@@ -278,9 +278,29 @@ Verified state: **48/48 packages · 4,360 tests · 0 fail**; graph **3,533 nodes
 | 200e | External idea-mining (8 repos → 12 ranked; [logicn-external-idea-mining-2026-06-15.md](logicn-external-idea-mining-2026-06-15.md)) | ✅ |
 
 **Open follow-ups become the roadmap (NOT part of #200):**
-- **#201 (proposed) — "calibration-as-attestation" lane:** measured-tolerance/precision-attestation contract work (idea-mining #5→#2+#12→#3+#4→#1); extends `BridgeManifest`+`DeterminismMode "tolerance"`.
+- **#201 — "calibration-as-attestation" lane (increments 1-2 LANDED 2026-06-15 — see §6):** measured-tolerance/precision-attestation contract work (idea-mining #5→#2+#12→#3+#4→#1); extends `BridgeManifest`+`DeterminismMode "tolerance"`.
 - **#202 (proposed) — honesty pass (#179-class):** H3/H4 ML-DSA naming, manifest CBOR/JSON header, LEXER_PARITY downgrade, scaffold relabeling, README overclaims, `canCommit` wiring-or-docstring.
 - **#177-followon:** add the remaining ~34 real packages to `logicn.workspace.json` (graph under-coverage; #155-adjacent).
 - **User-gated (TCB/decisions):** H1 cert-profile pre-image · H2 `policy{}` fail-open (parser) · H5 fusion-B2 ABI · #149 key rotation+force-push.
 - **External-infra:** real DSS.wasm (#102-106) · ffsim Phase 2 (#199) · ML-DSA-65 manifest wiring.
 - ⚠️ **dead-export findings are "wire-or-verify", NOT "delete"** — some (e.g. plugin-schema.ts) are pending-integration security code per P9-144.
+
+---
+
+## 6. Session continuation (2026-06-15 cont.) — #201 lane opened + audit-fix landings
+
+Verified: **48/48 · 4,368 tests · 0 fail**. 7 commits on top of `Initial commit` (all local). KB: [logicn-precision-attestation.md](logicn-precision-attestation.md).
+
+| # | Item | Status | Commit |
+|---|---|---|---|
+| 201 | **Calibration-as-attestation lane (umbrella)** | 🔶 contract-package portion landed | — |
+| 201.1 | Measured-attestation manifest fields: `comparabilityHash`, fidelity floor (`minFidelity`/`measuredFidelity`), `toleranceWitness {N,ε,std,noiseModelId}` + the **"can't claim a tighter band than measured"** invariant. Opt-in, hash-preserving, fail-closed. | ✅ | `659b90c` |
+| 201.2 | `QuantizationMethod` axis (none/qat/gptq/awq/marlin/nf4/gguf) + optional `quantizationMethod` field (idea #5 done as a SEPARATE axis — widening `PrecisionTechnique` would break the Tower's exhaustive `Record<PrecisionTechnique,_>` maps). | ✅ | `31b44ee` |
+| AF-1 | **border-check** fail-closed admission gate: 13 spawn-CLI regression tests (P9-144 §83) + wired into `run-phase-close`. | ✅ | `2d584c0` |
+| AF-2 | **Sentinel instanceof fix:** `Object.setPrototypeOf` restored in memory/state error classes (consistent with egress/io) + regression test. | ✅ | `beb575b` |
+| AF-3 | `type-registry.ts:145` stale comment → inline `EffectFlags`. | ✅ | `beb575b` |
+| AF-4 | **Graph duplicates:** verified NOT mergeable (`project-graph` is a vendored external repo + `graph-algorithms` is compiler-used); hardened our `canReach` + do-not-merge marker. | ✅ | `f57ef02` |
+
+**#201 — still open (next, in rough order):**
+- **Universal enforcement:** `validateManifestShape` is currently called by `ext-bridge-quantum` + the contract tests only — NOT the Tower's general admission path. Wire it in (or confirm intentional separation, since `bridge-attestation` already does Ed25519 + hash-pin) — VERIFY-BEFORE-BUILD.
+- **#1** precision-attestation gate (compiler-side) · **#3/#4** substrate integration (`verifySubstrate` + the witness) · storage/compute-precision split (needs `int4`/`int8` in the routing enum + both Tower Records) · **#2** comparability as a required pin (with ffsim-manifest migration).

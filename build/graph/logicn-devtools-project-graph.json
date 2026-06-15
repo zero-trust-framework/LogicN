@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-06-15T15:07:05.067Z",
+  "generatedAt": "2026-06-15T22:01:22.396Z",
   "nodes": [
     {
       "id": "package:logicn-core",
@@ -568,6 +568,16 @@
       "label": "logicn-ext-bridge-quantum",
       "sourcePath": "packages-logicn/logicn-ext-bridge-quantum/README.md",
       "summary": "LogicN governed bridge for IBM ffsim — out-of-process fermionic quantum simulation under contract, Tower audit lifecycle + attestation",
+      "tags": [
+        "package"
+      ]
+    },
+    {
+      "id": "package:logicn-inference-bridge-contract",
+      "kind": "Package",
+      "label": "logicn-inference-bridge-contract",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/README.md",
+      "summary": "Neutral Brain/Brawn contract — InferenceBridge, BridgeOp/Result, packed-ternary + fixed-point layout metadata, bridge manifest schema, determinism oracle interface. Zero runtime deps.",
       "tags": [
         "package"
       ]
@@ -7199,6 +7209,15 @@
       ]
     },
     {
+      "id": "doc:docs/Knowledge-Bases/logicn-200-closeout-2026-06-15.md",
+      "kind": "Document",
+      "label": "logicn-200-closeout-2026-06-15.md",
+      "sourcePath": "docs/Knowledge-Bases/logicn-200-closeout-2026-06-15.md",
+      "tags": [
+        "document"
+      ]
+    },
+    {
       "id": "doc:docs/Knowledge-Bases/logicn-adaptive-runtime-profiles.md",
       "kind": "Document",
       "label": "logicn-adaptive-runtime-profiles.md",
@@ -8189,6 +8208,15 @@
       ]
     },
     {
+      "id": "doc:docs/Knowledge-Bases/logicn-external-idea-mining-2026-06-15.md",
+      "kind": "Document",
+      "label": "logicn-external-idea-mining-2026-06-15.md",
+      "sourcePath": "docs/Knowledge-Bases/logicn-external-idea-mining-2026-06-15.md",
+      "tags": [
+        "document"
+      ]
+    },
+    {
       "id": "doc:docs/Knowledge-Bases/logicn-floor3-proof-zone-graph.md",
       "kind": "Document",
       "label": "logicn-floor3-proof-zone-graph.md",
@@ -9066,6 +9094,15 @@
       "kind": "Document",
       "label": "logicn-post-quantum-hardware-security.md",
       "sourcePath": "docs/Knowledge-Bases/logicn-post-quantum-hardware-security.md",
+      "tags": [
+        "document"
+      ]
+    },
+    {
+      "id": "doc:docs/Knowledge-Bases/logicn-precision-attestation.md",
+      "kind": "Document",
+      "label": "logicn-precision-attestation.md",
+      "sourcePath": "docs/Knowledge-Bases/logicn-precision-attestation.md",
       "tags": [
         "document"
       ]
@@ -33858,6 +33895,266 @@
       ]
     },
     {
+      "id": "doc:packages-logicn/logicn-inference-bridge-contract/.graph/boundary-policy.json",
+      "kind": "Document",
+      "label": "boundary-policy.json",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/.graph/boundary-policy.json",
+      "tags": [
+        "report",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "doc:packages-logicn/logicn-inference-bridge-contract/.graph/BOUNDARY.md",
+      "kind": "Document",
+      "label": "BOUNDARY.md",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/.graph/BOUNDARY.md",
+      "tags": [
+        "document",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "doc:packages-logicn/logicn-inference-bridge-contract/.graph/package-graph.json",
+      "kind": "Document",
+      "label": "package-graph.json",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/.graph/package-graph.json",
+      "tags": [
+        "report",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "doc:packages-logicn/logicn-inference-bridge-contract/ARCHITECTURE_MIGRATION.md",
+      "kind": "Document",
+      "label": "ARCHITECTURE_MIGRATION.md",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/ARCHITECTURE_MIGRATION.md",
+      "tags": [
+        "document",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "doc:packages-logicn/logicn-inference-bridge-contract/package.json",
+      "kind": "Document",
+      "label": "package.json",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/package.json",
+      "tags": [
+        "report",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:FixedScale",
+      "kind": "Type",
+      "label": "FixedScale",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/bridge.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:BridgeOp",
+      "kind": "Type",
+      "label": "BridgeOp",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/bridge.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:BridgeResult",
+      "kind": "Type",
+      "label": "BridgeResult",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/bridge.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:InferenceBridge",
+      "kind": "Type",
+      "label": "InferenceBridge",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/bridge.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:BridgeRegistry",
+      "kind": "Type",
+      "label": "BridgeRegistry",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/bridge.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "flow:logicn-inference-bridge-contract:assertDeterminism",
+      "kind": "Flow",
+      "label": "assertDeterminism",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/bridge.ts",
+      "tags": [
+        "function",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:DeterminismMode",
+      "kind": "Type",
+      "label": "DeterminismMode",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:CertificationProfile",
+      "kind": "Type",
+      "label": "CertificationProfile",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:BridgeDomain",
+      "kind": "Type",
+      "label": "BridgeDomain",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:ToleranceWitness",
+      "kind": "Type",
+      "label": "ToleranceWitness",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:BridgeManifest",
+      "kind": "Type",
+      "label": "BridgeManifest",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:BridgeAttestation",
+      "kind": "Type",
+      "label": "BridgeAttestation",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "flow:logicn-inference-bridge-contract:canonicalManifestString",
+      "kind": "Flow",
+      "label": "canonicalManifestString",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts",
+      "tags": [
+        "function",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "flow:logicn-inference-bridge-contract:validateManifestShape",
+      "kind": "Flow",
+      "label": "validateManifestShape",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts",
+      "tags": [
+        "function",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:TernaryOracle",
+      "kind": "Type",
+      "label": "TernaryOracle",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/oracle.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "flow:logicn-inference-bridge-contract:oracleAgrees",
+      "kind": "Flow",
+      "label": "oracleAgrees",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/oracle.ts",
+      "tags": [
+        "function",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:PrecisionTechnique",
+      "kind": "Type",
+      "label": "PrecisionTechnique",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/precision-types.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:QuantizationMethod",
+      "kind": "Type",
+      "label": "QuantizationMethod",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/precision-types.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:SchedulingTechnique",
+      "kind": "Type",
+      "label": "SchedulingTechnique",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/precision-types.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "type:logicn-inference-bridge-contract:InferenceOpClass",
+      "kind": "Type",
+      "label": "InferenceOpClass",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/src/precision-types.ts",
+      "tags": [
+        "type",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
+      "id": "doc:packages-logicn/logicn-inference-bridge-contract/tsconfig.json",
+      "kind": "Document",
+      "label": "tsconfig.json",
+      "sourcePath": "packages-logicn/logicn-inference-bridge-contract/tsconfig.json",
+      "tags": [
+        "report",
+        "logicn-inference-bridge-contract"
+      ]
+    },
+    {
       "id": "doc:docs",
       "kind": "Document",
       "label": "app",
@@ -36231,6 +36528,20 @@
       "evidencePath": "docs/Knowledge-Bases/KNOWLEDGE-BASE-INDEX.md"
     },
     {
+      "from": "doc:docs/Knowledge-Bases/logicn-200-closeout-2026-06-15.md",
+      "to": "package:logicn-core",
+      "kind": "documents",
+      "confidence": "INFERRED",
+      "evidencePath": "docs/Knowledge-Bases/logicn-200-closeout-2026-06-15.md"
+    },
+    {
+      "from": "doc:docs/Knowledge-Bases/logicn-200-closeout-2026-06-15.md",
+      "to": "package:logicn-core-compiler",
+      "kind": "documents",
+      "confidence": "INFERRED",
+      "evidencePath": "docs/Knowledge-Bases/logicn-200-closeout-2026-06-15.md"
+    },
+    {
       "from": "doc:docs/Knowledge-Bases/logicn-ai-neural-npu-targets.md",
       "to": "package:logicn-core",
       "kind": "documents",
@@ -37869,6 +38180,20 @@
       "evidencePath": "docs/Knowledge-Bases/logicn-ext-bridge-quantum-design.md"
     },
     {
+      "from": "doc:docs/Knowledge-Bases/logicn-ext-bridge-quantum-design.md",
+      "to": "package:logicn-inference-bridge-contract",
+      "kind": "documents",
+      "confidence": "INFERRED",
+      "evidencePath": "docs/Knowledge-Bases/logicn-ext-bridge-quantum-design.md"
+    },
+    {
+      "from": "doc:docs/Knowledge-Bases/logicn-external-idea-mining-2026-06-15.md",
+      "to": "package:logicn-ext-bridge-quantum",
+      "kind": "documents",
+      "confidence": "INFERRED",
+      "evidencePath": "docs/Knowledge-Bases/logicn-external-idea-mining-2026-06-15.md"
+    },
+    {
       "from": "doc:docs/Knowledge-Bases/logicn-floor3-proof-zone-graph.md",
       "to": "package:logicn-core",
       "kind": "documents",
@@ -39397,6 +39722,13 @@
     {
       "from": "doc:docs/Knowledge-Bases/logicn-runtime-status-SOT.md",
       "to": "package:logicn-core-security",
+      "kind": "documents",
+      "confidence": "INFERRED",
+      "evidencePath": "docs/Knowledge-Bases/logicn-runtime-status-SOT.md"
+    },
+    {
+      "from": "doc:docs/Knowledge-Bases/logicn-runtime-status-SOT.md",
+      "to": "package:logicn-inference-bridge-contract",
       "kind": "documents",
       "confidence": "INFERRED",
       "evidencePath": "docs/Knowledge-Bases/logicn-runtime-status-SOT.md"
@@ -61992,6 +62324,13 @@
     },
     {
       "from": "package:logicn-ext-bridge-quantum",
+      "to": "package:logicn-inference-bridge-contract",
+      "kind": "depends_on",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-ext-bridge-quantum/package.json"
+    },
+    {
+      "from": "package:logicn-ext-bridge-quantum",
       "to": "doc:packages-logicn/logicn-ext-bridge-quantum/package.lln.json",
       "kind": "owns",
       "confidence": "EXTRACTED",
@@ -62164,6 +62503,188 @@
       "kind": "owns",
       "confidence": "EXTRACTED",
       "evidencePath": "packages-logicn/logicn-ext-bridge-quantum/tsconfig.json"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "doc:packages-logicn/logicn-inference-bridge-contract/.graph/boundary-policy.json",
+      "kind": "owns",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/.graph/boundary-policy.json"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "doc:packages-logicn/logicn-inference-bridge-contract/.graph/BOUNDARY.md",
+      "kind": "owns",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/.graph/BOUNDARY.md"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "doc:packages-logicn/logicn-inference-bridge-contract/.graph/package-graph.json",
+      "kind": "owns",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/.graph/package-graph.json"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "doc:packages-logicn/logicn-inference-bridge-contract/ARCHITECTURE_MIGRATION.md",
+      "kind": "owns",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/ARCHITECTURE_MIGRATION.md"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "doc:packages-logicn/logicn-inference-bridge-contract/package.json",
+      "kind": "owns",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/package.json"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:FixedScale",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/bridge.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:BridgeOp",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/bridge.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:BridgeResult",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/bridge.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:InferenceBridge",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/bridge.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:BridgeRegistry",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/bridge.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "flow:logicn-inference-bridge-contract:assertDeterminism",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/bridge.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:DeterminismMode",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:CertificationProfile",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:BridgeDomain",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:ToleranceWitness",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:BridgeManifest",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:BridgeAttestation",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "flow:logicn-inference-bridge-contract:canonicalManifestString",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "flow:logicn-inference-bridge-contract:validateManifestShape",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/manifest.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:TernaryOracle",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/oracle.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "flow:logicn-inference-bridge-contract:oracleAgrees",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/oracle.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:PrecisionTechnique",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/precision-types.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:QuantizationMethod",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/precision-types.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:SchedulingTechnique",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/precision-types.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "type:logicn-inference-bridge-contract:InferenceOpClass",
+      "kind": "provides",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/src/precision-types.ts"
+    },
+    {
+      "from": "package:logicn-inference-bridge-contract",
+      "to": "doc:packages-logicn/logicn-inference-bridge-contract/tsconfig.json",
+      "kind": "owns",
+      "confidence": "EXTRACTED",
+      "evidencePath": "packages-logicn/logicn-inference-bridge-contract/tsconfig.json"
     },
     {
       "from": "package:logicn-devtools-graph-project",

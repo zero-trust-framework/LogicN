@@ -606,3 +606,21 @@ Provides:
 - validateFfsimManifest
 - QuantumOp
 - QUANTUM_OPS
+
+## logicn-inference-bridge-contract
+
+Neutral Brain/Brawn contract — InferenceBridge, BridgeOp/Result, packed-ternary + fixed-point layout metadata, bridge manifest schema, determinism oracle interface. Zero runtime deps.
+
+Provides:
+- FixedScale
+- BridgeOp
+- BridgeResult
+- InferenceBridge
+- BridgeRegistry
+- assertDeterminism
+- DeterminismMode
+- CertificationProfile
+- BridgeDomain
+- ToleranceWitness
+- BridgeManifest
+- BridgeAttestation

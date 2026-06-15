@@ -58,9 +58,9 @@ LogicN is built for organisations where software failure is not acceptable — f
 ████████████████████████████████  100%
 ```
 
-**Tests — 44/44 packages**
+**Tests — 48/48 packages**
 ```
-████████████████████████████████  100%  (4,129 tests · 0 failures)
+████████████████████████████████  100%  (4,368 tests · 0 failures)
 ```
 
 **Stage B Self-Hosting (WAT Linear Memory)**
@@ -86,7 +86,7 @@ LogicN is built for organisations where software failure is not acceptable — f
 | **Governed Tower — Stage A simulation** (real DSS.wasm is Post-P9, #102–106) | 100% |
 | **Tests — full suite** | 100% |
 | **DevTools** | 100% |
-| **Security audit (0 findings)** | 100% |
+| **Security/architecture audit (2026-06-15)** | deep audit logged 48 findings (3 security · rest scaffold/wiring/honesty); 8 open HIGH tracked in the [task ledger](docs/Knowledge-Bases/logicn-task-ledger.md) |
 | **Type checker** | 90% |
 | **Effect checker** | 90% |
 | **WAT emitter** | 88% |
@@ -104,10 +104,12 @@ LogicN is built for organisations where software failure is not acceptable — f
 ---
 
 > **Full roadmap** → [docs/Knowledge-Bases/logicn-roadmap.md](docs/Knowledge-Bases/logicn-roadmap.md) — current forward view (160 tasks), P9 critical path, security remediation, Post-P9 sequencing
+>
+> **Recent cycle (2026-06-15)** → #200 integrity close-out (doc reconciliation · #177 graph fix · 48-finding deep audit) + the **#201 calibration-as-attestation** lane opened (measured bridge-manifest attestation: fidelity floor + tolerance witness + quantization-method declaration — contract foundation, not yet Tower-wide-enforced) + sentinel/border-check hardening. Details: [task ledger §5–6](docs/Knowledge-Bases/logicn-task-ledger.md) · [external idea-mining](docs/Knowledge-Bases/logicn-external-idea-mining-2026-06-15.md).
 
 ---
 
-*Stage A (TypeScript Runtime) is the **production-hardened path** — 44/44 packages, 4,129 tests, 0 audit findings.
+*Stage A (TypeScript Runtime) is the **production-hardened path** — 48/48 packages, 4,368 tests, 0 test failures (a 2026-06-15 deep audit logged 48 findings — mostly scaffold/wiring/honesty items, tracked in the ledger).
 Stage B (Runtime in LogicN) is **in progress (P9 self-hosting bootstrap)**: the self-hosted lexer/parser/checker `.lln`
 sources reach Stage-A == Stage-B parity through the interpreter (R6 corpus, 100%), and the self-hosted `lexer.lln`
 `tokenize` now reaches **byte-for-byte Stage-A interpreter == Stage-B real-WASM parity** through the #105 admission
@@ -144,7 +146,7 @@ LogicN is three things building toward one platform:
 
 **1. A language** — strict typing, explicit errors, declared effects, no hidden nulls, no silent failures. Source files use `.lln`.
 
-**2. A compiler and checker pipeline** — lexer → parser → type checker → value-state/taint checker → effect checker → governance verifier → GIR emitter → tiered runtime. Every check has a diagnostic code. **4,145 tests, 0 failures**. Stage B self-hosting is **in progress (P9)** — Stage-A == Stage-B interpreter parity is locked (R6 corpus) and `tokenize` WASM byte-parity is **achieved** (#143); extending WASM parity to the parser/type-checker/governance-verifier flows is the remaining gate.
+**2. A compiler and checker pipeline** — lexer → parser → type checker → value-state/taint checker → effect checker → governance verifier → GIR emitter → tiered runtime. Every check has a diagnostic code. **4,368 tests, 0 failures**. Stage B self-hosting is **in progress (P9)** — Stage-A == Stage-B interpreter parity is locked (R6 corpus) and `tokenize` WASM byte-parity is **achieved** (#143); extending WASM parity to the parser/type-checker/governance-verifier flows is the remaining gate.
 
 **3. A governed runtime architecture** — capability-based authority, machine-readable ProofGraph, post-quantum governance signatures, PCI DSS 4.0.1 audit, Deterministic Runtime Containment Model (DRCM) with monotonic security overlays.
 
@@ -283,7 +285,7 @@ LogicN has nine canonical patterns. Patterns 1–6 compile today (`drcm_stable_v
 
 ```
 packages-logicn/
-├── logicn-core-compiler/     ← active: full pipeline, 3,279 tests
+├── logicn-core-compiler/     ← active: full pipeline, 3,361 tests
 ├── logicn-core-runtime/      execution contracts + WASI boundaries
 ├── logicn-core-economics/    CostGraph, ValueGraph, breach-risk matrix
 ├── logicn-core-security/     taint profiles, redaction, OWASP boundaries
@@ -328,7 +330,7 @@ Layer 5: ProofGraph + .lmanifest — cryptographic audit proof (Ed25519 today; M
 
 ```bash
 # Run tests (core suite)
-node scripts/run-all-tests.cjs --core        # SOT-four core suite, 0 failures (full: npm test → 44/44 · 4,129)
+node scripts/run-all-tests.cjs --core        # SOT-four core suite, 0 failures (full: npm test → 48/48 · 4,368)
 
 # Full benchmark suite (~5-10 min)
 cd packages-logicn/logicn-devtools-benchmarks

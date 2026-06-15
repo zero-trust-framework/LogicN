@@ -1,15 +1,15 @@
 # LogicN Graph Report
 
 Workspace: LogicN-app
-Generated: 2026-06-15T15:07:05.067Z
+Generated: 2026-06-15T22:01:22.396Z
 
 ## Summary
 
-- Packages: 57
-- Documents: 1737
-- Types/interfaces: 1242
-- Functions: 480
-- Relationships: 3969
+- Packages: 58
+- Documents: 1746
+- Types/interfaces: 1258
+- Functions: 484
+- Relationships: 4001
 
 ## Package Nodes
 
@@ -70,6 +70,7 @@ Generated: 2026-06-15T15:07:05.067Z
 - logicn-api-protocol-rest (packages-logicn/logicn-api-protocol-rest/README.md)
 - logicn-substrate-math (packages-logicn/logicn-substrate-math/README.md)
 - logicn-ext-bridge-quantum (packages-logicn/logicn-ext-bridge-quantum/README.md)
+- logicn-inference-bridge-contract (packages-logicn/logicn-inference-bridge-contract/README.md)
 
 ## High-Signal Questions
 

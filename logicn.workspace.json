@@ -59,7 +59,8 @@
         "packages-logicn/logicn-framework-example-app",
         "packages-logicn/logicn-api-protocol-rest",
         "packages-logicn/logicn-substrate-math",
-        "packages-logicn/logicn-ext-bridge-quantum"
+        "packages-logicn/logicn-ext-bridge-quantum",
+        "packages-logicn/logicn-inference-bridge-contract"
     ],
     "defaultPackage": "packages-logicn/logicn-framework-example-app",
     "languagePackage": "packages-logicn/logicn-core",
