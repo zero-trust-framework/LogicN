@@ -35,10 +35,13 @@ than measured).
 
 ## Next increments (not yet built)
 
-1. **#5 — widen `PrecisionTechnique`** to a grounded production taxonomy (`ternary | int4-QAT | gptq | awq |
-   marlin | nf4 | gguf | fp8 | fp16 | fp4_block`) + a `storagePrecision` vs `computePrecision` split
-   (the fake-quantized case). ⚠️ Cross-package ripple — verify no exhaustive `switch` in tower-citizen/bridges
-   first (the current enum is consumed as a map key, which is safe, but check the router).
+1. ✅ **#5 — quantization taxonomy (LANDED as `QuantizationMethod`, increment 2).** Verify-before-build
+   showed `PrecisionTechnique` is the routing/compute-format enum, consumed by the Tower's **exhaustive**
+   `Record<PrecisionTechnique,_>` maps (`TECHNIQUE_SOURCE`/`TECHNIQUE_BITS`) — so widening *it* is wrong
+   (breaks the Tower + conflates routing with declaration). Instead added a SEPARATE `QuantizationMethod`
+   axis (`none|qat|gptq|awq|marlin|nf4|gguf`) + an optional `quantizationMethod` manifest field, hash-preserving
+   via a third monotonic extension tier. **Deferred:** the storage-vs-compute-precision split (needs `int4`/`int8`
+   added to the routing enum + both Tower Records updated — a real cross-package change, not done here).
 2. **#1 — precision-attestation gate (compiler/Tower side):** read the bridge's exported quant config vs
    tensor headers, enforce `declared == observed` per module, record the coverage table as a signed manifest
    record. Closes the Brawn fail-open (a bridge shipping a layer at the wrong precision / a swapped tokenizer

@@ -6,7 +6,7 @@
 // `hash = sha256(canonicalManifestString(m))` and checks it against the active
 // contract's allowed bridges before calling `bridge.execute()`.
 
-import type { PrecisionTechnique } from "./precision-types.js";
+import type { PrecisionTechnique, QuantizationMethod } from "./precision-types.js";
 
 /**
  * How a bridge's results are trusted to match the reference oracle.
@@ -67,6 +67,7 @@ export interface BridgeManifest {
   readonly measuredFidelity?:  number;          // 0..1 closeness-to-reference oracle the bridge SUPPLIES (LogicN only thresholds it)
   readonly minFidelity?:       number;          // 0..1 declared floor; admission requires measuredFidelity >= this (fail-closed)
   readonly toleranceWitness?:  ToleranceWitness; // binds the declared `tolerance` to a measured (N, ε, std) curve
+  readonly quantizationMethod?: QuantizationMethod; // the production quantization the bridge ships (storage/method axis)
 }
 
 /** A manifest plus its detached signature (verified by the Tower's key authority). */
@@ -94,13 +95,15 @@ export function canonicalManifestString(m: BridgeManifest): string {
                     m.pinnedEnvHash !== undefined || m.backendArtifactHash !== undefined;
   const hasMeasuredExt = m.comparabilityHash !== undefined || m.measuredFidelity !== undefined ||
                          m.minFidelity !== undefined || m.toleranceWitness !== undefined;
-  if (hasOldExt || hasMeasuredExt) {
+  const hasDeclExt = m.quantizationMethod !== undefined;
+  // Extension TIERS appended in a fixed order; a later tier forces the earlier (padded) tiers
+  // so the layout stays monotonic. A manifest that sets NO extension field serializes as the
+  // base-10 pre-image, and adding only an earlier tier never pulls in a later one — so existing
+  // inference/ffsim attested hashes are byte-unaffected.
+  if (hasOldExt || hasMeasuredExt || hasDeclExt) {
     fields.push(m.domain ?? "", m.tolerance ?? "", m.pinnedEnvHash ?? "", m.backendArtifactHash ?? "");
   }
-  // The measured block is appended AFTER the original extension block and ONLY when a
-  // measured field is set — so manifests that don't opt in (including the existing ffsim
-  // tolerance manifest) keep their exact pinned pre-image.
-  if (hasMeasuredExt) {
+  if (hasMeasuredExt || hasDeclExt) {
     fields.push(
       m.comparabilityHash ?? "",
       m.measuredFidelity ?? "",
@@ -109,6 +112,9 @@ export function canonicalManifestString(m: BridgeManifest): string {
         ? `${m.toleranceWitness.redundancyN}:${m.toleranceWitness.epsilonMeasured}:${m.toleranceWitness.stdDev}:${m.toleranceWitness.noiseModelId}`
         : "",
     );
+  }
+  if (hasDeclExt) {
+    fields.push(m.quantizationMethod ?? "");
   }
   return JSON.stringify(fields);
 }

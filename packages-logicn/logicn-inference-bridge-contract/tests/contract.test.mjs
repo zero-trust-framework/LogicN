@@ -108,3 +108,17 @@ test("#201 measured fields are opt-in + hash-preserving (non-opted manifests kee
   assert.notEqual(qMeasured, qBefore, "opting into a measured field extends the pre-image");
   assert.match(qMeasured, /0.99/);
 });
+
+test("#201 quantizationMethod: a bridge can honestly declare its storage method; opt-in + hash-preserving + monotonic tiers", () => {
+  const inf = { bridgeId: "bitnet-cpu", packageName: "@logicn/ext-bridge-cpp", packageHash: H, nativeAddonHash: H, sourceEngine: "microsoft/BitNet", precision: "ternary", layoutVersion: "i2s-v1", hardwareIdentity: "x86_64-avx2", determinismMode: "exact", certificationProfile: "certified" };
+  const expected = JSON.stringify([inf.bridgeId, inf.packageName, inf.packageHash, inf.nativeAddonHash, inf.sourceEngine, inf.precision, inf.layoutVersion, inf.hardwareIdentity, inf.determinismMode, inf.certificationProfile]);
+  assert.equal(canonicalManifestString(inf), expected, "no method -> base pre-image unchanged");
+  const gptq = canonicalManifestString({ ...inf, quantizationMethod: "gptq" });
+  assert.notEqual(gptq, expected, "declaring a quantization method extends the pre-image");
+  assert.match(gptq, /gptq/);
+  assert.equal(validateManifestShape({ ...inf, quantizationMethod: "qat" }).ok, true, "qat is admissible");
+  // tier monotonicity: a method-only manifest still emits the (empty) earlier tiers before it
+  const m = JSON.parse(canonicalManifestString({ ...inf, quantizationMethod: "gguf" }));
+  assert.equal(m.length, 10 + 4 + 4 + 1, "base(10) + old-ext(4) + measured(4) + decl(1)");
+  assert.equal(m[m.length - 1], "gguf");
+});
