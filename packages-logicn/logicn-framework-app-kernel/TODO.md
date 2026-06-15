@@ -1,5 +1,10 @@
 # LogicN App Kernel TODO
 
+> Note (2026-06-16): the App-Kernel **P1 implementation shipped** — `src/{types,route-defaults,kernel,fuse-loader,index}.ts`
+> (the fail-closed request pipeline + fuse-loader), **38 tests**, and **3 `.lln` examples**
+> (`typed-api-boundary`, `security-policy`, `job`). The unchecked `Define …` items below are the
+> remaining contract-spec backlog, not the implementation.
+
 ```text
 [x] Create /packages-logicn/logicn-framework-app-kernel
 [x] Add README.md
@@ -16,6 +21,6 @@
 [ ] Define runtime audit report format
 [ ] Define app-kernel to logicn-core-runtime handoff contract
 [ ] Define app-kernel to logicn-framework-api-server contract
-[ ] Add examples
-[ ] Add tests
+[x] Add examples
+[x] Add tests
 ```
