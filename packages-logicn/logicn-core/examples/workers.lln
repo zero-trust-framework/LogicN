@@ -1,0 +1,16 @@
+type OrderEvent {
+  id: String
+  type: String
+}
+
+channel orders: Channel<OrderEvent> {
+  buffer 1000
+  overflow "dead_letter"
+  dead_letter "./storage/dead/orders.jsonl"
+}
+
+worker OrderWorker count 8 {
+  for event in orders {
+    processOrderEvent(event)
+  }
+}

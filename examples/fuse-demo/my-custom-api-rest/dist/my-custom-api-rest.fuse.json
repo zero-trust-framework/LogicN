@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "lln.fuse.v1",
+  "name": "my-custom-api-rest",
+  "version": "0.1.0",
+  "kind": "api-protocol",
+  "provides": "rest",
+  "seam": "protocol.inbound",
+  "capabilities": [
+    "network.inbound"
+  ],
+  "artifacts": {
+    "wasm": "my-custom-api-rest.wasm",
+    "manifest": "my-custom-api-rest.lmanifest"
+  },
+  "wasmSha256": "sha256:0802a1e04d70a868c53af10ee9d79dbafe71656f576da087eda6c5b8127ad0b2",
+  "generatedAt": "2026-06-14T22:37:46.258Z"
+}

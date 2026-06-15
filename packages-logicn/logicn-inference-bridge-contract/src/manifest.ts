@@ -1,0 +1,116 @@
+// manifest.ts — the signed-bridge-manifest schema (enables CF-3 attestation).
+//
+// This package defines the SHAPE and a canonical serialisation; the actual SHA-256
+// hashing and signature verification live in the Tower (which has node:crypto), so
+// the contract stays zero-dependency and neutral. The Tower computes
+// `hash = sha256(canonicalManifestString(m))` and checks it against the active
+// contract's allowed bridges before calling `bridge.execute()`.
+
+import type { PrecisionTechnique } from "./precision-types.js";
+
+/**
+ * How a bridge's results are trusted to match the reference oracle.
+ * `tolerance` (added for out-of-process float backends, e.g. the ffsim quantum bridge):
+ * results are reproducible only to a numeric band, never bit-exact — admissible ONLY
+ * when fully pinned (see validateManifestShape). Never claim "exact" for a noisy backend.
+ */
+export type DeterminismMode = "exact" | "sampled" | "unverified" | "tolerance";
+
+/** Which runtime profile a bridge is attested for. */
+export type CertificationProfile = "dev" | "certified";
+
+/** Backend domain discriminator. `precision` (a ternary enum) is meaningful only for inference. */
+export type BridgeDomain = "inference" | "quantum";
+
+/**
+ * A bridge's self-description. In certified mode the Tower refuses any bridge
+ * whose manifest is missing, structurally invalid, or not on the active
+ * contract's allow-list / hash-pin.
+ */
+export interface BridgeManifest {
+  readonly bridgeId:           string;
+  readonly packageName:        string;
+  readonly packageHash:        string;            // sha256 hex of the bridge package
+  readonly nativeAddonHash?:   string;            // sha256 hex of the .node addon, if any
+  readonly sourceEngine:       string;            // "microsoft/BitNet", "NVIDIA/TransformerEngine", …
+  readonly precision?:         PrecisionTechnique; // OPTIONAL — N/A for domain:"quantum"
+  readonly layoutVersion:      string;            // packed-ternary layout version
+  readonly hardwareIdentity:   string;            // "x86_64-avx2", "cuda-sm_80", "photonic-v0", …
+  readonly determinismMode:    DeterminismMode;
+  readonly certificationProfile: CertificationProfile;
+  // ── extensions (out-of-process / tolerance backends; e.g. the ffsim quantum bridge) ──
+  // Serialized into the canonical pre-image ONLY when present, so existing
+  // inference-domain manifest hashes are byte-unaffected.
+  readonly domain?:              BridgeDomain;     // default "inference" when absent
+  readonly tolerance?:           number;           // REQUIRED iff determinismMode="tolerance"
+  readonly pinnedEnvHash?:       string;           // sha256 of the pinned venv/env lock
+  readonly backendArtifactHash?: string;           // sha256 of the out-of-process backend artifact (analog of nativeAddonHash)
+}
+
+/** A manifest plus its detached signature (verified by the Tower's key authority). */
+export interface BridgeAttestation {
+  readonly manifest:  BridgeManifest;
+  readonly signature?: string; // base64 detached signature over canonicalManifestString(manifest)
+}
+
+const SHA256_HEX = /^[0-9a-f]{64}$/;
+
+/**
+ * Deterministic, field-ordered serialisation — the pre-image the Tower hashes and
+ * signs. Stable ordering guarantees the same manifest always yields the same hash.
+ */
+export function canonicalManifestString(m: BridgeManifest): string {
+  const fields: (string | number)[] = [
+    m.bridgeId, m.packageName, m.packageHash, m.nativeAddonHash ?? "",
+    m.sourceEngine, m.precision ?? "", m.layoutVersion, m.hardwareIdentity,
+    m.determinismMode, m.certificationProfile,
+  ];
+  // Extension fields are appended in a FIXED order ONLY when the manifest uses any of
+  // them — so an existing inference-domain manifest (none set, precision present)
+  // serializes byte-for-byte as before, and its attested hash is unchanged.
+  if (m.domain !== undefined || m.tolerance !== undefined ||
+      m.pinnedEnvHash !== undefined || m.backendArtifactHash !== undefined) {
+    fields.push(m.domain ?? "", m.tolerance ?? "", m.pinnedEnvHash ?? "", m.backendArtifactHash ?? "");
+  }
+  return JSON.stringify(fields);
+}
+
+/**
+ * Structural validation (no crypto). Confirms required fields are present and
+ * well-formed (hashes are 64-hex), and that a certified manifest is not in
+ * `unverified` determinism mode. Returns { ok, reason }.
+ */
+export function validateManifestShape(m: BridgeManifest): { ok: boolean; reason?: string } {
+  if (!m.bridgeId) return { ok: false, reason: "missing bridgeId" };
+  if (!m.packageName) return { ok: false, reason: "missing packageName" };
+  if (!SHA256_HEX.test(m.packageHash)) return { ok: false, reason: "packageHash is not a sha256 hex digest" };
+  if (m.nativeAddonHash !== undefined && !SHA256_HEX.test(m.nativeAddonHash)) {
+    return { ok: false, reason: "nativeAddonHash is not a sha256 hex digest" };
+  }
+  if (m.pinnedEnvHash !== undefined && !SHA256_HEX.test(m.pinnedEnvHash)) {
+    return { ok: false, reason: "pinnedEnvHash is not a sha256 hex digest" };
+  }
+  if (m.backendArtifactHash !== undefined && !SHA256_HEX.test(m.backendArtifactHash)) {
+    return { ok: false, reason: "backendArtifactHash is not a sha256 hex digest" };
+  }
+  if (!m.layoutVersion) return { ok: false, reason: "missing layoutVersion" };
+  if (m.certificationProfile === "certified" && m.determinismMode === "unverified") {
+    return { ok: false, reason: "certified bridge cannot be determinismMode=unverified" };
+  }
+  // RATIFIED (ffsim §13.1) — a "tolerance" backend is admissible (incl. certified) ONLY when
+  // FULLY PINNED. Fail-closed: any missing pin → invalid. This is what makes a non-bit-exact
+  // backend safe under certified mode (integrity stays on the deterministic core; see
+  // logicn-ext-bridge-quantum-design.md §9.2).
+  if (m.determinismMode === "tolerance") {
+    if (typeof m.tolerance !== "number" || !Number.isFinite(m.tolerance) || m.tolerance <= 0) {
+      return { ok: false, reason: "determinismMode=tolerance requires a finite positive tolerance" };
+    }
+    if (m.pinnedEnvHash === undefined) {
+      return { ok: false, reason: "determinismMode=tolerance requires pinnedEnvHash (env not pinned)" };
+    }
+    if (m.backendArtifactHash === undefined) {
+      return { ok: false, reason: "determinismMode=tolerance requires backendArtifactHash (backend not pinned)" };
+    }
+  }
+  return { ok: true };
+}
