@@ -1,8 +1,12 @@
 // GateCache micro-benchmark (#194).
 //
-// Measures the ACTUAL win GateCache provides: compiling the same ai{} governance
-// policy COLD (recompile every time — the pre-GateCache behaviour) vs CACHED
-// (compile once, then HIT — the wired behaviour now used by createHybridEngine).
+// Measures the standalone win GateCache provides: compiling the same ai{} governance
+// policy COLD (recompile every time) vs CACHED (compile once, then HIT).
+//
+// ⚠️ GateCache is an OPT-IN utility — createHybridEngine deliberately does NOT use it: the engine
+// compiles via the branchless `compilePolicy` (#140), because GateCache's content-hash key was
+// ~38× slower (measured, reverted). This bench measures GateCache's own cold-vs-cached delta, NOT
+// the engine's hot path.
 //
 // This is a CONSTRUCTION-TIME optimisation for the "many engines, one policy"
 // pattern (per-request engines / warm pools). It does NOT cache the allow/deny
@@ -31,10 +35,10 @@ function timeIt(fn) {
 
 // COLD: recompile the policy on every call (pre-GateCache behaviour).
 const cold = timeIt(() => compilePolicy(gov, false));
-// CACHED: GateCache — 1 miss then HITs (what createHybridEngine now does).
+// CACHED: GateCache — 1 miss then HITs (the opt-in utility; NOT what createHybridEngine uses).
 const cache = new GateCache();
 const cached = timeIt(() => cache.compile(gov, false));
-// Module-level default cache (the wired path).
+// Module-level default cache (opt-in; not wired into the engine).
 const wired = timeIt(() => compilePolicyCached(gov, false));
 
 const speedup = cached.opsPerSec / cold.opsPerSec;

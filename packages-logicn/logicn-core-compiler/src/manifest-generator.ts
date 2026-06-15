@@ -7,9 +7,14 @@
 //
 // SERIALISATION — Two formats (dual output per logicn-cbor-manifest-spec.md):
 //
-//   .lmanifest       = Binary CBOR (RFC 8949 §4.2 Canonical CBOR) — signing target
+//   .lmanifest       = Binary CBOR (RFC 8949 §4.2 Canonical CBOR) — the on-disk manifest.
 //                      DSS.wasm parses this at runtime for V_DPM configuration.
 //                      Custom tags 400-408 for O(1) dispatch in DSS supervisor.
+//                      NOTE: the governance SIGNATURE is currently computed over the canonical-JSON
+//                      body (RFC 8785, `serializeManifest`), NOT the CBOR bytes — CBOR-bytes signing
+//                      is the planned upgrade (#67). And the signatures are PLACEHOLDERS unless real
+//                      Ed25519 keys are configured (`logicn keygen`); ML-DSA-65 is gated on key
+//                      custody (#34). Do not read "signed CBOR" into this until that lands.
 //
 //   .lmanifest.json  = Pretty-printed JSON — human inspection and debugging only
 //
