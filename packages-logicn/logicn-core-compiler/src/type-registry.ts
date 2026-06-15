@@ -142,7 +142,7 @@ export function resolveTypeId(typeName: string): TypeIdValue {
 //   (required & declared) === required
 //
 // Keep full effect names for diagnostics/reports. Use flags only in hot-path.
-// Canonical list: docs/Knowledge-Bases/logicn-effect-registry.md
+// Canonical list: the `EffectFlags` const immediately below (the inline source of truth).
 // ---------------------------------------------------------------------------
 
 export const EffectFlags = {

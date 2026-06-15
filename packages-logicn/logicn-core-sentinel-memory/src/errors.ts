@@ -14,6 +14,9 @@ export class SecurityTrap extends Error {
     super(message);
     this.name = "SecurityTrap";
     this.code = code;
+    // Restore the prototype chain (instanceof safety under down-level transpile output),
+    // consistent with the sibling egress/io sentinels.
+    Object.setPrototypeOf(this, SecurityTrap.prototype);
   }
 }
 
@@ -24,5 +27,8 @@ export class HardenedBorderViolation extends Error {
     super(message);
     this.name = "HardenedBorderViolation";
     this.code = code;
+    // Restore the prototype chain (instanceof safety under down-level transpile output),
+    // consistent with the sibling egress/io sentinels.
+    Object.setPrototypeOf(this, HardenedBorderViolation.prototype);
   }
 }
