@@ -228,6 +228,11 @@ run("tests:r6-corpus", "node",
   ["--test", "tests/r6-corpus/r6-parity.test.mjs"],
   { silent: false });
 
+// ── 7b. Border-check fail-closed admission gate (P9-144 §83, #200 close-out) ──
+run("tests:border-check", "node",
+  ["--test", "tests/border-check/border-check.test.mjs"],
+  { silent: false });
+
 // ── Summary ──
 console.log("\n── phase-close summary ──");
 let anyFail = false;
