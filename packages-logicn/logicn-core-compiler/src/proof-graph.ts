@@ -760,8 +760,10 @@ export async function verifyGovernanceSignatureHybrid(
     if (!ed25519OK) return false;
 
     // ML-DSA-65 check
+    // @noble/post-quantum ml_dsa65.verify is positional (sig, msg, pubKey) — match
+    // those names here so the call below is unambiguous and not "corrected" into a bug.
     const { ml_dsa65 } = await import("@noble/post-quantum/ml-dsa.js") as {
-      ml_dsa65: { verify(pk: Uint8Array, msg: Uint8Array, sig: Uint8Array): boolean };
+      ml_dsa65: { verify(sig: Uint8Array, msg: Uint8Array, pubKey: Uint8Array): boolean };
     };
     const mlDsaSig = fromBase64url(mlDsaSigStr);
     return ml_dsa65.verify(mlDsaSig, payload, mlDsaPublicKey);
