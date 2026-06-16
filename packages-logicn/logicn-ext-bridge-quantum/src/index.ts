@@ -6,6 +6,7 @@ export { binomial, subspaceDim, stateVectorBytes } from "./subspace.js";
 export { checkJobLimits, type LimitVerdict } from "./limits.js";
 export { detectFfsim, type FfsimEnv } from "./env-detect.js";
 export { buildFfsimManifest, validateFfsimManifest, type FfsimManifestInputs } from "./manifest.js";
+export { attestFfsimManifest, verifyFfsimAdmission } from "./attestation.js";
 export { FfsimBackend } from "./ffsim-backend.js";
 
 import { FfsimBackend } from "./ffsim-backend.js";
