@@ -43,7 +43,9 @@ for (const d of REGISTRY_DOCS) {
   for (const c of codesFrom(readFileSync(d, "utf8"), /LLN-[A-Z0-9-]+/g)) registered.add(c);
 }
 const allowlist = new Set(
-  readFileSync(ALLOWLIST_FILE, "utf8").split(/\r?\n/).map((s) => s.trim()).filter(Boolean),
+  readFileSync(ALLOWLIST_FILE, "utf8")
+    .split(/\r?\n/).map((s) => s.trim())
+    .filter((s) => s && !s.startsWith("#")), // allow # comment lines in the fixture
 );
 
 describe("Diagnostic-namespace ownership (checked invariant)", () => {

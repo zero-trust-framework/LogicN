@@ -897,3 +897,115 @@ LLN-SUPPLY-003   Unsigned package rejected by policy
 LLN-SUPPLY-004   Dependency graph hash mismatch
 LLN-SUPPLY-005   Known vulnerability in dependency
 ```
+
+## Reconciled emitted codes (2026-06-16)
+
+Codes that were emitted by the compiler but not yet documented here at the time the
+diagnostic-namespace conformance test was added (see `logicn-diagnostic-namespace-ownership.md`).
+Descriptions taken from each code's actual emission site. This shrinks the `PENDING_REGISTRATION`
+allowlist from 65 → 1.
+
+### Lexer
+
+```text
+LLN-LEX-001   Generic type nesting exceeds maximum depth (8 levels)
+LLN-LEX-002   String literal / identifier exceeds maximum length (10,000 chars)
+LLN-LEX-003   Invalid unicode escape sequence in a string literal
+LLN-LEX-004   File exceeds maximum size (10MB)
+LLN-LEX-005   Line exceeds maximum length (10,000 chars)
+LLN-LEX-006   Lexer hit the maximum diagnostic count (100); further errors suppressed
+```
+
+### Type checker
+
+```text
+LLN-TYPE-010   Type does not satisfy the required generic constraint
+LLN-TYPE-011   Collection element type does not match the declared element type
+LLN-TYPE-012   Ok/Err branch type does not match the declared Result<T,E>
+LLN-TYPE-013   Protected secret value cannot use this operator (use constantTimeEquals())
+LLN-TYPE-014   Calling this function requires an effect the current flow does not declare
+LLN-TYPE-015   Governed sink requires a safe/validated binding; received an unsafe binding
+LLN-TYPE-016   Tensor shapes are incompatible for this operation
+LLN-TYPE-017   Cannot mix quantized (Int8) and float (Float32) without explicit dequantize()
+LLN-TYPE-018   This type cannot exist in the selected compute target
+LLN-TYPE-019   Symbol is not defined in the current scope
+LLN-TYPE-030   Tensor element types do not match (Float32 vs Int8)
+LLN-TYPE-031   Tensor dimension/rank counts do not match
+```
+
+### Binding / value-state
+
+```text
+LLN-BINDING-005       Cannot reassign an immutable 'let' binding (use 'mut')
+LLN-BINDING-006       Cannot change the type of a 'mut' binding on reassignment (type-stable)
+LLN-VALUESTATE-005    A value derived from an unsafe binding reached a governed sink (taint survives transformation, e.g. .trim())
+LLN-VALUESTATE-006    A protected value used where the plain type is required (declare 'protected X' or pass an authorised gate)
+LLN-VALUESTATE-007    A redacted value cannot be converted back to its original type (redaction is irreversible)
+```
+
+### Effect / stdlib
+
+```text
+LLN-EFFECT-005    Effect is a broad alias; use the canonical effect name to precisely declare authority
+LLN-STDLIB-001    A stdlib call requires an effect not declared in the contract
+LLN-STDLIB-002    Unrecognised method on an effectful module — deny-by-default; declare the effect or use a recognised operation
+```
+
+### Governance / value classification
+
+```text
+LLN-GOV-006   Secure flow has high max_risk_liability but no epilogue {} proof strategy
+LLN-GOV-007   Privileged flow declares no effects or capabilities (should explicitly declare authority)
+LLN-GOV-009   Privileged flow declares no effects or capabilities (should explicitly declare authority)
+LLN-GOV-011   Contract set referenced with 'use' is not declared at program scope
+LLN-GOV-012   Contract set requires audit.write but the flow does not declare it
+LLN-GOV-013   A pure flow calls a flow with effects (pure flows cannot cross into governed boundaries)
+LLN-GOV-014   Flow declares prefer [...] compute targets but no fallback target (native crash → unrecoverable failure)
+LLN-VAL-001   A safety_critical flow must declare audit.write
+LLN-VAL-002   A safety_critical flow must declare 'require deterministic_execution'
+LLN-VAL-003   Unrecognised classification in contract.value
+```
+
+### Security / anti-abuse
+
+```text
+LLN-SEC-020            Runtime behaviour modification (monkey-patching) is prohibited; use adapters/interfaces/mocks
+LLN-SEC-021            Prototype/object mutation after definition is prohibited
+LLN-SOURCE-ESCAPE-001  Source calls eval()/dynamic code loading — bypasses governance and capability checks
+LLN-STYLE-SEC-001      Binding name looks sensitive; use SecureString or protected String
+LLN-ANTI-ABUSE-001     Background execution (process/worker.spawn, event.schedule) requires an explicit effect declaration
+```
+
+### Network / package supply
+
+```text
+LLN-NET-001   Network call target is not in the flow's declared allowlist
+LLN-NET-002   Network call resolved to a private/reserved IP (SSRF prevention)
+LLN-PKG-001   Package declares capabilities not present in the lockfile (breaking security change)
+LLN-PKG-002   Package from an unregistered/unverified registry
+LLN-PKG-003   Package has no content-addressable hash (no tamper detection / reproducible build)
+LLN-PKG-004   Package declares an install script (denied by default)
+LLN-PKG-005   Package has no signature (origin cannot be cryptographically verified)
+```
+
+### Border (plugin input validation) / economics / misc
+
+```text
+LLN-BORDER-001   Plugin input is required but missing
+LLN-BORDER-002   Plugin input type mismatch (expected vs actual)
+LLN-BORDER-003   Plugin input length exceeds the declared maximum
+LLN-BORDER-004   Plugin input value below the declared minimum
+LLN-ECON-001     Flow execution may exceed the declared economic budget
+LLN-ECON-002     Protected data binding has no lineage declaration
+LLN-ECON-003     AI model call uses a model not in the contract's approved_models list
+LLN-EVENT-001    Event emitted but not declared at program scope
+LLN-EVENT-002    Event declared but never emitted
+LLN-EVENT-003    Contract declares 'emits X' but no global 'event X' declaration exists
+LLN-EVENT-004    Event emitted more than once in a flow (possibly unintentional)
+LLN-EVENT-005    Event emitted but not declared in contract.events
+LLN-COMPUTE-001  Pattern may not map efficiently to the declared compute target (NPU/GPU/TPU)
+LLN-CONTEXT-001  A required context field (contract.context) is never accessed in the flow body
+LLN-BUILD-001    Non-deterministic build: identical source produced different output on recompilation
+LLN-WAT-STUB     WAT emitter stub (a target path not yet fully emitted)
+```
+
