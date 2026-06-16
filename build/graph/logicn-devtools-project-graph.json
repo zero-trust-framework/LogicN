@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-06-15T22:01:22.396Z",
+  "generatedAt": "2026-06-16T01:59:30.139Z",
   "nodes": [
     {
       "id": "package:logicn-core",
@@ -9108,6 +9108,15 @@
       ]
     },
     {
+      "id": "doc:docs/Knowledge-Bases/logicn-privacy-embedding-egress.md",
+      "kind": "Document",
+      "label": "logicn-privacy-embedding-egress.md",
+      "sourcePath": "docs/Knowledge-Bases/logicn-privacy-embedding-egress.md",
+      "tags": [
+        "document"
+      ]
+    },
+    {
       "id": "doc:docs/Knowledge-Bases/logicn-proof-chain-spec.md",
       "kind": "Document",
       "label": "logicn-proof-chain-spec.md",
@@ -9148,6 +9157,15 @@
       "kind": "Document",
       "label": "logicn-r6-bootstrap-corpus.md",
       "sourcePath": "docs/Knowledge-Bases/logicn-r6-bootstrap-corpus.md",
+      "tags": [
+        "document"
+      ]
+    },
+    {
+      "id": "doc:docs/Knowledge-Bases/logicn-rd-adoption-2026-06-16.md",
+      "kind": "Document",
+      "label": "logicn-rd-adoption-2026-06-16.md",
+      "sourcePath": "docs/Knowledge-Bases/logicn-rd-adoption-2026-06-16.md",
       "tags": [
         "document"
       ]
