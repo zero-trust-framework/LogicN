@@ -305,3 +305,20 @@ Verified: **48/48 · 4,368 tests · 0 fail**. 7 commits on top of `Initial commi
 - ✅ **Universal enforcement VERIFIED (not a gap).** The Tower admission gate `hybrid-engine.ts:265 → verifyAttestation → validateManifestShape` (`bridge-attestation.ts:71`, fail-closed) runs ALL #201 checks; `attestationHash` hashes the `canonNum`-hardened pre-image. Proven end-to-end by `bridge-attestation.test.mjs` (non-finite tolerance / below-floor fidelity / tighter-than-measured witness all DENY at admission). *(The earlier "not wired" note was a grep `head` truncation false-negative — caught by reading the code.)*
 - 🔒 **Attestation-injectivity fail-open FIXED** (`66e1b48`): non-finite numeric fields can no longer alias two manifests to one sha256.
 - **Still open:** **#1** precision-attestation gate (compiler-side) · **#3/#4** substrate integration (`verifySubstrate` + the witness) · storage/compute-precision split (needs `int4`/`int8` in the routing enum + both Tower Records) · **#2** comparability + mandatory-witness as required pins for `determinismMode='tolerance'` (with ffsim-manifest migration).
+
+---
+
+## 7. R&D adoption — `.tmf` / tri-encryption (2026-06-16)
+
+Full review: **[logicn-rd-adoption-2026-06-16.md](logicn-rd-adoption-2026-06-16.md)**. Both R&D tracks are
+R&D-only; the `.tmf` engine + confidentiality build are **gated on owner go**. Crypto stays the engine layer.
+
+**Usable in LogicN NOW (govern-don't-absorb) — proposed:**
+| # | Task | From | Status |
+|---|---|---|---|
+| 203 | **Verify-before-decrypt key-release governance pattern/example** — adopt the K3 `keyRelease(integrity, authenticity, govVerdict)` fail-closed gate (built on the shipped `LLN-GOV-3VL-001`) as a canonical `.lln` pattern in `tests/patterns/`. LogicN governs confidentiality; crypto stays engine-side. | tri-enc U1 (runnable `.lln`) | 🔲 proposed (HIGH, no crypto) |
+| 204 | **"No cleartext semantic embedding across a trust boundary" rule** — candidate `LLN-PRIVACY-*` data-exposure diagnostic (unencrypted embedding/attribute vector crossing egress/wire = violation). | tri-enc U2 (verdict 5) | 🔲 proposed (MED) |
+| — | Strengthen `LLN-SUBSTRATE-001` substrate KB with the crypto-on-core evidence + extend wording to "encryption/hashing/signatures" (`future-substrates` contradiction already ✅ fixed). | U3 | 🔶 partial |
+| — | Ground `fp4_block` `PrecisionTechnique`/`TECHNIQUE_BITS` with the verified NVFP4 byte facts (9-byte block, lossy). | U4 | 🔲 minor |
+
+**NOT usable / gated:** `.tmf` Rust engine · KEM-DEM impl · TMX/container/NVFP4 specs · ML-DSA-65 hybrid spec (feeds #34 when it lands) · FFSM Phase 2 · MeshQL DB layer.
