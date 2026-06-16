@@ -240,6 +240,7 @@ Tasks #1–67 + #71 + #73 + #74 + #79–89 + #92–#94 (see task list for full d
 | **#122** | `logicn-ext-bridge-nvfp4` NVFP4 TensorRT-LLM backend | Hardware-gated |
 | **#123** | `governance_tier` boot.lln mapping | Parser |
 | **#124** | `audit_depth full` AuditEvent AI inference fields | Verifier |
+| **#125** | `logicn run --governed <flow>` — execute effectful/secure flows via the **governed interpreter** (`console.log` / `audit.write` / capability host) **enforcing the manifest's allowed effects**. Today `run` is WASM-`--invoke`-only (only pure, primitive-returning flows are exported), so a `secure flow main { console.log }` can be *checked* but not *executed* from the CLI — the error at `logicn.mjs:1300` correctly says so but offers no run path. Governance-sensitive: must honour deny-by-default (no ambient `console`/capabilities), reuse `interpreter.ts`'s `ContractEnforcer` + `CapabilityHost`, not bypass them. Dogfooding finding (.tmf R&D #2). | CLI |
 
 ### Governed Inference Tower (Track A/B)
 | Task | What | Priority |
