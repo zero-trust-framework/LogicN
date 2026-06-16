@@ -81,4 +81,4 @@ The engine is the **governed object**; the governance lives in LogicN proper:
 `logicn-rd-adoption-2026-06-16.md` (the govern-don't-absorb ledger) · `logicn-build-roadmap.md` (#6 slice
 table) · `logicn-substrate-failure-model.md` · `logicn-three-valued-governance.md` ·
 `logicn-quantum-resistance-posture.md` · `logicn-tmf-tri-encryption-rd` (memory). Upstream specs +
-research: `LogicN-R-AND-D/tmf/`.
+research: `LogicN-R-AND-D/tmf/` (now mirrored into `rd-absorbed/`; full ledger `logicn-rd-absorption-catalog.md`, quantum roadmap `logicn-quantum-resilience-roadmap.md`).

@@ -7,6 +7,11 @@ marginal benefit.*
 
 ---
 
+> **Forward-looking standard:** the multi-level (L0–L4) quantum-resilience ladder, the QKD/QRNG/QDS photonic
+> lanes, the Lane-E hybrid `KDF(K_pqc ‖ K_qkd)` combiner, and the Q0–Q4 roadmap that build *on top of* this
+> posture now live in `logicn-quantum-resilience-roadmap.md` (absorbed from R&D). Verbatim R&D sources are under
+> `rd-absorbed/`; the full ledger is `logicn-rd-absorption-catalog.md`.
+
 ## Threat model — what a cryptographically-relevant quantum computer (CRQC) actually breaks
 - **Shor's algorithm → asymmetric / public-key** (RSA, ECDSA, **Ed25519**): *polynomial-time* break —
   the private key is recoverable from the public key. **This is the real quantum threat.**

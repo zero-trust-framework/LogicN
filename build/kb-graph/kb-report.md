@@ -2,7 +2,7 @@
 Generated: 2026-06-16
 
 ## Stats
-- Docs: 449 | Edges: 958 | Orphans: 134 | Stale links: 18 | LLN codes: 597
+- Docs: 451 | Edges: 972 | Orphans: 134 | Stale links: 18 | LLN codes: 598
 
 ## Document Registry (auto-generated)
 
@@ -304,9 +304,11 @@ Generated: 2026-06-16
 | logicn-privacy-embedding-egress.md | — | — | ENFORCED (Stage-A compile-time, `value-state-checker.ts`). Date: 2026-06-16. | LLN-PRIVACY-001, LLN-PRIVACY-002, LLN-SECRET-002, LLN-SUBSTRATE-001, LLN-VALUESTATE-005 |
 | logicn-proof-chain-spec.md | — | — | — | — |
 | logicn-proof-tracing-design.md | — | 1.0 | Design proposal — implementation tasks #73 and #74. | LLN-ASSUME-001, LLN-ASSUME-002, LLN-ASSUME-003, LLN-ASSUME-004, LLN-INV-000 …+4 |
+| logicn-quantum-resilience-roadmap.md | — | — | — | LLN-SUBSTRATE-001 |
 | logicn-quantum-resistance-posture.md | — | — | governance posture + decision record. **Date:** 2026-06-15. | LLN-SUBSTRATE-001 |
 | logicn-quantum-target-bridge.md | — | — | — | — |
 | logicn-r6-bootstrap-corpus.md | — | — | — | LLN-TYPE-002 |
+| logicn-rd-absorption-catalog.md | — | — | — | LLN-AMD-024 |
 | logicn-rd-adoption-2026-06-16.md | — | — | — | LLN-GOV-3, LLN-SUBSTRATE-001 |
 | logicn-readable-logic-forms.md | — | — | — | LLN-READABLE-001, LLN-READABLE-002 |
 | logicn-residual-risks.md | — | — | — | — |

@@ -24,12 +24,12 @@ with the code and the golden-vector conformance survives any cleanup of the scra
 | `inclusion-proof-v0.md` | Slice 5 — inclusion (Merkle-path) proofs ⬜ |
 | `tmf-history-chain-v0.md` | Slice 5 — append-only history chain ⬜ |
 | `governed-trust-capsule-v0.md` | Slice 5 — Governed Trust Capsule (CWT/COSE) ⬜ |
+| `nvfp4-codec-v0.md` | `Vector`-modality NVFP4 codec (used by `tmf-modalities`; opaque to TMX, not a crypto slice) |
 
 ## Deliberately **not** vendored (stay R&D-only)
 
-- `nvfp4-codec-v0.md` — the opt-in `Vector`-modality NVFP4 codec. Lossy, opaque to TMX, **not crypto**;
-  it is the separate `#201` precision lane, not a `.tmf` engine slice.
 - `research/*`, `notes/*`, `storage-and-query-v0.md` (DB/MeshQL — gated), and the photonic-lane research.
+  These are absorbed into the KB instead — see `docs/Knowledge-Bases/logicn-rd-absorption-catalog.md`.
 - `spec/_vectors/*.py` — the Python reference generators. They remain the upstream **authoring oracle**;
   the binding conformance for this package is the inline golden hex in `../tests/`. (Known residual: if
   the R&D repo is removed you cannot *re-derive* the vectors from scratch, but the pinned hex + the TS

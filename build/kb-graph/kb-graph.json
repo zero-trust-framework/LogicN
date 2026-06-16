@@ -36,7 +36,7 @@
       "title": "LogicN Core Knowledge Base — Master Navigation Guide & TCB Map",
       "version": "1.1",
       "layer": "Layer 0",
-      "wordCount": 2782,
+      "wordCount": 2895,
       "lnlCodes": [
         "LLN-ACCESS-001",
         "LLN-ASSIMILATE-001",
@@ -50,7 +50,7 @@
         "LLN-RES-001",
         "LLN-SUBSTRATE-001"
       ],
-      "lastModified": "2026-06-16T22:37:57.406Z"
+      "lastModified": "2026-06-16T23:05:05.439Z"
     },
     {
       "id": "ai-as-untrusted-reasoning-worker",
@@ -3895,15 +3895,25 @@
       "lastModified": "2026-06-04T22:19:00.757Z"
     },
     {
+      "id": "logicn-quantum-resilience-roadmap",
+      "path": "C:\\wwwprojects\\LogicN\\docs\\Knowledge-Bases\\logicn-quantum-resilience-roadmap.md",
+      "title": "Quantum-Resilience Standard & Roadmap (L0–L4)",
+      "wordCount": 1408,
+      "lnlCodes": [
+        "LLN-SUBSTRATE-001"
+      ],
+      "lastModified": "2026-06-16T23:01:52.313Z"
+    },
+    {
       "id": "logicn-quantum-resistance-posture",
       "path": "C:\\wwwprojects\\LogicN\\docs\\Knowledge-Bases\\logicn-quantum-resistance-posture.md",
       "title": "LogicN Quantum-Resistance Posture (Zero-Trust)",
       "status": "governance posture + decision record. **Date:** 2026-06-15.",
-      "wordCount": 825,
+      "wordCount": 876,
       "lnlCodes": [
         "LLN-SUBSTRATE-001"
       ],
-      "lastModified": "2026-06-16T08:56:20.550Z"
+      "lastModified": "2026-06-16T23:04:55.921Z"
     },
     {
       "id": "logicn-quantum-target-bridge",
@@ -3922,6 +3932,16 @@
         "LLN-TYPE-002"
       ],
       "lastModified": "2026-06-02T22:45:56.631Z"
+    },
+    {
+      "id": "logicn-rd-absorption-catalog",
+      "path": "C:\\wwwprojects\\LogicN\\docs\\Knowledge-Bases\\logicn-rd-absorption-catalog.md",
+      "title": "R&D Absorption Catalog — the complete ledger",
+      "wordCount": 1059,
+      "lnlCodes": [
+        "LLN-AMD-024"
+      ],
+      "lastModified": "2026-06-16T23:05:48.499Z"
     },
     {
       "id": "logicn-rd-adoption-2026-06-16",
@@ -4520,12 +4540,12 @@
       "id": "logicn-tmf-engine",
       "path": "C:\\wwwprojects\\LogicN\\docs\\Knowledge-Bases\\logicn-tmf-engine.md",
       "title": "The `.tmf` Engine (`@logicn/ext-tmf`)",
-      "wordCount": 720,
+      "wordCount": 730,
       "lnlCodes": [
         "LLN-GOV-3",
         "LLN-SUBSTRATE-001"
       ],
-      "lastModified": "2026-06-16T22:39:50.436Z"
+      "lastModified": "2026-06-16T23:04:57.438Z"
     },
     {
       "id": "logicn-topological-graph-engine",
@@ -6018,6 +6038,16 @@
       "from": "KNOWLEDGE-BASE-INDEX",
       "to": "logicn-rd-adoption-2026-06-16",
       "linkText": "logicn-rd-adoption-2026-06-16.md"
+    },
+    {
+      "from": "KNOWLEDGE-BASE-INDEX",
+      "to": "logicn-rd-absorption-catalog",
+      "linkText": "logicn-rd-absorption-catalog.md"
+    },
+    {
+      "from": "KNOWLEDGE-BASE-INDEX",
+      "to": "logicn-quantum-resilience-roadmap",
+      "linkText": "logicn-quantum-resilience-roadmap.md"
     },
     {
       "from": "KNOWLEDGE-BASE-INDEX",
@@ -9545,6 +9575,41 @@
       "linkText": "logicn-domain-guard-policies.md"
     },
     {
+      "from": "logicn-quantum-resilience-roadmap",
+      "to": "logicn-quantum-resistance-posture",
+      "linkText": "logicn-quantum-resistance-posture.md"
+    },
+    {
+      "from": "logicn-quantum-resilience-roadmap",
+      "to": "logicn-tmf-engine",
+      "linkText": "logicn-tmf-engine.md"
+    },
+    {
+      "from": "logicn-quantum-resilience-roadmap",
+      "to": "logicn-rd-absorption-catalog",
+      "linkText": "logicn-rd-absorption-catalog.md"
+    },
+    {
+      "from": "logicn-quantum-resilience-roadmap",
+      "to": "logicn-substrate-failure-model",
+      "linkText": "logicn-substrate-failure-model.md"
+    },
+    {
+      "from": "logicn-quantum-resilience-roadmap",
+      "to": "logicn-post-quantum-hardware-security",
+      "linkText": "logicn-post-quantum-hardware-security.md"
+    },
+    {
+      "from": "logicn-quantum-resistance-posture",
+      "to": "logicn-quantum-resilience-roadmap",
+      "linkText": "logicn-quantum-resilience-roadmap.md"
+    },
+    {
+      "from": "logicn-quantum-resistance-posture",
+      "to": "logicn-rd-absorption-catalog",
+      "linkText": "logicn-rd-absorption-catalog.md"
+    },
+    {
       "from": "logicn-quantum-resistance-posture",
       "to": "logicn-task-ledger",
       "linkText": "logicn-task-ledger.md"
@@ -9563,6 +9628,21 @@
       "from": "logicn-r6-bootstrap-corpus",
       "to": "logicn-selfhosting-roadmap-axisB",
       "linkText": "logicn-selfhosting-roadmap-axisB.md"
+    },
+    {
+      "from": "logicn-rd-absorption-catalog",
+      "to": "logicn-quantum-resilience-roadmap",
+      "linkText": "logicn-quantum-resilience-roadmap.md"
+    },
+    {
+      "from": "logicn-rd-absorption-catalog",
+      "to": "logicn-tmf-engine",
+      "linkText": "logicn-tmf-engine.md"
+    },
+    {
+      "from": "logicn-rd-absorption-catalog",
+      "to": "logicn-rd-adoption-2026-06-16",
+      "linkText": "logicn-rd-adoption-2026-06-16.md"
     },
     {
       "from": "logicn-rd-adoption-2026-06-16",
@@ -9988,6 +10068,16 @@
       "from": "logicn-tmf-engine",
       "to": "logicn-three-valued-governance",
       "linkText": "logicn-three-valued-governance.md"
+    },
+    {
+      "from": "logicn-tmf-engine",
+      "to": "logicn-rd-absorption-catalog",
+      "linkText": "logicn-rd-absorption-catalog.md"
+    },
+    {
+      "from": "logicn-tmf-engine",
+      "to": "logicn-quantum-resilience-roadmap",
+      "linkText": "logicn-quantum-resilience-roadmap.md"
     },
     {
       "from": "logicn-topological-graph-engine",
@@ -10472,9 +10562,9 @@
     "logicn-three-valued-governance → tri-logic (\"tri-logic.md\")"
   ],
   "stats": {
-    "totalDocs": 449,
-    "totalEdges": 958,
-    "totalLlnCodes": 597,
+    "totalDocs": 451,
+    "totalEdges": 972,
+    "totalLlnCodes": 598,
     "orphanCount": 134,
     "staleLinkCount": 18
   }
