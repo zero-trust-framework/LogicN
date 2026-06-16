@@ -56,10 +56,17 @@ was a grep-truncation false negative).
    tensor headers, enforce `declared == observed` per module, record the coverage table as a signed manifest
    record. Closes the Brawn fail-open (a bridge shipping a layer at the wrong precision / a swapped tokenizer
    passes the naive `packageHash` pin today).
-3. **#3/#4 — substrate integration:** tie `toleranceWitness` into `verifySubstrate` (LLN-SUBSTRATE-002/003)
-   and add the typed noisy→deterministic **reducer** rule (only an `expectation` or `voted@N` aggregate may
-   cross into a deterministic sink — LLN-SUBSTRATE-004 structural shape). Add a `NoiseModel` descriptor so a
-   tolerance proven under model A can't be reused under model B (#8).
+3. **#3/#4 — substrate integration (⚠️ DESIGN DECISION NEEDED — verify-before-build, 2026-06-16):**
+   `substrate-inference.ts` *deliberately* holds every flow to a **fixed, conservative `LANE_PROFILE`
+   noise floor** "so it cannot be gamed downward to make a tolerance pass" (the author declares the
+   *guarantee*; the floor is not author-supplied). Idea #3's `toleranceWitness` is **author-supplied** — i.e.
+   the exact gaming vector that design prevents. So binding a witness into `verifySubstrate` is safe ONLY if
+   the witness is **ATTESTED** (the signed `toleranceWitness` already on the BridgeManifest) and the flow's
+   `substrate{}` lane is connected to that attested bridge — a real cross-surface design decision (flow-contract
+   ↔ signed-manifest), **not a clean additive build.** Idea #4's "typed reducer" likewise needs **edge-level
+   dataflow analysis** (the current B3/`LLN-SUBSTRATE-004` checks the flow's `redundancy` *declaration*, not
+   dataflow edges). Both gated on the owner's call: *do we let an attested witness refine the conservative
+   floor, and how is the witness trust-bound to the flow?* The `NoiseModel` descriptor (#8) rides on the same decision.
 4. **#2 — comparability enforcement:** promote `comparabilityHash` from "validated if present" to a required
    pin for tolerance mode **with migration** (the ffsim manifest + its tests must add it) — deferred so the
    first increment stays non-breaking.
