@@ -279,6 +279,12 @@ function isNetworkSink(node: AstNode): boolean {
   const r = (receiver.value ?? "").toLowerCase();
   if (r === "http" || r === "https" || r === "net" || r === "socket" || r === "ws" || r === "websocket") return true;
   if ((r === "email" || r === "emailservice") && methodName === "send") return true;
+  // Egress beyond raw network transport: the HTTP response body leaves the trust
+  // boundary; remote inference ships the payload to a third-party model; a vector
+  // store persists the (invertible) embedding. All are exfiltration paths.
+  if (r === "response" && methodName === "body") return true;
+  if (r === "ai" && (methodName === "remoteInference" || methodName === "remote")) return true;
+  if (/vectordb$/.test(r) && /^(write|insert|upsert|add|index)$/.test(methodName)) return true;
   return false;
 }
 
@@ -357,6 +363,25 @@ function isRedactCall(node: AstNode): boolean {
 }
 
 /**
+ * Extract every identifier referenced inside `${...}` interpolation holes of a string
+ * literal. The lexer keeps an interpolated string as a single token (e.g. `"tok=${k}"`),
+ * so without this the dataflow walkers can't see `k`. Conservative/fail-closed: returns
+ * ALL identifiers in each hole (a method name that isn't a binding simply resolves to
+ * undefined). Closes the interpolation laundering path for secrets/embeddings/taint.
+ */
+function interpolatedNames(node: AstNode): string[] {
+  if (node.kind !== "stringLiteral" || typeof node.value !== "string") return [];
+  const out: string[] = [];
+  const holes = /\$\{([^}]*)\}/g;
+  let m: RegExpExecArray | null;
+  while ((m = holes.exec(node.value)) !== null) {
+    const ids = (m[1] ?? "").match(/[A-Za-z_]\w*/g);
+    if (ids) out.push(...ids);
+  }
+  return out;
+}
+
+/**
  * Returns true when `node` reads from — OR is DERIVED from — a `secrets {}` credential.
  * This is the propagating form of isSecretSourceExpression: a secret carried through a
  * transform (slice, concat, member access, record field, a non-redacting call/helper)
@@ -388,18 +413,23 @@ function derivesFromSecret(
       return receiver !== undefined && derivesFromSecret(receiver, lookupBinding);
     }
     case "callExpr": {
-      // Record literals parse as callExpr "#record" whose children are field nodes,
-      // each holding the field VALUE as its first child (mirrors isTaintedExpression).
-      if (node.value === "#record") {
+      // Record literal "#record" AND spread/update "#record-update" (`{ ...base, tok: k }`):
+      // each child is a field (value = child[0]) or a #spread (source = child[0]).
+      if (node.value === "#record" || node.value === "#record-update") {
         return (node.children ?? []).some((field) => {
-          const value = field.children?.[0];
-          return value !== undefined && derivesFromSecret(value, lookupBinding);
+          const value = field.children?.[0] ?? field;
+          return derivesFromSecret(value, lookupBinding);
         });
       }
       // Any non-redacting call carrying a secret through receiver or args stays secret
       // (NOTE: unlike the taint chain, validate/parse/decode do NOT declassify a secret).
       return (node.children ?? []).some((child) => derivesFromSecret(child, lookupBinding));
     }
+    case "stringLiteral":
+      // Interpolated secret: `"Authorization: ${key}"` keeps the secret.
+      return interpolatedNames(node).some(
+        (n) => lookupBinding(n)?.typeName === "SecureString",
+      );
     case "binaryExpr":
     case "listLiteral":
     case "errorPropagation":
@@ -427,8 +457,11 @@ function isEmbeddingTypeName(typeName: string | undefined): boolean {
 /**
  * Returns true when `node` reads a semantic embedding from a model — the embedding
  * SOURCE. Keyed on the REAL shipped symbols (the EmbeddingModel value from
- * @logicn/ai-types, canonical call `EmbeddingModel.run(...)` / `.infer` / `.embed`),
- * plus the common embed / embedQuery / embedDocuments method names. Unwraps `?`.
+ * @logicn/ai-types, canonical call `EmbeddingModel.run(...)`), the common
+ * embed / embedQuery / embedDocuments method names, AND any receiver whose name
+ * contains "embed" (case-insensitive) — so a constructed instance var like
+ * `embeddingModel.run(req)` or `myEmbedder.infer(x)` is recognized, not just the
+ * exact-case type value. Unwraps `?`.
  */
 function isEmbeddingSourceExpression(node: AstNode): boolean {
   if (node.kind === "errorPropagation") {
@@ -439,7 +472,7 @@ function isEmbeddingSourceExpression(node: AstNode): boolean {
   const method = (node.value ?? "").toLowerCase();
   if (method === "embed" || method === "embedquery" || method === "embeddocuments") return true;
   const receiver = node.children?.[0];
-  if (receiver?.kind === "identifier" && receiver.value === "EmbeddingModel") return true;
+  if (receiver?.kind === "identifier" && /embed/i.test(receiver.value ?? "")) return true;
   return false;
 }
 
@@ -475,14 +508,20 @@ function derivesFromEmbedding(
       return receiver !== undefined && derivesFromEmbedding(receiver, lookupBinding);
     }
     case "callExpr": {
-      if (node.value === "#record") {
+      // "#record" literal AND "#record-update" spread (`{ ...base, v: e }`).
+      if (node.value === "#record" || node.value === "#record-update") {
         return (node.children ?? []).some((field) => {
-          const value = field.children?.[0];
-          return value !== undefined && derivesFromEmbedding(value, lookupBinding);
+          const value = field.children?.[0] ?? field;
+          return derivesFromEmbedding(value, lookupBinding);
         });
       }
       return (node.children ?? []).some((child) => derivesFromEmbedding(child, lookupBinding));
     }
+    case "stringLiteral":
+      // Interpolated embedding: `"vec=${e}"` keeps the embedding cleartext.
+      return interpolatedNames(node).some(
+        (n) => lookupBinding(n)?.embeddingDerived === true,
+      );
     case "binaryExpr":
     case "listLiteral":
     case "errorPropagation":
@@ -977,6 +1016,10 @@ class ValueStateChecker {
         this.handleMutDecl(node);
         break;
 
+      case "assignStmt":
+        this.handleAssignStmt(node);
+        break;
+
       case "trapDecl":
         // Phase 12: trap as validation guard — clear taint on referenced bindings.
         // `trap x == "" : ERR_X` guarantees x is non-empty past this point.
@@ -1247,6 +1290,40 @@ class ValueStateChecker {
     if (init !== undefined) this.walkNode(init);
   }
 
+  /**
+   * Bare reassignment `name = rhs` (no binding keyword). Without this, `walkNode` fell
+   * to `default` and never re-evaluated the target's value-state — so `mut s = "x";
+   * s = secret.get("k"); http.post(u, s)` laundered the secret (and likewise embeddings
+   * and ordinary taint). Recompute the target's flags from the RHS (mirrors handleMutDecl):
+   * a dirty RHS taints/marks the target; a clean RHS — including a redact()/seal()
+   * discharge — clears it. The update lands in the binding's declaring scope.
+   */
+  private handleAssignStmt(node: AstNode): void {
+    const target = node.value ?? "";
+    const rhs = node.children?.[0];
+    if (target !== "" && rhs !== undefined && this.lookupBinding(target) !== undefined) {
+      const lookup = (n: string) => this.lookupBinding(n);
+      const existing = this.lookupBinding(target)!;
+      const isSecret = derivesFromSecret(rhs, lookup);
+      const isEmbedding = derivesFromEmbedding(rhs, lookup);
+      const isTainted = isTaintedExpression(rhs, lookup, this.userGates);
+      const taintSrc = isTainted ? findTaintSourceName(rhs, lookup) : undefined;
+      const patch: Partial<BindingInfo> = {
+        tainted: isTainted,
+        embeddingDerived: isEmbedding,
+        // Recompute the secret marker: a secret RHS marks SecureString; a clean RHS
+        // (incl. redact()) clears it without clobbering a real declared type.
+        typeName: isSecret
+          ? "SecureString"
+          : existing.typeName === "SecureString" ? "" : existing.typeName,
+        ...(taintSrc !== undefined ? { taintSource: taintSrc } : {}),
+      };
+      this.updateBinding(target, patch);
+    }
+    // Walk the RHS so a sink call on its right-hand side is still checked.
+    this.walkChildren(node);
+  }
+
   // ── Gate recognition ─────────────────────────────────────────────────────
 
   private isGateExpression(node: AstNode): boolean {
@@ -1401,6 +1478,41 @@ class ValueStateChecker {
             risk: `Passing unvalidated input to '${calleeName}' can propagate taint across flow boundaries.`,
           });
           break; // One diagnostic per call site is enough
+        }
+      }
+      // Inter-flow secret / embedding propagation (intra-procedural checker can't follow
+      // into the callee body, so a sealed/redacted handoff can't be proven here). Surface
+      // it as a WARNING — fail-loud without breaking legitimate secret-helper patterns.
+      for (const arg of callArgs) {
+        const lookup = (n: string) => this.lookupBinding(n);
+        if (derivesFromSecret(arg, lookup)) {
+          this.diagnostics.push({
+            code: "LLN-SECRET-002",
+            name: "SecretCrossesFlowBoundary",
+            severity: "warning",
+            message: `A secret value is passed to flow '${calleeName}', which may transmit it off-host. The checker does not follow into the callee — seal/redact it or confirm '${calleeName}' keeps it within a trusted boundary.`,
+            ...(node.location !== undefined ? { location: node.location } : {}),
+            suggestedFix: `Pass redact(...) instead, or audit '${calleeName}' for egress.`,
+            why: `Cross-flow propagation is not inter-procedurally verified; a secret crossing a flow boundary unsealed is a potential exfiltration path.`,
+            risk: `If '${calleeName}' egresses the value, the credential leaks.`,
+          });
+          break;
+        }
+      }
+      for (const arg of callArgs) {
+        const lookup = (n: string) => this.lookupBinding(n);
+        if (derivesFromEmbedding(arg, lookup)) {
+          this.diagnostics.push({
+            code: "LLN-PRIVACY-002",
+            name: "EmbeddingCrossesFlowBoundary",
+            severity: "warning",
+            message: `A cleartext semantic embedding is passed to flow '${calleeName}', which may egress it. The checker does not follow into the callee — seal() it or confirm '${calleeName}' keeps it within a trusted boundary.`,
+            ...(node.location !== undefined ? { location: node.location } : {}),
+            suggestedFix: `Pass seal(...) instead, or audit '${calleeName}' for egress.`,
+            why: `Cross-flow propagation is not inter-procedurally verified; a cleartext (vec2text-invertible) embedding crossing a flow boundary is a potential leak.`,
+            risk: `If '${calleeName}' egresses the vector, the source content is recoverable.`,
+          });
+          break;
         }
       }
     }

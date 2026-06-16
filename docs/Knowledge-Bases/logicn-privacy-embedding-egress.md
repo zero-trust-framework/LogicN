@@ -67,24 +67,44 @@ The fail-open auditor empirically proved **LLN-SECRET-002 itself** leaked on der
 (`key.slice(0,5)` → `http.post` produced no diagnostic). Fixed first (`derivesFromSecret`, redact-discharge)
 so secrets are not weaker than embeddings; SealTaint then mirrors that proven pattern with seal-discharge.
 
-## Residual holes / deferred (honest limits — shared with the taint/secret guards)
+## Adversarial-audit hardening (2026-06-16 — commit after aeb420d/ea6163d)
 
-- **Container read-back across statements** is only partly modelled: `{ v: e }` to a sink is caught (record
-  literal + member-access on a stamped container), but storing into a collection and reading an element back
-  in a later statement is not deeply tracked. Same limitation as LLN-VALUESTATE-005 / LLN-SECRET-002.
-- **Inter-flow body descent** — passing an embedding into a user flow is a call-site signal
-  (LLN-VALUESTATE-004 is warning-only) and the pass does not descend into the callee body. Cross-flow
-  routing can still leak; escalating embedding-tainted inter-flow args to an error is a follow-up.
-- **Runtime backstop** — the DRCM monitor scans only `__tag==='secure'` values; embeddings are not
-  secure-tagged, so compile-time is the sole enforcement for this rule today.
-- **CRYPTO_EFFECT** (`substrate-inference.ts`) covers `crypto.hash|sign|verify` only — extend to
-  `crypto.encrypt`/`crypto.seal` to make the LLN-SUBSTRATE-001 "seal lands on a deterministic lane"
-  composition real (deferred; orthogonal to the egress invariant).
-- **Tensor<Float32,[N]>** is intentionally NOT treated as an embedding (too generic); recognition is
-  precise to `Embedding`/`EmbeddingResult`/`EmbeddingModel`. Widen later if needed.
+An independent adversarial audit of the *committed* code returned a zero-trust verdict of FAIL with 6
+empirically-confirmed fail-open holes (each also affected the pre-existing taint/secret rules). All were
+verified by reproduction and **CLOSED** (regression-tested in `tests/value-state-egress-hardening.test.mjs`):
+
+- **A1 — bare assignment (`s = secret`/`s = embedding`)** silently laundered everything (`walkNode` had no
+  `assignStmt` case). FIXED: `handleAssignStmt` recomputes the target's flags from the RHS (taints on dirty,
+  clears on `redact()`/`seal()`/clean), via `updateBinding` in the declaring scope. **Critical** — was a total bypass.
+- **A2 — record spread `{ ...base, tok: k }`** (`#record-update`) dropped the flag. FIXED in all three walkers.
+- **A3 — string interpolation `"...${k}..."`** (single lexer token) was opaque. FIXED with `interpolatedNames`
+  (extracts `${}` identifiers, checks each) — a checker-level closure; the lexer-level decomposition is the
+  deeper future fix.
+- **A5 — sink coverage** added `response.body`, `ai.remoteInference`, and `*VectorDB.(write|insert|upsert|add|index)`
+  to `isNetworkSink`.
+- **A6 — embedding recognizer** now matches any receiver whose name contains `embed` (case-insensitive), so a
+  constructed instance var `embeddingModel.run(...)` is caught, not only the exact-case `EmbeddingModel`.
+- **A4 — cross-flow propagation** now surfaces a **warning** (`LLN-SECRET-002`/`LLN-PRIVACY-002`,
+  `severity:"warning"`) when a secret/embedding is passed to a user flow — fail-loud without breaking
+  legitimate secret-helper patterns (the checker is intra-procedural; it cannot prove the callee seals).
+
+## Residual / deferred (honest limits)
+
+- **Inter-flow is a warning, not inter-procedural proof.** Full inter-procedural egress analysis (a call
+  graph) is a larger feature; the warning is the fail-loud stopgap.
+- **`fs.writeFile` / generic `*DB` writes of a raw secret are NOT flagged by the network rule** — deliberately:
+  `hash(secret) → db.insert(h)` (password storage) is legitimate and only `redact()` declassifies, so routing
+  secrets to persistence sinks would false-positive. A separate "secret-at-rest" rule (with a hash declassifier)
+  is the correct future home. Embedding→VectorDB *is* flagged (no legitimate cleartext-vector-at-rest pattern).
+- **Runtime backstop** — the DRCM monitor scans only `__tag==='secure'` values; compile-time is the sole
+  enforcement for this rule today.
+- **`CRYPTO_EFFECT`** (`substrate-inference.ts`) covers `crypto.hash|sign|verify` only — extend to
+  `crypto.encrypt`/`crypto.seal` for the LLN-SUBSTRATE-001 lane-placement composition (deferred; orthogonal).
+- **Tensor<Float32,[N]>** intentionally NOT treated as an embedding (too generic); recognition is precise to
+  `Embedding`/`EmbeddingResult`/`EmbeddingModel`/`*embed*` receivers.
 
 ## Tests
 
-`tests/embedding-egress-privacy.test.mjs` — 10 cases: direct/typed/inline sources fire; slice/concat/
-record/double-derived (the laundering corpus) fire; seal()-via-binding, inline seal(), and derived
-non-embedding stay clean. Compiler package green (3,389 tests, 0 fail).
+`tests/embedding-egress-privacy.test.mjs` (10) + `tests/value-state-egress-hardening.test.mjs` (15, the audit
+laundering corpus) + the derived-secret cases in `value-state-checker.test.mjs` (6). Compiler package green
+(3,404 tests, 0 fail).
