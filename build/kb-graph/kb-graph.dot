@@ -5,7 +5,7 @@ digraph KBGraph {
 
   "00-KB-INDEX" [label="LogicN Knowledge Base — Index\n7 LLN codes", fillcolor="#f5f5f5", color=gray, penwidth=2];
   "AI_INDEX" [label="LogicN — AI Canonical Index\n5 LLN codes", fillcolor="#f5f5f5"];
-  "KNOWLEDGE-BASE-INDEX" [label="LogicN Core Knowledge Base — Master Navigation Guide & TCB Map\n(Layer 0)\n11 LLN codes", fillcolor="#ffe0b2"];
+  "KNOWLEDGE-BASE-INDEX" [label="LogicN Core Knowledge Base — Master Navigation Guide & TCB Map\n(Layer 0)\n12 LLN codes", fillcolor="#ffe0b2"];
   "ai-as-untrusted-reasoning-worker" [label="AI As Untrusted Reasoning Worker", fillcolor="#f5f5f5"];
   "ai-compute-plan" [label="AI Compute Plan", fillcolor="#f5f5f5"];
   "ai-friendly-architecture-documentation" [label="AI-Friendly Architecture Documentation", fillcolor="#f5f5f5", color=gray, penwidth=2];
@@ -298,7 +298,8 @@ digraph KBGraph {
   "logicn-privacy-embedding-egress" [label="LogicN — No Cleartext Semantic Embedding Across a Trust Boundary (U2/#204, LLN-PRIVACY-002)\n5 LLN codes", fillcolor="#f5f5f5"];
   "logicn-proof-chain-spec" [label="LogicN Execution Proof Chain Specification", fillcolor="#f5f5f5"];
   "logicn-proof-tracing-design" [label="LogicN — Proof-Tracing Design (`assuming {}` block)\n9 LLN codes", fillcolor="#f5f5f5"];
-  "logicn-quantum-resilience-roadmap" [label="Quantum-Resilience Standard & Roadmap (L0–L4)\n1 LLN code", fillcolor="#f5f5f5"];
+  "logicn-qrng-entropy-capability-design" [label="QRNG Entropy Capability — governed interface design (Q1 / Lane D)\n4 LLN codes", fillcolor="#f5f5f5"];
+  "logicn-quantum-resilience-roadmap" [label="Quantum-Resilience Standard & Roadmap (L0–L4)\n2 LLN codes", fillcolor="#f5f5f5"];
   "logicn-quantum-resistance-posture" [label="LogicN Quantum-Resistance Posture (Zero-Trust)\n1 LLN code", fillcolor="#f5f5f5"];
   "logicn-quantum-target-bridge" [label="LogicN Architecture: Quantum Computing Support Through Target Bridges", fillcolor="#f5f5f5", color=gray, penwidth=2];
   "logicn-r6-bootstrap-corpus" [label="LogicN — R6 Bootstrap Conformance Corpus\n1 LLN code", fillcolor="#f5f5f5"];
@@ -556,6 +557,7 @@ digraph KBGraph {
   "KNOWLEDGE-BASE-INDEX" -> "logicn-rd-adoption-2026-06-16" [label="logicn-rd-adoption-2026-06-16."];
   "KNOWLEDGE-BASE-INDEX" -> "logicn-rd-absorption-catalog" [label="logicn-rd-absorption-catalog.m"];
   "KNOWLEDGE-BASE-INDEX" -> "logicn-quantum-resilience-roadmap" [label="logicn-quantum-resilience-road"];
+  "KNOWLEDGE-BASE-INDEX" -> "logicn-qrng-entropy-capability-design" [label="logicn-qrng-entropy-capability"];
   "KNOWLEDGE-BASE-INDEX" -> "logicn-checkpoint-2026-06-06" [label="logicn-checkpoint-2026-06-06.m"];
   "KNOWLEDGE-BASE-INDEX" -> "logicn-roadmap" [label="logicn-roadmap.md"];
   "KNOWLEDGE-BASE-INDEX" -> "logicn-task-ledger" [label="logicn-task-ledger.md"];
@@ -1261,7 +1263,12 @@ digraph KBGraph {
   "logicn-proof-tracing-design" -> "logicn-deterministic-runtime-containment" [label="logicn-deterministic-runtime-c"];
   "logicn-proof-tracing-design" -> "logicn-agile-governance-pattern" [label="logicn-agile-governance-patter"];
   "logicn-proof-tracing-design" -> "logicn-domain-guard-policies" [label="logicn-domain-guard-policies.m"];
+  "logicn-qrng-entropy-capability-design" -> "logicn-quantum-resilience-roadmap" [label="logicn-quantum-resilience-road"];
+  "logicn-qrng-entropy-capability-design" -> "logicn-tmf-engine" [label="logicn-tmf-engine.md"];
+  "logicn-qrng-entropy-capability-design" -> "logicn-three-valued-governance" [label="logicn-three-valued-governance"];
+  "logicn-qrng-entropy-capability-design" -> "logicn-quantum-resistance-posture" [label="logicn-quantum-resistance-post"];
   "logicn-quantum-resilience-roadmap" -> "logicn-quantum-resistance-posture" [label="logicn-quantum-resistance-post"];
+  "logicn-quantum-resilience-roadmap" -> "logicn-qrng-entropy-capability-design" [label="logicn-qrng-entropy-capability"];
   "logicn-quantum-resilience-roadmap" -> "logicn-tmf-engine" [label="logicn-tmf-engine.md"];
   "logicn-quantum-resilience-roadmap" -> "logicn-rd-absorption-catalog" [label="logicn-rd-absorption-catalog.m"];
   "logicn-quantum-resilience-roadmap" -> "logicn-substrate-failure-model" [label="logicn-substrate-failure-model"];

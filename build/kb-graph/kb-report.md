@@ -2,13 +2,13 @@
 Generated: 2026-06-16
 
 ## Stats
-- Docs: 451 | Edges: 972 | Orphans: 134 | Stale links: 18 | LLN codes: 598
+- Docs: 452 | Edges: 978 | Orphans: 134 | Stale links: 18 | LLN codes: 600
 
 ## Document Registry (auto-generated)
 
 | Doc | Layer | Version | Status | LLN Codes |
 |---|---|---|---|---|
-| KNOWLEDGE-BASE-INDEX.md | Layer 0 | 1.1 | — | LLN-ACCESS-001, LLN-ASSIMILATE-001, LLN-BORDER-001, LLN-CAP-001, LLN-GOV-004 …+6 |
+| KNOWLEDGE-BASE-INDEX.md | Layer 0 | 1.1 | — | LLN-ACCESS-001, LLN-ASSIMILATE-001, LLN-BORDER-001, LLN-CAP-001, LLN-ENTROPY-001 …+7 |
 | logicn-build-roadmap.md | Layer 0 | 7.0 | — | LLN-ACCESS-001, LLN-ASSIMILATE-001, LLN-CAP-001, LLN-GATE-001, LLN-IMPORT-001 …+8 |
 | logicn-engineering-goals.md | Layer 0 | 1.0 | — | LLN-CAP-003, LLN-RESOURCE-001 |
 | logicn-governed-tower-specification.md | Layer 0 | 1.0 | Authoritative architecture specification — supersedes individual component documents | LLN-INV-000, LLN-INV-001, LLN-INV-004 |
@@ -304,7 +304,8 @@ Generated: 2026-06-16
 | logicn-privacy-embedding-egress.md | — | — | ENFORCED (Stage-A compile-time, `value-state-checker.ts`). Date: 2026-06-16. | LLN-PRIVACY-001, LLN-PRIVACY-002, LLN-SECRET-002, LLN-SUBSTRATE-001, LLN-VALUESTATE-005 |
 | logicn-proof-chain-spec.md | — | — | — | — |
 | logicn-proof-tracing-design.md | — | 1.0 | Design proposal — implementation tasks #73 and #74. | LLN-ASSUME-001, LLN-ASSUME-002, LLN-ASSUME-003, LLN-ASSUME-004, LLN-INV-000 …+4 |
-| logicn-quantum-resilience-roadmap.md | — | — | — | LLN-SUBSTRATE-001 |
+| logicn-qrng-entropy-capability-design.md | — | — | — | LLN-ENTROPY-001, LLN-ENTROPY-002, LLN-GOV-3, LLN-SUBSTRATE-001 |
+| logicn-quantum-resilience-roadmap.md | — | — | — | LLN-ENTROPY-001, LLN-SUBSTRATE-001 |
 | logicn-quantum-resistance-posture.md | — | — | governance posture + decision record. **Date:** 2026-06-15. | LLN-SUBSTRATE-001 |
 | logicn-quantum-target-bridge.md | — | — | — | — |
 | logicn-r6-bootstrap-corpus.md | — | — | — | LLN-TYPE-002 |

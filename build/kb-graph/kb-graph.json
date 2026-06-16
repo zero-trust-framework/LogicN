@@ -36,12 +36,13 @@
       "title": "LogicN Core Knowledge Base — Master Navigation Guide & TCB Map",
       "version": "1.1",
       "layer": "Layer 0",
-      "wordCount": 2895,
+      "wordCount": 2961,
       "lnlCodes": [
         "LLN-ACCESS-001",
         "LLN-ASSIMILATE-001",
         "LLN-BORDER-001",
         "LLN-CAP-001",
+        "LLN-ENTROPY-001",
         "LLN-GOV-004",
         "LLN-GOV-3",
         "LLN-IMPORT-001",
@@ -50,7 +51,7 @@
         "LLN-RES-001",
         "LLN-SUBSTRATE-001"
       ],
-      "lastModified": "2026-06-16T23:05:05.439Z"
+      "lastModified": "2026-06-16T23:44:16.124Z"
     },
     {
       "id": "ai-as-untrusted-reasoning-worker",
@@ -3895,14 +3896,28 @@
       "lastModified": "2026-06-04T22:19:00.757Z"
     },
     {
+      "id": "logicn-qrng-entropy-capability-design",
+      "path": "C:\\wwwprojects\\LogicN\\docs\\Knowledge-Bases\\logicn-qrng-entropy-capability-design.md",
+      "title": "QRNG Entropy Capability — governed interface design (Q1 / Lane D)",
+      "wordCount": 918,
+      "lnlCodes": [
+        "LLN-ENTROPY-001",
+        "LLN-ENTROPY-002",
+        "LLN-GOV-3",
+        "LLN-SUBSTRATE-001"
+      ],
+      "lastModified": "2026-06-16T23:43:52.891Z"
+    },
+    {
       "id": "logicn-quantum-resilience-roadmap",
       "path": "C:\\wwwprojects\\LogicN\\docs\\Knowledge-Bases\\logicn-quantum-resilience-roadmap.md",
       "title": "Quantum-Resilience Standard & Roadmap (L0–L4)",
-      "wordCount": 1792,
+      "wordCount": 1800,
       "lnlCodes": [
+        "LLN-ENTROPY-001",
         "LLN-SUBSTRATE-001"
       ],
-      "lastModified": "2026-06-16T23:36:19.235Z"
+      "lastModified": "2026-06-16T23:44:12.634Z"
     },
     {
       "id": "logicn-quantum-resistance-posture",
@@ -6048,6 +6063,11 @@
       "from": "KNOWLEDGE-BASE-INDEX",
       "to": "logicn-quantum-resilience-roadmap",
       "linkText": "logicn-quantum-resilience-roadmap.md"
+    },
+    {
+      "from": "KNOWLEDGE-BASE-INDEX",
+      "to": "logicn-qrng-entropy-capability-design",
+      "linkText": "logicn-qrng-entropy-capability-design.md"
     },
     {
       "from": "KNOWLEDGE-BASE-INDEX",
@@ -9575,9 +9595,34 @@
       "linkText": "logicn-domain-guard-policies.md"
     },
     {
+      "from": "logicn-qrng-entropy-capability-design",
+      "to": "logicn-quantum-resilience-roadmap",
+      "linkText": "logicn-quantum-resilience-roadmap.md"
+    },
+    {
+      "from": "logicn-qrng-entropy-capability-design",
+      "to": "logicn-tmf-engine",
+      "linkText": "logicn-tmf-engine.md"
+    },
+    {
+      "from": "logicn-qrng-entropy-capability-design",
+      "to": "logicn-three-valued-governance",
+      "linkText": "logicn-three-valued-governance.md"
+    },
+    {
+      "from": "logicn-qrng-entropy-capability-design",
+      "to": "logicn-quantum-resistance-posture",
+      "linkText": "logicn-quantum-resistance-posture.md"
+    },
+    {
       "from": "logicn-quantum-resilience-roadmap",
       "to": "logicn-quantum-resistance-posture",
       "linkText": "logicn-quantum-resistance-posture.md"
+    },
+    {
+      "from": "logicn-quantum-resilience-roadmap",
+      "to": "logicn-qrng-entropy-capability-design",
+      "linkText": "logicn-qrng-entropy-capability-design.md"
     },
     {
       "from": "logicn-quantum-resilience-roadmap",
@@ -10562,9 +10607,9 @@
     "logicn-three-valued-governance → tri-logic (\"tri-logic.md\")"
   ],
   "stats": {
-    "totalDocs": 451,
-    "totalEdges": 972,
-    "totalLlnCodes": 598,
+    "totalDocs": 452,
+    "totalEdges": 978,
+    "totalLlnCodes": 600,
     "orphanCount": 134,
     "staleLinkCount": 18
   }
