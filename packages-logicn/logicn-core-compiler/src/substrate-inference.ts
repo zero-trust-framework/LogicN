@@ -43,7 +43,10 @@ const LANE_PROFILES: Record<SubstrateLane, SubstrateNoiseParams> = {
   noisy: { phaseDriftSigma: 0.60, crosstalkCoeff: 0, laneFailureProb: 0, readoutSigma: 0 }, // pBad 0.60 — degraded lane, voting cannot converge (pBad ≥ 0.5)
 };
 
-const CRYPTO_EFFECT = /^crypto\.(hash|sign|verify)$/;
+// Crypto/integrity effects that must run bit-exact on a deterministic core (LLN-SUBSTRATE-001)
+// — extended for #34 confidentiality (encrypt/decrypt/seal) so a KEM-DEM/AEAD op on a noisy
+// or analog (photonic) lane is rejected, exactly as sign/verify/hash already are.
+const CRYPTO_EFFECT = /^crypto\.(hash|sign|verify|encrypt|decrypt|seal)$/;
 
 // ---------------------------------------------------------------------------
 // AST extraction (reuses the resilience-inference idiom)

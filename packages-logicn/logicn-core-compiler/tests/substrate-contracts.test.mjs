@@ -58,6 +58,27 @@ describe("B1 — crypto-on-noisy-lane (LLN-SUBSTRATE-001)", () => {
   });
 });
 
+// ── #34 — confidentiality crypto effects are lane-gated too (crypto-on-core) ──
+const confSrc = (effect, lane) => `
+secure flow encryptVec(request: Request) -> Result<Response, ApiError>
+contract {
+  effects { ${effect} audit.write }
+  substrate { lane: ${lane}  tolerance: 5e-3  redundancy: 3 }
+}
+{ return Ok(Response.ok({})) }
+`;
+describe("#34 — KEM-DEM/AEAD effects on a noisy lane (LLN-SUBSTRATE-001)", () => {
+  for (const eff of ["crypto.encrypt", "crypto.decrypt", "crypto.seal"]) {
+    it(`${eff} on a photonic lane is denied (bit-exact required)`, () => {
+      assert.ok(has(parseAndVerify(confSrc(eff, "photonic"), "production"), "LLN-SUBSTRATE-001"),
+        `${eff} must be crypto-on-core gated`);
+    });
+    it(`${eff} on a digital lane is fine`, () => {
+      assert.ok(!has(parseAndVerify(confSrc(eff, "digital"), "production"), "LLN-SUBSTRATE-001"));
+    });
+  }
+});
+
 // ── B2 — tolerance / redundancy sufficiency (LLN-SUBSTRATE-002 / -003) ────────
 
 const b2src = (tolerance, redundancy, lane = "photonic") => `

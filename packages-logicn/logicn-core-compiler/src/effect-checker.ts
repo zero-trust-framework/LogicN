@@ -99,6 +99,11 @@ export const EFFECT_REGISTRY: Readonly<Record<string, readonly string[]>> = {
   "crypto.verify": ["crypto.verify"],
   "Crypto.sign": ["crypto.sign"],
   "crypto.sign": ["crypto.sign"],
+  // #34 confidentiality — namespaced so generic functions named seal()/encrypt() are NOT
+  // clobbered; using Crypto.encrypt/decrypt/seal requires the corresponding crypto effect.
+  "Crypto.encrypt": ["crypto.encrypt"],
+  "Crypto.decrypt": ["crypto.decrypt"],
+  "Crypto.seal": ["crypto.seal"],
 
   // Phase 34: bcrypt password verification — requires crypto.verify effect
   "BCrypt.verify": ["crypto.verify"],
@@ -274,6 +279,11 @@ const CANONICAL_EFFECTS = new Set([
   // Phase 25: crypto effects — HSM/TPM signature ops require explicit declaration
   "crypto.verify",
   "crypto.sign",
+  // #34 confidentiality — KEM-DEM / AEAD ops. Like sign/verify, these must run bit-exact
+  // on the deterministic core (LLN-SUBSTRATE-001), never on a noisy/analog lane.
+  "crypto.encrypt",
+  "crypto.decrypt",
+  "crypto.seal",
   // Phase 25: random/clock non-deterministic effects
   "random.generate",
   "clock.read",
