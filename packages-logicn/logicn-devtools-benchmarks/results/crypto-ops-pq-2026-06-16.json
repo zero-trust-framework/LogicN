@@ -1,0 +1,243 @@
+[
+  {
+    "benchmark": "crypto-ops",
+    "results": {
+      "nodejs": {
+        "runtime": "nodejs",
+        "benchmark": "crypto-ops-v1",
+        "dataBytes": 1024,
+        "results": {
+          "sha256": {
+            "name": "SHA-256",
+            "iterations": 10000,
+            "elapsedMs": 38.342,
+            "operationsPerSecond": 260814,
+            "nsPerOp": 3834.2,
+            "cpu": {
+              "totalMs": 47
+            }
+          },
+          "hmacSha256": {
+            "name": "HMAC-SHA256",
+            "iterations": 10000,
+            "elapsedMs": 51.807,
+            "operationsPerSecond": 193026,
+            "nsPerOp": 5180.7,
+            "cpu": {
+              "totalMs": 62
+            }
+          },
+          "ed25519Sign": {
+            "name": "Ed25519 sign",
+            "iterations": 2000,
+            "elapsedMs": 160.01,
+            "operationsPerSecond": 12499,
+            "nsPerOp": 80005,
+            "cpu": {
+              "totalMs": 157
+            }
+          },
+          "ed25519Verify": {
+            "name": "Ed25519 verify",
+            "iterations": 2000,
+            "elapsedMs": 206.946,
+            "operationsPerSecond": 9664,
+            "nsPerOp": 103472.9,
+            "cpu": {
+              "totalMs": 203
+            }
+          },
+          "mlDsa65Sign": {
+            "name": "ML-DSA-65 sign",
+            "iterations": 100,
+            "elapsedMs": 545.795,
+            "operationsPerSecond": 183,
+            "nsPerOp": 5457949,
+            "cpu": {
+              "totalMs": 562
+            }
+          },
+          "mlDsa65Verify": {
+            "name": "ML-DSA-65 verify",
+            "iterations": 200,
+            "elapsedMs": 326.108,
+            "operationsPerSecond": 613,
+            "nsPerOp": 1630541,
+            "cpu": {
+              "totalMs": 344
+            }
+          },
+          "hybridSign": {
+            "name": "Hybrid Ed25519+ML-DSA-65 sign",
+            "iterations": 100,
+            "elapsedMs": 670.877,
+            "operationsPerSecond": 149,
+            "nsPerOp": 6708774,
+            "cpu": {
+              "totalMs": 671
+            }
+          },
+          "hybridVerify": {
+            "name": "Hybrid Ed25519+ML-DSA-65 verify",
+            "iterations": 200,
+            "elapsedMs": 350.148,
+            "operationsPerSecond": 571,
+            "nsPerOp": 1750740,
+            "cpu": {
+              "totalMs": 359
+            }
+          }
+        },
+        "sizes": {
+          "ed25519": {
+            "sigBytes": 64,
+            "pubDerBytes": 44
+          },
+          "mlDsa65": {
+            "sigBytes": 3309,
+            "pubBytes": 1952
+          }
+        },
+        "notes": [
+          "bcrypt intentionally excluded from this runner (use bcrypt.mjs for that)",
+          "SHA-256 throughput: 267 MB/s (1024 byte chunks)"
+        ]
+      },
+      "python": {
+        "runtime": "python",
+        "benchmark": "crypto-ops-v1",
+        "dataBytes": 1024,
+        "results": {
+          "sha256": {
+            "name": "SHA-256",
+            "iterations": 5000,
+            "elapsedMs": 11.878,
+            "operationsPerSecond": 420936,
+            "nsPerOp": 2375.7
+          },
+          "hmacSha256": {
+            "name": "HMAC-SHA256",
+            "iterations": 5000,
+            "elapsedMs": 22.304,
+            "operationsPerSecond": 224170,
+            "nsPerOp": 4460.9
+          }
+        },
+        "notes": [
+          "hashlib (C-backed) SHA-256 throughput: 431 MB/s"
+        ]
+      },
+      "rust": {
+        "runtime": "rust",
+        "benchmark": "crypto-ops-v1",
+        "dataBytes": 1024,
+        "results": {
+          "pseudoHash": {
+            "name": "Pseudo-Hash (XOR chain)",
+            "iterations": 10000,
+            "elapsedMs": 8.93,
+            "operationsPerSecond": 1119758,
+            "nsPerOp": 893
+          }
+        },
+        "notes": [
+          "Rust pseudo-hash — install sha2 crate for real SHA-256 numbers"
+        ]
+      },
+      "logicnGoverned": {
+        "runtime": "logicn-governed",
+        "mode": "governed",
+        "parseMs": 3.06,
+        "execMs": 4.87,
+        "totalMs": 7.93,
+        "result": {
+          "__tag": "record",
+          "fields": {}
+        },
+        "error": false,
+        "runsPerSecond": 205,
+        "cpu": {
+          "userMs": 16,
+          "systemMs": 0,
+          "totalMs": 16
+        },
+        "memory": {
+          "heapUsedBefore": 13645704,
+          "heapUsedAfter": 13859264,
+          "heapUsedDelta": 213560,
+          "rssBefore": 64065536,
+          "rssAfter": 64679936,
+          "rssDelta": 614400,
+          "externalBefore": 3901099,
+          "externalAfter": 3901155,
+          "externalDelta": 56
+        },
+        "logicnOpsPerSecond": 205,
+        "logicnOpsPerRun": 1
+      },
+      "logicnManifest": {
+        "runtime": "logicn-manifest",
+        "mode": "manifest",
+        "parseMs": 0.36,
+        "execMs": 0.23,
+        "totalMs": 0.59,
+        "result": {
+          "__tag": "record",
+          "fields": {}
+        },
+        "error": false,
+        "runsPerSecond": 4367,
+        "cpu": {
+          "userMs": 0,
+          "systemMs": 0,
+          "totalMs": 0
+        },
+        "memory": {
+          "heapUsedBefore": 14451664,
+          "heapUsedAfter": 14521824,
+          "heapUsedDelta": 70160,
+          "rssBefore": 65564672,
+          "rssAfter": 65634304,
+          "rssDelta": 69632,
+          "externalBefore": 3901155,
+          "externalAfter": 3901155,
+          "externalDelta": 0
+        },
+        "logicnOpsPerSecond": 4348,
+        "logicnOpsPerRun": 1
+      },
+      "logicnPassive": {
+        "runtime": "logicn-passive",
+        "mode": "passive",
+        "setupMs": 0.63,
+        "warmMs": 6.017,
+        "coldMs": 0.906,
+        "warmCalls": 100,
+        "coldCalls": 20,
+        "warmCallsPerSecond": 16619.58,
+        "coldCallsPerSecond": 22067.75,
+        "iterationsPerSecond": 16619.58,
+        "result": {
+          "__tag": "record",
+          "fields": {}
+        },
+        "error": false,
+        "cpu": {
+          "warmTotalMs": 0,
+          "coldTotalMs": 15
+        },
+        "memory": {
+          "heapUsedBefore": 15430680,
+          "heapUsedAfter": 14327232,
+          "heapUsedDelta": -1103448,
+          "rssBytes": 69062656
+        },
+        "notes": [
+          "setupMs: one-time compile+governance cost (not charged to execution)",
+          "warmCallsPerSecond: execution with LRU cache (deployment steady-state)",
+          "coldCallsPerSecond: execution without cache (first-call per unique input)"
+        ]
+      }
+    }
+  }
+]

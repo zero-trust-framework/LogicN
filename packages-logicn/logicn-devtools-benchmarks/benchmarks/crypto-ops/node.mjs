@@ -1,5 +1,12 @@
-import { createHash, createHmac, generateKeyPairSync, sign, verify } from "node:crypto";
+import { createHash, createHmac, generateKeyPairSync, sign, verify, randomBytes } from "node:crypto";
 import { performance } from "node:perf_hooks";
+
+// ML-DSA-65 (FIPS 204) via @noble/post-quantum. Not a direct dep of this benchmark, so it's
+// resolved from the compiler package (which IS a dep). This lets crypto-ops measure the
+// post-quantum + hybrid signature cost the governance attestation/proof-graph/bridge surfaces
+// now use — the R4 "PQ-tax" visibility gate ("resist where reasonable, no hot-path hammering").
+const { ml_dsa65 } = await import("../../../logicn-core-compiler/node_modules/@noble/post-quantum/ml-dsa.js");
+const MLDSA_CTX = Buffer.from("logicn.bench.mldsa.v1");
 
 const DEFAULT_ITERATIONS = 10000;
 const KEY_SIZE = 1024; // bytes for hashing
@@ -38,6 +45,10 @@ function runBench(iterations = DEFAULT_ITERATIONS) {
   const pubObj  = { key: publicKey,  format: "der", type: "spki"  };
   let sig;
 
+  // ML-DSA-65 keypair (one-time, like the Ed25519 keygen above)
+  const mlKeys = ml_dsa65.keygen(randomBytes(32));
+  let mlSig;
+
   const results = {
     runtime: "nodejs",
     benchmark: "crypto-ops-v1",
@@ -47,6 +58,14 @@ function runBench(iterations = DEFAULT_ITERATIONS) {
       hmacSha256: bench("HMAC-SHA256",   () => createHmac("sha256", key).update(data).digest(), iterations),
       ed25519Sign:   bench("Ed25519 sign",   () => { sig = sign(null, data, privObj); }, Math.min(iterations, 2000)),
       ed25519Verify: bench("Ed25519 verify", () => verify(null, data, pubObj, sig),    Math.min(iterations, 2000)),
+      mlDsa65Sign:   bench("ML-DSA-65 sign",   () => { mlSig = ml_dsa65.sign(data, mlKeys.secretKey, { context: MLDSA_CTX }); }, Math.min(iterations, 100)),
+      mlDsa65Verify: bench("ML-DSA-65 verify", () => ml_dsa65.verify(mlSig, data, mlKeys.publicKey, { context: MLDSA_CTX }),    Math.min(iterations, 200)),
+      hybridSign:    bench("Hybrid Ed25519+ML-DSA-65 sign",   () => { sig = sign(null, data, privObj); mlSig = ml_dsa65.sign(data, mlKeys.secretKey, { context: MLDSA_CTX }); }, Math.min(iterations, 100)),
+      hybridVerify:  bench("Hybrid Ed25519+ML-DSA-65 verify", () => { verify(null, data, pubObj, sig); ml_dsa65.verify(mlSig, data, mlKeys.publicKey, { context: MLDSA_CTX }); }, Math.min(iterations, 200)),
+    },
+    sizes: {
+      ed25519: { sigBytes: sig.length, pubDerBytes: publicKey.length },
+      mlDsa65: { sigBytes: mlSig.length, pubBytes: mlKeys.publicKey.length },
     },
     notes: [
       "bcrypt intentionally excluded from this runner (use bcrypt.mjs for that)",
