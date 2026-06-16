@@ -4,6 +4,14 @@ A **govern-don't-absorb** review of the two R&D tracks. Separates *achievements*
 **production repo can USE NOW** vs what stays **R&D-only / gated**. Sources: memory `[[logicn-tmf-tri-encryption-rd]]`,
 `LogicN-R-AND-D/{tmf,tri-encription}/`. **No crypto and no `.tmf` engine enter LogicN core.**
 
+> **UPDATE 2026-06-16 (post-review).** The owner then authorized building the `.tmf` engine **in-repo as an
+> _ext_ package** — `packages-logicn/logicn-ext-tmf` (slices 1–2 shipped). This does **not** breach the
+> core boundary (ext ≠ core; LogicN core still takes no crypto). The engine's authoritative KB doc is now
+> [`logicn-tmf-engine.md`](logicn-tmf-engine.md), and its implemented-slice specs are vendored into
+> `packages-logicn/logicn-ext-tmf/spec/` (pinned to R&D `fb68d06`). The "`.tmf` engine — R&D-only" line in
+> §3 below is **superseded for the engine package**; the other R&D-only items (NVFP4 codec, MeshQL/DB,
+> FFSM Phase 2, the tri-encryption confidentiality *build*) still stand.
+
 ## 1. Achievements (what the R&D established + adversarially verified)
 
 - **`.tmf` trust layer SPEC-COMPLETE + executable-verified:** TMX-256 integrity core, `.tmf` container
@@ -30,7 +38,7 @@ A **govern-don't-absorb** review of the two R&D tracks. Separates *achievements*
 
 ## 3. R&D-ONLY / GATED (NOT usable now — do NOT pull into LogicN)
 
-- **`.tmf` engine** (Rust `libtmf_core`, `lane: digital`, governed by `.lln`) — **gated on owner go** (R&D-only; D3 = R&D-only).
+- ~~**`.tmf` engine** (Rust `libtmf_core`, `lane: digital`) — gated on owner go (R&D-only).~~ **SUPERSEDED 2026-06-16:** now built **in-repo** as the ext package `logicn-ext-tmf` (TypeScript on a deterministic core — **not** Rust). See [`logicn-tmf-engine.md`](logicn-tmf-engine.md).
 - **KEM-DEM crypto impl** + TMX-256 / container / NVFP4 codec specs — TritMesh/R&D; crypto/integrity stay the deterministic engine layer.
 - **ML-DSA-65 hybrid signature + key-custody spec** (TASK 2, in progress) — feeds LogicN **#34** (ML-DSA-65 over the SHA-256 digest, hybrid Ed25519) **when it lands**; not yet.
 - **FFSM Phase 2** (real ffsim worker), **confidentiality build**, **DB/query layer** (MeshQL) — gated / deferred on a real requirement.

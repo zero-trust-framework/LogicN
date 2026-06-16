@@ -295,7 +295,7 @@ digraph KBGraph {
   "logicn-platform-infographic-concept" [label="LogicN — Platform Infographic Concept\n4 LLN codes", fillcolor="#f5f5f5"];
   "logicn-post-quantum-hardware-security" [label="LogicN Post-Quantum and Hardware Security Spec\n10 LLN codes", fillcolor="#f5f5f5"];
   "logicn-precision-attestation" [label="#201 — Calibration-as-Attestation: the measured half of the tolerance/determinism model\n1 LLN code", fillcolor="#f5f5f5"];
-  "logicn-privacy-embedding-egress" [label="LogicN — No Cleartext Semantic Embedding Across a Trust Boundary (U2/#204, LLN-PRIVACY-002)\n5 LLN codes", fillcolor="#f5f5f5", color=gray, penwidth=2];
+  "logicn-privacy-embedding-egress" [label="LogicN — No Cleartext Semantic Embedding Across a Trust Boundary (U2/#204, LLN-PRIVACY-002)\n5 LLN codes", fillcolor="#f5f5f5"];
   "logicn-proof-chain-spec" [label="LogicN Execution Proof Chain Specification", fillcolor="#f5f5f5"];
   "logicn-proof-tracing-design" [label="LogicN — Proof-Tracing Design (`assuming {}` block)\n9 LLN codes", fillcolor="#f5f5f5"];
   "logicn-quantum-resistance-posture" [label="LogicN Quantum-Resistance Posture (Zero-Trust)\n1 LLN code", fillcolor="#f5f5f5"];
@@ -350,6 +350,7 @@ digraph KBGraph {
   "logicn-tensor-numeric-performance" [label="logicn-tensor-numeric-performance", fillcolor="#f5f5f5"];
   "logicn-testing-model" [label="LogicN — Testing Model\n1 LLN code", fillcolor="#f5f5f5", color=gray, penwidth=2];
   "logicn-three-valued-governance" [label="LogicN Three-Valued Governance — Direction A sub-spec (proved fail-closed)\n3 LLN codes", fillcolor="#f5f5f5"];
+  "logicn-tmf-engine" [label="The `.tmf` Engine (`@logicn/ext-tmf`)\n2 LLN codes", fillcolor="#f5f5f5"];
   "logicn-topological-graph-engine" [label="LogicN — Topological Graph Engine\n3 LLN codes", fillcolor="#f5f5f5"];
   "logicn-tower-native-syntax" [label="LogicN — Tower-Native Syntax\n21 LLN codes", fillcolor="#f5f5f5"];
   "logicn-tpl-bitnet-fidelity-audit" [label="LogicN TPL ↔ BitNet I2_S fidelity audit (verified in code, not asserted)", fillcolor="#f5f5f5"];
@@ -549,6 +550,8 @@ digraph KBGraph {
   "KNOWLEDGE-BASE-INDEX" -> "logicn-substrate-failure-model" [label="logicn-substrate-failure-model"];
   "KNOWLEDGE-BASE-INDEX" -> "logicn-substrate-contracts" [label="logicn-substrate-contracts.md"];
   "KNOWLEDGE-BASE-INDEX" -> "logicn-ext-bridge-quantum-design" [label="logicn-ext-bridge-quantum-desi"];
+  "KNOWLEDGE-BASE-INDEX" -> "logicn-tmf-engine" [label="logicn-tmf-engine.md"];
+  "KNOWLEDGE-BASE-INDEX" -> "logicn-rd-adoption-2026-06-16" [label="logicn-rd-adoption-2026-06-16."];
   "KNOWLEDGE-BASE-INDEX" -> "logicn-checkpoint-2026-06-06" [label="logicn-checkpoint-2026-06-06.m"];
   "KNOWLEDGE-BASE-INDEX" -> "logicn-roadmap" [label="logicn-roadmap.md"];
   "KNOWLEDGE-BASE-INDEX" -> "logicn-task-ledger" [label="logicn-task-ledger.md"];
@@ -1258,6 +1261,7 @@ digraph KBGraph {
   "logicn-quantum-resistance-posture" -> "logicn-substrate-contracts" [label="logicn-substrate-contracts.md"];
   "logicn-quantum-target-bridge" -> "logicn-adaptive-runtime-profiles" [label="logicn-adaptive-runtime-profil"];
   "logicn-r6-bootstrap-corpus" -> "logicn-selfhosting-roadmap-axisB" [label="logicn-selfhosting-roadmap-axi"];
+  "logicn-rd-adoption-2026-06-16" -> "logicn-tmf-engine" [label="`logicn-tmf-engine.md`"];
   "logicn-resilience-observability-design" -> "logicn-contract-economics" [label="logicn-contract-economics.md"];
   "logicn-resilience-observability-design" -> "logicn-contract-authoring-guide" [label="logicn-contract-authoring-guid"];
   "logicn-resilience-observability-design" -> "logicn-governance-rules" [label="logicn-governance-rules.md"];
@@ -1336,6 +1340,12 @@ digraph KBGraph {
   "logicn-tensor-numeric-performance" -> "logicn-logical-planning-target-emission" [label="logicn-logical-planning-target"];
   "logicn-three-valued-governance" -> "logicn-photonic-tri-substrate-rd-agenda" [label="logicn-photonic-tri-substrate-"];
   "logicn-three-valued-governance" -> "compiler-diagnostics" [label="compiler-diagnostics.md"];
+  "logicn-tmf-engine" -> "logicn-rd-adoption-2026-06-16" [label="logicn-rd-adoption-2026-06-16."];
+  "logicn-tmf-engine" -> "logicn-substrate-failure-model" [label="logicn-substrate-failure-model"];
+  "logicn-tmf-engine" -> "logicn-quantum-resistance-posture" [label="logicn-quantum-resistance-post"];
+  "logicn-tmf-engine" -> "logicn-privacy-embedding-egress" [label="logicn-privacy-embedding-egres"];
+  "logicn-tmf-engine" -> "logicn-build-roadmap" [label="logicn-build-roadmap.md"];
+  "logicn-tmf-engine" -> "logicn-three-valued-governance" [label="logicn-three-valued-governance"];
   "logicn-topological-graph-engine" -> "logicn-governed-tower-specification" [label="logicn-governed-tower-specific"];
   "logicn-topological-graph-engine" -> "logicn-cbor-manifest-spec" [label="logicn-cbor-manifest-spec.md"];
   "logicn-topological-graph-engine" -> "logicn-domain-guard-policies" [label="logicn-domain-guard-policies.m"];

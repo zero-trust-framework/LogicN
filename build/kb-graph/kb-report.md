@@ -2,7 +2,7 @@
 Generated: 2026-06-16
 
 ## Stats
-- Docs: 448 | Edges: 949 | Orphans: 135 | Stale links: 18 | LLN codes: 597
+- Docs: 449 | Edges: 958 | Orphans: 134 | Stale links: 18 | LLN codes: 597
 
 ## Document Registry (auto-generated)
 
@@ -355,6 +355,7 @@ Generated: 2026-06-16
 | logicn-tensor-numeric-performance.md | — | — | — | — |
 | logicn-testing-model.md | — | — | — | LLN-TYPE-001 |
 | logicn-three-valued-governance.md | — | — | spike sub-spec + implementation (Direction **A** of the photonic/ternary R&D agenda). | LLN-GOV-004, LLN-GOV-3, LLN-SAFETY-003 |
+| logicn-tmf-engine.md | — | — | — | LLN-GOV-3, LLN-SUBSTRATE-001 |
 | logicn-topological-graph-engine.md | — | 1.1 | Can be implemented now (Task #79). Builds on existing domain guard infrastructure. | LLN-GATE-001, LLN-GATE-002, LLN-INV-000 |
 | logicn-tower-native-syntax.md | — | 1.2 | Implemented — Stage A compiler + governance verifier (§1–§10) | LLN-ACCESS-001, LLN-ACCESS-002, LLN-ASSIMILATE-001, LLN-ASSIMILATE-002, LLN-ASSIMILATE-003 …+16 |
 | logicn-tpl-bitnet-fidelity-audit.md | — | — | verification record. Every claim below is a **direct quote from current source** (LogicN | — |
@@ -542,7 +543,6 @@ Docs with no inbound links from other KB docs:
 - `logicn-phase58-cuda-gpu-backend.md` — LogicN Phase 58 — CUDA GPU Backend
 - `logicn-phase59-60-rc-summary.md` — LogicN — Phase 59-60 RC Summary
 - `logicn-photonic-crossover-analysis.md` — LogicN Photonic Compute Crossover Analysis
-- `logicn-privacy-embedding-egress.md` — LogicN — No Cleartext Semantic Embedding Across a Trust Boundary (U2/#204, LLN-PRIVACY-002)
 - `logicn-quantum-target-bridge.md` — LogicN Architecture: Quantum Computing Support Through Target Bridges
 - `logicn-readable-logic-forms.md` — LogicN Language Proposal — Readable Logic Forms
 - `logicn-residual-risks.md` — LogicN — Non-P9 Residual Risks (verified catalogue)

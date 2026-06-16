@@ -36,7 +36,7 @@
       "title": "LogicN Core Knowledge Base — Master Navigation Guide & TCB Map",
       "version": "1.1",
       "layer": "Layer 0",
-      "wordCount": 2662,
+      "wordCount": 2782,
       "lnlCodes": [
         "LLN-ACCESS-001",
         "LLN-ASSIMILATE-001",
@@ -50,7 +50,7 @@
         "LLN-RES-001",
         "LLN-SUBSTRATE-001"
       ],
-      "lastModified": "2026-06-16T09:59:03.636Z"
+      "lastModified": "2026-06-16T22:37:57.406Z"
     },
     {
       "id": "ai-as-untrusted-reasoning-worker",
@@ -3927,12 +3927,12 @@
       "id": "logicn-rd-adoption-2026-06-16",
       "path": "C:\\wwwprojects\\LogicN\\docs\\Knowledge-Bases\\logicn-rd-adoption-2026-06-16.md",
       "title": "What LogicN Adopts from the `.tmf` / tri-encryption R&D (2026-06-16)",
-      "wordCount": 616,
+      "wordCount": 725,
       "lnlCodes": [
         "LLN-GOV-3",
         "LLN-SUBSTRATE-001"
       ],
-      "lastModified": "2026-06-16T00:55:14.458Z"
+      "lastModified": "2026-06-16T22:37:29.144Z"
     },
     {
       "id": "logicn-readable-logic-forms",
@@ -4515,6 +4515,17 @@
         "LLN-SAFETY-003"
       ],
       "lastModified": "2026-06-15T06:29:33.102Z"
+    },
+    {
+      "id": "logicn-tmf-engine",
+      "path": "C:\\wwwprojects\\LogicN\\docs\\Knowledge-Bases\\logicn-tmf-engine.md",
+      "title": "The `.tmf` Engine (`@logicn/ext-tmf`)",
+      "wordCount": 720,
+      "lnlCodes": [
+        "LLN-GOV-3",
+        "LLN-SUBSTRATE-001"
+      ],
+      "lastModified": "2026-06-16T22:39:50.436Z"
     },
     {
       "id": "logicn-topological-graph-engine",
@@ -5997,6 +6008,16 @@
       "from": "KNOWLEDGE-BASE-INDEX",
       "to": "logicn-ext-bridge-quantum-design",
       "linkText": "logicn-ext-bridge-quantum-design.md"
+    },
+    {
+      "from": "KNOWLEDGE-BASE-INDEX",
+      "to": "logicn-tmf-engine",
+      "linkText": "logicn-tmf-engine.md"
+    },
+    {
+      "from": "KNOWLEDGE-BASE-INDEX",
+      "to": "logicn-rd-adoption-2026-06-16",
+      "linkText": "logicn-rd-adoption-2026-06-16.md"
     },
     {
       "from": "KNOWLEDGE-BASE-INDEX",
@@ -9544,6 +9565,11 @@
       "linkText": "logicn-selfhosting-roadmap-axisB.md"
     },
     {
+      "from": "logicn-rd-adoption-2026-06-16",
+      "to": "logicn-tmf-engine",
+      "linkText": "`logicn-tmf-engine.md`"
+    },
+    {
       "from": "logicn-resilience-observability-design",
       "to": "logicn-contract-economics",
       "linkText": "logicn-contract-economics.md"
@@ -9932,6 +9958,36 @@
       "from": "logicn-three-valued-governance",
       "to": "compiler-diagnostics",
       "linkText": "compiler-diagnostics.md"
+    },
+    {
+      "from": "logicn-tmf-engine",
+      "to": "logicn-rd-adoption-2026-06-16",
+      "linkText": "logicn-rd-adoption-2026-06-16.md"
+    },
+    {
+      "from": "logicn-tmf-engine",
+      "to": "logicn-substrate-failure-model",
+      "linkText": "logicn-substrate-failure-model.md"
+    },
+    {
+      "from": "logicn-tmf-engine",
+      "to": "logicn-quantum-resistance-posture",
+      "linkText": "logicn-quantum-resistance-posture.md"
+    },
+    {
+      "from": "logicn-tmf-engine",
+      "to": "logicn-privacy-embedding-egress",
+      "linkText": "logicn-privacy-embedding-egress.md"
+    },
+    {
+      "from": "logicn-tmf-engine",
+      "to": "logicn-build-roadmap",
+      "linkText": "logicn-build-roadmap.md"
+    },
+    {
+      "from": "logicn-tmf-engine",
+      "to": "logicn-three-valued-governance",
+      "linkText": "logicn-three-valued-governance.md"
     },
     {
       "from": "logicn-topological-graph-engine",
@@ -10342,7 +10398,6 @@
     "logicn-phase58-cuda-gpu-backend",
     "logicn-phase59-60-rc-summary",
     "logicn-photonic-crossover-analysis",
-    "logicn-privacy-embedding-egress",
     "logicn-quantum-target-bridge",
     "logicn-readable-logic-forms",
     "logicn-residual-risks",
@@ -10417,10 +10472,10 @@
     "logicn-three-valued-governance → tri-logic (\"tri-logic.md\")"
   ],
   "stats": {
-    "totalDocs": 448,
-    "totalEdges": 949,
+    "totalDocs": 449,
+    "totalEdges": 958,
     "totalLlnCodes": 597,
-    "orphanCount": 135,
+    "orphanCount": 134,
     "staleLinkCount": 18
   }
 }
