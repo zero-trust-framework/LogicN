@@ -5,6 +5,25 @@
 
 ---
 
+## 🔐 2026-06-16 cycle — security audit · PQ benchmark · R&D adjudication
+
+**Verified:** 48/48 packages · 4,459 tests · 0 fail · graph 3569 nodes / 4005 edges / 1875 files · zero `.td` (migration complete).
+
+**Security — adversarial Gate-6 audit (23 confirmed):**
+- ✅ **CRYPTO-001 (high) FIXED** (`16145bd`) — certified mode silently permitted a post-quantum downgrade: the construction guard required only the Ed25519 `publicKeyPem`, so `checkBridgeAttestation` admitted bridges on the classical half whenever `mlDsaPublicKey` was unprovisioned. Now throws **`ERR_CERTIFIED_NO_PQ_KEY`**; certified-profile tests migrated to hybrid attestation + a no-downgrade guard test (183/183 tower-citizen).
+- 🔲 **CRYPTO-002 (medium)** — `verifyFfsimAdmission` (and `checkBridgeAttestation`) pick hybrid-vs-classical purely on `mlDsaPublicKey !== undefined` (opt-in). The quantum bridge is Tier-3 "Toxic Border" → should DEFAULT to requiring hybrid. **Plan:** add `requireHybrid` to `AttestationPolicy`, honor it in both verifiers, default-on for Tier-3.
+- 🔲 **14 audit findings unverified** (`SUB-*`, `VSC-*`, `GOV-*`, `GAP-CRYPTO-EFFECT`) — verification dropped when credits hit the session limit. **Plan:** re-run the verify phase (raw findings in `tasks/wiua91x60.output`) and triage.
+
+**Benchmark — Gate 9 (`8273ad3`):** `crypto-ops` now measures **ML-DSA-65 + hybrid Ed25519+ML-DSA-65**. PQ-tax: hybrid verify ≈ 1.75 ms (~17× Ed25519), sign ≈ 6.7 ms (~84×); sigs/keys ~50× larger. governance-cost unchanged within noise. These rows are an **R4 regression gate** — PQ stays at amortized admission/build boundaries, never the per-decision hot path.
+
+**R&D adjudication:** `notes/35-hashing` (photonic "THA-162" ternary hash) **rejected** — contradicts crypto-on-core (analog optics can't compute a bit-exact hash; security-by-radix is an encoding illusion; IOTA's Curl ternary hash was broken → reverted to binary Keccak). Keep SHA-256; PQ the *signature* (ML-DSA-65, shipping).
+
+**Open CLI/DX (filed):** #125 `logicn run --governed` · #126 parser-level bitwise hint (`& | << >>`).
+
+**Tech debt this cycle:** CRYPTO-002 + 14 unverified findings; `crypto-ops` ML-DSA numbers are pure-JS upper bounds (native binding would re-baseline); governance-cost LogicN-runtime variants need a clean re-measure (old baseline had incomplete fields).
+
+---
+
 ## 📍 Current snapshot (2026-06-06)
 
 **Governed Inference Tower hardening (logicn-tower-citizen, 106 tests):**
