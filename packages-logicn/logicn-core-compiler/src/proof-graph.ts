@@ -625,7 +625,12 @@ function canonicalSigningPayload(pg: ProofGraph): Uint8Array {
     flowName:      pg.flowName,
     signatureHash: pg.signatureHash,
     verified:      pg.verified,
-    obligations:   pg.obligations.map(o => ({ kind: o.kind })),
+    // Bind the FULL obligation (not just kind) so the human-readable claim/satisfiedBy
+    // strings shown in audit/forensic output are also tamper-evident under the signature
+    // (#34 review LOW: previously only `kind` — the load-bearing field — was bound).
+    obligations:   pg.obligations.map(o => ({
+      kind: o.kind, claim: o.claim, satisfiedBy: o.satisfiedBy, diagnosticCode: o.diagnosticCode,
+    })),
   });
   return new TextEncoder().encode(payloadHex);
 }

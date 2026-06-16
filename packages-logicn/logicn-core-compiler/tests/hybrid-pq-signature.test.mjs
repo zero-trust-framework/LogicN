@@ -144,4 +144,16 @@ describe("Phase 55: hybrid Ed25519 + ML-DSA-65 governance signature", () => {
     const signed = await signProofGraphHybrid(mkPg("flow"), kp);
     assert.equal(verifyGovernanceSignature(signed, kp.publicKey), false);
   });
+
+  it("binds obligation claim/satisfiedBy — tampering the forensic strings fails verification", async () => {
+    // #34 review LOW follow-up: the signed pre-image now covers the full obligation, not just kind.
+    const kp = await generateHybridGovernanceKeyPair("hk10");
+    const sig = computeExecutionSignature(1, 2, 3, 4, 5, 1, 0, false);
+    const ob = { kind: "effect", claim: "database.write is declared", satisfiedBy: "contract.effects" };
+    const signed = await signProofGraphHybrid(
+      buildProofGraph("flow", sig, [ob], [], "2026-01-01T00:00:00Z"), kp);
+    assert.equal(await verifyGovernanceSignatureHybrid(signed, kp.publicKey, kp.mlDsaPublicKey), true);
+    const tampered = { ...signed, obligations: [{ ...ob, claim: "EVIL injected claim" }] };
+    assert.equal(await verifyGovernanceSignatureHybrid(tampered, kp.publicKey, kp.mlDsaPublicKey), false);
+  });
 });
