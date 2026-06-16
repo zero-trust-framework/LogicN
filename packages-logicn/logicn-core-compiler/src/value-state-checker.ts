@@ -410,6 +410,89 @@ function derivesFromSecret(
 }
 
 // ---------------------------------------------------------------------------
+// U2/#204 — semantic-embedding confidentiality (LLN-PRIVACY-002)
+//
+// A semantic embedding vector can be inverted back to its source text
+// (embedding-inversion / vec2text recovers ~90%+), so a CLEARTEXT embedding
+// crossing a trust boundary is a confidentiality leak equivalent to leaking the
+// text. We model the same source→derive→sink dataflow as secrets, with seal()/
+// encrypt() (engine-side AEAD, govern-don't-absorb) as the sole declassifier.
+// ---------------------------------------------------------------------------
+
+/** A type annotation that denotes a semantic embedding vector. */
+function isEmbeddingTypeName(typeName: string | undefined): boolean {
+  return typeName === "Embedding" || typeName === "EmbeddingResult";
+}
+
+/**
+ * Returns true when `node` reads a semantic embedding from a model — the embedding
+ * SOURCE. Keyed on the REAL shipped symbols (the EmbeddingModel value from
+ * @logicn/ai-types, canonical call `EmbeddingModel.run(...)` / `.infer` / `.embed`),
+ * plus the common embed / embedQuery / embedDocuments method names. Unwraps `?`.
+ */
+function isEmbeddingSourceExpression(node: AstNode): boolean {
+  if (node.kind === "errorPropagation") {
+    const inner = node.children?.[0];
+    return inner !== undefined && isEmbeddingSourceExpression(inner);
+  }
+  if (node.kind !== "callExpr") return false;
+  const method = (node.value ?? "").toLowerCase();
+  if (method === "embed" || method === "embedquery" || method === "embeddocuments") return true;
+  const receiver = node.children?.[0];
+  if (receiver?.kind === "identifier" && receiver.value === "EmbeddingModel") return true;
+  return false;
+}
+
+/** seal(...) / encrypt(...) — the sole declassifier for an embedding (incl. `?`). */
+function isSealCall(node: AstNode): boolean {
+  if (node.kind === "errorPropagation") {
+    const inner = node.children?.[0];
+    return inner !== undefined && isSealCall(inner);
+  }
+  return node.kind === "callExpr" && (node.value === "seal" || node.value === "encrypt");
+}
+
+/**
+ * Propagating form of isEmbeddingSourceExpression: a cleartext embedding carried
+ * through slice/concat/normalize/reshape/member/record/non-sealing call STAYS a
+ * cleartext embedding (this is what holds the line against vec2text laundering).
+ * The ONLY declassifier is seal()/encrypt() — mirrors derivesFromSecret's redact().
+ */
+function derivesFromEmbedding(
+  node: AstNode,
+  lookupBinding: (name: string) => BindingInfo | undefined,
+): boolean {
+  if (isSealCall(node)) return false;
+  if (isEmbeddingSourceExpression(node)) return true;
+
+  switch (node.kind) {
+    case "identifier": {
+      const binding = lookupBinding(node.value ?? "");
+      return binding?.embeddingDerived === true;
+    }
+    case "memberExpr": {
+      const receiver = node.children?.[0];
+      return receiver !== undefined && derivesFromEmbedding(receiver, lookupBinding);
+    }
+    case "callExpr": {
+      if (node.value === "#record") {
+        return (node.children ?? []).some((field) => {
+          const value = field.children?.[0];
+          return value !== undefined && derivesFromEmbedding(value, lookupBinding);
+        });
+      }
+      return (node.children ?? []).some((child) => derivesFromEmbedding(child, lookupBinding));
+    }
+    case "binaryExpr":
+    case "listLiteral":
+    case "errorPropagation":
+      return (node.children ?? []).some((child) => derivesFromEmbedding(child, lookupBinding));
+    default:
+      return false;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Gate function recognition
 //
 // The right-hand side of `safe mut name = gate(name)?` must match one of these.
@@ -560,6 +643,15 @@ interface BindingInfo {
   readonly tainted?: boolean;
   /** The original unsafe binding name this taint was derived from (for diagnostics). */
   readonly taintSource?: string;
+  /**
+   * U2/#204 — SemanticVector confidentiality (LLN-PRIVACY-002).
+   * True when this binding holds, or is DERIVED from, a semantic embedding vector
+   * (EmbeddingModel.run/.embed, or an Embedding/EmbeddingResult-typed binding) and has
+   * NOT been sealed/encrypted. A cleartext embedding is inversion-bearing (vec2text), so
+   * it must not cross a trust boundary in cleartext; reaching a network sink emits
+   * LLN-PRIVACY-002. seal()/encrypt() is the sole declassifier. Propagates like `tainted`.
+   */
+  readonly embeddingDerived?: boolean;
 }
 
 function parseBindingValue(value: string): BindingInfo {
@@ -1093,7 +1185,14 @@ class ValueStateChecker {
       derivesFromSecret(init, (name) => this.lookupBinding(name))
         ? { typeName: "SecureString" }
         : {};
-    this.registerBinding({ ...info, ...locField, ...taintField, ...secretField });
+    // U2/#204: a binding that holds or derives a cleartext embedding (and isn't sealed)
+    // carries SemanticVector confidentiality — propagates like taint/secret.
+    const embeddingField =
+      isEmbeddingTypeName(info.typeName) ||
+      (init !== undefined && derivesFromEmbedding(init, (name) => this.lookupBinding(name)))
+        ? { embeddingDerived: true }
+        : {};
+    this.registerBinding({ ...info, ...locField, ...taintField, ...secretField, ...embeddingField });
     // Walk the init expression
     if (init !== undefined) this.walkNode(init);
   }
@@ -1138,7 +1237,12 @@ class ValueStateChecker {
       derivesFromSecret(init, (name) => this.lookupBinding(name))
         ? { typeName: "SecureString" }
         : {};
-    this.registerBinding({ ...info, ...mutLocField, ...mutTaintField, ...mutSecretField });
+    const mutEmbeddingField =
+      isEmbeddingTypeName(info.typeName) ||
+      (init !== undefined && derivesFromEmbedding(init, (name) => this.lookupBinding(name)))
+        ? { embeddingDerived: true }
+        : {};
+    this.registerBinding({ ...info, ...mutLocField, ...mutTaintField, ...mutSecretField, ...mutEmbeddingField });
 
     if (init !== undefined) this.walkNode(init);
   }
@@ -1257,6 +1361,7 @@ class ValueStateChecker {
       const callName = buildFullCallName(node);
       for (const child of node.children ?? []) {
         this.checkArgForSecretNetwork(child, callName, node.location);
+        this.checkArgForEmbeddingNetwork(child, callName, node.location);
       }
     }
 
@@ -1332,6 +1437,59 @@ class ValueStateChecker {
     }
     for (const child of node.children ?? []) {
       this.checkArgForSecretNetwork(child, callName, location);
+    }
+  }
+
+  /**
+   * LLN-PRIVACY-002 (U2/#204): a cleartext semantic embedding (an Embedding/EmbeddingResult
+   * value, or anything derived from EmbeddingModel.run/.embed) must not be transmitted to a
+   * network/egress sink — an embedding is invertible (vec2text), so sending it cleartext leaks
+   * the source text across the trust boundary. seal()/encrypt() breaks the chain. Filtering on
+   * the vector must happen at a trusted endpoint AFTER decryption (composes with the pattern-10
+   * verify-before-decrypt gate). Mirrors checkArgForSecretNetwork.
+   */
+  private checkArgForEmbeddingNetwork(
+    node: AstNode,
+    callName: string,
+    location: SourceLocation | undefined,
+  ): void {
+    if (isSealCall(node)) return; // a sealed/encrypted vector may cross — the cleartext may not
+    if (node.kind === "identifier") {
+      const binding = this.lookupBinding(node.value ?? "");
+      if (binding?.embeddingDerived === true) {
+        this.diagnostics.push(makeVSDiag(
+          "LLN-PRIVACY-002",
+          "EmbeddingEgressDenied",
+          `Cleartext semantic embedding '${binding.name}' must not be transmitted to network sink '${callName}'.`,
+          location,
+          `Seal the vector before egress, e.g. seal(${binding.name}), and filter only at a trusted endpoint after decryption.`,
+          `seal(${binding.name})`,
+          {
+            why: `'${binding.name}' is a semantic embedding — embedding-inversion (vec2text) reconstructs the source text from a cleartext vector, so egressing it is equivalent to leaking the text.`,
+            risk: `A router/intermediary that receives a cleartext embedding can recover the original content; only an encrypted vector may cross an untrusted boundary.`,
+          },
+        ));
+      }
+      return;
+    }
+    // Inline embedding source passed straight to the sink, e.g. http.post(u, EmbeddingModel.run(x)).
+    if (isEmbeddingSourceExpression(node)) {
+      this.diagnostics.push(makeVSDiag(
+        "LLN-PRIVACY-002",
+        "EmbeddingEgressDenied",
+        `A cleartext semantic embedding must not be transmitted to network sink '${callName}'.`,
+        location,
+        `Bind and seal the vector before egress: let v = seal(<embedding>), and filter only at a trusted endpoint after decryption.`,
+        undefined,
+        {
+          why: `An embedding produced inline is still cleartext — embedding-inversion (vec2text) reconstructs the source text from it.`,
+          risk: `Sending a cleartext embedding to a network egress leaks the source content to anyone observing the channel or endpoint.`,
+        },
+      ));
+      return;
+    }
+    for (const child of node.children ?? []) {
+      this.checkArgForEmbeddingNetwork(child, callName, location);
     }
   }
 

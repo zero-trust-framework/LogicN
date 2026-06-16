@@ -8,6 +8,13 @@ Parser: Phase 10B
 Enforcement: LLN-PRIVACY-001, LLN-OBSERVE-001 (Phase 10C+)
 ```
 
+> **Code namespace note (2026-06-16).** `LLN-PRIVACY-001` is reserved for the *declarative*
+> `deny protected X to Y` clause of this `privacy {}` block (still Phase 10C+ — parsed, not yet
+> enforced). It is a DIFFERENT mechanism from `LLN-PRIVACY-002`, the *dataflow* rule that blocks a
+> cleartext semantic embedding from reaching a network sink (ENFORCED now, in `value-state-checker.ts` —
+> see [[logicn-privacy-embedding-egress]]). Keep the two distinct: 001 = contract-clause matcher,
+> 002 = embedding-taint egress.
+
 ## TL;DR
 
 - `privacy {}` declares PII rules, data retention, and exposure policy — it is governance, not implementation
