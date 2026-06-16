@@ -68,6 +68,7 @@
 | `logicn-hardened-border.md` | Plugin DMZ "Toxic Border" spec — 5-stage load/execute/erase cycle, LLN-BORDER-001–005 SECURITY_ALERTs, blacklist protocol, `logicn border-check` CLI |
 | `logicn-quantum-resistance-posture.md` | **Quantum-resistance decision record** — *resist where reasonable, no hot-path hammering*. **DECISION: KEEP SHA-256** (already quantum-OK; Grover→128-bit). The PQ work is the SIGNATURE: ML-DSA-65/FIPS-204 over the SHA-256 digest (#34, DONE), hybrid w/ Ed25519, per-surface ctx. ML-KEM only if encryption is added. `LLN-CRYPTO-PQ-001` ENFORCED. |
 | `logicn-design-stability-and-forward-planning.md` | **Stability charter** — anti-mistake principles (null/ambient-authority/silent-coercion/one-hop-taint/roll-your-own-crypto…), crypto-format **versioning rule** (bump on any format change once keys persist), **provisional-stopgap register** (marker-effect pattern, pipe-encoding), enforcement **escalation plan** (inter-flow warning→error), diagnostic-namespace ownership. |
+| `logicn-diagnostic-namespace-ownership.md` | **Diagnostic namespace = a CHECKED invariant.** Canonical registry (compiler-diagnostics.md ∪ governance-rules.md); a conformance test (`diagnostic-namespace.test.mjs`) fails on any NEW emitted LLN-* code that isn't registered or on the shrink-only `PENDING_REGISTRATION` allowlist (65-code baseline at adoption). Mechanism tags + numbering rule. Prevents semantic drift. |
 
 ### Research & Engineering Goals
 
