@@ -37,6 +37,14 @@ export interface AttestationPolicy {
    * deployment must ship real certified kernels, not the dev fallback. Default off.
    */
   readonly requireCertifiedProfile?: boolean;
+  /**
+   * #34: when set, the admission gate REQUIRES a hybrid Ed25519+ML-DSA-65 attestation and
+   * verifies the ML-DSA-65 half against this key (via verifyAttestationHybrid) — an
+   * Ed25519-only attestation is then denied (no PQ downgrade). Absent ⇒ classical Ed25519
+   * verification only (backward-compatible default). The key is provisioned by production
+   * key custody (#149).
+   */
+  readonly mlDsaPublicKey?: Uint8Array;
 }
 
 export interface AttestationResult {
@@ -214,4 +222,28 @@ export async function verifyAttestationHybrid(
     return { ok: false, reason: `ML-DSA check error: ${(e as Error).message}`, ...hashField };
   }
   return base;
+}
+
+/** Hybrid counterpart of attestBridge: sign the bridge's manifest with a hybrid key and
+ *  return a delegating wrapper carrying the hybrid attestation (both signatures). */
+export async function attestBridgeHybrid(
+  bridge: InferenceBridge,
+  privateKeyPem: string,
+  mlDsaPrivateKey: Uint8Array,
+): Promise<InferenceBridge> {
+  const manifest = bridge.manifest;
+  if (!manifest) {
+    throw new Error("ERR_BRIDGE_NO_MANIFEST: cannot attest a bridge that has no manifest to sign");
+  }
+  const attestation = await signManifestHybrid(manifest, privateKeyPem, mlDsaPrivateKey);
+  return {
+    get bridgeId() { return bridge.bridgeId; },
+    get technique() { return bridge.technique; },
+    get nativeAvailable() { return bridge.nativeAvailable; },
+    manifest,
+    attestation,
+    initialize: () => bridge.initialize(),
+    shutdown: () => bridge.shutdown(),
+    execute: (op: BridgeOp): BridgeResult => bridge.execute(op),
+  };
 }

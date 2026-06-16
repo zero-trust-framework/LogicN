@@ -37,7 +37,7 @@ import {
 import { createStubRegistry } from "./bridge/stub-provider.js";
 import { assertDeterminism, type BridgeRegistry, type BridgeOp, type BridgeResult } from "./bridge/interface.js";
 import type { EgressSink } from "./audit-logger.js";
-import { verifyAttestation, type AttestationPolicy } from "./bridge-attestation.js";
+import { verifyAttestation, verifyAttestationHybrid, type AttestationPolicy } from "./bridge-attestation.js";
 import { compilePolicy, POL_HAS_ALLOWLIST, POL_HAS_CALL_BUDGET, POL_HAS_TOKEN_BUDGET, POL_DENY_HOST_NATIVE, type CompiledPolicy } from "./compiled-policy.js";
 
 // The canonical layer sequence of a transformer inference pass.
@@ -257,12 +257,19 @@ export class HybridInferenceEngine {
    * Runs once and caches the result. Returns the first offending bridge id (with a
    * reason via the audit) or null when all bridges are attested.
    */
-  private checkBridgeAttestation(): string | null {
+  private async checkBridgeAttestation(): Promise<string | null> {
     if (this.attestationPolicy === null) return null;
     if (this.bridgeAttestationChecked) return this.bridgeAttestationDenial;
     this.bridgeAttestationChecked = true;
+    const policy = this.attestationPolicy;
+    // #34: a configured ML-DSA public key escalates admission to the hybrid verifier —
+    // BOTH the Ed25519 and the ML-DSA-65 half must verify (no PQ downgrade). Absent ⇒
+    // classical Ed25519-only verification (backward-compatible default).
+    const mlDsaPublicKey = policy.mlDsaPublicKey;
     for (const bridge of this.bridges.values()) {
-      const result = verifyAttestation(bridge.attestation, this.attestationPolicy);
+      const result = mlDsaPublicKey !== undefined
+        ? await verifyAttestationHybrid(bridge.attestation, policy, mlDsaPublicKey)
+        : verifyAttestation(bridge.attestation, policy);
       if (!result.ok) {
         this.bridgeAttestationDenial = `${bridge.bridgeId}: ${result.reason ?? "unattested"}`;
         return this.bridgeAttestationDenial;
@@ -337,7 +344,7 @@ export class HybridInferenceEngine {
       // The branchless capability gate is the MOST fundamental authority question —
       // does this engine even hold the ai.inference V_DPM bit? — so it runs first.
       const capabilityHeld = (AI_INFERENCE_CAP & this.grantedCapabilityMask) === AI_INFERENCE_CAP;
-      const bridgeDenial = this.checkBridgeAttestation();
+      const bridgeDenial = await this.checkBridgeAttestation();
       const govTrap = !capabilityHeld
         ? { code: "ERR_CAPABILITY_DENIED", details: { required: AI_INFERENCE_CAP, granted: this.grantedCapabilityMask } }
         : bridgeDenial !== null
