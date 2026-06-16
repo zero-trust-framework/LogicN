@@ -234,6 +234,11 @@ run("tests:border-check", "node",
   ["--test", "tests/border-check/border-check.test.mjs"],
   { silent: false });
 
+// ── 7c. CLI invoke arg-marshalling regression (dogfooding #3 — bool args must not silently fail) ──
+run("tests:cli-invoke-marshal", "node",
+  ["--test", "tests/cli-invoke-marshal/cli-invoke-marshal.test.mjs"],
+  { silent: false });
+
 // ── Summary ──
 console.log("\n── phase-close summary ──");
 let anyFail = false;

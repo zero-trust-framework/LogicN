@@ -1,0 +1,43 @@
+// Regression for dogfooding #3: `logicn run <f> --invoke <flow> [args]` used to marshal CLI args
+// with `.map(Number)`, so BOTH "true" and "false" became NaN → i32 0 → false — a wrong-but-plausible
+// Bool argument silently fizzled to `false` with no error. The fix marshals Bool literals (true/false
+// → 1/0) and fails LOUDLY (exit 2) on anything un-parseable, instead of silently coercing to 0.
+
+import { test, before, after } from "node:test";
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+const FIXTURE = join(ROOT, "build", "__cli_marshal_test.lln");
+
+function run(...args) {
+  const r = spawnSync(process.execPath, ["logicn.mjs", "run", FIXTURE, "--invoke", "boolToInt", ...args],
+    { cwd: ROOT, encoding: "utf-8", timeout: 60000 });
+  return { status: r.status, out: `${r.stdout ?? ""}${r.stderr ?? ""}` };
+}
+
+before(() => {
+  mkdirSync(dirname(FIXTURE), { recursive: true });
+  // Distinct, unlikely return values so the marshalled bool is unambiguous in the output.
+  writeFileSync(FIXTURE, `pure flow boolToInt(b: Bool) -> Int {\n  if b { return 777 }\n  return 333\n}\n`);
+});
+after(() => { try { rmSync(FIXTURE, { force: true }); } catch { /* ignore */ } });
+
+test("Bool literals marshal distinctly (true→1→777, false→0→333), not silently to one value", () => {
+  const t = run("true");
+  const f = run("false");
+  assert.equal(t.status, 0, t.out);
+  assert.equal(f.status, 0, f.out);
+  assert.match(t.out, /777/, "true must marshal to 1 → boolToInt returns 777");
+  assert.doesNotMatch(t.out, /333/, "true must NOT fall through to the false branch (the old silent bug)");
+  assert.match(f.out, /333/, "false must marshal to 0 → boolToInt returns 333");
+});
+
+test("an un-parseable invoke arg fails LOUDLY (exit 2 + clear message), never silently to 0", () => {
+  const r = run("garbage");
+  assert.equal(r.status, 2, r.out);
+  assert.match(r.out, /not a valid Int or Bool/);
+});

@@ -1223,7 +1223,20 @@ Baseline comparison (governance-cost):
   if (command === "run") {
     const invokeIdx = rest.indexOf("--invoke");
     const flowName = invokeIdx >= 0 ? rest[invokeIdx + 1] : "main";
-    const args = invokeIdx >= 0 ? rest.slice(invokeIdx + 2).map(Number) : [];
+    // Marshal CLI args to WASM i32. Bool literals → 1/0; numbers → themselves. Fail LOUDLY on
+    // anything else — the old `.map(Number)` turned BOTH "true" and "false" into NaN→i32 0→false,
+    // so a wrong-but-plausible Bool arg silently fizzled to `false` with no error (dogfooding #3).
+    const args = (invokeIdx >= 0 ? rest.slice(invokeIdx + 2) : []).map((a, i) => {
+      if (a === "true") return 1;
+      if (a === "false") return 0;
+      const n = Number(a);
+      if (!Number.isFinite(n)) {
+        console.error(`\n  ✗ invoke argument #${i + 1} = ${JSON.stringify(a)} is not a valid Int or Bool.`);
+        console.error(`    Pass a number (e.g. 42, -3) or a Bool literal (true / false).\n`);
+        process.exit(2);
+      }
+      return n;
+    });
 
     // ── Host Runtime (P9.3) — array manager + string intern table ──────────────
     // Provides the bridge between WASM i32 opaque handles and host JS types.
