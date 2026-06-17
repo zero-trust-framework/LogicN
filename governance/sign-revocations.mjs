@@ -1,37 +1,52 @@
 #!/usr/bin/env node
 /**
- * governance/sign-revocations.mjs — OWNER-RUN: self-sign the revocation registry.
+ * governance/sign-revocations.mjs — MAINTAINER-RUN: self-sign the revocation registry.
  *
- * Makes governance/revocations.json tamper-evident: after signing, any edit that
- * is not re-signed by a valid (non-revoked) key fails the gate closed.
+ * This is NOT a per-developer step. Writing or running LogicN never requires it — it is a
+ * project-maintainer action (like a CA signing a CRL): it makes governance/revocations.json
+ * tamper-evident, so an edit that is not re-signed by the active key fails the gate closed.
  *
- * An assistant CANNOT run this — it requires the offline signing private key.
+ * SAFE BY DEFAULT — NO key material on the command line. The key is read exactly the way
+ * `logicn build` reads it: from .env.logicn-signing (created by `logicn keygen`, mode 0600,
+ * git-ignored) as LOGICN_SIGNING_KEY_ID + LOGICN_SIGNING_PRIVATE_KEY_B64. Just run:
  *
- * Usage (from repo root):
- *   LOGICN_SIGNING_KEY_ID=<id> LOGICN_SIGNING_KEY_PEM_PATH=path/to/private.pem \
- *     node governance/sign-revocations.mjs
- *   # or pass the PEM directly:
- *   LOGICN_SIGNING_KEY_ID=<id> LOGICN_SIGNING_KEY_PEM="$(cat private.pem)" \
  *     node governance/sign-revocations.mjs
  *
- * The signer key id MUST NOT be one of the revoked ids, and its public key must
- * exist at governance/signing-key-<id>.pub.pem so the gate can verify.
+ * (If those vars are already exported in your shell they take precedence. Override the file
+ *  location with LOGICN_SIGNING_ENV=<path> if your key file lives elsewhere.)
+ *
+ * PRODUCTION KEY CUSTODY: the plaintext .env.logicn-signing is a DEV stopgap. Production
+ * should keep the signing key in an HSM / KMS / hardware token and sign via that API so the
+ * raw private key never touches disk, env, the shell, or this process — open item #149.
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { loadRegistry, signRegistryObject } from "./revocation-registry.mjs";
 
-const keyId = process.env.LOGICN_SIGNING_KEY_ID;
-if (!keyId) {
-  console.error("LOGICN_SIGNING_KEY_ID is required (the active signing key id).");
+function readEnvFile(path) {
+  const out = {};
+  if (!existsSync(path)) return out;
+  for (const line of readFileSync(path, "utf-8").split(/\r?\n/)) {
+    const m = /^\s*([A-Z0-9_]+)\s*=\s*(.*)$/.exec(line);
+    if (m) out[m[1]] = m[2].trim();
+  }
+  return out;
+}
+
+const envFile = process.env.LOGICN_SIGNING_ENV ?? ".env.logicn-signing";
+const fileVars = readEnvFile(envFile);
+const keyId = process.env.LOGICN_SIGNING_KEY_ID ?? fileVars.LOGICN_SIGNING_KEY_ID;
+const keyB64 = process.env.LOGICN_SIGNING_PRIVATE_KEY_B64 ?? fileVars.LOGICN_SIGNING_PRIVATE_KEY_B64;
+
+if (!keyId || !keyB64) {
+  console.error(`No signing key found.`);
+  console.error(`Expected ${envFile} (created by \`logicn keygen\`) to contain`);
+  console.error(`  LOGICN_SIGNING_KEY_ID=... and LOGICN_SIGNING_PRIVATE_KEY_B64=...`);
+  console.error(`or those vars exported in the shell. Do NOT pass the key on the command line.`);
   process.exit(1);
 }
-const pemPath = process.env.LOGICN_SIGNING_KEY_PEM_PATH;
-const pem = process.env.LOGICN_SIGNING_KEY_PEM ?? (pemPath ? readFileSync(pemPath, "utf-8") : null);
-if (!pem) {
-  console.error("Provide the private key via LOGICN_SIGNING_KEY_PEM or LOGICN_SIGNING_KEY_PEM_PATH.");
-  process.exit(1);
-}
+
+const privateKeyPem = Buffer.from(keyB64, "base64").toString("utf-8");
 
 const data = loadRegistry(".");
 if (data === null) {
@@ -39,11 +54,11 @@ if (data === null) {
   process.exit(1);
 }
 if (data.revoked.some((e) => e && e.keyId === keyId)) {
-  console.error(`Refusing to sign: ${keyId} is itself revoked. Sign with the current active key.`);
+  console.error(`Refusing to sign: the signer key ${keyId} is itself revoked. Sign with the current active key.`);
   process.exit(1);
 }
 
-const signed = signRegistryObject(data, pem, keyId);
+const signed = signRegistryObject(data, privateKeyPem, keyId);
 writeFileSync(join(".", "governance", "revocations.json"), JSON.stringify(signed, null, 2) + "\n");
-console.log(`Signed governance/revocations.json with key ${keyId}.`);
-console.log("Verify: node -e \"import('./governance/revocation-registry.mjs').then(m=>console.log(m.assertRegistryTrustworthy('.')))\"");
+console.log(`Signed governance/revocations.json with key ${keyId}`);
+console.log(`(key read from ${envFile} — nothing secret on the command line).`);
