@@ -15,7 +15,10 @@
 ## Verify state (this session)
 - **Graph:** clean — 3,622 nodes / 4,029 edges / 4 manifests / 1,923 files.
 - **Tests:** full suite green (re-confirmed this turn; see commit log).
-- Shipped this session: Gap-B revocation registry (v0+tamper+v2 pinning), zero-touch key lifecycle, Phase-0 interpreter dead-copy removal (`d005d75`), 0011 resolver parts b+c (`fc88cb8`).
+- Shipped this session: Gap-B revocation registry (v0+tamper+v2 pinning), zero-touch key lifecycle, Phase-0 interpreter dead-copy removal (`d005d75`), 0011 resolver parts b+c (`fc88cb8`), 0011 (a-config) (`4261102`), **#125 secure-flow-run `--governed` (`da17cfc`)**.
+
+## ⚑ 2026-06-18 — R&D bridge queue DRAINED
+All R&D jobs **0014–0019 + every in-bounds roadmap item are DONE + adversarially verified** (R&D `ef851aa→0d74bf6`, unpushed per #149; handover `LogicN-R-AND-D/_session-bridge/HANDOFF-2026-06-18-auto-run.md`). Absorbed into KB; see [[logicn-rd-queue-drained-2026-06-18]]. **Everything not 🟢 below is now owner- or hardware-gated.** The 5 owner-decisions that are the real gates: (1) name the semantic reference tier → unblocks 0014 harness + lean→WASM; (2) wire `LLN-MONO-001`; (3) extend the CFG fingerprint beyond effects-only; (4) hybrid vs Ed25519 build-signing (#34); (5) runtime-observed surface (#102-104). **Remaining 🟢 (safe to auto-build, not owner-gated): items 2 & 4 below** (0011 a-grammar; LLN-ENTROPY/PCI/DP code allocations).
 
 ## 🟢 Zero-trust-safe — auto-build queue (in order)
 | # | Item | Why it's 🟢 (changes no authority) |
