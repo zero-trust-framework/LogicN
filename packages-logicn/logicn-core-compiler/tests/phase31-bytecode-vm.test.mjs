@@ -39,8 +39,17 @@ describe("Phase 31: bytecode VM arithmetic", () => {
   it("nested (a+b)*c", () => {
     assert.equal(run("pure flow f(a: Int, b: Int, c: Int) -> Int contract { effects {} } { return (a + b) * c }", "f", [2,3,4]), 20);
   });
-  it("div by zero = 0 (safe)", () => {
-    assert.equal(run("pure flow d(a: Int, b: Int) -> Int contract { effects {} } { return a / b }", "d", [5,0]), 0);
+  // Owner decision 2026-06-18 (Fork A=TRAP / Fork B=bytecode-conforms): the bytecode VM must TRAP
+  // on divide/modulo-by-zero and integer overflow — never the old silent `0`/wrap (a capability-gate
+  // exploit vector). Byte-identical to the tree-walker's runtimeError (i32-arith.ts is the source).
+  it("div by zero TRAPS (no silent 0)", () => {
+    assert.throws(() => run("pure flow d(a: Int, b: Int) -> Int contract { effects {} } { return a / b }", "d", [5,0]), /DivisionByZero/);
+  });
+  it("mod by zero TRAPS", () => {
+    assert.throws(() => run("pure flow m(a: Int, b: Int) -> Int contract { effects {} } { return a % b }", "m", [5,0]), /DivisionByZero/);
+  });
+  it("integer overflow TRAPS (no silent wrap)", () => {
+    assert.throws(() => run("pure flow o(a: Int, b: Int) -> Int contract { effects {} } { return a + b }", "o", [2147483647, 1]), /IntegerOverflow/);
   });
 });
 

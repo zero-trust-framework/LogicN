@@ -15,6 +15,7 @@ import { pureFlowCacheKey, getCachedPureFlow, setCachedPureFlow } from "./pure-f
 import { activeSinkMonitor } from "./security-sink-monitor.js";
 import { buildExecutionGraph, getOrLoadGraph, storeGraph, executionGraphCacheKey, ExecOp, type ExecutionGraph } from "./execution-graph.js";
 import { compileToBytecode, runBytecode } from "./bytecode-vm.js";
+import { i32AddChecked, i32SubChecked, i32MulChecked, i32DivChecked, i32ModChecked, isI32Trap, type I32Result } from "./i32-arith.js";
 
 export type LogicNValue =
   | { readonly __tag: "int";       readonly value: number }
@@ -59,6 +60,15 @@ function intVal(n: number): LogicNValue {
   return n >= 0 && n < 256 ? (INT_POOL[n] as LogicNValue) : { __tag: "int", value: n };
 }
 
+/**
+ * Map a checked-i32 arithmetic result to a LogicNValue: an in-range value boxes to an Int; a trap
+ * (overflow / divide-by-zero) becomes a `runtimeError` — the walker's fail-closed LOAD→TRAP→ERASE.
+ * Owner decision 2026-06-18 (Fork A=TRAP): integer overflow never silently wraps. See i32-arith.ts.
+ */
+function i32R(r: I32Result): LogicNValue {
+  return isI32Trap(r) ? { __tag: "runtimeError", message: r } : intVal(r);
+}
+
 /** Singleton booleans — avoids allocating { __tag: "bool", value: ... } on every comparison. */
 const BOOL_TRUE:  LogicNValue = { __tag: "bool", value: true };
 const BOOL_FALSE: LogicNValue = { __tag: "bool", value: false };
@@ -96,11 +106,14 @@ type _DispatchFn = (a: any, b: any) => LogicNValue;
 /** Pre-built dispatch map — O(1) lookup replaces the linear if-chain. */
 export const BINARY_DISPATCH = new Map<number, _DispatchFn>([
   // --- Int × Int ---
-  [dispatchKey("int", "+",  "int"),  (a, b) => intVal((a.value as number) + (b.value as number))],
-  [dispatchKey("int", "-",  "int"),  (a, b) => intVal((a.value as number) - (b.value as number))],
-  [dispatchKey("int", "*",  "int"),  (a, b) => intVal(Math.imul(a.value as number, b.value as number))],
-  [dispatchKey("int", "/",  "int"),  (a, b) => (b.value as number) === 0 ? { __tag: "runtimeError", message: "DivisionByZero" } : intVal(Math.trunc((a.value as number) / (b.value as number)))],
-  [dispatchKey("int", "%",  "int"),  (a, b) => (b.value as number) === 0 ? { __tag: "runtimeError", message: "DivisionByZero" } : intVal((a.value as number) % (b.value as number))],
+  // Strict-trapping i32 (owner decision Fork A=TRAP, 2026-06-18): overflow / div0 → runtimeError,
+  // never a silent wrap. Single source of truth = i32-arith.ts (shared with the bytecode VM + the
+  // WASM emitter's checked helpers, so all tiers are byte-identical for the 0014 differential).
+  [dispatchKey("int", "+",  "int"),  (a, b) => i32R(i32AddChecked(a.value as number, b.value as number))],
+  [dispatchKey("int", "-",  "int"),  (a, b) => i32R(i32SubChecked(a.value as number, b.value as number))],
+  [dispatchKey("int", "*",  "int"),  (a, b) => i32R(i32MulChecked(a.value as number, b.value as number))],
+  [dispatchKey("int", "/",  "int"),  (a, b) => i32R(i32DivChecked(a.value as number, b.value as number))],
+  [dispatchKey("int", "%",  "int"),  (a, b) => i32R(i32ModChecked(a.value as number, b.value as number))],
   [dispatchKey("int", "<",  "int"),  (a, b) => boolVal((a.value as number) <  (b.value as number))],
   [dispatchKey("int", "<=", "int"),  (a, b) => boolVal((a.value as number) <= (b.value as number))],
   [dispatchKey("int", ">",  "int"),  (a, b) => boolVal((a.value as number) >  (b.value as number))],
@@ -2586,9 +2599,34 @@ export async function executeFlow(
       // Check all args are integer-compatible (matching the bytecode VM's requirement)
       const allInts = [...args.values()].every(v => v.__tag === "int" || v.__tag === "bool" || v.__tag === "byte");
       if (allInts) {
-        const bcValue = runBytecode(bcResult, bcArgs);
-        const intResult = intVal(bcValue);
         const now = new Date().toISOString();
+        let intResult: LogicNValue;
+        try {
+          intResult = intVal(runBytecode(bcResult, bcArgs));
+        } catch (e) {
+          const message = (e as Error).message;
+          if (message !== "IntegerOverflow" && message !== "DivisionByZero") throw e;
+          // The bytecode VM trapped (overflow / div0). Surface the SAME runtimeError the tree-walker
+          // produces, so the two tiers are byte-identical for the 0014 fidelity differential.
+          return {
+            value: { __tag: "runtimeError", message },
+            effectsObserved: [],
+            auditEntries: [],
+            diagnostics: [],
+            executionTier: "bytecode" as const,
+            audit: {
+              schemaVersion: "lln.runtime.audit.v1" as const,
+              flowName,
+              qualifier: "pure" as const,
+              startedAt: now,
+              completedAt: now,
+              effectsObserved: [] as readonly string[],
+              auditEntries: [] as readonly RuntimeAuditEntry[],
+              result: "error" as const,
+              error: message,
+            } satisfies ExecutionAuditRecord,
+          } satisfies FlowExecutionResult;
+        }
         const bcAuditResult = {
           value: intResult,
           effectsObserved: [],

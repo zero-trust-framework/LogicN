@@ -18,6 +18,7 @@
 // =============================================================================
 
 import { type AstNode, type FlowMeta } from "./parser.js";
+import { i32AddChecked, i32SubChecked, i32MulChecked, i32DivChecked, i32ModChecked, i32NegChecked, type I32Result } from "./i32-arith.js";
 
 // ---------------------------------------------------------------------------
 // Opcodes
@@ -289,6 +290,16 @@ class BytecodeCompiler {
  * @param args    - Positional integer arguments (mapped to param slots)
  * @returns the i32 result
  */
+/**
+ * Unwrap a checked-i32 result for the VM: a trap-kind THROWS (caught at the executeFlow call site
+ * → the same `runtimeError` the tree-walker yields). Owner decision Fork A=TRAP, 2026-06-18:
+ * overflow / div0 never silently wrap or return 0. Single source of truth = i32-arith.ts.
+ */
+function i32Trap(r: I32Result): number {
+  if (typeof r === "string") throw new Error(r);
+  return r;
+}
+
 export function runBytecode(program: BytecodeProgram, args: readonly number[]): number {
   const code = program.code;
   const locals = new Int32Array(program.localCount);
@@ -306,11 +317,12 @@ export function runBytecode(program: BytecodeProgram, args: readonly number[]): 
       case Op.LOAD_LOCAL:  stack[sp++] = locals[code[pc++]!]!; break;
       case Op.STORE_LOCAL: locals[code[pc++]!] = stack[--sp]!; break;
 
-      case Op.ADD: { const b = stack[--sp]!; stack[sp-1] = (stack[sp-1]! + b) | 0; break; }
-      case Op.SUB: { const b = stack[--sp]!; stack[sp-1] = (stack[sp-1]! - b) | 0; break; }
-      case Op.MUL: { const b = stack[--sp]!; stack[sp-1] = Math.imul(stack[sp-1]!, b); break; }
-      case Op.DIV: { const b = stack[--sp]!; stack[sp-1] = b === 0 ? 0 : (stack[sp-1]! / b) | 0; break; }
-      case Op.MOD: { const b = stack[--sp]!; stack[sp-1] = b === 0 ? 0 : (stack[sp-1]! % b) | 0; break; }
+      // Strict-trapping i32 (owner Fork A=TRAP): overflow / div0 throw, never wrap or return 0.
+      case Op.ADD: { const b = stack[--sp]!; stack[sp-1] = i32Trap(i32AddChecked(stack[sp-1]!, b)); break; }
+      case Op.SUB: { const b = stack[--sp]!; stack[sp-1] = i32Trap(i32SubChecked(stack[sp-1]!, b)); break; }
+      case Op.MUL: { const b = stack[--sp]!; stack[sp-1] = i32Trap(i32MulChecked(stack[sp-1]!, b)); break; }
+      case Op.DIV: { const b = stack[--sp]!; stack[sp-1] = i32Trap(i32DivChecked(stack[sp-1]!, b)); break; }
+      case Op.MOD: { const b = stack[--sp]!; stack[sp-1] = i32Trap(i32ModChecked(stack[sp-1]!, b)); break; }
 
       case Op.LT: { const b = stack[--sp]!; stack[sp-1] = stack[sp-1]! <  b ? 1 : 0; break; }
       case Op.LE: { const b = stack[--sp]!; stack[sp-1] = stack[sp-1]! <= b ? 1 : 0; break; }
@@ -322,7 +334,7 @@ export function runBytecode(program: BytecodeProgram, args: readonly number[]): 
       case Op.AND: { const b = stack[--sp]!; stack[sp-1] = (stack[sp-1]! !== 0 && b !== 0) ? 1 : 0; break; }
       case Op.OR:  { const b = stack[--sp]!; stack[sp-1] = (stack[sp-1]! !== 0 || b !== 0) ? 1 : 0; break; }
       case Op.NOT: stack[sp-1] = stack[sp-1]! === 0 ? 1 : 0; break;
-      case Op.NEG: stack[sp-1] = (-stack[sp-1]!) | 0; break;
+      case Op.NEG: stack[sp-1] = i32Trap(i32NegChecked(stack[sp-1]!)); break;
 
       case Op.JUMP: pc = code[pc]!; break;
       case Op.JUMP_IF_FALSE: { const t = code[pc++]!; if (stack[--sp]! === 0) pc = t; break; }
