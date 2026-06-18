@@ -85,6 +85,17 @@ first-class graph-indexed doc. Re-runnable evidence (the benches) stays upstream
 | `0014-recheck-prove-own-maths.done.md` | **curated** (in-flight-PROVEN self-catch lesson) | **logicn-prove-own-maths-roadmap.md** §1b note |
 | `tri-encription/bench/{tower-citizen-verify,i32-findings-verify}.mjs` | **referenced** (re-runnable evidence; hub re-ran 27/27 + 25/25) | same doc §1a |
 
+### 3c. R&D `treewalker-speed/` thread — **curated, not mirrored** (2026-06-18)
+The R&D `treewalker-speed/` dir (5 docs + 5 re-runnable benches) is a measured speed + photonic-governance
+thread. Its knowledge is curated into one graph-indexed doc; the benches stay upstream as re-runnable evidence.
+**Hub re-verified** all 5 benches 2026-06-18 (headline numbers reproduce, exit 0).
+
+| R&D source (`treewalker-speed/`) | Disposition | Curated home |
+|---|---|---|
+| `TREE-WALKER-SPEED-RND.md` + `walker-techniques-bench.mjs` | **curated** (de-coloring = #1 lever; the A–G table) | **logicn-tree-walker-speed-and-photonic-governance.md** §1–§2 |
+| `PHOTONIC-GOVERNANCE-TMAC-CONCEPT.md` + `governance-tmac-poc.mjs` | **curated** (governance = associative ternary semiring reduction; 200k-equivalence) | same doc §3 |
+| `PHOTONIC-CLAIMS-AUDIT.md` · `PHASE-RESONANT-TRAVERSAL-AUDIT.md` · `linear-pipeline-flatten-poc.mjs` | **curated** (refuted-hype ledger + flat-AST/constant-time keepers + linear-flatten boundary) | same doc §4–§5 |
+
 ## 4. TritMesh repo (`LogicN-TritMesh/TritMesh` @ `5db2e17`) — separate product, referenced not absorbed
 TritMesh is a downstream **product** that *consumes* LogicN; its own design-notes mandate "separate repos, no
 merge, no shared crypto substrate." So LogicN **references** the seam + conformance (captured in
