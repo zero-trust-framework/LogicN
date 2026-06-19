@@ -17,8 +17,11 @@ graph 3676/4069; both LogicN + LogicN-R-AND-D git trees CLEAN.
   (`1804557`); `LLN-HW-004` hardware uncertainty (`5d8d611`); **`logicn deps [--write]`** = `//lln: USES/
   USEDBY/IMPACT/COMPLEXITY` (`1a57761`/`45bc0a5`/`2fb7ac1`); `contract.architecture{}` + `LLN-ARCH-001`
   (`c04fac0`) + Stable-Deps `LLN-ARCH-002` always-hard-error (`f8468a4`); token renamed `//@`→`//lln:`
-  (`b2b1c6e`, owner-final, no `@generated`). Remaining: 2c/3d volatility (0045 proved the churn+depth formula),
-  3a per-flow graph edges, Phase 4 polish. See [[logicn-structured-engineering-metadata]].
+  (`b2b1c6e`, owner-final, no `@generated`). **+ `0bbf39f`:** `logicn deps --all [dir] [--write]` whole-app
+  refresh via a NEW cross-file analyzer `analyzeProgramFlowDependencies` (USES/USEDBY/IMPACT span files —
+  closes the per-file "safe to delete" fail-open); `logicn build --package` auto-refreshes `//lln:` by default
+  (`--no-refresh` opts out, single-file build stays pure); `lln` short bin alias. Remaining: 2c/3d volatility
+  (0045 proved the churn+depth formula), 3a per-flow graph edges, Phase 4 polish. See [[logicn-structured-engineering-metadata]].
 - **git/build hygiene:** untracked ~501 ephemeral `build/*` artifacts + the 2.1MB `build/graph/*.json`/html
   (gitignored; kept the small nav `.md`s). `build/` now tracks 4 intentional files.
 
