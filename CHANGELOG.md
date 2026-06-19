@@ -24,6 +24,15 @@ verified**; the codebase is in a fail-closed, deterministic state. 48/48 package
   `epilogueReceipt`, `liabilityProfile`, `physicalHardeningTier`).
 
 ### Added
+- **`//@USES` / `//@USEDBY` / `//@IMPACT` flow-dependency analysis + `logicn deps` (R&D 0045 — Phase 2).**
+  `analyzeFlowDependencies(ast)` computes the observed flow→flow call graph per flow: **USES** (upstream
+  callees), **USEDBY** (direct callers / "dependants"), and **IMPACT** (transitive downstream blast-radius;
+  `0` ⟹ *safe to delete*). `renderDependencyComments()` emits the canonical generated-tier lines
+  (`//@USES: (2) …`, `//@USEDBY: (1) …`, `//@IMPACT: (0) — safe to delete`). New read-only CLI:
+  `logicn deps <file.lln> [--flow <name>]` graphs the app and prints the `//@` comments (no source mutation
+  yet — the source-writer is a later phase, gated on the human-edit decision). Naming standardised on the
+  clean antonym pair **USES** (what I call) / **USEDBY** (who calls me); recursion/self-calls and
+  stdlib/method calls are excluded. +8 tests.
 - **`LLN-HW-004` UnknownHardwareTarget — yellow hardware uncertainty (R&D 0045 — Phase 1b).** A `contract.hardware`
   target that is not in `HARDWARE_TRUST_PROFILES` was previously a **silent `continue`** (the uncertainty was
   invisible). It now emits a **yellow `LLN-HW-004` warning** (K3 INDETERMINATE — *not* a red error): the build
