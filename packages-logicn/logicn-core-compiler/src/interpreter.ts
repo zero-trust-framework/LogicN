@@ -2670,12 +2670,22 @@ export async function executeFlow(
         const now = new Date().toISOString();
         let intResult: LogicNValue;
         try {
-          intResult = intVal(runBytecode(bcResult, bcArgs));
+          intResult = intVal(runBytecode(bcResult, bcArgs, runtimeOptions?.maxIterations ?? 100_000));
         } catch (e) {
-          const message = (e as Error).message;
-          if (message !== "IntegerOverflow" && message !== "DivisionByZero") throw e;
-          // The bytecode VM trapped (overflow / div0). Surface the SAME runtimeError the tree-walker
-          // produces, so the two tiers are byte-identical for the 0014 fidelity differential.
+          const raw = (e as Error).message;
+          // The bytecode VM trapped. Surface the SAME runtimeError the tree-walker produces so the two
+          // tiers are byte-identical for the 0014 fidelity differential.
+          let message: string;
+          if (raw === "IntegerOverflow" || raw === "DivisionByZero") {
+            // i32 trap (overflow / div0): the walker yields the bare trap kind (LOAD→TRAP→ERASE).
+            message = raw;
+          } else if (raw.startsWith("Loop exceeded maximum iteration count")) {
+            // Liveness cap (Goal-C / 0032): the async tree-walker THROWS this and runFlow wraps it with
+            // the flow name — mirror that exact wrapping so a runaway bytecode loop fails closed identically.
+            message = `[Flow '${flowName}'] ${raw}`;
+          } else {
+            throw e;
+          }
           return {
             value: { __tag: "runtimeError", message },
             effectsObserved: [],

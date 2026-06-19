@@ -286,8 +286,9 @@ class BytecodeCompiler {
 /**
  * Phase 31: Execute a bytecode program. No objects, no async — pure Int32Array.
  *
- * @param program - Compiled bytecode
- * @param args    - Positional integer arguments (mapped to param slots)
+ * @param program       - Compiled bytecode
+ * @param args          - Positional integer arguments (mapped to param slots)
+ * @param maxIterations - Fail-closed cap on loop back-edges (Goal-C / 0032 liveness). Default 100_000.
  * @returns the i32 result
  */
 /**
@@ -300,7 +301,7 @@ function i32Trap(r: I32Result): number {
   return r;
 }
 
-export function runBytecode(program: BytecodeProgram, args: readonly number[]): number {
+export function runBytecode(program: BytecodeProgram, args: readonly number[], maxIterations: number = 100_000): number {
   const code = program.code;
   const locals = new Int32Array(program.localCount);
   for (let i = 0; i < args.length && i < program.localCount; i++) {
@@ -309,6 +310,14 @@ export function runBytecode(program: BytecodeProgram, args: readonly number[]): 
   const stack = new Int32Array(256);
   let sp = 0;
   let pc = 0;
+  // Liveness cap (Goal-C "no system crash" / 0032): the async tree-walker and the sync fast-path both
+  // bound their loops; the bytecode VM previously had NONE, so a bytecode-eligible non-terminating loop
+  // (e.g. `while true {}`) would hang the host uncatchably. We count loop back-edges (every taken
+  // backward JUMP / JUMP_IF_FALSE = one loop iteration) and TRAP at the cap. The count is global across
+  // all back-edges in the program — strictly conservative vs. the tree-walker's per-loop counter, but it
+  // can only fail-closed sooner, never fail-OPEN. The trap message mirrors the tree-walker's so the tiers
+  // stay byte-identical (interpreter.ts wraps it with the flow name, like the walker's runFlow catch).
+  let backEdges = 0;
 
   while (pc < code.length) {
     const op = code[pc++]!;
@@ -336,8 +345,27 @@ export function runBytecode(program: BytecodeProgram, args: readonly number[]): 
       case Op.NOT: stack[sp-1] = stack[sp-1]! === 0 ? 1 : 0; break;
       case Op.NEG: stack[sp-1] = i32Trap(i32NegChecked(stack[sp-1]!)); break;
 
-      case Op.JUMP: pc = code[pc]!; break;
-      case Op.JUMP_IF_FALSE: { const t = code[pc++]!; if (stack[--sp]! === 0) pc = t; break; }
+      case Op.JUMP: {
+        const target = code[pc]!;
+        // Backward jump = loop back-edge. Count it against the liveness cap; trap fail-closed when exceeded.
+        if (target < pc && ++backEdges > maxIterations) {
+          throw new Error(`Loop exceeded maximum iteration count (${maxIterations}) — fail-closed`);
+        }
+        pc = target;
+        break;
+      }
+      case Op.JUMP_IF_FALSE: {
+        const t = code[pc++]!;
+        if (stack[--sp]! === 0) {
+          // Current codegen only emits forward JIF (loop exit / if-else), but count a taken backward
+          // JIF defensively so any future loop shape stays bounded too.
+          if (t < pc && ++backEdges > maxIterations) {
+            throw new Error(`Loop exceeded maximum iteration count (${maxIterations}) — fail-closed`);
+          }
+          pc = t;
+        }
+        break;
+      }
 
       case Op.RETURN: return stack[--sp]!;
       case Op.HALT: return sp > 0 ? stack[sp-1]! : 0;
@@ -352,8 +380,19 @@ export function runBytecode(program: BytecodeProgram, args: readonly number[]): 
 // Public API — compile + cache
 // ---------------------------------------------------------------------------
 
-/** Cache compiled bytecode by flow name (per AST). */
-const BYTECODE_CACHE = new Map<string, BytecodeProgram | null>();
+/**
+ * Cache compiled bytecode, keyed by the program AST object identity, then by flow name.
+ *
+ * BUG FIX (2026-06-19): the cache used to key on flow NAME ALONE in a single module-level Map. Two
+ * different flows both named `main` (different files/ASTs in the SAME process — e.g. every benchmark's
+ * entry flow is `main`) would silently serve the FIRST one's compiled bytecode for the SECOND — a
+ * wrong-result hazard. The benchmark runner hit exactly this (it clears the pure-flow cache between
+ * files but not this one). Keying by the program AST *identity* gives per-compilation isolation for ALL
+ * callers (not just the benchmark runner) at zero hot-path cost — no per-call source hashing on the
+ * fastest interpreter tier. A re-parse of the same source yields a fresh AST object → a cache MISS (one
+ * harmless recompile), never a wrong HIT. A WeakMap also lets entries be reclaimed when the AST is GC'd.
+ */
+let BYTECODE_CACHE = new WeakMap<AstNode, Map<string, BytecodeProgram | null>>();
 
 /**
  * Phase 31: Try to compile a pure flow to bytecode. Returns null if unsupported.
@@ -363,23 +402,28 @@ export function compileToBytecode(
   ast: AstNode,
   flowName: string,
 ): BytecodeProgram | null {
-  const cacheKey = flowName;
-  if (BYTECODE_CACHE.has(cacheKey)) return BYTECODE_CACHE.get(cacheKey)!;
+  // Per-compilation isolation: scope the per-flow cache to this exact program AST (see BYTECODE_CACHE).
+  let perAst = BYTECODE_CACHE.get(ast);
+  if (perAst === undefined) {
+    perAst = new Map<string, BytecodeProgram | null>();
+    BYTECODE_CACHE.set(ast, perAst);
+  }
+  if (perAst.has(flowName)) return perAst.get(flowName)!;
 
   const flowNode = (ast.children ?? []).find(c => FLOW_KINDS.has(c.kind) && c.value === flowName);
   if (flowNode === undefined) {
-    BYTECODE_CACHE.set(cacheKey, null);
+    perAst.set(flowName, null);
     return null;
   }
 
   try {
     // Phase 45: pass ast so callExpr can compile callees
     const program = new BytecodeCompiler(flowName, ast).compile(flowNode);
-    BYTECODE_CACHE.set(cacheKey, program);
+    perAst.set(flowName, program);
     return program;
   } catch (e) {
     if (e instanceof BytecodeUnsupported) {
-      BYTECODE_CACHE.set(cacheKey, null);
+      perAst.set(flowName, null);
       return null;
     }
     throw e;
@@ -403,7 +447,7 @@ export function tryRunBytecode(
   return runBytecode(program, args);
 }
 
-/** Clear the bytecode cache (per-compilation isolation). */
+/** Drop all cached bytecode. (A WeakMap has no clear(), so swap in a fresh one.) */
 export function clearBytecodeCache(): void {
-  BYTECODE_CACHE.clear();
+  BYTECODE_CACHE = new WeakMap<AstNode, Map<string, BytecodeProgram | null>>();
 }
