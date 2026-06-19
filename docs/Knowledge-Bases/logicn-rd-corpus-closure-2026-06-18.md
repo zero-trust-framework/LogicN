@@ -1,5 +1,31 @@
 # R&D corpus closure + shipping-readiness ledger (2026-06-18)
 
+## ▶ RESUME POINTER — 2026-06-19 session close (read FIRST after a /clear)
+**Shipped this session (prod `main`, NOT pushed):** sync-path hang fix · `forEach`→WASM · `for…where`
+filtered iteration (`2c27e14`) · 0031/34A `tainted` param · bytecode-VM cap + per-AST cache · **0038
+i32-overflow fail-OPEN fix** (`3596fb5`+`490c492`) · global fail-closed-invariant guard + §7 bench scoreboard
+(`b403639`) · **AOT #1 const-expression folding** (`dc76ed4`). Gate: SOT `--core` **3641 green**, 0014
+fidelity 4/4, full 28-bench suite lands (recorded `full-suite-2026-06-19.json` — note it PREDATES the 0038
+fix, so arithmetic-threshold now fails closed).
+
+**▶ Immediate next autonomous step:** **AOT #2 — branch-folding + dead-arm DCE** (composes on the const-fold
+just shipped: a folded-constant `if` condition → keep one arm, drop the other + now-unused lets). Then AOT
+#3 trap-tail simplify · #4 small-pure-flow inlining · #5 cross-flow LTO · #6 PGO (defer). Build order from 0036.
+
+**R&D worker (separate session) — ACTIVELY RUNNING:** 0036/0037/0038/0039/0041 DONE (absorbed). 0040 (DbC)
+UNLOCKED (`bc18123`) — worker has a done-report IN ITS TREE (uncommitted at close). 0042 (WDM-ternary) /
+0044 (predictability-mass-eqn) — worker has harnesses in progress; 0043 (golden-standard re-audit) open.
+**POST-CLEAR TODO:** absorb the worker's new done-reports (0040, 0042, 0043, 0044) once it commits them
+(SOP: inventory→import→index→commit). Do NOT edit the worker's tree.
+
+**Owner-gated PRODUCTION builds awaiting a steer:** 0037 separate-presence-channel (correctness, "do first")
+· 0038 throw-at-op refactor (cleaner than the shipped value-propagation fix) · 0039 benchmark re-author
+(spec ready: matrix n=32 all / tri-logic runBulkTri(100000) / data-query N=2000) · 0031-34B route auto-taint
+(breaking, strict-profile) · 0025/0035 governance decision-path wiring · `move`/`USE_AFTER_MOVE` syntax ·
+WASM handles/WasmGC · the **"Mesh" → ? rename** (owner picks the name; TritMesh/TritMeshQL/MeshQL + `meshql.mjs`).
+
+---
+
 > **Status: R&D bridge queue DRAINED — 35/35 tasks done.** Verified structurally by the hub (every
 > `_session-bridge/tasks/00NN-*.md` has a matching `done/00NN-*.done.md`; R&D commits `7f2dae0` + `48b606e`).
 > **Provenance honesty:** verdicts 0009/0031/0032/0033/0034/0035 were **hub-verified this session** (own
