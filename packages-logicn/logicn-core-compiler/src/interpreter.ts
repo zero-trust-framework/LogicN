@@ -1430,18 +1430,27 @@ class Interpreter {
   private async evalBinary(op: string, leftNode: AstNode, rightNode: AstNode): Promise<LogicNValue> {
     if (op === "&&") {
       const left = await this.evalExpr(leftNode);
+      if (isCheckedTrap(left)) return left; // 0038: a trap in a bool operand fails closed, not silently
       if (left.__tag === "bool" && !left.value) return { __tag: "bool", value: false };
-      return await this.evalExpr(rightNode);
+      return await this.evalExpr(rightNode); // a checked trap in `right` propagates to the binding
     }
 
     if (op === "||") {
       const left = await this.evalExpr(leftNode);
+      if (isCheckedTrap(left)) return left; // 0038: a trap in a bool operand fails closed, not silently
       if (left.__tag === "bool" && left.value) return { __tag: "bool", value: true };
       return await this.evalExpr(rightNode);
     }
 
     const left = await this.evalExpr(leftNode);
     const right = await this.evalExpr(rightNode);
+
+    // 0038: a CHECKED-OP trap operand (IntegerOverflow / DivisionByZero) PROPAGATES through the
+    // expression — otherwise the dispatch-miss fallthrough below masks it as a soft "Operator '…' not
+    // supported for runtimeError", losing the trap (and letting a nested overflow run the whole loop
+    // before failing). Soft runtimeErrors keep the fallthrough so graceful handling is unaffected.
+    if (isCheckedTrap(left)) return left;
+    if (isCheckedTrap(right)) return right;
 
     // O(1) dispatch map — covers all common type × op × type combinations
     const dispatchFn = BINARY_DISPATCH.get(dispatchKey(left.__tag, op, right.__tag));

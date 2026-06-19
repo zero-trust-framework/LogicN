@@ -48,3 +48,11 @@ test("fail-closed: division-by-zero assigned to a NON-returned binding must stil
   const v = await runFlow("mut junk: Int = 0  mut z: Int = 0  junk = 10 / z  return 5");
   assert.ok(trapsClosed(v), `div-by-zero into a dead binding must fail closed (got ${v.__tag}:${v.value})`);
 });
+
+// A checked trap NESTED inside a larger expression must propagate through the operator (the compute-mix
+// shape: `(seed*K)+C`), not be masked into a soft "Operator '+' not supported for runtimeError".
+test("fail-closed: a checked trap NESTED in an expression propagates (compute-mix shape) — fails fast + clean", async () => {
+  const v = await runFlow("mut junk: Int = 0  junk = (2000000000 * 2000000000) + 1  return 5");
+  assert.ok(trapsClosed(v), `nested overflow must fail closed (got ${v.__tag}:${v.value})`);
+  assert.equal(v.message, "IntegerOverflow", "the original checked-trap message must survive the surrounding op, not be masked");
+});
