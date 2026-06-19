@@ -55,6 +55,30 @@ WASM handles/WasmGC · the **"Mesh" → ? rename** (owner picks the name; TritMe
 
 ---
 
+## BENCHMARK SNAPSHOT 2026-06-19 (full suite, i9-9900K / Node v24.16.0 — post 0040+AOT#2)
+Full `runner.mjs` + `compare.mjs`. **Honest scoreboard (LRU cache-hit "LogicN passive" wins EXCLUDED as
+artifacts — the compare flags them ⚠️cache + names the real first-call winner).** Real-compute ranking:
+- **🥇 Rust (generic / AVX2)** — the compute ceiling: wins arithmetic-threshold (1.56B/s), six-digit-guess,
+  record-allocation, collection-pipeline (13B/s), governance-cost (889M/s), low-memory (6.1B/s), gpu-compute,
+  mandelbrot, spectral-norm, tmf-container (~10 numeric benchmarks).
+- **🥈 Node.js (V8 JIT)** — wins the string/branchy/framework lane: compute-mix (134M/s first-call),
+  call-chain (317M/s), nbody (123M/s), json-parse (3.52M/s), binary-trees (79.9M/s), framework-pipeline (=the
+  LogicN App Kernel, 408K/s).
+- **🥉 LogicN WASM ▶ production** — LogicN's REAL native-speed path: WINS fibonacci-recursive (16.5K/s) +
+  hardware-targets (46.5M/s); podiums six-digit (38.7M/s 🥉) + governance-cost (3.12M/s 🥉). This is the
+  realistic LogicN ceiling (≈native-CPU class) — the target per [[logicn-aot-tricks-verdict]].
+- **LogicN interp (governed/manifest)** = the FLOOR (Stage-A TS tree-walker): beats Python on only **1/11**
+  unit-aligned benchmarks; wins crypto-ops/text-html only because no native column exists there.
+- **3 benchmarks EXCLUDED — not unit-aligned** (matrix-multiply / tri-logic / data-query) = 0039's spec, still
+  owner-gated to re-author. Takeaway unchanged: governed interpreter = correctness floor; **WASM is the speed
+  story**; overflow workloads fail closed (Fork-A/0038). My session's 0040+AOT#2 are codegen/runtime-correctness,
+  not interpreter-throughput, changes — perf-neutral on the interp benchmark path by construction.
+
+**Gate (this pass):** SOT `--core` **3659 green · 0 fail**; graph **3667 nodes / 4061 edges / 1952 files** clean;
+0014 fidelity 4/4; tsc clean across the touched packages.
+
+---
+
 > **Status: R&D bridge queue DRAINED — 35/35 tasks done.** Verified structurally by the hub (every
 > `_session-bridge/tasks/00NN-*.md` has a matching `done/00NN-*.done.md`; R&D commits `7f2dae0` + `48b606e`).
 > **Provenance honesty:** verdicts 0009/0031/0032/0033/0034/0035 were **hub-verified this session** (own
