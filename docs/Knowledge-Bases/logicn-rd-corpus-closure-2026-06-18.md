@@ -22,12 +22,14 @@ graph 3676/4069; both LogicN + LogicN-R-AND-D git trees CLEAN.
 - **git/build hygiene:** untracked ~501 ephemeral `build/*` artifacts + the 2.1MB `build/graph/*.json`/html
   (gitignored; kept the small nav `.md`s). `build/` now tracks 4 intentional files.
 
-**R&D queue 0036–0051 ALL filed/done.** Worker closed 0045–0049 (done-records committed; 0045 re-grounded to
+**R&D queue 0036–0052 filed.** Worker closed 0045–0049 (done-records committed; 0045 re-grounded to
 owner decisions `215aab0`). NEW filed this session for the worker: **0047** (marker→keep `//lln:`, DONE),
 **0048** (testing strategy — top adds = wire 0014 fuzz live + 0016 contract-test generator), **0049** (USES/
 USEDBY runtime → incremental recompute = real win), **0050** (cloud-native blind-observability telemetry
 sidecar — build the exporter, state already exists), **0051** (ecosystem-language positioning + verified
-imports — mostly already-true, don't change the language). See [[logicn-social-ecosystem-cloud-native]].
+imports — mostly already-true, don't change the language), **0052** (WASM compilation granularity —
+single vs multi-module, packages-outside; verified current = one signed `.wasm`/package + fuse, component-model
+#102–104 reserved; landscape question, no maths yet). See [[logicn-social-ecosystem-cloud-native]].
 
 **▶ AOT #2 — branch-folding + dead-arm DCE — ✅ SHIPPED `056ac70`** (`foldToBool` folds a const `if`
 condition → emit only the taken arm; dead arm + locals dropped; nested=true → explicit returns valid
