@@ -1,11 +1,33 @@
 # R&D corpus closure + shipping-readiness ledger (2026-06-18)
 
-## ▶ RESUME POINTER — 2026-06-19 session close (read FIRST after a /clear)
-**Shipped this session (prod `main`, NOT pushed):** sync-path hang fix · `forEach`→WASM · `for…where`
-filtered iteration (`2c27e14`) · 0031/34A `tainted` param · bytecode-VM cap + per-AST cache · **0038
-i32-overflow fail-OPEN fix** (`3596fb5`+`490c492`) · global fail-closed-invariant guard + §7 bench scoreboard
-(`b403639`) · **AOT #1 const-expression folding** (`dc76ed4`) · **0040 DbC OUTPUT post-conditions**
-(`fa9fae5`, owner re-R&D'd → BUILT). Gate: SOT `--core` **3652 green**, 0014 fidelity 4/4, graph 3666/4060.
+## ▶ RESUME POINTER — 2026-06-19 session close v2 (read FIRST after a /clear)
+**▶ NEXT (owner directive): work on the CORE ROADMAP** (`logicn-build-roadmap.md` — the language/compiler
+roadmap). The structured-engineering + social-ecosystem threads below are DONE/R&D-filed; the owner wants the
+core roadmap next.
+
+**State at clear (everything committed local `main`, NOT pushed — #149):** SOT `--core` **3702 green · 0 fail**;
+graph 3676/4069; both LogicN + LogicN-R-AND-D git trees CLEAN.
+
+**Shipped this session (the big arcs):**
+- **DbC output post-conditions (0040)** — `invariant { ensure result … }` fail-closed on EVERY tier (`fa9fae5`
+  + gap-fix `d9316c2` + WASM single-exit `71ec537`). The done-record's "fail-OPEN" was REFUTED (a fail-SAFE
+  capability gap); follow-up = early-return `br` rewrite + Z3 discharge (0024 track).
+- **AOT #1 const-fold (`dc76ed4`) + AOT #2 branch-fold/DCE (`056ac70`).** Next = AOT #3 trap-tail simplify.
+- **Structured-engineering metadata (R&D 0045) — Phases 1-3 SHIPPED:** `//lln:` generated-comment tier
+  (`1804557`); `LLN-HW-004` hardware uncertainty (`5d8d611`); **`logicn deps [--write]`** = `//lln: USES/
+  USEDBY/IMPACT/COMPLEXITY` (`1a57761`/`45bc0a5`/`2fb7ac1`); `contract.architecture{}` + `LLN-ARCH-001`
+  (`c04fac0`) + Stable-Deps `LLN-ARCH-002` always-hard-error (`f8468a4`); token renamed `//@`→`//lln:`
+  (`b2b1c6e`, owner-final, no `@generated`). Remaining: 2c/3d volatility (0045 proved the churn+depth formula),
+  3a per-flow graph edges, Phase 4 polish. See [[logicn-structured-engineering-metadata]].
+- **git/build hygiene:** untracked ~501 ephemeral `build/*` artifacts + the 2.1MB `build/graph/*.json`/html
+  (gitignored; kept the small nav `.md`s). `build/` now tracks 4 intentional files.
+
+**R&D queue 0036–0051 ALL filed/done.** Worker closed 0045–0049 (done-records committed; 0045 re-grounded to
+owner decisions `215aab0`). NEW filed this session for the worker: **0047** (marker→keep `//lln:`, DONE),
+**0048** (testing strategy — top adds = wire 0014 fuzz live + 0016 contract-test generator), **0049** (USES/
+USEDBY runtime → incremental recompute = real win), **0050** (cloud-native blind-observability telemetry
+sidecar — build the exporter, state already exists), **0051** (ecosystem-language positioning + verified
+imports — mostly already-true, don't change the language). See [[logicn-social-ecosystem-cloud-native]].
 
 **▶ AOT #2 — branch-folding + dead-arm DCE — ✅ SHIPPED `056ac70`** (`foldToBool` folds a const `if`
 condition → emit only the taken arm; dead arm + locals dropped; nested=true → explicit returns valid
