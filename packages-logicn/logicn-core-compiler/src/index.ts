@@ -433,6 +433,7 @@ export {
 export {
   analyzeFlowDependencies,
   renderDependencyComments,
+  rewriteGeneratedComments,
   type FlowDependencies,
 } from "./flow-dependency-analysis.js";
 export {

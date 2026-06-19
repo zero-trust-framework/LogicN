@@ -40,8 +40,8 @@ mostly **additive wiring**, not new subsystems.
   (NB: `logicn deps` already derives flow→flow edges directly from the AST, so the report doesn't need this.)
 - **3b. Stable-Dependencies enforcement** ✅ `<this commit>` — `LLN-ARCH-002`, always a hard error (decision #5),
   on the observed call graph; only declared-volatility flows participate.
-- **3c. SOURCE WRITER** (`logicn deps --write` overwrites only `//lln:` lines, silently — decision #3) — ⏳ NEXT
-  (the one remaining big piece; modifies source files, so safe-overwrite must be airtight).
+- **3c. SOURCE WRITER** ✅ — `logicn deps --write` (rewriteGeneratedComments): silently overwrites only `//lln:` lines, idempotent, fail-closed; unit-tested
+  (decision #3, done).
 - **3d. git-churn volatility** — gated on history availability (decision #4 open); the graph-depth proxy (2c) is the fallback.
 
 **Phase 4 — polish:** state-mutability metric (`//lln:Mutates`), central Governance-Registry index (decision #2), pre-commit hook.

@@ -749,14 +749,39 @@ Baseline comparison (governance-cost):
       process.exit(1);
     }
     const names = only !== undefined ? [only] : [...depMap.keys()];
-    if (names.length === 0) console.log(`(${llnFile}: no flows)`);
+
+    // Build the generated //lln: lines per flow (USES/USEDBY/IMPACT + COMPLEXITY).
+    const genLines = new Map();
     for (const name of names) {
       const d = depMap.get(name);
       if (d === undefined) continue;
-      console.log(`flow ${name}`);
-      for (const line of m.renderDependencyComments(d)) console.log(`  ${line}`);
+      const lines = [...m.renderDependencyComments(d)];
       const node = flowNodeByName.get(name);
-      if (node !== undefined) for (const line of m.renderComplexityComment(node)) console.log(`  ${line}`);
+      if (node !== undefined) lines.push(...m.renderComplexityComment(node));
+      genLines.set(name, lines);
+    }
+
+    // ── --write: silently overwrite the //lln: block above each flow IN THE SOURCE (R&D 0045 #3) ──
+    // Touches ONLY //lln: lines — removes the old contiguous //lln: block immediately above each flow
+    // declaration and inserts the fresh block; never modifies a human // line, a contract, or any code.
+    // Processes bottom-up so line indices stay valid. Fail-closed: parse errors already exited above.
+    if (rest.includes("--write")) {
+      const out = m.rewriteGeneratedComments(source, genLines);
+      if (out !== source) {
+        writeFileSync(llnFile, out);
+        console.log(`✅ ${llnFile}: refreshed //lln: metadata on ${genLines.size} flow(s)`);
+      } else {
+        console.log(`✓ ${llnFile}: //lln: metadata already current (${genLines.size} flow(s))`);
+      }
+      process.exit(0);
+    }
+
+    if (names.length === 0) console.log(`(${llnFile}: no flows)`);
+    for (const name of names) {
+      const lines = genLines.get(name);
+      if (lines === undefined) continue;
+      console.log(`flow ${name}`);
+      for (const line of lines) console.log(`  ${line}`);
     }
     process.exit(0);
   }

@@ -78,7 +78,7 @@ export function analyzeFlowDependencies(ast: AstNode): Map<string, FlowDependenc
 }
 
 /**
- * Render the canonical generated `//@` dependency comment lines for one flow (R&D 0045 vocabulary).
+ * Render the canonical generated `//lln:` dependency comment lines for one flow (R&D 0045 vocabulary).
  * Count-prefixed `(N)` so the blast-radius is visible even if a long list is truncated by a writer.
  * USES/USEDBY are omitted when empty; IMPACT always renders (it carries the safe-to-delete signal).
  */
@@ -92,4 +92,32 @@ export function renderDependencyComments(deps: FlowDependencies): string[] {
   }
   lines.push(deps.impact === 0 ? `//lln: IMPACT: (0) — safe to delete` : `//lln: IMPACT: (${deps.impact})`);
   return lines;
+}
+
+/**
+ * Rewrite a .lln source so each flow has its current generated `//lln:` block immediately above its
+ * declaration. SILENTLY OVERWRITES the old contiguous `//lln:` block (R&D 0045 decision #3 — the generated
+ * tier is machine-owned). Touches ONLY `//lln:` lines: removes the contiguous run of `//lln:` lines directly
+ * above a flow declaration and inserts the fresh block — never a human `//` line, a `contract`, or any code.
+ * Processes bottom-up so line indices stay valid; idempotent when the metadata is already current.
+ * `genByFlow` maps a flow name → its fresh `//lln:` lines (renderDependencyComments + renderComplexityComment).
+ */
+export function rewriteGeneratedComments(
+  source: string,
+  genByFlow: ReadonlyMap<string, readonly string[]>,
+): string {
+  const lines = source.split("\n");
+  const flowRe = /^(\s*)(?:pure\s+|secure\s+|guarded\s+)?flow\s+(\w+)\b/;
+  for (let i = lines.length - 1; i >= 0; i--) {
+    const fm = (lines[i] ?? "").match(flowRe);
+    if (fm === null) continue;
+    const gen = genByFlow.get(fm[2] as string);
+    if (gen === undefined) continue;
+    const indent = fm[1] ?? "";
+    let start = i;
+    while (start - 1 >= 0 && /^\s*\/\/lln:/.test(lines[start - 1] ?? "")) start--;
+    lines.splice(start, i - start, ...gen.map((l) => indent + l));
+    i = start; // continue scanning above the block we just wrote
+  }
+  return lines.join("\n");
 }

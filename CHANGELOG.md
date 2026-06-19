@@ -24,6 +24,13 @@ verified**; the codebase is in a fail-closed, deterministic state. 48/48 package
   `epilogueReceipt`, `liabilityProfile`, `physicalHardeningTier`).
 
 ### Added
+- **`logicn deps --write` source-writer (R&D 0045 — Phase 3c; owner: silently overwrite).** `rewriteGeneratedComments(source, genByFlow)`
+  injects/refreshes each flow's `//lln:` block **in the source file**, directly above its declaration —
+  **silently overwriting** the old contiguous `//lln:` block (the generated tier is machine-owned). It
+  touches **only `//lln:` lines** — never a human `//` line, a `contract`, or any code (a human line that
+  merely contains "USEDBY" is left alone); idempotent; preserves indentation; fail-closed (refuses a file
+  with parse errors). So `logicn deps app.lln --write` graphs the app and writes the `//lln: USES`/`USEDBY`/
+  `IMPACT`/`COMPLEXITY` comments back automatically. The rewrite logic is a unit-tested pure function. +6 tests.
 - **Stable-Dependencies enforcement — `LLN-ARCH-002` (R&D 0045 — Phase 3b; owner: always a hard error).** A
   cross-flow governance pass: a **more-stable** flow (lower `contract.architecture` volatility) may **not**
   depend on a **more-volatile** one (the Stable Dependencies Principle). E.g. a `volatility: LOW` flow that
