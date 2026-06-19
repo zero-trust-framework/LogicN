@@ -6,10 +6,11 @@
  * never-returned binding, or discarded inside a loop. A trap is a FAILURE, not a discardable value.
  *
  * Why this exists: the i32-overflow fail-open (R&D 0038) — `junk = 2e9 * 2e9` where `junk` is never
- * returned silently COMPLETES (the overflow's runtimeError is dropped). This suite catches that CLASS
- * (any checked op × any result placement), not just the one instance. The "discarded" cases are marked
- * `todo` (expected-fail until 0038 lands); when the fix lands, delete the `todo` option and they become
- * permanent regression guards. The return-path cases pass today and guard that direction now.
+ * returned silently COMPLETED (the overflow's runtimeError was dropped). FIXED 2026-06-19: a CHECKED-OP
+ * trap (IntegerOverflow / DivisionByZero) now propagates out of a binding/expression statement
+ * (`isCheckedTrap` in interpreter.ts) so it fails the flow closed regardless of result placement. Soft
+ * runtimeErrors (e.g. a missing field) keep value semantics so graceful handling still works. All cases
+ * below now PASS and are permanent guards against this CLASS (any checked op × any result placement).
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -35,15 +36,15 @@ test("fail-closed: division-by-zero on the return path traps", async () => {
 
 // ── A trap whose result is DISCARDED must STILL fail closed (the fail-OPEN class — R&D 0038) ─────────
 // `todo`: expected-fail until 0038 lands. Removing the `todo` option turns these into permanent guards.
-test("fail-closed: i32 overflow assigned to a NON-returned binding must still trap", { todo: "fail-open — R&D bridge 0038" }, async () => {
+test("fail-closed: i32 overflow assigned to a NON-returned binding must still trap",async () => {
   const v = await runFlow("mut junk: Int = 0  junk = 2000000000 * 2000000000  return 5");
   assert.ok(trapsClosed(v), `overflow into a dead binding must fail closed (got ${v.__tag}:${v.value})`);
 });
-test("fail-closed: i32 overflow DISCARDED inside a loop must still trap (arithmetic-threshold shape)", { todo: "fail-open — R&D bridge 0038" }, async () => {
+test("fail-closed: i32 overflow DISCARDED inside a loop must still trap (arithmetic-threshold shape)",async () => {
   const v = await runFlow("mut junk: Int = 0  mut i: Int = 0  while i < 5 { junk = 2000000000 * 2000000000  i = i + 1 } return i");
   assert.ok(trapsClosed(v), `overflow discarded in a loop must fail closed (got ${v.__tag}:${v.value})`);
 });
-test("fail-closed: division-by-zero assigned to a NON-returned binding must still trap", { todo: "fail-open — R&D bridge 0038" }, async () => {
+test("fail-closed: division-by-zero assigned to a NON-returned binding must still trap",async () => {
   const v = await runFlow("mut junk: Int = 0  mut z: Int = 0  junk = 10 / z  return 5");
   assert.ok(trapsClosed(v), `div-by-zero into a dead binding must fail closed (got ${v.__tag}:${v.value})`);
 });

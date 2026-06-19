@@ -1119,6 +1119,10 @@ class Interpreter {
       case "readonlyDecl": {
         const initNode = node.children?.[0];
         const initVal = initNode !== undefined ? await this.evalExpr(initNode) : LLN_VOID;
+        // 0038 fail-closed: a checked-op trap (overflow/div0) must FAIL THE FLOW where it occurs, not be
+        // bound to a variable and silently discarded. Propagate it (executeBlock returns it → flow errors).
+        // Soft runtimeErrors (e.g. missing field) keep value semantics so graceful handling still works.
+        if (isCheckedTrap(initVal)) return initVal;
         const { name, safetyPrefix, typeName, rawType } = parseBindingValue(node.value ?? "");
         const wrappedVal = wrapGovernedValue(initVal, rawType);
         // R1C: Soft-tag governed values with a non-enumerable _governed property (Phase 11D)
@@ -1132,6 +1136,7 @@ class Interpreter {
       case "mutDecl": {
         const initNode = node.children?.[0];
         const initVal = initNode !== undefined ? await this.evalExpr(initNode) : LLN_VOID;
+        if (isCheckedTrap(initVal)) return initVal; // 0038 fail-closed: don't bind + discard a checked trap
         const { name, safetyPrefix, typeName, rawType } = parseBindingValue(node.value ?? "");
         const value = wrapGovernedValue(initVal, rawType);
         // R1C: Soft-tag governed values with a non-enumerable _governed property (Phase 11D)
@@ -1189,6 +1194,7 @@ class Interpreter {
         const rhsNode = node.children?.[0];
         if (targetName === "" || rhsNode === undefined) return undefined;
         const newValue = await this.evalExpr(rhsNode);
+        if (isCheckedTrap(newValue)) return newValue; // 0038 fail-closed: don't assign + discard a checked trap
         if (!this.assign(targetName, newValue)) {
           this.diagnostics.push({
             code: "LLN-RUNTIME-004",
@@ -1279,9 +1285,11 @@ class Interpreter {
       case "block":
         return await this.executeBlock(node);
 
-      default:
-        await this.evalExpr(node);
-        return undefined;
+      default: {
+        // 0038 fail-closed: a bare expression-statement that hits a checked-op trap must fail the flow.
+        const v = await this.evalExpr(node);
+        return isCheckedTrap(v) ? v : undefined;
+      }
     }
   }
 
@@ -2310,6 +2318,19 @@ function qualifierFromFlowKind(kind: AstNode["kind"]): "flow" | "pure" | "guarde
 
 function isRuntimeError(value: LogicNValue): value is { readonly __tag: "runtimeError" | "error"; readonly message: string } {
   return value.__tag === "runtimeError" || value.__tag === "error";
+}
+
+/**
+ * A CHECKED-OP trap (i32 overflow / division-by-zero) — a HARD fail-closed condition under the owner's
+ * Fork-A=TRAP decision. Distinct from a SOFT, handleable `runtimeError` (e.g. a missing field, which a
+ * flow may legitimately turn into `{ success: false }`). 0038 fix: only checked traps must PROPAGATE out
+ * of a binding/expression statement (a trap assigned to a never-returned var must still fail the flow);
+ * soft runtimeErrors keep their existing value semantics so graceful handling still works.
+ * NB: matches the two `I32TrapKind`s by message — a cleaner long-term design is a distinct trap tag (0038).
+ */
+function isCheckedTrap(value: LogicNValue): boolean {
+  return value.__tag === "runtimeError" &&
+    (value.message === "IntegerOverflow" || value.message === "DivisionByZero");
 }
 
 function stripStringQuotes(value: string): string {
