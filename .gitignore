@@ -44,3 +44,12 @@ build/tower-logs/
 build/receipt-ledger/
 build/bench-report.md
 build/*.dot
+
+# build/graph: ignore the heavy REGENERATED artifacts (2.1 MB json churns every `graph` run;
+# the json is rebuilt by `graph` — `graph query/explain/path` print "run graph first" if absent).
+# KEEP the small human/AI nav docs (LogicN_GRAPH_REPORT.md, logicn-ai-map.md — AGENTS.md points to them).
+build/graph/*.json
+build/graph/*.html
+build/kb-graph/*.json
+build/kb-graph/*.dot
+build/graph/*.dot
