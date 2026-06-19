@@ -1235,6 +1235,7 @@ class Interpreter {
         const varName = node.value ?? "item";
         const collectionNode = node.children?.[0];
         const bodyNode = node.children?.[1];
+        const whereGuard = node.children?.[2]; // optional `where <guard>` filter (3rd child)
         if (collectionNode === undefined || bodyNode === undefined) return undefined;
 
         const collection = await this.evalExpr(collectionNode);
@@ -1250,7 +1251,18 @@ class Interpreter {
           this.enforcer?.checkDeadline(); // 0032 fix: wall-clock deadline bounds forEach too
           this.pushScope();
           this.declare(varName, item);
-          const bodyResult = await this.executeBlock(bodyNode);
+          // `where` guard (filtered iteration): the loop variable is in scope, so the guard can
+          // reference it; run the body only for items where the guard is truthy.
+          let pass = true;
+          if (whereGuard !== undefined) {
+            const g = await this.evalExpr(whereGuard);
+            pass = (g.__tag === "bool" && g.value) ||
+                   (g.__tag === "int" && g.value !== 0) ||
+                   (g.__tag === "float" && g.value !== 0) ||
+                   g.__tag === "some" || g.__tag === "ok";
+          }
+          let bodyResult: LogicNValue | undefined;
+          if (pass) bodyResult = await this.executeBlock(bodyNode);
           this.popScope();
           if (bodyResult !== undefined) return bodyResult;
         }

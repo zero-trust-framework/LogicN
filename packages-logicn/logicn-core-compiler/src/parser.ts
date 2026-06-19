@@ -4912,8 +4912,20 @@ class Parser {
     if (this.current().kind === "identifier" && this.current().value === "in") this.advance();
     this.skipNewlines();
     const collection = this.parseExpression();
+    this.skipNewlines();
+    // Optional `where <guard>` filter (#filtered iteration): the body runs only for items where the
+    // guard is truthy — `for x in xs where x > 0 { ... }`. Emitted as the optional 3rd child so the
+    // existing [collection, body] shape (and its consumers) stay backward-compatible.
+    let whereGuard: AstNode | undefined;
+    if (this.currentIs("keyword", "where")) {
+      this.advance(); // consume "where"
+      this.skipNewlines();
+      whereGuard = this.parseExpression();
+      this.skipNewlines();
+    }
     const body = this.parseBlock();
-    return { kind: "forEachStmt", value: varName, location: loc, children: [collection, body] };
+    const children = whereGuard !== undefined ? [collection, body, whereGuard] : [collection, body];
+    return { kind: "forEachStmt", value: varName, location: loc, children };
   }
 
   // ── Import / type / enum stubs ────────────────────────────────────────────

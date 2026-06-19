@@ -24,10 +24,19 @@ verified**; the codebase is in a fail-closed, deterministic state. 48/48 package
   `epilogueReceipt`, `liabilityProfile`, `physicalHardeningTier`).
 
 ### Added
+- **`for x in list where <guard> { … }` — filtered iteration.** `where` is promoted from reserved-future
+  to an active keyword: the loop body runs only for items where the guard is truthy. Works in the
+  interpreter and lowers to WASM as an `(if guard (then body))` inside the for-in loop (the index always
+  advances), byte-identical across tiers (tests in `where-filter.test.mjs`). Guard form — no masking, so no
+  K3 trit-0 aliasing concern.
 - **#128(b) / GAP-4 — `forEachStmt` (for-in) WASM lowering.** A `for x in list { … }` loop now lowers to
   a real counted WASM loop over the host array bridge (`__array_length` / `__array_get`) instead of the
   fail-closed `(unreachable)` trap. Executes correctly and is byte-identical to the reference tree-walker
   (tests in `wat-forin-execution.test.mjs`).
+- **Fail-closed invariant test suite** (`fail-closed-invariant.test.mjs`) — a global guard that a checked-op
+  trap (overflow, div0) must fail the flow closed regardless of where its result lands (return / dead
+  binding / discarded-in-loop). Return-path cases pass; the discard cases are `todo` pending the R&D-0038
+  fix (a confirmed fail-open: an overflow assigned to a never-returned binding is silently discarded).
 - `crypto-ops` benchmark now measures ML-DSA-65 + hybrid Ed25519+ML-DSA-65 signatures (PQ-tax visibility).
 - KB §7a — ratified domain-guard `permitted_effects` state machine.
 - Roadmap #125–#128 (CLI governed-run, parser-level bitwise hint, shape-stable governance objects, GAP-4).

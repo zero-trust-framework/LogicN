@@ -1703,6 +1703,7 @@ function emitBlockStatements(
         const varName = rawVar.split(":")[0]?.trim() ?? "item";
         const collectionNode = stmt.children?.[0];
         const bodyBlock = stmt.children?.[1];
+        const whereGuard = stmt.children?.[2]; // optional `where <guard>` filter (3rd child)
         const labelN = labelCounter.n++;
         const exitLabel = `$forin_exit_${labelN}`;
         const loopLabel = `$forin_loop_${labelN}`;
@@ -1735,7 +1736,16 @@ function emitBlockStatements(
         if (bodyBlock !== undefined) {
           const loopLines: string[] = [];
           emitBlockStatements(bodyBlock, vars, localDecls, loopLines, labelCounter, true, staticConsts);
-          for (const line of loopLines) bodyLines.push(`    ${line}`);
+          if (whereGuard !== undefined) {
+            // `where` filter: run the body only when the guard is truthy. The idx increment stays
+            // OUTSIDE the guard so the loop always advances (no infinite loop on a failing guard).
+            const guardWat = emitWATExpr(whereGuard, vars, staticConsts);
+            bodyLines.push(`    (if ${guardWat} (then`);
+            for (const line of loopLines) bodyLines.push(`      ${line}`);
+            bodyLines.push(`    ))`);
+          } else {
+            for (const line of loopLines) bodyLines.push(`    ${line}`);
+          }
         }
         bodyLines.push(`    (local.set ${idxLocal} (i32.add (local.get ${idxLocal}) (i32.const 1)))`);
         bodyLines.push(`    (br ${loopLabel})`);
