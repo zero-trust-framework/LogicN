@@ -53,7 +53,14 @@ mostly **additive wiring**, not new subsystems.
   it's used on fixtures/examples in the test suite; only `--package` refreshes.)
 - **3d. git-churn volatility** — gated on history availability (decision #4 open); the graph-depth proxy (2c) is the fallback.
 
-**Phase 4 — polish:** state-mutability metric (`//lln:Mutates`), central Governance-Registry index (decision #2), pre-commit hook.
+**Phase 4 — polish:** state-mutability metric (`//lln:Mutates`), central Governance-Registry index (decision #2),
+pre-commit hook ✅ template shipped at `scripts/hooks/pre-commit` (the "keep build pure + use a hook" alternative —
+runs `logicn deps --all --write` + re-stages changed `.lln`; set `LOGICN_APP_DIR` to your src root).
+
+**Open follow-up (recommended next): fail-closed STALENESS GATE** — the build-refresh + hook keep `//lln:` current
+*ergonomically*, but neither *enforces* freshness. Stamp each block with the graph hash and have `logicn check` FAIL
+when the live graph hash ≠ the recorded one (don't-trust-check applied to the tool's own output). This is the stronger
+half of R&D 0045 forward-design #1.
 
 **CLI ergonomics** ✅ `<this commit>` — added the short bin alias **`lln`** alongside `logicn` (package.json `bin`); both
 point at `logicn.mjs`. Takes effect after `npm link` / global reinstall (Windows gets an `lln.cmd` shim).
