@@ -4,19 +4,20 @@
 **Shipped this session (prod `main`, NOT pushed):** sync-path hang fix · `forEach`→WASM · `for…where`
 filtered iteration (`2c27e14`) · 0031/34A `tainted` param · bytecode-VM cap + per-AST cache · **0038
 i32-overflow fail-OPEN fix** (`3596fb5`+`490c492`) · global fail-closed-invariant guard + §7 bench scoreboard
-(`b403639`) · **AOT #1 const-expression folding** (`dc76ed4`). Gate: SOT `--core` **3641 green**, 0014
-fidelity 4/4, full 28-bench suite lands (recorded `full-suite-2026-06-19.json` — note it PREDATES the 0038
-fix, so arithmetic-threshold now fails closed).
+(`b403639`) · **AOT #1 const-expression folding** (`dc76ed4`) · **0040 DbC OUTPUT post-conditions**
+(`fa9fae5`, owner re-R&D'd → BUILT). Gate: SOT `--core` **3652 green**, 0014 fidelity 4/4, graph 3666/4060.
 
 **▶ Immediate next autonomous step:** **AOT #2 — branch-folding + dead-arm DCE** (composes on the const-fold
 just shipped: a folded-constant `if` condition → keep one arm, drop the other + now-unused lets). Then AOT
 #3 trap-tail simplify · #4 small-pure-flow inlining · #5 cross-flow LTO · #6 PGO (defer). Build order from 0036.
+Also queued (owner-steer via AskUserQuestion per the new "owner-gated = ask" rule): 0037 separate-presence
+channel · 0031-34B route auto-taint · 0025/0035 governance decision-path wiring · the "Mesh" rename · 0040
+follow-ups (WASM single-exit `$logicn_result` lowering · Z3 discharge of decidable post-condition bounds).
 
-**R&D worker (separate session) — ACTIVELY RUNNING:** 0036/0037/0038/0039/0041 DONE (absorbed). 0040 (DbC)
-UNLOCKED (`bc18123`) — worker has a done-report IN ITS TREE (uncommitted at close). 0042 (WDM-ternary) /
-0044 (predictability-mass-eqn) — worker has harnesses in progress; 0043 (golden-standard re-audit) open.
-**POST-CLEAR TODO:** absorb the worker's new done-reports (0040, 0042, 0043, 0044) once it commits them
-(SOP: inventory→import→index→commit). Do NOT edit the worker's tree.
+**R&D worker queue 0036–0044 — ALL DONE + ABSORBED (2026-06-19).** 0036/0037/0038/0039/0041 absorbed earlier
+(`4c2013c`); **0040/0042/0043/0044 absorbed this pass** (see the cont-section below). **0040 was BUILT**
+(owner: "ideas was re-R&D, get it done" — it is NOT owner-gated). POST-CLEAR TODO ✅ DONE. Do NOT edit the
+worker's tree.
 
 **Owner-gated PRODUCTION builds awaiting a steer:** 0037 separate-presence-channel (correctness, "do first")
 · 0038 throw-at-op refactor (cleaner than the shipped value-propagation fix) · 0039 benchmark re-author
@@ -110,6 +111,62 @@ task** — unlock by owner go (verify-before-build: ~80% likely already shipped)
 queue is DONE. Owner-gated PRODUCTION builds (separate from R&D-worker tasks) still pending a steer: 0036
 const-fold/DCE adoption (build order above), 0037 presence-channel + tricks, 0038 throw-at-op refactor, 0039
 benchmark re-author (spec ready), 0031-34B, 0025/0035 governance decision-path, `move` syntax, WASM handles.
+
+## WORKER R&D RESULTS 2026-06-19 (cont) — 0040 BUILT · 0042/0043/0044 absorbed · OWNER REFRAME
+The worker closed 0040 (owner released + re-R&D'd) + 0042/0043/0044 under a **binding owner reframe**, and the
+hub verified the load-bearing claims against the live tree (don't-trust-check) before absorbing.
+
+**OWNER REFRAME (binding):** the R&D goal is **the best LINE to BUILD a golden-standard photonic language**
+(secure·governed·auditable·zero-trust·fast·tri-photonic+HW-ready) — **"% already shipped" is NOT the metric.**
+Tiered honesty (MACHINE-PROVEN / DESIGNED-owner-gated / ASPIRATIONAL-HW-GATED) is the METHOD, not a brake:
+confirm the kernel → design forward → tier honestly. The fail-closed core (crypto/decisions stay digital +
+bit-exact; photonics only at the calibrated T-MAC offload behind 0028's SNR gate) is unchanged by the reframe.
+
+**NEW BINDING RULE (owner 2026-06-19):** anything "owner-gated" → **surface it as an explicit question
+(AskUserQuestion), never silently PARK it.** A design the owner directed/re-R&D'd is GO (build it), not gated.
+
+- **0040 — DbC OUTPUT post-conditions → BUILT (`fa9fae5`), NOT owner-gated.** **Don't-trust-check correction
+  (5-agent verify + adversarial refute):** the done-record's "fail-OPEN leak" framing is **REFUTED**. A
+  `result`-referencing `ensure` was HARD-REJECTED at compile time (LLN-NAME-001 symbol resolver + LLN-INV-004
+  governance verifier) → never reached the emitter → no leak. The dead stubs `extractPostConditionEnsures`/
+  `wrapInSingleExit` (#70) have ZERO callers; the live gate is `extractInvariantEnsures`, whose tail post-gate
+  the early-return path bypasses — but that only affects PARAMETER ensures (immutable → entry gate proves them).
+  So the real state was a **fail-SAFE capability gap**, not a leak. **Built the capability + enforced it
+  fail-closed across every tier:** symbol-resolver scopes `result` to the ensure expr; verifier classifies it
+  as an `invariant_postcondition`; interpreter `checkOutputPostconditions` traps a violating result at the
+  single exit (LLN-INV-002, value never escapes); post-condition flows are EXCLUDED from the bytecode/sync/
+  ExecutionGraph/cache fast tiers (three-tier fidelity — they bypass the gate) and DECLINED on WASM (→ the
+  governed interpreter). +9 tests incl. a fast-path fidelity check. **Follow-ups (now AskUserQuestion items,
+  not parked):** WASM single-exit `$logicn_result` lowering · Z3 discharge of decidable bounds (0024 track) ·
+  `result.taint`/`result.cardinality` as compile-time governance metadata.
+- **0042 — WDM tri-photonic.** MACHINE-PROVEN (re-ran `wdm-tri-photonic.mjs` exit 0): per-channel `T_k⊙(·)` ==
+  shipped `decideAtBoundary`; cross-channel bank fold == `allOf` == `reduce(minTrit)` + K3 deny-annihilator
+  (exhaustive 1092 vectors; 200k random banks, 0 violations). **WDM is vocabulary over the already-proven
+  governance-as-T-MAC fold (0025/0035) — no new calculus, no perf claim, no bench number.** Genuine new bit =
+  `.tmf`-category→wavelength-lane governance partition (per-lane isolation; crypto-on-core fence
+  `LLN-SUBSTRATE-001`; fail-closed unknown). HW speed/energy/light-drop EXCLUDED-until-silicon (0028 SNR gate).
+  Forward line: one wavelength = one category lane = one trust trit. **No build** (vocabulary; partition is a
+  design).
+- **0043 — golden-standard decision re-audit.** Per-decision KEEP/REVISE/RETIRE + sequencing (flags/profiles
+  first, fail-closed core LAST) + explicit consequences-of-breaking. Re-ran the §A spine green vs the shipped
+  binary (0025 9841/9841+300k · 0035 1092 · 0023 27/27 · #34 ml-dsa 20/20 · i32-findings 25/25; the 0038
+  detector flips RED = fix landed). **Hub reconciliations (the tree moved under the audit):** M4 crypto-hygiene
+  is **STALE for `kemdem.ts`** (timingSafeEqual + fill(0) already shipped `5c1f846`) — **still TRUE for
+  `tmx256.ts`/`container.ts`** (no zeroize; container uses a non-constant-time `bytesEqual`); M3 generation-tag
+  UAF guard (LSM-UAF-001) is now PRESENT (`692e62d`) though raw offset arith + absent WasmGC stand; C3 Ed25519-
+  only build/sign path CONFIRMED (hybrid label is type-only). KEEP the spine; REVISE the wiring; RETIRE only the
+  substrate-magic. **Design audit — no build.**
+- **0044 — predictability/eigendecomposition.** MACHINE-PROVEN (re-ran `eigendecomp-skip-iteration.mjs` exit 0,
+  14/14): the "O(1) skip-iteration" reduces to **0036's AOT envelope** — eigendecomp is O(N³) to compute, the
+  apply `P·D^k·P⁻¹·v` is **O(N²) not O(1)** (== 0036 D2, 3.9×/doubling), chain fusion DENSIFIES 40.9× (== D4),
+  and large-k breaks bit-exactness (mantissa exhaustion past 2^53). Genuine narrow kernel = a fixed-count LINEAR
+  loop `V·M^k` = AOT unroll+const-fold (but LogicN loops generally aren't that shape — Computational
+  Irreducibility). KEEP the irreducibility framing; REJECT universal-O(1) + the reject-non-collapsible gate.
+  **No new build** (folds into 0036's plan).
+
+**Verified this pass (don't-trust-check, all green):** 4 new benches re-ran exit 0 (wdm / eigendecomp / dbc-
+output-postconditions / Z3 dbc-postcondition); i32-findings 25/25; the 0038 fail-open detector flips RED
+(= production fix present). The 0040 build is the only production change; 0042/0043/0044 are verdicts/audit.
 
 ## Shipping-readiness / unblock map (what gates the *application* of the proven work)
 1. **Owner-gated (production read-only — the big bucket; batch applied per owner Go 2026-06-18/19, see APPLY PHASE above):**
