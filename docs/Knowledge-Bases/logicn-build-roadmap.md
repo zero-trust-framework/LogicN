@@ -131,6 +131,29 @@ to before — the 188 existing tower tests are unchanged).
 
 ---
 
+## 🎯 2026-06-20 — Tri-Pipe capstone BUILT — `logicn-tri-pipe` (the switch in one call)
+
+**New package `packages-logicn/logicn-tri-pipe`** — the composition/application layer that ties the whole
+photonic line into a single deployment call. `createTriPipeEngine(opts)` resolves the `hardware()` tier and
+returns a governed `HybridInferenceEngine` configured for it. It is the **one package allowed to depend on
+the Tower runtime** (composes `@logicn/hardware-tier` + `@logicn/ext-photonic-emulator` +
+`@logicn/tower-citizen`, relative-dist).
+
+- **Selection:** `binary` (cpu/wasm, or unknown/unattested) ⇒ digital stub, photonic offload **off**;
+  `hybrid` (gpu/npu, whole components) / `photonic` (attested photonic + fully eligible) ⇒ digital core +
+  photonic offload **on** for net-win eligible kernels. The capability tier is the *preference* (AXIS-1);
+  the 0053 per-kernel router (AXIS-2) still gates each actual offload — preference never forces photonics.
+  **Fail-closed:** unknown/unattested ⇒ binary ⇒ no offload ⇒ identical to today.
+- **Verify:** `npm test` (7 node:test, end-to-end through the real engine: binary→stub,
+  hybrid/photonic→photonic-emulator, fail-closed unattested/unknown→binary, per-kernel gating still
+  applies) + `npm run prove` (3/3 — S1 tier==hardware() over 68 inputs, S2 offload-IFF-offload-capable-tier,
+  S3 fail-closed). Full suite green: 53/53 packages.
+
+**The photonic line is now COMPLETE + demonstrable end-to-end:** emulator (0053) → directive/loader (0054)
+→ Tower dispatch wiring → this one-call capstone. Digital stays the default and byte-unchanged throughout.
+
+---
+
 ## 🏁 Phase 1 Security Audit — COMPLETE (2026-06-16)
 
 **The perimeter is sealed.** All **8/8** Critical + High findings from the adversarial Gate-6 audit are
