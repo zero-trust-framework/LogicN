@@ -198,10 +198,16 @@ over the session's 9 commits returned **24 confirmed** findings (false positives
 
 All affected suites green (core-network 97, tower-citizen 196, photonic-emulator 35, hardware-tier 14).
 
-**STILL OPEN (confirmed pre-existing, not session-introduced — next batch):**
-- 🔴 **CRITICAL: `fuse-loader.ts` never consults the revocation registry** — a manifest validly signed by the
-  *revoked* key `8eecf4…` is still admitted + instantiated at the runtime fuse gate (CLI verify/build enforce
-  revocation; the loader doesn't). Wire `isKeyRevoked`/`assertRegistryTrustworthy` into `verifyManifestSignature`.
+**Batch 2 — pre-existing fixes:**
+- ✅ **CRITICAL FIXED 2026-06-20 (`fuse-loader.ts` revocation):** the runtime fuse admission gate now refuses a
+  validly-signed but REVOKED key (the audited exploit: a forgery signed by the leaked in-repo key `8eecf4…`
+  passed because the loader never checked revocation). Added a fail-closed `revocationCheck` to
+  `FusePackageOptions` + a `LLN-FUSE-KEY-REVOKED` gate in `loadAndVerifyPackage` (a throwing check ⇒
+  `LLN-FUSE-REVOCATION-UNVERIFIABLE`, also fail-closed); the kernel stays node-dep-free and the CLI
+  `logicn fuse` injects the real `governance/revocation-registry.mjs` check (`assertRegistryTrustworthy`
+  once + per-key `isKeyRevoked`). +1 app-kernel test. app-kernel 58/58.
+
+**STILL OPEN (next):**
 - 🟠 `logicn run` admission gate does only a self-referential sourceHash check (no signature/revocation) and
   swallows manifest errors — make it enforce the `verify` gate, fail-closed.
 - 🟠 unsigned/placeholder manifest accepted by verify/run (add a profile-gated signature-required policy).

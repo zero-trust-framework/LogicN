@@ -743,6 +743,17 @@ Baseline comparison (governance-cost):
     try {
       const opts = { allowUnsigned, warn: (msg) => console.warn(`  ⚠ ${msg}`) };
       if (governanceDir) opts.governanceDir = governanceDir;
+      // AUDIT FIX (fail-closed revocation): the runtime fuse gate must refuse a validly-signed but
+      // REVOKED key (the revoked key's public key is shipped in-repo). Inject a registry-backed check;
+      // an untrustworthy/tampered revocation registry fails the whole fuse closed.
+      try {
+        const { isKeyRevoked, assertRegistryTrustworthy } = await import("./governance/revocation-registry.mjs");
+        assertRegistryTrustworthy("."); // throws if the registry is unsigned-under-pin / signed by a revoked key
+        opts.revocationCheck = (keyId) => isKeyRevoked(keyId, ".");
+      } catch (e) {
+        console.error(`❌ LLN-FUSE-REVOCATION-UNTRUSTED: ${e.message} — refusing to fuse (fail-closed)`);
+        process.exit(1);
+      }
       const components = await ak.fusePackages(dirs, opts);
       console.log(`✅ Fused ${components.size} package(s) (host-linked, first-party):`);
       for (const [name, c] of components) {

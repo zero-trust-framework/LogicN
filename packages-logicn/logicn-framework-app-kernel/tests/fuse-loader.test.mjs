@@ -152,6 +152,43 @@ test("a real Ed25519-signed manifest is verified; tampering the body is rejected
   }
 });
 
+// ── 5b — REVOCATION (audit fix): a validly-signed but REVOKED key is refused at the fuse gate ──
+test("a validly-signed manifest whose signing key is REVOKED is refused (fail-closed)", async () => {
+  const { root, pkg } = copyDemo();
+  try {
+    const { publicKey, privateKey } = generateKeyPairSync("ed25519", {
+      publicKeyEncoding: { type: "spki", format: "pem" },
+      privateKeyEncoding: { type: "pkcs8", format: "pem" },
+    });
+    const keyId = "revokedkey000001";
+    const govDir = join(root, "governance");
+    mkdirSync(govDir, { recursive: true });
+    writeFileSync(join(govDir, `signing-key-${keyId}.pub.pem`), publicKey);
+
+    const manifestPath = join(pkg, "dist", "my-custom-api-rest.lmanifest.json");
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    const { governanceSignature: _drop, ...withoutSig } = manifest;
+    const signature = cryptoSign(null, Buffer.from(JSON.stringify(withoutSig, null, 2)), createPrivateKey(privateKey)).toString("base64");
+    writeFileSync(manifestPath, JSON.stringify({ ...withoutSig, governanceSignature: { algorithm: "Ed25519", keyId, signature, signedAt: new Date().toISOString() } }, null, 2));
+
+    // The signature is CRYPTOGRAPHICALLY VALID — but the key is revoked → refuse (the core audit gap).
+    await assert.rejects(
+      () => fusePackage(pkg, { governanceDir: govDir, warn: () => {}, revocationCheck: (k) => k === keyId }),
+      /LLN-FUSE-KEY-REVOKED/,
+    );
+    // A revocation check that THROWS (e.g. an untrustworthy/tampered registry) is itself fail-closed.
+    await assert.rejects(
+      () => fusePackage(pkg, { governanceDir: govDir, warn: () => {}, revocationCheck: () => { throw new Error("registry untrusted"); } }),
+      /LLN-FUSE-REVOCATION-UNVERIFIABLE/,
+    );
+    // A NON-revoked key still fuses — the gate blocks ONLY revoked keys.
+    const ok = await fusePackage(pkg, { governanceDir: govDir, warn: () => {}, revocationCheck: () => false });
+    assert.equal(ok.invoke("main"), 200);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 // ── 6 — the embedded fuse block is the source of truth: sidecar drift is caught ──
 test("a .fuse.json whose wasmSha256 disagrees with the signed manifest is rejected", async () => {
   const { root, pkg } = copyDemo();

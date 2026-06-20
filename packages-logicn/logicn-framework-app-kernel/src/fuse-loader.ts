@@ -126,6 +126,13 @@ export interface FusePackageOptions {
   readonly capabilityRegistry?: Readonly<Record<string, CapabilityImportFactory>>;
   /** Sink for warnings (default: console.warn). Lets tests capture WARN output. */
   readonly warn?: (message: string) => void;
+  /**
+   * Fail-closed revocation check. The host supplies a registry-backed predicate returning `true` if a
+   * keyId has been revoked; a VALIDLY-SIGNED but REVOKED key is then REFUSED at the fuse gate (a throw
+   * is itself treated as fail-closed). The kernel stays node-dependency-free — the CLI (`logicn fuse`)
+   * injects this from `governance/revocation-registry.mjs`. When omitted, no revocation gate runs.
+   */
+  readonly revocationCheck?: (keyId: string) => boolean;
 }
 
 /**
@@ -446,6 +453,24 @@ async function loadAndVerifyPackage(
     sigField !== null && typeof sigField === "object" && typeof (sigField as Record<string, unknown>)["keyId"] === "string"
       ? ((sigField as Record<string, unknown>)["keyId"] as string)
       : undefined;
+
+  // ── Gate 2b: REVOCATION — a validly-signed but REVOKED key must NOT be admitted (fail-closed) ──
+  // verifyManifestSignature only proves the signature is cryptographically valid against a discoverable
+  // public key; the revoked key's public key is shipped in-repo, so a forgery signed with the leaked
+  // private key would otherwise pass. Consult the host-injected registry-backed check and refuse a
+  // revoked key. A throwing check (e.g. an untrustworthy/tampered revocation registry) is fail-closed.
+  if (signature === "verified" && keyId !== undefined && opts.revocationCheck !== undefined) {
+    let revoked: boolean;
+    try {
+      revoked = opts.revocationCheck(keyId) === true;
+    } catch (e) {
+      return fuseError("LLN-FUSE-REVOCATION-UNVERIFIABLE", `revocation status for keyId '${keyId}' could not be determined (${(e as Error).message}) — refusing to fuse (fail-closed)`);
+    }
+    if (revoked) {
+      return fuseError("LLN-FUSE-KEY-REVOKED", `keyId '${keyId}' is REVOKED — refusing to fuse (the signature is cryptographically valid but the signing key is revoked)`);
+    }
+  }
+
   return { name, descriptor, wasmBytes, signature, ...(keyId !== undefined ? { keyId } : {}) };
 }
 
