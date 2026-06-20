@@ -71,6 +71,32 @@ in spirit by the hub's `prove-hardware-tier.mjs` against production code.
 
 ---
 
+## 🛡️ 2026-06-20 — core-network SSRF / outbound-egress guard BUILT — `logicn-core-network`
+
+**Verified gap closed:** `logicn-core-network` was policy-VALIDATION only (a declared `NetworkPolicy` shape
+checker) — it had **no runtime egress guard / SSRF protection / host-IP classification**. Added a new
+`src/egress-guard.ts` module (**additive** — the existing validation path is byte-unchanged; +59 tests, the
+12 original contract tests intact).
+
+- **`classifyHost(host)`** → IANA special-purpose category (`loopback`/`private`/`linkLocal`/`uniqueLocal`/
+  `cgnat`/`metadata`/`multicast`/`unspecified`/`reserved`/`broadcast`/`public`/`invalid`) for IPv4, IPv6
+  (incl. IPv4-mapped `::ffff:…`), and hostnames. **Normalizes the numeric-IP SSRF bypasses** that defeat
+  naive string checks — decimal (`2130706433`), hex (`0x7f000001`), octal (`0177.0.0.1`), inet_aton short
+  forms (`127.1`). The cloud **metadata** endpoint (`169.254.169.254` / `fd00:ec2::254` /
+  `metadata.google.internal`) is caught through **every** encoding.
+- **`guardOutboundHost` / `guardOutboundUrl` / `validateWebhookTarget`** — fail-closed, deny-by-default:
+  only a public host passes; metadata needs its OWN explicit opt-in (not covered by `allowNonPublicHosts`);
+  plaintext/non-https schemes, embedded URL credentials (userinfo — parser-confusion SSRF), and unparseable
+  URLs are denied; an exact `allowedHosts` allow-list permits specific internal receivers. Hostnames carry
+  `requiresDnsRecheck` (the caller MUST re-classify each resolved IP — DNS-rebinding defence). Webhooks force
+  the strict posture regardless of caller relaxations. Diagnostic codes `LogicN_NETWORK_SSRF_*` /
+  `LogicN_NETWORK_EGRESS_*`.
+- **Verify:** `npm test` (71 node:test) + `npm run prove` (8/8 — 2,200 IANA-range samples 0-leak, exact
+  172.16/12 CIDR edges, numeric-bypass equivalence, **20k-input fuzz: 0 throws / 0 leaks**, fail-closed URL
+  layer). Full suite green: 53/53 packages.
+
+---
+
 ## 🏁 Phase 1 Security Audit — COMPLETE (2026-06-16)
 
 **The perimeter is sealed.** All **8/8** Critical + High findings from the adversarial Gate-6 audit are

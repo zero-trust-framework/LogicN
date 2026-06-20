@@ -400,3 +400,16 @@ function uniqueNumbers(values: readonly number[]): readonly number[] {
 function uniqueStrings(values: readonly string[]): readonly string[] {
   return [...new Set(values)].sort();
 }
+
+// Outbound SSRF / egress protection — the runtime counterpart to NetworkPolicy validation.
+export {
+  type HostCategory,
+  type HostKind,
+  type HostClassification,
+  type EgressPolicy,
+  type EgressDecision,
+  classifyHost,
+  guardOutboundHost,
+  guardOutboundUrl,
+  validateWebhookTarget,
+} from "./egress-guard.js";
