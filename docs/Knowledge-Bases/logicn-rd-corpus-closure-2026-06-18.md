@@ -47,10 +47,14 @@ opt-in multi-module/component mode; ship interim host-linker over `capabilityReg
 #102–104; bench 15/15. **0052's worker artifacts (wasm-granularity/) committed by the worker; R&D tree clean.**
 
 **▶ OWNER DECISIONS 2026-06-20:** (1) 0050 name = **`logicn-governance-telemetry`** (panel rec'd `-exporter`; owner
-kept "telemetry"). (2) Next build = **0052 multi-module Phase A** → **SLICE 1 SHIPPED** (`fuse-loader.ts`:
-`fusePackages` + pure `planComposition` [SET-SIGNED, deny-by-default, acyclic, unambiguous] + `makeProviderFactory`;
-unconsumed `provides`=inert seam; +13 tests, app-kernel 51/51, SOT 3705). **Slice 2 NEXT** = real cross-module wasm
-call (needs .wasm fixtures). **Still pending an ask:** the 0050 exporter build + the 0051 posture-derived import profile.
+kept "telemetry"). (2) Next build = **0052 multi-module Phase A → COMPLETE** (`68879a4`+`f40c945`+`f4fa7b1`+`ee8eb7d`): **Slice 1**
+`fuse-loader.ts` `fusePackages` + pure `planComposition` [SET-SIGNED, deny-by-default, acyclic, unambiguous] +
+`makeProviderFactory` (unconsumed `provides`=inert seam); **Slice 2** REAL producer→consumer wasm→wasm call proven via
+committed `tests/fixtures/compose/` (consumer.main→42 through provider; differential control consumer-alone→0;
+order-independent) + the fixtures-dist gitignore-negation so a fresh checkout passes; **CLI** `logicn fuse <dirs>
+[--invoke pkg:export]`. app-kernel **54/54**, SOT **3705**. **Phase B** (Component Model isolation for UNTRUSTED peers)
+= externally blocked on #102–104; **Phase C** (app-split) = speculative; §7 perf bench deferred ("no maths yet").
+**STILL PENDING AN OWNER ASK:** the 0050 `logicn-governance-telemetry` exporter build + the 0051 posture-derived import profile.
 
 **▶ AOT #2 — branch-folding + dead-arm DCE — ✅ SHIPPED `056ac70`** (`foldToBool` folds a const `if`
 condition → emit only the taken arm; dead arm + locals dropped; nested=true → explicit returns valid
