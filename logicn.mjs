@@ -1206,7 +1206,10 @@ Baseline comparison (governance-cost):
       // AUDIT (profile-gated signature-required policy): in production an unsigned / placeholder /
       // incomplete manifest must fail-closed; dev keeps the informational behaviour. Default (no
       // LOGICN_PROFILE) is dev, so existing usage is byte-unchanged. Mirrors #178 fail-closed-in-prod.
-      const requireSigned = process.env.LOGICN_PROFILE === "production";
+      // FAIL-SECURE profile resolution: a set-but-unrecognized value (e.g. a typo'd "prod") resolves to
+      // production with a warning, so a malformed profile can never silently disable this gate.
+      const { resolveSigningProfileWarned } = await import("./governance/profile.mjs");
+      const requireSigned = resolveSigningProfileWarned().profile === "production";
       const jsonManifestPath = `build/${name}.lmanifest.json`;
       if (existsSync(jsonManifestPath)) {
         try {
@@ -1371,7 +1374,9 @@ Baseline comparison (governance-cost):
       // re-derives effects from the sourceHash-bound source and the WASM gate attests over the binary.)
       // Posture note: this is "verify-if-present" — a flow with NO manifest at all still raw-runs. The
       // stricter "production requires a signed manifest to run" is a deliberate posture left for owner opt-in.
-      if (process.env.LOGICN_PROFILE === "production") {
+      // Profile resolved FAIL-SECURE (a typo'd value resolves to production, never silently off).
+      const { resolveSigningProfileWarned: resolveRunProfile } = await import("./governance/profile.mjs");
+      if (resolveRunProfile().profile === "production") {
         try {
           // #67 — verify the AUTHORITATIVE CBOR directly (self-contained); the human-readable .json is
           // never consulted. This is possible because new builds sign over RFC 8785 canonical JSON, which
@@ -1564,7 +1569,11 @@ Baseline comparison (governance-cost):
       let signingKeyB64 = process.env.LOGICN_SIGNING_PRIVATE_KEY_B64;
       try {
         const kl = await import("./governance/key-lifecycle.mjs");
-        const profile = process.env.LOGICN_PROFILE === "production" ? "production" : "dev";
+        // FAIL-SECURE profile: a set-but-unrecognized LOGICN_PROFILE (e.g. typo'd "prod") resolves to
+        // production (with a warning) so a malformed value can't silently downgrade to throwaway dev-key
+        // signing. UNSET stays dev (zero-touch local development). Mirrors core-config posture.ts.
+        const { resolveSigningProfileWarned } = await import("./governance/profile.mjs");
+        const profile = resolveSigningProfileWarned().profile;
         const assessment = kl.assessSigningKey({ rootDir: ".", profile });
         if (assessment.diagnostics.length > 0) console.log(kl.formatDiagnostics(assessment.diagnostics));
         if (assessment.fatal) {

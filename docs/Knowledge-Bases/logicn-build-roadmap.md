@@ -245,7 +245,20 @@ All affected suites green (core-network 97, tower-citizen 196, photonic-emulator
   manifest-generator tests (incl. the #67 invariant: jcs reconstructs identically from CBOR, legacy does not;
   a real Ed25519 jcs sig verifies from both JSON and CBOR), +1 fuse-loader jcs/conformance test, +2
   cli-compatibility (production run REJECTS an unsigned CBOR, ACCEPTS a jcs-signed CBOR end-to-end). Suite
-  53/53 · 4907. Remaining 🟡 low: signing-profile fail-secure default.
+  53/53 · 4907.
+- 🟢 **signing-profile fail-secure default — FIXED:** the production signing gates keyed off
+  `process.env.LOGICN_PROFILE === "production" ? … : "dev"` — FAIL-OPEN: any value other than the exact string
+  (a typo'd `"prod"`, `"PRODUCTION"`, a stray space) silently resolved to dev, **silently disabling every gate
+  the signing-format work added**. Now a single fail-secure resolver `governance/profile.mjs`
+  (`resolveSigningProfile` / `isProductionProfile` / `resolveSigningProfileWarned`) — mirroring core-config
+  `posture.ts` (unknown ⇒ fail-secure) — is routed through by all three reads (build key policy, `verify`,
+  `run`). UNSET/empty + recognized dev tokens (`dev`/`test`/`local`/…) relax to dev (zero-touch local dev,
+  byte-unchanged); the exact canonical `"production"` resolves strict cleanly; anything else set resolves
+  **strict (production) with an `LLN-PROFILE-UNRECOGNIZED` warning** so a malformed value can never quietly
+  relax enforcement. +4 governance-step unit tests + 1 cli-compatibility behaviour test (a typo'd profile
+  fail-secures and denies an unsigned run; explicit `dev` relaxes). Suite 53/53 · 4908; governance step 22/22.
+  **The 2026-06-20 zero-trust audit is now FULLY CLOSED** (2 criticals + all highs + all 🟠/🟡 — only the
+  `admitManifest` orchestration tidy-up remains, a non-security refactor).
 - ✅ **unknown-`opClass` deny-by-default — FIXED:** `routePrecision` (the precision-lane router used by both the
   hybrid engine and the Execution Router) previously let an UNRECOGNIZED op class fall through to a fabricated
   fp8/ternary decision (every numeric comparison against the `undefined` sensitivity is false). `InferenceOpClass`

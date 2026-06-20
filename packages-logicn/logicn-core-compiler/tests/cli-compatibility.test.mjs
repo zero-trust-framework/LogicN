@@ -143,6 +143,31 @@ describe("CLI compatibility — logicn run", () => {
     assert.equal(prod.code, 0, `production run of a jcs-signed manifest should succeed: ${prod.stderr}`);
     assert.equal(prod.stdout.trim(), "5050");
   });
+
+  // AUDIT (fail-secure profile): a SET-but-UNRECOGNIZED LOGICN_PROFILE (e.g. a typo'd "prod") must resolve
+  // to PRODUCTION — never silently to dev — so a malformed profile can't quietly disable the run gate.
+  // An explicit recognized dev token keeps the relaxed (dev) behaviour.
+  it("a typo'd LOGICN_PROFILE fail-secures to production (denies an unsigned run); explicit 'dev' relaxes", async () => {
+    mkdirSync(join(ROOT, "build"), { recursive: true });
+    const built = logicn("build", BENCH);
+    assert.equal(built.code, 0, `build failed: ${built.stdout}`);
+    const cborPath = join(ROOT, "build", "benchmark.lmanifest");
+    if (!existsSync(cborPath)) return;
+    const { decodeCBOR, serializeManifestCBOR } = await import("../dist/manifest-generator.js");
+    const manifest = decodeCBOR(new Uint8Array(readFileSync(cborPath))).value;
+    writeFileSync(cborPath, Buffer.from(serializeManifestCBOR({ ...manifest, governanceSignature: "placeholder" })));
+
+    // Typo'd profile → fail-secure to production → the unsigned CBOR is rejected (and a warning is printed).
+    const typo = logicnEnv({ LOGICN_PROFILE: "prod" }, "run", BENCH, "--invoke", "main");
+    assert.notEqual(typo.code, 0, "a typo'd profile must fail-secure to production (deny the unsigned run)");
+    assert.ok(typo.stderr.includes("LLN-MANIFEST-UNSIGNED"), `expected LLN-MANIFEST-UNSIGNED, got: ${typo.stderr}`);
+    assert.ok(typo.stderr.includes("LLN-PROFILE-UNRECOGNIZED"), "the unrecognized profile must be surfaced, not silent");
+
+    // Explicit recognized dev token → relaxed → the gate is sourceHash-only → run succeeds.
+    const dev = logicnEnv({ LOGICN_PROFILE: "dev" }, "run", BENCH, "--invoke", "main");
+    assert.equal(dev.code, 0, `explicit dev profile should relax the gate: ${dev.stderr}`);
+    assert.equal(dev.stdout.trim(), "5050");
+  });
 });
 
 // ── logicn build ──────────────────────────────────────────────────────────────
