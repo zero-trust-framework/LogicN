@@ -25,14 +25,14 @@ test("photonic tier (photonic, attested, fully eligible) → photonic backend ru
   const { tp, r } = await run({ targetId: "photonic", attestationVerified: true, componentFullyEligible: true });
   assert.equal(tp.tier, "photonic");
   assert.equal(tp.photonicEnabled, true);
-  assert.deepEqual(r.bridgesUsed, ["photonic-emulator"]);
+  assert.deepEqual(r.bridgesUsed, ["photonic:photonic-emulator"]); // provenance namespaced (anti-spoof)
 });
 
 test("hybrid tier (gpu, whole component) → photonic offload enabled for the eligible kernel", async () => {
   const { tp, r } = await run({ targetId: "gpu", attestationVerified: true });
   assert.equal(tp.tier, "hybrid");
   assert.equal(tp.photonicEnabled, true);
-  assert.deepEqual(r.bridgesUsed, ["photonic-emulator"]);
+  assert.deepEqual(r.bridgesUsed, ["photonic:photonic-emulator"]); // provenance namespaced (anti-spoof)
 });
 
 test("fail-closed: UNATTESTED photonic hardware → binary tier, no offload", async () => {

@@ -37,14 +37,25 @@ export interface PhotonicRunResult {
   readonly bridgeResult?: BridgeResult;
 }
 
+/** The effective re-verify tolerance: never looser than the trusted band, never non-finite/≤0.
+ *  A caller-supplied `kernel.tolerance` could otherwise be inflated (e.g. 1e9) to make the re-verify
+ *  bound-check trivially pass, turning the integrity rail into a no-op. Clamp it to the trusted band. */
+function effectiveTolerance(callerTol: number | undefined, maxBand: number): number {
+  const t = (typeof callerTol === "number" && Number.isFinite(callerTol) && callerTol > 0) ? callerTol : maxBand;
+  return Math.min(t, maxBand);
+}
+
 /** Ties the decider + the photonic backend into the fail-closed runtime path. */
 export class PhotonicRuntime {
   private readonly decider: PartitionDecider;
   private readonly backend: PhotonicBackend;
+  /** Trusted ceiling for the re-verify band — a caller's kernel.tolerance can never exceed it. */
+  private readonly maxTolerance: number;
 
-  constructor(backend?: PhotonicBackend, decider?: PartitionDecider) {
+  constructor(backend?: PhotonicBackend, decider?: PartitionDecider, maxTolerance = 0.05) {
     this.backend = backend ?? new PhotonicEmulatorBridge();
     this.decider = decider ?? new PartitionDecider();
+    this.maxTolerance = Number.isFinite(maxTolerance) && maxTolerance > 0 ? maxTolerance : 0.05;
   }
 
   /** Run one kernel through decide → (digital | photonic + re-verify → fail-closed). */
@@ -66,7 +77,7 @@ export class PhotonicRuntime {
     // Photonic path: execute, then re-verify against the cheap exact recompute.
     const res = this.backend.execute(op, decision.N);
     const exact = this.backend.executeExact(op);
-    const tol = kernel.tolerance ?? 0.05;
+    const tol = effectiveTolerance(kernel.tolerance, this.maxTolerance); // caller cannot inflate the band
     const span = adcRange(op.count);
 
     if (toleranceCheck(res.value, exact, tol, span)) {
@@ -114,7 +125,9 @@ export function createPhotonicRouterPort(
       if (d.target !== "photonic") return null;            // not a net win → engine's digital path
       const value = bridge.execute(op, d.N).value;
       const exact = bridge.executeExact(op);
-      if (toleranceCheck(value, exact, kernel.tolerance ?? 0.05, adcRange(op.count))) {
+      // Clamp the re-verify band to the bridge's DECLARED manifest tolerance — a caller's inflated
+      // kernel.tolerance can never loosen the integrity check below the attested band.
+      if (toleranceCheck(value, exact, effectiveTolerance(kernel.tolerance, bridge.manifest.tolerance ?? 0.05), adcRange(op.count))) {
         return { value, bridgeId: bridge.bridgeId };
       }
       return null;                                          // out-of-tolerance → decline (fail-closed)

@@ -40,12 +40,15 @@ export interface ResolveHardwareInput {
 export function resolveHardware(input: ResolveHardwareInput): Tier {
   const profiles = input.profiles ?? HARDWARE_TIER_PROFILES;
   // 2. UNATTESTED ⇒ binary. A tier above binary REQUIRES a verified attestation; binary is the floor.
-  if (!input.attestationVerified) return "binary";
+  // Strict boolean identity (zero-trust): any truthy non-boolean (the string "false", {}, [], 1 from a
+  // JSON/env round-trip or a mis-wired caller passing the verifyAttestation result object instead of .ok)
+  // must collapse to the floor — never coerce-pass the gate.
+  if (input.attestationVerified !== true) return "binary";
   // 3. UNKNOWN target ⇒ K3 INDETERMINATE ⇒ DENY ⇒ binary (LLN-HW-004).
   const profile = profiles.get(input.targetId);
   if (!profile) return "binary";
   // 4. defensive (step 2 already ensured verified === true here).
-  if (profile.requiresAttestation && !input.attestationVerified) return "binary";
+  if (profile.requiresAttestation && input.attestationVerified !== true) return "binary";
   // 5. AcceleratorPlane (photonic/neuromorphic) + fully-eligible ⇒ photonic (the preference ceiling).
   if (profile.governanceClass === "AcceleratorPlane") {
     return input.componentFullyEligible ? "photonic" : "hybrid"; // whole component converges to hybrid (§4)

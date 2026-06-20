@@ -1244,10 +1244,18 @@ Baseline comparison (governance-cost):
                     process.exit(1);
                   }
                 } catch (err) {
-                  console.warn(`   ⚠️  Signature verification error: ${err.message}`);
+                  // AUDIT FIX (fail-closed): a manifest that CLAIMS a signature but whose verification
+                  // cannot be COMPLETED (malformed key/sig, crypto error) must DENY — not warn-and-pass.
+                  // Treating present-but-unverifiable as fine is the canonical fail-open. (The genuinely
+                  // unsigned/dev case is handled by the `=== "placeholder"` branch below, unaffected.)
+                  console.error(`❌ LLN-MANIFEST-TAMPER: signature verification could not be completed — fail-closed: ${err.message}`);
+                  process.exit(1);
                 }
               } else {
-                console.warn(`   ⚠️  Public key not found: ${pubKeyPath} — skipping signature verification`);
+                // AUDIT FIX (fail-closed): the manifest asserts a signature but its public key is absent,
+                // so integrity cannot be verified — DENY rather than skip.
+                console.error(`❌ LLN-MANIFEST-PUBKEY-MISSING: public key ${pubKeyPath} not found but manifest asserts a signature — fail-closed (cannot verify integrity)`);
+                process.exit(1);
               }
             }
           } else if (jsonManifest.governanceSignature === "placeholder") {

@@ -171,6 +171,47 @@ the build-time half of the parity enforcement (the runtime half is the per-call 
 
 ---
 
+## 🛡️ 2026-06-20 — Zero-trust adversarial audit of the session + fixes (41-agent workflow)
+
+An adversarial security audit (`Workflow weeli9elq`, 41 agents, each finding independently refuted-or-confirmed)
+over the session's 9 commits returned **24 confirmed** findings (false positives filtered).
+
+**FIXED (the session-introduced gaps + clean pre-existing fail-opens):**
+- 🔴 **CRITICAL SSRF** (`core-network/egress-guard.ts`): hex IPv4-mapped IPv6 (`::ffff:a9fe:a9fe` = the
+  cloud-metadata endpoint) classified **public**, and `new URL()` canonicalizes the *dotted* form to *hex*
+  before the classifier — so the webhook/egress guard **allowed cloud-metadata/loopback/private**. The
+  author test only hit `classifyHost` directly, never the URL path. Fixed: rewrote `classifyIpv6` with a full
+  `expandIpv6` (8-hextet expansion, `::` + zone-id + dotted-tail), embedded-v4 decode for **all** forms
+  (mapped/compat/translated/NAT64/6to4), and a **fail-closed default** (malformed/low-range → non-public).
+  +16 regression tests exercising **both** `classifyHost` and `validateWebhookTarget`/`guardOutboundUrl`/
+  `guardResolvedAddresses` through the URL parser.
+- 🟠 photonic re-verify **tolerance clamp** (`runner.ts`): a caller's `kernel.tolerance` can no longer be
+  inflated past the bridge's declared manifest band, so the integrity rail can't be made a no-op.
+- 🟡 `hybrid-engine.ts`: **finite-guard** on the injected photonic port's value (non-finite → fall through to
+  digital) + a reserved **`photonic:` provenance namespace** so an injected port can never impersonate an
+  attested registry bridge (e.g. claim `stub-ternary`) in the audit trail.
+- 🟡 `hardware-directive.ts`: strict `attestationVerified === true` (truthy non-boolean no longer coerce-passes
+  the tier gate); `partition-decider.ts`: the systematic-floor refusal (LLN-SUBSTRATE-003) can't be skipped by
+  supplying `redundancyN`.
+- 🟠 `logicn verify`: **fail-OPEN → fail-CLOSED** — a manifest that *claims* a signature but can't be verified
+  (crypto error / missing public key) now **denies** instead of warn-and-pass.
+
+All affected suites green (core-network 97, tower-citizen 196, photonic-emulator 35, hardware-tier 14).
+
+**STILL OPEN (confirmed pre-existing, not session-introduced — next batch):**
+- 🔴 **CRITICAL: `fuse-loader.ts` never consults the revocation registry** — a manifest validly signed by the
+  *revoked* key `8eecf4…` is still admitted + instantiated at the runtime fuse gate (CLI verify/build enforce
+  revocation; the loader doesn't). Wire `isKeyRevoked`/`assertRegistryTrustworthy` into `verifyManifestSignature`.
+- 🟠 `logicn run` admission gate does only a self-referential sourceHash check (no signature/revocation) and
+  swallows manifest errors — make it enforce the `verify` gate, fail-closed.
+- 🟠 unsigned/placeholder manifest accepted by verify/run (add a profile-gated signature-required policy).
+- 🟡 CBOR `.lmanifest` signature still verified only via the JSON copy (the deeper self-verifiable-CBOR fix = **#67**);
+  sign over RFC-8785 canonical bytes; signing-profile fail-secure default; unknown-`opClass` deny-by-default.
+
+Full audit JSON (24 findings, reasoning + recommendations): `tasks/weeli9elq.output`.
+
+---
+
 ## 🔏 2026-06-20 — #180: the authoritative CBOR `.lmanifest` is now really Ed25519-signed (owner-unblocked)
 
 **Verified security gap closed.** `logicn build` (#108 zero-touch signing) signed the manifest with real

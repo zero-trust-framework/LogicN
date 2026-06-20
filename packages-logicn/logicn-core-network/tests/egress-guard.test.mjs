@@ -36,6 +36,44 @@ describe("classifyHost — numeric-IP SSRF bypasses normalize to the real range"
   it("0x0a000001 → private (10.0.0.1)", () => assert.equal(classifyHost("0x0a000001").category, "private"));
 });
 
+// AUDIT REGRESSION (critical SSRF): the HEX-hextet IPv4-mapped IPv6 form — which `new URL()` produces
+// when canonicalizing the dotted form — must classify by its embedded v4, not fall through to "public".
+describe("classifyHost — hex IPv4-mapped/embedded IPv6 (the URL-canonicalization bypass)", () => {
+  const cases = [
+    ["::ffff:a9fe:a9fe", "metadata"],            // 169.254.169.254 (the SSRF prize)
+    ["::ffff:7f00:1", "loopback"],               // 127.0.0.1
+    ["::ffff:0a00:1", "private"],                // 10.0.0.1
+    ["::ffff:c0a8:1", "private"],                // 192.168.0.1
+    ["[::ffff:a9fe:a9fe]", "metadata"],          // bracketed
+    ["0:0:0:0:0:ffff:a9fe:a9fe", "metadata"],    // fully expanded
+    ["64:ff9b::a9fe:a9fe", "metadata"],          // NAT64
+    ["2002:a9fe:a9fe::", "metadata"],            // 6to4
+    ["fe80::1%eth0", "linkLocal"],               // zone id stripped
+    ["gggg::1", "invalid"],                      // malformed → fail-closed (not public)
+    ["::1:", "invalid"],
+    ["2606:4700::1111", "public"],               // a real global IPv6 still passes
+  ];
+  for (const [h, expected] of cases) {
+    it(`${h} → ${expected}`, () => assert.equal(classifyHost(h).category, expected));
+  }
+});
+
+describe("egress guards DENY hex IPv4-mapped IPv6 through the URL parser (end-to-end)", () => {
+  it("validateWebhookTarget denies the dotted metadata URL (URL canonicalizes it to hex)", () => {
+    assert.equal(validateWebhookTarget("https://[::ffff:169.254.169.254]/latest/meta-data/").allowed, false);
+  });
+  it("validateWebhookTarget denies hex loopback/private", () => {
+    assert.equal(validateWebhookTarget("https://[::ffff:127.0.0.1]/").allowed, false);
+    assert.equal(guardOutboundUrl("https://[::ffff:10.0.0.1]/").allowed, false);
+  });
+  it("guardResolvedAddresses denies a resolution containing a hex IPv4-mapped non-public addr", () => {
+    assert.equal(guardResolvedAddresses("x.com", ["8.8.8.8", "::ffff:a9fe:a9fe"]).allowed, false);
+  });
+  it("a legitimate public host is still allowed (no over-blocking)", () => {
+    assert.equal(validateWebhookTarget("https://hooks.example.com/x").allowed, true);
+  });
+});
+
 describe("guardOutboundHost — fail-closed (deny-by-default)", () => {
   it("a public host is allowed", () => assert.equal(guardOutboundHost("example.com").allowed, true));
   it("private/loopback/linkLocal are denied by default", () => {

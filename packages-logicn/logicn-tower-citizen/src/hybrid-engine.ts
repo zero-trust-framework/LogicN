@@ -536,15 +536,22 @@ export class HybridInferenceEngine {
       if (this.photonic && !this.certified && decision.precision === "ternary") {
         const kernel = (this.photonic.kernelFor ?? defaultPhotonicKernelFor)(op);
         const ph = this.photonic.router.route(op, kernel);
-        if (ph) {
-          used.add(ph.bridgeId);
+        // Engine-side defense-in-depth: the injected port is duck-typed and NOT attestation-gated
+        // (checkBridgeAttestation only iterates this.bridges). So do not trust it blindly:
+        //   • reject a non-finite value (fail-closed → fall through to the digital dispatch); and
+        //   • record provenance under a reserved `photonic:` namespace so an injected port can NEVER
+        //     impersonate an attested registry bridge (e.g. claim bridgeId "stub-ternary") in the trail.
+        if (ph && Number.isFinite(ph.value)) {
+          const provId = `photonic:${ph.bridgeId}`;
+          used.add(provId);
           byOp.set(decision.opClass, {
-            value: ph.value, executedNatively: false, bridgeId: ph.bridgeId,
+            value: ph.value, executedNatively: false, bridgeId: provId,
             technique: "ternary", latencyMs: 0, deterministic: false,
           });
           ternaryChecksum = (ternaryChecksum + (ph.value | 0)) | 0;
           continue; // photonic handled this op (tolerance-verified) — skip the digital dispatch
         }
+        // ph null / non-finite → fall through to the UNCHANGED digital dispatch (fail-closed).
       }
 
       const bridge = this.bridges.get(decision.precision);

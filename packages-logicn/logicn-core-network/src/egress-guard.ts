@@ -118,26 +118,76 @@ function classifyIpv4(host: string, oct: [number, number, number, number]): Host
 }
 
 // ── IPv6 ─────────────────────────────────────────────────────────────────────────────────────────
+/**
+ * Expand an IPv6 literal to its 8 16-bit hextets. Handles "::" compression, an embedded dotted-v4
+ * tail, and a zone id (%eth0). Returns null for ANY malformed input — so the classifier can
+ * fail-CLOSED (treat un-parseable IPv6 as non-public) rather than defaulting it to "public".
+ */
+function expandIpv6(input: string): number[] | null {
+  let s = input;
+  const pct = s.indexOf("%"); if (pct >= 0) s = s.slice(0, pct);   // strip a zone id (fe80::1%eth0)
+  // Convert an embedded dotted-v4 tail (::ffff:127.0.0.1) into two hex groups first.
+  const v4 = s.match(/^(.*:)((?:\d{1,3}\.){3}\d{1,3})$/);
+  if (v4) {
+    const oct = ipv4ToOctets(v4[2]!);
+    if (!oct) return null;
+    s = v4[1]! + ((oct[0] << 8) | oct[1]).toString(16) + ":" + ((oct[2] << 8) | oct[3]).toString(16);
+  }
+  if (s === "::") return [0, 0, 0, 0, 0, 0, 0, 0];
+  const halves = s.split("::");
+  if (halves.length > 2) return null;
+  const groups = (part: string): number[] | null => {
+    if (part === "") return [];
+    const out: number[] = [];
+    for (const grp of part.split(":")) {
+      if (!/^[0-9a-f]{1,4}$/.test(grp)) return null;             // reject non-hex / over-long hextets
+      out.push(parseInt(grp, 16));
+    }
+    return out;
+  };
+  const head = groups(halves[0] ?? "");
+  const tail = halves.length === 2 ? groups(halves[1] ?? "") : [];
+  if (head === null || tail === null) return null;
+  if (halves.length === 2) {
+    const fill = 8 - head.length - tail.length;
+    if (fill < 1) return null;                                    // "::" must stand for ≥1 zero group
+    return [...head, ...new Array<number>(fill).fill(0), ...tail];
+  }
+  return head.length === 8 ? head : null;                         // no "::" → exactly 8 groups
+}
+
 function classifyIpv6(host: string): HostClassification {
   let h = host.toLowerCase();
   if (h.startsWith("[") && h.endsWith("]")) h = h.slice(1, -1);
-  // IPv4-mapped / -embedded (::ffff:127.0.0.1, ::127.0.0.1) — classify the embedded v4.
-  const v4Tail = h.match(/(?:^|:)((?:\d{1,3}\.){3}\d{1,3})$/);
-  if (v4Tail && v4Tail[1]) {
-    const oct = ipv4ToOctets(v4Tail[1]);
-    if (oct) { const v4 = classifyIpv4(host, oct); return cls(host, v4.category, "ipv6", `IPv4-in-IPv6 → ${v4.reason}`); }
-  }
-  const groups = h.split(":");
-  if (h === "::" || (h.includes(":") && groups.every((g) => g === "" || /^0+$/.test(g)))) return cls(host, "unspecified", "ipv6", "unspecified ::");
-  if (h === "::1" || (groups.every((g, i) => g === "" || (i === groups.length - 1 ? g === "1" : /^0+$/.test(g))) && groups[groups.length - 1] === "1")) return cls(host, "loopback", "ipv6", "loopback ::1");
-  if (h === "fd00:ec2::254") return cls(host, "metadata", "ipv6", "AWS IPv6 metadata fd00:ec2::254");
-  const first = h.split(":")[0] ?? "";
-  const hextet = parseInt(first || "0", 16);
-  if (h.startsWith("fe8") || h.startsWith("fe9") || h.startsWith("fea") || h.startsWith("feb")) return cls(host, "linkLocal", "ipv6", "link-local fe80::/10");
-  if (!Number.isNaN(hextet) && hextet >= 0xfc00 && hextet <= 0xfdff) return cls(host, "uniqueLocal", "ipv6", "unique-local fc00::/7");
-  if (h.startsWith("ff")) return cls(host, "multicast", "ipv6", "multicast ff00::/8");
-  if (h.startsWith("2001:db8")) return cls(host, "reserved", "ipv6", "documentation 2001:db8::/32");
-  return cls(host, "public", "ipv6", `public ${h}`);
+  const g = expandIpv6(h);
+  if (g === null) return cls(host, "invalid", "ipv6", "malformed IPv6 literal");  // fail-closed default
+  const [g0, g1, g2, g3, g4, g5, g6, g7] = g as [number, number, number, number, number, number, number, number];
+
+  // Embedded IPv4 → reclassify via the v4 ranges. This closes the hex-hextet bypass that the WHATWG
+  // URL parser produces (new URL("https://[::ffff:169.254.169.254]/").hostname === "[::ffff:a9fe:a9fe]").
+  const embedded = (hi: number, lo: number): HostClassification => {
+    const oct: [number, number, number, number] = [(hi >> 8) & 0xff, hi & 0xff, (lo >> 8) & 0xff, lo & 0xff];
+    const v4 = classifyIpv4(host, oct);
+    return cls(host, v4.category, "ipv6", `IPv4-in-IPv6 → ${v4.reason}`);
+  };
+
+  if (g.every((x) => x === 0)) return cls(host, "unspecified", "ipv6", "unspecified ::");
+  if (g0 === 0 && g1 === 0 && g2 === 0 && g3 === 0 && g4 === 0 && g5 === 0 && g6 === 0 && g7 === 1) return cls(host, "loopback", "ipv6", "loopback ::1");
+  if (g0 === 0xfd00 && g1 === 0x0ec2 && g2 === 0 && g3 === 0 && g4 === 0 && g5 === 0 && g6 === 0 && g7 === 0x254) return cls(host, "metadata", "ipv6", "AWS IPv6 metadata fd00:ec2::254");
+  // IPv4-mapped ::ffff:W:Z, IPv4-compatible ::W:Z, IPv4-translated ::ffff:0:W:Z — embedded v4 in the last two hextets.
+  if (g0 === 0 && g1 === 0 && g2 === 0 && g3 === 0 && ((g4 === 0 && (g5 === 0xffff || g5 === 0)) || (g4 === 0xffff && g5 === 0)) && (g6 !== 0 || g7 !== 0)) return embedded(g6, g7);
+  // NAT64 64:ff9b::/96 — embedded v4 in the last two hextets.
+  if (g0 === 0x0064 && g1 === 0xff9b && g2 === 0 && g3 === 0 && g4 === 0 && g5 === 0) return embedded(g6, g7);
+  // 6to4 2002:V4::/16 — embedded v4 in hextets 1-2.
+  if (g0 === 0x2002) return embedded(g1, g2);
+  // Special-purpose IPv6 ranges (numeric prefix checks).
+  if ((g0 & 0xffc0) === 0xfe80) return cls(host, "linkLocal", "ipv6", "link-local fe80::/10");
+  if ((g0 & 0xfe00) === 0xfc00) return cls(host, "uniqueLocal", "ipv6", "unique-local fc00::/7");
+  if ((g0 & 0xff00) === 0xff00) return cls(host, "multicast", "ipv6", "multicast ff00::/8");
+  if (g0 === 0x2001 && g1 === 0x0db8) return cls(host, "reserved", "ipv6", "documentation 2001:db8::/32");
+  // Fail-closed: the top 64 bits being zero is never a global-unicast address (2000::/3) — non-public.
+  if (g0 === 0 && g1 === 0 && g2 === 0 && g3 === 0) return cls(host, "reserved", "ipv6", "low-range ::/64 (non-global)");
+  return cls(host, "public", "ipv6", "global-unicast IPv6");
 }
 
 // ── hostnames ──────────────────────────────────────────────────────────────────────────────────

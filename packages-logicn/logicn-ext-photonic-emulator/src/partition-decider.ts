@@ -125,7 +125,14 @@ export class PartitionDecider {
     // Required votes from D1's real variance (or supplied). Infeasible lane ⇒ refuse.
     const tol = kernel.tolerance ?? 0.05;
     const phys = kernel.phys ?? PHOTONIC;
-    const N = kernel.redundancyN ?? requiredRedundancy(n, phys, tol);
+    // The systematic ADC-quantization floor (LLN-SUBSTRATE-003) is a STRUCTURAL refusal the caller
+    // cannot switch off by supplying redundancyN: re-derive feasibility regardless. A supplied
+    // redundancyN only overrides the random-variance vote count, never the systematic-floor refusal.
+    const feasibleN = requiredRedundancy(n, phys, tol);
+    if (!Number.isFinite(feasibleN)) {
+      return { target: "digital", reason: "FAIL-CLOSED: systematic ADC floor exceeds tolerance — lane infeasible regardless of redundancyN (LLN-SUBSTRATE-003)" };
+    }
+    const N = kernel.redundancyN ?? feasibleN;
     if (!Number.isFinite(N) || N < 1) {
       return { target: "digital", reason: `FAIL-CLOSED: lane cannot vote into tolerance (N=${N}) → digital (LLN-SUBSTRATE-003)` };
     }
