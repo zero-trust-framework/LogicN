@@ -430,12 +430,16 @@ export {
   type AiGraphSourceSpan,
   type PassiveExecutionPlan,
 } from "./gir-emitter.js";
-// R&D 0016 - Contract-driven test generation (fault-injection dimension; consumes 0017 fault handlers)
+// R&D 0016 - Contract-driven test generation (fault-injection + effect-egress dimensions)
 export {
   generateFaultInjectionTests,
   generateFaultInjectionSuite,
+  generateEffectEgressTests,
+  generateContractTestSuite,
   renderFaultInjectionTAP,
   type FaultInjectionTestCase,
+  type EffectEgressTestCase,
+  type ContractTestSuite,
 } from "./test-generator.js";
 export {
   analyzeFlowDependencies,

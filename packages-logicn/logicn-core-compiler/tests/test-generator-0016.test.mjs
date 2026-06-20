@@ -5,6 +5,7 @@ import { describe, it } from "node:test";
 import {
   parseProgram, checkEffects, emitGIR,
   generateFaultInjectionTests, generateFaultInjectionSuite, renderFaultInjectionTAP,
+  generateEffectEgressTests, generateContractTestSuite,
 } from "../dist/index.js";
 
 function girFlows(source) {
@@ -94,5 +95,55 @@ describe("0016: fault-injection test generation from GIRFlow.faultHandlers", () 
     assert.match(tap, /\n1\.\.4\n/);
     assert.equal((tap.match(/^not ok /gm) ?? []).length, 4, "one TODO obligation per case");
     assert.match(tap, /fetchOrder::on_timeout_fault/);
+  });
+});
+
+const twoSinks = `flow saveOrder(id: String) -> Result<String, String>
+contract {
+  intent { "Persist an order and notify downstream." }
+  effects {
+    database.write
+    network.outbound
+  }
+}
+{
+  let w = OrdersDB.write(id)?
+  return Ok(id)
+}`;
+
+const pureFlow = `pure flow addOne(n: Int) -> Int
+contract { intent { "Add one." } }
+{
+  return n + 1
+}`;
+
+describe("0016: effect-egress test generation from governed sinks", () => {
+  it("emits one 'no unsafe egress' obligation per governed-sink effect", () => {
+    const flow = girFlows(twoSinks)[0];
+    const cases = generateEffectEgressTests(flow);
+    const bySink = Object.fromEntries(cases.map((c) => [c.sink, c]));
+    // both declared effects are governed sinks requiring validated data
+    assert.ok(bySink["database.write"], "database.write is a governed sink");
+    assert.ok(bySink["network.outbound"], "network.outbound is a governed sink");
+    assert.equal(bySink["database.write"].requiredState, "validated");
+    assert.equal(bySink["network.outbound"].requiredState, "validated");
+    for (const c of cases) {
+      assert.equal(c.id, `saveOrder::egress::${c.sink}`);
+      assert.match(c.assertion, /must be REJECTED \(no unsafe egress\) — fail-closed/);
+      assert.ok(c.violatingInput.length > 0 && c.policyNote.length > 0);
+    }
+  });
+
+  it("a flow with no governed-sink effect generates no egress obligations", () => {
+    const flow = girFlows(pureFlow)[0];
+    assert.deepEqual(generateEffectEgressTests(flow), []);
+  });
+
+  it("generateContractTestSuite returns both dimensions over the program", () => {
+    const flows = girFlows(twoSinks);
+    const suite = generateContractTestSuite(flows);
+    assert.equal(suite.effectEgress.length, 2, "two governed sinks → two egress obligations");
+    // saveOrder declares no resilience handlers → no fault-injection cases
+    assert.equal(suite.faultInjection.length, 0);
   });
 });

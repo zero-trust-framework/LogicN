@@ -19,6 +19,7 @@
 
 import { type GIRFlow } from "./gir-emitter.js";
 import { type FaultHandler, type FaultSignal } from "./resilience-inference.js";
+import { getSinkRequirement, type SinkRequirement } from "./value-state-checker.js";
 
 /** A single generated fault-injection test obligation. Deterministic given the GIR. */
 export interface FaultInjectionTestCase {
@@ -90,6 +91,72 @@ export function generateFaultInjectionSuite(
   flows: readonly GIRFlow[],
 ): readonly FaultInjectionTestCase[] {
   return flows.flatMap((f) => generateFaultInjectionTests(f));
+}
+
+// =============================================================================
+// Effect-egress dimension — every governed sink a flow declares becomes a "no unsafe
+// egress" obligation: a value that does not meet the sink's required state must be
+// REJECTED before it leaves through that sink (the LLN-SECRET / LLN-PRIVACY / LLN-TYPE-015
+// governance, exercised at runtime). Reuses the shipped SINK_REQUIREMENTS registry.
+// =============================================================================
+
+/** A generated effect-egress test obligation for one governed sink. */
+export interface EffectEgressTestCase {
+  readonly id: string;                                  // `<flow>::egress::<sink>`
+  readonly flow: string;
+  readonly sink: string;                                // the governed-sink effect (e.g. network.outbound)
+  readonly requiredState: SinkRequirement["requiredState"];
+  /** The non-conforming input the test injects to prove the sink rejects it. */
+  readonly violatingInput: string;
+  readonly assertion: string;
+  readonly policyNote: string;
+}
+
+/** The non-conforming value to inject for each required sink state. */
+const VIOLATING_INPUT: Readonly<Record<SinkRequirement["requiredState"], string>> = {
+  safe: "an unsafe (untrusted / unsanitised) value",
+  validated: "an unvalidated value",
+  redacted: "a raw, un-redacted PII value",
+  nonPII: "a PII-bearing value",
+};
+
+/**
+ * Generate one egress obligation per governed sink among a flow's declared effects. Returns [] for a
+ * flow whose declared effects include no governed sink. Deterministic given the GIR + the shipped
+ * SINK_REQUIREMENTS registry (exact + pattern sinks via getSinkRequirement).
+ */
+export function generateEffectEgressTests(flow: GIRFlow): EffectEgressTestCase[] {
+  const out: EffectEgressTestCase[] = [];
+  for (const effect of flow.effects.declared) {
+    const req = getSinkRequirement(effect);
+    if (req === undefined) continue; // not a governed sink → no egress obligation
+    out.push({
+      id: `${flow.name}::egress::${effect}`,
+      flow: flow.name,
+      sink: effect,
+      requiredState: req.requiredState,
+      violatingInput: VIOLATING_INPUT[req.requiredState],
+      assertion:
+        `a value reaching '${effect}' must be ${req.requiredState}; injecting ${VIOLATING_INPUT[req.requiredState]} ` +
+        `must be REJECTED (no unsafe egress) — fail-closed`,
+      policyNote: req.policyNote,
+    });
+  }
+  return out;
+}
+
+/** All generated contract test obligations for a flow, by dimension. */
+export interface ContractTestSuite {
+  readonly faultInjection: readonly FaultInjectionTestCase[];
+  readonly effectEgress: readonly EffectEgressTestCase[];
+}
+
+/** Run every implemented generator dimension over a program's flows. */
+export function generateContractTestSuite(flows: readonly GIRFlow[]): ContractTestSuite {
+  return {
+    faultInjection: flows.flatMap((f) => generateFaultInjectionTests(f)),
+    effectEgress: flows.flatMap((f) => generateEffectEgressTests(f)),
+  };
 }
 
 /** Render a TAP (Test Anything Protocol) plan from generated cases — a concrete, runnable-shaped output. */
