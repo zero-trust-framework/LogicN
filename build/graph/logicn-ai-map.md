@@ -486,13 +486,13 @@ Provides:
 - FusePackageOptions
 - CapabilityImportFactory
 - buildCapabilityImports
+- CompositionMember
+- CapabilitySource
+- CompositionPlan
+- planComposition
+- makeProviderFactory
 - LogicnKernelRequest
 - LogicnKernelResponse
-- HandlerContext
-- HandlerResult
-- HandlerFn
-- HandlerDispatch
-- IdempotencyStore
 
 ## logicn-framework-api-server
 
