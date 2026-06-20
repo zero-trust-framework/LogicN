@@ -68,7 +68,12 @@ Remaining enc-rnd hand-offs gated behind this: #7 (slice 4), #12 (slice 5); #9/#
 
 **R&D adjudication:** `notes/35-hashing` (photonic "THA-162" ternary hash) **rejected** — contradicts crypto-on-core (analog optics can't compute a bit-exact hash; security-by-radix is an encoding illusion; IOTA's Curl ternary hash was broken → reverted to binary Keccak). Keep SHA-256; PQ the *signature* (ML-DSA-65, shipping).
 
-**Open CLI/DX (filed):** #125 `logicn run --governed` · #126 parser-level bitwise hint (`& | << >>`).
+**Open CLI/DX (filed):** #125 `logicn run --governed` · ✅ **#126 parser-level bitwise hint** (`2026-06-20`) —
+`& | << >>` in expression position now get the clear `LLN-PARSE-001` crypto-on-core hint (matching the lexer's
+`^`/`~`), with recovery that suppresses the confusing follow-on. Done in the `parseExpression` binary loop (value
+context — so it never flags generic `<<`/`>>` in TYPE position or `|` match-arm patterns, which parse elsewhere).
++5 tests; SOT 3710. **NB:** bitwise ops are *intentionally* NOT LogicN operators (crypto-on-core boundary) — #126 is
+the HINT, not the feature.
 
 **Tech debt this cycle:** CRYPTO-002 + 14 unverified findings; `crypto-ops` ML-DSA numbers are pure-JS upper bounds (native binding would re-baseline); governance-cost LogicN-runtime variants need a clean re-measure (old baseline had incomplete fields).
 

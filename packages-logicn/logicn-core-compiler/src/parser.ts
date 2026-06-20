@@ -1835,6 +1835,33 @@ class Parser {
       }
 
       if (tok.kind !== "operator") break;
+
+      // ── #126 — bitwise operators are intentionally NOT LogicN operators ──────
+      // Bit-level math (AND/OR/shift) lives in the engine/extension layer, not in .lln (the
+      // crypto-on-core boundary). Emit the clear LLN-PARSE-001 hint HERE, where this is
+      // unambiguously an infix/value position — vs. generics (`<<`/`>>` in TYPE position) and
+      // `|` match-arm patterns, which are parsed by other paths and never reach this loop.
+      {
+        const next = this.peek(1);
+        const doubled = (tok.value === "<" || tok.value === ">") && next.kind === "operator" && next.value === tok.value;
+        if (tok.value === "&" || tok.value === "|" || doubled) {
+          const sym = doubled ? tok.value + tok.value : tok.value;
+          this.emit(
+            "LLN-PARSE-001",
+            "UNEXPECTED_TOKEN",
+            `Bitwise operator '${sym}' is not a LogicN operator — bit-level operations (AND/OR/shift) live in the engine/extension layer, not in .lln (the crypto-on-core boundary).`,
+            this.loc(),
+            `.lln has arithmetic (+ - * / %), comparison, and logical (and / or) operators only — move bit-twiddling into a governed engine extension.`,
+          );
+          // Recover: consume the operator + the rest of the expression so we don't ALSO emit a
+          // confusing "unexpected token in statement position" follow-on. The error already failed it.
+          this.advance();
+          if (doubled) this.advance();
+          this.parseExpression(0);
+          break;
+        }
+      }
+
       const entry = INFIX_OPERATOR_TABLE.get(tok.value);
       if (entry === undefined || entry.precedence < minPrecedence) break;
 
