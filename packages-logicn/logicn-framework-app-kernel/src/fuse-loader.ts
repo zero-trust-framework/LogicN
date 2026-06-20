@@ -109,6 +109,13 @@ export interface FusePackageOptions {
    */
   readonly allowUnsigned?: boolean;
   /**
+   * Posture-derived import profile (R&D 0051): when `true`, an unsigned import is REFUSED even if
+   * `allowUnsigned` was also passed — the security posture wins, fail-secure. The host derives this
+   * from `deriveImportProfile(resolvePosture(...))` in `@logicn/core-config` (prod/mesh ⇒ true).
+   * Tamper (hash/signature) is denied regardless of this flag.
+   */
+  readonly requireSignature?: boolean;
+  /**
    * Directory holding `signing-key-<keyId>.pub.pem` public keys. Defaults to
    * `<repo>/governance` relative to the package dir's two parents is NOT assumed —
    * callers point this at their governance dir. When omitted, the loader looks for a
@@ -376,6 +383,8 @@ interface AdmittedPackage {
   readonly descriptor: FuseDescriptor;
   readonly wasmBytes: Uint8Array;
   readonly signature: "verified" | "unsigned";
+  /** The signing keyId from the manifest's governanceSignature, if present (for the import closure). */
+  readonly keyId?: string;
 }
 
 /**
@@ -432,7 +441,12 @@ async function loadAndVerifyPackage(
 
   // ── Gate 2: signature state (caller decides the unsigned policy) ─────────────
   const signature = verifyManifestSignature(node, manifestObj, opts.governanceDir, dir, warn);
-  return { name, descriptor, wasmBytes, signature };
+  const sigField = manifestObj["governanceSignature"];
+  const keyId =
+    sigField !== null && typeof sigField === "object" && typeof (sigField as Record<string, unknown>)["keyId"] === "string"
+      ? ((sigField as Record<string, unknown>)["keyId"] as string)
+      : undefined;
+  return { name, descriptor, wasmBytes, signature, ...(keyId !== undefined ? { keyId } : {}) };
 }
 
 /** Gate 3: instantiate `wasmBytes` with the closed capability import object and wrap it. */
@@ -480,9 +494,17 @@ export async function fusePackage(dir: string, opts: FusePackageOptions = {}): P
 
   const admitted = await loadAndVerifyPackage(node, dir, opts, warn);
 
-  // ── Gate 2 policy (single package): fail-closed unless allowUnsigned ─────────
+  // ── Gate 2 policy (single package): fail-closed unless allowUnsigned ──────────
+  // Posture-derived import profile (R&D 0051): requireSignature overrides allowUnsigned (fail-secure).
+  const allowUnsigned = opts.allowUnsigned === true && opts.requireSignature !== true;
   if (admitted.signature === "unsigned") {
-    if (opts.allowUnsigned !== true) {
+    if (!allowUnsigned) {
+      if (opts.requireSignature === true) {
+        return fuseError(
+          "LLN-FUSE-UNSIGNED",
+          `manifest for '${admitted.name}' is unsigned but the security posture requires a signature — refusing (posture-derived import profile)`,
+        );
+      }
       const keysExist = governanceKeysPresent(fs, path, opts.governanceDir, dir);
       return fuseError(
         "LLN-FUSE-UNSIGNED",
@@ -740,8 +762,10 @@ export async function fusePackages(
     capabilities: a.descriptor.capabilities,
     signature: a.signature,
   }));
-  const plan = planComposition(members, known, { allowUnsigned: opts.allowUnsigned === true });
-  if (opts.allowUnsigned === true) {
+  // Posture-derived import profile (R&D 0051): requireSignature overrides allowUnsigned (fail-secure).
+  const allowUnsigned = opts.allowUnsigned === true && opts.requireSignature !== true;
+  const plan = planComposition(members, known, { allowUnsigned });
+  if (allowUnsigned) {
     for (const a of admitted) {
       if (a.signature === "unsigned") warn(`LLN-FUSE-UNSIGNED-ALLOWED: composing '${a.name}' from an UNSIGNED manifest because allowUnsigned was set`);
     }
@@ -764,4 +788,49 @@ export async function fusePackages(
     components.set(name, await instantiateComponent(a, imports));
   }
   return components;
+}
+
+/** One module in the import closure report. */
+export interface ImportClosureModule {
+  readonly name: string;
+  /** `sha256:<hex>` of the module's .wasm, as bound by the (signed) descriptor. */
+  readonly wasmSha256: string;
+  /** The signing keyId, or null when unsigned. */
+  readonly keyId: string | null;
+  readonly signature: "verified" | "unsigned";
+}
+
+/**
+ * An UNTRUSTED import-closure report (R&D 0051) — NOT a lockfile. The trust already lives in each
+ * signed manifest (the signature binds `wasmSha256` before signing); this is an informational
+ * inventory of what was admitted (keyId + wasmSha256 per module). `trusted` is ALWAYS false.
+ */
+export interface ImportClosure {
+  readonly schemaVersion: "lln.import-closure.v1";
+  readonly trusted: false;
+  readonly modules: readonly ImportClosureModule[];
+}
+
+/**
+ * Build the import-closure report over a set of package dirs. Each is run through Gates 1+2
+ * (hash + signature) — a tampered module throws (LLN-FUSE-HASH-MISMATCH), so the report only ever
+ * describes modules whose bytes match their descriptor. This is a REPORT, not an admission decision.
+ */
+export async function buildImportClosure(
+  dirs: readonly string[],
+  opts: FusePackageOptions = {},
+): Promise<ImportClosure> {
+  const warn = opts.warn ?? ((m: string) => console.warn(m));
+  const node = await loadNode();
+  const modules: ImportClosureModule[] = [];
+  for (const dir of dirs) {
+    const a = await loadAndVerifyPackage(node, dir, opts, warn);
+    modules.push({
+      name: a.name,
+      wasmSha256: a.descriptor.wasmSha256,
+      keyId: a.keyId ?? null,
+      signature: a.signature,
+    });
+  }
+  return { schemaVersion: "lln.import-closure.v1", trusted: false, modules };
 }

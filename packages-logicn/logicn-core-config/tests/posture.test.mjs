@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
   resolvePosture, isSecurityPosture, DEFAULT_SECURITY_POSTURE, SECURITY_POSTURES,
+  deriveImportProfile,
 } from "../dist/index.js";
 
 test("default posture is auto; the union is off/auto/on", () => {
@@ -59,4 +60,29 @@ test("isSecurityPosture guards the union (case-sensitive)", () => {
   assert.ok(isSecurityPosture("off") && isSecurityPosture("auto") && isSecurityPosture("on"));
   assert.equal(isSecurityPosture("ON"), false);
   assert.equal(isSecurityPosture(1), false);
+});
+
+// ── R&D 0051 — import-admission profile derived from the posture ──────────────
+test("deriveImportProfile: posture 'on' requires a signature (prod/mesh signed-hash)", () => {
+  const p = deriveImportProfile(resolvePosture("on"));
+  assert.equal(p.requireSignature, true);
+  assert.equal(p.allowFilePath, false);
+  assert.equal(p.posture, "on");
+});
+
+test("deriveImportProfile: posture 'off' allows file-path / unsigned (dev/test only)", () => {
+  const p = deriveImportProfile(resolvePosture("off", "development"));
+  assert.equal(p.requireSignature, false);
+  assert.equal(p.allowFilePath, true);
+  assert.equal(p.posture, "off");
+});
+
+test("deriveImportProfile: 'auto' is fail-secure — requires a signature except in dev/test", () => {
+  assert.equal(deriveImportProfile(resolvePosture("auto", "production")).requireSignature, true);
+  assert.equal(deriveImportProfile(resolvePosture("auto", "unknown")).requireSignature, true, "unknown env → signed");
+  assert.equal(deriveImportProfile(resolvePosture("auto", "development")).requireSignature, false);
+});
+
+test("deriveImportProfile: an invalid posture resolves to require-signature (fail-secure)", () => {
+  assert.equal(deriveImportProfile(resolvePosture("nonsense", "development")).requireSignature, true);
 });

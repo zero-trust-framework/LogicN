@@ -116,3 +116,37 @@ export function resolvePosture(
       : `Posture 'auto' resolved to 'on' (fail-secure) for ${env === "unknown" ? "unknown env" : env}.`,
   };
 }
+
+// ── Import-admission profile (R&D 0051) ──────────────────────────────────────
+// The verified-import HYBRID, bound to the posture (NOT a separate knob): production / mesh use
+// signed-hash admission; dev/test may use a file-path / unsigned import. TAMPER (hash mismatch or
+// invalid signature) is denied in EVERY posture by the loader gates — this profile only decides
+// whether an UNSIGNED / file-path import is admissible at all.
+
+/** The import-admission policy derived from a resolved posture. */
+export interface ImportProfile {
+  /** Production / mesh: an import MUST carry a verifying signature (signed-hash admission). */
+  readonly requireSignature: boolean;
+  /** Dev/test only: a file-path / unsigned import is permitted. */
+  readonly allowFilePath: boolean;
+  /** The effective posture this was derived from. */
+  readonly posture: "off" | "on";
+  readonly rationale: string;
+}
+
+/**
+ * Derive the import-admission profile from a resolved posture. Fail-secure: ONLY an explicit
+ * effective `off` (dev/test) relaxes to allow unsigned / file-path imports; `on` (prod/staging/
+ * unknown/invalid) requires a signature. Tamper is always denied by the loader regardless.
+ */
+export function deriveImportProfile(resolved: ResolvedPosture): ImportProfile {
+  const requireSignature = resolved.effective === "on";
+  return {
+    requireSignature,
+    allowFilePath: !requireSignature,
+    posture: resolved.effective,
+    rationale: requireSignature
+      ? `Posture '${resolved.effective}': imports must be signed (signed-hash admission for prod/mesh).`
+      : `Posture 'off': file-path / unsigned imports permitted (dev/test only).`,
+  };
+}

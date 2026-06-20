@@ -39,9 +39,23 @@ framing in **docs / north-star only**.
   Mesh-branded type names (Mesh is a RETIRED brand — UK trademark; "mesh layer" = the generic concept, **TritMesh** = the
   kept name of the separate networking project). See [[logicn-mesh-brand-rename]].
 
+## SHIPPED 2026-06-20 (owner green-lit, after 0050)
+- **`deriveImportProfile(resolved)`** in `@logicn/core-config` (`posture.ts`) — the policy binding: posture `on`
+  (prod/staging/unknown/invalid) ⇒ `requireSignature` (signed-hash admission); posture `off` (dev/test) ⇒
+  `allowFilePath`. Fail-secure: only an explicit `off` relaxes. Tamper is denied by the loader regardless. +4 tests.
+- **`requireSignature` enforcement** in `fuse-loader.ts` (`FusePackageOptions`) — wired into BOTH `fusePackage`
+  (single) and `fusePackages` (set). It **overrides `allowUnsigned` fail-secure**: an unsigned import is refused even
+  if `allowUnsigned:true` was passed (single ⇒ `LLN-FUSE-UNSIGNED` "posture requires a signature"; set ⇒
+  `LLN-FUSE-SET-UNSIGNED`). The host derives the boolean from `deriveImportProfile(...)` and passes it — app-kernel
+  stays decoupled from core-config. +2 tests.
+- **`buildImportClosure(dirs)`** — the UNTRUSTED `import-closure.json` report (`trusted:false` ALWAYS): `{ name,
+  wasmSha256, keyId, signature }` per module, each run through Gates 1+2 (a tampered module throws). NOT a lockfile —
+  the trust already lives in the signed manifest (signature binds `wasmSha256` pre-sign). +1 test. app-kernel 57/57.
+
 ## Honest tiers / open
-- **Net-new (NOT built):** import-profile derivation from posture (`resolvePosture` unconsumed; all `fusePackage`/
-  `allowUnsigned` callers are tests); the `import-closure.json` report.
+- **Net-new — now BUILT (above):** posture-derived import profile + `requireSignature` enforcement + the
+  `import-closure.json` report. Open follow-up: wire the host to actually call `resolvePosture`→`deriveImportProfile`
+  →`fusePackages({requireSignature})` end-to-end (the pieces exist; the production wiring is the host's to assemble).
 - **#34-gated:** ML-DSA-65 hybrid signing is a placeholder — the fuse loader treats the `Ed25519 + ML-DSA-65` placeholder
   manifest as **UNSIGNED** until #34 (Node FIPS-204 key custody) lands.
 - **Tech debt:** `#105` `admitAndInstantiate` gate is **export/test-only**, NOT in the production fuse path.

@@ -57,7 +57,11 @@ order-independent) + the fixtures-dist gitignore-negation so a fresh checkout pa
 **OWNER 2026-06-20: build BOTH (0050 then 0051).** **0050 exporter Slice 1 SHIPPED** — new package
 `@logicn/governance-telemetry` (`renderPrometheus` + closed egress fence [unsafe labels dropped+counted, effects→family,
 closed vocab] + `startExporter` read-only /metrics /healthz /readyz; +14 tests). DEFERRED: host snapshot adapter, OTLP,
-the `503 + X-LogicN-State` backpressure bridge (kernel→runtime, security-sensitive). **0051 posture-derived import profile = NEXT.**
+the `503 + X-LogicN-State` backpressure bridge (kernel→runtime, security-sensitive). **0051 SHIPPED** —
+`deriveImportProfile` (core-config: posture `on`⇒require-signature, `off`⇒file-path, fail-secure) + `requireSignature`
+enforcement in `fuse-loader` (overrides `allowUnsigned` fail-secure, both single + set) + `buildImportClosure` (untrusted
+`import-closure.json`, `trusted:false`). +7 tests; app-kernel 57/57, core-config 12/12, SOT 3705. **Both owner-gated
+builds (0050 Slice 1 + 0051) DONE.** Open follow-ups: 0050 host snapshot adapter + OTLP + backpressure bridge; 0051 end-to-end host wiring.
 
 **▶ AOT #2 — branch-folding + dead-arm DCE — ✅ SHIPPED `056ac70`** (`foldToBool` folds a const `if`
 condition → emit only the taken arm; dead arm + locals dropped; nested=true → explicit returns valid

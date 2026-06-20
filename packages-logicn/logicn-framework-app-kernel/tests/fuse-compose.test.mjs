@@ -7,7 +7,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
 
-import { planComposition, makeProviderFactory, fusePackages } from "../dist/index.js";
+import { planComposition, makeProviderFactory, fusePackages, fusePackage, buildImportClosure } from "../dist/index.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const DEMO_DIR = join(here, "..", "..", "..", "examples", "fuse-demo", "my-custom-api-rest");
@@ -160,4 +160,31 @@ test("fusePackages: WITHOUT the provider, the consumer's clock.read falls back t
   // proving the 42 above genuinely came from the provider module, not a coincidence.
   const components = await fusePackages([CONSUMER_DIR], { allowUnsigned: true, warn: () => {} });
   assert.equal(components.get("clockconsumer").invoke("main"), 0, "no provider → built-in host shim backs clock.read");
+});
+
+// ── R&D 0051: posture-derived import profile (requireSignature) + import-closure report ──
+test("requireSignature OVERRIDES allowUnsigned (fail-secure) — fusePackages refuses an unsigned set", async () => {
+  await assert.rejects(
+    () => fusePackages([PROVIDER_DIR, CONSUMER_DIR], { allowUnsigned: true, requireSignature: true, warn: () => {} }),
+    /LLN-FUSE-SET-UNSIGNED/,
+    "posture 'on' (requireSignature) must refuse unsigned even when allowUnsigned was passed (set-signed invariant fires)",
+  );
+});
+
+test("requireSignature OVERRIDES allowUnsigned for a single fusePackage too", async () => {
+  await assert.rejects(
+    () => fusePackage(DEMO_DIR, { allowUnsigned: true, requireSignature: true, warn: () => {} }),
+    /posture requires a signature/,
+  );
+});
+
+test("buildImportClosure: an UNTRUSTED inventory (trusted:false) with wasmSha256 + signature per module", async () => {
+  const closure = await buildImportClosure([PROVIDER_DIR, CONSUMER_DIR], { warn: () => {} });
+  assert.equal(closure.schemaVersion, "lln.import-closure.v1");
+  assert.equal(closure.trusted, false, "the closure is a report, NOT a trusted lockfile");
+  assert.equal(closure.modules.length, 2);
+  const byName = Object.fromEntries(closure.modules.map((m) => [m.name, m]));
+  assert.match(byName.clockprovider.wasmSha256, /^sha256:[0-9a-f]{64}$/);
+  assert.equal(byName.clockprovider.signature, "unsigned", "the unsigned fixtures report as unsigned");
+  assert.equal(byName.clockconsumer.keyId, null, "no keyId on an unsigned module");
 });
