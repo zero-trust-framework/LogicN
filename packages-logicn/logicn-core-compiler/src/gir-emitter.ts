@@ -4,6 +4,7 @@
 
 import { createHash } from "node:crypto";
 import { type AstNode, type AstNodeKind, type FlowMeta, type SourceLocation } from "./parser.js";
+import { inferFlowResilience, type FaultHandler } from "./resilience-inference.js";
 import { type EffectCheckResult } from "./effect-checker.js";
 import { SemanticGraphBuilder, type SemanticGraph } from "@logicn/devtools-graph-algorithms";
 import { buildExecutionPlan as _buildExecutionPlanImpl } from "./runtime/executionPlan.js";
@@ -117,6 +118,14 @@ export interface GIRFlow {
    * Absent when no parameters are declared.
    */
   readonly paramTypes?: readonly string[];
+  /**
+   * 0017: first-class fault handlers. The full 4-class matrix (on_timeout/rotation/denial/substrate_fault),
+   * each resolved to its declared action or the fail-closed `halt` default. 0016's generator emits one
+   * fault-injection test per entry. Present only when at least one handler is explicitly DECLARED — for
+   * purely-default flows it is omitted to keep the canonical GIR/hash unchanged (materializing the matrix
+   * for every flow is a deliberate follow-on, since it perturbs every flow's girHash).
+   */
+  readonly faultHandlers?: readonly FaultHandler[];
 }
 
 export interface GIRProgram {
@@ -289,6 +298,12 @@ export function emitGIR(
     // Phase 24: extract parameter types in declaration order for WAT emission.
     const paramTypes = flowNode === undefined ? undefined : extractParamTypes(flowNode);
 
+    // 0017: surface the fault-handler matrix only when at least one handler is explicitly declared, so
+    // purely-default flows keep an unchanged canonical GIR/hash. When present we emit the FULL 4-class
+    // matrix (declared + inferred-default halt) so 0016 is a trivial map-over-array.
+    const faultHandlers = flowNode === undefined ? [] : inferFlowResilience(flowNode, flow).faultHandlers;
+    const hasDeclaredFault = faultHandlers.some((h) => h.source === "declared");
+
     const flowGIR: GIRFlow = {
       name: flow.name,
       qualifier: flow.qualifier,
@@ -305,6 +320,7 @@ export function emitGIR(
       allowedEffectsMask,
       ...(loweringPlan.entries.length > 0 ? { typedArrayLoweringPlan: loweringPlan } : {}),
       ...(paramTypes !== undefined && paramTypes.length > 0 ? { paramTypes } : {}),
+      ...(hasDeclaredFault ? { faultHandlers } : {}),
     };
     return flowGIR;
   });

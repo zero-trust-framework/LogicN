@@ -42,7 +42,7 @@ import { type EffectCheckResult } from "./effect-checker.js";
 import { GovernanceFlags, type GovernanceFlagsMask, type RuntimeManifest } from "./type-registry.js";
 import { buildProofGraphCached, computeExecutionSignature, generateEpilogueReceipt, type EpilogueFailureAction, type EpilogueProofStrategy, type ProofGraph, type ProofObligation, LLN_HW_001, LLN_HW_002, LLN_HW_003, LLN_HW_004, TAMPER_RESPONSE_STRATEGIES } from "./proof-graph.js";
 import { HARDWARE_TRUST_PROFILES, ProofLevel } from "./type-registry.js";
-import { checkResilienceViolations } from "./resilience-inference.js";
+import { checkResilienceViolations, checkFaultHandlerViolations } from "./resilience-inference.js";
 import { checkObservabilityWarnings } from "./observability-inference.js";
 import { checkSubstrateViolations } from "./substrate-inference.js";
 
@@ -1978,6 +1978,24 @@ class GovernanceVerifier {
           v.message,
           loc,
           `Add 'idempotent: true' to the resilience {} block, or remove the retry declaration.`,
+        ));
+      }
+    }
+
+    // ── LLN-FAULT-001/003: first-class fault-handler governance (0017) ──
+    // A declared on_*_fault handler that fails open (log outside on_rotation_fault) or violates deny-only
+    // monotonicity (on_denial_fault retry) is rejected. The inferred secure default (halt) never violates.
+    if (flowNode !== undefined) {
+      for (const v of checkFaultHandlerViolations(flowNode)) {
+        this.diagnostics.push(makeGovDiag(
+          v.code,
+          v.code === "LLN-FAULT-003" ? "FAULT_HANDLER_FAIL_OPEN" : "FAULT_HANDLER_MONOTONICITY",
+          "error",
+          v.message,
+          loc,
+          v.code === "LLN-FAULT-003"
+            ? "Replace 'log' with 'halt' or 'quarantine' (log is fail-open; only on_rotation_fault may opt in)."
+            : "Replace 'retry' with 'halt', 'quarantine', or 'fallback <flow>' for on_denial_fault.",
         ));
       }
     }

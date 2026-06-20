@@ -973,6 +973,10 @@ Under `@experimental_profile(drcm_core_v1)`, the compiler:
 | LLN-AU-001 | Auditability | `epilogue { strategy: none }` on high-trust flow (max_risk_liability: high) | PLANNED Phase 6 |
 | LLN-DEP-001 | Lifecycle | Deprecated syntax in use — migration available | PLANNED (post-DRCM) |
 | LLN-RES-001 | Resilience | `retry` on `database.write`/`gateway.charge` without `idempotent: true` | ENFORCED (task #58) |
+| LLN-FAULT-001 | Resilience | `on_denial_fault retry` — retrying a capability denial attempts a re-grant, colliding with deny-only monotonicity (LLN-MONO-001) | ENFORCED (0017) |
+| LLN-FAULT-002 | Resilience | `fallback <flow>` whose effect-set is not a subset of the post-fault capability set | PLANNED (0017 follow-on — needs fallback symbol resolution) |
+| LLN-FAULT-003 | Resilience | Fail-OPEN fault action — `log` outside the `on_rotation_fault` back-compat opt-in (keeps serving past the fault) | ENFORCED (0017) |
+| LLN-FAULT-004 | Resilience | `fallback <flow>` recursion/cycle beyond depth-1 | PLANNED (0017 follow-on) |
 | LLN-OBS-001 | Observability | Explicit `observability {}` on a `pure` flow (no side effects to observe) | ENFORCED (task #58) |
 | LLN-INV-000 | Invariant | **RUNTIME** — `unreachable` hardware trap fired; DSS emits Audit Event (CBOR Tag 410) | PLANNED DRCM Phase 5 (#76) |
 | LLN-INV-001 | Invariant | `ensure expr` statically proved false at compile time | ENFORCED (task #36) |

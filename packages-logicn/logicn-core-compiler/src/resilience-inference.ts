@@ -36,6 +36,29 @@ export type ResilienceFallback =
 
 export type BackoffStrategy = "constant" | "linear" | "exponential";
 
+// ---------------------------------------------------------------------------
+// First-class fault handlers (R&D 0017) — `on_*_fault <action>` inside resilience {}
+// ---------------------------------------------------------------------------
+
+export type FaultSignal =
+  | "on_timeout_fault"    // an operation exceeded its time budget
+  | "on_rotation_fault"   // a key/credential rotation failed (logicn-ext-secrets-vault)
+  | "on_denial_fault"     // a capability was denied mid-flow (capability_denied)
+  | "on_substrate_fault"; // a substrate lane failed (substrate {} model)
+
+/** Recovery action for a fault. `halt` is the fail-closed DEFAULT. `log` is the only fail-OPEN action
+ *  and is admitted ONLY on on_rotation_fault (back-compat with logicn-ext-secrets-vault types). */
+export type FaultAction = "halt" | "quarantine" | "retry" | "fallback" | "log";
+
+export interface FaultHandler {
+  readonly signal: FaultSignal;
+  readonly action: FaultAction;
+  /** Target flow name — present iff action === "fallback". */
+  readonly target?: string;
+  /** "declared" = author wrote `on_X_fault <action>`; "inferred-default" = secure default (halt). */
+  readonly source: "declared" | "inferred-default";
+}
+
 export interface InferredResilience {
   /** Number of retry attempts on transient failure */
   readonly retryCount: number;
@@ -53,6 +76,9 @@ export interface InferredResilience {
   readonly idempotent: boolean;
   /** DPM posture bit to set on quarantine (DRCM Phase 5, "" = none) */
   readonly onQuarantinePostureBit: string;
+  /** 0017: the full 4-class fault-handler matrix — every signal resolves to a handler (declared or the
+   *  fail-closed `halt` default). 0016's generator emits one fault-injection test per entry. */
+  readonly faultHandlers: readonly FaultHandler[];
   /** True if resilience was explicitly declared in contract */
   readonly explicit: boolean;
 }
@@ -133,6 +159,69 @@ function extractOnQuarantine(flowNode: AstNode): string {
 }
 
 // ---------------------------------------------------------------------------
+// Fault handlers (0017): on_*_fault lines already parse into the resilience:block as inert
+// `decl:on_<signal>_fault <action> [<flow>]` identifiers. These give them typed, fail-closed semantics.
+// ---------------------------------------------------------------------------
+
+const FAULT_SIGNALS: readonly FaultSignal[] = [
+  "on_timeout_fault", "on_rotation_fault", "on_denial_fault", "on_substrate_fault",
+];
+
+/** The fail-closed secure default applied to every undeclared fault class. */
+const SECURE_DEFAULT_FAULT_ACTION: FaultAction = "halt";
+
+/** Scan the resilience:block for `decl:on_*_fault <action> [<flowIdent>]` lines; returns the RAW
+ *  declared action (validated/coerced later) keyed by signal. Last declaration of a signal wins. */
+function extractDeclaredFaultHandlers(
+  flowNode: AstNode,
+): Map<FaultSignal, { action: string; target?: string }> {
+  const out = new Map<FaultSignal, { action: string; target?: string }>();
+  const contractNode = (flowNode.children ?? []).find(c => c.kind === "contractDecl");
+  const resBlock = (contractNode?.children ?? []).find(
+    c => c.kind === "identifier" && c.value === "resilience:block",
+  );
+  if (resBlock === undefined) return out;
+  for (const child of resBlock.children ?? []) {
+    const v = child.value ?? "";
+    if (!v.startsWith("decl:on_")) continue;
+    const parts = v.replace(/^decl:/, "").trim().split(/\s+/); // e.g. ["on_substrate_fault","fallback","degraded_read_flow"]
+    const signal = parts[0] as FaultSignal;
+    if (!FAULT_SIGNALS.includes(signal)) continue;
+    const action = parts[1] ?? "";
+    const target = parts[2];
+    out.set(signal, target !== undefined ? { action, target } : { action });
+  }
+  return out;
+}
+
+/** Coerce a raw declared action to a safe FaultAction. Unknown actions, and the fail-OPEN `log` outside
+ *  on_rotation_fault, COERCE to `halt` (fail-closed by construction). The coercion is separately surfaced
+ *  as a diagnostic by checkFaultHandlerViolations so the author isn't silently overridden. */
+function coerceFaultAction(signal: FaultSignal, raw: string): FaultAction {
+  if (raw === "halt" || raw === "quarantine" || raw === "retry" || raw === "fallback") return raw;
+  if (raw === "log" && signal === "on_rotation_fault") return "log"; // back-compat opt-in (fail-open, flagged)
+  return "halt"; // fail-closed default for anything unrecognised or disallowed
+}
+
+/** Build the full 4-class fault-handler matrix: EVERY signal resolves to a handler — the declared action
+ *  when present+valid, else the fail-closed secure default. Explicit declaration wins; inference fills
+ *  gaps with `halt`; nothing widens toward fail-open (the #58 precedence contract, applied to faults). */
+function buildFaultHandlers(flowNode: AstNode): FaultHandler[] {
+  const declared = extractDeclaredFaultHandlers(flowNode);
+  return FAULT_SIGNALS.map((signal): FaultHandler => {
+    const d = declared.get(signal);
+    if (d === undefined) {
+      return { signal, action: SECURE_DEFAULT_FAULT_ACTION, source: "inferred-default" };
+    }
+    const action = coerceFaultAction(signal, d.action);
+    if (action === "fallback" && d.target !== undefined) {
+      return { signal, action, target: d.target, source: "declared" };
+    }
+    return { signal, action, source: "declared" };
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
@@ -150,6 +239,7 @@ export function inferFlowResilience(
   const hasNetworkEffect  = flow.declaredEffects.some(e => NETWORK_EFFECTS.has(e));
   const isPure            = flow.qualifier === "pure";
   const idempotent        = extractIdempotentFlag(flowNode);
+  const faultHandlers     = buildFaultHandlers(flowNode);
 
   if (hasExplicitResilience(flowNode)) {
     const retryCount = extractRetryCount(flowNode) ?? (hasMutationEffect && !idempotent ? 0 : 1);
@@ -162,6 +252,7 @@ export function inferFlowResilience(
       quarantineReset:         "manual",
       idempotent,
       onQuarantinePostureBit:  extractOnQuarantine(flowNode),
+      faultHandlers,
       explicit:                true,
     };
   }
@@ -171,25 +262,25 @@ export function inferFlowResilience(
     // Pure flows: no retry needed (side-effect-free, safe to retry at caller level)
     return { retryCount: 0, backoff: "constant", maxDelayMs: 0, fallback: "propagate",
              quarantineAfter: 0, quarantineReset: "manual", idempotent: false,
-             onQuarantinePostureBit: "", explicit: false };
+             onQuarantinePostureBit: "", faultHandlers, explicit: false };
   }
   if (hasMutationEffect) {
     // Mutation effects: NO retry by default (safety — avoid duplicate writes)
     return { retryCount: 0, backoff: "constant", maxDelayMs: 0, fallback: "propagate",
              quarantineAfter: 0, quarantineReset: "manual", idempotent: false,
-             onQuarantinePostureBit: "", explicit: false };
+             onQuarantinePostureBit: "", faultHandlers, explicit: false };
   }
   if (hasNetworkEffect) {
     // Network effects: 1 retry with exponential backoff (transient fault tolerance)
     return { retryCount: 1, backoff: "exponential", maxDelayMs: 5000, fallback: "propagate",
              quarantineAfter: 0, quarantineReset: "manual", idempotent: false,
-             onQuarantinePostureBit: "", explicit: false };
+             onQuarantinePostureBit: "", faultHandlers, explicit: false };
   }
 
   // Default: no retry
   return { retryCount: 0, backoff: "constant", maxDelayMs: 0, fallback: "propagate",
            quarantineAfter: 0, quarantineReset: "manual", idempotent: false,
-           onQuarantinePostureBit: "", explicit: false };
+           onQuarantinePostureBit: "", faultHandlers, explicit: false };
 }
 
 // ---------------------------------------------------------------------------
@@ -226,5 +317,46 @@ export function checkResilienceViolations(
     }
   }
 
+  return violations;
+}
+
+// ---------------------------------------------------------------------------
+// Fault-handler governance checks (0017): LLN-FAULT-001 / LLN-FAULT-003
+// ---------------------------------------------------------------------------
+
+export interface FaultHandlerViolation {
+  readonly code: "LLN-FAULT-001" | "LLN-FAULT-003";
+  readonly message: string;
+}
+
+/**
+ * Validate DECLARED fault handlers (the secure default never violates by construction):
+ *  - **LLN-FAULT-003** (fail-open guard): a handler resolving to `log` outside the on_rotation_fault
+ *    back-compat opt-in is fail-OPEN (it keeps serving past the fault) — rejected. Use halt/quarantine.
+ *  - **LLN-FAULT-001** (monotonicity): `on_denial_fault retry` is rejected — retrying a capability denial
+ *    attempts a re-grant, colliding with deny-only monotonicity (LLN-MONO-001). Use halt/quarantine/fallback.
+ * The matrix itself already coerces these to `halt` (fail-closed); this surfaces the author error instead of
+ * silently overriding it.
+ */
+export function checkFaultHandlerViolations(flowNode: AstNode): FaultHandlerViolation[] {
+  const violations: FaultHandlerViolation[] = [];
+  for (const [signal, d] of extractDeclaredFaultHandlers(flowNode)) {
+    if (d.action === "log" && signal !== "on_rotation_fault") {
+      violations.push({
+        code: "LLN-FAULT-003",
+        message:
+          `Fault handler '${signal} log' is fail-OPEN: 'log' keeps serving past the fault and is permitted ` +
+          `only on on_rotation_fault. Use 'halt' (fail-closed) or 'quarantine'.`,
+      });
+    }
+    if (d.action === "retry" && signal === "on_denial_fault") {
+      violations.push({
+        code: "LLN-FAULT-001",
+        message:
+          `Fault handler 'on_denial_fault retry' is rejected: retrying a capability denial attempts a ` +
+          `re-grant, colliding with deny-only monotonicity (LLN-MONO-001). Use 'halt', 'quarantine', or 'fallback <flow>'.`,
+      });
+    }
+  }
   return violations;
 }
