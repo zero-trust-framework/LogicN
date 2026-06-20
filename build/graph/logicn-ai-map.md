@@ -491,8 +491,8 @@ Provides:
 - CompositionPlan
 - planComposition
 - makeProviderFactory
-- LogicnKernelRequest
-- LogicnKernelResponse
+- ImportClosureModule
+- ImportClosure
 
 ## logicn-framework-api-server
 
