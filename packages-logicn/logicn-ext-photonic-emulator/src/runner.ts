@@ -1,0 +1,95 @@
+// runner.ts — the LOAD → (gate) → EXEC → re-verify → fall-back runtime path, in-package.
+//
+// Demonstrates the spec §4 photonic runtime path end-to-end WITHOUT the Tower, so the
+// whole fail-closed design is testable in isolation:
+//
+//   1. DECIDE     PartitionDecider.decide(kernel)   — default digital; photonic only on a net win
+//   2a. digital   → run the exact digital T-MAC (the unchanged default)
+//   2b. photonic  → bridge.execute(op) with the decided vote count N
+//   3. RE-VERIFY  (photonic only) tolerance bound-check vs the cheap O(n) exact recompute
+//                 — verify-cheap, never re-execute
+//   4. FAIL-CLOSED out-of-tolerance ⇒ DENY the photonic value and fall back to the DIGITAL
+//                 value (never re-run on photonics to "trust"). Worst case = stayed digital.
+//
+// The photonic backend can only ever ADD speed on a proven-win eligible kernel; it can
+// never subtract it or corrupt a result — any failure lands on the unchanged digital path.
+
+import type { BridgeOp, BridgeResult } from "../../logicn-inference-bridge-contract/dist/index.js";
+import { PartitionDecider, type KernelCost, type Decision, type Target } from "./partition-decider.js";
+import { type PhotonicBackend, PhotonicEmulatorBridge } from "./photonic-bridge.js";
+import { toleranceCheck } from "./freivalds.js";
+import { adcRange } from "./emulator.js";
+
+export interface PhotonicRunResult {
+  /** Where the value actually came from after re-verify + fallback. */
+  readonly target: Target;
+  /** The committed value (digital exact, or photonic-within-tolerance). */
+  readonly value: number;
+  /** True iff the committed value passed its integrity check (always true for digital). */
+  readonly verified: boolean;
+  /** True iff a routed-photonic kernel failed re-verify and fell back to digital. */
+  readonly fellBack: boolean;
+  /** Human-readable trail. */
+  readonly reason: string;
+  /** The routing decision that produced this run. */
+  readonly decision: Decision;
+  /** The raw photonic bridge result, when the photonic path was taken. */
+  readonly bridgeResult?: BridgeResult;
+}
+
+/** Ties the decider + the photonic backend into the fail-closed runtime path. */
+export class PhotonicRuntime {
+  private readonly decider: PartitionDecider;
+  private readonly backend: PhotonicBackend;
+
+  constructor(backend?: PhotonicBackend, decider?: PartitionDecider) {
+    this.backend = backend ?? new PhotonicEmulatorBridge();
+    this.decider = decider ?? new PartitionDecider();
+  }
+
+  /** Run one kernel through decide → (digital | photonic + re-verify → fail-closed). */
+  run(op: BridgeOp, kernel: KernelCost): PhotonicRunResult {
+    const decision = this.decider.decide(kernel);
+
+    if (decision.target === "digital") {
+      // The unchanged default path — the exact digital T-MAC.
+      return {
+        target: "digital",
+        value: this.backend.executeExact(op),
+        verified: true,
+        fellBack: false,
+        reason: decision.reason,
+        decision,
+      };
+    }
+
+    // Photonic path: execute, then re-verify against the cheap exact recompute.
+    const res = this.backend.execute(op, decision.N);
+    const exact = this.backend.executeExact(op);
+    const tol = kernel.tolerance ?? 0.05;
+    const span = adcRange(op.count);
+
+    if (toleranceCheck(res.value, exact, tol, span)) {
+      return {
+        target: "photonic",
+        value: res.value,
+        verified: true,
+        fellBack: false,
+        reason: decision.reason,
+        decision,
+        bridgeResult: res,
+      };
+    }
+
+    // FAIL-CLOSED: out-of-tolerance → deny the photonic value, commit the digital one.
+    return {
+      target: "digital",
+      value: exact,
+      verified: false,
+      fellBack: true,
+      reason: `re-verify FAILED (|Δ| > ${tol}·span) → DENY photonic, fall back to digital (fail-closed)`,
+      decision,
+      bridgeResult: res,
+    };
+  }
+}

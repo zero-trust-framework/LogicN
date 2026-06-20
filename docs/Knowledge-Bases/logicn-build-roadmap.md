@@ -5,6 +5,41 @@
 
 ---
 
+## 🌅 2026-06-20 — Photonic emulator package (R&D 0053 GAP) BUILT — `logicn-ext-photonic-emulator`
+
+**New package `packages-logicn/logicn-ext-photonic-emulator`** (peer to `logicn-ext-bridge-cpp`/`-quantum`),
+the hub-side production build of the R&D 0053 GAP (the owner-greenlit photonic virtualisation). Depends ONLY
+on the neutral `@logicn/inference-bridge-contract` (relative-dist convention, offline); **production /
+tower-citizen left byte-unchanged**. Ports the prove-own-maths D1 emulator (18/18) + D2 router (25/25) into
+real TS and re-proves them against the package's own compiled code.
+
+- **D1 emulator** (`emulator.ts`): noise-carrying MZI/micro-ring ternary MAC — per-element phase-drift gain
+  noise, photodiode shot+thermal readout noise, finite-ADC quantization, N-modular voting, the WDM
+  row-stochastic crosstalk coupler, the substrate-math closed forms. Converges to exact in the high-SNR
+  limit; MC variance == `σ_phase²·Σa² + σ_readout²`; precision wall at the ~8-bit ENOB knee; WDM
+  energy-conserving.
+- **D2 router** (`partition-decider.ts`): absolute-ns `Tdigital`/`Tphotonic`/`crossover`, `requiredRedundancy()`
+  from D1's variance, `PartitionDecider.decide()` — default digital, photonic only on a proven win, **0
+  slowdowns over n=1..4096 × N∈{1,3,9,25}**, crypto/control-flow gated off (crypto-on-core), fail-closed.
+- **Bridge + re-verify + runtime** (`photonic-bridge.ts`/`freivalds.ts`/`runner.ts`):
+  `PhotonicEmulatorBridge implements InferenceBridge` with a `determinismMode:"tolerance"` manifest that
+  passes the shipped `validateManifestShape` only when fully pinned + witnessed; honest
+  `executedNatively/deterministic = false` (so `assertDeterminism` correctly throws on it); `PhotonicRuntime`
+  demonstrates decide → exec → Freivalds/tolerance re-verify → **fall back to digital** on out-of-tolerance.
+- **Verify:** `npm test` (25 node:test cases) + `npm run prove` (10/10, exit 0). The root runner discovers it
+  via smart-dispatch against the prebuilt `dist/` (offline; no npm/tsc needed at run time).
+- **STILL OPEN (iteration 2):** the **Tower-side dispatch wiring** in `hybrid-engine.ts` — the photonic path
+  that routes via the decider + re-verifies via Freivalds/tolerance *instead of* the bit-exact ternary
+  `assertDeterminism` oracle. A separate, deliberately-reviewed edit to tower-citizen.
+- **EXCLUDED (HW-gated):** any measured photonic speedup (ns are aspirational Meech-anchored envelopes); the
+  real PIC noise floor / coupler S-params. No speedup claimed without a named PIC.
+
+R&D bridge: hub-built 0053 production; R&D task **0054** (hardware-capability directive + per-tier packages)
+remains the OPEN enc-rnd design+proof task — its `hardware()` selector will choose among per-tier packages,
+of which this emulator is the photonic substrate.
+
+---
+
 ## 🏁 Phase 1 Security Audit — COMPLETE (2026-06-16)
 
 **The perimeter is sealed.** All **8/8** Critical + High findings from the adversarial Gate-6 audit are

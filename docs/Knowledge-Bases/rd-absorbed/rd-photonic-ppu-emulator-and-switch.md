@@ -39,12 +39,28 @@ remaining (owner-gated) production edits.
 4. **ADC quantization is a systematic floor voting cannot beat** — fixed by more bits, not more votes; this is
    why `requiredRedundancy()` returns Infinity for a coarse-ADC lane → refuse.
 
-## GAP — the remaining production edits (owner-gated; design + interfaces proven, not yet wired)
-1. The **`logicn-ext-photonic-emulator`** package (the D1 emulator behind the `InferenceBridge` contract).
-2. The **`PartitionDecider`** selector (= D2 `route()`) + the **net-win cost gate** between the router and
-   `bridges.get(...)`.
-3. The post-`execute` **Freivalds re-verify hook** (fail-closed to digital on out-of-tolerance).
-Closest shipped precedent: the `BridgeDomain` discriminator + the ffsim tolerance-backend path.
+## GAP — the remaining production edits
+
+**✅ BUILT 2026-06-20 (hub, iteration 1) — `packages-logicn/logicn-ext-photonic-emulator`** (new package,
+depends ONLY on the neutral `@logicn/inference-bridge-contract` via the repo's relative-dist convention;
+production/tower-citizen left byte-unchanged). Ports the proven D1+D2 maths into real TS + re-proves it
+against the package's own compiled code (25 node:test cases + `npm run prove` 10/10, exit 0):
+1. ✅ The **`logicn-ext-photonic-emulator`** package — `PhotonicEmulatorBridge implements InferenceBridge`
+   (the D1 emulator: `emulator.ts`), `determinismMode:"tolerance"` manifest that passes the shipped
+   `validateManifestShape` only when fully pinned + witnessed. Honest: `executedNatively=false`,
+   `deterministic=false` (so `assertDeterminism` correctly THROWS on it — proving it can't masquerade as
+   the bit-exact ternary path).
+2. ✅ The **`PartitionDecider`** selector (= D2 `route()`, `partition-decider.ts`) + the **net-win cost gate**
+   (default digital, photonic only on a proven absolute-ns win; crypto/control-flow gated off; fail-closed).
+3. ✅ The post-`execute` **Freivalds re-verify hook** (`freivalds.ts`) + the `PhotonicRuntime` orchestrator
+   (`runner.ts`) demonstrating the §4 path end-to-end: decide → exec → re-verify → **fall back to digital**
+   on out-of-tolerance (verify-cheap, never re-execute).
+
+**STILL OPEN (iteration 2, hub):** the **Tower-side dispatch wiring** inside `hybrid-engine.ts` — the
+photonic dispatch path that routes via the decider and re-verifies via Freivalds/tolerance *instead of* the
+bit-exact ternary `assertDeterminism` oracle (a separate, deliberately-reviewed production edit to
+tower-citizen). Closest shipped precedent for the manifest side: the `BridgeDomain` discriminator + the
+ffsim tolerance-backend path.
 
 ## EXCLUDED (HW-gated — recorded with reason)
 Measured silicon MAC speedup; the real PHASE_GAIN/XTALK/READOUT noise floor; the real coupler S-parameter
