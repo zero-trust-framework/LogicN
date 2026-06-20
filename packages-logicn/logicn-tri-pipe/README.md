@@ -44,4 +44,33 @@ npm run prove  # the selection logic: tier == hardware() for every input; offloa
                #   tier; fail-closed unattested/unknown → binary (exit 0)
 ```
 
+## The LogicN Execution Router — one decision across all routing axes
+
+LogicN's execution routing lived in three separate routers a caller had to consult individually.
+`createExecutionRouter()` is the single front door that **composes** them (it re-derives no routing maths)
+into one `ExecutionDecision`:
+
+```ts
+import { createExecutionRouter } from "@logicn/tri-pipe";
+const router = createExecutionRouter();
+const decision = router.route({
+  opClass: "feedforward",
+  routing: { governanceTier: 2, fp4HardwareAvailable: false, airGapped: false },  // precision context
+  capability: { targetId: "photonic", attestationVerified: true, componentFullyEligible: true }, // tier
+  kernel: { n: 1024, lane: "photonic", tolerance: 0.05 },                          // offload cost
+});
+// → { tier, precision, offloadTarget, photonic, reason }
+```
+
+| Axis | Source router | Decides |
+|---|---|---|
+| AXIS-1 capability tier | `hardware()` (`@logicn/hardware-tier`) | binary / hybrid / photonic |
+| AXIS-2 precision technique | `routePrecision` (`@logicn/tower-citizen`) | ternary / fp4 / fp8 / fp16 |
+| AXIS-3 per-kernel offload | `PartitionDecider` (`@logicn/ext-photonic-emulator`) | digital / photonic |
+
+**Photonic IFF** offload-capable tier (hybrid/photonic) **∧** ternary precision **∧** the per-kernel
+net-win router says photonic. A binary tier, a non-ternary precision (e.g. an fp16 sensitivity-critical
+op), a crypto/control kernel, or any uncertainty ⇒ the **digital** path. Fail-closed; worst case == binary
+digital == today. (`npm test` includes a property sweep proving `photonic` matches that conjunction exactly.)
+
 License: Apache-2.0.

@@ -152,6 +152,14 @@ the Tower runtime** (composes `@logicn/hardware-tier` + `@logicn/ext-photonic-em
 **The photonic line is now COMPLETE + demonstrable end-to-end:** emulator (0053) → directive/loader (0054)
 → Tower dispatch wiring → this one-call capstone. Digital stays the default and byte-unchanged throughout.
 
+**Added 2026-06-20 — the LogicN Execution Router** (`tri-pipe/src/execution-router.ts`): `createExecutionRouter()`
+unifies the three routing axes into ONE `ExecutionDecision` — AXIS-1 capability tier (`hardware()`), AXIS-2
+precision technique (`routePrecision`), AXIS-3 per-kernel offload (`PartitionDecider`). It COMPOSES the
+proven routers (no re-derived maths). **Photonic IFF** offload-capable tier ∧ ternary precision ∧ the
+net-win router says photonic; everything else (binary tier / non-ternary / crypto / uncertainty) ⇒ digital,
+fail-closed. +7 node:test incl. a property sweep proving the conjunction. (There was no component literally
+named "Execution Router" before; routing was spread across three packages — this is the single front door.)
+
 ---
 
 ## 🔏 2026-06-20 — #180: the authoritative CBOR `.lmanifest` is now really Ed25519-signed (owner-unblocked)

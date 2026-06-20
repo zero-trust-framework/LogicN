@@ -9,3 +9,9 @@ export {
   type TriPipeOptions, type TriPipeEngine, type Tier,
   createTriPipeEngine,
 } from "./tri-pipe.js";
+
+// The LogicN Execution Router — one decision across all routing axes (tier × precision × offload).
+export {
+  type CapabilityInput, type ExecutionRouteInput, type ExecutionDecision,
+  ExecutionRouter, createExecutionRouter,
+} from "./execution-router.js";
