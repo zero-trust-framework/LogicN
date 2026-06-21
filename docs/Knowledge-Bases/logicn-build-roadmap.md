@@ -150,8 +150,10 @@ to before — the 188 existing tower tests are unchanged).
 - **Verify:** tower-citizen **194/194** (was 188; +6 `photonic-dispatch.test.mjs`: default-unchanged,
   net-win→photonic, no-win→digital, decline→digital, hit→commits-photonic-value, receipt-shape-stable);
   photonic **29/29** (+4 `router-port.test.mjs`). Full suite green: 52/52 packages.
-- **STILL OPEN:** certified-mode photonic admission (an ATTESTED, signed tolerance backend so the photonic
-  path can run under the certified profile too — today certified mode fail-closes to digital); a real
+- ✅ **certified-mode photonic admission — DONE 2026-06-21 (`7a58a26`):** `PhotonicConfig.certifiedAttestation`
+  admits the photonic lane in certified mode iff verified (attested ∧ certificationProfile="certified" ∧
+  toleranceWitnessed) — fail-closed, default-off (byte-unchanged for deployments without it), keep-digital.
+  Composes with the photonic-hardware switch's attestation gate. +4 tower-citizen tests. **STILL OPEN:** a real
   per-op kernel-size source (Stage A demo ops are n=16, so `kernelFor` is deployment-supplied).
 
 ---
