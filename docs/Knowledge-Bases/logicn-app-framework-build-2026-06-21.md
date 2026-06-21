@@ -22,10 +22,10 @@ overlapped heavily with shipped work, so most B-items were verified, not re-deri
 - **Built (the real gaps):** B1 scaffolder, B2 admission-vocabulary unification — both with tests, pushed.
 - **Verified already shipped (no re-derivation):** B3, B4, and the core of B5 + B6.
 
-## Residual NEW slices (owner to direct)
-1. **B5a — signed central registry index** + a verifying resolver entry (hash + signature + revocation BEFORE admission). The one item flagged genuinely-new.
-2. **B5b / B4-residual — wire revocation into more gates**: the package resolver (resolution-time defense-in-depth) and `bridge-attest` / `border-check` (per the `revocations.json` hardening note).
-3. **B6 — a richer worked example** (within the TritMesh-as-example-only constraint).
+## Residual NEW slices
+1. **B5a — signed central registry index** + a verifying resolver entry (hash + signature + revocation BEFORE admission). The one item flagged genuinely-new. *(Owner to direct — not yet built.)*
+2. **Revocation into more gates** — ✅ **BUILT** (`fdb3f3e`, owner-directed). Signing-key revocation now enforced at the **package resolver** (`LLN-PKG-006`, `checkPackageProvenance`/`getResolverReport` take a fail-closed `{ isRevoked }` predicate; `signerKeyId` added to the manifest schema — forward-ready) and the **bridge-attestation gate** (`AttestationPolicy.signerKeyId` + `revocationCheck`; `verifyAttestation` refuses a validly-signed-but-revoked key, covering the hybrid path). New CLI `logicn bridge-attest verify … [--keyid <id>]` injects the real registry (fail-closed via `assertRegistryTrustworthy`). Verified e2e: real revoked key `8eecf4…` → DENIED. `border-check` intentionally excluded (plugins use `sourceHash`, not signer keyIds). +7 tests; full suite 53/53 · 4980.
+3. **B6 — a richer worked example** (within the TritMesh-as-example-only constraint). *(Owner to direct — not yet built.)*
 
 ## Decisions recorded
 - B2 canonical schema = **compiler ontology** (border-check's was the least load-bearing; taking it literally would have broken V_DPM/governance/.lln and dropped `shell.execute`/`native.call`).
