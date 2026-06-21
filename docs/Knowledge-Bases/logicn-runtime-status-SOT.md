@@ -2,6 +2,14 @@
 
 **Last verified: 2026-06-06 (by running the suites, not by reading prior docs)**
 
+> **⏩ NEWER AUDIT 2026-06-21** — see [logicn-roadmap-and-percent-audit-2026-06-21.md](logicn-roadmap-and-percent-audit-2026-06-21.md).
+> Counts refreshed to **53/53 packages · 4,980 tests · 0 fail** (verified by running; the `version.json` `--emit-counts` bump is deferred to a clean run — it refused under concurrent R&D CPU load).
+> The §6 / `appLayerStatus` "app layer = TEMPLATES, NOT IMPLEMENTED" line is now **partly stale**: the
+> app-framework **admission/fusion border + scaffolder + governed resolver are REAL and tested** this
+> session (fuse-loader 3 gates + `planComposition` + revocation = 60 tests; `logicn new app`; unified
+> admission vocabulary; LLN-PKG-006). Still unbuilt: the signed registry index + a richer example app.
+> Two-axis position (Axis B self-hosting ≈80%) and real-DSS.wasm 0% are unchanged.
+
 This document exists because the percentage and test-count figures across the
 roadmap/audit docs contradicted each other and the actual code. Where any other
 doc disagrees with this one, **this one wins** until re-verified. Every number
