@@ -12,7 +12,7 @@
     "build": "tsc",
     "test": "npm run build && node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit",
-    "prove": "node scripts/prove-photonic.mjs"
+    "prove": "node scripts/prove-photonic.mjs && node scripts/prove-photonic-switch.mjs"
   },
   "dependencies": {
     "@logicn/inference-bridge-contract": "file:../logicn-inference-bridge-contract"

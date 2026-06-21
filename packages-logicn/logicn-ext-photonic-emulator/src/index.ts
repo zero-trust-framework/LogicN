@@ -38,6 +38,12 @@ export {
 } from "./photonic-bridge.js";
 export { type PhotonicRunResult, PhotonicRuntime, type PhotonicRouteHit, createPhotonicRouterPort } from "./runner.js";
 
+// ── the photonic-HARDWARE switch — emulator (default) ⇄ attested real silicon, fail-closed, keep-digital ──
+export {
+  type PhotonicMode, type PhotonicHardwareBackend, type PhotonicSwitchOptions, type PhotonicSwitchDecision,
+  selectPhotonicBackend, resolvePhotonicBackend,
+} from "./photonic-switch.js";
+
 // ── the Bifurcated Execution Invariant — semantic-parity conformance gate ────────────
 export {
   type ParityOptions, type ParityResult, type ParityReport,
