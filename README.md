@@ -4,7 +4,7 @@
 
 LogicN is built for organisations where software failure is not acceptable — financial platforms, healthcare systems, government services, and regulated enterprise. Every execution is **declared, verified, and audited** by design, not by convention.
 
-> **Maturity (honest status, 2026-06-20).** LogicN is an **advanced prototype with several hardened zero-trust subsystems** — *not* yet a production-complete platform. The **compiler, security, and governance core are production-grade** (50/50 packages, 4,731 tests, fail-closed border check). The **app/API/framework layer is still templates**, Stage-B self-hosting is in progress, and the "Tower" compute layer is a **governed software simulator + bridge-attestation runtime, not real photonic-CPU virtualisation**. See [the 2026-06-17 senior-developer audit](notes/2026-06-17-zero-trust-senior-developer-project-audit.md) and [the roadmap](docs/Knowledge-Bases/logicn-build-roadmap.md).
+> **Maturity (honest status, 2026-06-21).** LogicN is an **advanced prototype with several hardened zero-trust subsystems** — *not* yet a production-complete platform. The **compiler, security, and governance core are production-grade** (53/53 packages, 4,980 tests, fail-closed border check). The **application-framework layer is now substantially real**: the deny-by-default admission/fusion border (3 gates + multi-module linker + revocation), the `logicn new app` scaffolder, and the governed package resolver are shipped and tested (60 App-Kernel tests) — the *signed registry index* and a *richer example app* are the remaining gaps. Stage-B self-hosting is in progress (≈80%), and the "Tower" compute layer is a **governed software simulator + bridge-attestation runtime, not real photonic-CPU virtualisation**. See [the 2026-06-21 roadmap + % audit](docs/Knowledge-Bases/logicn-roadmap-and-percent-audit-2026-06-21.md), [the framework plan](docs/Knowledge-Bases/logicn-framework-plan-2026-06-21.md), and [the 2026-06-17 senior-developer audit](notes/2026-06-17-zero-trust-senior-developer-project-audit.md).
 
 ---
 
@@ -54,7 +54,7 @@ Run on an **Intel i9-9900K (8C/16T) + NVIDIA RTX 2060**, across Rust (native, ge
 | **Lexer / Parser / Governance Verifier / Contract blocks / Value-state checker** | 100% | full pipeline |
 | **DRCM Phases 1–7 (Governed Tower — Stage-A simulation)** | 100% | real `DSS.wasm` is Post-P9 (#102–106) |
 | **CBOR Manifests (RFC 8949)** | 100% | |
-| **Tests — full suite** | 100% | **50/50 packages · 4,731 tests · 0 failures** |
+| **Tests — full suite** | 100% | **53/53 packages · 4,980 tests · 0 failures** |
 | **Resilience — first-class fault handlers (0017)** | shipped | `on_*_fault` → fail-closed `halt` default + LLN-FAULT-001/003 + `GIRFlow.faultHandlers` |
 | **Contract-driven test generation (0016)** | 5/5 vector dimensions | fault-injection · effect-egress · capability-denial · boundary/fuzz · substrate-violation (over GIR) |
 | **Type checker / Effect checker** | ~90% | |
@@ -67,9 +67,12 @@ Run on an **Intel i9-9900K (8C/16T) + NVIDIA RTX 2060**, across Rust (native, ge
 | **Passive Execution Plans & Target Bridges** | ~22% | |
 | **AI Inference Tower (BitNet / GroqCloud / NVFP4)** | ~12% | default bridges are governed dev stubs/simulators |
 | **Photonic / Ternary Computing** | ~3% | software simulation only (not hardware) |
-| **App / API / Framework layer** | templates | `logicn-framework-*` are TODO/template-level — not a complete app yet |
+| **Application-framework layer** | ~75% | admission/fusion border (3 gates + `planComposition` multi-module linker + revocation, 60 tests) · `logicn new app` scaffolder · governed resolver (hash/sig/registry/install-deny + LLN-PKG-006) — all real + tested. Signed registry index + a richer example app are the remaining gaps |
+| **Tri-Pipe fault tolerance (binary/hybrid/photonic)** | re-R&D | shipped: fail-closed core · arena + overflow traps · DbC post-conditions · K3 fail-safe · NMR tolerance · Freivalds verify · DRCM containment. A multi-agent stability re-R&D is in flight |
 
-> **Full roadmap** → [docs/Knowledge-Bases/logicn-build-roadmap.md](docs/Knowledge-Bases/logicn-build-roadmap.md)
+> **Full roadmap + % audit** → [logicn-roadmap-and-percent-audit-2026-06-21.md](docs/Knowledge-Bases/logicn-roadmap-and-percent-audit-2026-06-21.md) · [build-roadmap](docs/Knowledge-Bases/logicn-build-roadmap.md)
+>
+> **Recent (2026-06-21)** → **application-framework build**: `logicn new app` scaffolder (B1) · unified admission capability vocabulary (B2 — compiler-canonical, alias-aware, drift-guarded) · signing-key **revocation** wired into the package resolver + bridge-attestation (+ new `bridge-attest verify`) · high-authority cap tiering at `border-check` · framework plan + flowchart + roadmap/% audit · **Tri-Pipe fault-tolerance re-R&D** launched · **53/53 · 4,980** · governance change-class **NEUTRAL — no authority widening** · graph 3,750 nodes / 4,148 edges.
 >
 > **Recent (2026-06-20)** → security residuals closed (**0033** use-after-free REJECT-fill on free · **GOV-003** intermediate-binding response-leak · **`.tmf`** `crypto.timingSafeEqual` integrity compares; the three prior **0032** liveness hazards — fail-open loop, recursion OOM, sub-interpreter gate-drop — verified already-fixed) · **0017** first-class fail-closed `on_*_fault` handlers · **0016** contract-driven test generator (5-dimension vector taxonomy) · governance change-class **NEUTRAL — no authority widening** · graph 3,712 nodes / 4,103 edges · 50/50 · 4,731.
 >
@@ -164,6 +167,32 @@ Nine canonical patterns. Patterns 1–6 compile today (`drcm_stable_v0`); 7–9 
 
 ---
 
+## Building an application
+
+A LogicN app is **compile-time conventions + signed governed packages fused at declared seams — not runtime middleware.** Scaffold one with `logicn new app`:
+
+```text
+my-orders-app/
+├── App.lln          composition-root flow (the app entry)
+├── App.manifest     declarative descriptor → folded into the SIGNED build/App.lmanifest
+├── flows/           your governed business logic (routeOrders, createOrder, …)
+├── deps/            signed governed components admitted at the fuse border
+├── proofs/          contract-driven generated tests
+└── .gitignore       build/ output + .env secrets are never committed
+```
+
+`logicn build App.lln` produces **one signed `build/App.wasm` + `build/App.lmanifest`** (Ed25519). A host **App Kernel** admits that wasm at a deny-by-default **fuse border** — three fail-closed gates — before it runs a single instruction:
+
+1. **hash-pin** — the `.wasm` sha256 must equal the signed descriptor.
+2. **signature + revocation** — a valid Ed25519 signature from a **non-revoked** key.
+3. **closed capabilities** — a declared capability with no host shim is refused (link-time `LinkError → CRITICAL_SECURITY_VIOLATION`).
+
+At runtime the app reaches the world **only** through the deny-by-default **Capability Host** (network · db · secrets), with governance — K3, contracts, fail-closed, audit — **compiled into** the wasm rather than wrapped around it. Capability binding lives in the signed `.lmanifest fuse{}` block; `.env` secrets are injected at runtime, never compiled in.
+
+> Detailed plan + flowchart: [`docs/Knowledge-Bases/logicn-framework-plan-2026-06-21.md`](docs/Knowledge-Bases/logicn-framework-plan-2026-06-21.md)
+
+---
+
 ## Architecture
 
 ### Compiler pipeline
@@ -183,17 +212,18 @@ Nine canonical patterns. Patterns 1–6 compile today (`drcm_stable_v0`); 7–9 
 ### Package layout (status-labelled)
 ```
 packages-logicn/
-├── logicn-core-compiler/     ACTIVE — full pipeline, 3,459 tests
+├── logicn-core-compiler/     ACTIVE — full pipeline, 3,679 tests
 ├── logicn-core-security/     ACTIVE — taint profiles, redaction, OWASP boundaries
 ├── logicn-core-economics/    ACTIVE — CostGraph, ValueGraph, breach-risk matrix
 ├── logicn-core-logic/        ACTIVE — Tri, Decision, RiskLevel
-├── logicn-tower-citizen/     ACTIVE — governed ternary/BitNet simulator + K3 + bridge attestation (183 tests)
+├── logicn-tower-citizen/     ACTIVE — governed ternary/BitNet simulator + K3 + bridge attestation + revocation (202 tests)
 ├── logicn-ext-tmf/           ACTIVE — .tmf trust engine: TMX-256 + container + KEM-DEM (slices 1–3)
 ├── logicn-ext-bridge-quantum/ ACTIVE — governed ffsim bridge (Phase 1.5; real exec deferred to Phase 2)
 ├── logicn-devtools-security/ ACTIVE — runSecurityAudit, PCI DSS 4.0.1
 ├── logicn-devtools-pci/      ACTIVE — PCI DSS 4.0.1 (LLN-PCI-001..010)
 ├── logicn-devtools-benchmarks/ ACTIVE — 23 benchmarks across all runtimes
-├── logicn-framework-*/       TEMPLATE — api-server / example-app / app-kernel (not yet complete apps)
+├── logicn-framework-app-kernel/ ACTIVE — admission/fusion host: fuse-loader 3 gates + planComposition multi-module linker + revocation (60 tests)
+├── logicn-framework-{example-app,api-server}/  REFERENCE — REST adapter (e2e-fused) + worked-example scaffolds
 └── logicn-target-*, data/db/web/registry  PLANNED/PARTIAL — several documentation-only
 
 examples/auth-service/        31 governed flows (verifyPassword, charge, sovereign...)
@@ -218,9 +248,12 @@ Layer 5: ProofGraph + .lmanifest      — cryptographic audit proof (Ed25519; hy
 ## Running the Tools
 
 ```bash
-# Tests — core suite (4 packages, 3,583 tests) / full suite (49 packages, 4,518 tests)
+# Tests — core suite (4 packages) / full suite (53 packages, 4,980 tests)
 node scripts/run-all-tests.cjs --core
 npm test
+
+# Scaffold a new governed app (App.lln + App.manifest + flows/ deps/ proofs/, deny-by-default)
+logicn new app my-orders-app
 
 # Full benchmark suite (~5–10 min) on this machine, then compare
 cd packages-logicn/logicn-devtools-benchmarks && npm run run && npm run compare
