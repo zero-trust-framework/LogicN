@@ -5,6 +5,23 @@
 
 ---
 
+## 🛡 2026-06-21 — core-network INBOUND guard + rate limiter (ranked priority "core-network guards")
+
+`logicn-core-network` validated the inbound policy but had **no runtime enforcement** (like egress before
+`egress-guard`). New `src/inbound-guard.ts` (fail-closed, deny-by-default): `guardInboundRequest` (port/protocol
+admission — explicit DENY wins, else ALLOW rule, else `defaultEffect`; bad port refused), a deterministic
+fixed-window `RateLimiter` (clock injected; an **unparseable limit fails CLOSED**), `parseRateLimit`,
+`rateLimitKey`. +7 tests + prove-own-maths (`prove-inbound-guard.mjs` 6/6: the fixed-window invariant holds
+over 100k fuzzed requests, admission is total + deny-by-default over 20k fuzz). Committed `f4d4bc3`. Suite **53/53 · 4924**.
+
+**Ranked-priority status reconciliation (2026-06-21, verified against source — roadmap was stale):**
+**#165** f64 WAT lowering ✅ DONE · **#180** manifest signing ✅ DONE (this session's signing-format hardening +
+RFC-8785/#67/fail-secure profile) · **#194** GateCache ✅ DONE (`gate-cache.ts`) · **#128(b)** for-in WASM
+lowering ✅ DONE (`forEachStmt` lowers to a counted `__array_length`/`__array_get` loop; `wat-forin-execution`
+test green) · **core-network guards** ✅ (egress SSRF/DNS-rebind + this inbound guard). Genuinely-open + non-gated:
+the self-hosted **Stage-B pipeline** (#102 dss→wasm), the photonic **-hybrid tier package** + certified-mode
+admission, and **0055 B3** (generation tag, deferred — pervasive layout change). **#149/#34/.tmf-4** owner-gated.
+
 ## 🌅 2026-06-20 — Photonic emulator package (R&D 0053 GAP) BUILT — `logicn-ext-photonic-emulator`
 
 **New package `packages-logicn/logicn-ext-photonic-emulator`** (peer to `logicn-ext-bridge-cpp`/`-quantum`),
