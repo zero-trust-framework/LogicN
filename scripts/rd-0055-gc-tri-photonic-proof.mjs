@@ -337,6 +337,45 @@ const defaultMaxPages = (() => {
     "BB-D.cam-propose-verify", `naive optical CAM false-merges=${naiveBadMerges} (DRCM violation) vs propose/verify=${verifiedBadMerges} => hash-cons only under digital exact-verify`);
 }
 
+// =====================================================================
+// 0055 ADDENDUM — three ecosystem-sourced ideas (balanced-ternary phase tag, squeezed-state wipe,
+// MZI bar-state). PennyLane / Strawberry Fields / Piquasso are all CONTINUOUS-VARIABLE QUANTUM
+// simulators, so two of the three import quantum/analog physics that LogicN's charter keeps out.
+// =====================================================================
+{
+  // BB-E — balanced-ternary PHASE as a "sealed" tag → REFUTE. Phase is NOT secrecy. A -1 (antiphase) cell
+  // carries the SAME readable amplitude as +1; homodyne detection (mix with a phase-π reference — exactly
+  // how CV-quantum MEASURES) recovers it in full. The "destructive cancellation = 0" only holds for a
+  // +1-phase-locked combiner, which an attacker simply does not use.
+  const E0 = 1.0;
+  const ampPlus = Math.abs(E0);                 // +1 state amplitude
+  const ampMinus = Math.abs(-E0);               // -1 (antiphase) state amplitude — SAME magnitude
+  const naiveCombinerRead = E0 + (-E0);         // a +1-locked combiner: cancels to 0 (the claim)
+  const homodyneRead = Math.abs((-E0) * Math.cos(Math.PI - Math.PI)); // attacker mixes with a π reference → full E0
+  log(ampMinus === ampPlus && homodyneRead === E0 && naiveCombinerRead === 0,
+    "BB-E.phase-not-secrecy", `-1 amplitude=${ampMinus} == +1 amplitude=${ampPlus}; homodyne recovers ${homodyneRead}=E0 (full) — phase != access control; overloading -1=Deny is the same K3 aliasing (separate channel still required)`);
+
+  // BB-F — squeezed-state "absolute O(1) secure wipe" → REFUTE (vs the digital memset(0) 0055 settled on).
+  // Quadrature variance ΔX1² = ¼·e^(-2r). It is > 0 for EVERY finite r and only → 0 as r → ∞ (infinite
+  // pump = the same asymptotic-cost trap as reversible/adiabatic). Real squeezing maxes ~15 dB (r≈1.7).
+  // And Heisenberg INFLATES the conjugate ΔX2² = ¼·e^(+2r): the noise is moved, the data is not destroyed.
+  const squeezedResidual = (r) => 0.25 * Math.exp(-2 * r);
+  const conjugate = (r) => 0.25 * Math.exp(2 * r);
+  const rMax = 1.7;                              // ~15 dB, the realistic ceiling
+  const memsetResidual = 0;                      // digital overwrite: bit-exact zero
+  log(squeezedResidual(rMax) > memsetResidual && conjugate(rMax) > squeezedResidual(rMax) && squeezedResidual(50) < 1e-40,
+    "BB-F.squeezed-not-erasure", `ΔX1²(r=${rMax})=${squeezedResidual(rMax).toExponential(2)} > memset=0; conjugate ΔX2²=${conjugate(rMax).toExponential(2)} (noise MOVED not deleted); zero only as r→∞ (infinite energy) => digital memset is strictly superior`);
+
+  // BB-G — MZI bar-state "impenetrable physical firewall" for borrow → TRACK (aspirational), don't overclaim.
+  // Real MZI extinction is FINITE (~20–30 dB): bar-state leakage = 10^(-ER/10) > 0, so some egress light
+  // reaches the arena — a strong attenuator, not a perfect wall. It is the analog/HW-gated realization of
+  // 0055's B3 digital separate-channel tag, which is bit-exact (leakage 0) and free on binary silicon today.
+  const mziLeak = (erDb) => Math.pow(10, -erDb / 10);
+  const digitalB3Leak = 0;                       // a bit-exact tag check cannot "leak"
+  log(mziLeak(25) > 0 && mziLeak(25) > digitalB3Leak,
+    "BB-G.mzi-finite-extinction", `MZI bar-state leak @25dB=${mziLeak(25).toExponential(2)} > 0 (NOT impenetrable) vs digital B3 tag leak=0 => MZI is the aspirational-HW form of B3; the digital tag is what ships`);
+}
+
 // ---------------------------------------------------------------------------
 function WAT_HEAP_BASE() { return 1024; }
 function logLogSlope(xs, ys) {
