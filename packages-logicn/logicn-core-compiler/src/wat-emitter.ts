@@ -750,6 +750,26 @@ const FLOAT_ARITH_WAT: Readonly<Record<string, string>> = { "+": "f64.add", "-":
 const FLOAT_CMP_WAT: Readonly<Record<string, string>> = { "==": "f64.eq", "!=": "f64.ne", "<": "f64.lt", ">": "f64.gt", "<=": "f64.le", ">=": "f64.ge" };
 
 /**
+ * #165: the WASM stack type a fully-emitted expression string leaves on the stack, read from its
+ * leading opcode. Used to declare a `let`/`mut` local with the SAME type as its initialiser — an
+ * f64 value (f64.mul/add/const/convert…) MUST go in an f64 local or the store is a type error.
+ * Float COMPARISONS (f64.lt/eq/…) yield an i32 bool, so they are i32. Anything we can't classify
+ * (records, strings, `(block …)`, `(local.get …)`, calls) defaults to i32 — the SAFE default: a
+ * wrong guess yields an invalid module → walker fallback (correct, just slower), never a wrongly
+ * typed but "valid" store that would compute garbage.
+ */
+function watStackType(expr: string): WATValType {
+  const m = expr.trimStart().match(/^\(([a-z0-9]+)\.([a-z0-9_]+)/);
+  if (m === null) return "i32";
+  const prefix = m[1]!, op = m[2]!;
+  if (/^(eq|ne|lt|gt|le|ge)/.test(op)) return "i32"; // f64/f32/i64 comparisons → i32 bool
+  if (prefix === "f64") return "f64";
+  if (prefix === "f32") return "f32";
+  if (prefix === "i64") return "i64";
+  return "i32";
+}
+
+/**
  * i32 strict-trapping arithmetic helpers (owner Fork A=TRAP, 2026-06-18). Native WASM i32.add/sub/mul
  * wrap mod 2^32 — a lying abstraction in a governed system. These harden the WASM-i32 reference so
  * signed overflow is a TRAP (`unreachable` = LOAD→TRAP→ERASE), byte-identical to the tree-walker +
@@ -936,12 +956,15 @@ function inferExprType(node: AstNode | undefined): string | undefined {
     case "binaryExpr": {
       const op = node.value ?? "";
       if (["==", "!=", "<", ">", "<=", ">=", "and", "or", "&&", "||"].includes(op)) return "Bool";
-      if (op === "+") {
-        const l = inferExprType(node.children?.[0]);
-        const r = inferExprType(node.children?.[1]);
-        return l === "String" || r === "String" ? "String" : "Int";
-      }
-      return "Int"; // - * / % → integer arithmetic
+      const l = inferExprType(node.children?.[0]);
+      const r = inferExprType(node.children?.[1]);
+      if (op === "+" && (l === "String" || r === "String")) return "String";
+      // #165: float arithmetic is CONTAGIOUS — if either operand is a float type the result is Float
+      // (f64). Without this, nested float arith like `(x * 2) + 1` infers Int, so the outer op takes the
+      // i32 checked-helper path over an f64 operand (invalid module) OR wraps an already-f64 operand in
+      // f64.convert_i32_s (reinterprets the bits → garbage). This is the fix for both nested-mixed bugs.
+      if (FLOAT_WAT_TYPES.has(l ?? "") || FLOAT_WAT_TYPES.has(r ?? "")) return "Float";
+      return "Int"; // +, -, *, /, % over integers
     }
     case "callExpr": {
       const name = node.value ?? "";
@@ -1551,8 +1574,14 @@ function emitBlockStatements(
           bodyLines.push(`(local.set ${watLocal} ${initExpr})`);
         } else {
           // New variable: declare at function top + initialise inline.
+          // #165: a float binding (`let y: Float = x * 2.0`) holds an f64 — the local MUST be f64
+          // or the (local.set $y <f64>) is a type error. An explicit float annotation wins; else the
+          // local takes the type its initialiser leaves on the stack (watStackType). Non-float bindings
+          // (Int/Bool/records/strings) stay i32, unchanged.
+          const annoType = rawName.includes(":") ? (rawName.split(":")[1] ?? "").trim() : "";
+          const localVal: WATValType = FLOAT_WAT_TYPES.has(annoType) ? "f64" : watStackType(initExpr);
           vars.set(varName, watLocal);
-          localDecls.push(`(local ${watLocal} i32)`);
+          localDecls.push(`(local ${watLocal} ${localVal})`);
           bodyLines.push(`(local.set ${watLocal} ${initExpr})`);
         }
         break;
@@ -1566,9 +1595,10 @@ function emitBlockStatements(
         const exprNode = stmt.children?.[0];
         const exprStr  = exprNode ? emitWATExpr(exprNode, vars, staticConsts) : "(i32.const 0)";
         if (!vars.has(varName)) {
-          // Declare it now if somehow not in scope (defensive)
+          // Declare it now if somehow not in scope (defensive). #165: match the assigned value's
+          // stack type so a float assignment to an undeclared local is f64, not a mistyped i32.
           vars.set(varName, watLocal);
-          localDecls.push(`(local ${watLocal} i32)`);
+          localDecls.push(`(local ${watLocal} ${watStackType(exprStr)})`);
         }
         bodyLines.push(`(local.set ${watLocal} ${exprStr})`);
         break;
@@ -2907,13 +2937,25 @@ export function buildWATModule(
       body = tensorHints;
     }
 
+    // #165: derive the result valtype from the flow's return type. The body lowers every
+    // float in FLOAT_WAT_TYPES (Float/Float64/Double/Decimal) to f64 — literals → f64.const,
+    // arith → f64.*, comparisons → i32 — so a float-RETURNING flow MUST be typed `(result f64)`
+    // or the module is invalid (i32 fallthru vs an f64 left on the stack → walker fallback).
+    // Records/enums/strings/Int/Bool stay i32 (pointer or scalar). i64 and scalar-f32 bodies
+    // aren't emitted yet, so those return types also stay i32 (unchanged). The result valtype
+    // here is provably == what the body leaves on the stack because both key off FLOAT_WAT_TYPES.
+    // EDGE (walker-only, unchanged): a float flow that ALSO has an `invariant { ensure result … }`
+    // output post-condition stays on the walker — $logicn_result is declared i32 (§emitWATFromFlowAST),
+    // so the single-exit module won't assemble; it was already walker-only before this fix (no regression).
+    const declaredReturn = flowReturnTypes?.get(flow.name);
+    const resultVal: WATValType = declaredReturn !== undefined && FLOAT_WAT_TYPES.has(declaredReturn) ? "f64" : "i32";
     return {
       name: flow.name,
       isPure: flow.qualifier === "pure",
       isEntryPoint: entrySet.has(flow.name),
       handlesSecrets: gir.ast !== undefined ? flowHandlesSecrets(findFlowNodeInAST(gir.ast, flow.name)) : false,
-      ...((() => { const rt = flowReturnTypes?.get(flow.name); return rt !== undefined ? { returnType: rt } : {}; })()),
-      type: { params: paramValTypes, results: ["i32"] },
+      ...(declaredReturn !== undefined ? { returnType: declaredReturn } : {}),
+      type: { params: paramValTypes, results: [resultVal] },
       body,
       ...(namedParams.length > 0 ? { namedParams } : {}),
     };

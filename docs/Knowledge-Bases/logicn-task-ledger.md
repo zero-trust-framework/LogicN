@@ -173,7 +173,23 @@ base slots, overwrite the named fields; was a silent null-handle placeholder. Ve
 real WASM (`tests/wat-record-update.test.mjs`: overwrite per slot position + base not
 mutated). **3,322/3,322 compiler tests green.** Parser-parity prerequisites now cleared:
 **#161 · #162 · #163 · #164 · #168 · #169 done**; remaining for parser WASM parity:
-#165 (float arithmetic), #192 (match-as-expression parser), #193 (param-naming collision).
+#192 (match-as-expression parser), #193 (param-naming collision).
+
+**✅ Landed 2026-06-21 — #165 (float arithmetic) DONE end-to-end.** Scalar `Float` is f64
+(literals → f64.const, `+ - * /` → f64.*, comparisons → f64.cmp→i32 bool, mixed int operands
+promote via f64.convert_i32_s). The prior batch shipped the OPCODE lowering but left three
+defects that only a RUNTIME (WebAssembly.instantiate) check catches — `assembleWAT().valid`
+false-greened them: (1) a float-returning flow was typed `(result i32)` over an f64 body; (2) a
+float local was `(local $y i32)` set with an f64; (3) nested mixed arith (`(x*2)+1`) inferred Int,
+so the outer op took the i32 path over an f64 operand / wrapped an already-f64 value in
+convert_i32_s (bit-reinterpret → garbage). Fixes in `wat-emitter.ts`: result valtype keys off
+FLOAT_WAT_TYPES; new `watStackType` declares each local with its initialiser's stack type
+(safe-default i32 → invalid module → walker, never a mistyped valid store); `inferExprType` makes
+float arithmetic contagious. New `tests/wat-f64-runtime-165.test.mjs` (8 tests) instantiates and
+asserts computed results. Suite 53/53 · 4952. EDGE (walker-only, unchanged, no regression): a float
+flow with an `invariant { ensure result … }` output post-condition — `$logicn_result` is i32.
+Tri-Pipe verdict: **Binary-only** (exact IEEE-754 digital arithmetic; floats reach the photonic
+seam only as tensor kernels, a separate path).
 
 > Note: expression-position `match` (`return match …` / `let x = match …`) is a separate
 > PARSER gap (parses `match` as an identifier) — the expression-path Option/enum/Result
