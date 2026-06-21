@@ -1837,6 +1837,13 @@ Baseline comparison (governance-cost):
         __str_eq:         (a, b) => (_strFromId(a) === _strFromId(b) ? 1 : 0),
         __char_is_letter: (c) => (/[a-zA-Z_]/.test(String.fromCharCode(c)) ? 1 : 0),
         __char_is_digit:  (c) => (c >= 48 && c <= 57 ? 1 : 0),
+        // #169: Char classifiers — mirror createHostRuntime / interpreter (stdlib.ts:1814-1816) truth tables.
+        // The emitter maps c.isUpper()/isLower()/isWhitespace() to these host imports (wat-emitter.ts:858-860)
+        // and declares them (wat-emitter.ts:2811-2813), but this inline run-host had drifted behind the
+        // canonical createHostRuntime — so `logicn run --wasm` on a flow using them failed at instantiate.
+        __char_is_upper:  (c) => { const ch = String.fromCharCode(c); return ch === ch.toUpperCase() && ch !== ch.toLowerCase() ? 1 : 0; },
+        __char_is_lower:  (c) => { const ch = String.fromCharCode(c); return ch === ch.toLowerCase() && ch !== ch.toUpperCase() ? 1 : 0; },
+        __char_is_whitespace: (c) => (/\s/.test(String.fromCharCode(c)) ? 1 : 0),
         __char_to_string: (c) => _strIntern(String.fromCharCode(c)),
         __unwrap_or:      (val, def) => val === 0 ? def : val,
         __option_some:    (val) => val,
