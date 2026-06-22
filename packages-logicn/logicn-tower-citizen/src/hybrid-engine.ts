@@ -108,11 +108,20 @@ export interface HybridInferenceReceipt {
   /** True if any op ran on a real native kernel (vs. the deterministic simulator). */
   readonly executedNatively: boolean;
   /**
-   * Deterministic checksum of every ternary bridge result in this pass.
-   * Bit-identical across CPU/GPU/photonic (Citizen Standard 1) — the provable
-   * "same answer everywhere" fingerprint for the ternary path.
+   * Deterministic checksum of every BIT-EXACT (digital) ternary bridge result in this pass.
+   * Bit-identical across CPU/GPU (Citizen Standard 1) — the provable "same answer everywhere"
+   * fingerprint for the digital ternary path. A tolerance-verified analog PHOTONIC value is
+   * deliberately NOT folded in (it is not bit-exact); when one contributed, `valuesReproducible`
+   * is false and this checksum covers the digital subset only.
    */
   readonly ternaryChecksum: number;
+  /**
+   * True iff every value in this pass is bit-exact reproducible (the digital/governed path).
+   * FALSE when a tolerance-verified analog photonic value was accepted — that value is recorded
+   * in the trail (bridgesUsed/byOp) but excluded from the bit-exact `ternaryChecksum`. Splits the
+   * receipt's two truth channels so a consumer never mistakes an analog value for a bit-exact one.
+   */
+  readonly valuesReproducible: boolean;
 }
 
 /** Default governance metadata for the unified hybrid engine. */
@@ -441,7 +450,7 @@ export class HybridInferenceEngine {
           govTrap.code, govTrap.details);
         const latencyMs = Date.now() - t0;
         await this.tower.erase(sandbox, correlationId);
-        return this.buildReceipt(request, plan, "", latencyMs, "sha256:0", [], false, 0, true, govTrap.code);
+        return this.buildReceipt(request, plan, "", latencyMs, "sha256:0", [], false, 0, true, true, govTrap.code);
       }
       this.callCount++;
 
@@ -450,6 +459,7 @@ export class HybridInferenceEngine {
       let bridgesUsed: string[] = [];
       let executedNatively = false;
       let ternaryChecksum = 0;
+      let valuesReproducible = true;
 
       if (!execResult.trapFired) {
         // EXEC — dispatch each precision decision through its registered bridge
@@ -463,7 +473,7 @@ export class HybridInferenceEngine {
             "ERR_HOST_NATIVE_DENIED", { deniedTechniques: dispatch.deniedTechniques });
           const latencyMs = Date.now() - t0;
           await this.tower.erase(sandbox, correlationId, execResult);
-          return this.buildReceipt(request, plan, "", latencyMs, "sha256:0", dispatch.bridgesUsed, dispatch.executedNatively, dispatch.ternaryChecksum, true, "ERR_HOST_NATIVE_DENIED");
+          return this.buildReceipt(request, plan, "", latencyMs, "sha256:0", dispatch.bridgesUsed, dispatch.executedNatively, dispatch.ternaryChecksum, dispatch.valuesReproducible, true, "ERR_HOST_NATIVE_DENIED");
         }
 
         // A bridge fault / ternary-drift trap caught mid-dispatch fails CLOSED as a
@@ -474,12 +484,13 @@ export class HybridInferenceEngine {
             dispatch.trap.code, dispatch.trap.details);
           const latencyMs = Date.now() - t0;
           await this.tower.erase(sandbox, correlationId, execResult);
-          return this.buildReceipt(request, plan, "", latencyMs, "sha256:0", dispatch.bridgesUsed, dispatch.executedNatively, dispatch.ternaryChecksum, true, dispatch.trap.code);
+          return this.buildReceipt(request, plan, "", latencyMs, "sha256:0", dispatch.bridgesUsed, dispatch.executedNatively, dispatch.ternaryChecksum, dispatch.valuesReproducible, true, dispatch.trap.code);
         }
 
         bridgesUsed = dispatch.bridgesUsed;
         executedNatively = dispatch.executedNatively;
         ternaryChecksum = dispatch.ternaryChecksum;
+        valuesReproducible = dispatch.valuesReproducible;
         for (const decision of plan.decisions) {
           this.auditPrecisionDecision(audit, correlationId, decision, dispatch.byOp.get(decision.opClass));
         }
@@ -492,12 +503,12 @@ export class HybridInferenceEngine {
         audit.trap(correlationId, HYBRID_METADATA.artifactHash, HYBRID_METADATA.engineId,
           "ERR_LATENCY_INVARIANT", { latencyMs, boundMs: this.ctx.maxLatencyMs });
         await this.tower.erase(sandbox, correlationId, execResult);
-        return this.buildReceipt(request, plan, "", latencyMs, "sha256:0", bridgesUsed, executedNatively, ternaryChecksum, true, "ERR_LATENCY_INVARIANT");
+        return this.buildReceipt(request, plan, "", latencyMs, "sha256:0", bridgesUsed, executedNatively, ternaryChecksum, valuesReproducible, true, "ERR_LATENCY_INVARIANT");
       }
 
       if (execResult.trapFired) {
         await this.tower.erase(sandbox, correlationId, execResult);
-        return this.buildReceipt(request, plan, "", latencyMs, execResult.outputHash, bridgesUsed, executedNatively, ternaryChecksum, true, execResult.trapCode);
+        return this.buildReceipt(request, plan, "", latencyMs, execResult.outputHash, bridgesUsed, executedNatively, ternaryChecksum, valuesReproducible, true, execResult.trapCode);
       }
 
       // Stage A governed result — the ternary path is REAL (executed via the
@@ -509,7 +520,7 @@ export class HybridInferenceEngine {
       const outputHash = "sha256:" + createHash("sha256").update(text + correlationId).digest("hex").slice(0, 16);
 
       await this.tower.erase(sandbox, correlationId, execResult);
-      return this.buildReceipt(request, plan, text, latencyMs, outputHash, bridgesUsed, executedNatively, ternaryChecksum, false);
+      return this.buildReceipt(request, plan, text, latencyMs, outputHash, bridgesUsed, executedNatively, ternaryChecksum, valuesReproducible, false);
     } catch (err) {
       await this.tower.erase(sandbox, correlationId);
       throw err;
@@ -558,6 +569,8 @@ export class HybridInferenceEngine {
     bridgesUsed: string[];
     executedNatively: boolean;
     ternaryChecksum: number;
+    /** False iff a tolerance-verified analog photonic value contributed (not bit-exact). */
+    valuesReproducible: boolean;
     byOp: Map<InferenceOpClass, BridgeResult>;
     deniedTechniques: string[];
     /** A bridge fault / ternary-drift trap caught mid-dispatch — fail-closed, governed
@@ -573,6 +586,7 @@ export class HybridInferenceEngine {
     const denied = new Set<string>();
     let executedNatively = false;
     let ternaryChecksum = 0;
+    let valuesReproducible = true; // flips false if an analog (tolerance-verified) photonic value is accepted
     let trap: { code: string; details: Record<string, unknown> } | null = null;
 
     for (const decision of plan.decisions) {
@@ -610,7 +624,9 @@ export class HybridInferenceEngine {
             value: ph.value, executedNatively: false, bridgeId: provId,
             technique: "ternary", latencyMs: 0, deterministic: false,
           });
-          ternaryChecksum = (ternaryChecksum + (ph.value | 0)) | 0;
+          // Tolerance-verified analog value: recorded in the trail (byOp above) but NOT folded into
+          // the bit-exact ternaryChecksum — flag the pass non-reproducible instead (split truth channels).
+          valuesReproducible = false;
           continue; // photonic handled this op (tolerance-verified) — skip the digital dispatch
         }
         // ph null / non-finite → fall through to the UNCHANGED digital dispatch (fail-closed).
@@ -642,7 +658,7 @@ export class HybridInferenceEngine {
         ternaryChecksum = (ternaryChecksum + (result.value | 0)) | 0;
       }
     }
-    return { bridgesUsed: [...used], executedNatively, ternaryChecksum, byOp, deniedTechniques: [...denied], trap };
+    return { bridgesUsed: [...used], executedNatively, ternaryChecksum, valuesReproducible, byOp, deniedTechniques: [...denied], trap };
   }
 
   /** Release native bridge resources. Call once at engine teardown (NOT per-infer —
@@ -691,6 +707,7 @@ export class HybridInferenceEngine {
     bridgesUsed: readonly string[],
     executedNatively: boolean,
     ternaryChecksum: number,
+    valuesReproducible: boolean,
     trapFired: boolean,
     trapCode?: string,
   ): HybridInferenceReceipt {
@@ -708,6 +725,7 @@ export class HybridInferenceEngine {
       bridgesUsed,
       executedNatively,
       ternaryChecksum,
+      valuesReproducible,
       ...(trapCode !== undefined ? { trapCode } : {}),
     };
   }

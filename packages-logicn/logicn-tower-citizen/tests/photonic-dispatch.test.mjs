@@ -18,6 +18,7 @@ test("default (no photonic config) — the digital path is unchanged (stub-terna
   assert.deepEqual(r.bridgesUsed, ["stub-ternary"]);
   assert.equal(r.trapFired, false);
   assert.equal(r.executedNatively, false);
+  assert.equal(r.valuesReproducible, true); // pure digital path → bit-exact reproducible
   await eng.shutdown();
 });
 
@@ -52,7 +53,7 @@ test("a router that DECLINES (returns null) → the engine runs the unchanged di
   await eng.shutdown();
 });
 
-test("a router that returns a hit → the engine commits the photonic value (skips the bit-exact oracle)", async () => {
+test("a router that returns a hit → photonic value committed but EXCLUDED from the bit-exact checksum (split channels)", async () => {
   // A custom port returning a value WITHOUT being a real deterministic ternary result. The engine
   // accepts it (trusting the port's own re-verify) — this is exactly the tolerance-path substitution.
   const fixed = { route: () => ({ value: 7, bridgeId: "test-photonic" }) };
@@ -60,10 +61,13 @@ test("a router that returns a hit → the engine commits the photonic value (ski
   const r = await eng.infer({ prompt: "hi", correlationId: "p4" });
   assert.deepEqual(r.bridgesUsed, ["photonic:test-photonic"]); // recorded under the reserved namespace
   assert.equal(r.trapFired, false);
-  // the value (7 per op) accumulates into the ternary checksum: 7 × (number of ternary-routed ops).
   const nTernary = r.plan.decisions.filter((d) => d.precision === "ternary").length;
   assert.ok(nTernary > 0, "at least one op routes to ternary");
-  assert.equal(r.ternaryChecksum, 7 * nTernary);
+  // Split truth channels: the analog photonic value is tolerance-verified, NOT bit-exact, so it must
+  // NOT pollute the bit-exact ternaryChecksum (now the digital subset only — here every ternary op
+  // went photonic, so 0 digital values fold in), and the receipt flags the pass non-reproducible.
+  assert.equal(r.ternaryChecksum, 0, "photonic value must NOT fold into the bit-exact checksum");
+  assert.equal(r.valuesReproducible, false, "an analog photonic value makes the pass non-reproducible");
   await eng.shutdown();
 });
 
@@ -91,7 +95,7 @@ test("fail-closed: a port returning a non-finite value is rejected → the engin
 test("the photonic config does not affect the receipt shape consumers depend on", async () => {
   const eng = createHybridEngine({ auditInMemory: true, photonic: { router: createPhotonicRouterPort(), kernelFor: bigKernel } });
   const r = await eng.infer({ prompt: "hi", correlationId: "p5" });
-  for (const k of ["correlationId", "text", "tokenCount", "latencyMs", "plan", "outputHash", "enginesBlended", "avgBitsPerWeight", "deterministic", "trapFired", "bridgesUsed", "executedNatively", "ternaryChecksum"]) {
+  for (const k of ["correlationId", "text", "tokenCount", "latencyMs", "plan", "outputHash", "enginesBlended", "avgBitsPerWeight", "deterministic", "trapFired", "bridgesUsed", "executedNatively", "ternaryChecksum", "valuesReproducible"]) {
     assert.ok(k in r, `receipt has ${k}`);
   }
   await eng.shutdown();

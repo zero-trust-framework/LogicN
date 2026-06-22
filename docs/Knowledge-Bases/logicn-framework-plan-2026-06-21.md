@@ -84,8 +84,12 @@ fires a fault. A second, **live** weak link was concrete and is now fixed (item 
 1. ✅ **BUILT (`449d8f2`)** — made `dispatchPlan` total over exceptions: a photonic-port throw declines
    to the digital floor, a binary fault/drift becomes a governed `ERR_BRIDGE_DISPATCH_FAULT` `trapFired`
    receipt. The one live, code-confirmed break of fail-safe-to-Binary / no-crash. +4 tests, 206/206.
-2. **NEXT** — split the receipt's truth channels (stop folding the analog photonic value into the
-   bit-exact `ternaryChecksum`; add `valuesReproducible`). *(pins `photonic-dispatch.test.mjs:66` — needs the test updated.)*
+2. ✅ **BUILT (2026-06-22)** — split the receipt's truth channels: the analog (tolerance-verified) photonic
+   value is no longer folded into the bit-exact `ternaryChecksum` (it stays the digital subset only); a new
+   `valuesReproducible` flag on the receipt goes **false** when an analog value contributed (recorded in
+   `bridgesUsed`/`byOp` but excluded from the bit-exact channel). `hybrid-engine.ts` dispatch + `buildReceipt`
+   + the receipt interface; `photonic-dispatch.test.mjs` updated to the new semantics (+2 assertions).
+   tower-citizen 206/206; full suite 53/53 · 4989.
 3. ✅ **BUILT (2026-06-22)** — pin **LLN-MONO-001**: `parseEmergencyBlock` now SURFACES an emergency-block
    `allow`/`grant` as an `allow:` action node (was: silently consumed by the "unknown action — skip" branch,
    so the verifier's `EMERGENCY_EXPANDS_CAPABILITY` check could never fire → fail-silent permission widening
