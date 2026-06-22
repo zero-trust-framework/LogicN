@@ -5,19 +5,50 @@ transport/auth R&D phase. Full machine-readable results: `packages-logicn/logicn
 Machine: i9-9900K · win32 · Node v24.16.0.
 
 ## Honest scoreboard (LogicN vs the winner — the slowdown column is mandatory)
-LogicN's **governed tree-walking interpreter** (`logicnPassive`) is, as expected, **orders of magnitude slower than
-native runtimes** on raw compute — it pays for per-node governance, exact-arithmetic trapping, and K3 evaluation:
+### ⚠ Data-integrity correction (don't-trust-check)
+An earlier draft of this snapshot claimed LogicN was "~10³–10⁵× slower" — that was a **misread** (it compared
+LogicN's raw *calls/runs-per-second* against native *operations-per-second*, different units). On direct re-check the
+suite's cross-runtime `normThroughput` for LogicN is **unreliable in the OTHER direction**: it *over-counts*
+`logicnPassive` (e.g. it reports passive at **5,252M nodes/s** on binary-trees — 273× *faster* than Rust, which is
+not credible). So **no trustworthy LogicN-vs-native ×slower is presentable from this run.** Below: the reliable
+native scoreboard, then LogicN's raw measured rates separately. Fixing the LogicN unit-normalization is an open
+benchmark item (R&D 0039 unit-alignment; see [[logicn-benchmark-suite]] "was lying" fix).
 
-| Class | Winner | LogicN (governed) ×slower vs winner |
+### Native cross-runtime scoreboard (reliable — `operationsPerSecond`)
+| Benchmark | unit | Node | Rust | Rust-AVX2 | WASM | Winner |
+|---|---|---|---|---|---|---|
+| compute-mix | mix-ops/s | 134.0M | 130.8M | 128.9M | · | Node 134M |
+| record-allocation | records/s | 58.8M | 1152M | 1174M | 597.6M | Rust-AVX2 1.17B |
+| collection-pipeline | elements/s | 68.7M | 4294M | 12459M | 215.3M | Rust-AVX2 12.5B |
+| low-memory | items/s | 712.7M | 1298M | 6040M | 462.5M | Rust-AVX2 6.0B |
+| gpu-compute | kernel-evals/s | 978.8M | 1161M | 1172M | 468.3M | Rust-AVX2 1.17B |
+| governance-cost | ops/s | 1.9M | 897.9M | 891.4M | 3.1M | Rust 898M |
+| nbody | force-evals/s | 122.7M | · | · | · | Node 122.7M |
+| mandelbrot | pixels/s | 8.8M | 23.1M | · | · | Rust 23.1M |
+| spectral-norm | A-evals/s | 234.9M | 371.4M | · | · | Rust 371.4M |
+| binary-trees | nodes/s | 76.1M | 19.2M | · | · | Node 76.1M |
+| json-parse | records/s | 3.3M | · | · | · | Node 3.3M |
+| tmf-container | containers/s | 46.9k | 152.1k | · | · | Rust 152k |
+| framework-pipeline | requests/s | 404.1k | · | · | · | Node 404k (Python 154k) |
+
+### LogicN execution modes — RAW rates (⚠ per-call/run batch rate, NOT ops/s; do not compare directly to the table above)
+| Benchmark | Passive (compiled) calls/s | Governed (tree-walker) runs/s |
 |---|---|---|
-| Vectorizable compute (e.g. matrix/spectral) | Rust-AVX2 | **~1.5×10⁵× slower** (≈10²–10³ kops/s vs ~10⁹) |
-| General compute (compute-mix, nbody, json) | Node / Rust | **~10³–10⁴× slower** |
-| Allocation / collection pipelines | Rust-AVX2 | **~20–80× slower** |
-| LogicN-specific governance/framework (framework-pipeline, tmf-container, call-chain, low-memory, record-alloc, …) | — | **sole runtime** (no cross-runtime baseline) |
+| compute-mix | 6.3k | 322 |
+| gpu-compute | 50.4k | 3 |
+| governance-cost | 55.4k | 504 |
+| fibonacci-recursive | 57.8k | 17 |
+| json-parse | 40.3k | 11 |
+| mandelbrot | 29.6k | 1 |
+| binary-trees | 38.7k | 24 |
+| nbody | 21.3k | 2 |
+| low-memory | 31.4k | 13 |
 
-This is the **expected** profile of a governed interpreter and is exactly why the **Stage-B WASM / AOT path** matters
-(const-fold/branch-fold/DCE already proven 1.64×; the self-hosted WASM lowering is the real lever). No result here is
-presented as competitive on raw throughput; the value proposition is governance, not speed.
+**Honest read:** among native runtimes, **Rust-AVX2 dominates the vectorizable/compute benches** (up to ~12.5B
+elements/s) and **Node wins several scalar/GC-bound ones**. For LogicN, the **governed tree-walker is the slow path**
+(1–500 runs/s) and the **passive/compiled path is ~10²–10⁴× faster** (tens of thousands of calls/s) — which is the
+case for the **Stage-B WASM / AOT lowering** (const-fold/branch-fold/DCE already proven 1.64×). The value proposition
+is governance, not raw speed; and a clean LogicN-vs-native ratio awaits the unit-normalization fix.
 
 ## Unit-alignment integrity check
 - **14 comparable benches PASS** (single matching unit): compute-mix, record-allocation, collection-pipeline,
