@@ -1,5 +1,7 @@
 # R&D Absorption Catalog — the complete ledger
 
+> **⏩ STALENESS (2026-06-22): complete ONLY as of pin `238f07a` (2026-06-17).** R&D has since advanced through **0064**; bridge tasks **0045–0064 are NOT folded in here** — they are tracked in [logicn-rd-corpus-closure-2026-06-18.md](logicn-rd-corpus-closure-2026-06-18.md) (0036–0052), [logicn-build-roadmap.md](logicn-build-roadmap.md) (0053/0054 built as packages), and [logicn-rd-0059-0064-triage-2026-06-22.md](logicn-rd-0059-0064-triage-2026-06-22.md). The "nothing is silently missing" guarantee below holds **up to the pin only** — re-run the `feedback-auto-import-rd-docs` sweep + re-pin to restore it. (The §2 "32 mirrored" count also drifted — the `rd-absorbed/` dir now holds 38 `rd-*.md`.)
+
 **LogicN is the single "main library."** Every durable knowledge doc from the R&D repo
 (`C:\wwwprojects\LogicN-R-AND-D`) is accounted for here so nothing is silently missing. Built from a 49-doc
 classification sweep (2026-06-17), pinned to R&D commit **`238f07a`** (Lane E delta absorbed 2026-06-17; the earlier 29-doc sweep was captured at `fb68d06`). The standing import rule is the memory

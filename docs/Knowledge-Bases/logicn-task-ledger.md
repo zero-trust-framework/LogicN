@@ -1,6 +1,6 @@
 # LogicN — Task Ledger #1–#148 (graph-review checklist)
 
-**Generated:** 2026-06-06 · **Re-verified:** 2026-06-15 · **State:** 48/48 packages · 4,360 tests · 0 fail · graph 2,995 nodes / 3,764 edges (1,839 files) · governance NEUTRAL.
+**Generated:** 2026-06-06 · **Re-verified:** 2026-06-15 · **State (2026-06-15 snapshot; CURRENT 2026-06-22 = 53/53 · 4,989 — see logicn-roadmap-and-percent-audit-2026-06-21.md + version.json):** 48/48 packages · 4,360 tests · 0 fail · graph 2,995 nodes / 3,764 edges (1,839 files) · governance NEUTRAL.
 *(The original 44/44 · 4,128 figure was a 2026-06-06 snapshot; counts re-run this session via `node scripts/run-all-tests.cjs` + `cli graph`. See SOT §1.)*
 
 ## How to use this (the point)
@@ -12,7 +12,7 @@ which flows/packages depend on the changed node. Status legend: ✅ done · 🔶
 ---
 
 ## 1. Status rollup
-- **Done:** 137+ · **In-progress:** 1 (#105 parity-gated) · **Pending (in-repo):** #69, #110, #146, #147, #148, #177, #199(Ph2). **Blocked (external infra):** #102, #103, #104, #106. *(§2 rows below were stale for #143/#145/#199 — corrected 2026-06-15.)*
+- **Done:** 137+ · **In-progress:** 1 (#105 parity-gated) · **Pending (in-repo):** #69, #110, #147, #148, #177, #199(Ph2). *(#146 was here — now ✅ BUILT, corrected 2026-06-22.)* **Blocked (external infra):** #102, #103, #104, #106. *(§2 rows below were stale for #143/#145/#199 — corrected 2026-06-15.)*
 - **P9 critical path:** #144 ✅ → #145 ✅ → #143 ✅ — **P9 tokenize byte-parity COMPLETE (2026-06-06, see §3).** The §2 table rows had not been updated; now reconciled.
 - **Post-P9 (frozen until P9 parity + gaps review):** #146, #147, #148. **Post-P9 DSS.wasm:** #102–#104, #106.
 
@@ -80,7 +80,7 @@ which flows/packages depend on the changed node. Status legend: ✅ done · 🔶
 | 87 | `bitfield` V_DPM register | ✅ | core-compiler (parser, wat-emitter) |
 | 88 | `gate {}` admission guard | ✅ | core-compiler (governance-verifier) |
 | 89 | `access {}` enforcement | ✅ | core-compiler (governance-verifier) |
-| 90 | `policy {}` state mutation governance | ✅ | core-compiler (governance-verifier) |
+| 90 | `policy {}` state mutation governance — **RESERVED/future** (parser accepts `policy{}` as a silent alias, `parser.ts:2672`; only emergency-transition MONO #39 is live, NOT mut-var governance — corrected 2026-06-22) | 🔲 | core-compiler (governance-verifier) |
 | 91 | vdpm.lln → `bitfield V_DPM` | ✅ | self-hosted/dss |
 | 92 | import plugin assimilate/evict | ✅ | core-compiler (module-registry) |
 | 93 | `;;` govComment manifest collection | ✅ | core-compiler (lexer, manifest) |
@@ -117,7 +117,7 @@ which flows/packages depend on the changed node. Status legend: ✅ done · 🔶
 | 143 | **P9 ceremony — tokenize byte-parity** (DONE 2026-06-06 — ledger §2 was stale; see §3) | ✅ | core-compiler · wasm-runtime |
 | 144 | P9.4d enum-variant member lowering | ✅ | core-compiler/wat-emitter.ts (buildEnumVariants) |
 | 145 | **P9 string runtime: type-aware `+`/`Char.toString` + `__str_concat`/`__char_to_string`/`__str_eq` + table exposure + output reader** | ✅ | core-compiler/wat-emitter.ts · wasm-runtime.ts (DONE 2026-06-06; ledger §2 was stale) |
-| 146 | **Post-P9: compliance ledger over audit-egress** | 🔲 | devtools-pci · sentinel-egress |
+| 146 | **Post-P9: compliance ledger over audit-egress** — ✅ **BUILT** (`devtools-pci/compliance-ledger.ts`, header "(#146)"; 9/9 tests; verified 2026-06-22) | ✅ | devtools-pci · sentinel-egress |
 | 147 | **Post-P9: warm-sandbox + memory sanitizer** | 🔲 | core-compiler/wasm-runtime.ts |
 | 148 | **Post-P9: 3 governance partials (token/cache/partial-eval)** | 🔲 | tower-citizen · core-compiler |
 
@@ -347,6 +347,39 @@ over the #1–#200 register above. Convergent #1 = **#201** (least-privilege min
 *Already tracked elsewhere (no new task):* 0059 Global Safety Theorem SMT obligations → 0024/0040 Z3 track;
 `LLN-FAULT-005` → fault-tolerance doc §9; per-block differential → formal-verification-direction.md.
 **Owner-gated steers:** #201 (breaking-in-prod), #205 (architecture), #210 (toolchain commitment).
+
+---
+
+## 9. Tracker reconciliation (2026-06-22) — corrections + new tasks #211–#212
+
+Wide KB-vs-todos-vs-R&D-vs-roadmap reconciliation (23-agent workflow, every flagged finding adversarially
+verified against live source). **Headline: no R&D output is unreflected** — every 0001–0064 report has a
+production home. The findings are tracker drift + two genuinely-missed security gaps.
+
+**New tasks (CONFIRMED missed — in NO tracker AND not implemented):**
+| # | Task | Subsystem |
+|---|---|---|
+| 211 | **governance-telemetry inbound-hardening gate** — the exporter's HTTP listener (`logicn-governance-telemetry/src/server.ts`) has only 405/404/500: no request timeout, rate-limit, body-size cap, slowloris guard, `SecurityPosture` honor, or run-under-App-Kernel (12-point border gate items 1/9/10/12). **Security: an unhardened inbound listener on a zero-trust component.** | logicn-governance-telemetry |
+| 212 | **kernel→runtime governance-deny bridge** (owner-gated) — the `503 + X-LogicN-State` backpressure handshake needs a runtime-denial→kernel-response bridge that does not exist (`kernel.ts` `KernelErrorCode` has no `governance_deny`; no `X-LogicN-State` in any `.ts`). Named unbuilt/held-back in KB, in no tracker. | framework-app-kernel · runtime |
+
+**Stale-mark corrections applied 2026-06-22:** #90 ✅→🔲 (RESERVED, not built — was conflated with #39);
+#146 🔲→✅ (BUILT); prove-own-maths §3 — 6 OWED items marked PROVEN (2026-06-18 benches); status-count
+headers across build-roadmap / this ledger / SOT / KB-INDEX / roadmap-2026-06-17 reconciled to **53/53 · 4,989**;
+absorption-catalog staleness flagged; key-custody `bridge-attest` wiring marked done.
+
+**build-roadmap "🟡 Open" tables are stale** (DONE but still listed open — verified against source; fix when
+that doc is next edited): #68 (CBOR secure parser), #72 (`parent_policy` ⊆), #76 (LLN-INV-000), #91 (`bitfield
+V_DPM`), #125 (`run --governed`), #126 (bitwise hint — doc self-contradicts), #128 (for-in WASM — doc
+self-contradicts). Correctly open: #69, #147, #148, #171, #172, #192, #193, #200, CF-4, CF-5. **REFUTED** (leave
+open, only half-done): #177 (deprecation advisory not emitted), #119 (native BitNet runtime absent).
+
+**OWNER DECISIONS NEEDED** (surfaced, not parked — per `feedback-owner-gated-means-ask`):
+- **0056 / 0057 / 0058** framework architecture (B1–B8) — owner-DIRECTED but PARKED under a "HOLD rule" in
+  roadmap-2026-06-21; the standing rule treats owner-directed designs as GO. Confirm build-vs-hold.
+- **#201** least-privilege minimality escalation (breaking-in-prod) · **#205** Kleene-lattice unification
+  (architecture) · **#210** TS7 host build (toolchain commitment) — from the 0059–0064 triage.
+- **#212** kernel→runtime governance-deny bridge (security-sensitive) · **H2** inline `contract` `policy{}`
+  allow/deny parsed but enforced by no checker (a deny-by-default fail-open).
 
 ---
 

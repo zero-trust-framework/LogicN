@@ -1,5 +1,7 @@
 # LogicN — Completion % Audit + Roadmap (2026-06-17)
 
+> **⏩ SUPERSEDED 2026-06-21 → [logicn-roadmap-and-percent-audit-2026-06-21.md](logicn-roadmap-and-percent-audit-2026-06-21.md) (53/53 · 4,989).** The 49/49 · 4,518 figures below are a 2026-06-17 historical snapshot — do not cite them as current.
+
 Consolidates: the independent [zero-trust senior-developer audit](../../notes/2026-06-17-zero-trust-senior-developer-project-audit.md), the corrected cross-language benchmarks, the settled-decision reopen-triage, and the active R&D queue. Authoritative test/package counts come from the test runner, not from stale metadata.
 
 ## 1. Verified state

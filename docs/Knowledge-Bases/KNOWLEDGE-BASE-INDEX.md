@@ -101,12 +101,12 @@
 
 | Document | Purpose |
 |---|---|
-| `logicn-checkpoint-2026-06-06.md` | **Latest full checkpoint** — verified tests (44/44, 4,171), audit (auth-service 31/31 clean), benchmark baseline, %-audit, roadmap, + design decisions (OS/HW `off\|auto\|on` #195, GateCache #194, ternary XOR #196, Zig-ready #197). **Read this for current status.** |
+| `logicn-checkpoint-2026-06-06.md` | **Latest full checkpoint** — verified tests (44/44, 4,171), audit (auth-service 31/31 clean), benchmark baseline, %-audit, roadmap, + design decisions (OS/HW `off\|auto\|on` #195, GateCache #194, ternary XOR #196, Zig-ready #197). *(historical 2026-06-06 snapshot — for CURRENT status see `logicn-roadmap-and-percent-audit-2026-06-21.md`, 53/53 · 4,989)* |
 | `logicn-roadmap.md` | Forward roadmap — P9 byte-parity ✅ (tokenize), parity-extension cluster, security remediation, Post-P9 |
 | `logicn-task-ledger.md` | Task ledger #1–#197 + code-area reverse index; landed-batch log |
 | `logicn-techdebt-gaps-review.md` | P9 post-parity tech-debt review — 50 verified findings → tasks #161–#193 |
 | `logicn-build-roadmap.md` | Build roadmap v6.0 — Phases 1–3 ✅, DRCM Phases 1–4 ✅, Tower-native v2.1 (tasks #86–#94) ✅ |
-| `logicn-roadmap-and-audit-2026-06-17.md` | **Current %-audit + roadmap (READ FOR STATUS).** Verified 49/49 · 4,518; senior-dev audit P0/P1/P2 remediation list; performance review (interpreter is slowest tier → route to WASM + `governance: auto`); R&D queue 0006–0012; reopen-triage outcome. |
+| `logicn-roadmap-and-audit-2026-06-17.md` | **SUPERSEDED 2026-06-21 → `logicn-roadmap-and-percent-audit-2026-06-21.md` (53/53 · 4,989) is the current READ-FOR-STATUS doc.** Historical snapshot: 49/49 · 4,518; senior-dev audit P0/P1/P2 remediation list; performance review (interpreter is slowest tier → route to WASM + `governance: auto`); R&D queue 0006–0012; reopen-triage outcome. |
 | `logicn-engineering-goals.md` | Three architectural goals with acceptance tests |
 | `logicn-continuation-brief-2026-06-15.md` | **READ-FIRST continuation/handoff brief** — recent-work inventory, build/test cheatsheet, GateCache finding (built-but-unwired class), open items, and the audit scope (steps 6/8/10 + wiring/dead-code hunt). |
 | `logicn-framework-layer-design.md` | **Framework-layer scope decision** — one secure App Kernel boundary + many protocol adapters (REST now; SOAP/gRPC/GraphQL later); "no middleware" = fixed kernel pipeline; build order P1–P6 (P1/B2/B3 DONE); explicitly excludes notes' Citadel/photonic/Zig/middleware-fusion material |

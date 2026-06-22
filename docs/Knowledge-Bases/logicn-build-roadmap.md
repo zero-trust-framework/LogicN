@@ -1,7 +1,7 @@
 # LogicN — Build Roadmap
 
 **Version:** 7.0 (2026-06-06)  
-**Last updated:** 2026-06-06 — P9 self-hosting: flow-body emission real (small modules execute via real wabt); **CORRECTION — the lexer module does NOT yet wabt-assemble** (undefined stdlib fns; see §16) + Governed-Tower hardening shipped; graph 2924 nodes / 3673 edges; **44/44 packages · 4,128 tests · 0 fail**; audit:security 31 files / 0 findings; 18 CBOR manifests canonical; governance:diff NEUTRAL (no authority widening); r6 Stage-A parity green
+**Last updated:** 2026-06-06 — P9 self-hosting: flow-body emission real (small modules execute via real wabt); **CORRECTION — the lexer module does NOT yet wabt-assemble** (undefined stdlib fns; see §16) + Governed-Tower hardening shipped; graph 2924 nodes / 3673 edges; **44/44 packages · 4,128 tests · 0 fail** ⟶ *(historical 2026-06-06 snapshot; CURRENT 2026-06-22 = **53/53 · 4,989** — authoritative: [logicn-roadmap-and-percent-audit-2026-06-21.md](logicn-roadmap-and-percent-audit-2026-06-21.md) + version.json)*; audit:security 31 files / 0 findings; 18 CBOR manifests canonical; governance:diff NEUTRAL (no authority widening); r6 Stage-A parity green
 
 ---
 

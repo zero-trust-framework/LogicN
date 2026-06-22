@@ -12,7 +12,7 @@
 
 This document exists because the percentage and test-count figures across the
 roadmap/audit docs contradicted each other and the actual code. Where any other
-doc disagrees with this one, **this one wins** until re-verified. Every number
+doc disagrees with this one, **this one wins** for figures it has re-verified — but this SOT's own body is now stale in places (it still carries 2026-06-06 `44/44 · 4,128` and `48/48` figures, and a `33/33` change-log row). For CURRENT status defer to [logicn-roadmap-and-percent-audit-2026-06-21.md](logicn-roadmap-and-percent-audit-2026-06-21.md) + version.json (**53/53 · 4,989**, 2026-06-22). Every number
 below was produced by executing something, not by carrying a figure forward.
 
 ---

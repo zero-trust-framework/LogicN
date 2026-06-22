@@ -86,6 +86,8 @@ All 14 audit OWED items classify to **rnd-bench** (the cheap close in every case
 vector under `tri-encription/bench`," or refresh an R&D done-note). **Zero are hub-actionable**, and none require
 a LogicN code change (see §4). This table is the handoff manifest, not a hub work queue.
 
+> **⏩ UPDATE 2026-06-22 — 6 of these 14 are now CLOSED by the R&D 2026-06-18 benches** (`done/owed-closure-2026-06-18.done.md` 184/184 + `done/findings-verification-bench.done.md` 25/25): NMR [0007/0009] (`nmr-verify` 51/51), ~15 negative-existence/grep predicates [0016-0019] (`negative-existence-verify` 24/24), checksum identities [0013] (`benchmark-checksum-verify` 9/9), `i32.rem_s` WAT [0021] (`i32-wasm-trap-verify` 50/50), tri-tier gas counter [0022-A] (`gas-unit-verify` 30/30), ML-DSA norm-bound [0003] (`mldsa-verify-relation` 20/20). **Genuine remainders still open:** GAP-4 artifact-freeze [0001], citation content-assert [0020], the ffsim env-pin (G3), and the external-cited figures.
+
 | Tier | OWED item | Cheap close (R&D bench) |
 |---|---|---|
 | T1 | **GAP-4 provenance drift** [0001] | pin the engine hash + snapshot the emitted `.wat` into the R&D boundary (the *fix* is already in LogicN — §4) |
