@@ -21,12 +21,14 @@ measured negative)**. A re-statement of a known result is, at most, a defensive 
 | **Crypto-on-core refutations** (0065/0070: analog-in-KDF non-reproducible; optical-PUF-as-auth) | known-result | none | NIST SP 800-90A/90B (KDF/DRBG determinism); Rührmair-lineage PUF modeling attacks / optical-PUF PAC-learnability | **defensive-pub** (rejected-path record) |
 | **TLSTP governance composition** (0065/0066/0068; B8) | known-result | design-only | RFC 7633 OCSP Must-Staple; RFC 7469 SPKI pinning; RFC 5705/8471 channel binding; macaroon attenuation; TrustBase (arXiv 1610.08570) | **not-publishable** (cite the RFCs inline; nothing to defend) |
 
-## The single conditional future paper path
-If the team later **MEASURES a real availability/false-deny negative** — e.g. **K3 hard-fail vs soft-fail under
-measured revocation-responder (OCSP/CRL) outage rates**, showing the K3 composition closes a gap that
-soft-fail + pinning alone does not, at a quantified availability cost — that genuine *measured negative* could justify
-a short workshop note (the only realistic route from this corpus). It needs a benchmark that does not yet exist →
-**queued as R&D task 0076** (`measured-negative K3 hard/soft-fail availability benchmark`).
+## The single conditional future paper path — now RESOLVED (still ~no)
+If the team **MEASURES a real availability/false-deny negative** (K3 hard-fail vs soft-fail under measured OCSP/CRL
+outage rates), that genuine *measured negative* could justify a short workshop note — the only realistic route from
+this corpus. **Update 2026-06-22: R&D 0076 built that benchmark** (27/27, exit 0, cited outage range) **and the verdict
+is borderline-NO even reframed** — it largely re-derives the known Web-PKI soft-fail consensus; publishable only if
+narrowed to the K3 framing + a first-party availability measurement. So the one conditional path resolves to
+**essentially still no paper.** (And the 3 defensive-publication notes are now WRITTEN into `LogicN-Patens/` per R&D
+0075 — see [rd-tlstp-closure-0071-0077-2026-06-22.md](rd-absorbed/rd-tlstp-closure-0071-0077-2026-06-22.md).)
 
 ## What to actually do
 1. **No paper.** Do not write or submit one from 0065–0070.
