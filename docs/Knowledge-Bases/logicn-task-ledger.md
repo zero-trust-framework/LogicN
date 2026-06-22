@@ -427,6 +427,15 @@ open, only half-done): #177 (deprecation advisory not emitted), #119 (native Bit
   interpreter/wat-emitter), (b) where it's tested, (c) where it's demonstrated (examples corpus), (d) its
   governing diagnostics (cross-link to the code-index). Like `scripts/code-index.mjs` but for capabilities.
   🔲 scoped, build on go (broad/fuzzy extraction — wants a clean token budget).
+- **#218 — Coverage cross-check framework** (owner-directed 2026-06-22, motivated by the "codes" near-miss):
+  for EACH governed dimension build a comprehensive index (codes ✅ `code-index`; capabilities/syntax = #217;
+  flows/deps ✅ project graph; governance rules; effects; non-LLN namespaces), then **cross-check each audit
+  against its index bidirectionally** — (1) every index entry was audited (no blind spots), (2) every finding
+  maps to an index entry (no phantoms), (3) the index ingests ALL sources incl. docs/README/registry (the
+  Stage-D lesson, not just `src`). Output `coverage-<dimension>.md` reports; wire green ones into phase-close.
+  **Trigger: run as an end-of-roadmap pass over ALL items (finished + unfinished); gated to "once the current
+  roadmap is finished."** #217 is a prerequisite (capabilities/syntax index). Full plan:
+  [logicn-coverage-crosscheck-methodology.md](logicn-coverage-crosscheck-methodology.md). 🔲
 - **RULE (binding, owner 2026-06-22):** if a task can be made cheaper by building/extending a dev tool, do
   that — and consider it at the START of every task. Memory: `feedback-build-tools-to-save-tokens`.
 - **#214 — framework developer-tests folder** (owner-raised): the B1 scaffolder emits a `tests/` dir for

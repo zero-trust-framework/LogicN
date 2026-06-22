@@ -1,0 +1,61 @@
+# Coverage Cross-Check Methodology — index every dimension, then prove the audit covered it
+
+**Status:** PLANNED — owner-directed 2026-06-22. Execute as an end-of-roadmap QA pass (covering ALL
+roadmap items, finished AND unfinished) and thereafter as a standing gate on every audit.
+
+## Why (the motivating failure)
+The diagnostic-"codes" audit nearly missed real problems. The src-only R3 scan (codes defined in >1
+package's `src`) found EFFECT/GRAPH but **missed** `logicn-devtools-project-graph` squatting on core's
+`LLN-BOUNDARY` series — because core owns that series only in its **README/TODO**, not yet in `src`. A
+`grep` for a stale "canonical to core" comment caught it by luck. **An audit whose completeness rests on
+one detector's blind spots is not trustworthy.** The fix: for each governed dimension, build a comprehensive
+INDEX, then CROSS-CHECK the audit against the index in BOTH directions so coverage is provable, not assumed.
+
+## The principle
+```
+An audit is only as complete as the index it is cross-checked against.
+Index the whole domain (every source) → prove the audit touched every entry → prove every finding maps back.
+```
+
+## The dimensions to index (the "graph indexing for each")
+One index per governed dimension. Each pairs with its audit and its enforcing detector/scanner.
+
+| Dimension | Index (tool) | Audit | Detector/gate | Status |
+|---|---|---|---|---|
+| Diagnostic codes (`LLN-*`, `ERR_*`, traps) | `scripts/code-index.mjs` → `build/code-index/` | [taxonomy audit](logicn-diagnostic-code-taxonomy-audit-2026-06-22.md) | `scripts/audit-diagnostic-codes.mjs` (V1-V5) | ✅ index + audit + scanner exist |
+| Capabilities · syntax · full language surface | **#217** capability/syntax index (PARKED) | — | — | 🔲 build #217 first |
+| Flows · dependencies · symbols | `logicn-core-cli graph` → `build/graph/` | — | phase-close regen | ✅ index exists; no coverage audit yet |
+| Governance rules | [logicn-governance-rules.md](logicn-governance-rules.md) registry | rules index | invariants matrix | 🔲 index-ify |
+| Effects | `EFFECT_REGISTRY` / `CANONICAL_EFFECTS` (effect-checker) | #201 work | effect-checker | partial |
+| Non-LLN namespaces (CBOR tags, HTTP status, metric names) | — | taxonomy audit §6 | — | 🔲 index-ify |
+
+## The cross-check (bidirectional — this is the new gate)
+For each dimension, the audit is "covered" only when ALL THREE hold:
+1. **Index → audit (no blind spots):** every entry in the index was examined by the audit/detector. A code
+   in `code-index` that no scanner rule inspects is an uncovered blind spot.
+2. **Audit → index (no phantom findings):** every audit finding maps to a real index entry. A finding about
+   a code not in the index means the index is incomplete (or the finding is stale).
+3. **Index completeness (all sources):** the index ingests EVERY source of truth, not just `src` — docs,
+   README, TODO, registries, manifests. *(This is the Stage-D lesson: README-only ownership was invisible to
+   a src-only index.)* An index that misses a source silently under-reports coverage.
+
+Output per dimension: a `coverage-<dimension>.md` report — `indexed N · audited M · uncovered [...] ·
+phantom [...] · sources ingested [...]`. Green = the three conditions hold with empty gap lists.
+
+## Procedure (end-of-roadmap pass)
+1. Enumerate every roadmap item (finished + unfinished) and map each to the dimension(s) it touches.
+2. For each dimension: ensure its index exists (build #217 etc.), then run/author the cross-check report.
+3. Review the reports together; any non-empty gap list is a remediation task (the index, the audit, or the
+   detector is incomplete — fix whichever).
+4. Wire the green cross-checks into `run-phase-close.mjs` so coverage can only improve (regression gate).
+
+## Connections
+Builds on the existing token-saver tooling ([feedback-build-tools-to-save-tokens]) and the diagnostic-code
+[conventions](logicn-diagnostic-code-conventions.md) + [scanner](logicn-diagnostic-code-taxonomy-audit-2026-06-22.md).
+#217 (capability/syntax index) is a prerequisite for the capabilities/syntax dimension. The project graph
+(`build/graph/`) already indexes flows/deps/symbols but has no coverage audit yet — a candidate first target.
+
+## Trigger
+Owner gated this to "once [the current roadmap] is finished." Do NOT start the full pass until the in-flight
+work (#201 + the rest) lands. A single-dimension proof-of-concept (code-index ↔ taxonomy audit) can be run
+sooner on owner request to validate the methodology.
