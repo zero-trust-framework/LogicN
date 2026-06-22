@@ -405,6 +405,12 @@ open, only half-done): #177 (deprecation advisory not emitted), #119 (native Bit
   GRAPH-001/VALUESTATE-005 case-dups). **Pending hardening:** free-text `ERR_` modes, dead/unregistered
   cross-ref, the `MEMORY-*` dead-production-gate check, then flip to CI-enforce. Remediation stages then clean
   families until each category → 0. (Remediation being done in token-staged increments at owner's "next".)
+- **Code-index dev tool** (`scripts/code-index.mjs`, owner-requested 2026-06-22): re-runnable map of EVERY
+  code (`LLN-*`/`ERR_*`) → definition site + names + severity + every emit/test/doc location. **Query
+  `build/code-index/CODE_INDEX.md` instead of grepping** (token-saver); `node scripts/code-index.mjs`
+  regenerates (+ a full-location `code-index.json`). Quantified the disease: **268 codes emitted with NO
+  exported constant** (R4), **462 doc-only/phantom mentions** (R5 / doc-drift), 3 dead-defined — across 444
+  src-real codes (364 LLN + 80 ERR, 157 families). Complements the #215 scanner (scanner = gate; index = map).
 - **#214 — framework developer-tests folder** (owner-raised): the B1 scaffolder emits a `tests/` dir for
   developer-authored tests, kept SEPARATE from generated / contract-driven tests (R&D 0016) so a regen never
   clobbers hand-written ones. Folds into the framework B-series. 🔲
