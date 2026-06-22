@@ -489,6 +489,25 @@ open, only half-done): #177 (deprecation advisory not emitted), #119 (native Bit
     SOT; flags stale "X shipped" claims + count-authority drift + the advisor re-derive problem.
   Build sequence: **ENV-001 (umbrella) → DOC-004 + BLD-003 → SEC-002 (largest)**. All 🔲. Memory:
   [[feedback-tooled-engineering-processes]]. Sit alongside #218 (coverage cross-check) as the QA-tooling program.
+- **Full code review 2026-06-22 (`wn8v30euh`, 6 agents): VERDICT = expand graph scope, but FIX BEFORE ADD.**
+  3 prod suites green (3684+80+90). Two real problem areas found:
+  - ✅ **B5a kernel fail-opens FIXED** (`b0428b0`, kernel 87/87): truthy-verifier admit, multi-module
+    registryCheck bypass, issuedAt replay/rollback + canon/schema/duplicate hardening + 7 adversarial tests.
+  - 🔲 **Audit-toolchain regex bugs (corrupt the ONE audited dimension — do next):** (a) CODE_RE drops a
+    trailing letter — `LLN-PROFILE-005B`→`005` (a shipped code vanishes + merges into 005); (b) CODE_RE range
+    greed invents phantoms (`LLN-ACCESS-001-002`); (c) const-identifier emits unresolved (`code: LLN_FOO_001`)
+    → **28 live+tested codes false-classed DEAD/RESERVED**; (d) object-literal `export const X = { code: … }`
+    never classed `def` → `live` count wrong (14); (e) audit-coverage.mjs:41 uses a DIVERGENT, more-broken
+    regex (`LLN-CRYPTO-PQ-001`/`LLN-GOV-3VL-001` mis-parsed → false REGISTRY-PHANTOM). FIX: ONE shared,
+    unit-tested CODE_RE module + const-id symbol-table pass + object-literal def + reconcile `dead` across the
+    3 tools. **⚠ Do NOT act on the derived-registry RESERVED list until const-id lands (28 false-deads).**
+  - 🔲 **New tooling (after the scanner is trustworthy):** project-graph coverage dimension in audit-coverage
+    (layering/dependency-direction + R3 cross-family collision — the graph is indexed but never audited);
+    **SEC-002 mutation/fail-closed detector** (slot reserved in lint-conventions; would have caught the B5a
+    fail-open); then #217 capability/syntax, effects, contract-clause coverage, DOC-004.
+  - 🔲 **Script tests:** the 4 dev-tool scripts (code-index/audit-coverage/gen-code-registry/lint-conventions)
+    shipped with ZERO tests — add fixture-tree tests (role classification, const-id, window-boundary, statusOf,
+    crash-as-tool-error). Also: lint-conventions counts a child crash as 1 violation (should be a tool error).
 - **RULE (binding, owner 2026-06-22):** if a task can be made cheaper by building/extending a dev tool, do
   that — and consider it at the START of every task. Memory: `feedback-build-tools-to-save-tokens`.
 - **#214 — framework developer-tests folder** (owner-raised): the B1 scaffolder emits a `tests/` dir for
