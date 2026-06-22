@@ -411,6 +411,19 @@ open, only half-done): #177 (deprecation advisory not emitted), #119 (native Bit
   regenerates (+ a full-location `code-index.json`). Quantified the disease: **268 codes emitted with NO
   exported constant** (R4), **462 doc-only/phantom mentions** (R5 / doc-drift), 3 dead-defined — across 444
   src-real codes (364 LLN + 80 ERR, 157 families). Complements the #215 scanner (scanner = gate; index = map).
+- **#216 — WASM build-provenance metadata** (owner-requested 2026-06-22): every `build/*.wasm` (+ its
+  `.lmanifest`) should carry build provenance — LogicN version (`version.json`), git commit / package version,
+  repo URL, build timestamp, author (git config) — alongside the existing `sourceHash`/`governanceSignature`/
+  `signedAt`. Extend `manifest-generator.ts` + the `logicn build` path. Verify-first: `signedAt`/`keyId`/
+  `sourceHash` exist today; version/commit/repo/author likely don't. 🔲
+- **#217 — Capability/syntax index dev tool** (owner-requested 2026-06-22; applies the build-tools-to-save-
+  tokens rule): a re-runnable graph/index of LogicN's FULL language scope — operators (arithmetic/comparison/
+  logical), keywords + constructs (flow/contract/effects/invariant/trap/gate/match/for/where…), stdlib
+  functions, effect families, types — each mapped to WHERE its logic lives (lexer/parser/type-checker/
+  effect-checker/interpreter/wat-emitter). Like `scripts/code-index.mjs` but for capabilities (query instead
+  of explore). 🔲 scoped, build on go.
+- **RULE (binding, owner 2026-06-22):** if a task can be made cheaper by building/extending a dev tool, do
+  that — and consider it at the START of every task. Memory: `feedback-build-tools-to-save-tokens`.
 - **#214 — framework developer-tests folder** (owner-raised): the B1 scaffolder emits a `tests/` dir for
   developer-authored tests, kept SEPARATE from generated / contract-driven tests (R&D 0016) so a regen never
   clobbers hand-written ones. Folds into the framework B-series. 🔲
