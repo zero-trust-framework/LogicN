@@ -94,7 +94,10 @@ importing the canonical constant. This is *why* EFFECT-002 drifted even after th
 
 ## 5. The remediation policy — "one code, one fault, one source of truth"
 
-The standard that makes the disease impossible (this is what #213 establishes, and what a CI lint enforces):
+The standard that makes the disease impossible (this is what #213 establishes, and what a CI lint enforces).
+**The authoritative rules now live in [logicn-diagnostic-code-conventions.md](logicn-diagnostic-code-conventions.md)**
+(naming + case + severity + single-source + no-cross-package + no-dead-code conventions, with the
+add-a-new-code checklist); the summary:
 
 1. **One code = one failure mode = one `name` = one severity-policy.** (A dev→prod severity toggle of the
    *same* problem is allowed; two different problems are not.)
