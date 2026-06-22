@@ -74,7 +74,7 @@ does not replace it (cannot abolish CAs; cannot do photonic auth). Real value = 
 | Threat | Mitigation (over standard TLS) | Tier |
 |---|---|---|
 | **MITM / TLS interception** | S1 K3 cert-gate (revocation-unknown→DENY) + content-addressed cert/key pinning (`fuse-loader` Gates 1/2/2b) + no-downgrade/no-plaintext `DEFAULT_TLS_POLICY` floor | cert-gate **NET-NEW** · pinning **SHIPPED** · TLS floor **SHIPPED-declarative** (live handshake enforcement = B8/0066) |
-| **SSRF / metadata-endpoint / DNS-rebind (outbound)** | `egress-guard.ts` (169.254.169.254 deny · URL-credential SSRF deny · verify-before-instantiate) + capability-bounded `network.outbound` | **SHIPPED** |
+| **SSRF / metadata-endpoint / DNS-rebind (outbound)** | `egress-guard.ts` (169.254.169.254 deny · URL-credential SSRF deny) + capability-bounded `network.outbound`. *(verify-before-instantiate is `wasm-runtime.ts:99 verifyWasm`, NOT egress-guard — corrected from 0068's citation slip.)* | **SHIPPED** |
 | **Token theft / bearer replay** | capability-DECLARED auth (vs possession); capsule caveat token over HTTP; **RFC-5705 channel-binding → capsule `cnf` (RFC 8747)**. (Kernel auth is presence-only today — S1 verdict is the real fix, adjacent #212) | caps **SHIPPED** · capsule **DECIDED** (#12) · channel-binding **NET-NEW** |
 | **Response tampering / supply-chain** | govern-don't-absorb + verify-before-parse; app-level provenance needs the API to sign its payloads | transport integrity **SHIPPED (TLS)** · app-level provenance **NOT-POSSIBLE-OVER-STANDARD** unless peer cooperates |
 
@@ -88,8 +88,12 @@ factor ("unspoofable" refuted — optical PUFs are PAC-learnable).
 
 ## Cross-cutting + status
 - **Convergent build-first across all three: the K3 cert-gate (S1).** It is the one item that is net-new, in-bounds,
-  crypto-digital, and useful for BOTH bespoke TLSTP and standard third-party APIs. Owner-gated (B8-adjacent) — ask.
-- **Still pending from the worker (will absorb when they land):** 0067 (boundary R&D + prove-maths double-check),
-  0069 (DTM → degrade-only K3 telemetry), 0070 (photonic/path-deviation TamperTrust resolver).
-- **Owner decision still owed:** unlock B8 / authorize the S1 cert-gate as a standalone governance pass. See
+  crypto-digital, and useful for BOTH bespoke TLSTP and standard third-party APIs.
+- **All worker dones now landed — 0067/0069/0070 too** (the full cluster + their use/no-use dispositions are in the
+  narrative explainer [logicn-transport-auth-research-explained-2026-06-22.md](../logicn-transport-auth-research-explained-2026-06-22.md)):
+  **0067** boundary+prove-maths audit (13/14 crossings fail-closed; one fail-open = bare-param taint → fix is **34B**
+  routeDecl auto-taint; next proof = promote 0014-C3 SAMPLED→Z3-PROVEN); **0069** DTM as degrade-only K3 telemetry
+  (No-Coercion proven, codomain `{−1,0}`, rides the 0050 exporter); **0070** photonic TamperTrust resolver
+  (deviation→trit→`vAnd`, `cnf`-row under the digital sig, optical front-end aspirational-HW).
+- **✅ B8 UNLOCKED (owner, 2026-06-22)** — the S1 cert-gate is the greenlit build-first. See
   [logicn-tlstp-transport-auth-rnd-2026-06-22.md](../logicn-tlstp-transport-auth-rnd-2026-06-22.md) §"B8/HTTP guidance".

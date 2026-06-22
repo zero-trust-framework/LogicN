@@ -409,7 +409,17 @@ aspirational (#102-106). **#211 listener hardening is now in-scope too.** Memory
     **All 3 converge on the same BUILD-FIRST: the K3 cert/channel-validation gate (S1)** — revocation-unknown→DENY over a
     library-validated chain, works for BOTH bespoke TLSTP and vanilla third-party HTTPS, zero new crypto. Owner-gated (B8-adjacent).
     8 TLSTP clusters all have R&D numbers (1→0066,2→0065+#12,3→0069,4→0065,5→0065,6→0070,7→0066+0068,8→0052/0055/0058).
-    Still pending from worker: 0067 (boundary/prove-maths), 0069 (DTM→K3 telemetry), 0070 (photonic TamperTrust).
+  - **ALL 6 worker dones + the hub workflow now LANDED + explained 2026-06-22** → narrative explainer
+    `docs/Knowledge-Bases/logicn-transport-auth-research-explained-2026-06-22.md` (use/no-use disposition table for EVERY
+    finding, both directions). 0067 boundary+prove-maths audit: **13/14 crossings fail-closed**; the ONE fail-open =
+    bare flow-param trusted-by-default (`value-state-checker.ts:1162-1191`) → fix = **34B routeDecl auto-taint** (34A
+    `tainted` discharge already ships); **next proof = promote 0014-C3 overflow-equivalence SAMPLED→Z3-PROVEN** (proof
+    already prints `[PROVEN]`, just delegate) + apply stale-claim corrections. 0069 DTM = degrade-only K3 telemetry
+    (No-Coercion proven, codomain {−1,0}, rides 0050 exporter). 0070 photonic TamperTrust resolver (deviation→trit→vAnd,
+    `cnf`-row under digital sig; optical front-end aspirational-HW). **9 findings ADOPTED, ~8 REFUTED (each w/ a digital
+    replacement), rest HW-gated.** Rule-audit `wd7f3ccri` = rules genuinely used (2 minor cite notes, one resolved:
+    `build/dss-supervisor.wasm` really is 115 bytes; 0068 `verifyWasm`→`wasm-runtime.ts:99` fixed in the absorbed doc).
+    NEW follow-up build items: **34B routeDecl auto-taint** (close fail-open), **0014-C3→Z3** (promote proof).
 
 **Filed / decided 2026-06-22 (owner session):**
 - **#201 → built as a NEW code `LLN-EFFECT-006 OVERDECLARED_EFFECT`** (error, ALL profiles), NOT an escalation
