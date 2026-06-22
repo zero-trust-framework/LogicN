@@ -16,7 +16,7 @@
 //                                  witnessed (the shipped validateManifestShape rail).
 
 import type { InferenceBridge, BridgeOp, BridgeResult, BridgeManifest } from "../../logicn-inference-bridge-contract/dist/index.js";
-import { tmacExact, tmacVoted, PHOTONIC, type PhysParams, Xorshift32 } from "./emulator.js";
+import { tmacExact, tmacVoted, clampVotes, PHOTONIC, type PhysParams, Xorshift32 } from "./emulator.js";
 
 /** The surface the photonic runtime consumes: the contract execute + a cheap exact recompute. */
 export interface PhotonicBackend {
@@ -55,7 +55,7 @@ export class PhotonicEmulatorBridge implements InferenceBridge, PhotonicBackend 
 
   constructor(cfg: PhotonicBridgeConfig = {}) {
     this.phys = cfg.phys ?? PHOTONIC;
-    this.redundancyN = cfg.redundancyN ?? 8;
+    this.redundancyN = clampVotes(cfg.redundancyN, 8); // caller-independent [1, N_MAX_VOTES] bound
     const tolerance = cfg.tolerance ?? 0.05;
     // determinismMode:"tolerance" — admissible ONLY when fully pinned (validateManifestShape):
     // finite positive tolerance + pinnedEnvHash + backendArtifactHash, and (with a witness)
@@ -117,9 +117,9 @@ export class PhotonicEmulatorBridge implements InferenceBridge, PhotonicBackend 
   execute(op: BridgeOp, votes?: number): BridgeResult {
     const t0 = Date.now();
     const trits = this.trits(op);
-    const N = votes ?? this.redundancyN;
+    const N = clampVotes(votes, this.redundancyN); // caller cannot inflate the vote count past N_MAX_VOTES
     const rng = new Xorshift32(fnv1a(`${op.correlationId}:${op.opClass}:${op.precision}:${N}`));
-    const value = tmacVoted(trits, op.activations, op.count, op.scale, this.phys, Math.max(1, N), rng);
+    const value = tmacVoted(trits, op.activations, op.count, op.scale, this.phys, N, rng);
     return {
       value,
       executedNatively: false,

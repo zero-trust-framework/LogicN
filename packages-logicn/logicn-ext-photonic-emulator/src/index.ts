@@ -15,7 +15,7 @@ export {
   ACT_MAX, ENOB_CEILING, PHOTONIC, NOISY,
   Xorshift32,
   tmacExact, analogVarianceClosedForm, adcRange, quantStep,
-  tmacPhotonic, tmacVoted,
+  tmacPhotonic, tmacVoted, N_MAX_VOTES, clampVotes,
   wdmCrosstalkMatrix, applyWdm,
   flipProbability, singleLaneErrorProbability, binom, nmrFailureProbability,
 } from "./emulator.js";

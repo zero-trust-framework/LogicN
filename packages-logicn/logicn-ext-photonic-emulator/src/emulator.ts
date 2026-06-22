@@ -112,13 +112,30 @@ export function tmacPhotonic(
   return s * scale;
 }
 
-/** N-modular vote = mean of N independent analog readouts. Cuts zero-mean noise variance by 1/N. */
+/** Caller-independent upper bound on N-modular voting redundancy. An attacker/caller cannot
+ *  request unbounded votes: without this, `execute(op, Infinity)` → an infinite `tmacVoted` loop
+ *  (DoS / hang) and `execute(op, 1e9)` → O(N·n) resource exhaustion. Realistic NMR redundancy is
+ *  ≤ ~25; 1024 is a generous STRUCTURAL ceiling the caller cannot raise. */
+export const N_MAX_VOTES = 1024;
+
+/** Coerce a requested vote count to a safe integer in [1, N_MAX_VOTES]. Non-finite (NaN/±Infinity)
+ *  or < 1 falls back to `fallback` (itself clamped). Caller-independent — the bound cannot be lifted. */
+export function clampVotes(n: number | undefined, fallback = 1): number {
+  const fb = Number.isFinite(fallback) ? Math.min(N_MAX_VOTES, Math.max(1, Math.floor(fallback))) : 1;
+  if (n === undefined || !Number.isFinite(n)) return fb;
+  return Math.min(N_MAX_VOTES, Math.max(1, Math.floor(n)));
+}
+
+/** N-modular vote = mean of N independent analog readouts. Cuts zero-mean noise variance by 1/N.
+ *  N is clamped to [1, N_MAX_VOTES] (caller-independent) so the vote loop is ALWAYS bounded — a
+ *  non-finite or enormous caller N can never hang or exhaust the host. */
 export function tmacVoted(
   weights: ArrayLike<number>, acts: ArrayLike<number>, n: number, scale: number, phys: PhysParams, N: number, rng: Xorshift32,
 ): number {
+  const votes = clampVotes(N); // bound the loop regardless of caller input (Infinity/NaN/1e9 → safe)
   let acc = 0;
-  for (let v = 0; v < N; v++) acc += tmacPhotonic(weights, acts, n, scale, phys, rng);
-  return acc / N;
+  for (let v = 0; v < votes; v++) acc += tmacPhotonic(weights, acts, n, scale, phys, rng);
+  return acc / votes;
 }
 
 // ── WDM off-diagonal crosstalk channel — a faithful row-stochastic leakage matrix ───

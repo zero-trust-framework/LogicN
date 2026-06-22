@@ -277,8 +277,10 @@ fully pinned: a finite `tolerance` + `pinnedEnvHash` + `backendArtifactHash` + a
   3. ✅ **BUILT (2026-06-22)** — Pin **LLN-MONO-001** at the parser: `parseEmergencyBlock` surfaces an
      emergency-block `allow`/`grant` as an `allow:` node so the verifier's `EMERGENCY_EXPANDS_CAPABILITY`
      error fires (was silently swallowed → fail-silent permission widening). +5 tests; suite 53/53 · 4989.
-  4. Close two fail-open admission/clamp holes (certified-mode photonic admission bound to a verified
-     signed manifest; caller-independent `maxTolerance`/`N_MAX` clamps). *(queued)*
+  4. ✅ **BUILT (2026-06-22)** — both fail-open holes shut: certified-mode photonic admission bound to a
+     verified signed manifest (`7a58a26`) + `maxTolerance` band clamp (already done); the caller-independent
+     **`N_MAX` vote-count clamp** now built (`tmacVoted` bounds N to `[1, 1024]` via `clampVotes` — a
+     non-finite/enormous caller N was an infinite-loop / resource-exhaustion fail-open). suite 53/53 · 4993.
 
 **Recovery & the invariant gate (`LLN-FAULT-005`, designed — enforcement gated).** Fault recovery is the
 shipped `resilience { on_*_fault <action> }` block (R&D 0017, core `621fbda`) — *not* a new `recover {}`

@@ -96,8 +96,12 @@ fires a fault. A second, **live** weak link was concrete and is now fixed (item 
    in the Binary governance core). The existing verifier error now fires as a hard compile error. Parser-only
    fix (parser-parses / verifier-validates split preserved). +5 tests `tests/governance/emergency-monotonicity.test.mjs`;
    compiler 3684, full suite 53/53 · 4989.
-4. **NEXT** — close two fail-open admission/clamp holes (certified-mode photonic admission bound to a
-   verified signed manifest; caller-independent `maxTolerance`/`N_MAX` upper-bound clamps).
+4. ✅ **BUILT (closed 2026-06-22)** — both fail-open admission/clamp holes shut: certified-mode photonic
+   admission bound to a verified signed manifest (`7a58a26`) + the `maxTolerance` band clamp (runner.ts
+   `effectiveTolerance=Math.min`) were already done; the remaining **caller-independent `N_MAX` vote-count
+   clamp** is now built — `tmacVoted` clamps N to `[1, N_MAX_VOTES=1024]` (a non-finite/enormous caller N
+   was an infinite-loop hang / O(N·n) resource-exhaustion fail-open via `execute(op, Infinity|1e9)`); bridge
+   `execute` + constructor route through `clampVotes`. +4 tests; photonic-emulator 46/46; suite 53/53 · 4993.
 5. **DESIGN-ONLY / owner-gated** — the crash-containment weakest link: interim = a real same-process
    supervisor harness replacing the T-008 placeholder + relabel the diagnostic declaration counts; full
    DWI / guard-page / fuel isolation is DRCM Phase 5 (#40/#41).

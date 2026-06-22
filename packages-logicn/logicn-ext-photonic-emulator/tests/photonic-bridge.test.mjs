@@ -2,7 +2,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { PhotonicEmulatorBridge, tmacExact } from "../dist/index.js";
+import { PhotonicEmulatorBridge, tmacExact, tmacVoted, clampVotes, N_MAX_VOTES, Xorshift32, PHOTONIC } from "../dist/index.js";
 import { validateManifestShape, assertDeterminism } from "../../logicn-inference-bridge-contract/dist/index.js";
 
 // Pack a trit array into BitNet I2_S i32 words (mirrors the engine's packTrits/decoder).
@@ -77,4 +77,36 @@ test("a native handle (number weights) is refused — emulation needs packed tri
   const b = new PhotonicEmulatorBridge();
   const handle = { opClass: "feedforward", precision: "ternary", correlationId: "x", weights: 42, activations: Int32Array.from([1]), count: 1, scale: 1 };
   assert.throws(() => b.execute(handle), /PHOTONIC_EMULATOR/);
+});
+
+// ── caller-independent N_MAX vote-count clamp (roadmap item 4: resource-exhaustion fail-open) ──
+
+test("clampVotes bounds to [1, N_MAX_VOTES]; non-finite/garbage falls back", () => {
+  assert.equal(clampVotes(10), 10);
+  assert.equal(clampVotes(1e9), N_MAX_VOTES, "an enormous N is capped at the ceiling");
+  assert.equal(clampVotes(Infinity), 1, "Infinity → fallback (never an unbounded loop)");
+  assert.equal(clampVotes(NaN, 8), 8, "NaN → fallback");
+  assert.equal(clampVotes(0), 1, "0 → 1");
+  assert.equal(clampVotes(-5), 1, "negative → 1");
+  assert.equal(clampVotes(3.9), 3, "floored to an integer");
+  assert.equal(clampVotes(undefined, 1e9), N_MAX_VOTES, "the fallback is itself clamped");
+});
+
+test("tmacVoted with an Infinity vote count does NOT hang and returns a finite mean", () => {
+  const v = tmacVoted([1, -1, 0, 1], [1, 1, 1, 1], 4, 1, PHOTONIC, Infinity, new Xorshift32(123));
+  assert.ok(Number.isFinite(v), "the vote loop is bounded → finite result, no hang");
+});
+
+test("bridge.execute: a caller-supplied enormous vote count is BOUNDED (no resource exhaustion)", () => {
+  const b = new PhotonicEmulatorBridge();
+  const t0 = Date.now();
+  const r = b.execute(op([1, -1, 0, 1], [3, 2, 1, -2]), 1e9); // 1e9 iterations if unclamped
+  const dt = Date.now() - t0;
+  assert.ok(Number.isFinite(r.value), "finite value");
+  assert.ok(dt < 2000, `bounded work (${dt}ms) — not 1e9 iterations`);
+});
+
+test("an absurd configured redundancyN is clamped in the manifest witness", () => {
+  const b = new PhotonicEmulatorBridge({ redundancyN: 1e9 });
+  assert.equal(b.manifest.toleranceWitness.redundancyN, N_MAX_VOTES);
 });
