@@ -133,3 +133,47 @@ test("doc-drift: historical lines (superseded / verified:) are exempt", () => {
 test("doc-drift: a dated-FILENAME snapshot is fully exempt", () => {
   assert.ok(!drift.drift.some((d) => d.rel.includes("snap-2026-06-01")), "dated snapshot not scanned");
 });
+
+// ── SEC-002 mutation gate: a hermetic tmp git repo proves KILL + SURVIVE + git-safety (no production touched) ──
+const tmp3 = mkdtempSync(join(tmpdir(), "lln-mutation-"));
+after(() => { try { rmSync(tmp3, { recursive: true, force: true }); } catch { /* best effort */ } });
+const git3 = (...a) => spawnSync("git", a, { cwd: tmp3, encoding: "utf8" });
+// a fixture "gate": one check is GUARDED by the test, one is NOT
+writeFileSync(join(tmp3, "gate.mjs"), [
+  `export function admit(result, level) {`,
+  `  if (result !== true) throw new Error("DENY non-true verifier");`, // GUARDED
+  `  if (level > 5) throw new Error("DENY level too high");`,          // UNGUARDED (no test exercises level)
+  `  return "ok";`,
+  `}`,
+].join("\n") + "\n");
+// plain-node assertion script (NOT nested `node --test` — a child test-runner spawned from this test-runner
+// parent misreports its exit code; the production catalog uses `node --test` because its parent is plain node).
+writeFileSync(join(tmp3, "gate.check.mjs"), [
+  `import assert from "node:assert/strict";`,
+  `import { admit } from "./gate.mjs";`,
+  `for (const x of ["yes", 1, {}]) assert.throws(() => admit(x, 0)); // GUARDS the result-check`,
+  `assert.equal(admit(true, 0), "ok");`,
+].join("\n") + "\n");
+writeFileSync(join(tmp3, "mutants.json"), JSON.stringify([
+  { id: "guarded", file: "gate.mjs", find: "if (result !== true)", replace: "if (!result)", cwd: ".", test: ["node", "gate.check.mjs"], desc: "guarded check" },
+  { id: "unguarded", file: "gate.mjs", find: "if (level > 5)", replace: "if (level > 6)", cwd: ".", test: ["node", "gate.check.mjs"], desc: "unguarded check" },
+]) + "\n");
+git3("init", "-q");
+git3("add", "-A");
+git3("-c", "user.email=ci@x", "-c", "user.name=ci", "commit", "-q", "-m", "fixture");
+const mut = JSON.parse(spawnSync(process.execPath,
+  [join(SCRIPTS, "audit-mutation.mjs"), "--config", join(tmp3, "mutants.json"), "--root", tmp3, "--json"],
+  { cwd: tmp3, encoding: "utf8" }).stdout);
+const verdict = (id) => mut.results.find((r) => r.id === id);
+
+test("mutation: a GUARDED fail-closed check → mutant KILLED (the test catches the re-introduced hole)", () => {
+  assert.equal(verdict("guarded")?.killed, true);
+});
+test("mutation: an UNGUARDED check → mutant SURVIVED (flags the missing red-team test)", () => {
+  assert.equal(verdict("unguarded")?.killed, false);
+  assert.equal(mut.survived.length, 1);
+});
+test("mutation: git-safety — every target file restored clean after the run", () => {
+  assert.deepEqual(mut.leftDirty, []);
+  assert.equal(git3("diff", "--quiet", "--", "gate.mjs").status, 0, "gate.mjs is git-clean after mutation run");
+});

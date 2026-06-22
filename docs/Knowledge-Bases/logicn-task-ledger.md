@@ -483,9 +483,16 @@ auto-start the api-server/transport adapter; confirm with owner before touching 
     for ALL codebase conventions (`scripts/lint-conventions.mjs`: a check-registry, aggregate report,
     exit = total violations; wired into `run-phase-close`). PRINCIPLE: no convention is "binding" until a tool
     enforces it (else it's advisory and rots). The umbrella the other gates register into.
-  - **TASK-SEC-002** — **mutation / red-team test per gate**: every fail-closed `contract {}` clause + admission
-    border ships a test that RE-INTRODUCES the hole and asserts the gate catches it (proves fail-closed, not
-    just passing-today). Systematizes the ad-hoc "detector flips RED" guards (i32 overflow, fail-closed-invariant).
+  - **TASK-SEC-002** — **mutation / red-team test per gate**: ✅ **v1 BUILT 2026-06-22** — `scripts/audit-mutation.mjs`
+    (Stryker-style). For each registered fail-closed gate it RE-INTRODUCES the hole (a source mutation), runs that
+    gate's adversarial test, and asserts the test now FAILS (mutant KILLED); a SURVIVING mutant = the test doesn't
+    guard the hole. v1 catalog = the 3 B5a registry-index fail-opens (**truthy-verifier `!result`** — the exact one
+    the review caught — **replay floor `>`→`>=`**, **duplicate `>1`→`>2`**); all 3 KILLED against production.
+    **git-backed SAFETY**: target files must be git-clean before mutation; reverted with `git checkout` in a finally;
+    post-run git-clean assertion; final clean rebuild. Registered in `lint-conventions` as a **heavy** check (run with
+    `--full` — rebuilds per mutant ~40s; the fast phase-close sweep skips it). +3 hermetic fixture tests (tmp git repo,
+    proves KILL + SURVIVE + git-safety; tooling suite now **23/23**). Follow-on: extend the catalog to fuse-loader
+    gates 1–3, secret-egress, and i32-overflow as those get adversarial tests. `fast-check` available for fuzz mutants.
   - **TASK-BLD-003** — **artifact provenance + freshness** (folds in #216): stamp every generated artifact
     (graph, code-index, `.wasm`, `.lmanifest`, reports) with git-commit + tool-version + build-time; CI fails if
     an artifact is stale vs HEAD. Makes "is this current?" a check, not a guess.
@@ -498,7 +505,8 @@ auto-start the api-server/transport adapter; confirm with owner before touching 
     table-rows *inside* living docs still counted → **v2 = opt-in `<!-- LIVE:testCount -->` markers** (Rust-tidy
     style, zero false positives); the real remedy for the drift itself is **#150 CI auto-count**. Does NOT yet do
     "X shipped" semantic claims (harder; v3).
-  Build sequence: **ENV-001 (umbrella ✅) → DOC-004 (✅ v1) + BLD-003 → SEC-002 (largest)**. Memory:
+  Build sequence: **ENV-001 (umbrella ✅) → DOC-004 (✅ v1) + BLD-003 → SEC-002 (✅ v1)**. Only **BLD-003**
+  (artifact provenance/freshness, folds #216) remains of the 4-process program. Memory:
   [[feedback-tooled-engineering-processes]]. Sit alongside #218 (coverage cross-check) as the QA-tooling program.
 - **Full code review 2026-06-22 (`wn8v30euh`, 6 agents): VERDICT = expand graph scope, but FIX BEFORE ADD.**
   3 prod suites green (3684+80+90). Two real problem areas found:

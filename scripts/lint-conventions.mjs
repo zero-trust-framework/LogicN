@@ -25,17 +25,25 @@ const CHECKS = [
     script: "scripts/audit-doc-drift.mjs",
     desc: "DOC-004: doc 'living metrics' (global test/package COUNTS) vs the version.json authority — v1 heuristic (living docs only; #150 auto-count is the real remedy)",
   },
-  // TASK-SEC-002 (mutation/red-team per gate) and #218 (coverage cross-check, run separately as
-  // `audit-coverage.mjs`) register additional check scripts here as they are built.
+  {
+    name: "mutation",
+    script: "scripts/audit-mutation.mjs",
+    desc: "SEC-002: re-introduce each fail-closed gate's hole + assert its test catches it (Stryker-style; would have caught the B5a fail-open)",
+    heavy: true, // rebuilds + runs tests per mutant (~40s) — only with --full (CI/security tier), skipped in the fast phase-close sweep
+  },
+  // #218 (coverage cross-check) runs separately as `audit-coverage.mjs`.
 ];
 
 const soft = process.argv.includes("--soft");
 const asJson = process.argv.includes("--json");
+const full = process.argv.includes("--full"); // include heavy checks (mutation); default = fast tier only
 
 const rows = [];
 let total = 0;
 let toolErrors = 0;
+let skippedHeavy = 0;
 for (const c of CHECKS) {
+  if (c.heavy && !full) { skippedHeavy++; rows.push({ name: c.name, desc: c.desc, skipped: true }); continue; }
   const r = spawnSync(process.execPath, [c.script], { encoding: "utf8" });
   const stdout = r.stdout || "";
   // Each check MUST print a machine-readable `VIOLATIONS: N` line. Parse THAT, not the raw exit code —
@@ -55,16 +63,18 @@ for (const c of CHECKS) {
 }
 
 if (asJson) {
-  console.log(JSON.stringify({ total, toolErrors, checks: rows }, null, 2));
+  console.log(JSON.stringify({ total, toolErrors, skippedHeavy, checks: rows }, null, 2));
 } else {
   const out = ["# LogicN convention lint (TASK-ENV-001)\n"];
   for (const row of rows) {
+    if (row.skipped) { out.push(`⊘ ${row.name} — SKIPPED (heavy; pass --full to run)`); out.push(`    ${row.desc}`); continue; }
     if (row.error) { out.push(`⚠ ${row.name} — TOOL ERROR: ${row.why}${row.stderr ? " — " + row.stderr : ""}`); continue; }
     out.push(`${row.violations === 0 ? "✓" : "✗"} ${row.name} — ${row.violations} violation(s)`);
     out.push(`    ${row.desc}`);
     if (row.totalLine) out.push(`    ${row.totalLine}`);
   }
-  out.push(`\nTOTAL: ${total} violation(s) across ${CHECKS.length - toolErrors} ran check(s)` + (toolErrors ? `  ·  ⚠ ${toolErrors} TOOL ERROR(s)` : ""));
+  const ran = CHECKS.length - toolErrors - skippedHeavy;
+  out.push(`\nTOTAL: ${total} violation(s) across ${ran} ran check(s)` + (skippedHeavy ? `  ·  ⊘ ${skippedHeavy} heavy skipped (--full)` : "") + (toolErrors ? `  ·  ⚠ ${toolErrors} TOOL ERROR(s)` : ""));
   out.push(
     toolErrors > 0
       ? "GATE INCONCLUSIVE — a check failed to run (fix the tool error)."
