@@ -200,6 +200,12 @@ run("graph:reindex", "node",
 // becomes literally true at phase-close). PRINCIPLE: owner 2026-06-22 binding process.
 run("lint:conventions", "node", ["scripts/lint-conventions.mjs", "--soft"]);
 
+// ── 5c. Coverage cross-check (#218) ──
+// "Review the graphs and check against what we audit" — cross-checks the code-index (graph) against the
+// governance registry bidirectionally (blind spots · phantoms). Report-only (--soft) until the coverage
+// holes are triaged; emits build/coverage/coverage-codes.md. GRAPH THE AUDIT (owner 2026-06-22).
+run("coverage:codes", "node", ["scripts/audit-coverage.mjs", "codes", "--soft"]);
+
 // ── 6. Standing Governance Sanity Check — diff HEAD~1 ──
 // Transforms governance diff from a passive human-review step into an active quality gate.
 // Enforces the Monotonicity Rule at CI level: expansion requires explicit sign-off.

@@ -1,7 +1,15 @@
 # Coverage Cross-Check Methodology — index every dimension, then prove the audit covered it
 
-**Status:** PLANNED — owner-directed 2026-06-22. Execute as an end-of-roadmap QA pass (covering ALL
-roadmap items, finished AND unfinished) and thereafter as a standing gate on every audit.
+**Status:** IN PROGRESS — owner-directed 2026-06-22. **`codes` dimension BUILT + RUN** (`scripts/audit-coverage.mjs`,
+wired into run-phase-close `--soft`); other dimensions pending. Full end-of-roadmap pass (ALL items, finished
+AND unfinished) is the remaining scope; thereafter a standing gate on every audit.
+
+**First run (codes, 2026-06-22) — the tool works + surfaced real signal:** 930 codes indexed vs only 67 LLN
+codes in the governance registry → **317 src-real `LLN-*` REGISTRY-UNCOVERED** (the registry is blind to most
+codes); **40 DEAD candidates** (≥8 are false-positives — `ERR_REGISTRY_*` are live+tested but the code-index
+doesn't recognise the `{code:"ERR_…"}` result-object emit pattern → a code-index emit-detection gap to fix);
+0 registry-phantoms. Report: `build/coverage/coverage-codes.md`. Triage of the 317/40 is the codes-coverage
+remediation (distinct from the conformance scanner's V1-V5).
 
 ## Why (the motivating failure)
 The diagnostic-"codes" audit nearly missed real problems. The src-only R3 scan (codes defined in >1

@@ -433,6 +433,10 @@ open, only half-done): #177 (deprecation advisory not emitted), #119 (native Bit
   against its index bidirectionally** — (1) every index entry was audited (no blind spots), (2) every finding
   maps to an index entry (no phantoms), (3) the index ingests ALL sources incl. docs/README/registry (the
   Stage-D lesson, not just `src`). Output `coverage-<dimension>.md` reports; wire green ones into phase-close.
+  **🔶 codes dimension BUILT + RUN 2026-06-22** (`scripts/audit-coverage.mjs codes` + phase-close `--soft`):
+  graph-the-audit, deterministic. First run: 930 indexed vs 67 registry → 317 src-real LLN-* registry-uncovered
+  + 40 dead candidates (≥8 false-positive from a code-index result-object emit-detection gap) + 0 phantoms;
+  report `build/coverage/coverage-codes.md`. Other dimensions (#217 capabilities, flows/deps) pending.
   **Trigger: run as an end-of-roadmap pass over ALL items (finished + unfinished); gated to "once the current
   roadmap is finished."** #217 is a prerequisite (capabilities/syntax index). Full plan:
   [logicn-coverage-crosscheck-methodology.md](logicn-coverage-crosscheck-methodology.md). 🔲
