@@ -493,14 +493,13 @@ open, only half-done): #177 (deprecation advisory not emitted), #119 (native Bit
   3 prod suites green (3684+80+90). Two real problem areas found:
   - ✅ **B5a kernel fail-opens FIXED** (`b0428b0`, kernel 87/87): truthy-verifier admit, multi-module
     registryCheck bypass, issuedAt replay/rollback + canon/schema/duplicate hardening + 7 adversarial tests.
-  - 🔲 **Audit-toolchain regex bugs (corrupt the ONE audited dimension — do next):** (a) CODE_RE drops a
-    trailing letter — `LLN-PROFILE-005B`→`005` (a shipped code vanishes + merges into 005); (b) CODE_RE range
-    greed invents phantoms (`LLN-ACCESS-001-002`); (c) const-identifier emits unresolved (`code: LLN_FOO_001`)
-    → **28 live+tested codes false-classed DEAD/RESERVED**; (d) object-literal `export const X = { code: … }`
-    never classed `def` → `live` count wrong (14); (e) audit-coverage.mjs:41 uses a DIVERGENT, more-broken
-    regex (`LLN-CRYPTO-PQ-001`/`LLN-GOV-3VL-001` mis-parsed → false REGISTRY-PHANTOM). FIX: ONE shared,
-    unit-tested CODE_RE module + const-id symbol-table pass + object-literal def + reconcile `dead` across the
-    3 tools. **⚠ Do NOT act on the derived-registry RESERVED list until const-id lands (28 false-deads).**
+  - ✅ **Audit-toolchain regex bugs FIXED (`6141bac`):** NEW shared `scripts/lib/codes.mjs` (one regex +
+    `scripts/tests/codes.test.mjs` 7/7 — first script test) fixes (a) 005B truncation, (b) range phantoms,
+    (e) the divergent audit-coverage regex. (c) const-identifier resolution → the **28 false-deads are now
+    correctly LIVE**. `dead` reconciled across all tools = defined AND truly-unreferenced; new `referenced`
+    status for def-no-detected-emit-but-tested. **Registry now live:37 · referenced:11 · dead:0 — the RESERVED
+    list is EMPTY/SAFE** (was 32, mostly live/tested). (d) object-literal-def was attempted then REVERTED
+    (over-corrected into 95 new false-deads); live-vs-inline accuracy is a noted lower-priority backlog.
   - 🔲 **New tooling (after the scanner is trustworthy):** project-graph coverage dimension in audit-coverage
     (layering/dependency-direction + R3 cross-family collision — the graph is indexed but never audited);
     **SEC-002 mutation/fail-closed detector** (slot reserved in lint-conventions; would have caught the B5a
