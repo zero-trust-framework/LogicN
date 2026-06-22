@@ -385,9 +385,19 @@ open, only half-done): #177 (deprecation advisory not emitted), #119 (native Bit
 - **#201 → built as a NEW code `LLN-EFFECT-006 OVERDECLARED_EFFECT`** (error, ALL profiles), NOT an escalation
   of the overloaded `LLN-EFFECT-002` (owner-directed de-overload). `002` now carries ONLY the transitive-missing
   (soundness) case. Owner chose strict-all-profiles, so the build must also fix every over-declared fixture/example.
-- **#213 — LLN-* diagnostic taxonomy audit** (owner-raised): enumerate every `LLN-*` code; split any that
-  conflate distinct failure modes or mix severities (`EFFECT-002` is the exemplar); document a per-code
-  severity + suppression policy so the next escalation isn't surgery. 🔲
+- **#213 — LLN-* diagnostic taxonomy audit** ✅ **AUDIT DONE 2026-06-22** (build paused for it). Full report:
+  **[logicn-diagnostic-code-taxonomy-audit-2026-06-22.md](logicn-diagnostic-code-taxonomy-audit-2026-06-22.md)**.
+  All 336 `LLN-*` codes / ~90 families swept (7 auditors + adversarial verify); **~30 confirmed diseased** via
+  5 recurring root causes (R1 overloaded · R2 split-across-codes · R3 divergent duplicate defs across packages
+  · R4 inline-no-constant · R5 dead/unregistered). **Most alarming:** `LLN-MEMORY-001..007` are dead yet wired
+  as production-BLOCKING gates (false enforcement). P0 security overloads: SECRET-002, PRIVACY-002, GOV-004,
+  MONO-001, INV-002, ASSIMILATE-002, NET-001/002. The #201 `EFFECT-006` split aligns with the policy; devtools
+  `effect-graph.ts` still has the old inverted EFFECT-002 (must re-sync). **Remediation 🔲 gated on owner.**
+  Non-`LLN-*` namespaces (ERR_*/violations/CBOR) = companion audit `wdjnqlw27` (§6, pending).
+- **#215 — diagnostic-registry conformance lint** (NEW, the durable fix): a CI check that fails the build on
+  any code that is overloaded (>1 name/severity at emit sites), emitted-without-its-constant, defined-in-2+-
+  packages, dead/unregistered (unless RESERVED), or named in a production-blocking gate while non-live.
+  Without it the ~30 fixes re-rot. Do alongside the P0/P1 remediation. 🔲
 - **#214 — framework developer-tests folder** (owner-raised): the B1 scaffolder emits a `tests/` dir for
   developer-authored tests, kept SEPARATE from generated / contract-driven tests (R&D 0016) so a regen never
   clobbers hand-written ones. Folds into the framework B-series. 🔲
