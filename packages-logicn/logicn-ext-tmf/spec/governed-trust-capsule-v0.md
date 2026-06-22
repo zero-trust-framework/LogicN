@@ -144,8 +144,8 @@ holder; the signature still covers the whole set via the root. (Reuses an alread
 1. CBOR decode; reject non-canonical (RFC 8949 §4.2)                         else MalformedCapsule
 2. resolve key(s) from the Trust Capsule registry (NOT from the token)       else AuthError
 3. expected alg(s) == token's signed protected alg(s)                        else AlgMismatch
-4. reconstruct external_aad (§5); M = SHA-256(CBOR(Sig_structure))
-5. verify Ed25519 AND ML-DSA-65 over M (per-surface ctx)                     else AuthError (any false)
+4. reconstruct external_aad (§5); M = CBOR(Sig_structure)  (§2 — signed DIRECTLY, no pre-hash)
+5. verify Ed25519 AND ML-DSA-65 over M (ML-DSA empty ctx, RFC 9964; §2)      else AuthError (any false)
 6. key_id current + not revoked (signature-custody §7)                       else AuthError
 7. exp/nbf/iat window valid                                                  else Expired/NotYetValid
 8. evaluate capabilities + every caveat under K3; collapse(unknown)=deny     else GovDeny
@@ -154,6 +154,20 @@ holder; the signature still covers the whole set via the root. (Reuses an alread
 ```
 Every branch is `→ deny`; `unknown → deny`. A reader without a vetted ML-DSA/Ed25519 verifier rejects every
 signed Capsule (never downgrades) — same rule as signature-custody §6.
+
+> **Canonical signing method (the ONE definition — binding for the §12 reader).** The message signed at step 4/5
+> is `M = CBOR(Sig_structure)` — the COSE `Sig_structure` bytes signed **DIRECTLY**, with **no application-layer
+> pre-hash** (RFC 9964 / RFC 9052 §4.4), ML-DSA `ctx = ""` (empty). This is the single method used everywhere in
+> this spec (§2, §8, §11, §12) — there is no `SHA-256(...)` pre-hash anywhere. *Rationale:* (a) **standards** —
+> RFC 9964 signs `Sig_structure` directly; an application `SHA-256` pre-hash is non-conformant and would not
+> interoperate with a standard COSE/ML-DSA verifier (and "pure" ML-DSA ≠ the separate HashML-DSA algorithm, which
+> has its own distinct code points). (b) **128-bit collision ceiling** — a SHA-256 pre-hash caps the signed
+> message at SHA-256 collision resistance (~2^128), which would clamp the hybrid below **ML-DSA-65's NIST
+> Category-3** margin and defeat the PQ rationale of the hybrid; direct signing keeps Ed25519 and ML-DSA-65 each
+> at native strength. (c) **no streaming gain** — ML-DSA and Ed25519 already hash `M` internally and the
+> `Sig_structure` is a bounded in-memory CBOR value (not a stream), so a pre-hash buys nothing and only lowers
+> the ceiling. (Closes hub D13; an earlier draft of §8 step 4 erroneously wrote `M = SHA-256(CBOR(Sig_structure))`
+> — corrected to the §2/RFC-9964 direct form on review, per R&D 0071.)
 
 ---
 

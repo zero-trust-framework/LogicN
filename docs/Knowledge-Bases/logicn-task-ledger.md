@@ -447,6 +447,18 @@ aspirational (#102-106). **#211 listener hardening is now in-scope too.** Memory
     (generated reports CODE_INDEX/REGISTRY/coverage/graph + `results/latest.json` + owner edits to
     `workspace.lindex`/`api-protocol-rest/index.lln`). Excluded by design: `_scratch-effect006.mjs` (WIP scratch),
     nested `logicn-devtools-project-graph/` repo, generated build JSON + test temp dirs.
+  - **✅ CLOSURE CLUSTER 0071-0077 DONE + ABSORBED 2026-06-22** → `docs/Knowledge-Bases/rd-absorbed/rd-tlstp-closure-0071-0077-2026-06-22.md`.
+    Worker completed the ENTIRE closure/verification queue. **0071** capsule signing-spec reconciled to one method
+    (direct `CBOR(Sig_structure)`, no pre-hash, RFC 9964) — **the 3-edit PRODUCTION fix APPLIED this session** to
+    `packages-logicn/logicn-ext-tmf/spec/governed-trust-capsule-v0.md` (§8 steps 4/5 + canonical-method blockquote;
+    unblocks capsule reader #12). **0072** prove-maths closure: **7 verdicts SAMPLED/ASSERTED→PROVEN** (0014-C3 via
+    Z3; div/rem `X==X` → real cross-encoding; 0031-C1/C3/C7, 0022-A4/B5 vs shipped dist; 0059 L1/L3/n-ary 18 SMT);
+    0024-C2/C4 stay EXCL-SLV + X1 EXCLUDED (honest). **0073** record-hygiene (4 stale corrections + cite re-anchors +
+    2 new 0054 proof scripts 24/24+23/23). **0075** 3 defensive-pub notes WRITTEN into `LogicN-Patens/` (note-01/02/03,
+    novelty-disclaimed) — **NB LogicN-Patens is NOT a git repo (un-versioned; git-init = owner decision).** **0076**
+    measured-negative bench done → **borderline-NO even reframed** (re-derives Web-PKI soft-fail consensus). **0077**
+    Kleene-lattice unify → **ADOPT-WITH-CHANGES** (per-axis provenance; category-conflation real: ill-typed = structural
+    reject ≠ policy DENY; INDETERMINATE must be ADDED). Bridge tasks 0001-0077 all done; R&D side fully closed.
 
 **Filed / decided 2026-06-22 (owner session):**
 - **#201 → built as a NEW code `LLN-EFFECT-006 OVERDECLARED_EFFECT`** (error, ALL profiles), NOT an escalation
