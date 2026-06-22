@@ -67,6 +67,34 @@ name `OVERDECLARED_EFFECT`, error) + diagnostics-spec doc.
   (documented interim, NOT the permanent no-exemption policy) so the 11 pii/phi flows stay green; remove the
   exemption + populate the map when the owner provides it.
 
+## D2 RESOLVED — the brand→family map (owner "unlock", 2026-06-22)
+The corpus's OWN declarations are the map: every patient brand in scope is declared `pii.*` by its example
+(451/459/460/461/462/463/465 pii.write/read on NhsNumber, PatientId, PatientName, DateOfBirth, Email, Address,
+PatientData). So the implemented map is **default → `pii`**, with an explicit owner-editable `PHI_BRANDS`
+override set (clinical brands — `DiagnosisCode`, `BloodType`, `MedicationCode`, lab/vital results — empty-ish
+for the current corpus). 465's lone `phi.read` is the category-C spurious case (no medical brand read) → removed.
+This unblocks ② without guessing a contested PII-vs-PHI regulatory line; the owner adjusts `PHI_BRANDS` later.
+Rationale: mapping e.g. PatientData→phi would make 460/461 (which DECLARE pii.read) fail with undeclared-phi —
+so corpus-consistency requires pii here. NOTE: interim pii/phi exemption is now REMOVED (② replaces it).
+
+## Progress + findings (2026-06-22, owner "unlock")
+- **D2 map RESOLVED** (above) — unblocked.
+- **Built into the WIP (stash), verified via the scratch tool: 39 → 34 flagged.** ① helper-effect descent
+  (fnDecl bodies now count toward the over-declaration "satisfied" set — clears 110/112/354) + **D1(a)**
+  (suppress EFFECT-006 on a non-canonical effect name — clears 119). Surgical + low-risk (only REMOVE false
+  positives; cannot add failures). Held in stash — NOT committed (suite is RED until all 34 resolve; the
+  example-test corpus is all-or-nothing for a green commit).
+- **CORPUS INCONSISTENCY FOUND (must reconcile during ②/③):** `460 sendReferral` declares `pii.write` for a
+  network-egress-of-PII (`SpecialistService.refer(patientData)`), but `462 emailPatient` declares only
+  `pii.read` for the SAME pattern (read protected value → send over network). A correct ② must classify the
+  op (DB-persist = `pii.write`; network-send-of-PII = `pii.read` + `network.outbound`) AND one of 460/462 must
+  be fixed for consistency. → ② is NOT a coarse heuristic; it needs **AST-level read-vs-write op classification**.
+- **Remaining for green (the focused completion):** ② type-driven pii/phi (11, with the resolved map +
+  AST read/write classification) · category-A receiver patterns/registry (~18: EmailGateway, ExternalService/
+  *Service, ApiClient, *Store, *SDK, Process.spawn, AI compute receivers, payment→+network) · category-C
+  example fixes (13) · D1(b) governance-mandated suppression (356/458) · ④ unit tests · ⑤ Stage-B port ·
+  full-suite verify. Best done as one focused, security-critical push (not session-tail).
+
 ## Delivery split
 - **Part 1 (now, unblocked):** ⑥ `LLN_EFFECT_006` metadata · D1(a) suppress on invalid/broad effect name (119) ·
   category-A inference fixes (fnDecl descent + receiver patterns + cross-flow propagation) · category-C example
