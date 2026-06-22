@@ -381,10 +381,16 @@ open, only half-done): #177 (deprecation advisory not emitted), #119 (native Bit
 - **#212** kernel→runtime governance-deny bridge (security-sensitive) · **H2** inline `contract` `policy{}`
   allow/deny parsed but enforced by no checker (a deny-by-default fail-open).
 
-**⛔ OWNER LOCK (2026-06-22): HTTP transport / B8 (`logicn-framework-api-server`) — DO NOT BUILD.** Owner has
-R&D for the transport design and will direct it. Was the roadmap's NEAR lead; now gated on owner R&D. Do not
-auto-start the api-server/transport adapter; confirm with owner before touching anything HTTP/listener-side
-(#211 inbound hardening is adjacent — also confirm first). Memory: [[feedback-http-transport-owner-locked]].
+**✅ B8 HTTP-transport UNLOCKED (owner decision, 2026-06-22).** The owner's transport R&D landed (TLSTP grounding
+`wi3py3913` + worker dones 0065/0066/0068, independently rule-audited = compliant) and the owner has LIFTED the lock
+— **B8 is now GO.** Build per the absorbed design `rd-tlstp-transport-auth-cluster-2026-06-22.md`. **BUILD-FIRST =
+the S1 K3 cert/channel-validation gate** (the converged lead: `cert_verdict = vAnd(pin_match, chain_valid,
+not_expired, revocation_fresh) ∈ {+1,0,−1}`, **revocation-unknown→DENY**, over a library-validated chain;
+crypto-digital, reuses `decideAtBoundary`; hardens MITM for BOTH TLSTP and vanilla HTTPS). Then 0066's first-3
+sequence (bind shipped admission to the handshake · raw-byte shim + idempotency-gated 0-RTT · Recovering FSM +
+ECH/OHTTP). Crypto stays Binary; photonics feed a K3 verdict only; the in-sandbox-isolation guarantee stays
+aspirational (#102-106). **#211 listener hardening is now in-scope too.** Memory: [[feedback-http-transport-owner-locked]] (now UNLOCKED).
+  - *(history) Was ⛔ OWNER-LOCKED 2026-06-22* pending the owner's transport R&D; that R&D is now done + absorbed + rule-audited → lock lifted same day.
   - **R&D decision-support for B8 filed 2026-06-22** (owner's notes `notes/41-tritmesh` + `notes/42-auth` = the
     "TLSTP" transport+auth series, the R&D behind this lock): `logicn-tlstp-transport-auth-rnd-2026-06-22.md`
     (18-agent workflow `wi3py3913`, adversarially verified). Headline: ~75-85% RE-DERIVES shipped architecture

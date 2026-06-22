@@ -23,15 +23,17 @@ Weighting by how much each dimension defines whether LogicN *is* what it claims 
 
 ## NEW ROADMAP
 
-### ⛔ OWNER LOCKS (do NOT build autonomously)
-- **HTTP transport / B8 (`logicn-framework-api-server`) — OWNER-LOCKED 2026-06-22.** The owner has R&D for the
-  transport design and will direct it. Do NOT build the api-server / transport adapter; do NOT auto-start it from
-  the roadmap. (This was the prior NEAR lead — it is now gated on the owner's R&D.) `#211 inbound-listener
-  hardening` is adjacent but distinct — confirm with the owner before touching anything HTTP/listener-side.
+### ✅ OWNER UNLOCKS
+- **HTTP transport / B8 (`logicn-framework-api-server`) — UNLOCKED by owner 2026-06-22.** The owner's transport R&D
+  landed (TLSTP grounding `wi3py3913` + worker dones 0065/0066/0068, rule-audited compliant) and the lock is lifted —
+  **B8 is GO.** Build per `rd-absorbed/rd-tlstp-transport-auth-cluster-2026-06-22.md`. `#211 inbound-listener hardening`
+  is now in-scope too. Crypto stays Binary; the in-sandbox-isolation guarantee remains aspirational (#102-106).
 
 ### NEAR (build-not-research, highest cross-dimension leverage)
-- ~~B8 transport adapter~~ → **⛔ OWNER-LOCKED (see above)** — owner has R&D.
-- **Harden the live inbound listener** (#211: request timeout · rate-limit · body-size cap · slowloris guard · honor SecurityPosture) — highest unblocked-security value; today only 405/404/500 (border-gate items 1/9/10/12, buildable now).
+- **B8 — BUILD-FIRST = the S1 K3 cert/channel-validation gate** (revocation-unknown→DENY over a library-validated
+  chain; crypto-digital, reuses `decideAtBoundary`; hardens MITM for both TLSTP and vanilla HTTPS). Then 0066's
+  first-3: bind shipped admission to the handshake · raw-byte shim + idempotency-gated 0-RTT · Recovering FSM + ECH/OHTTP.
+- **Harden the live inbound listener** (#211: request timeout · rate-limit · body-size cap · slowloris guard · honor SecurityPosture) — now in-scope with B8; today only 405/404/500 (border-gate items 1/9/10/12, buildable now).
 - ~~**SEC-002 mutation/red-team gate**~~ → **✅ v1 BUILT 2026-06-22** (`audit-mutation.mjs`; 3 B5a mutants killed, git-backed safety, registered in `lint-conventions --full`). Follow-on: extend the mutant catalog to fuse-loader gates 1–3 / secret-egress / i32-overflow.
 - **H5 fusion-B2 ABI mismatch** (sync `invoke(i32)` → async `HandlerResult`) + one real end-to-end fused-app test — makes a fused package reachable through the kernel; pairs with the transport adapter.
 - **#201 EFFECT-006**: surface the pii/phi brand→family map as an explicit AskUserQuestion, then complete + `git stash pop` — largest in-flight item with no commit; unblocks #202.
