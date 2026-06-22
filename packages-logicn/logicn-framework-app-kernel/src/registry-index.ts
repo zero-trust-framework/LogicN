@@ -142,7 +142,7 @@ export interface CertifiedLookup {
   readonly name: string;
   readonly version: string;
   readonly sourceHash: string;        // the package's ACTUAL hash, checked against the pinned entry
-  readonly keyId?: string;            // the package's ACTUAL manifest keyId (optional cross-check)
+  readonly keyId?: string | undefined; // the package's ACTUAL manifest keyId (optional cross-check)
 }
 export type LookupResult =
   | { readonly ok: true; readonly entry: RegistryEntry }

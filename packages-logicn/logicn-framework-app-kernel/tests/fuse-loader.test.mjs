@@ -34,6 +34,32 @@ function copyDemo() {
   return { root, pkg };
 }
 
+// ── B5a — central signed-registry gate (registryCheck), fail-closed ──────────
+test("registryCheck DENY refuses the fuse even for an otherwise-admissible package", async () => {
+  assert.ok(existsSync(join(DEMO_DIR, "dist", "my-custom-api-rest.wasm")), "demo must be built first");
+  await assert.rejects(
+    () => fusePackage(DEMO_DIR, {
+      allowUnsigned: true,
+      warn: () => {},
+      registryCheck: () => ({ ok: false, code: "ERR_REGISTRY_PACKAGE_UNKNOWN", reason: "not in the certified index" }),
+    }),
+    /ERR_REGISTRY_PACKAGE_UNKNOWN|central registry refused/,
+  );
+});
+
+test("registryCheck ALLOW lets the fuse proceed and receives the package identity", async () => {
+  let seen;
+  const component = await fusePackage(DEMO_DIR, {
+    allowUnsigned: true,
+    warn: () => {},
+    registryCheck: (pkg) => { seen = pkg; return { ok: true }; },
+  });
+  assert.equal(component.name, "my-custom-api-rest");
+  assert.equal(seen.name, "my-custom-api-rest");
+  assert.equal(typeof seen.sourceHash, "string");
+  assert.ok(seen.sourceHash.startsWith("sha256:"), "registry gate receives the pinned-style wasm hash");
+});
+
 // ── 1 — the built demo package fuses, and invoke('main') runs the governed wasm ──
 test("the built demo package fuses (allowUnsigned: placeholder-signed) and invokes main → 200", async () => {
   assert.ok(existsSync(join(DEMO_DIR, "dist", "my-custom-api-rest.wasm")), "demo must be built first");

@@ -177,6 +177,20 @@ export interface FusePackageOptions {
    * injects this from `governance/revocation-registry.mjs`. When omitted, no revocation gate runs.
    */
   readonly revocationCheck?: (keyId: string) => boolean;
+
+  /**
+   * B5a — optional CENTRAL signed-registry admission gate. Mirrors {@link revocationCheck}: the host
+   * injects a predicate (typically `(pkg) => admitFromRegistry(index, verify, pkg, policy)` from
+   * registry-index.ts) that vets the package against a VALIDLY-SIGNED central index. A non-`ok` result
+   * REFUSES the fuse, fail-closed — a central allow-list ON TOP of the per-manifest signature gate, so a
+   * validly self-signed but unlisted / forked package is rejected. When omitted, no registry gate runs.
+   */
+  readonly registryCheck?: (pkg: {
+    readonly name: string;
+    readonly version: string;
+    readonly sourceHash: string;
+    readonly keyId?: string | undefined;
+  }) => { readonly ok: boolean; readonly code?: string; readonly reason?: string };
 }
 
 /**
@@ -595,6 +609,24 @@ export async function fusePackage(dir: string, opts: FusePackageOptions = {}): P
       );
     }
     warn(`LLN-FUSE-UNSIGNED-ALLOWED: fusing '${admitted.name}' from an UNSIGNED manifest because allowUnsigned was set`);
+  }
+
+  // ── Gate 2c (B5a): CENTRAL signed-registry admission — fail-closed ───────────
+  // A package may be validly self-signed yet not be the certified, listed artifact. When a registry
+  // gate is injected, the package must ALSO pass it (verified index + pinned-hash match + policy).
+  if (opts.registryCheck !== undefined) {
+    const verdict = opts.registryCheck({
+      name: admitted.name,
+      version: admitted.descriptor.version,
+      sourceHash: admitted.descriptor.wasmSha256,
+      keyId: admitted.keyId,
+    });
+    if (!verdict.ok) {
+      return fuseError(
+        verdict.code ?? "LLN-FUSE-REGISTRY-DENIED",
+        `central registry refused '${admitted.name}@${admitted.descriptor.version}': ${verdict.reason ?? "not admissible"}`,
+      );
+    }
   }
 
   // ── Gate 3: instantiate with ONLY capability-permitted host imports ──────────
