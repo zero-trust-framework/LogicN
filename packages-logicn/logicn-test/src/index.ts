@@ -18,3 +18,11 @@
 export * from "./types.js";
 export { parseCounts } from "./parse.js";
 export { resolveRoot, resolveTarget, WORKSPACE_MARKER } from "./paths.js";
+export {
+  runUnit,
+  runE2e,
+  runConformance,
+  runFidelity,
+  runAll,
+  DEFAULT_E2E_EXAMPLES,
+} from "./runners.js";
