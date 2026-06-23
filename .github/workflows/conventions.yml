@@ -1,0 +1,50 @@
+# Convention / quality gate (#6 — flip the enforcers toward CI-enforcing). Runs the build-free
+# `lint-conventions` umbrella (diagnostic-codes · doc-drift · provenance · lint-lln) on every push + PR.
+#
+# STAGE 1 (now): `--soft` = REPORT-ONLY. It prints the full violation report into the Actions log + the
+# step summary but does NOT fail the build, because the baseline is still > 0 (the documented plan:
+# drive the scanner baseline → 0, then drop `--soft` to make it enforcing). The pure-node enforcers need
+# no build and no `npm install` (they read git-tracked source/docs/artifacts), so this is CI-clean.
+# (Full test-suite CI is a separate task — the non-workspace monorepo needs per-package installs.)
+name: conventions
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  lint-conventions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Convention gate (report-only — STAGE 1 of #6)
+        run: |
+          echo '## Convention / quality gate (lint-conventions --soft)' >> "$GITHUB_STEP_SUMMARY"
+          echo '' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          node scripts/lint-conventions.mjs --soft | tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+        # --soft always exits 0: report-only until the baseline reaches 0, then this `--soft` is dropped.
+
+  # A green, build-free, zero-baseline SECURITY invariant — run ENFORCING (no --soft): a literal NUL byte in
+  # a source file makes it binary-flagged + invisible to grep/git review (an audit-evasion class). This job
+  # FAILS a PR that introduces one. It needs no build/install — the test reads source files directly.
+  hygiene-no-nul:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: No NUL bytes in source (enforcing)
+        run: node --test packages-logicn/logicn-core-compiler/tests/source-hygiene-no-nul.test.mjs
