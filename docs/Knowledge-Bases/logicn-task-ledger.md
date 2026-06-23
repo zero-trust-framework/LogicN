@@ -671,3 +671,18 @@ R&D-only; the `.tmf` engine + confidentiality build are **gated on owner go**. C
 | — | Ground `fp4_block` `PrecisionTechnique` with the verified NVFP4 byte facts (16×E2M1 + 1-byte scale = 9 B/block, lossy, not-ternary). `TECHNIQUE_BITS fp4_block=4` already correct. | U4 | ✅ done (comment) |
 
 **NOT usable / gated:** `.tmf` Rust engine · KEM-DEM impl · TMX/container/NVFP4 specs · ML-DSA-65 hybrid spec (feeds #34 when it lands) · FFSM Phase 2 · MeshQL DB layer.
+
+## 10. Outstanding R&D + To-Dos catalog (2026-06-23)
+
+The complete, current catalog of everything outstanding — R&D gaps, designed-but-unbuilt items, build items, and
+**missing/incomplete packages** — lives in **[logicn-outstanding-rd-and-todos-2026-06-23.md](logicn-outstanding-rd-and-todos-2026-06-23.md)** (single source of truth). Highlights:
+
+- **R&D dispatched to the bridge:** `0078` OCSP-staple · `0079` framework-structure · `0080` memory-cleanup ·
+  **`0081`** component photonic/tri gap verdicts · **`0082`** packages photonic/tri + **missing/incomplete/stub package status** ·
+  **`0083`** closed-capabilities photonic/tri · **`0084`** security-standards × K3 (**PCI/DSS + full OWASP + CWE/NIST/MITRE/SLSA**) ·
+  **`0085`** **RAG-vulnerabilities rulebook-curator** (`E:\projects\RAG-vulnerabilities`) → reconcile `LOGICN_SECURITY_RULEBOOK` with the LLN registry + RAG/LLM-retrieval threat class.
+- **R&D designed (build pending):** [`contract.permissions{}`](logicn-contract-permissions-design.md) (V_PERM + LLN-PERM-001..006) ·
+  DRCM degrade-only operand · CBOR SubstrateAttestation Tag-418 · core-economics/core-security photonic lanes — see [logicn-architecture-rd-2026-06-23.md](logicn-architecture-rd-2026-06-23.md).
+- **Top build items:** ① wire S1 cert-gate into `kernel.ts:307` (closes the audit's only HIGH) · ② verify+fix WAT codegen fail-opens #163/#165 · ③ tainted-by-default entry params · ④ graph auto-discover.
+- **Missing/incomplete packages:** `framework-api-server`/`-example-app` have no `src/` (build); the `data-*/web-*/db-*/target-{js,wasm,native,gpu}` stubs need a build-vs-stay-stub + photonic/tri verdict (R&D 0082).
+- **Phase-4 audit:** no critical/exploitable, no regressions; one HIGH (`kernel.ts:307` presence-only auth) → closed by build ①.
