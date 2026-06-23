@@ -5,10 +5,12 @@ not security-critical) — see the note at the end. The weighted **% completion 
 [logicn-roadmap-and-percent-audit-2026-06-23.md](logicn-roadmap-and-percent-audit-2026-06-23.md) (overall **~76%**,
 **53/53 · 5,042 · 0 fail**). Run `node scripts/status.mjs` for the live one-liner.
 
-**This session already landed:** S1 cert-gate · sentinel-egress flaky fix · graph-coverage fix (+28 pkgs) · 6
-architecture diagrams · architecture + compiler-intelligence R&D (designs) · `contract.permissions{}` design · the
-R&D results log + 95-row ledger · **3 token-saving dev tools** (status/rd-absorb/stray-docs, wired into the Stop
-cadence). **In flight:** the **api-server transport** (unblocks security #1).
+**This session already landed:** S1 cert-gate · **kernel K3-fold of `channelVerdict`** (fail-closed admission) ·
+**api-server transport** (fail-closed Node http adapter, slowloris timeouts, +5 e2e) · **bitnet cpu+gpu Standard-2
+governance preflight** (R&D 0086) · **SEC-002 cert-gate mutants** (8/8 killed) · sentinel-egress flaky fix ·
+graph-coverage fix (+28 pkgs) · 6 architecture diagrams · architecture + compiler-intelligence R&D (designs) ·
+`contract.permissions{}` design · the R&D results log + ledger · `C:\x` re-mine (18 net-new ideas) · **3
+token-saving dev tools** (status/rd-absorb/stray-docs, wired into the Stop cadence).
 
 ---
 
@@ -31,9 +33,12 @@ cadence). **In flight:** the **api-server transport** (unblocks security #1).
 4. **[MEDIUM] Tainted-by-default at entry boundaries** — the 34B bare-flow-param trust
    (`value-state-checker.ts:1162-1191`): an un-annotated param from a hostile caller is fail-open by default. Make
    boundary-entry flows tainted-by-default (posture-gated; non-breaking for internal flows). *(arch-rd #4.)*
-5. **[MEDIUM] Extend the SEC-002 mutant catalog** beyond the 3 B5a mutants — fuse-loader gates 1–3 / secret-egress /
-   i32-overflow / the cert-gate's 5 in-test guards — so **every** fail-closed gate is mutation-regression-protected.
-   Fix the `audit-mutation.mjs:28` `--config`-absent CLI crash.
+5. **[MEDIUM] ◑ Extend the SEC-002 mutant catalog** beyond the 3 B5a mutants. **cert-gate DONE 2026-06-23** — 5
+   TLSTP-S1 mutants registered (revocation-unknown→ALLOW · stale-good→ALLOW · throwing-check→ALLOW · pin-mismatch
+   soften · no-pin→ALLOW); full run **8/8 killed, 0 survived**; also fixed a harness gap (final rebuild now restores
+   *every* mutated package's dist, not just the first). The `audit-mutation.mjs:28` `--config`-absent CLI crash was
+   already fixed. **Remaining:** fuse-loader gates 1–3 / secret-egress / i32-overflow mutants — so **every**
+   fail-closed gate is mutation-regression-protected.
 6. **[MEDIUM] Flip the enforcers from report-only to CI-enforcing** — drive the scanner baseline 154→0 (+ doc-drift
    24, provenance 2) across Stages F/G/H, then drop `--soft` on `lint-conventions` + the scanner (Stage J). Today
    nothing can fail a build (the taxonomy/standards gap, dimension at 58%).
