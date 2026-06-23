@@ -15,7 +15,7 @@
 import { existsSync } from "node:fs";
 import { resolveRoot, resolveTarget } from "./paths.js";
 import { runNode } from "./spawn.js";
-import { parseCounts } from "./parse.js";
+import { parseCounts, parseAggregateTotal } from "./parse.js";
 import type {
   AllOptions,
   CheckResult,
@@ -76,10 +76,14 @@ export async function runUnit(opts: UnitOptions = {}): Promise<CheckResult> {
   for (const p of opts.packages ?? []) args.push(p);
 
   const r = runNode(args, root, opts);
-  const counts = parseCounts(r.output);
+  // run-all-tests.cjs prints its own cross-package "<N> tests total" line, not the
+  // node:test "ℹ tests N" format, so fall back to that for the aggregate count.
+  const parsed = parseCounts(r.output);
+  const total = parsed.tests ?? parseAggregateTotal(r.output);
+  const counts = { tests: total, pass: parsed.pass, fail: parsed.fail };
   const ok = r.exitCode === 0;
   const detail = ok
-    ? `unit suites passed${counts.tests != null ? ` (${counts.tests} tests)` : ""}`
+    ? `unit suites passed${total != null ? ` (${total} tests)` : ""}`
     : r.timedOut
       ? "unit run timed out"
       : `unit suites failed (exit ${r.exitCode})`;

@@ -16,7 +16,7 @@
 // exitCode — never as a silent pass.
 
 export * from "./types.js";
-export { parseCounts } from "./parse.js";
+export { parseCounts, parseAggregateTotal } from "./parse.js";
 export { resolveRoot, resolveTarget, WORKSPACE_MARKER } from "./paths.js";
 export {
   runUnit,

@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   parseCounts,
+  parseAggregateTotal,
   resolveRoot,
   resolveTarget,
   WORKSPACE_MARKER,
@@ -40,6 +41,14 @@ test("parseCounts: a missing line yields null (never throws, never guesses)", ()
     pass: null,
     fail: null,
   });
+});
+
+test("parseAggregateTotal: reads run-all-tests.cjs's '<N> tests total' line", () => {
+  assert.equal(
+    parseAggregateTotal("1/1 packages passed · 4993 tests total\n"),
+    4993,
+  );
+  assert.equal(parseAggregateTotal("no total here"), null);
 });
 
 // ── resolveRoot / resolveTarget (fail-closed) ────────────────────────────────

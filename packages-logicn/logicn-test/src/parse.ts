@@ -21,3 +21,13 @@ export function parseCounts(output: string): TestCounts {
   };
   return { tests: grab("tests"), pass: grab("pass"), fail: grab("fail") };
 }
+
+/**
+ * Parse the aggregate "<N> tests total" line that scripts/run-all-tests.cjs
+ * prints in its summary (its cross-package total is not in node:test format, so
+ * parseCounts alone returns null for a unit run). Returns null when absent.
+ */
+export function parseAggregateTotal(output: string): number | null {
+  const m = output.match(/(\d+)\s+tests total/);
+  return m ? Number(m[1]) : null;
+}
