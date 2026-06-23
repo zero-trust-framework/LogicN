@@ -39,9 +39,12 @@ token-saving dev tools** (status/rd-absorb/stray-docs, wired into the Stop caden
    3169/3170, all record-update/layout/fail-closed/tokenize-parity/f64 green. *(Also fixed a found-in-passing
    hygiene bug: `scripts/audit-mutation.mjs` had a literal NUL byte — the SEC-002 tool itself was binary-flagged /
    grep-invisible; replaced with the `\0` escape, `source-hygiene-no-nul` now green.)*
-3. **[CRITICAL-open] #149 — CI secret-scan + re-sign legacy old-key artifacts.** The rotated-but-leaked signing key
-   `8eecf4…` may still be on the public remote; add gitleaks/trufflehog in a real `.github/workflows/` and re-sign
-   any exclusively-old-key-signed artifacts. The last open key-exposure P0.
+3. **[CRITICAL] ◑ #149 — CI secret-scan DONE 2026-06-23; re-sign owner-gated.** Added `.github/workflows/secret-scan.yml`
+   (gitleaks on push/PR/weekly-full-history/manual, fail-closed) + `.gitleaks.toml` (default rule pack; allowlists ONLY
+   the TLS test fixtures + other test-fixture creds by path). Local pre-scan clean (no real secrets in source). **Remaining
+   (owner-gated):** if the full-history sweep surfaces the legacy `8eecf4…` PRIVATE key, **re-sign** any exclusively-old-key-signed
+   artifacts with the rotated key (offline custody, gated on #34) + a **history rewrite**. The scan deliberately does NOT
+   allowlist that key, so the gate stays red until remediated. (Key already revoked → Deny.)
 4. **[MEDIUM] Tainted-by-default at entry boundaries** — the 34B bare-flow-param trust
    (`value-state-checker.ts:1162-1191`): an un-annotated param from a hostile caller is fail-open by default. Make
    boundary-entry flows tainted-by-default (posture-gated; non-breaking for internal flows). *(arch-rd #4.)*
