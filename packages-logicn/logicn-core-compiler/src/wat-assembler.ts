@@ -236,7 +236,14 @@ export async function executeWASMFlow(
   args: readonly number[],
 ): Promise<WASMExecutionResult> {
   const assembled = await assembleWAT(watSource);
-  if (!assembled.valid) {
+  // #163 defense-in-depth: a wabt-REJECTED module falls back to the minimal-encoder
+  // STUB with `valid:true` + a "NOT a faithful compile" diagnostic. Gating on `valid`
+  // ALONE would RUN that stub and return a WRONG VALUE instead of trapping (the exact
+  // fail-open behind the comment-swallows-paren bug). A faithful wabt assembly returns
+  // `diagnostics:[]` (see assembleWithWabt); the stub always carries a diagnostic — so
+  // treat ANY diagnostic as a decline. This is the pervasive `valid && diagnostics
+  // .length===0` convention already used across the test suite.
+  if (!assembled.valid || assembled.diagnostics.length > 0) {
     return {
       flowName,
       args,

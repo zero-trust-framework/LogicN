@@ -1006,6 +1006,13 @@ class ValueStateChecker {
       case "flowDecl":
       case "secureFlowDecl":
       case "pureFlowDecl":
+      // #0093 / guarded-flow fail-open fix: `guardedFlowDecl` was omitted here, so
+      // guarded-flow params were NEVER registered as value-state bindings — a
+      // tainted/untrusted-origin param reaching a governed sink emitted ZERO
+      // diagnostics (LLN-VALUESTATE-003/004/005 all silent) for the whole tier.
+      // Every sibling pass (runtime, effect-checker, taint-checker) already
+      // enumerates guardedFlowDecl; the value-state checker was the lone omission.
+      case "guardedFlowDecl":
         this.pushScope();
         // Register parameter bindings so SecureString params are tracked
         for (const child of node.children ?? []) {

@@ -1020,7 +1020,7 @@ export function emitWATExpr(
       const constVal = staticConsts.get(name);
       if (constVal !== undefined) return `(i32.const ${constVal}) ;; static ${name}`;
       // Unknown identifier — emit with comment for diagnostics.
-      return `(unreachable) ;; unresolved: ${name} — fail-closed (emitter cannot lower; #128-sibling)`;
+      return `(unreachable) (; unresolved: ${name} — fail-closed (emitter cannot lower; #128-sibling) ;)`;
     }
 
     case "memberExpr": {
@@ -1058,7 +1058,7 @@ export function emitWATExpr(
             // pointer. Fail CLOSED (trap) — never read reserved scratch at (i32.const 0),
             // which would silently load a wrong-but-plausible value instead of trapping.
             if (local === undefined) {
-              return `(unreachable) ;; unresolved record base: ${receiverName} — fail-closed (emitter cannot lower; #163)`;
+              return `(unreachable) (; unresolved record base: ${receiverName} — fail-closed (emitter cannot lower; #163) ;)`;
             }
             const off = idx * WAT_REC_FIELD_SIZE;
             // NO trailing ;; comment — this expression is used INLINE (e.g. inside
@@ -1068,7 +1068,7 @@ export function emitWATExpr(
           }
         }
       }
-      return `(unreachable) ;; unresolved member: ${memberName} — fail-closed (emitter cannot lower; #128-sibling)`;
+      return `(unreachable) (; unresolved member: ${memberName} — fail-closed (emitter cannot lower; #128-sibling) ;)`;
     }
 
     case "numberLiteral": {
@@ -1121,11 +1121,16 @@ export function emitWATExpr(
           const R = rFloat165 ? right : `(f64.convert_i32_s ${right})`;
           return `(${fOp} ${L} ${R})`;
         }
+        // #165 fail-open fix: a float operand with an i32-only op (`%`, bitwise) has no
+        // f64 lowering (fOp undefined). Falling through to the `watOp` path below would
+        // emit an i32 op (e.g. i32.rem_s) over f64 operands — a wrong-typed module /
+        // wrong value (CWE-704). Fail-closed TRAP instead (inline-safe block comment).
+        return `(unreachable) (; #165: i32-only op over float operand — fail-closed ;)`;
       }
       if (watOp !== undefined) {
         return `(${watOp} ${left} ${right})`;
       }
-      return `(unreachable) ;; unknown op: ${op} — fail-closed (emitter cannot lower; #128-sibling)`;
+      return `(unreachable) (; unknown op: ${op} — fail-closed (emitter cannot lower; #128-sibling) ;)`;
     }
 
     case "unaryExpr": {
@@ -1133,7 +1138,7 @@ export function emitWATExpr(
       const operand = node.children?.[0] ? emitWATExpr(node.children[0], vars, staticConsts) : "(i32.const 0)";
       if (op === "-") return `(call $lln_checked_sub_i32 (i32.const 0) ${operand})`; // -INT32_MIN overflows → trap
       if (op === "!")  return `(i32.eqz ${operand})`;
-      return `(unreachable) ;; unknown unary: ${op} — fail-closed (emitter cannot lower; #128-sibling)`;
+      return `(unreachable) (; unknown unary: ${op} — fail-closed (emitter cannot lower; #128-sibling) ;)`;
     }
 
     case "callExpr": {
@@ -1210,7 +1215,7 @@ export function emitWATExpr(
         // plausible value instead of trapping). OUTSIDE an emission walk (recordCtx ===
         // null) keep the placeholder so analysis-only pipeline callers are unchanged.
         if (recordCtx !== null) {
-          return `(unreachable) ;; #record-update: base type unknown — fail-closed (emitter cannot lower; #163)`;
+          return `(unreachable) (; #record-update: base type unknown — fail-closed (emitter cannot lower; #163) ;)`;
         }
         return `(i32.const 0)`;
       }
@@ -1388,7 +1393,7 @@ export function emitWATExpr(
       const arms = node.children?.slice(1).filter(c => c.kind === "matchArm") ?? [];
 
       if (subject === undefined || arms.length === 0) {
-        return `(unreachable) ;; empty match — fail-closed (malformed; emitter cannot lower; #128-sibling)`;
+        return `(unreachable) (; empty match — fail-closed (malformed; emitter cannot lower; #128-sibling) ;)`;
       }
 
       const subjectWat = emitWATExpr(subject, vars, staticConsts);
@@ -1475,7 +1480,7 @@ export function emitWATExpr(
     }
 
     default:
-      return `(unreachable) ;; unhandled: ${node.kind} — fail-closed (emitter cannot lower; #128-sibling)`;
+      return `(unreachable) (; unhandled: ${node.kind} — fail-closed (emitter cannot lower; #128-sibling) ;)`;
   }
 }
 
