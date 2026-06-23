@@ -423,6 +423,10 @@
           "coldCallsPerSecond: execution without cache (first-call per unique input)"
         ]
       }
+    },
+    "units": {
+      "benchId": "arithmetic-threshold",
+      "skipped": true
     }
   },
   {
@@ -653,6 +657,10 @@
           "coldCallsPerSecond: execution without cache (first-call per unique input)"
         ]
       }
+    },
+    "units": {
+      "benchId": "six-digit-guess",
+      "skipped": true
     }
   },
   {
@@ -1059,6 +1067,10 @@
           "coldCallsPerSecond: execution without cache (first-call per unique input)"
         ]
       }
+    },
+    "units": {
+      "benchId": "fibonacci-recursive",
+      "skipped": true
     }
   },
   {
@@ -1475,6 +1487,10 @@
           "coldCallsPerSecond: execution without cache (first-call per unique input)"
         ]
       }
+    },
+    "units": {
+      "benchId": "governance-cost",
+      "skipped": true
     }
   },
   {
@@ -1657,6 +1673,10 @@
           "coldCallsPerSecond: execution without cache (first-call per unique input)"
         ]
       }
+    },
+    "units": {
+      "benchId": "hardware-targets",
+      "skipped": true
     }
   },
   {
@@ -2178,7 +2198,7 @@
         "notes": [
           "Float32Array matrix multiply — V8 JIT may auto-vectorise to AVX2"
         ],
-        "normThroughput": null,
+        "normThroughput": 599106519,
         "throughputUnit": "cells/s",
         "rawThroughput": 2285.41
       },
@@ -2200,7 +2220,7 @@
         "notes": [
           "Pure Python (slow, install numpy for real numbers)"
         ],
-        "normThroughput": null,
+        "normThroughput": 11804344,
         "throughputUnit": "cells/s",
         "rawThroughput": 45.03
       },
@@ -2216,7 +2236,7 @@
         "notes": [
           "Rust serial float32 matmul — compiler may auto-vectorise"
         ],
-        "normThroughput": null,
+        "normThroughput": 1469429842,
         "throughputUnit": "cells/s",
         "rawThroughput": 5605.43
       },
@@ -2232,7 +2252,7 @@
         "notes": [
           "Rust serial float32 matmul — compiler may auto-vectorise"
         ],
-        "normThroughput": null,
+        "normThroughput": 1309220536,
         "throughputUnit": "cells/s",
         "rawThroughput": 4994.28
       },
@@ -2265,7 +2285,7 @@
           "Compile (one-time): 1.2ms. Execution: pure WASM, no JS tree-walker.",
           "LogicN integer matmul (scaled ×1000) compiled to WASM"
         ],
-        "normThroughput": null,
+        "normThroughput": 458081567,
         "throughputUnit": "cells/s",
         "rawThroughput": 14315049.92
       },
@@ -2282,7 +2302,7 @@
         "notes": [
           "Deno WebGPU WGSL compute shader — 8×8 workgroups"
         ],
-        "normThroughput": null,
+        "normThroughput": 1617889853,
         "throughputUnit": "cells/s",
         "rawThroughput": 771.47
       },
@@ -2314,7 +2334,7 @@
           "externalAfter": 22053893,
           "externalDelta": -139925
         },
-        "normThroughput": null,
+        "normThroughput": 633810,
         "throughputUnit": "cells/s",
         "rawThroughput": 19
       },
@@ -2346,7 +2366,7 @@
           "externalAfter": 22053893,
           "externalDelta": 0
         },
-        "normThroughput": null,
+        "normThroughput": 695121,
         "throughputUnit": "cells/s",
         "rawThroughput": 21
       },
@@ -2381,17 +2401,17 @@
           "warmCallsPerSecond: execution with LRU cache (deployment steady-state)",
           "coldCallsPerSecond: execution without cache (first-call per unique input)"
         ],
-        "normThroughput": null,
+        "normThroughput": 689272259,
         "throughputUnit": "cells/s",
         "rawThroughput": 21034.92
       }
     },
     "units": {
       "benchId": "matrix-multiply",
-      "comparable": false,
-      "unit": "cells/s",
-      "status": "FLAGGED",
-      "reason": "workload SIZE differs by runtime — LogicN/WASM n=32 (1024 cells, 32³ mul-adds), node/python/rust n=64 (4096 cells, 64³), Deno n=128 (16384 cells). Per-cell work (dot-product length n) also differs, so no shared unit is apples-to-apples until n is unified.",
+      "comparable": true,
+      "unit": "mul-adds/s",
+      "status": "PASS",
+      "normalized": 9,
       "problems": []
     }
   },
@@ -2663,6 +2683,10 @@
           "coldCallsPerSecond: execution without cache (first-call per unique input)"
         ]
       }
+    },
+    "units": {
+      "benchId": "crypto-ops",
+      "skipped": true
     }
   },
   {
@@ -2928,6 +2952,10 @@
           "coldCallsPerSecond: execution without cache (first-call per unique input)"
         ]
       }
+    },
+    "units": {
+      "benchId": "text-html",
+      "skipped": true
     }
   },
   {
@@ -4533,6 +4561,10 @@
           "Sequential (not concurrent) — isolates server throughput from client parallelism"
         ]
       }
+    },
+    "units": {
+      "benchId": "http-throughput",
+      "skipped": true
     }
   },
   {
@@ -4554,6 +4586,10 @@
           "10320 files/sec"
         ]
       }
+    },
+    "units": {
+      "benchId": "naming-check",
+      "skipped": true
     }
   },
   {
@@ -4576,6 +4612,10 @@
           "Receipt throughput: 22615 receipts/sec"
         ]
       }
+    },
+    "units": {
+      "benchId": "context-receipt",
+      "skipped": true
     }
   },
   {
@@ -4598,6 +4638,10 @@
           "Top \"verify password\": verifyPassword"
         ]
       }
+    },
+    "units": {
+      "benchId": "intelligence-search",
+      "skipped": true
     }
   },
   {
@@ -4623,6 +4667,10 @@
           "Throughput: 1555 files/sec"
         ]
       }
+    },
+    "units": {
+      "benchId": "provenance-trace",
+      "skipped": true
     }
   }
 ]
