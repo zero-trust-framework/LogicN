@@ -1,6 +1,6 @@
 # The `.tmf` Trust-Capsule Format
 
-### A content-addressed, integrity-verified, post-quantum-signable **universal file and communications container**
+### A content-addressed, integrity-verified, **quantum-resilient** universal file and communications container
 
 **Defensive-publication note · v0 · 2026-06-23**
 
@@ -16,7 +16,7 @@
 
 ## Abstract
 
-`.tmf` ("trust-capsule" file) is a container format that binds an ordered set of payload sections to a single 256-bit cryptographic root via **TMX-256**, a 3-ary Merkle tree built on the FIPS-202 XOF SHAKE256, and (optionally) signs that root with the post-quantum signature **ML-DSA-65** (FIPS 204). Payloads may be confidentiality-sealed with a **KEM-DEM** scheme (ML-KEM encapsulation + an AEAD data-encryption mode). Crucially, the integrity layer is **codec-agnostic**: TMX-256 hashes a section's bytes opaquely, so `.tmf` is **not only a database substrate** — it is a **universal file format and communications container** that carries images, audio, video (with seekable streaming framing), documents (including mathematical and chemical markup), and structured data (JSON/XML/CBOR) under one integrity, authenticity, and confidentiality envelope. This note specifies the construction, its mathematics, its usage, and its security properties, and maps every primitive to its authoritative source.
+`.tmf` ("trust-capsule" file) is a container format that binds an ordered set of payload sections to a single 256-bit cryptographic root via **TMX-256**, a 3-ary Merkle tree built on the FIPS-202 XOF SHAKE256, and (optionally) signs that root with the **quantum-resilient** post-quantum signature **ML-DSA-65** (FIPS 204). Payloads may be confidentiality-sealed with a **KEM-DEM** scheme — a **quantum-resilient** ML-KEM (FIPS 203) key encapsulation plus an AEAD data-encryption mode. The authenticity and confidentiality layers are therefore **quantum-resilient by construction** (NIST PQC standards), with a hybrid Ed25519 + ML-DSA-65 transition form recommended during migration; the integrity hash (SHAKE256, 256-bit) retains a 128-bit security margin against Grover-style quantum search. Crucially, the integrity layer is **codec-agnostic**: TMX-256 hashes a section's bytes opaquely, so `.tmf` is **not only a database substrate** — it is a **universal file format and communications container** that carries images, audio, video (with seekable streaming framing), documents (including mathematical and chemical markup), and structured data (JSON/XML/CBOR) under one integrity, authenticity, and confidentiality envelope. This note specifies the construction, its mathematics, its usage, and its security properties, and maps every primitive to its authoritative source.
 
 ---
 
@@ -31,6 +31,8 @@ A `.tmf` file is a **trust capsule**: a self-describing container whose entire c
 3. **A communications container** — large payloads (audio/video/bulk data) use a segmented, seekable, anti-truncation streaming mode, so `.tmf` can frame a *transmitted* stream the same way it frames a *stored* file. A relay sees opaque ciphertext plus a codec tag; it never sees decoded content.
 
 **What `.tmf` is NOT.** It is **not a new image/video/audio codec**: a photo stays JPEG/PNG/AVIF *bytes* and a video stays H.264/AV1 *bytes*; `.tmf` adds coordinate-bound integrity, authenticity, and confidentiality **around** those bytes (§6). It is **not** a database engine, query language, or transport protocol. It introduces **no new cryptography** (§"Novelty disclaimer").
+
+> **Positioning — an honest aspiration, not a claim.** Combining *all* of {content-addressed integrity, quantum-resilient post-quantum authenticity, confidentiality, selective-disclosure inclusion proofs, universal media/document/structured modality, and seekable streaming for communications} in **one fail-closed format** is unusual — most real systems assemble these from several *separate* formats and layers stacked by hand. In that sense `.tmf` aims to be a "unicorn" format: the rare single capsule that does all of it at once. **Whether it earns that status is for adoption and independent measurement to decide — not this note.** Consistent with the novelty disclaimer above, this document claims only the construction and its stated properties; it does **not** claim `.tmf` is the best, fastest, or a uniquely novel format. The engineering value is the *composition discipline* (a deterministic, byte-precise, fail-closed wrapping order over borrowed standards), not an invention.
 
 > **Crypto-on-core boundary (LLN-SUBSTRATE-001).** Every cryptographic operation in `.tmf` — the SHAKE256 hashing, the ML-DSA signature, the KEM-DEM seal — runs on the **digital/binary** substrate and is **bit-exact and reproducible**. The "ternary" in TMX (the 3-ary tree shape) is a *data-structure modelling choice*, **not** a use of analog/photonic/ternary hardware in the cryptographic path, and carries **no performance claim** (§5.3). This separation is a hard line: analog/probabilistic substrates never carry a cryptographic operation.
 
