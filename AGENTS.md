@@ -25,9 +25,14 @@ intent → governed execution plan → coordinated compute → audit proof
 | 1 | Project graph + CLI | Complete |
 | 2 | Typed content blocks + string/char/byte safety | Complete |
 | 3 | Scanner-level safety enforcement | Complete (28/28 tests) |
-| 4 | Lexer + Parser + AST | **In progress** |
-| 5 | Type + Effect Checker | Planned |
-| 6 | IR + Target Planner | Planned |
+| 4 | Lexer + Parser + AST | Complete (Stage-A) |
+| 5 | Type + Effect Checker | Complete (Stage-A) |
+| 6 | IR (GIR) + Target Planner + WAT emitter | Complete (Stage-A) |
+
+> **Stage-A status (2026-06-23):** the full pipeline lexer→parser→type/effect/value-state→governance-verifier→GIR→WAT
+> is shipped and green (`logicn-core-compiler` 3,684 tests; whole suite 53/53 · 5,042 · 0 fail). The remaining
+> frontier is **Stage-B self-hosting WASM byte-parity** (only `tokenize` reaches it today) and the **real
+> `DSS.wasm`** Wasmtime runtime (#102–106, still a stub). See `docs/Knowledge-Bases/logicn-roadmap-and-percent-audit-2026-06-23.md`.
 
 ## Grammar — Current v0.1 Flow Forms
 

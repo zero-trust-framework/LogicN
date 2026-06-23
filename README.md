@@ -4,7 +4,21 @@
 
 LogicN is built for organisations where software failure is not acceptable — financial platforms, healthcare systems, government services, and regulated enterprise. Every execution is **declared, verified, and audited** by design, not by convention.
 
-> **Maturity (honest status, 2026-06-21).** LogicN is an **advanced prototype with several hardened zero-trust subsystems** — *not* yet a production-complete platform. The **compiler, security, and governance core are production-grade** (53/53 packages, 4,980 tests, fail-closed border check). The **application-framework layer is now substantially real**: the deny-by-default admission/fusion border (3 gates + multi-module linker + revocation), the `logicn new app` scaffolder, and the governed package resolver are shipped and tested (60 App-Kernel tests) — the *signed registry index* and a *richer example app* are the remaining gaps. Stage-B self-hosting is in progress (≈80%), and the "Tower" compute layer is a **governed software simulator + bridge-attestation runtime, not real photonic-CPU virtualisation**. See [the 2026-06-21 roadmap + % audit](docs/Knowledge-Bases/logicn-roadmap-and-percent-audit-2026-06-21.md), [the framework plan](docs/Knowledge-Bases/logicn-framework-plan-2026-06-21.md), and [the 2026-06-17 senior-developer audit](notes/2026-06-17-zero-trust-senior-developer-project-audit.md).
+> **Maturity (honest status, 2026-06-23).** LogicN is an **advanced prototype with several hardened zero-trust subsystems** — *not* yet a production-complete platform. The **compiler, security, and governance core are production-grade** (53/53 packages, 5,042 tests, fail-closed border check). The **application-framework layer is now substantially real**: the deny-by-default admission/fusion border (3 gates + multi-module linker + revocation), the `logicn new app` scaffolder, and the governed package resolver are shipped and tested (87 App-Kernel tests). The **governed HTTP transport (B8) is unlocked and in progress** — the TLSTP **S1 K3 cert/channel-validation gate** landed (`logicn-core-network`, 126 tests, fail-closed `revocation-unknown → DENY`), though it is not yet wired into the live kernel auth path; the *servable api-server / example-app* and the *signed registry index* are the remaining framework gaps. Stage-B self-hosting is in progress (≈80%), and the "Tower" compute layer is a **governed software simulator + bridge-attestation runtime, not real photonic-CPU virtualisation**. See [the 2026-06-23 roadmap + % audit](docs/Knowledge-Bases/logicn-roadmap-and-percent-audit-2026-06-23.md) and [the framework plan](docs/Knowledge-Bases/logicn-framework-plan-2026-06-21.md).
+
+---
+
+## The Zero-Trust thesis
+
+LogicN optimises for **mathematical proof and absolute Zero-Trust containment** — an ecosystem that trusts absolutely no one: **not the developer, not the network, not the host OS.**
+
+- **Compiler.** Verifies your pre-resolved policy and execution DAG strictly for deterministic, mathematically reproducible correctness.
+- **I/O philosophy.** A mathematically-proven wall against the OS kernel. LogicN assumes the kernel is *already a compromised, hostile environment*. Rather than injecting OS-level I/O into a `main`, the governed HTTP transport adapter **denies native capabilities by default**; the host acts as a *dumb byte-mover* and authorisation is handled strictly by the fail-closed `vAnd` Kleene-K3 logic gate.
+- **Package management.** A signed central registry index with fail-closed kernel verification — cryptographic manifests, content-addressed hash-pinning, and transitive capability masks.
+- **Memory.** Treated as a highly hostile, actively-governed physical boundary.
+- **TLSTP (zero-middleware).** LogicN routes around the OS kernel using the governed HTTP adapter: the host reads raw encrypted packets off the wire and writes them as *unparsed byte-arrays* straight into WASM linear memory; decryption happens strictly **inside the WASM sandbox**. The kernel never sees plaintext.
+
+> **What is shipped vs. design intent.** The **compiler**, the **`vAnd` Kleene-K3 authorisation gate**, **signed package admission** (hash-pin · signature · revocation · closed capabilities), and the **S1 cert/channel-validation gate** are *shipped and tested today*. The full **kernel-bypass / in-sandbox isolation** — decryption strictly inside a real WASM sandbox with the host as a pure byte-mover — is the **target architecture**: it depends on the real `DSS.wasm` Wasmtime TCB (#102–106), which is still a stub. Treat the kernel-bypass / zero-middleware guarantees as **design intent**, not yet a shipped runtime property.
 
 ---
 
@@ -54,7 +68,7 @@ Run on an **Intel i9-9900K (8C/16T) + NVIDIA RTX 2060**, across Rust (native, ge
 | **Lexer / Parser / Governance Verifier / Contract blocks / Value-state checker** | 100% | full pipeline |
 | **DRCM Phases 1–7 (Governed Tower — Stage-A simulation)** | 100% | real `DSS.wasm` is Post-P9 (#102–106) |
 | **CBOR Manifests (RFC 8949)** | 100% | |
-| **Tests — full suite** | 100% | **53/53 packages · 4,980 tests · 0 failures** |
+| **Tests — full suite** | 100% | **53/53 packages · 5,042 tests · 0 failures** |
 | **Resilience — first-class fault handlers (0017)** | shipped | `on_*_fault` → fail-closed `halt` default + LLN-FAULT-001/003 + `GIRFlow.faultHandlers` |
 | **Contract-driven test generation (0016)** | 5/5 vector dimensions | fault-injection · effect-egress · capability-denial · boundary/fuzz · substrate-violation (over GIR) |
 | **Type checker / Effect checker** | ~90% | |
@@ -67,10 +81,15 @@ Run on an **Intel i9-9900K (8C/16T) + NVIDIA RTX 2060**, across Rust (native, ge
 | **Passive Execution Plans & Target Bridges** | ~22% | |
 | **AI Inference Tower (BitNet / GroqCloud / NVFP4)** | ~12% | default bridges are governed dev stubs/simulators |
 | **Photonic / Ternary Computing** | ~3% | software simulation only (not hardware) |
-| **Application-framework layer** | ~75% | admission/fusion border (3 gates + `planComposition` multi-module linker + revocation, 60 tests) · `logicn new app` scaffolder · governed resolver (hash/sig/registry/install-deny + LLN-PKG-006) — all real + tested. Signed registry index + a richer example app are the remaining gaps |
+| **Application-framework layer** | ~72% | admission/fusion border (3 gates + `planComposition` multi-module linker + revocation, 87 tests) · `logicn new app` scaffolder · governed resolver (hash/sig/registry/install-deny + LLN-PKG-006) — all real + tested. **B8 HTTP transport unlocked + in progress** (S1 cert-gate landed, kernel-wiring pending). Servable api-server/example-app + signed registry index are the remaining gaps |
+| **B8 governed HTTP transport (TLSTP)** | in progress | **S1 K3 cert/channel-validation gate shipped** (`logicn-core-network`, 126 tests, fail-closed `revocation-unknown → DENY`, SEC-002 mutation-guarded) — wiring into live kernel auth + 0066 first-3 (handshake-bind · raw-byte shim · ECH/OHTTP) are next |
 | **Tri-Pipe fault tolerance (binary/hybrid/photonic)** | re-R&D | shipped: fail-closed core · arena + overflow traps · DbC post-conditions · K3 fail-safe · NMR tolerance · Freivalds verify · DRCM containment. A multi-agent stability re-R&D is in flight |
 
-> **Full roadmap + % audit** → [logicn-roadmap-and-percent-audit-2026-06-21.md](docs/Knowledge-Bases/logicn-roadmap-and-percent-audit-2026-06-21.md) · [build-roadmap](docs/Knowledge-Bases/logicn-build-roadmap.md)
+> **Full roadmap + % audit** → [logicn-roadmap-and-percent-audit-2026-06-23.md](docs/Knowledge-Bases/logicn-roadmap-and-percent-audit-2026-06-23.md) · [build-roadmap](docs/Knowledge-Bases/logicn-build-roadmap.md)
+>
+> **Recent (2026-06-23)** → **TLSTP S1 cert-gate** — the B8 build-first K3 cert/channel-validation gate landed (`logicn-core-network`, 126 tests, fail-closed `revocation-unknown → DENY`, reuses the shipped `vAnd`/`allOf`/`decideAtBoundary` K3 rails, no new crypto; adversarially verified across 4 lenses + SEC-002 mutation-guarded). Kernel-wiring (live admission) is the next step. **53/53 · 5,042** · overall completion **~76%**.
+>
+> **Recent (2026-06-22)** → **B8 HTTP transport UNLOCKED** by owner · **4-process QA-tooling program complete**: SEC-002 mutation/red-team gate (kills 3 B5a mutants) · DOC-004 doc-drift · BLD-003 artifact provenance/freshness (folds #216) · #218 derived code-registry + coverage cross-check · kb-index KB search over ~506 docs.
 >
 > **Recent (2026-06-21)** → **application-framework build**: `logicn new app` scaffolder (B1) · unified admission capability vocabulary (B2 — compiler-canonical, alias-aware, drift-guarded) · signing-key **revocation** wired into the package resolver + bridge-attestation (+ new `bridge-attest verify`) · high-authority cap tiering at `border-check` · framework plan + flowchart + roadmap/% audit · **Tri-Pipe fault-tolerance re-R&D** launched · **53/53 · 4,980** · governance change-class **NEUTRAL — no authority widening** · graph 3,750 nodes / 4,148 edges.
 >
@@ -212,7 +231,7 @@ At runtime the app reaches the world **only** through the deny-by-default **Capa
 ### Package layout (status-labelled)
 ```
 packages-logicn/
-├── logicn-core-compiler/     ACTIVE — full pipeline, 3,679 tests
+├── logicn-core-compiler/     ACTIVE — full pipeline, 3,684 tests
 ├── logicn-core-security/     ACTIVE — taint profiles, redaction, OWASP boundaries
 ├── logicn-core-economics/    ACTIVE — CostGraph, ValueGraph, breach-risk matrix
 ├── logicn-core-logic/        ACTIVE — Tri, Decision, RiskLevel
@@ -222,7 +241,8 @@ packages-logicn/
 ├── logicn-devtools-security/ ACTIVE — runSecurityAudit, PCI DSS 4.0.1
 ├── logicn-devtools-pci/      ACTIVE — PCI DSS 4.0.1 (LLN-PCI-001..010)
 ├── logicn-devtools-benchmarks/ ACTIVE — 23 benchmarks across all runtimes
-├── logicn-framework-app-kernel/ ACTIVE — admission/fusion host: fuse-loader 3 gates + planComposition multi-module linker + revocation (60 tests)
+├── logicn-core-network/      ACTIVE — network I/O policy + egress/inbound guards + TLSTP S1 K3 cert-validation gate (126 tests)
+├── logicn-framework-app-kernel/ ACTIVE — admission/fusion host: fuse-loader 3 gates + planComposition multi-module linker + revocation (87 tests)
 ├── logicn-framework-{example-app,api-server}/  REFERENCE — REST adapter (e2e-fused) + worked-example scaffolds
 └── logicn-target-*, data/db/web/registry  PLANNED/PARTIAL — several documentation-only
 
@@ -248,7 +268,7 @@ Layer 5: ProofGraph + .lmanifest      — cryptographic audit proof (Ed25519; hy
 ## Running the Tools
 
 ```bash
-# Tests — core suite (4 packages) / full suite (53 packages, 4,980 tests)
+# Tests — core suite (4 packages) / full suite (53 packages, 5,042 tests)
 node scripts/run-all-tests.cjs --core
 npm test
 
