@@ -942,6 +942,7 @@ LLN-BINDING-006       Cannot change the type of a 'mut' binding on reassignment 
 LLN-VALUESTATE-005    A value derived from an unsafe binding reached a governed sink (taint survives transformation, e.g. .trim())
 LLN-VALUESTATE-006    A protected value used where the plain type is required (declare 'protected X' or pass an authorised gate)
 LLN-VALUESTATE-007    A redacted value cannot be converted back to its original type (redaction is irreversible)
+LLN-VALUESTATE-008    An unmarked boundary input (a bare param of a secure/guarded flow) reached a governed sink without a gate — the "34B hole" (R&D 0093). Stage-1 WARNING; escalates to error in production/deterministic. Fix: validate.*/sanitize.* before the sink, or declare the param 'tainted' and gate it.
 ```
 
 ### Effect / stdlib

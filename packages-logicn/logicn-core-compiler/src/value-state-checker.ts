@@ -682,9 +682,13 @@ function buildFullCallName(node: AstNode): string {
 // Format: [safetyPrefix " "] name [":" " " typeName [...postfixQualifiers]]
 // ---------------------------------------------------------------------------
 
+// `boundary-untrusted` (R&D 0093, the "34B hole"): a BARE param at a posture-gated
+// entry boundary (secure/guarded flow). It behaves EXACTLY like `undefined` (trusted)
+// at every existing site — all of which test `=== "unsafe"`/`"safe"` — so it is inert
+// for VS-001/002/004/005/006/007; it fires ONLY LLN-VALUESTATE-008 at a governed sink.
 interface BindingInfo {
   readonly name: string;
-  readonly safetyPrefix: "unsafe" | "safe" | undefined;
+  readonly safetyPrefix: "unsafe" | "safe" | "boundary-untrusted" | undefined;
   readonly typeName: string;
   /** Location where this binding was declared — used for Rust-style related diagnostics. */
   readonly declaredAt?: SourceLocation;
@@ -938,6 +942,9 @@ class ValueStateChecker {
   private readonly userGates: ReadonlySet<string>;
   // Phase 4.3: user-defined flow names (collected from *flowDecl nodes)
   private readonly userFlows: ReadonlySet<string>;
+  // R&D 0093: the flow-kind currently being walked, so registerParamBinding knows whether
+  // a bare param sits at a posture-gated entry boundary (secure/guarded → boundary-untrusted).
+  private currentFlowKind: string | undefined;
 
   constructor(userGates: ReadonlySet<string> = new Set(), userFlows: ReadonlySet<string> = new Set()) {
     this.userGates = userGates;
@@ -1012,8 +1019,10 @@ class ValueStateChecker {
       // diagnostics (LLN-VALUESTATE-003/004/005 all silent) for the whole tier.
       // Every sibling pass (runtime, effect-checker, taint-checker) already
       // enumerates guardedFlowDecl; the value-state checker was the lone omission.
-      case "guardedFlowDecl":
+      case "guardedFlowDecl": {
         this.pushScope();
+        const prevFlowKind = this.currentFlowKind;
+        this.currentFlowKind = node.kind; // R&D 0093: posture context for registerParamBinding
         // Register parameter bindings so SecureString params are tracked
         for (const child of node.children ?? []) {
           if (child.kind === "paramDecl") {
@@ -1021,8 +1030,10 @@ class ValueStateChecker {
           }
         }
         this.walkChildren(node);
+        this.currentFlowKind = prevFlowKind;
         this.popScope();
         break;
+      }
 
       case "block":
         this.pushScope();
@@ -1193,6 +1204,14 @@ class ValueStateChecker {
       || (sourceFromOrigin !== undefined && isUntrustedSourceFromOrigin(sourceFromOrigin));
     if (untrusted) {
       this.registerBinding({ name, safetyPrefix: "unsafe", typeName, ...locField });
+    } else if (this.currentFlowKind === "secureFlowDecl" || this.currentFlowKind === "guardedFlowDecl") {
+      // R&D 0093 "34B hole": a BARE param at a posture-gated entry boundary (secure/guarded
+      // flow) is untrusted-until-gated. `boundary-untrusted` is inert everywhere EXCEPT a
+      // governed sink, where it fires LLN-VALUESTATE-008 (warning) — closing the
+      // param-trusted-by-default fail-open at the secure/guarded tier without the false
+      // positives of a full taint flip (string-concat / VS-004 stays clean). `pure`/plain
+      // `flow` stay trusted-by-default (non-breaking).
+      this.registerBinding({ name, safetyPrefix: "boundary-untrusted", typeName, ...locField });
     } else {
       this.registerBinding({ name, safetyPrefix: undefined, typeName, ...locField });
     }
@@ -1660,6 +1679,30 @@ class ValueStateChecker {
             risk: `Sending a transformed-but-tainted value to '${sinkName}' can cause injection attacks. Taint can only be removed by a validate.* or sanitize.* gate.`,
           },
         ));
+      } else if (binding?.safetyPrefix === "boundary-untrusted") {
+        // R&D 0093 "34B hole": an unmarked boundary param (bare param of a secure/guarded flow)
+        // reaching a governed sink without a gate. Stage-1 WARNING (escalates to error in
+        // production/deterministic). Inert everywhere else, so no VS-004 string-concat false positives.
+        const related: DiagnosticRelatedLocation[] = [];
+        if (binding.declaredAt !== undefined) {
+          related.push({ message: `'${binding.name}' is an unmarked boundary input here`, location: binding.declaredAt });
+        }
+        this.diagnostics.push({
+          ...makeVSDiag(
+            "LLN-VALUESTATE-008",
+            "BoundaryInputUnclean",
+            `Untrusted boundary input '${binding.name}' reaches governed sink '${sinkName}' without an explicit gate.`,
+            location,
+            `Add before the sink: safe mut ${binding.name} = validate.${binding.name}(${binding.name})?  (or declare the param 'tainted' and gate it).`,
+            `safe mut ${binding.name} = validate.${binding.name}(${binding.name})?`,
+            {
+              ...(related.length > 0 ? { relatedLocations: related } : {}),
+              why: `'${binding.name}' is a bare parameter of a secure/guarded flow — an entry-boundary input that has not been validated.`,
+              risk: `Unvalidated boundary data at '${sinkName}' risks injection / governance violations. (Stage-1 WARNING; becomes an error in production.)`,
+            },
+          ),
+          severity: "warning",
+        });
       }
     }
     // Recurse into nested children (e.g. named-argument wrappers, blocks)
