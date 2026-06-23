@@ -8,21 +8,17 @@
  *       `logicn build --package <target-dir>`.
  *
  *   node scripts/logicn-new.mjs app <target-dir> [--name <app>]
- *     → a governed APPLICATION laid out by the app-framework convention (B1):
- *
- *         <target-dir>/
- *           App.lln          governed composition-root flow (the app entry)
- *           App.manifest     declarative app descriptor → folded into the SIGNED
- *                            build/App.lmanifest at build time (deny-by-default)
- *           flows/           application flows composed by App.lln
- *           deps/            signed governed components admitted at the fuse border
- *           proofs/          contract-driven generated test obligations
- *           README.md
- *           .gitignore
+ *     → a COMPLETE, runnable governed APPLICATION — a byte-for-byte copy (with the
+ *       app name substituted) of the canonical golden template
+ *       `packages-logicn/logicn-framework-example-app`. That single source of truth
+ *       is the "hello, governed world" app: a governed flow compiled to a signed
+ *       .wasm, fused into the App Kernel at a route, served over HTTP, with an
+ *       end-to-end test. Build outputs (dist/, build/) are NOT copied — the new app
+ *       rebuilds them (`npm run build:greeting`, then `npm test`).
  *
  * Design principles (Zero Trust), identical across both modes:
- *   - Deny-by-default: the scaffold declares NO capabilities and NO deps. The
- *     entry is a `pure flow` with no `effects {}` — least-capability by default.
+ *   - Deny-by-default: the scaffold declares NO capabilities and NO deps beyond the
+ *     app's own pure compute. The entry is a `pure flow` with no `effects {}`.
  *   - Fail-closed: every generated `match` keeps its mandatory `_ =>` wildcard
  *     (LLN-TYPE-023); an unrecognised state exits non-zero, never falls through.
  *   - VERIFY BEFORE BUILD: the entry compiles as-is (`logicn build`).
@@ -32,10 +28,22 @@
  * This is a STANDALONE script and deliberately does NOT touch logicn.mjs.
  */
 
-import { mkdirSync, writeFileSync, existsSync } from "node:fs";
-import { join, basename, resolve } from "node:path";
+import { mkdirSync, writeFileSync, existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { join, basename, resolve, dirname, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const MODES = new Set(["app", "package"]);
+
+// The canonical golden app `app` mode copies from. Resolved relative to this script
+// so it works from any cwd in the repo. Kept as the SINGLE source of truth: edit the
+// example app, and every newly-scaffolded app inherits the change (no template drift).
+const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
+const APP_TEMPLATE_DIR = resolve(SCRIPT_DIR, "..", "packages-logicn", "logicn-framework-example-app");
+// The example app's own identity strings, replaced with the new app's name on copy.
+const TEMPLATE_PKG_NAME = "logicn-framework-example-app";
+const TEMPLATE_SCOPED_NAME = "@logicn/framework-example-app";
+// Directory names never copied into a new app — regenerated build artifacts, deps.
+const COPY_SKIP_DIRS = new Set(["dist", "build", "node_modules", ".git"]);
 
 // ── Argument parsing ────────────────────────────────────────────────────────
 function parseArgs(argv) {
@@ -93,9 +101,10 @@ After scaffolding a package:
   node logicn.mjs build --package <target-dir>
   # → <target-dir>/dist/<name>.wasm
 
-After scaffolding an app:
-  node logicn.mjs build <target-dir>/App.lln
-  # → build/App.wasm + build/App.lmanifest  (the signed admission artifact)`);
+After scaffolding an app (the runnable "hello, governed world" golden template):
+  cd <target-dir>
+  npm run build:greeting   # → packages/greeting/dist/greeting.wasm (signed)
+  npm test                 # scaffold → fuse → kernel → serve, end to end`);
 }
 
 function fail(msg) {
@@ -199,216 +208,6 @@ README.md          this file
 `;
 }
 
-// ── App templates (B1: app-layout convention) ────────────────────────────────
-function appLln(name) {
-  return `// ${name} — a governed LogicN application (scaffolded by \`logicn new app\`).
-//
-// src/App.lln is the application's composition ROOT — \`flow main()\` is the entry the
-// host App Kernel invokes AFTER admission (there is no separate boot file; the Kernel
-// IS the boot). \`logicn build src/App.lln\` fuses it into ONE signed build/App.wasm
-// plus a signed build/App.lmanifest (the admission artifact the Kernel verifies first).
-//
-// Zero-trust defaults:
-//   - Deny-by-default: this entry is a \`pure flow\` with NO \`effects {}\` block,
-//     so it cannot reach the network, storage, secrets, the database, or
-//     inference. Opt into a capability by adding it to a flow's \`effects {}\` AND
-//     to App.manifest's \`capabilities\` list — the build folds that into the
-//     SIGNED .lmanifest fuse{} block. Capability binding lives there, NEVER in a
-//     .tmf (which carries integrity/confidentiality only).
-//   - Fail-closed: every \`match\` ends with a mandatory \`_ =>\` wildcard
-//     (LLN-TYPE-023) — an unrecognised state exits non-zero, never falls through.
-//
-// Build:  node logicn.mjs build src/App.lln     →  build/App.wasm + build/App.lmanifest
-// Run:    node logicn.mjs run   src/App.lln --invoke main
-// Prove:  node logicn.mjs gen-tests src/App.lln  →  contract obligations (see proofs/)
-
-pure flow main() -> Int
-contract {
-  intent { "Application entry point for ${name}. Compose flows from flows/ here." }
-}
-{
-  // Demonstration of the mandatory fail-closed wildcard.
-  let status: Int = 0
-  match status {
-    0 => return 0       // OK — nominal startup
-    _ => return 1       // fail-closed: any other state exits non-zero
-  }
-}
-`;
-}
-
-function appExampleFlow(name) {
-  return `// src/flows/example.lln — an example application flow for ${name}.
-//
-// Application flows live in src/flows/ and are composed by src/App.lln (the root). Keep
-// each flow least-capability: start \`pure\`, and add an \`effects {}\` block plus
-// the matching capability in App.manifest only when the flow provably needs it.
-
-pure flow exampleValue() -> Int
-contract {
-  intent { "Example flow — returns a constant. Replace with real governed logic." }
-}
-{
-  return 0
-}
-`;
-}
-
-function appManifest(name) {
-  // The DECLARATIVE app descriptor. At build time its fields are folded into the
-  // SIGNED build/App.lmanifest fuse{} block (the authoritative, tamper-evident
-  // source of truth). Deny-by-default: no capabilities, no deps.
-  return JSON.stringify(
-    {
-      schemaVersion: "lln.app.v1",
-      kind: "app",
-      name,
-      version: "0.1.0",
-      entry: "src/App.lln",
-      flows: "src/flows/",
-      proofs: "proofs/",
-      // Deny-by-default. Grant a capability only alongside a flow's effects {}.
-      capabilities: [],
-      // Signed governed components admitted at the fuse border. Each entry, when
-      // added, is { name, wasm, sha256, signer } — see deps/README.md.
-      deps: [],
-      build: {
-        wasm: "build/App.wasm",
-        manifest: "build/App.lmanifest",
-      },
-    },
-    null,
-    2
-  ) + "\n";
-}
-
-function appDepsReadme(name) {
-  return `# deps/ — signed governed components
-
-Third-party (or split-out) governed components for **${name}** live here as a
-built \`<component>.wasm\` plus its \`<component>.fuse.json\` descriptor. They are
-admitted at the **fuse border** — a deny-by-default, fail-closed gate — before
-the App Kernel will compose them. Three independent gates must all pass:
-
-1. **Hash pin** — the component's sha256 must match the \`sha256\` declared for it
-   in \`App.manifest\` (\`deps[]\`). A changed binary is refused.
-2. **Signature** — the component's manifest must carry a valid Ed25519 signature
-   from an authorised \`signer\`. An unsigned or wrongly-signed component is refused.
-3. **Revocation** — a revoked signing key (\`governance/revocations.json\`) is
-   refused even if the signature is otherwise valid.
-
-Capability imports are **closed / deny-by-default**: a component may only import a
-capability the host explicitly provides at the seam. An unresolved import is a
-link-time \`LinkError\`, not a silent fallthrough.
-
-> Capability binding lives in the **signed \`.lmanifest\` fuse{} block**, never in a
-> \`.tmf\`. \`.tmf\` carries integrity/confidentiality only.
-
-## Declaring a dep
-
-Add it to \`App.manifest\`:
-
-\`\`\`json
-"deps": [
-  {
-    "name": "example-component",
-    "wasm": "deps/example-component.wasm",
-    "sha256": "sha256:<digest-of-the-built-wasm>",
-    "signer": "<authorised-ed25519-public-key-id>"
-  }
-]
-\`\`\`
-
-An empty \`deps[]\` admits nothing — that is the secure default.
-`;
-}
-
-function appProofsReadme(name) {
-  return `# proofs/ — contract-driven test obligations
-
-LogicN derives test obligations from each flow's \`contract {}\` (intent,
-pre/post-conditions, effects, fail-closed branches). Generate them for **${name}**:
-
-\`\`\`sh
-node logicn.mjs gen-tests App.lln          # human-readable obligations
-node logicn.mjs gen-tests App.lln --tap    # TAP plan for CI
-\`\`\`
-
-Commit the generated proofs here so the governance surface of the app is checked
-on every change. They are *obligations the contract implies*, not hand-written
-assertions — which is why they belong with the app, under version control.
-`;
-}
-
-function appReadme(name) {
-  return `# ${name}
-
-A governed LogicN **application**, scaffolded with \`logicn new app\`.
-
-## Build & run
-
-\`\`\`sh
-node logicn.mjs build src/App.lln          # → build/App.wasm + build/App.lmanifest
-node logicn.mjs run   src/App.lln --invoke main
-node logicn.mjs gen-tests src/App.lln      # contract-driven proofs (see proofs/)
-\`\`\`
-
-\`logicn build\` fuses the app into **one signed \`build/App.wasm\`** and emits the
-signed **\`build/App.lmanifest\`** — the admission artifact. A host App Kernel
-verifies that manifest (signature → capability bounds → revocation) before it
-will run the app: governance is part of execution, not a layer around it.
-
-## Layout (app-framework convention)
-
-\`\`\`
-src/App.lln      composition-root flow — flow main() is the entry the App Kernel invokes
-src/flows/       your governed business logic, composed by src/App.lln
-App.manifest     declarative descriptor (entry, capabilities, deps[]) → SIGNED build/App.lmanifest
-deps/            THIRD-PARTY signed governed components (.wasm + .fuse.json), admitted at the fuse border
-packages/        (optional) the app's OWN split-out LogicN packages — each \`logicn build --package\`-able
-proofs/          contract-driven generated test obligations
-build/           generated, signed output (git-ignored) — App.wasm + App.lmanifest
-\`\`\`
-
-**main / boot.** \`src/App.lln\`'s \`flow main()\` is the entry; the host **App Kernel** is the boot —
-it admits \`build/App.wasm\` (hash · sig+revoke · caps) then invokes main(). There is no separate boot
-file in your source.
-
-**Where LogicN packages go.** Third-party signed components are declared in \`App.manifest\`'s \`deps[]\`
-(name + sha256 + signer) and live in \`deps/\`. The \`logicn\` toolchain (compiler/runtime) is not
-vendored. Registry-resolved packages (forward model) are verified hash+sig+revocation into a local,
-git-ignored store — you commit the lock, not the bytes.
-
-## Security posture
-
-- **Deny-by-default.** \`App.manifest\` declares \`"capabilities": []\` and
-  \`"deps": []\`. \`App.lln\` is \`pure\` with no \`effects {}\`, so the app cannot
-  reach the network, storage, secrets, the database, or inference until you opt in.
-- **Fail-closed.** Every \`match\` ends with a mandatory \`_ =>\` wildcard
-  (LLN-TYPE-023): an unrecognised state exits non-zero, never falls through.
-- **Capability binding is signed.** It lives in the \`.lmanifest\` fuse{} block the
-  build signs — never in a \`.tmf\`.
-- **Secrets are runtime-only.** \`.env\` is git-ignored and never compiled in; in
-  production they come from a vault/KMS, not the binary.
-`;
-}
-
-function appGitignore() {
-  return `# Generated, signed build output — never committed (rebuild from source).
-build/
-dist/
-packages/*/dist/
-logicn_modules/
-
-# Secrets are runtime-only and MUST never be committed.
-.env
-.env.*
-!.env.example
-*.key
-*.pem
-`;
-}
-
 // ── Scaffolding ─────────────────────────────────────────────────────────────
 function writeFileStrict(path, content, what) {
   if (existsSync(path)) {
@@ -437,27 +236,46 @@ Next:
   # → ${join(targetDir, "dist", name + ".wasm")}`);
 }
 
-function scaffoldApp(absTarget, name, targetDir) {
-  mkdirSync(absTarget, { recursive: true });
-  mkdirSync(join(absTarget, "src", "flows"), { recursive: true });
-  mkdirSync(join(absTarget, "deps"), { recursive: true });
-  mkdirSync(join(absTarget, "proofs"), { recursive: true });
+// ── App mode: copy the canonical golden template, name-substituted ────────────
+// Replace the example app's identity strings with the new app's name. Exact-string
+// replacement (never a prefix), so unrelated names like `logicn-framework-app-kernel`
+// or `logicn-framework-layer-design` are untouched.
+function substituteName(text, name) {
+  return text.split(TEMPLATE_SCOPED_NAME).join(name).split(TEMPLATE_PKG_NAME).join(name);
+}
 
+// Recursively copy `srcDir` → `dstDir`, skipping build-output dirs, substituting the
+// app name in every (text) file, and refusing to overwrite an existing file.
+function copyTree(srcDir, dstDir, name) {
+  mkdirSync(dstDir, { recursive: true });
+  for (const entry of readdirSync(srcDir, { withFileTypes: true })) {
+    const srcPath = join(srcDir, entry.name);
+    const dstPath = join(dstDir, entry.name);
+    if (entry.isDirectory()) {
+      if (COPY_SKIP_DIRS.has(entry.name)) continue;
+      copyTree(srcPath, dstPath, name);
+    } else if (entry.isFile()) {
+      const content = substituteName(readFileSync(srcPath, "utf8"), name);
+      writeFileStrict(dstPath, content, relative(dstDir, dstPath) || entry.name);
+    }
+  }
+}
+
+function scaffoldApp(absTarget, name, targetDir) {
+  if (!existsSync(APP_TEMPLATE_DIR) || !statSync(APP_TEMPLATE_DIR).isDirectory()) {
+    fail(`golden app template not found at ${APP_TEMPLATE_DIR} (expected packages-logicn/logicn-framework-example-app)`);
+  }
   console.log(`logicn-new — scaffolding secure app "${name}" into ${absTarget}`);
-  writeFileStrict(join(absTarget, "src", "App.lln"), appLln(name), "src/App.lln");
-  writeFileStrict(join(absTarget, "App.manifest"), appManifest(name), "App.manifest");
-  writeFileStrict(join(absTarget, "src", "flows", "example.lln"), appExampleFlow(name), "src/flows/example.lln");
-  writeFileStrict(join(absTarget, "deps", "README.md"), appDepsReadme(name), "deps/README.md");
-  writeFileStrict(join(absTarget, "proofs", "README.md"), appProofsReadme(name), "proofs/README.md");
-  writeFileStrict(join(absTarget, "README.md"), appReadme(name), "README.md");
-  writeFileStrict(join(absTarget, ".gitignore"), appGitignore(), ".gitignore");
+  console.log(`   (copying the golden template ${TEMPLATE_PKG_NAME}; build outputs excluded)`);
+  copyTree(APP_TEMPLATE_DIR, absTarget, name);
 
   console.log(`
 ✅ Scaffolded app "${name}".
 
 Next:
-  node logicn.mjs build ${join(targetDir, "src", "App.lln")}
-  # → build/App.wasm + build/App.lmanifest  (the signed admission artifact)`);
+  cd ${targetDir}
+  npm run build:greeting   # → packages/greeting/dist/greeting.wasm (signed)
+  npm test                 # scaffold → fuse → kernel → serve, end to end`);
 }
 
 function main() {

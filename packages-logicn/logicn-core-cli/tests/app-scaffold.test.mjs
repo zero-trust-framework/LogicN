@@ -1,10 +1,13 @@
 // app-scaffold.test.mjs — B1: `logicn new app` app-layout scaffolder.
 //
-// Locks the app-framework layout convention + its zero-trust defaults:
-//   src/App.lln + App.manifest + src/flows/ + deps/ + proofs/, deny-by-default,
-//   fail-closed, refuse-to-overwrite. Structural/content assertions only (no
-//   compile) so the test stays fast and toolchain-independent; the build path is
-//   verified manually + by the compiler suite.
+// `logicn new app` copies the canonical golden template
+// (packages-logicn/logicn-framework-example-app) with the app name substituted and
+// build outputs excluded. This locks that contract: the runnable layout
+// (src/App.lln + src/flows/ + App.manifest + config/ + host/ + packages/greeting/ +
+// tests/ + package.json/tsconfig.json), its zero-trust defaults (deny-by-default,
+// fail-closed), and refuse-to-overwrite. Structural/content assertions only (no
+// compile) so the test stays fast and toolchain-independent; the build + run path is
+// verified by the example app's own e2e suite and the compiler suite.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -32,7 +35,7 @@ function withTempDir(fn) {
   }
 }
 
-test("logicn new app — emits the App.lln + App.manifest + flows/ deps/ proofs/ layout", () => {
+test("logicn new app — emits the full runnable golden layout (name-substituted, no build outputs)", () => {
   withTempDir((base) => {
     const target = join(base, "my-app");
     const r = runScaffold(["app", target]);
@@ -40,8 +43,16 @@ test("logicn new app — emits the App.lln + App.manifest + flows/ deps/ proofs/
 
     for (const rel of [
       "src/App.lln",
+      "src/flows/greeting.lln",
       "App.manifest",
-      "src/flows/example.lln",
+      "config/app.config.json",
+      "host/server.ts",
+      "host/config.ts",
+      "packages/greeting/package.lln.json",
+      "packages/greeting/src/index.lln",
+      "tests/e2e.test.mjs",
+      "package.json",
+      "tsconfig.json",
       "deps/README.md",
       "proofs/README.md",
       "README.md",
@@ -50,13 +61,16 @@ test("logicn new app — emits the App.lln + App.manifest + flows/ deps/ proofs/
       assert.ok(existsSync(join(target, rel)), `expected ${rel} to be scaffolded`);
     }
     // The convention dirs exist as directories.
-    for (const d of ["src", "src/flows", "deps", "proofs"]) {
+    for (const d of ["src", "src/flows", "config", "host", "packages/greeting", "deps", "proofs", "tests"]) {
       assert.ok(statSync(join(target, d)).isDirectory(), `${d}/ should be a directory`);
     }
+    // Build outputs are NEVER copied — the new app rebuilds them.
+    assert.ok(!existsSync(join(target, "packages/greeting/dist")), "greeting/dist must NOT be copied");
+    assert.ok(!existsSync(join(target, "dist")), "host dist/ must NOT be copied");
   });
 });
 
-test("logicn new app — App.manifest is deny-by-default (no caps, no deps, kind=app)", () => {
+test("logicn new app — App.manifest is deny-by-default (no caps, kind=app, name substituted)", () => {
   withTempDir((base) => {
     const target = join(base, "secure-app");
     const r = runScaffold(["app", target]);
@@ -66,13 +80,22 @@ test("logicn new app — App.manifest is deny-by-default (no caps, no deps, kind
     assert.equal(manifest.kind, "app");
     assert.equal(manifest.schemaVersion, "lln.app.v1");
     assert.equal(manifest.entry, "src/App.lln");
+    // The example app's identity string is replaced with the new app's name.
     assert.equal(manifest.name, "secure-app");
-    // Deny-by-default: nothing granted, nothing admitted.
+    // Deny-by-default: the app grants NO capabilities.
     assert.deepEqual(manifest.capabilities, [], "capabilities must default to []");
-    assert.deepEqual(manifest.deps, [], "deps must default to [] (admits nothing)");
     // Build target declared so the convention is self-describing.
     assert.equal(manifest.build.wasm, "build/App.wasm");
     assert.equal(manifest.build.manifest, "build/App.lmanifest");
+
+    // The app's own compute package is pure + grants nothing.
+    const pkg = JSON.parse(readFileSync(join(target, "packages/greeting/package.lln.json"), "utf8"));
+    assert.equal(pkg.name, "greeting", "the compute package keeps its own name (not the app name)");
+    assert.deepEqual(pkg.capabilities, [], "greeting grants no capabilities");
+
+    // package.json identity is the new app's name (unscoped).
+    const npmPkg = JSON.parse(readFileSync(join(target, "package.json"), "utf8"));
+    assert.equal(npmPkg.name, "secure-app");
   });
 });
 
@@ -94,6 +117,11 @@ test("logicn new app — App.lln is pure (no effects) and fail-closed (mandatory
     // Capability binding lives in the signed manifest, never in a .tmf — the
     // scaffold teaches that explicitly.
     assert.match(app, /\.lmanifest/, "App.lln should point at the signed .lmanifest");
+
+    // The greeting compute is likewise pure and fail-closed.
+    const greeting = readFileSync(join(target, "packages/greeting/src/index.lln"), "utf8");
+    assert.match(greeting, /pure flow main\(\)\s*->\s*Int/, "greeting compute must be a pure flow");
+    assert.match(greeting, /_\s*=>/, "greeting match must keep its fail-closed wildcard");
   });
 });
 
