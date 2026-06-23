@@ -39,6 +39,7 @@ build/*.snap
 # Runtime/test scratch (audit ledgers, egress/flight test dirs) — NOT build/graph or build/kb-graph
 build/audit-log/
 build/egress-it-*/
+build/egress-test-*/
 build/full-flight-*/
 build/tower-logs/
 build/receipt-ledger/
