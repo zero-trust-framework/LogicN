@@ -28,12 +28,13 @@ unscheduled).
 | core-security photonic-lane taint/egress rule | arch-rd #15 | 🧪 |
 | Standardise `withSideSignal`/`vAnd` as the ONLY photonic/sentinel→verdict channel | arch-rd #6 | 🧪 |
 | Per-package Tri-Pipe coverage as machine-checkable metadata | arch-rd #16 | 🧪 |
+| **Compiler Intelligence (Doc 005)** — §2 Governance DCE pass (`LLN-GDCE-001`) · §3a `substrate{photonic}` envelope keyword · §3b value-level substrate-taint · §4 auto-resilience AST→GIR wrap | [compiler-intelligence](logicn-compiler-intelligence-deterministic-foresight.md) (wf `w2gzcbx9d`) | 🧪 design-complete → build |
 
 ## C. Build items (engineering — no further R&D needed)
 | # | Item | Source | Status |
 |---|---|---|---|
 | 1 | **Wire S1 cert-gate into `kernel.ts:307`** (closes the audit's only HIGH; both audit + R&D rank #1) | audit + arch-rd #1 | 🔨 |
-| 2 | **Verify then fix the 2 WAT codegen fail-opens (#163 record-update, #165 float)** — reconcile vs Phase-4 "emitter fail-closed-hardened" first | arch-rd #3 | 🔨 |
+| 2 | **Fix the 2 WAT codegen fail-opens (#163 record-update → silent `i32.const 0`, #165 float)** — **VERIFIED REAL** 2026-06-23 (techdebt review:54-73; these are the #161-191 set, distinct from the #128 set the Phase-4 audit called "hardened" — both true). Fix-forward = emit `unreachable` (fail-closed) or lower properly; check WASM-parity test impact first | arch-rd #3 | 🔨 |
 | 3 | Tainted-by-default at posture-gated entry boundaries (the 34B `value-state-checker.ts:1162-1191` hole) | audit + arch-rd #4 | 🔨 |
 | 4 | Auto-discover `packages-logicn/*` as the project-graph manifest (kill the drift this session fixed by hand) | this session + arch-rd #5 | 🔨 |
 | 5 | Expand the SEC-002 mutant catalog (3 B5a → one per shipped fail-closed gate; incl. cert-gate's 5 in-test guards) | audit + arch-rd #9 | 🔨 |

@@ -50,4 +50,41 @@ determinism contract (photonic is lossy/noisy). This is exactly the standing **T
 behind the decider, fail-closed to Binary. So the blueprint's §3 "compiler intelligently promotes tensor → S_P"
 should read **"auto-routes within the developer-authorized, tolerance-witnessed envelope."**
 
-> Status: R&D (workflow in flight). Net-new build candidate = §2 Governance DCE pass. Photonic perf = projected/emulated.
+## R&D results (workflow `w2gzcbx9d`, 4 lenses, 2026-06-23)
+
+**Verdict: all pillars `design-then-build` — sound to build as Deterministic Foresight. No pillar is "guessing"
+(deterministic total transfer functions; unknown → `0` → keep). The adversarial lens confirms over-elision is the
+one fatal risk and it is structurally mitigated.**
+
+### §2 Governance Dead-Code Elimination — high-value net-new (design complete)
+~75% of the substrate is reusable: the K3 lattice/`vAnd`/`allOf`, the value-fold DCE (`foldToInt`/`foldToBool` + the
+R&D-0036 `ifStmt` elision at wat-emitter.ts:1623-1651), static-truth proving (`tryStaticEval` → LLN-INV-001), the
+`unreachable` TRAP→ERASE primitive, `analyzeFlowDependencies`, and the revocation/pin trust inputs
+(package-resolver.ts:162-202). The ~25% net-new is a **formal K3 trust-dataflow abstract-interpretation pass**:
+- **Lattice:** K3 verdict lattice `DENY ⊑ INDET ⊑ ALLOW`; per-variable `σ: Var→V`; conjunctive meet = `min` = `vAnd` (REUSE).
+- **Transfer fns (monotone, total):** cert/key ref → admission verdict (pinned-sig `+1` · revoked/throws `−1` · unknown `0`); `vAnd` → `min`; a value derived from a `−1` source by any pure op stays `−1` (taint-monotone — trust can't be manufactured upward); **any unknown node → `0`, never `+1`**.
+- **Join (the soundness crux):** elide a branch **iff** its guard is provably `−1` on **ALL** paths — i.e. `max`-over-paths of the guard `== −1`. A single `0`/`+1` path forces `max ≥ 0 → KEEP`. *(Two lattice directions: `min`/`vAnd` within a path for evidence; `max` across paths for elision — unit-test with a diamond CFG.)*
+- **Fixpoint:** monotone worklist, lattice height 3 → terminates trivially, no widening.
+- **Emission:** `(unreachable) ;; LLN-GDCE-001 TRAP→ERASE` (REUSE) + a non-silent verifier diagnostic **`LLN-GDCE-001`** (analogous to LLN-INV-001). Both tiers take the same K3 branch → preserves 0014 parity.
+- **Only elide on STRUCTURAL/monotone `−1`** (revoked-at-build or a contract-contradiction that can never become `+1`), never a merely-currently-`0` verdict — avoids baking in a stale dynamic verdict.
+
+### §3 Routing + agency — routing maths ~85% built; 2 net-new gaps
+`R(o)` (Binary/Hybrid/Photonic on net-win + tolerance + Freivalds) is largely shipped. Net-new:
+**(3a)** there is **no `substrate { photonic }` envelope keyword** (parser + substrate-inference accept only
+lane/tolerance/redundancy) — the bounded-agency authorization surface needs it; **(3b)** contamination
+(LLN-SUBSTRATE-001) is **effect-declaration-level, not value-level taint** — it doesn't track a photonic *value*
+flowing into a crypto op. Agency verdict confirmed: **bounded (explicit envelope + auto-route within, fail-closed to
+Binary)**; precision/crypto → photonic is "NOT POSSIBLE today and must stay so."
+
+### §4 Auto-resilience — ~80% unbuilt; net-new = the wrapping transform
+Net-new: the AST→GIR transform wrapping an effectful op in the K3 holding pattern + the 0-state semantics. Two
+fail-closed-by-design risks: the holding `0` must carry a **hard deadline → 0→DENY on expiry** (never 0→ALLOW); and
+a naive 0→retry on `database.write`/`gateway.charge` **doubles the mutation** → gated by the idempotency requirement.
+
+### Build items (design-complete → engineering, logged in the outstanding catalog)
+1. **§2 Governance DCE pass** (`LLN-GDCE-001`) — the headline net-new.
+2. **§3a** `substrate { photonic }` envelope keyword + bounded-agency authorization surface.
+3. **§3b** value-level substrate-taint (photonic value → crypto op).
+4. **§4** auto-resilience AST→GIR wrapping transform + 0-state deadline→DENY semantics.
+
+> Photonic perf = projected/emulated. Crypto/keys Binary everywhere. All four = `design-then-build`, not more R&D.
