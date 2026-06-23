@@ -4,21 +4,23 @@
 
 LogicN is built for organisations where software failure is not acceptable — financial platforms, healthcare systems, government services, and regulated enterprise. Every execution is **declared, verified, and audited** by design, not by convention.
 
-> **Maturity (honest status, 2026-06-23).** LogicN is an **advanced prototype with several hardened zero-trust subsystems** — *not* yet a production-complete platform. The **compiler, security, and governance core are production-grade** (53/53 packages, 5,042 tests, fail-closed border check). The **application-framework layer is now substantially real**: the deny-by-default admission/fusion border (3 gates + multi-module linker + revocation), the `logicn new app` scaffolder, and the governed package resolver are shipped and tested (87 App-Kernel tests). The **governed HTTP transport (B8) is unlocked and in progress** — the TLSTP **S1 K3 cert/channel-validation gate** landed (`logicn-core-network`, 126 tests, fail-closed `revocation-unknown → DENY`), though it is not yet wired into the live kernel auth path; the *servable api-server / example-app* and the *signed registry index* are the remaining framework gaps. Stage-B self-hosting is in progress (≈80%), and the "Tower" compute layer is a **governed software simulator + bridge-attestation runtime, not real photonic-CPU virtualisation**. See [the 2026-06-23 roadmap + % audit](docs/Knowledge-Bases/logicn-roadmap-and-percent-audit-2026-06-23.md) and [the framework plan](docs/Knowledge-Bases/logicn-framework-plan-2026-06-21.md).
+> **Maturity (honest status, 2026-06-23).** LogicN is an **advanced prototype with several hardened zero-trust subsystems** — *not* yet a production-complete platform. The **compiler, security, and governance core are production-grade** (53/53 packages, 5,042 tests, fail-closed border check). The **application-framework layer is now substantially real**: the deny-by-default admission/fusion border (3 gates + multi-module linker + revocation), the `logicn new app` scaffolder, and the governed package resolver are shipped and tested (87 App-Kernel tests). The **governed HTTP transport (B8) is unlocked and in progress** — the TLSTP **S1 K3 cert/channel-validation gate** landed (`logicn-core-network`, 126 tests, fail-closed `revocation-unknown → DENY`), though it is not yet wired into the live kernel auth path; the *servable api-server / example-app* and the *signed registry index* are the remaining framework gaps. Stage-B self-hosting is in progress (≈80%), and the "Tower" compute layer is a **governed software simulator + bridge-attestation runtime, not real photonic-CPU virtualisation**. See [the 2026-06-23 EOD roadmap + % audit](docs/Knowledge-Bases/logicn-roadmap-and-percent-audit-2026-06-23-eod.md) and [the framework plan](docs/Knowledge-Bases/logicn-framework-plan-2026-06-21.md).
 
 ---
 
 ## The Zero-Trust thesis
 
-LogicN optimises for **mathematical proof and absolute Zero-Trust containment** — an ecosystem that trusts absolutely no one: **not the developer, not the network, not the host OS.**
+LogicN optimises for **mathematical proof and absolute Zero-Trust containment**: an ecosystem that trusts **absolutely no one — not the developer, not the network, not the host OS.** Where most languages bolt security on as a library, LogicN treats **every boundary as already hostile** and *proves* the boundary at compile time. Each row below is a boundary and the mandate LogicN enforces at it.
 
-- **Compiler.** Verifies your pre-resolved policy and execution DAG strictly for deterministic, mathematically reproducible correctness.
-- **I/O philosophy.** A mathematically-proven wall against the OS kernel. LogicN assumes the kernel is *already a compromised, hostile environment*. Rather than injecting OS-level I/O into a `main`, the governed HTTP transport adapter **denies native capabilities by default**; the host acts as a *dumb byte-mover* and authorisation is handled strictly by the fail-closed `vAnd` Kleene-K3 logic gate.
-- **Package management.** A signed central registry index with fail-closed kernel verification — cryptographic manifests, content-addressed hash-pinning, and transitive capability masks.
-- **Memory.** Treated as a highly hostile, actively-governed physical boundary. Standard shared-mutable memory models are **mathematically incompatible** with absolute Zero-Trust invariants — which is why TLSTP governs network memory directly rather than handing it to shared host state.
-- **TLSTP (zero-middleware).** LogicN routes around the OS kernel using the governed HTTP adapter: the host reads raw encrypted packets off the wire and writes them as *unparsed byte-arrays* straight into WASM linear memory; decryption happens strictly **inside the WASM sandbox**. The kernel never sees plaintext.
+| Boundary | LogicN's mandate | Status |
+|---|---|---|
+| **Compiler** | Verifies your **pre-resolved policy + execution DAG** strictly for deterministic, mathematically reproducible correctness — the contract is proven at build time, so there is no runtime surprise. | ✅ shipped |
+| **I/O — the OS kernel** | Assumes the kernel is *already a compromised, hostile environment*. Native capabilities are **denied by default**; the host is a **dumb byte-mover**; authorisation is the fail-closed **`vAnd` Kleene-K3 gate** — never OS-level I/O injected into a `main`. | ◑ K3 gate shipped · full bypass = design intent |
+| **Packages** | A **signed central registry** with fail-closed kernel verification: cryptographic manifests, content-addressed **hash-pinning**, and transitive **capability masks**. | ✅ admission shipped |
+| **Memory** | An actively-governed, **hostile physical boundary**. Standard shared-mutable memory models are **mathematically incompatible** with absolute Zero-Trust invariants — so TLSTP governs network memory *directly* instead of handing it to shared host state. | ◑ governed · real isolation = design intent |
+| **TLSTP — zero-middleware** | Routes *around* the OS kernel: the host writes raw encrypted packets as **unparsed byte-arrays** straight into WASM linear memory; **decryption happens strictly inside the WASM sandbox** — the kernel never sees plaintext. | ◑ design intent (DSS.wasm TCB #102-106) |
 
-> **What is shipped vs. design intent.** The **compiler**, the **`vAnd` Kleene-K3 authorisation gate**, **signed package admission** (hash-pin · signature · revocation · closed capabilities), and the **S1 cert/channel-validation gate** are *shipped and tested today*. The full **kernel-bypass / in-sandbox isolation** — decryption strictly inside a real WASM sandbox with the host as a pure byte-mover — is the **target architecture**: it depends on the real `DSS.wasm` Wasmtime TCB (#102–106), which is still a stub. Treat the kernel-bypass / zero-middleware guarantees as **design intent**, not yet a shipped runtime property.
+> **Honest line — shipped vs. design intent.** The **compiler**, the **`vAnd` Kleene-K3 authorisation gate**, **signed package admission** (hash-pin · signature · revocation · closed capabilities), and the **S1 cert/channel-validation gate** are **shipped and tested today**. The full **kernel-bypass / in-sandbox isolation** — decryption inside a *real* WASM sandbox with the host as a pure byte-mover — is the **target architecture**, gated on the real `DSS.wasm` Wasmtime TCB (#102–106, still a stub; a design-spec is in R&D). Treat kernel-bypass / zero-middleware as **design intent**, not yet a shipped runtime property.
 
 ---
 
@@ -222,7 +224,7 @@ At runtime the app reaches the world **only** through the deny-by-default **Capa
 ### Package layout (status-labelled)
 ```
 packages-logicn/
-├── logicn-core-compiler/     ACTIVE — full pipeline, 3,684 tests
+├── logicn-core-compiler/     ACTIVE — full pipeline, 3,176 tests
 ├── logicn-core-security/     ACTIVE — taint profiles, redaction, OWASP boundaries
 ├── logicn-core-economics/    ACTIVE — CostGraph, ValueGraph, breach-risk matrix
 ├── logicn-core-logic/        ACTIVE — Tri, Decision, RiskLevel
