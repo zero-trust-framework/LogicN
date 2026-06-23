@@ -115,8 +115,11 @@ token-saving dev tools** (status/rd-absorb/stray-docs, wired into the Stop caden
   shipped + tested (`proof-graph.ts` `generateHybridGovernanceKeyPair`/`signProofGraphHybrid`/`verify…Hybrid`,
   `tests/hybrid-pq-signature.test.mjs`); secure generation (QRNG/SP-800-90) + custody/rotation lifecycle research
   all exist. The only gate was the owner's **offline key ceremony** — now documented as a runbook
-  ([#34 ceremony](logicn-34-offline-key-ceremony-runbook.md)). Residual is owner-only (air-gapped keygen) +
-  two smoothing follow-ups (a `logicn sign` CLI; #110/Gap-A rotation-body retention). Also covers the #149 re-sign.
+  ([#34 ceremony](logicn-34-offline-key-ceremony-runbook.md)). **`logicn keygen --hybrid` SHIPPED 2026-06-23**
+  — the ceremony's keygen step is now a CLI command (wires the shipped hybrid keygen; Ed25519 PEM byte-compatible
+  + ML-DSA-65, written to `.env.logicn-signing` 0600; round-trip + fail-closed tested via the real CLI). Residual:
+  the owner runs `keygen --hybrid` air-gapped; remaining follow-ups = a **`logicn sign` CLI** (wrap
+  `signProofGraphHybrid`) + #110/Gap-A rotation-body retention. Also covers the #149 re-sign.
 - **#216 WASM build-provenance** (fold/finish via BLD-003) · **#202 transitive capability-mask ⊆** · **#212
   kernel→runtime governance-deny bridge** (completes the cert-gate verdict→HTTP-response story once #1 lands).
 
