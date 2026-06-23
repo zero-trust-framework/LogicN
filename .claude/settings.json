@@ -15,6 +15,16 @@
             "type": "command",
             "command": "node scripts/run-phase-close.mjs",
             "description": "Full phase-close cadence at the end of every stage: core tests + devtools tests + security/naming audit sweep + provenance audit + full graph re-index. Always exits 0 (informational). Set LOGICN_SKIP_PHASE_CLOSE=1 to skip during rapid iteration. Benchmarks are intentionally NOT included (multi-minute) — run `npm run run` in logicn-devtools-benchmarks on demand."
+          },
+          {
+            "type": "command",
+            "command": "node scripts/rd-absorb.mjs --summary",
+            "description": "Periodic drift heartbeat (informational, exit 0): one-line count of R&D done-files in ../LogicN-R-AND-D/_session-bridge/done/ not yet recorded in docs/Knowledge-Bases/logicn-rd-results-log.md — the absorption backlog the owner's standing process (feedback-rd-absorb-positive-and-negative) clears. Drop --summary for the actionable list."
+          },
+          {
+            "type": "command",
+            "command": "node scripts/audit-stray-docs.mjs --summary",
+            "description": "Periodic drift heartbeat (informational, exit 0): one-line count of stray *.md outside docs/ + duplicate basenames + kb-graph orphans/broken-links. Drop --summary for the grouped report."
           }
         ]
       }
@@ -41,6 +51,9 @@
       "test-tooling":   "node --test scripts/tests/codes.test.mjs scripts/tests/dev-tools-scripts.test.mjs",
       "code-index":     "node scripts/code-index.mjs   (query build/code-index/CODE_INDEX.md instead of grepping)",
       "kb-index":       "node scripts/kb-index.mjs <terms>   (KB keyword search over ~495 docs — TOKEN-SAVER; build/kb-index/KB-INDEX.md; --code LLN-... for code lookup)",
+      "status":         "node scripts/status.mjs   (TOKEN-SAVER one-shot: live version/tests/overall-%/open-tasks/R&D-queue + doc pointers — READS version.json, do NOT re-run the suite just to get counts)",
+      "rd-absorb":      "node scripts/rd-absorb.mjs [--summary|--all|--json]   (flags R&D done-files in ../LogicN-R-AND-D/_session-bridge/done/ not yet in logicn-rd-results-log.md; --summary runs periodically at Stop)",
+      "stray-docs":     "node scripts/audit-stray-docs.mjs [--summary|--json]   (stray/stale *.md outside docs/ + duplicate basenames + kb-graph orphans/broken-links; --summary runs periodically at Stop)",
       "code-registry":  "node scripts/gen-code-registry.mjs   (-> build/code-registry/REGISTRY.md, the live code catalog)",
       "lint-conventions":"node scripts/lint-conventions.mjs   (umbrella: #215 scanner + registered convention checks; --soft to report; --full adds the heavy SEC-002 mutation gate)",
       "coverage-codes": "node scripts/audit-coverage.mjs codes   (#218 bidirectional code-coverage cross-check)",

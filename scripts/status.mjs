@@ -1,0 +1,106 @@
+#!/usr/bin/env node
+// status.mjs — LogicN STATUS one-shot. Print the live project state (version / stage / test line / overall % /
+// open critical tasks / R&D bridge queue / pointers) WITHOUT re-running the test suite or re-deriving counts.
+// A re-runnable TOKEN-SAVER (owner request, 2026-06-22): a session runs THIS instead of `npm test` or grepping.
+// Pure-read, zero deps (node:fs/node:path only), informational — never throws on missing files, always exit 0.
+//
+//   node scripts/status.mjs
+import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), ".."); // repo root (scripts/..)
+const RND_TASKS = "C:/wwwprojects/LogicN-R-AND-D/_session-bridge/tasks";
+const RND_DONE = "C:/wwwprojects/LogicN-R-AND-D/_session-bridge/done";
+
+const NA = "n/a";
+const readText = (p) => { try { return readFileSync(p, "utf8"); } catch { return null; } };
+const readJSON = (p) => { try { return JSON.parse(readFileSync(p, "utf8")); } catch { return null; } };
+const listDir = (p) => { try { return readdirSync(p); } catch { return null; } };
+
+// ── version.json ──────────────────────────────────────────────────────────────
+const v = readJSON(join(ROOT, "version.json")) || {};
+const version = v.version || NA;
+const stage = v.stage || NA;
+const date = v.date || NA;
+const milestone = v.milestone || NA;
+
+// live test line: prefer packageCount/testCount; format with thousands separators + '0 fail'
+const fmt = (n) => (typeof n === "number" ? n.toLocaleString("en-US") : null);
+let testLine = NA;
+if (v.packageCount != null && v.testCount != null) {
+  testLine = `${v.packageCount}/${v.packageCount} packages, ${fmt(v.testCount)} tests, 0 fail`;
+} else if (v.testCountNote) {
+  testLine = v.testCountNote;
+}
+
+// ── overall % : newest roadmap-and-percent-audit-*.md by filename date ─────────
+const KB = join(ROOT, "docs", "Knowledge-Bases");
+let overall = NA;
+let roadmapDoc = null;
+const kbFiles = listDir(KB) || [];
+const audits = kbFiles
+  .filter((f) => /^logicn-roadmap-and-percent-audit-.*\.md$/.test(f))
+  .sort(); // ISO-date filenames sort chronologically
+if (audits.length) {
+  const newest = audits[audits.length - 1];
+  roadmapDoc = `docs/Knowledge-Bases/${newest}`;
+  const txt = readText(join(KB, newest)) || "";
+  const line = txt.split(/\r?\n/).find((l) => /overall/i.test(l));
+  if (line) overall = line.replace(/^#+\s*/, "").replace(/\s+/g, " ").trim();
+}
+
+// ── R&D bridge queue : queued tasks vs matching done records ──────────────────
+let rndLine = NA;
+const tasks = listDir(RND_TASKS);
+if (tasks) {
+  const queued = tasks.filter((f) => f.endsWith(".md") && f !== "_TEMPLATE.md");
+  const doneFiles = listDir(RND_DONE) || [];
+  const doneNums = new Set(
+    doneFiles
+      .map((f) => (f.match(/^(\d{3,4})/) || [])[1])
+      .filter(Boolean),
+  );
+  let doneCount = 0;
+  for (const t of queued) {
+    const num = (t.match(/^(\d{3,4})/) || [])[1];
+    if (num && doneNums.has(num)) doneCount++;
+  }
+  rndLine = `${queued.length} queued, ${doneCount} done`;
+}
+
+// ── pointers (print only if present) ──────────────────────────────────────────
+const pointerCandidates = [
+  roadmapDoc,
+  "docs/Knowledge-Bases/logicn-outstanding-rd-and-todos-2026-06-23.md",
+  "docs/Knowledge-Bases/logicn-rd-results-log.md",
+].filter(Boolean);
+const pointers = pointerCandidates.filter((p) => existsSync(join(ROOT, p)));
+
+// ── print compact status block ────────────────────────────────────────────────
+const out = [];
+out.push(`LogicN status — v${version} · ${stage}${date !== NA ? ` · ${date}` : ""}`);
+out.push("");
+out.push(`  tests     : ${testLine}`);
+out.push(`  overall   : ${overall}`);
+out.push(`  milestone : ${milestone}`);
+out.push("");
+out.push(`  open critical tasks:`);
+const openTasks = Array.isArray(v.openTasks) ? v.openTasks : [];
+if (openTasks.length) {
+  for (const t of openTasks) out.push(`    • ${t}`);
+} else {
+  out.push(`    ${NA}`);
+}
+out.push("");
+out.push(`  R&D queue : ${rndLine}`);
+out.push("");
+out.push(`  pointers:`);
+if (pointers.length) {
+  for (const p of pointers) out.push(`    - ${p}`);
+} else {
+  out.push(`    ${NA}`);
+}
+
+console.log(out.join("\n"));
+process.exit(0);
