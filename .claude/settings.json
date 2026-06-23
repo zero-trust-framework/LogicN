@@ -56,6 +56,7 @@
       "stray-docs":     "node scripts/audit-stray-docs.mjs [--summary|--json]   (stray/stale *.md outside docs/ + duplicate basenames + kb-graph orphans/broken-links; --summary runs periodically at Stop)",
       "code-registry":  "node scripts/gen-code-registry.mjs   (-> build/code-registry/REGISTRY.md, the live code catalog)",
       "lint-conventions":"node scripts/lint-conventions.mjs   (umbrella: #215 scanner + registered convention checks; --soft to report; --full adds the heavy SEC-002 mutation gate)",
+      "lint-lln":"node scripts/lint-lln.mjs [--summary|--json|--soft] [paths…]   (.lln source-quality gate: flow comments + contract{intent} sans auto-settings + no AI slop/bad-syntax; fixtures whitelisted in governance/lln-lint-allow.json; inline //lln-allow: CODE; registered in lint-conventions → runs at Stop)",
       "coverage-codes": "node scripts/audit-coverage.mjs codes   (#218 bidirectional code-coverage cross-check)",
       "doc-drift":      "node scripts/audit-doc-drift.mjs   (DOC-004 #219: doc test/package COUNTS vs version.json authority; registered in lint-conventions)",
       "provenance":     "node scripts/audit-provenance.mjs   (BLD-003 #219/#216: generated artifacts carry a provenance sidecar + are fresh vs sources; registered in lint-conventions)",

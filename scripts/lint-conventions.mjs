@@ -36,6 +36,11 @@ const CHECKS = [
     desc: "SEC-002: re-introduce each fail-closed gate's hole + assert its test catches it (Stryker-style; would have caught the B5a fail-open)",
     heavy: true, // rebuilds + runs tests per mutant (~40s) — only with --full (CI/security tier), skipped in the fast phase-close sweep
   },
+  {
+    name: "lln-quality",
+    script: "scripts/lint-lln.mjs",
+    desc: "owner .lln rules (2026-06-23): every flow has a human comment (rule 1) + a contract{intent} declaring clauses EXCEPT auto-settings (rule 2), and no AI slop / bad syntax (rule 3). Production src only — fixtures/examples/benchmarks whitelisted in governance/lln-lint-allow.json. Baseline > 0 (report-only until the self-hosted/.lln corpus is retrofitted).",
+  },
   // #218 (coverage cross-check) runs separately as `audit-coverage.mjs`.
 ];
 
