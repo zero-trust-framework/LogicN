@@ -149,7 +149,54 @@ const FUSE = [
   },
 ];
 
-const MUTANTS = configArg ? JSON.parse(readFileSync(configArg, "utf8")) : [...BUILTIN, ...CERT, ...FUSE];
+// ── i32 strict-trapping arithmetic — the fail-closed "overflow/div0 must TRAP, never wrap" gate ──
+// Owner decision 2026-06-18 (Fork A = TRAP): integer overflow must NEVER silently wrap (a wrap past a
+// bounds check is a capability-gate exploit). i32-arith.ts is the SINGLE source of truth shared by the
+// walker, the bytecode VM, and the WASM emitter, so a wrap-mutant here is a cross-tier fail-open. Each
+// mutant makes one op wrap instead of trap; i32-arith.test.mjs kills it [test]. core-compiler has its own
+// typescript, so build with the local vendored tsc (not a bare `tsc`).
+const CC = "packages-logicn/logicn-core-compiler";
+const CC_BUILD = ["node", "node_modules/typescript/lib/tsc.js", "-p", "tsconfig.json"];
+const CC_TEST = ["node", "--test", "tests/i32-arith.test.mjs"];
+const CC_I32 = [
+  {
+    // Pre-wrap r with `| 0` BEFORE the range check: an already-i32-wrapped r is never out of [MIN,MAX],
+    // so the overflow check never fires → silent wrap. Single-line anchor (CRLF-agnostic; the file has
+    // mixed line endings), unique to add.
+    id: "i32-add-overflow-wrap",
+    file: `${CC}/src/i32-arith.ts`,
+    find: "const r = a + b;",
+    replace: "const r = (a + b) | 0;",
+    cwd: CC, build: CC_BUILD, test: CC_TEST,
+    desc: "i32 ADD silently WRAPS on signed overflow instead of trapping — the exact wrap-past-bounds-check exploit Fork-A forbids",
+  },
+  {
+    id: "i32-sub-overflow-wrap",
+    file: `${CC}/src/i32-arith.ts`,
+    find: "const r = a - b;",
+    replace: "const r = (a - b) | 0;",
+    cwd: CC, build: CC_BUILD, test: CC_TEST,
+    desc: "i32 SUB silently WRAPS on signed underflow instead of trapping (also breaks neg, which is 0 - x)",
+  },
+  {
+    id: "i32-mul-overflow-wrap",
+    file: `${CC}/src/i32-arith.ts`,
+    find: 'return p < -2147483648n || p > 2147483647n ? "IntegerOverflow" : Number(p) | 0;',
+    replace: "return Number(p) | 0;",
+    cwd: CC, build: CC_BUILD, test: CC_TEST,
+    desc: "i32 MUL (BigInt slow path) silently WRAPS on overflow instead of trapping — large-operand products escape the bound",
+  },
+  {
+    id: "i32-div-minint-wrap",
+    file: `${CC}/src/i32-arith.ts`,
+    find: 'if (a === I32_MIN && b === -1) return "IntegerOverflow"; // 2^31 overflows i32 (the one signed-div overflow)',
+    replace: 'if (a === I32_MIN && b === -1) return Math.trunc(a / b) | 0; // 2^31 overflows i32 (the one signed-div overflow)',
+    cwd: CC, build: CC_BUILD, test: CC_TEST,
+    desc: "i32 DIV INT32_MIN/-1 (the one signed-division overflow = 2^31) silently wraps instead of trapping",
+  },
+];
+
+const MUTANTS = configArg ? JSON.parse(readFileSync(configArg, "utf8")) : [...BUILTIN, ...CERT, ...FUSE, ...CC_I32];
 
 function git(args) { return spawnSync("git", args, { cwd: ROOT, encoding: "utf8" }); }
 function isClean(file) { return git(["diff", "--quiet", "--", file]).status === 0; }
