@@ -82,8 +82,14 @@ export type { SignerVote, QuorumDecision, QuorumDenyReason } from "./quorum.js";
 // `overwrite` needs a verified signed attestation, else fail-closed to the stricter `crypto-only`.
 // A cleartext secret to crypto-only media is UNERASABLE (overwrite-erase impossible) -> DENY; seal
 // (KEM-DEM) first and "delete" by destroying the DEK. Closes the R&D 0116 WORM-media fail-open.
-export { admitSubstrateWrite, effectiveEraseModel, STORAGE_ADMIT_CAP } from "./substrate-erasure.js";
-export type { EraseModel, SubstrateDescriptor, WritePayload, SubstrateWriteAdmission } from "./substrate-erasure.js";
+export {
+  admitSubstrateWrite, effectiveEraseModel, STORAGE_ADMIT_CAP,
+  admitStorageSubstrate, signSubstrateAttestation, generateSubstrateKeypair,
+} from "./substrate-erasure.js";
+export type {
+  EraseModel, SubstrateDescriptor, WritePayload, SubstrateWriteAdmission,
+  SubstrateAttestationManifest, SubstrateAttestation, SubstrateAdmissionPolicy, StorageSubstrateAdmission,
+} from "./substrate-erasure.js";
 
 // ── Substrate failure-mode model (Direction C) — seeded, fail-closed ──
 // Models photonic/ternary noise (phase-drift/crosstalk/lane-failure/readout) in software.

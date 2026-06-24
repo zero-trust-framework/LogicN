@@ -24,6 +24,7 @@
  * #102-106). The OBLIGATION is enforced now so it cannot be silently violated.
  */
 
+import { sign as edSign, verify as edVerify, createPrivateKey, createPublicKey, generateKeyPairSync } from "node:crypto";
 import {
   Verdict,
   decideAtBoundary,
@@ -113,4 +114,145 @@ export function admitSubstrateWrite(
     Verdict.DENY,
     "LLN-RETAIN-001: cleartext secret to a crypto-only substrate is UNERASABLE (overwrite-erase impossible) — seal with KEM-DEM before write; deletion = destroy the DEK + mint a crypto-erase witness",
   );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+// The SIGNED eraseModel attestation rail (R&D 0118 §2 — the discovery answer).
+//
+// An eraseModel is NEVER taken from a drive's self-report. `overwrite` (the permissive model) is an
+// EARNED, SIGNED, REVOCABLE exception: it is honoured only when a manifest carrying the substrate's
+// eraseModel is Ed25519-signed by a non-revoked deployment key AND declares (and the admitter holds)
+// the `storage.admit` capability. Any failure — no attestation, bad signature, revoked key, wrong
+// capability — yields a descriptor with `attested: false`, which `effectiveEraseModel` resolves to
+// the stricter `crypto-only`. So a WORM drive that lies "overwrite" cannot produce a valid signature
+// and is denied. (Mirrors photonic-admission.ts's 4-gate discipline for the storage capability axis;
+// the shared verify helper is a future dedup — kept separate here to avoid touching the shipped rail.)
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+
+/** A signed descriptor binding a storage substrate's id to its eraseModel + a signer. */
+export interface SubstrateAttestationManifest {
+  readonly schemaVersion: "logicn.substrate-config.v1";
+  /** Stable substrate id (drive serial / mount / mesh seam) — inside the signed blob, so id-spoof breaks the sig. */
+  readonly id: string;
+  /** The erasure physics the signer vouches for. `overwrite` is the earned exception. */
+  readonly eraseModel: EraseModel;
+  /** MUST be STORAGE_ADMIT_CAP (deny-by-default otherwise — a photonic.reprogram key cannot mount storage). */
+  readonly capability: typeof STORAGE_ADMIT_CAP;
+  /** Signer key id — paired with a revocationCheck so a valid sig from a revoked key is refused. */
+  readonly signerKeyId?: string;
+}
+
+/** A signed substrate attestation (manifest + Ed25519 signature over its canonical form). */
+export interface SubstrateAttestation {
+  readonly manifest: SubstrateAttestationManifest;
+  readonly signature: string; // base64 Ed25519 over canonical(manifest)
+}
+
+export interface SubstrateAdmissionPolicy {
+  /** PEM SPKI public key used to verify the manifest signature. Required. */
+  readonly publicKeyPem: string;
+  /** Capabilities granted to the admitter. `storage.admit` must be present (deny-by-default). */
+  readonly grantedCapabilities: readonly string[];
+  /** Registry-backed revocation predicate (host-injected). A throw is treated as a denial. */
+  readonly revocationCheck?: (keyId: string) => boolean;
+}
+
+export interface StorageSubstrateAdmission {
+  readonly decision: BoundaryDecision;
+  /** The descriptor to feed `admitSubstrateWrite` — `attested` is true IFF all gates passed. */
+  readonly descriptor: SubstrateDescriptor;
+  /** Audit reason (admitted, or the first gate that denied → falls back to crypto-only). */
+  readonly reason: string;
+}
+
+/** Deterministic JSON pre-image: keys sorted, `undefined` dropped, signature excluded. */
+function canonicalSubstrate(m: SubstrateAttestationManifest): string {
+  const entries = Object.entries(m).filter(([, v]) => v !== undefined).sort(([a], [b]) => a.localeCompare(b));
+  return JSON.stringify(Object.fromEntries(entries));
+}
+
+/** Sign a substrate attestation manifest with an Ed25519 private key (PEM PKCS8). */
+export function signSubstrateAttestation(manifest: SubstrateAttestationManifest, privateKeyPem: string): SubstrateAttestation {
+  const sig = edSign(null, Buffer.from(canonicalSubstrate(manifest), "utf8"), createPrivateKey(privateKeyPem));
+  return { manifest, signature: sig.toString("base64") };
+}
+
+/** Generate an Ed25519 keypair for signing substrate attestations offline (public key pinned in policy). */
+export function generateSubstrateKeypair(): { publicKeyPem: string; privateKeyPem: string } {
+  const { publicKey, privateKey } = generateKeyPairSync("ed25519");
+  return {
+    publicKeyPem: publicKey.export({ type: "spki", format: "pem" }).toString(),
+    privateKeyPem: privateKey.export({ type: "pkcs8", format: "pem" }).toString(),
+  };
+}
+
+/**
+ * Resolve a substrate's TRUSTED eraseModel from a signed attestation, fail-closed. The returned
+ * descriptor feeds `admitSubstrateWrite`. `attested` is true ONLY when the signature verifies, the
+ * key is not revoked, and the `storage.admit` capability is declared AND granted — otherwise the
+ * descriptor falls back to an unattested `crypto-only` (the stricter default). Deny-by-default.
+ */
+export function admitStorageSubstrate(
+  attestation: SubstrateAttestation | undefined,
+  policy: SubstrateAdmissionPolicy,
+  onDiagnostic?: (d: GovernanceDiagnostic) => void,
+): StorageSubstrateAdmission {
+  // Any non-ALLOW path yields an UNATTESTED descriptor → effectiveEraseModel = crypto-only (stricter).
+  const reject = (v: Verdict, reason: string, id?: string): StorageSubstrateAdmission => ({
+    decision: decideAtBoundary(v, onDiagnostic),
+    // unattested → crypto-only by effectiveEraseModel. Omit `id` when absent (exactOptionalPropertyTypes).
+    descriptor: id === undefined ? { attested: false } : { id, attested: false },
+    reason,
+  });
+
+  if (!attestation) return reject(Verdict.INDETERMINATE, "no substrate attestation — default to crypto-only (undischarged)");
+  const m = attestation.manifest;
+  if (
+    !m || m.schemaVersion !== "logicn.substrate-config.v1" ||
+    typeof m.id !== "string" || typeof m.capability !== "string" ||
+    (m.eraseModel !== "overwrite" && m.eraseModel !== "crypto-only")
+  ) {
+    return reject(Verdict.DENY, "malformed substrate attestation manifest");
+  }
+
+  // 1. SIGNATURE — Ed25519 over the canonical manifest (id is inside the signed blob → id-spoof breaks it).
+  if (!attestation.signature) return reject(Verdict.DENY, "signature required but absent", m.id);
+  if (!policy.publicKeyPem) return reject(Verdict.DENY, "no public key configured to verify signature", m.id);
+  try {
+    const ok = edVerify(
+      null,
+      Buffer.from(canonicalSubstrate(m), "utf8"),
+      createPublicKey(policy.publicKeyPem),
+      Buffer.from(attestation.signature, "base64"),
+    );
+    if (!ok) return reject(Verdict.DENY, "signature verification failed", m.id);
+  } catch (e) {
+    return reject(Verdict.DENY, `signature check error: ${(e as Error).message}`, m.id);
+  }
+
+  // 2. REVOCATION — a valid signature from a revoked key is refused (fail-closed on a throw).
+  if (m.signerKeyId !== undefined && policy.revocationCheck !== undefined) {
+    let revoked: boolean;
+    try {
+      revoked = policy.revocationCheck(m.signerKeyId) === true;
+    } catch (e) {
+      return reject(Verdict.DENY, `revocation status for '${m.signerKeyId}' undeterminable (${(e as Error).message}) — fail-closed`, m.id);
+    }
+    if (revoked) return reject(Verdict.DENY, `signing key '${m.signerKeyId}' is REVOKED`, m.id);
+  }
+
+  // 3. CAPABILITY — deny-by-default: declared AND granted (a photonic.reprogram key cannot mount storage).
+  if (m.capability !== STORAGE_ADMIT_CAP) {
+    return reject(Verdict.DENY, `manifest capability '${m.capability}' is not '${STORAGE_ADMIT_CAP}'`, m.id);
+  }
+  if (!policy.grantedCapabilities.includes(STORAGE_ADMIT_CAP)) {
+    return reject(Verdict.DENY, `'${STORAGE_ADMIT_CAP}' capability not granted to the admitter`, m.id);
+  }
+
+  // All gates passed → the eraseModel is now TRUSTED (attested). `overwrite` is the earned exception.
+  return {
+    decision: decideAtBoundary(Verdict.ALLOW, onDiagnostic),
+    descriptor: { id: m.id, claimedEraseModel: m.eraseModel, attested: true },
+    reason: `attested eraseModel='${m.eraseModel}' for substrate '${m.id}'`,
+  };
 }

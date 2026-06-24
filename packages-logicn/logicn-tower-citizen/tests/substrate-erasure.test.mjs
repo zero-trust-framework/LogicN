@@ -11,6 +11,9 @@ import {
   admitSubstrateWrite,
   effectiveEraseModel,
   STORAGE_ADMIT_CAP,
+  admitStorageSubstrate,
+  signSubstrateAttestation,
+  generateSubstrateKeypair,
   Verdict,
 } from "../dist/index.js";
 
@@ -86,4 +89,68 @@ test("SOUNDNESS: no non-ALLOW admission ever authorizes; STORAGE_ADMIT_CAP is th
   const denied = admitSubstrateWrite(secretCleartext, { claimedEraseModel: "crypto-only", attested: true });
   assert.equal(denied.admitted, denied.decision.authorized);
   assert.equal(denied.admitted, false);
+});
+
+// ── the SIGNED eraseModel attestation rail (R&D 0118 §2 — the discovery answer) ──
+const KP = generateSubstrateKeypair();
+const policy = (granted = [STORAGE_ADMIT_CAP], revocationCheck) => ({ publicKeyPem: KP.publicKeyPem, grantedCapabilities: granted, revocationCheck });
+const manifest = (eraseModel, extra = {}) => ({ schemaVersion: "logicn.substrate-config.v1", id: "drive-1", eraseModel, capability: STORAGE_ADMIT_CAP, ...extra });
+
+test("admitStorageSubstrate: a valid signed `overwrite` attestation yields attested:true → cleartext secret ALLOWED end-to-end", () => {
+  const att = signSubstrateAttestation(manifest("overwrite"), KP.privateKeyPem);
+  const adm = admitStorageSubstrate(att, policy());
+  assert.equal(adm.descriptor.attested, true);
+  assert.equal(adm.descriptor.claimedEraseModel, "overwrite");
+  assert.equal(effectiveEraseModel(adm.descriptor), "overwrite");
+  // end-to-end: the earned exception lets a cleartext secret through (overwrite-erase is sound).
+  assert.equal(admitSubstrateWrite(secretCleartext, adm.descriptor).admitted, true);
+});
+
+test("admitStorageSubstrate: a valid signed `crypto-only` attestation is attested but still DENIES a cleartext secret", () => {
+  const att = signSubstrateAttestation(manifest("crypto-only"), KP.privateKeyPem);
+  const adm = admitStorageSubstrate(att, policy());
+  assert.equal(adm.descriptor.attested, true);
+  assert.equal(effectiveEraseModel(adm.descriptor), "crypto-only");
+  assert.equal(admitSubstrateWrite(secretCleartext, adm.descriptor).admitted, false);
+  assert.equal(admitSubstrateWrite(secretSealed, adm.descriptor).admitted, true);
+});
+
+test("admitStorageSubstrate: NO attestation → attested:false → crypto-only default → cleartext secret DENIED", () => {
+  const adm = admitStorageSubstrate(undefined, policy());
+  assert.equal(adm.descriptor.attested, false);
+  assert.equal(effectiveEraseModel(adm.descriptor), "crypto-only");
+  assert.equal(admitSubstrateWrite(secretCleartext, adm.descriptor).admitted, false);
+});
+
+test("admitStorageSubstrate: THE LYING WORM DRIVE — a tampered/forged overwrite claim fails the signature → attested:false", () => {
+  const att = signSubstrateAttestation(manifest("overwrite"), KP.privateKeyPem);
+  // attacker swaps the signed eraseModel to overwrite-without-resigning (tamper the manifest post-sign).
+  const forged = { manifest: { ...att.manifest, id: "evil" }, signature: att.signature };
+  const adm = admitStorageSubstrate(forged, policy());
+  assert.equal(adm.descriptor.attested, false); // the lie isn't signed
+  assert.equal(effectiveEraseModel(adm.descriptor), "crypto-only");
+  assert.equal(admitSubstrateWrite(secretCleartext, adm.descriptor).admitted, false);
+});
+
+test("admitStorageSubstrate: a signature from the WRONG key fails → attested:false", () => {
+  const OTHER = generateSubstrateKeypair();
+  const att = signSubstrateAttestation(manifest("overwrite"), OTHER.privateKeyPem);
+  assert.equal(admitStorageSubstrate(att, policy()).descriptor.attested, false);
+});
+
+test("admitStorageSubstrate: a REVOKED signer key is refused even with a valid signature", () => {
+  const att = signSubstrateAttestation(manifest("overwrite", { signerKeyId: "k1" }), KP.privateKeyPem);
+  const adm = admitStorageSubstrate(att, policy([STORAGE_ADMIT_CAP], (id) => id === "k1"));
+  assert.equal(adm.descriptor.attested, false);
+  assert.match(adm.reason, /REVOKED/);
+});
+
+test("admitStorageSubstrate: deny-by-default capability — `storage.admit` not granted → attested:false", () => {
+  const att = signSubstrateAttestation(manifest("overwrite"), KP.privateKeyPem);
+  assert.equal(admitStorageSubstrate(att, policy([])).descriptor.attested, false);
+});
+
+test("admitStorageSubstrate: a wrong-capability manifest (photonic.reprogram) is denied", () => {
+  const att = signSubstrateAttestation({ ...manifest("overwrite"), capability: "photonic.reprogram" }, KP.privateKeyPem);
+  assert.equal(admitStorageSubstrate(att, policy()).descriptor.attested, false);
 });
