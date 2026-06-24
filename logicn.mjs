@@ -83,7 +83,27 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 const compilerPath = new URL("packages-logicn/logicn-core-compiler/dist/index.js", import.meta.url).href;
 
 async function main() {
-  const [, , command = "help", ...rest] = process.argv;
+  let [, , command = "help", ...rest] = process.argv;
+
+  // ── `generate tests` — canonical surface for contract-driven test obligations (0016) ──
+  // This command was historically `gen-tests`; it is now the two-word `logicn generate tests`.
+  // Normalize the subcommand into an internal dispatch token (the literal string "generate tests",
+  // which contains a space and therefore can never equal a single shell argv token) and drop the
+  // consumed `tests` token, leaving the downstream `llnFile = rest[0]` + parse pipeline unchanged.
+  if (command === "generate") {
+    if (rest[0] === "tests") {
+      command = "generate tests";
+      rest = rest.slice(1);
+    } else {
+      console.error(`Unknown 'generate' subcommand: '${rest[0] ?? ""}'. Did you mean:  logicn generate tests <file.lln> [--tap]`);
+      process.exit(1);
+    }
+  }
+  // The old `gen-tests` spelling was renamed to `generate tests` — redirect rather than 404 silently.
+  if (command === "gen-tests") {
+    console.error("`logicn gen-tests` was renamed. Use:  logicn generate tests <file.lln> [--tap]");
+    process.exit(1);
+  }
 
   if (command === "help" || command === "--help" || command === "-h") {
     console.log(`logicn — LogicN compiler + runtime (Phase 27 WASM)
@@ -109,7 +129,7 @@ Commands:
   logicn check --what-if <policy.lln>                 shadow policy analysis (dry run)
   logicn check --what-if <policy.lln> <file.lln>      what-if against single file
   logicn verify <file.lln>                            DRCM Phase 3 admission gate — verify manifest
-  logicn gen-tests <file.lln> [--tap]                 contract-driven test obligations (0016) — 5 dimensions; --tap = TAP plan
+  logicn generate tests <file.lln> [--tap]            contract-driven test obligations (0016) — 5 dimensions; --tap = TAP plan
   logicn manifest-to-dot <file.lln>                   export manifest as Graphviz DOT for DAG audit
   logicn init-env                                      validate capabilities against root policy
   logicn keygen                                        generate Ed25519 signing keypair for manifests
@@ -1113,11 +1133,12 @@ Baseline comparison (governance-cost):
     process.exit(errors.length > 0 ? 1 : 0);
   }
 
-  // ── logicn gen-tests <file.lln> [--tap] — contract-driven test obligations (0016) ──
+  // ── logicn generate tests <file.lln> [--tap] — contract-driven test obligations (0016) ──
   // Derives the fail-closed test obligations a flow's contract implies, across all five
   // generator dimensions (fault-injection / effect-egress / capability-denial / boundary /
   // substrate-violation), from the flow GIR. --tap prints a TAP plan for the fault dimension.
-  if (command === "gen-tests") {
+  // (The internal "generate tests" token is set by the argv normalization at the top of main().)
+  if (command === "generate tests") {
     const fx = m.checkEffects(parsed.flows, parsed.ast);
     const gir = m.emitGIR(parsed.ast, parsed.flows, fx).gir;
     const suite = m.generateContractTestSuite(gir.flows);

@@ -5,9 +5,10 @@
 Three tightly related developer tooling features that together make LogicN comprehensible to both
 human developers and AI tools:
 
-1. **Intent-Driven Test Skeleton Generation** — `logicn gen-tests` produces typed test
-   scaffolding from API contracts and flow signatures *(shipping command is `gen-tests`, stdout/TAP;
-   the `generate tests --out` file-emission form below is PLANNED — see R&D 0119/0016)*
+1. **Intent-Driven Test Skeleton Generation** — `logicn generate tests` derives the test
+   obligations a flow's contract implies *(shipping today: stdout obligations across 5 dimensions +
+   a `--tap` TAP plan; the `--out <dir>` file-emission and the `.lln` test-skeleton output shown
+   below are PLANNED — not yet built; see R&D 0016/0119)*
 2. **Cross-Package Capability Inheritance Warnings** — import-time visibility of transitive authority
    before code compiles
 3. **Constraint-Complete Callable Signatures** — every public flow exposes effects, capabilities,
@@ -26,10 +27,10 @@ is typically incomplete or missing.
 ### Command
 
 ```bash
-# SHIPPING today (stdout / TAP):
-logicn gen-tests api-orders.lln
-logicn gen-tests api-orders.lln --tap
-# PLANNED (file-emission + --out; not yet built — R&D 0119/0016):
+# SHIPPING today (stdout obligations + TAP plan):
+logicn generate tests api-orders.lln
+logicn generate tests api-orders.lln --tap
+# PLANNED (file emission to a directory — not yet built; see R&D 0016/0119):
 logicn generate tests api-orders.lln --out tests/generated/
 ```
 

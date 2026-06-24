@@ -54,7 +54,7 @@ packages/greeting/          the app's OWN governed, fusable package (the compile
   src/index.lln               pure flow main() -> Int (returns 200)
   dist/                        signed greeting.wasm + greeting.lmanifest.json (committed here)
 deps/README.md              where THIRD-PARTY signed components are vendored
-proofs/README.md            contract-driven test obligations (gen-tests)
+proofs/README.md            contract-driven test obligations (generate tests)
 tests/e2e.test.mjs          the scaffold→fuse→kernel→serve proof
 ```
 
