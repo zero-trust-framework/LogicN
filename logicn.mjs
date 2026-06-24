@@ -1306,8 +1306,8 @@ Baseline comparison (governance-cost):
         process.exit(1);
       }
 
-      // Check 3: schema version
-      if (manifest.schemaVersion !== "lln.manifest.v1") {
+      // Check 3: schema version — v1 = Ed25519-or-placeholder (default); v2 = a persisted hybrid signature (0102 / #34 (c)).
+      if (manifest.schemaVersion !== "lln.manifest.v1" && manifest.schemaVersion !== "lln.manifest.v2") {
         console.error(`❌ LLN-MANIFEST-VERSION: Unknown schema version '${manifest.schemaVersion}'`);
         process.exit(1);
       }
@@ -1342,7 +1342,79 @@ Baseline comparison (governance-cost):
           if (jsonManifest.governanceSignature && typeof jsonManifest.governanceSignature === "object") {
             const sig = jsonManifest.governanceSignature;
 
-            if (sig.algorithm && sig.keyId && sig.signature) {
+            // ── 0102 / #34: HYBRID (v2) manifest signature branch — dispatch on the signature's OWN fields ──
+            // A v2 sig is self-describing: sigAlgorithm "lln.gov.sig.v2" OR algorithm "Ed25519+ML-DSA-65" OR a
+            // pipe in the signature (base64url never contains '|', so a classical Ed25519 sig can't trip it).
+            // Checked FIRST; the classical branch below becomes `else if`, so a v2 sig is NEVER decoded by the
+            // single-key Buffer.from(sig.signature,'base64') path (which would silently truncate at the '|' —
+            // Adv-1 #2). This mirrors the shipped verifyGovernanceSignature v2-refusal at proof-graph.ts:763.
+            const isHybridSig = sig.sigAlgorithm === "lln.gov.sig.v2" || sig.algorithm === "Ed25519+ML-DSA-65"
+              || (typeof sig.signature === "string" && sig.signature.includes("|"));
+            if (isHybridSig) {
+              if (!sig.keyId || !sig.signature || !sig.bodyHash || sig.sigAlgorithm !== "lln.gov.sig.v2" || !sig.signature.includes("|")) {
+                console.error(`❌ LLN-MANIFEST-PQ-REQUIRED: incomplete/inconsistent or non-both-half hybrid (v2) signature — fail-closed (no PQ downgrade).`);
+                process.exit(1);
+              }
+              try {
+                // Revocation pre-check (same registry gate as the classical path).
+                const reg = await import("./governance/revocation-registry.mjs");
+                const trust = reg.assertRegistryTrustworthy(".");
+                if (trust.present && !trust.signed) {
+                  console.warn(`   ⚠️  LLN-REVOCATION-UNSIGNED: governance/revocations.json is not signed (tamperable) — run: node governance/sign-revocations.mjs`);
+                }
+                if (reg.isKeyRevoked(sig.keyId)) {
+                  console.error(`❌ LLN-MANIFEST-REVOKED-KEY: manifest signed by REVOKED key ${sig.keyId} — fail-closed (Deny).`);
+                  process.exit(1);
+                }
+                const edPubPath = join("governance", `signing-key-${sig.keyId}.pub.pem`);
+                const mlPubPath = join("governance", `signing-key-${sig.keyId}.mldsa.pub.b64`);
+                if (!existsSync(edPubPath) || !existsSync(mlPubPath)) {
+                  console.error(`❌ LLN-MANIFEST-PUBKEY-MISSING: hybrid public key(s) missing for keyId ${sig.keyId} (${edPubPath} / ${mlPubPath}) — fail-closed (cannot verify both halves).`);
+                  process.exit(1);
+                }
+                const { createPublicKey } = await import("node:crypto");
+                const { manifestSigningInput, manifestSigCanon } = await import(
+                  new URL("packages-logicn/logicn-core-compiler/dist/manifest-generator.js", import.meta.url).href
+                );
+                const cc = await import(new URL("packages-logicn/logicn-core-compiler/dist/index.js", import.meta.url).href);
+                // RE-DERIVE bodyHash from the actual body over the SIGNER's canon — NEVER trust sig.bodyHash as
+                // the signed input (Adv-1 #8). The recomputed hash is what goes into the reconstructed
+                // envelope, so the signature only validates if it matches what was signed.
+                const { governanceSignature: _sigH, ...manifestWithoutSig } = jsonManifest;
+                const bodyHash = createHash("sha256").update(Buffer.from(manifestSigningInput(manifestWithoutSig, manifestSigCanon(sig)))).digest("hex");
+                // Defence-in-depth: the explicit bodyHash field must match the recomputed body.
+                if (sig.bodyHash !== `sha256:${bodyHash}`) {
+                  console.error(`❌ LLN-MANIFEST-TAMPER: v2 manifest bodyHash mismatch (declared ${sig.bodyHash} vs computed sha256:${bodyHash}) — fail-closed.`);
+                  process.exit(1);
+                }
+                // Reconstruct the EXACT envelope the signer bound (bench-identical). generatedAt & evidence are
+                // excluded from the signed payload, so any value verifies; jsonManifest.generatedAt is used for fidelity.
+                const envelope = cc.buildProofGraph(
+                  "lmanifest",
+                  { effectMask: 0, governanceMask: 0, inputVsFlags: 0, outputVsFlags: 0, nodeFlagsMask: 0, effectCount: 0, capabilityCallCount: 0, hasBoundaryCrossings: false },
+                  [{ kind: "effect", claim: `lmanifest.bodyHash=${bodyHash}`, satisfiedBy: "manifest-generator" }],
+                  [{ obligationKind: "effect", sourceHash: `sha256:${bodyHash}`, girHash: `sha256:${bodyHash}`, checkerPassed: true, diagnosticsFired: [] }],
+                  jsonManifest.generatedAt,
+                );
+                // Attach the persisted v2 signature in the ProofGraph-layer shape (algorithm + signature are the
+                // only fields verifyGovernanceSignatureHybrid reads; proof-graph.ts:786-789).
+                envelope.governanceSignature = { algorithm: "lln.gov.sig.v2", signerKeyId: sig.keyId, signature: sig.signature, signedAt: sig.signedAt };
+                // Published Ed25519 pubkey is PEM → DER SPKI (verifier expects DER, proof-graph.ts:797);
+                // ML-DSA pubkey is base64 of raw bytes.
+                const edPubDer = new Uint8Array(createPublicKey(readFileSync(edPubPath, "utf-8")).export({ type: "spki", format: "der" }));
+                const mlPubRaw = new Uint8Array(Buffer.from(readFileSync(mlPubPath, "utf-8").trim(), "base64"));
+                const valid = await cc.verifyGovernanceSignatureHybrid(envelope, edPubDer, mlPubRaw);
+                if (valid) {
+                  console.log(`   🔐🛡️  Hybrid signature verified (Ed25519+ML-DSA-65, keyId: ${sig.keyId.slice(0, 8)}...) — both halves`);
+                } else {
+                  console.error(`❌ LLN-MANIFEST-TAMPER: hybrid signature verification FAILED (both halves required) — manifest may be tampered or PQ-downgraded.`);
+                  process.exit(1);
+                }
+              } catch (err) {
+                console.error(`❌ LLN-MANIFEST-TAMPER: hybrid signature verification could not be completed — fail-closed: ${err.message}`);
+                process.exit(1);
+              }
+            } else if (sig.algorithm && sig.keyId && sig.signature) {
               // ── Key revocation pre-check (Gap B, zero-trust v(k) mandate) ──
               // A revoked key id is Deny even with a valid signature. The registry
               // is tamper-evident: fail closed if it is signed-but-invalid (edited
@@ -1512,6 +1584,54 @@ Baseline comparison (governance-cost):
             console.error(`❌ LLN-MANIFEST-UNSIGNED: the authoritative manifest is unsigned/placeholder but LOGICN_PROFILE=production requires a signature to run — fail-closed. Run: logicn keygen && logicn build ${llnFile}`);
             process.exit(1);
           }
+          // ── 0102 / #34: HYBRID (v2) admission branch — self-describing on the signature's own fields ──
+          // A v2 sig MUST be verified with BOTH halves; it must NOT reach the classical legacy-format guard
+          // (which would mis-reject the jcs v2 sig) NOR the single-key cryptoVerify below (Adv-1 #2 / Adv-2 #2).
+          const runIsHybridSig = sig.sigAlgorithm === "lln.gov.sig.v2" || sig.algorithm === "Ed25519+ML-DSA-65"
+            || (typeof sig.signature === "string" && sig.signature.includes("|"));
+          if (runIsHybridSig) {
+            if (sig.sigAlgorithm !== "lln.gov.sig.v2" || !sig.bodyHash || !sig.keyId || !String(sig.signature).includes("|")) {
+              console.error(`❌ LLN-MANIFEST-PQ-REQUIRED: incomplete/inconsistent or non-both-half hybrid (v2) signature — refusing to run (fail-closed, no PQ downgrade).`);
+              process.exit(1);
+            }
+            const reg = await import("./governance/revocation-registry.mjs");
+            reg.assertRegistryTrustworthy(".");
+            if (reg.isKeyRevoked(sig.keyId)) {
+              console.error(`❌ LLN-MANIFEST-REVOKED-KEY: manifest signed by REVOKED key ${sig.keyId} — refusing to run (fail-closed, Deny).`);
+              process.exit(1);
+            }
+            const edPubPath = join("governance", `signing-key-${sig.keyId}.pub.pem`);
+            const mlPubPath = join("governance", `signing-key-${sig.keyId}.mldsa.pub.b64`);
+            if (!existsSync(edPubPath) || !existsSync(mlPubPath)) {
+              console.error(`❌ LLN-MANIFEST-PUBKEY-MISSING: hybrid public key(s) missing for keyId ${sig.keyId} — refusing to run (fail-closed, cannot verify both halves).`);
+              process.exit(1);
+            }
+            const { createPublicKey } = await import("node:crypto");
+            const cc = await import(new URL("packages-logicn/logicn-core-compiler/dist/index.js", import.meta.url).href);
+            const { governanceSignature: _omitH, ...withoutSigH } = manifest;
+            // RE-DERIVE bodyHash from the decoded CBOR body over sig's canon (jcs → representation-independent,
+            // self-verifiable from CBOR per #67); never trust sig.bodyHash as the signed input.
+            const runBodyHash = createHash("sha256").update(Buffer.from(manifestSigningInput(withoutSigH, manifestSigCanon(sig)))).digest("hex");
+            if (sig.bodyHash !== `sha256:${runBodyHash}`) {
+              console.error(`❌ LLN-MANIFEST-TAMPER: v2 manifest bodyHash mismatch — refusing to run (fail-closed).`);
+              process.exit(1);
+            }
+            const envelope = cc.buildProofGraph(
+              "lmanifest",
+              { effectMask: 0, governanceMask: 0, inputVsFlags: 0, outputVsFlags: 0, nodeFlagsMask: 0, effectCount: 0, capabilityCallCount: 0, hasBoundaryCrossings: false },
+              [{ kind: "effect", claim: `lmanifest.bodyHash=${runBodyHash}`, satisfiedBy: "manifest-generator" }],
+              [{ obligationKind: "effect", sourceHash: `sha256:${runBodyHash}`, girHash: `sha256:${runBodyHash}`, checkerPassed: true, diagnosticsFired: [] }],
+              manifest.generatedAt,
+            );
+            envelope.governanceSignature = { algorithm: "lln.gov.sig.v2", signerKeyId: sig.keyId, signature: sig.signature, signedAt: sig.signedAt };
+            const edPubDer = new Uint8Array(createPublicKey(readFileSync(edPubPath, "utf-8")).export({ type: "spki", format: "der" }));
+            const mlPubRaw = new Uint8Array(Buffer.from(readFileSync(mlPubPath, "utf-8").trim(), "base64"));
+            const sigOkHybrid = await cc.verifyGovernanceSignatureHybrid(envelope, edPubDer, mlPubRaw);
+            if (!sigOkHybrid) {
+              console.error(`❌ LLN-MANIFEST-TAMPER: hybrid manifest signature verification FAILED (both halves required) — refusing to run (fail-closed).`);
+              process.exit(1);
+            }
+          } else {
           // A legacy (pretty-JSON) signature can't be self-verified from CBOR (key order is not preserved
           // through canonical CBOR) — push toward the current canonical signer rather than mis-report it as tampered.
           if (manifestSigCanon(sig) !== "jcs") {
@@ -1537,6 +1657,7 @@ Baseline comparison (governance-cost):
           if (!sigOk) {
             console.error(`❌ LLN-MANIFEST-TAMPER: manifest signature verification FAILED — refusing to run (fail-closed).`);
             process.exit(1);
+          }
           }
         } catch (e) {
           // Only genuine errors reach here (bad JSON / unreadable key / crypto error / untrustworthy
@@ -1690,6 +1811,12 @@ Baseline comparison (governance-cost):
       // needed (stale → warn; revoked/tampered/prod-missing → fail-closed).
       let signingKeyId = process.env.LOGICN_SIGNING_KEY_ID;
       let signingKeyB64 = process.env.LOGICN_SIGNING_PRIVATE_KEY_B64;
+      // #34 / 0102: the `keygen --hybrid` ceremony also persists the ML-DSA private half + an algorithm
+      // tag (logicn.mjs:315,318). Declared with `let` in the SAME outer scope as the two key vars above
+      // (NOT inside the try) so they remain in scope at the sign step (~1731). Default Ed25519 builds
+      // leave signingMlDsaB64 undefined → useHybridManifestSig stays false → existing path byte-for-byte.
+      let signingAlgorithm = process.env.LOGICN_SIGNING_ALGORITHM;          // "hybrid-ed25519-mldsa65" when minted by `keygen --hybrid`
+      let signingMlDsaB64  = process.env.LOGICN_SIGNING_MLDSA_PRIVATE_KEY_B64;
       try {
         const kl = await import("./governance/key-lifecycle.mjs");
         // FAIL-SECURE profile: a set-but-unrecognized LOGICN_PROFILE (e.g. typo'd "prod") resolves to
@@ -1708,12 +1835,15 @@ Baseline comparison (governance-cost):
           console.log(`   🔑 Auto-provisioned a development signing key (${newId.slice(0, 8)}…) — zero-touch, no action needed.`);
         }
         // Auto-load from .env.logicn-signing so the developer never has to `source` it.
-        if ((!signingKeyId || !signingKeyB64) && existsSync(".env.logicn-signing")) {
+        if ((!signingKeyId || !signingKeyB64 || !signingAlgorithm || !signingMlDsaB64) && existsSync(".env.logicn-signing")) {
           for (const line of readFileSync(".env.logicn-signing", "utf-8").split(/\r?\n/)) {
             const m = /^\s*([A-Z0-9_]+)\s*=\s*(.*)$/.exec(line);
             if (!m) continue;
             if (m[1] === "LOGICN_SIGNING_KEY_ID") signingKeyId = signingKeyId || m[2].trim();
             if (m[1] === "LOGICN_SIGNING_PRIVATE_KEY_B64") signingKeyB64 = signingKeyB64 || m[2].trim();
+            // 0102 / #34: the two extra vars the `keygen --hybrid` ceremony writes (logicn.mjs:315,318).
+            if (m[1] === "LOGICN_SIGNING_ALGORITHM") signingAlgorithm = signingAlgorithm || m[2].trim();
+            if (m[1] === "LOGICN_SIGNING_MLDSA_PRIVATE_KEY_B64") signingMlDsaB64 = signingMlDsaB64 || m[2].trim();
           }
         }
         // Final fail-safe: never sign with a revoked key, whatever its source (env or file).
@@ -1728,8 +1858,42 @@ Baseline comparison (governance-cost):
         console.warn(`   ⚠️  key-lifecycle check skipped (${klErr.message}) — proceeding with existing env key if present.`);
       }
 
+      // ── #34 / 0102: choose the manifest signature mode. Default = Ed25519 (byte-unchanged). ──────────
+      // HYBRID IS DETECTED BY THE ML-DSA PRIVATE HALF, NOT the algorithm tag (Adv-2 guard): if the
+      // ML-DSA half is present we MUST use it — a hybrid key can never silently sign classical-only just
+      // because LOGICN_SIGNING_ALGORITHM was dropped. If the tag IS present it must agree, else fail-closed.
+      const isHybridKey = !!signingMlDsaB64;
+      if (isHybridKey && signingAlgorithm && signingAlgorithm !== "hybrid-ed25519-mldsa65") {
+        console.error(`❌ LLN-MANIFEST-PQ-REQUIRED: an ML-DSA signing half is present but LOGICN_SIGNING_ALGORITHM='${signingAlgorithm}' is not 'hybrid-ed25519-mldsa65' — refusing to sign with an inconsistent key (fail-closed).`);
+        process.exit(1);
+      }
+      // CERTIFIED MODE — FAIL-SECURE resolution (Adv-1 #3 / Adv-2 #4). `profile` (line 1699) is scoped to
+      // the try above and only ever yields dev/production, so it can NEVER be "certified"; certified is a
+      // dedicated opt-in keyed off LOGICN_MANIFEST_PROFILE. We do NOT do a raw `=== "certified"` (that is
+      // the fail-OPEN string-compare the profile resolver was written to kill — a typo would silently drop
+      // the PQ mandate). Instead: trim+lowercase; only an UNSET/empty value or an explicit off/dev token
+      // relaxes; ANYTHING ELSE set (incl. "Certified ", "certifed", "strict") fail-secures to certified.
+      const _mpRaw = String(process.env.LOGICN_MANIFEST_PROFILE ?? "").trim().toLowerCase();
+      const _mpOff = new Set(["", "dev", "development", "test", "off", "none", "default"]);
+      const certifiedMode = !_mpOff.has(_mpRaw);
+      if (certifiedMode && _mpRaw !== "certified") {
+        console.warn(`   ⚠️  LLN-MANIFEST-PROFILE-UNRECOGNIZED: LOGICN_MANIFEST_PROFILE='${process.env.LOGICN_MANIFEST_PROFILE}' is not recognized — fail-securing to certified (post-quantum signature REQUIRED). Set 'certified' or 'dev' explicitly.`);
+      }
+      // Certified MANDATES hybrid: a real classical-only key under certified is fail-closed (no PQ downgrade).
+      // Gated on a key actually being present so a no-key dev/certified build still emits an (unsigned)
+      // manifest that the production VERIFY gate already fail-closes on — existing production Ed25519 signing
+      // WITHOUT LOGICN_MANIFEST_PROFILE is untouched.
+      if (certifiedMode && signingKeyId && signingKeyB64 && !isHybridKey) {
+        console.error("❌ LLN-MANIFEST-PQ-REQUIRED: the certified manifest profile requires a hybrid Ed25519+ML-DSA-65 signing key, " +
+          "but the ML-DSA half (LOGICN_SIGNING_MLDSA_PRIVATE_KEY_B64) is missing. Refusing to emit a classical-only manifest (fail-closed, no PQ downgrade). " +
+          "Run the offline ceremony: logicn keygen --hybrid, then re-build.");
+        process.exit(1);
+      }
+      const useHybridManifestSig = isHybridKey;   // opt-in; default false → existing Ed25519 path, byte-for-byte
+
       if (signingKeyId && signingKeyB64) {
         try {
+          if (!useHybridManifestSig) {
           const { sign: cryptoSign, createPrivateKey } = await import("node:crypto");
           const privateKeyPem = Buffer.from(signingKeyB64, "base64").toString("utf-8");
           const privateKey = createPrivateKey(privateKeyPem);
@@ -1774,7 +1938,103 @@ Baseline comparison (governance-cost):
           } catch (cborErr) {
             console.warn(`   ⚠️  Signed CBOR re-serialize failed (.json is signed; CBOR kept prior bytes): ${cborErr.message}`);
           }
+          } else {
+            // ── OPT-IN: HYBRID Ed25519 + ML-DSA-65 — REUSE the shipped signProofGraphHybrid (no new crypto) ──
+            // Bind the EXACT manifest body (minus signature) into the SAME ProofGraph envelope the rd-0102
+            // bench proves sound (10/10), sign it with BOTH halves, persist a self-describing v2 signature.
+            const { createPrivateKey } = await import("node:crypto");
+            // Dist-availability probe (Adv-1 #6): if the hybrid signer is absent we must NOT fall through to a
+            // raw import stack trace. With a hybrid key in hand this is always fail-closed (intent is explicit).
+            let cc;
+            try {
+              cc = await import(new URL("packages-logicn/logicn-core-compiler/dist/index.js", import.meta.url).href);
+              if (typeof cc.signProofGraphHybrid !== "function" || typeof cc.buildProofGraph !== "function") {
+                throw new Error("shipped dist does not export signProofGraphHybrid/buildProofGraph");
+              }
+            } catch (distErr) {
+              console.error(`❌ LLN-MANIFEST-PQ-REQUIRED: hybrid signing requested (ML-DSA key present) but the shipped hybrid signer is unavailable — fail-closed (build the compiler: npm run build): ${distErr.message}`);
+              process.exit(1);
+            }
+
+            // Reconstruct the in-memory hybrid key pair from env material. signProofGraphHybrid expects the
+            // Ed25519 private key as DER pkcs8 bytes (proof-graph.ts:722) and the ML-DSA half as raw bytes.
+            // The env stores the Ed25519 key as base64(PKCS8 PEM) (keygen --hybrid, logicn.mjs:303/317).
+            const edPrivPem = Buffer.from(signingKeyB64, "base64").toString("utf-8");
+            const edPrivDer = createPrivateKey(edPrivPem).export({ type: "pkcs8", format: "der" });
+            const keyPair = {
+              keyId: signingKeyId,
+              privateKey: new Uint8Array(edPrivDer),
+              publicKey: new Uint8Array(0),                            // not consulted when signing
+              algorithm: "hybrid-ed25519-mldsa65",
+              mlDsaPrivateKey: new Uint8Array(Buffer.from(signingMlDsaB64, "base64")),
+            };
+
+            // Bind the manifest body hash over the SAME RFC 8785 JCS canon the Ed25519 path uses so the
+            // bodyHash reconstructs identically on the verify side (build-verify & run-verify).
+            const signCanon = "jcs";
+            const manifestObjForSigning = JSON.parse(manifestJson);
+            // Bump schemaVersion to v2 BEFORE hashing: the PERSISTED body is v2 (set on signedManifest
+            // below), so the signed bodyHash must bind the v2 body — otherwise the verifier, which
+            // re-derives the hash over the persisted v2 body, mismatches (caught by the E2E round-trip).
+            // The signed body == the persisted body, minus the governanceSignature field.
+            manifestObjForSigning.schemaVersion = "lln.manifest.v2";
+            const { governanceSignature: _ph, ...manifestWithoutSig } = manifestObjForSigning;
+            const bodyHash = createHash("sha256").update(Buffer.from(manifestSigningInput(manifestWithoutSig, signCanon))).digest("hex");
+
+            // EXACT envelope the bench signs (rd-0102 makeEnvelope): all-zero ExecutionSignature, one
+            // effect-obligation carrying the bodyHash in `claim`, matching evidence so verified===true.
+            // Only schemaVersion+flowName+signatureHash+verified+obligations are signed (proof-graph.ts:640-665);
+            // generatedAt & evidence are EXCLUDED, so generatedAt is irrelevant — built for fidelity only.
+            const envelope = cc.buildProofGraph(
+              "lmanifest",
+              { effectMask: 0, governanceMask: 0, inputVsFlags: 0, outputVsFlags: 0, nodeFlagsMask: 0, effectCount: 0, capabilityCallCount: 0, hasBoundaryCrossings: false },
+              [{ kind: "effect", claim: `lmanifest.bodyHash=${bodyHash}`, satisfiedBy: "manifest-generator" }],
+              [{ obligationKind: "effect", sourceHash: `sha256:${bodyHash}`, girHash: `sha256:${bodyHash}`, checkerPassed: true, diagnosticsFired: [] }],
+              manifest.generatedAt,
+            );
+            const signedEnv = await cc.signProofGraphHybrid(envelope, keyPair);   // → v2, "<ed>|<mldsa>"
+
+            // FAIL-CLOSED: the shipped signer falls back to Ed25519-only (v1) if it does not recognise the
+            // key as hybrid (proof-graph.ts:714). Refuse to persist anything that is not a both-halves v2.
+            if (!signedEnv.governanceSignature || signedEnv.governanceSignature.algorithm !== "lln.gov.sig.v2"
+                || !signedEnv.governanceSignature.signature.includes("|")) {
+              console.error("❌ LLN-MANIFEST-PQ-REQUIRED: hybrid signing did not produce a v2 (both-half) signature — refusing to write a downgraded manifest (fail-closed).");
+              process.exit(1);
+            }
+
+            const signedManifest = JSON.parse(manifestJson);
+            // (c) VERSION BUMP — a persisted hybrid signature is a durable on-disk crypto fact (charter:
+            // bump once a real signature persists). The Ed25519 default path stays lln.manifest.v1.
+            signedManifest.schemaVersion = "lln.manifest.v2";
+            signedManifest.governanceSignature = {
+              algorithm: "Ed25519+ML-DSA-65",                        // hybrid, both required (NIST FIPS 204)
+              sigAlgorithm: "lln.gov.sig.v2",                        // envelope sig version — verifiers dispatch on this
+              keyId: signingKeyId,
+              canon: signCanon,                                      // body canon the bodyHash binds (RFC 8785 JCS)
+              bodyHash: `sha256:${bodyHash}`,                        // explicit, audit-legible body binding (defence-in-depth only)
+              signature: signedEnv.governanceSignature.signature,    // "<ed25519_b64url>|<mldsa_b64url>"
+              signedAt: signedEnv.governanceSignature.signedAt,
+            };
+
+            writeFileSync(manifestJsonPath, JSON.stringify(signedManifest, null, 2));
+            try {
+              if (verifyManifestRoundTrip(signedManifest)) {
+                writeFileSync(`${outDir}/${name}.lmanifest`, Buffer.from(serializeManifestCBOR(signedManifest)));
+              } else {
+                writeFileSync(`${outDir}/${name}.lmanifest`, serializeManifest(signedManifest));
+              }
+              console.log(`   🔐🛡️  Manifest signed HYBRID (Ed25519+ML-DSA-65, keyId: ${signingKeyId.slice(0, 8)}...) — v2, both halves required, CBOR + JSON authoritative`);
+            } catch (cborErr) {
+              // Hybrid intent → fail-closed (a PQ-signed .json with a stale CBOR would be an admission-gate mismatch).
+              console.error(`❌ Signed hybrid CBOR re-serialize failed (fail-closed): ${cborErr.message}`);
+              process.exit(1);
+            }
+          }
         } catch (err) {
+          // FAIL-CLOSED when certified OR when a hybrid key is in use (Adv-2 #6): minting a PQ key is an
+          // explicit intent that must never silently degrade to unsigned. Warn-and-continue ONLY for the
+          // ordinary auto-provisioned dev Ed25519 key (default path, behaviour unchanged).
+          if (certifiedMode || useHybridManifestSig) { console.error(`❌ Manifest signing failed (fail-closed): ${err.message}`); process.exit(1); }
           console.warn(`   ⚠️  Signing failed (continuing unsigned): ${err.message}`);
         }
       }
