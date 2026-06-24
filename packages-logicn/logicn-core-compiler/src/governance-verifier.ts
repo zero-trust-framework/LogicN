@@ -214,6 +214,59 @@ export const LLN_GOV_012 = {
   message: "Contract set requires audit.write but the flow does not declare it.",
 } as const;
 
+// ── LLN-TENANT codes (G1 — deny-by-default tenant-isolation border, R&D 0109) ──
+// A data-access effect on a tenant-partitioned vault/resource MUST be bound to the
+// caller's PROVEN scope. Mechanic = CAPABILITY INTERSECTION over the manifest, not an
+// AST/query-string rewriter (LogicN does not own the MeshQL string): a tenant-scoped
+// access (effect ending `.tenant_scoped`) that is not paired with the caller-scope proof
+// (the sibling marker effect `tenant.scope`) is a FAIL-CLOSED compile error — it kills
+// IDOR / OWASP-A01 (Broken Access Control) at compile time. Spec:
+// docs/Knowledge-Bases/logicn-tritmesh-feature-gap-analysis-2026-06-24.md §"6 reusable mechanics" #1.
+//
+// SCOPE HONESTY (calibrated, R&D 0109): this is a per-flow effect-SURFACE intersection —
+// it proves the flow DECLARED the caller-scope binding alongside its tenant-scoped access.
+// It does NOT yet prove the binding is threaded to every row-level access inside the body
+// (that body-dataflow proof is the deferred LLN-TENANT-003, value-state territory). The
+// current border is the high-value compile gate that kills the common IDOR shape: a
+// tenant-partitioned read with NO caller-scope capability declared at all.
+//
+// PROVISIONAL (v0 marker-effect surface): the `.tenant_scoped` suffix + the `tenant.scope`
+// sibling marker ride the existing effect dot-path (no grammar change), exactly like the
+// shipped `crypto.sign.hybrid` marker convention. The first-class authoring surface (a
+// `tenant_scoped { vault }` guard sub-block, or `tenant.scope(tenantId)` parameter binding)
+// is an OPEN owner grammar decision — the checker logic below is unchanged by that choice.
+
+/**
+ * Suffix segment that marks a data-access effect as tenant-partitioned, e.g.
+ * `vault.read.tenant_scoped`, `database.read.tenant_scoped`, `secret.read.tenant_scoped`.
+ * Rides the existing effect dot-path (parser.ts parseEffectRef) — no new grammar.
+ */
+const TENANT_SCOPED_SUFFIX = ".tenant_scoped";
+
+/**
+ * The caller-scope binding proof: a marker effect a flow declares to assert that every
+ * tenant-scoped access in its body is parameterized by the caller's proven scope (S_user /
+ * actor tenant capability mask). Its presence is the intersection witness; its absence on a
+ * tenant-scoped access is deny-by-default (LLN-TENANT-002).
+ */
+const TENANT_SCOPE_BINDING = "tenant.scope";
+
+/** LLN-TENANT-001: a `tenant.scope` binding is declared but no tenant-scoped access uses it. */
+export const LLN_TENANT_001 = {
+  code: "LLN-TENANT-001",
+  name: "DANGLING_TENANT_SCOPE_BINDING",
+  severity: "warning" as const,
+  message: "A 'tenant.scope' caller-scope binding is declared but the flow has no tenant-scoped (.tenant_scoped) data-access effect to bind. Remove the unused binding, or mark the data access tenant-scoped.",
+} as const;
+
+/** LLN-TENANT-002: a tenant-scoped data access is not bound to the caller's proven scope (fail-closed). */
+export const LLN_TENANT_002 = {
+  code: "LLN-TENANT-002",
+  name: "UNSCOPED_TENANT_DATA_ACCESS",
+  severity: "error" as const,
+  message: "A tenant-scoped data-access effect is not bound to the caller's proven scope. Deny-by-default: cross-tenant access (IDOR / OWASP-A01) is refused at compile time until the access is parameterized by the caller scope.",
+} as const;
+
 // ── LLN-SUBSTRATE codes (Direction B) ──────────────────────────────────────────────
 // The substrate {} contract block's three invariants, fail-closed. Codes are shared
 // with Direction C's SUBSTRATE_DIAGNOSTICS (logicn-tower-citizen/src/substrate-model.ts);
@@ -1940,6 +1993,14 @@ class GovernanceVerifier {
       this.verifyDomainGuardConformance(flow, flowNode);
     }
 
+    // ── LLN-TENANT-001/002: deny-by-default tenant-isolation border (G1, R&D 0109) ──
+    // A tenant-scoped data-access effect (`*.tenant_scoped`) must be bound to the caller's
+    // proven scope (the `tenant.scope` marker effect). Capability intersection over the
+    // manifest — an unbound tenant-scoped access is a FAIL-CLOSED compile error in every
+    // profile (kills IDOR / OWASP-A01 at compile time). Runs unconditionally (depends only on
+    // declared effects, not the AST node) so a missing flow node never silently skips it.
+    this.verifyTenantIsolation(flow, loc);
+
     // ── LLN-INV-001/002: invariant {} static evaluation (DRCM Phase 2 — task #36) ──
     // For each `ensure expr` in the invariant block:
     //   - Statically provable TRUE  → record as statically_verified in ProofGraph
@@ -2611,6 +2672,62 @@ class GovernanceVerifier {
     // When implemented: compare contract limits {} values against policy enforced_limits {}
     // ceilings and emit LLN-LIMIT-001 on violation.
     // No diagnostic emitted here until structured parsing is in place.
+  }
+
+  /**
+   * G1 — deny-by-default tenant-isolation border (LLN-TENANT-001/002, R&D 0109).
+   *
+   * Capability intersection over the manifest (NOT an AST / query-string rewriter): a
+   * data-access effect on a tenant-partitioned resource is declared by the `.tenant_scoped`
+   * suffix (e.g. `vault.read.tenant_scoped`); the caller-scope proof is the sibling marker
+   * effect `tenant.scope`. The intersection is:
+   *
+   *   tenantScopedAccesses ≠ ∅  ∧  `tenant.scope` ∉ effects  ⇒  DENY  (LLN-TENANT-002)
+   *
+   * Fail-closed in EVERY profile — a cross-tenant read (IDOR / OWASP-A01) is refused at
+   * compile time unless the access is bound to the caller's proven scope. A `tenant.scope`
+   * declared without any tenant-scoped access to bind is a dangling capability (advisory
+   * LLN-TENANT-001), never an error.
+   *
+   * SCOPE (honest): proves the binding is DECLARED on the flow's effect surface; the
+   * body-level dataflow proof (every row-access threaded by the scope) is the deferred
+   * LLN-TENANT-003. This border kills the common "no caller-scope at all" IDOR shape.
+   */
+  private verifyTenantIsolation(flow: FlowMeta, loc: SourceLocation | undefined): void {
+    const tenantScopedAccesses = flow.declaredEffects.filter(
+      (e) => e.endsWith(TENANT_SCOPED_SUFFIX),
+    );
+    const hasScopeBinding = flow.declaredEffects.includes(TENANT_SCOPE_BINDING);
+
+    if (tenantScopedAccesses.length === 0) {
+      // No tenant-partitioned access. A lone `tenant.scope` binding is dangling (advisory).
+      if (hasScopeBinding) {
+        this.diagnostics.push(makeGovDiag(
+          LLN_TENANT_001.code,
+          LLN_TENANT_001.name,
+          LLN_TENANT_001.severity,
+          `Flow '${flow.name}' declares the caller-scope binding '${TENANT_SCOPE_BINDING}' but has no tenant-scoped data-access effect (ending '${TENANT_SCOPED_SUFFIX}') to bind.`,
+          loc,
+          `Remove '${TENANT_SCOPE_BINDING}' from effects, or mark the data access tenant-scoped, e.g. effects { vault.read${TENANT_SCOPED_SUFFIX} ${TENANT_SCOPE_BINDING} }.`,
+        ));
+      }
+      return;
+    }
+
+    // Deny-by-default: a tenant-scoped access with NO proven caller scope is fail-closed.
+    if (!hasScopeBinding) {
+      this.diagnostics.push(makeGovDiag(
+        LLN_TENANT_002.code,
+        LLN_TENANT_002.name,
+        LLN_TENANT_002.severity,
+        `Tenant-isolation violation in flow '${flow.name}': the tenant-scoped data access ` +
+        `'${tenantScopedAccesses.join("', '")}' is not bound to the caller's proven scope. ` +
+        `Deny-by-default: cross-tenant access (IDOR / OWASP-A01) is refused at compile time ` +
+        `until the access is parameterized by the caller scope.`,
+        loc,
+        `Add the caller-scope binding to the flow's effects: effects { ${tenantScopedAccesses[0]} ${TENANT_SCOPE_BINDING} }.`,
+      ));
+    }
   }
 
   // ── Phase 2.1 — LLN-GOV-019: limits {} field name validation ─────────────
