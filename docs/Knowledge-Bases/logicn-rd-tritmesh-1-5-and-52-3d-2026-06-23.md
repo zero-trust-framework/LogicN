@@ -1,5 +1,9 @@
 # R&D — TritMesh notes 1-5 + 52-3D (for LogicN) (2026-06-23)
 
+> **R&D numbers (assigned 2026-06-24):** **0106** = TritMesh notes 1-6 survey (substrate router + MeshQL/.tmf ecosystem) · **0107** = 52-3D-1/2 photonic/ternary survey + combination · **0108** = cross-synthesis + the 3 net-new LogicN mechanics. Prior run = workflow `we2yovu53`.
+>
+> **RE-VALIDATION 2026-06-24 (against current code, before formalizing):** of the 3 net-new mechanics below, **#1 (degrade-only telemetry → K3 admission feedback loop) is now SHIPPED** — `logicn-core-network/src/admission-feedback.ts` implements `telemetryToSideSignal` / `withTelemetryFeedback` / `certGateWithTelemetry` (degrade-only `≤+1`, folds via `vAnd`/No-Coercion `min(t*,r)≤t*`, fail-closed: empty reading = `+1` no-op, garbage reading = `0` throttle; it cites this R&D as "net-new mechanic #1"). Its LIVE wiring into the api-server cert path is OPT-IN (the host injects telemetry), same default-off pattern as the cert-gate resolver. **#2 (K3 `Result.Masked` partial-return) and #3 (Governed Transformation-Matrix admission, T-as-signed-artifact) remain NET-NEW (0 hits in current source) and buildable** — #3's governance rail is core-buildable now; its photonic side is #102-106-gated.
+
 ## Bottom line
 
 Across 7 per-note surveys and 2 combination passes (tritmesh-1..6, 52-3D-1/2), **~85-90% of every head RE-DERIVES already-shipped LogicN substrate/governance work**, exactly as VERIFY-BEFORE-BUILD predicted. The notes are a single chained TritMesh brainstorm: a substrate-routing gateway ("Tri-Pipe Substrate Router" = R&D-007 / note 6), a MeshQL/.tmf product ecosystem (notes 1-5), and a photonic/ternary physics tutorial (52-3D-1/2).
