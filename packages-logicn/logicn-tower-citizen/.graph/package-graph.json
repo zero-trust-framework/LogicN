@@ -10,8 +10,13 @@
     "src/governance-enforcer.ts",
     "src/hybrid-engine.ts",
     "src/index.ts",
+    "src/lease.ts",
+    "src/partial-return.ts",
+    "src/photonic-admission.ts",
     "src/plugin-sandbox.ts",
     "src/precision-strategy.ts",
+    "src/quorum.ts",
+    "src/substrate-erasure.ts",
     "src/substrate-model.ts",
     "src/three-valued-governance.ts",
     "src/tower-runtime.ts",
@@ -112,6 +117,26 @@
     },
     {
       "from": "src/index.ts",
+      "to": "src/partial-return.ts"
+    },
+    {
+      "from": "src/index.ts",
+      "to": "src/photonic-admission.ts"
+    },
+    {
+      "from": "src/index.ts",
+      "to": "src/lease.ts"
+    },
+    {
+      "from": "src/index.ts",
+      "to": "src/quorum.ts"
+    },
+    {
+      "from": "src/index.ts",
+      "to": "src/substrate-erasure.ts"
+    },
+    {
+      "from": "src/index.ts",
       "to": "src/substrate-model.ts"
     },
     {
@@ -133,6 +158,26 @@
     {
       "from": "src/index.ts",
       "to": "src/bridge/stub-provider.ts"
+    },
+    {
+      "from": "src/lease.ts",
+      "to": "src/three-valued-governance.ts"
+    },
+    {
+      "from": "src/partial-return.ts",
+      "to": "src/three-valued-governance.ts"
+    },
+    {
+      "from": "src/photonic-admission.ts",
+      "to": "src/three-valued-governance.ts"
+    },
+    {
+      "from": "src/quorum.ts",
+      "to": "src/three-valued-governance.ts"
+    },
+    {
+      "from": "src/substrate-erasure.ts",
+      "to": "src/three-valued-governance.ts"
     },
     {
       "from": "src/substrate-model.ts",
@@ -195,7 +240,9 @@
         "src/gate-cache.ts",
         "src/governance-enforcer.ts",
         "src/hybrid-engine.ts",
-        "src/plugin-sandbox.ts"
+        "src/photonic-admission.ts",
+        "src/plugin-sandbox.ts",
+        "src/substrate-erasure.ts"
       ]
     },
     {
@@ -218,8 +265,8 @@
     "src/index.ts"
   ],
   "stats": {
-    "fileCount": 15,
-    "internalEdgeCount": 36,
+    "fileCount": 20,
+    "internalEdgeCount": 46,
     "externalDepCount": 6,
     "nodeCoreCount": 3,
     "workspaceCount": 2,

@@ -2,6 +2,7 @@
   "packageName": "@logicn/ext-tmf",
   "nodes": [
     "src/container.ts",
+    "src/history.ts",
     "src/index.ts",
     "src/kemdem.ts",
     "src/tmx256.ts"
@@ -9,6 +10,10 @@
   "internalEdges": [
     {
       "from": "src/container.ts",
+      "to": "src/tmx256.ts"
+    },
+    {
+      "from": "src/history.ts",
       "to": "src/tmx256.ts"
     },
     {
@@ -22,6 +27,10 @@
     {
       "from": "src/index.ts",
       "to": "src/kemdem.ts"
+    },
+    {
+      "from": "src/index.ts",
+      "to": "src/history.ts"
     }
   ],
   "externalDeps": [
@@ -30,6 +39,7 @@
       "kind": "node_core",
       "importedBy": [
         "src/container.ts",
+        "src/history.ts",
         "src/kemdem.ts",
         "src/tmx256.ts"
       ]
@@ -40,8 +50,8 @@
     "src/index.ts"
   ],
   "stats": {
-    "fileCount": 4,
-    "internalEdgeCount": 4,
+    "fileCount": 5,
+    "internalEdgeCount": 6,
     "externalDepCount": 1,
     "nodeCoreCount": 1,
     "workspaceCount": 0,

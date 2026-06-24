@@ -188,9 +188,10 @@ try {
   }
 } catch { /* non-fatal if no manifests */ }
 
-// ── 5. Full graph re-index ──
-run("graph:reindex", "node",
-  ["packages-logicn/logicn-core-cli/dist/index.js", "graph", "--out", "build/graph"]);
+// ── 5. Full graph re-index — ALL THREE graph generators, not just the project graph ──
+//   project graph (build/graph) + kb graph (build/kb-graph; orphan/broken-link signal the stray-docs
+//   audit below reads) + per-package Hardened Border --check (border-drift surfaced, informational).
+run("graph:all", "node", ["scripts/graph-all.mjs", "--quiet"]);
 
 // ── 5a. Code index + derived registry — the graphs the audits read; regenerate from source first
 //        so the lint/coverage gates below see current state (std #10 derived-catalog, #219). ──

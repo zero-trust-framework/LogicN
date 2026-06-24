@@ -57,6 +57,7 @@
     "src/runtime/runtimeContext.ts",
     "src/runtime/runtimeReport.ts",
     "src/runtime/timeoutPolicy.ts",
+    "src/sbom.ts",
     "src/security-policy.ts",
     "src/security-sink-monitor.ts",
     "src/soa-arena.ts",
@@ -322,6 +323,10 @@
     {
       "from": "src/index.ts",
       "to": "src/package-resolver.ts"
+    },
+    {
+      "from": "src/index.ts",
+      "to": "src/sbom.ts"
     },
     {
       "from": "src/index.ts",
@@ -864,6 +869,10 @@
       "to": "src/naming-policy-checker.ts"
     },
     {
+      "from": "src/sbom.ts",
+      "to": "src/package-resolver.ts"
+    },
+    {
       "from": "src/source-escape-checker.ts",
       "to": "src/parser.ts"
     },
@@ -1087,8 +1096,8 @@
     "src/runtime/index.ts"
   ],
   "stats": {
-    "fileCount": 76,
-    "internalEdgeCount": 219,
+    "fileCount": 77,
+    "internalEdgeCount": 221,
     "externalDepCount": 14,
     "nodeCoreCount": 6,
     "workspaceCount": 2,

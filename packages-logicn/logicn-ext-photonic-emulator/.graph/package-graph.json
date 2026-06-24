@@ -60,6 +60,10 @@
       "to": "src/emulator.ts"
     },
     {
+      "from": "src/photonic-bridge.ts",
+      "to": "src/parity-conformance.ts"
+    },
+    {
       "from": "src/photonic-switch.ts",
       "to": "src/photonic-bridge.ts"
     },
@@ -87,7 +91,7 @@
   ],
   "stats": {
     "fileCount": 8,
-    "internalEdgeCount": 17,
+    "internalEdgeCount": 18,
     "externalDepCount": 0,
     "nodeCoreCount": 0,
     "workspaceCount": 0,
