@@ -333,6 +333,7 @@ export {
   checkPackageCapabilityExpansion,
   checkInstallScript,
   checkPackageProvenance,
+  checkRegistryTrust,
   getResolverReport,
   type PackageManifest,
   type PackageTargets,

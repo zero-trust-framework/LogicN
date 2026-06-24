@@ -151,22 +151,108 @@ export function checkInstallScript(manifest: PackageManifest): readonly PackageR
 // ---------------------------------------------------------------------------
 // Package provenance check
 //
-// Warns when a package lacks a hash or signature.
-// Fires LLN-PKG-003 (missing hash) and LLN-PKG-005 (missing signature).
+// Warns (or, under requireCertified, errors) when a package lacks a hash or
+// signature, or carries a placeholder/invalid hash.
+// Fires LLN-PKG-003 (missing/invalid hash) and LLN-PKG-005 (missing signature).
 // ---------------------------------------------------------------------------
+
+/**
+ * Canonical content-hash shape: `sha256:` followed by EXACTLY 64 hex chars.
+ * Mirrors the admission-gate regex in logicn-framework-app-kernel/src/fuse-loader.ts.
+ * Anything else — including the placeholder `sha256:pending` and any short/long
+ * or non-hex digest — is treated as a MISSING/invalid hash (fail-closed).
+ */
+const SHA256_RE = /^sha256:[0-9a-f]{64}$/i;
+
+/** True iff `hash` is a well-formed `sha256:<64 hex>` content hash. */
+function hasValidContentHash(hash: string | undefined): boolean {
+  return typeof hash === "string" && SHA256_RE.test(hash);
+}
 
 /**
  * Checks that a package manifest has both a content hash and a signature.
  * Missing hash → LLN-PKG-003. Missing signature → LLN-PKG-005.
  */
-/** Options for provenance checking — lets the host inject a revocation predicate. */
+/** Options for provenance checking — lets the host inject a revocation predicate and
+ *  a fail-closed certified-registry policy. */
 export interface ProvenanceCheckOptions {
   /**
    * Fail-closed signing-key revocation predicate (registry-backed). Returns true if a
    * keyId is revoked. The host injects this from `governance/revocation-registry.mjs`;
    * a throwing check (untrustworthy/tampered registry) is itself treated as revoked.
    */
-  readonly isRevoked?: (keyId: string) => boolean;
+  readonly isRevoked?: ((keyId: string) => boolean) | undefined;
+  /**
+   * Certified-registry mode. When true, provenance findings (LLN-PKG-003 missing/invalid
+   * hash, LLN-PKG-005 missing signature) are promoted from warning to ERROR, and a package
+   * with NO declared registry is rejected as untrusted (LLN-PKG-002). Default false keeps
+   * the lenient, back-compatible behavior.
+   */
+  readonly requireCertified?: boolean | undefined;
+  /**
+   * Allow-list of trusted source registries. When provided, any package whose `registry`
+   * is set but NOT in this list is rejected with LLN-PKG-002 (UntrustedRegistry). An EMPTY
+   * allow-list under `requireCertified` rejects ALL registries (fail-closed deny-by-default).
+   * When omitted (and not in certified mode), registry trust is not enforced (back-compat).
+   */
+  readonly trustedRegistries?: readonly string[] | undefined;
+}
+
+// ---------------------------------------------------------------------------
+// Registry trust check (dependency-confusion control)
+//
+// Emits LLN-PKG-002 (UntrustedRegistry) when a package's source registry is not
+// on the project's trusted allow-list, or — under requireCertified — is absent.
+// Fail-closed: an empty allow-list in certified mode rejects every registry.
+// ---------------------------------------------------------------------------
+
+/**
+ * Checks that a package's declared source registry is trusted.
+ *
+ * Enforcement is opt-in and fail-closed:
+ *   - No `trustedRegistries` AND not `requireCertified` => no check (back-compat).
+ *   - `trustedRegistries` provided => a declared registry NOT in the list => LLN-PKG-002.
+ *   - `requireCertified` => a package with NO declared registry => LLN-PKG-002, and an
+ *     EMPTY allow-list rejects every registry.
+ */
+export function checkRegistryTrust(
+  manifest: PackageManifest,
+  opts?: ProvenanceCheckOptions,
+): readonly PackageResolverDiagnostic[] {
+  const enforce = opts?.requireCertified === true || opts?.trustedRegistries !== undefined;
+  if (!enforce) return [];
+
+  const allow = opts?.trustedRegistries ?? [];
+  const registry = manifest.registry;
+
+  // Absent registry: only an error under certified mode (deny-by-default origin).
+  if (registry === undefined || registry === "") {
+    if (opts?.requireCertified === true) {
+      return [{
+        code: "LLN-PKG-002",
+        name: "UntrustedRegistry",
+        severity: "error",
+        packageName: manifest.name,
+        message: `Package '${manifest.name}@${manifest.version}' declares no source registry. Under a certified-registry policy every package must come from a declared, trusted registry.`,
+        suggestedFix: "Add 'registry: <url>' to the package manifest and add that URL to the project's trusted registry allow-list.",
+      }];
+    }
+    return [];
+  }
+
+  // Declared registry that is not on the allow-list (empty list rejects all).
+  if (!allow.includes(registry)) {
+    return [{
+      code: "LLN-PKG-002",
+      name: "UntrustedRegistry",
+      severity: "error",
+      packageName: manifest.name,
+      message: `Package '${manifest.name}@${manifest.version}' comes from untrusted registry '${registry}', which is not on the project's trusted registry allow-list.`,
+      suggestedFix: "Add the registry to the project's trusted registry list, or switch to a verified source.",
+    }];
+  }
+
+  return [];
 }
 
 export function checkPackageProvenance(
@@ -175,14 +261,17 @@ export function checkPackageProvenance(
 ): readonly PackageResolverDiagnostic[] {
   const diags: PackageResolverDiagnostic[] = [];
 
-  if (!manifest.hash || !manifest.hash.startsWith("sha256:")) {
+  // Promote provenance findings from warning -> error under a certified-registry policy.
+  const provenanceSeverity: "error" | "warning" = opts?.requireCertified ? "error" : "warning";
+
+  if (!hasValidContentHash(manifest.hash)) {
     diags.push({
       code: "LLN-PKG-003",
       name: "MissingHash",
-      severity: "warning",
+      severity: provenanceSeverity,
       packageName: manifest.name,
-      message: `Package '${manifest.name}@${manifest.version}' has no content-addressable hash. Without a hash, tamper detection and reproducible builds are not possible.`,
-      suggestedFix: "Add 'hash: sha256:<hex>' to the package manifest. Run 'logicn package hash' to generate it.",
+      message: `Package '${manifest.name}@${manifest.version}' has no valid content-addressable hash (expected 'sha256:<64 hex>', got '${manifest.hash ?? "<none>"}'). Placeholder or malformed hashes (e.g. 'sha256:pending') are rejected. Without a real hash, tamper detection and reproducible builds are not possible.`,
+      suggestedFix: "Add 'hash: sha256:<64 hex>' to the package manifest. Run 'logicn package hash' to generate it.",
     });
   }
 
@@ -190,7 +279,7 @@ export function checkPackageProvenance(
     diags.push({
       code: "LLN-PKG-005",
       name: "MissingSignature",
-      severity: "warning",
+      severity: provenanceSeverity,
       packageName: manifest.name,
       message: `Package '${manifest.name}@${manifest.version}' has no signature. Origin cannot be cryptographically verified.`,
       suggestedFix: "Sign the package with 'logicn package sign' and add 'signature:' to the manifest.",
@@ -282,15 +371,17 @@ export function getResolverReport(
       allTargets.add("cpu");
     }
 
-    // Run provenance (incl. fail-closed revocation when a predicate is injected) and install script checks
+    // Run provenance (incl. fail-closed revocation when a predicate is injected), registry-trust,
+    // and install script checks
     allDiagnostics.push(...checkPackageProvenance(m, opts));
+    allDiagnostics.push(...checkRegistryTrust(m, opts));
     allDiagnostics.push(...checkInstallScript(m));
 
     return {
       name: m.name,
       version: m.version,
       hash: m.hash,
-      trusted: !!m.hash && !!m.signature,
+      trusted: hasValidContentHash(m.hash) && !!m.signature,
       effects: m.effects ?? [],
       capabilities: m.capabilities ?? [],
       targets,
