@@ -545,6 +545,33 @@ export function buildProofGraph(
 }
 
 /**
+ * Build the canonical .lmanifest signing envelope (0102 / #34).
+ *
+ * The hybrid (and Ed25519) .lmanifest signature binds the manifest body hash into a
+ * ProofGraph of a FIXED shape: an all-zero ExecutionSignature plus a single
+ * effect-obligation carrying `lmanifest.bodyHash=<hash>` and matching evidence (so
+ * `verified === true`). This shape MUST be byte-identical between the signer and every
+ * verifier — if one side drifts, hybrid signatures silently stop verifying.
+ *
+ * This is the single source of truth for that shape. The signer (`logicn build` hybrid
+ * branch), the build-verify path (`logicn verify`) and the run-admission path (`logicn run`)
+ * all call this helper so they cannot diverge; the rd-0102 bench builds the same shape.
+ *
+ * `generatedAt` & `evidence` are EXCLUDED from the signed payload (see
+ * `canonicalSigningPayload`), so the bound signature is independent of `generatedAt` — any
+ * value verifies — but it is threaded through so the persisted envelope stays faithful.
+ */
+export function makeManifestEnvelope(bodyHash: string, generatedAt: string): ProofGraph {
+  return buildProofGraph(
+    "lmanifest",
+    { effectMask: 0, governanceMask: 0, inputVsFlags: 0, outputVsFlags: 0, nodeFlagsMask: 0, effectCount: 0, capabilityCallCount: 0, hasBoundaryCrossings: false },
+    [{ kind: "effect", claim: `lmanifest.bodyHash=${bodyHash}`, satisfiedBy: "manifest-generator" }],
+    [{ obligationKind: "effect", sourceHash: `sha256:${bodyHash}`, girHash: `sha256:${bodyHash}`, checkerPassed: true, diagnosticsFired: [] }],
+    generatedAt,
+  );
+}
+
+/**
  * Check if two flows have the same governance shape.
  * If yes, they can share the same ProofGraph.
  */

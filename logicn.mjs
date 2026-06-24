@@ -1387,15 +1387,10 @@ Baseline comparison (governance-cost):
                   console.error(`❌ LLN-MANIFEST-TAMPER: v2 manifest bodyHash mismatch (declared ${sig.bodyHash} vs computed sha256:${bodyHash}) — fail-closed.`);
                   process.exit(1);
                 }
-                // Reconstruct the EXACT envelope the signer bound (bench-identical). generatedAt & evidence are
-                // excluded from the signed payload, so any value verifies; jsonManifest.generatedAt is used for fidelity.
-                const envelope = cc.buildProofGraph(
-                  "lmanifest",
-                  { effectMask: 0, governanceMask: 0, inputVsFlags: 0, outputVsFlags: 0, nodeFlagsMask: 0, effectCount: 0, capabilityCallCount: 0, hasBoundaryCrossings: false },
-                  [{ kind: "effect", claim: `lmanifest.bodyHash=${bodyHash}`, satisfiedBy: "manifest-generator" }],
-                  [{ obligationKind: "effect", sourceHash: `sha256:${bodyHash}`, girHash: `sha256:${bodyHash}`, checkerPassed: true, diagnosticsFired: [] }],
-                  jsonManifest.generatedAt,
-                );
+                // Reconstruct the EXACT envelope the signer bound via the SAME shared helper (no drift).
+                // generatedAt & evidence are excluded from the signed payload, so any value verifies;
+                // jsonManifest.generatedAt is used for fidelity.
+                const envelope = cc.makeManifestEnvelope(bodyHash, jsonManifest.generatedAt);
                 // Attach the persisted v2 signature in the ProofGraph-layer shape (algorithm + signature are the
                 // only fields verifyGovernanceSignatureHybrid reads; proof-graph.ts:786-789).
                 envelope.governanceSignature = { algorithm: "lln.gov.sig.v2", signerKeyId: sig.keyId, signature: sig.signature, signedAt: sig.signedAt };
@@ -1616,13 +1611,8 @@ Baseline comparison (governance-cost):
               console.error(`❌ LLN-MANIFEST-TAMPER: v2 manifest bodyHash mismatch — refusing to run (fail-closed).`);
               process.exit(1);
             }
-            const envelope = cc.buildProofGraph(
-              "lmanifest",
-              { effectMask: 0, governanceMask: 0, inputVsFlags: 0, outputVsFlags: 0, nodeFlagsMask: 0, effectCount: 0, capabilityCallCount: 0, hasBoundaryCrossings: false },
-              [{ kind: "effect", claim: `lmanifest.bodyHash=${runBodyHash}`, satisfiedBy: "manifest-generator" }],
-              [{ obligationKind: "effect", sourceHash: `sha256:${runBodyHash}`, girHash: `sha256:${runBodyHash}`, checkerPassed: true, diagnosticsFired: [] }],
-              manifest.generatedAt,
-            );
+            // Reconstruct the signed envelope via the SAME shared helper the signer/verify paths use.
+            const envelope = cc.makeManifestEnvelope(runBodyHash, manifest.generatedAt);
             envelope.governanceSignature = { algorithm: "lln.gov.sig.v2", signerKeyId: sig.keyId, signature: sig.signature, signedAt: sig.signedAt };
             const edPubDer = new Uint8Array(createPublicKey(readFileSync(edPubPath, "utf-8")).export({ type: "spki", format: "der" }));
             const mlPubRaw = new Uint8Array(Buffer.from(readFileSync(mlPubPath, "utf-8").trim(), "base64"));
@@ -1948,8 +1938,8 @@ Baseline comparison (governance-cost):
             let cc;
             try {
               cc = await import(new URL("packages-logicn/logicn-core-compiler/dist/index.js", import.meta.url).href);
-              if (typeof cc.signProofGraphHybrid !== "function" || typeof cc.buildProofGraph !== "function") {
-                throw new Error("shipped dist does not export signProofGraphHybrid/buildProofGraph");
+              if (typeof cc.signProofGraphHybrid !== "function" || typeof cc.makeManifestEnvelope !== "function") {
+                throw new Error("shipped dist does not export signProofGraphHybrid/makeManifestEnvelope");
               }
             } catch (distErr) {
               console.error(`❌ LLN-MANIFEST-PQ-REQUIRED: hybrid signing requested (ML-DSA key present) but the shipped hybrid signer is unavailable — fail-closed (build the compiler: npm run build): ${distErr.message}`);
@@ -1985,13 +1975,9 @@ Baseline comparison (governance-cost):
             // effect-obligation carrying the bodyHash in `claim`, matching evidence so verified===true.
             // Only schemaVersion+flowName+signatureHash+verified+obligations are signed (proof-graph.ts:640-665);
             // generatedAt & evidence are EXCLUDED, so generatedAt is irrelevant — built for fidelity only.
-            const envelope = cc.buildProofGraph(
-              "lmanifest",
-              { effectMask: 0, governanceMask: 0, inputVsFlags: 0, outputVsFlags: 0, nodeFlagsMask: 0, effectCount: 0, capabilityCallCount: 0, hasBoundaryCrossings: false },
-              [{ kind: "effect", claim: `lmanifest.bodyHash=${bodyHash}`, satisfiedBy: "manifest-generator" }],
-              [{ obligationKind: "effect", sourceHash: `sha256:${bodyHash}`, girHash: `sha256:${bodyHash}`, checkerPassed: true, diagnosticsFired: [] }],
-              manifest.generatedAt,
-            );
+            // SINGLE SOURCE OF TRUTH for this shape = cc.makeManifestEnvelope (proof-graph.ts); the
+            // build-verify and run-admission branches reconstruct it via the SAME helper so they cannot drift.
+            const envelope = cc.makeManifestEnvelope(bodyHash, manifest.generatedAt);
             const signedEnv = await cc.signProofGraphHybrid(envelope, keyPair);   // → v2, "<ed>|<mldsa>"
 
             // FAIL-CLOSED: the shipped signer falls back to Ed25519-only (v1) if it does not recognise the

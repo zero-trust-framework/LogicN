@@ -114,6 +114,7 @@ export {
   computeExecutionSignature,
   executionSignatureHash,
   buildProofGraph,
+  makeManifestEnvelope,
   buildProofGraphCached,
   getProofCacheStats,
   clearProofCache,
