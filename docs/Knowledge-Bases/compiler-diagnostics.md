@@ -870,14 +870,30 @@ LLN-SUBSTRATE-004   UNVOTED_ANALOG_INTO_DETERMINISTIC   Un-voted (N=1) noisy res
 ### Runtime
 
 ```text
-LLN-RUNTIME-001   Native runtime ABI version mismatch
-LLN-RUNTIME-002   MIR bridge contract violated
-LLN-RUNTIME-003   Runtime enforcement rule failed
-LLN-RUNTIME-004   Resource scope closed before awaited task completed
-LLN-RUNTIME-005   Proof chain generation failed
-LLN-RUNTIME-006   Audit event stream write failed
-LLN-RUNTIME-007   Runtime fallback to JS prototype occurred
+LLN-RUNTIME-001   Native runtime ABI version mismatch                                  (reserved — not yet wired)
+LLN-RUNTIME-002   Flow or call could not be resolved (flow not found / unresolved call)
+LLN-RUNTIME-003   Uncaught runtime exception during flow execution
+LLN-RUNTIME-004   Assignment to an undeclared binding
+LLN-RUNTIME-005   Unauthorized access to a governed value (UnauthorizedGovernedValueAccess)
+LLN-RUNTIME-006   Declared contract limit exceeded — request_time / network_requests / memory / concurrent_tasks (RateLimitExceeded)
+LLN-RUNTIME-007   Manifest requires an audit entry but AuditLog.write was not called
 ```
+
+> **Source of truth = the code, not this table.** These descriptions are corrected to the wired
+> emitters (`security-policy.ts` `LLN_RUNTIME_006` / `LLN_RUNTIME_005`; `interpreter.ts` for
+> 002/003/004/007). The earlier draft of this block mislabelled six of seven codes (e.g. 006 read
+> "Audit event stream write failed", but the wired code is `RateLimitExceeded`); fixed 2026-06-24.
+> 001 is reserved — no emitter references it yet.
+>
+> **`LLN-RUNTIME-006` enforcement is COOPERATIVE, not preemptive — read this honestly.** The deadline
+> is polled at flow entry, at each loop iteration, and at statement boundaries; at those poll-sites an
+> exceeded limit fails **closed** (the flow is aborted with an error result). But a single in-flight
+> host/bridge/builtin call is awaited with no timeout, so it is **not interrupted mid-call** — the
+> overrun is caught at the *next* poll-site, or, if the long call is the flow's last act, only by the
+> flow-exit `request_time` check, which emits an **after-the-fact advisory** (the work already ran).
+> So 006's "the flow has been aborted" message is accurate for the poll-site path but over-claims for
+> the exit-advisory path. True mid-call preemption needs the WASM fuel counter (gated on #103/#104);
+> the diagnostic-taxonomy audit (2026-06-22) tracks splitting the advisory case out as `LLN-RUNTIME-009`.
 
 ### Graph Structure (lln-graph library)
 
