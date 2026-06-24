@@ -46,6 +46,29 @@ const isTest = (p) => /[\\/]tests?[\\/]|\.test\.|\.spec\./.test(p);
 const isDefinition = (p) => DEFINITION_SUFFIXES.some((d) => p.endsWith(d)) || p.endsWith("check-gate-injection.mjs");
 const toRel = (f) => relative(REPO, f).split(sep).join("/");
 
+/** Pure classifier (also exercised by --self-test): "none" | "skip" | "guarded" | "test" | "offender". */
+export function classifyCaller(path, src) {
+  if (!ADMIT_CALLS.some((c) => src.includes(c))) return "none";
+  if (isDefinition(path)) return "skip";
+  if (src.includes(GATE)) return "guarded";
+  return isTest(path) ? "test" : "offender";
+}
+
+// --self-test: prove the detector fires (a neutered gate-injection lint is itself a fail-open).
+if (process.argv.includes("--self-test")) {
+  const t = [
+    ["src/host.ts", "fusePackage(pkg)", "offender"],                         // non-test caller, no gate -> FAIL
+    ["src/host.ts", "fusePackage(pkg, { revocationCheck })", "guarded"],      // gate injected -> ok
+    ["tests/fuse.test.mjs", "fusePackage(pkg)", "test"],                      // test caller -> informational
+    ["packages/x/src/fuse-loader.ts", "fusePackage(pkg)", "skip"],            // the border definition -> skipped
+    ["src/unrelated.ts", "doStuff()", "none"],                               // no admit call -> none
+  ];
+  let ok = true;
+  for (const [p, s, want] of t) { const got = classifyCaller(p, s); if (got !== want) { ok = false; console.log(`  ✗ ${p} expected ${want} got ${got}`); } }
+  console.log(ok ? "[self-test] PASS — gate-injection detector classifies offender/guarded/test/skip correctly" : "[self-test] FAIL");
+  process.exit(ok ? 0 : 1);
+}
+
 const files = [];
 for (const d of SCAN_DIRS) walk(join(REPO, d), files);
 if (SCAN_TOPLEVEL) {
@@ -59,11 +82,11 @@ const testCallers = [];
 const offenders = [];
 for (const f of files) {
   const src = readFileSync(f, "utf8");
-  if (!ADMIT_CALLS.some((c) => src.includes(c))) continue;
-  if (isDefinition(f)) continue;
+  const cat = classifyCaller(f, src);
+  if (cat === "none" || cat === "skip") continue;
   const rel = toRel(f);
-  if (src.includes(GATE)) guarded.push(rel);
-  else if (isTest(f)) testCallers.push(rel);
+  if (cat === "guarded") guarded.push(rel);
+  else if (cat === "test") testCallers.push(rel);
   else offenders.push(rel);
 }
 

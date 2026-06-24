@@ -66,6 +66,23 @@ jobs:
           node scripts/audit-tier-boundary.mjs --self-test
           node scripts/audit-tier-boundary.mjs
 
+  # gate-injection (build-free, zero-baseline, ENFORCING): every non-test caller of the admission border
+  # (fusePackage / fusePackages / buildImportClosure) must inject the revocation gate (revocationCheck) —
+  # a host that fuses without it silently admits a REVOKED signing key (a fail-open no happy-path test
+  # catches). version.json mandates this gate "fails CI"; this job makes that true. --self-test proves the
+  # detector fires; then the scan runs ENFORCING.
+  gate-injection:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Admission-border revocation-gate injection guard (self-test, then enforcing)
+        run: |
+          node scripts/check-gate-injection.mjs --self-test
+          node scripts/check-gate-injection.mjs
+
   # production-blockers (build-free, zero-baseline, ENFORCING): every code in production-check.ts
   # PRODUCTION_BLOCKERS must have a real emitter. A blocker no compiler pass can produce advertises a
   # deployment block it cannot enforce (the false memory-gate: LLN-MEMORY-001/002/003/007 were blockers
