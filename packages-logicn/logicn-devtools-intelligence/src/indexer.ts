@@ -10,13 +10,60 @@
 
 import { readdir, readFile, stat, writeFile, readFile as readFileAsync } from "node:fs/promises";
 import { join, resolve, relative } from "node:path";
-import { createHash } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
 import { parseProgram } from "@logicn/core-compiler";
 import { extractFlows } from "./extractor.js";
 import type { IndexedFlow, WorkspaceIndex } from "./types.js";
 
 const INDEX_FILENAME = "workspace.lindex";
 const INDEX_VERSION = 1 as const;
+
+// ---------------------------------------------------------------------------
+// LLN-INTEL-001 — index integrity (anti poisoned-index)
+//
+// The .lindex is a CACHE whose `flows`/`fileHashes` are TRUSTED on an incremental build (a file whose
+// stored hash matches is not re-parsed — its cached flows are reused). An attacker who can write the
+// .lindex could therefore pair FABRICATED flows with a correct content hash and have them trusted
+// unverified. We bind the whole index under an integrity tag and re-verify it on load; any mismatch /
+// absence DISCARDS the cache and forces a full re-parse (fail-closed). With LOGICN_INDEX_HMAC_KEY set
+// the tag is an HMAC (tamper-RESISTANT — unforgeable without the key); without it, a SHA-256 digest
+// (tamper-EVIDENT — catches corruption + naive edits; a write-capable attacker can recompute it, so
+// set the key in untrusted-FS environments).
+// ---------------------------------------------------------------------------
+
+/** Deterministic serialization of the index for the integrity tag (excludes `integrity` itself). */
+function serializeForIntegrity(index: WorkspaceIndex): string {
+  return JSON.stringify({
+    version: index.version,
+    builtAt: index.builtAt,
+    workspaceDir: index.workspaceDir,
+    flows: index.flows,
+    fileHashes: index.fileHashes ?? {},
+    skippedFiles: index.skippedFiles ?? 0,
+  });
+}
+
+/** Compute the LLN-INTEL-001 integrity tag (HMAC if keyed, else SHA-256 digest). */
+export function computeIndexIntegrity(index: WorkspaceIndex): string {
+  const data = serializeForIntegrity(index);
+  const key = process.env.LOGICN_INDEX_HMAC_KEY;
+  if (key !== undefined && key.length > 0) {
+    return "hmac-sha256:" + createHmac("sha256", key).update(data, "utf8").digest("hex");
+  }
+  return "sha256:" + createHash("sha256").update(data, "utf8").digest("hex");
+}
+
+/** True iff `index.integrity` matches a fresh recompute (constant-time compare). */
+export function verifyIndexIntegrity(index: WorkspaceIndex): boolean {
+  const stored = index.integrity;
+  if (typeof stored !== "string" || stored.length === 0) return false; // no tag → fail-closed
+  const expected = computeIndexIntegrity(index);
+  if (stored.length !== expected.length) return false;
+  // constant-time compare (avoid a timing oracle on the tag)
+  let diff = 0;
+  for (let i = 0; i < stored.length; i++) diff |= stored.charCodeAt(i) ^ expected.charCodeAt(i);
+  return diff === 0;
+}
 
 // ---------------------------------------------------------------------------
 // File system walk
@@ -61,6 +108,12 @@ async function loadExistingIndex(indexPath: string): Promise<WorkspaceIndex | nu
       typeof parsed === "object" && parsed !== null &&
       (parsed as WorkspaceIndex).version === INDEX_VERSION
     ) {
+      // LLN-INTEL-001: never trust a cached index that fails its integrity tag (poisoned/corrupt) —
+      // discard it and let the caller fully re-parse (fail-closed). Never silent.
+      if (!verifyIndexIntegrity(parsed as WorkspaceIndex)) {
+        console.warn(`LLN-INTEL-001: ${INDEX_FILENAME} integrity check FAILED — discarding cached index, full re-parse (a poisoned/corrupt index is not trusted)`);
+        return null;
+      }
       return parsed as WorkspaceIndex;
     }
     return null;
@@ -70,7 +123,22 @@ async function loadExistingIndex(indexPath: string): Promise<WorkspaceIndex | nu
 }
 
 async function saveIndex(indexPath: string, index: WorkspaceIndex): Promise<void> {
-  await writeFile(indexPath, JSON.stringify(index, null, 2), "utf-8");
+  // Bind the index under its integrity tag BEFORE writing (computed over every other field).
+  const sealed: WorkspaceIndex = { ...index, integrity: computeIndexIntegrity(index) };
+  await writeFile(indexPath, JSON.stringify(sealed, null, 2), "utf-8");
+}
+
+/**
+ * LLN-INTEL-002: refuse a path-traversal `indexDir`. A raw `..` segment (CWE-22) is rejected so an
+ * indexDir derived from untrusted input cannot escape its intended root and plant/overwrite a
+ * `workspace.lindex` elsewhere. A deliberate absolute or sub-path with NO `..` segment is allowed
+ * (a trusted caller may legitimately write the index to a separate cache dir).
+ */
+function assertIndexDirSandboxed(indexDir: string | undefined): void {
+  if (indexDir === undefined) return; // default (= workspaceDir) is safe
+  if (indexDir.split(/[\\/]+/).includes("..")) {
+    throw new Error(`LLN-INTEL-002: indexDir contains a '..' path-traversal segment — refusing to write ${INDEX_FILENAME} (CWE-22)`);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -101,6 +169,7 @@ export async function buildIndex(
   indexDir?: string,
 ): Promise<IndexBuildResult> {
   const t0 = Date.now();
+  assertIndexDirSandboxed(indexDir); // LLN-INTEL-002 — reject path-traversal before any write
   const absWorkspace = resolve(workspaceDir);
   const absIndexDir  = resolve(indexDir ?? workspaceDir);
   const indexPath    = join(absIndexDir, INDEX_FILENAME);

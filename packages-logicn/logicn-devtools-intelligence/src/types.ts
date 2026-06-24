@@ -56,4 +56,11 @@ export interface WorkspaceIndex {
   fileHashes?: Record<string, string>;
   /** Number of files skipped (content unchanged) in the last build */
   skippedFiles?: number;
+  /**
+   * LLN-INTEL-001 integrity tag over the canonical index (all fields except this one).
+   * `hmac-sha256:<hex>` when LOGICN_INDEX_HMAC_KEY is set (tamper-RESISTANT), else `sha256:<hex>`
+   * (tamper-EVIDENT). Verified on load; any mismatch / absence → the cached index is DISCARDED and
+   * the workspace is fully re-parsed (fail-closed — a poisoned/corrupt cache is never trusted).
+   */
+  integrity?: string;
 }

@@ -1264,3 +1264,14 @@ LogicN's secret-erasure is **overwrite-based** (zero the arena page / derived-se
 The invariant: a substrate admitted via the storage capability whose media is write-once/fixed is flagged `eraseModel: "crypto-only"`; on it (1) **only KEM-DEM ciphertext may be written** — a cleartext-secret-tainted value reaching it is a fail-closed compile/admission error (extends `LLN-SECRET-002` / `LLN-PRIVACY-002` taint to a new sink class); (2) the DEK lives on overwritable digital silicon and "deletion" = key destruction, never media overwrite; (3) erasure emits a key-destruction **witness** (no read-back-verify of the medium is possible). No new crypto — reuses KEM-DEM + key custody (0 patents). Buildable surface: a capability-axis split in `photonic-admission.ts` (`storage.mount` vs `photonic.reprogram`) carrying `eraseModel`, plus one SealTaint sink rule.
 
 ---
+
+## Workspace-index integrity (anti poisoned-index)
+
+**Status:** ENFORCED (R&D 0098-intel-index; `logicn-devtools-intelligence/src/indexer.ts`, +5 tests)  **Diagnostics:** LLN-INTEL-001 (integrity), LLN-INTEL-002 (path traversal)
+
+The `workspace.lindex` cache TRUSTS its stored `flows`/`fileHashes` on an incremental build (a file whose stored hash matches is not re-parsed — its cached flows are reused). An attacker who can write the `.lindex` could therefore pair **fabricated flows** with a correct content hash and have them trusted unverified (poisoned-index). 
+
+- **LLN-INTEL-001** — the whole index is bound under an **integrity tag** (`computeIndexIntegrity`): `hmac-sha256:` when `LOGICN_INDEX_HMAC_KEY` is set (tamper-**resistant**, unforgeable without the key), else `sha256:` (tamper-**evident**). It is re-verified on load (`verifyIndexIntegrity`, constant-time); any mismatch / absence → the cached index is **discarded and the workspace is fully re-parsed** (fail-closed, never silent). Set the key in untrusted-FS environments.
+- **LLN-INTEL-002** — a caller-supplied `indexDir` containing a `..` path-traversal segment is **refused** before any write (CWE-22), so a poisoned indexDir cannot plant/overwrite a `workspace.lindex` outside its intended root. A deliberate absolute/sub-path with no `..` is allowed.
+
+---
