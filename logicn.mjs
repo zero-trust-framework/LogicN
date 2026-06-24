@@ -1318,6 +1318,43 @@ Baseline comparison (governance-cost):
         process.exit(1);
       }
 
+      // ── CERTIFIED-CONSUME PQ FLOOR (consume-side mirror of the sign-side certified gate, logicn.mjs:1917-1932) ──
+      // The SIGN side mandates a hybrid Ed25519+ML-DSA-65 manifest when LOGICN_MANIFEST_PROFILE=certified, but the
+      // CONSUME side only gated on LOGICN_PROFILE=production (= "a signature is required"), so a v1 (Ed25519-only)
+      // manifest was ACCEPTED here even under a PQ-required posture (one-directional gap). Resolve certified the SAME
+      // fail-secure way as the signer: trim+lowercase; only UNSET/empty or an explicit off/dev token relaxes; ANYTHING
+      // ELSE set fail-secures to certified (a typo can never silently drop the PQ mandate — Adv #3). This is keyed on
+      // LOGICN_MANIFEST_PROFILE (NOT LOGICN_PROFILE — orthogonal axes; production!=certified, Adv #1/#5) and is
+      // evaluated on the AUTHORITATIVE decoded-CBOR `manifest` BEFORE the signature dispatch below, so a v1 manifest
+      // (and any placeholder/unsigned/missing-json variant) is refused before it can reach the classical pass path
+      // (Adv #2). The acceptance predicate is a subset of what the signer writes (schemaVersion "lln.manifest.v2" +
+      // sigAlgorithm "lln.gov.sig.v2" + a both-half "|" signature; logicn.mjs:2045-2052) and of the existing v2
+      // detection (1357-1358), so a valid v2 manifest passes and flows into the untouched hybrid-verify path (Adv #4).
+      // DEFAULT (non-certified) consume is byte-for-byte unchanged — the whole block is a no-op when certified is off.
+      // This sits inside the outer manifest try (catch at ~1520 always exits 1), so an error here is fail-closed (Adv #5).
+      {
+        const _mpRawV = String(process.env.LOGICN_MANIFEST_PROFILE ?? "").trim().toLowerCase();
+        const _mpOffV = new Set(["", "dev", "development", "test", "off", "none", "default"]);
+        const certifiedConsume = !_mpOffV.has(_mpRawV);
+        if (certifiedConsume && _mpRawV !== "certified") {
+          console.warn(`   ⚠️  LLN-MANIFEST-PROFILE-UNRECOGNIZED: LOGICN_MANIFEST_PROFILE='${process.env.LOGICN_MANIFEST_PROFILE}' is not recognized — fail-securing to certified (post-quantum signature REQUIRED at verify). Set 'certified' or 'dev' explicitly.`);
+        }
+        if (certifiedConsume) {
+          const _sigV = manifest.governanceSignature;
+          const _isV2Hybrid = manifest.schemaVersion === "lln.manifest.v2"
+            && _sigV && typeof _sigV === "object"
+            && _sigV.sigAlgorithm === "lln.gov.sig.v2"
+            && typeof _sigV.signature === "string" && _sigV.signature.includes("|");
+          if (!_isV2Hybrid) {
+            console.error("❌ LLN-MANIFEST-PQ-REQUIRED: LOGICN_MANIFEST_PROFILE=certified requires a v2 hybrid Ed25519+ML-DSA-65 manifest " +
+              "(schemaVersion 'lln.manifest.v2', sigAlgorithm 'lln.gov.sig.v2', a both-half '|' signature), but this manifest is not v2 hybrid. " +
+              "Refusing to accept a classical-only (v1) manifest under a post-quantum-required posture (fail-closed, no PQ downgrade). " +
+              "Rebuild under certified: LOGICN_MANIFEST_PROFILE=certified logicn keygen --hybrid && logicn build.");
+            process.exit(1);
+          }
+        }
+      }
+
       const proofCount = manifest.proofObligations?.length ?? 0;
       const constraintCount = manifest.derivedConstraints?.length ?? 0;
       console.log(`✅ ${llnFile}: manifest verified`);
@@ -1557,6 +1594,40 @@ Baseline comparison (governance-cost):
         // manifest is the dev "run the source directly" case, already handled by the existsSync guard.
         console.error(`❌ LLN-MANIFEST-INVALID: admission manifest ${manifestPath} is present but could not be read/decoded — fail-closed: ${e.message}`);
         process.exit(1);
+      }
+
+      // ── CERTIFIED-CONSUME PQ FLOOR at run-admission (consume-side mirror of the sign-side certified gate) ──
+      // Independent of LOGICN_PROFILE (Adv #5): the production-gated block below only fires under
+      // LOGICN_PROFILE=production, so a present v1 (Ed25519-only) manifest was admitted to RUN even under a
+      // PQ-required posture. Resolve certified the SAME fail-secure way as the signer (trim+lowercase; only
+      // unset/empty or an explicit off/dev token relaxes; anything else set fail-secures to certified — Adv #3),
+      // keyed on LOGICN_MANIFEST_PROFILE not LOGICN_PROFILE (Adv #1). Evaluated on the authoritative decoded-CBOR
+      // `manifest` BEFORE the classical run path (Adv #2): when certified, the present manifest MUST be v2 hybrid
+      // (subset of the signer/run-detect predicate, so a valid v2 still runs — Adv #4) or we refuse fail-closed.
+      // Scoped INSIDE the existing existsSync(manifestPath) guard, so the no-manifest raw-run posture is untouched
+      // (this only rejects a PRESENT v1 manifest); every violation process.exit(1)s — never warn-and-continue.
+      // DEFAULT (non-certified) admission below is byte-for-byte unchanged (no-op when certifiedRun is false).
+      {
+        const _mpRawR = String(process.env.LOGICN_MANIFEST_PROFILE ?? "").trim().toLowerCase();
+        const _mpOffR = new Set(["", "dev", "development", "test", "off", "none", "default"]);
+        const certifiedRun = !_mpOffR.has(_mpRawR);
+        if (certifiedRun && _mpRawR !== "certified") {
+          console.warn(`   ⚠️  LLN-MANIFEST-PROFILE-UNRECOGNIZED: LOGICN_MANIFEST_PROFILE='${process.env.LOGICN_MANIFEST_PROFILE}' is not recognized — fail-securing to certified (post-quantum signature REQUIRED to run). Set 'certified' or 'dev' explicitly.`);
+        }
+        if (certifiedRun) {
+          const _sigR = manifest && manifest.governanceSignature;
+          const _isV2HybridR = manifest && manifest.schemaVersion === "lln.manifest.v2"
+            && _sigR && typeof _sigR === "object"
+            && _sigR.sigAlgorithm === "lln.gov.sig.v2"
+            && typeof _sigR.signature === "string" && _sigR.signature.includes("|");
+          if (!_isV2HybridR) {
+            console.error("❌ LLN-MANIFEST-PQ-REQUIRED: LOGICN_MANIFEST_PROFILE=certified requires a v2 hybrid Ed25519+ML-DSA-65 manifest " +
+              "(schemaVersion 'lln.manifest.v2', sigAlgorithm 'lln.gov.sig.v2', a both-half '|' signature), but this flow's manifest is not v2 hybrid. " +
+              "Refusing to run a classical-only (v1) manifest under a post-quantum-required posture (fail-closed, no PQ downgrade). " +
+              "Rebuild under certified: LOGICN_MANIFEST_PROFILE=certified logicn keygen --hybrid && logicn build.");
+            process.exit(1);
+          }
+        }
       }
 
       // ── AUDIT: production-gated signature + revocation admission (verify-if-present) ───────────
