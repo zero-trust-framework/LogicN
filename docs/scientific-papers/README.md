@@ -50,6 +50,7 @@ Any document in this folder follows the conventions below. These are good-practi
 | Document | Tier | Summary |
 |---|---|---|
 | [`tmf-trust-capsule-format-defensive-publication-2026-06-23.md`](tmf-trust-capsule-format-defensive-publication-2026-06-23.md) | **defensive-pub** | The `.tmf` trust-capsule **universal file & communications format** — TMX-256 (3-ary SHAKE256 Merkle-XOF), ML-DSA-65 root signing, KEM-DEM confidentiality, codec-agnostic modalities (image/audio/video/document/structured), streaming. Maths + usage + security + full references; novelty disclaimed. |
+| [`latency-is-not-work-measured-negatives-defensive-publication-2026-06-25.md`](latency-is-not-work-measured-negatives-defensive-publication-2026-06-25.md) | **defensive-pub** + borderline **measured-negative** | Five reproducible measured-negatives that a parallel/exotic substrate buys latency-depth, **not work** (ML-DSA Amdahl wash · photonic GEMM Θ(N²) · holographic ≠ O(1) · tree-as-tensor · interpreter speed-levers) + the Safe-Floor / reduction-≠-matmul complement. Known-physics/info-theoretic; novelty disclaimed. Result A's external-submission novelty gate (native/SIMD re-measure) stays **OPEN** — internal prior-art only. |
 
 ### Companion defensive-publication notes (in the `LogicN-Patens/` repo)
 
@@ -63,7 +64,7 @@ Any document in this folder follows the conventions below. These are good-practi
 
 | Candidate | Tier | Status |
 |---|---|---|
-| Lane A — "Photonic acceleration of ML-DSA-65 signing is an Amdahl latency-wash" | measured-negative (**borderline**) | f≈28% offloadable ⇒ ideal ~1.4×, realisable ~0.9× (wash). Only becomes genuinely novel after a **native/SIMD Dilithium re-measurement**; the published vectorised-Dilithium profile (arXiv:2306.01989) already implies the conclusion. Reviewer-novelty ~0.62. Kept as repo prior art until re-measured. |
+| Lane A — "Photonic acceleration of ML-DSA-65 signing is an Amdahl latency-wash" | measured-negative (**borderline**) | f≈28% offloadable ⇒ ideal ~1.4×, realisable ~0.9× (wash). **Now captured as Result A of the `latency-is-not-work` defensive-pub note above** (bundled with 4 known-physics negatives). Only becomes externally submittable after a **native/SIMD Dilithium re-measurement** (the vectorised-Dilithium profile arXiv:2306.01989 already implies it; reviewer-novelty ~0.62). **Repo prior art only** until re-measured. |
 
 ### Pre-graded NO-PAPER (kept as repo prior art only — with the one-line reason)
 
