@@ -45,6 +45,13 @@ export {
 } from "./three-valued-governance.js";
 export type { GovernanceDiagnostic, BoundaryDecision } from "./three-valued-governance.js";
 
+// ── K3 ternary partial-return / `Masked` per-field response shaper (R&D 0108 #2) ──
+// Per-field vAnd fold at an output boundary: authorized fields pass through, DENY/
+// INDETERMINATE fields become a typed Masked sentinel (keep-the-rest), fail-closed +
+// deny-by-default. Three-valued counterpart to whole-record redact/seal masking.
+export { partialReturn, maskByVerdict, isMasked } from "./partial-return.js";
+export type { Masked, FieldVerdict, PartialReturn } from "./partial-return.js";
+
 // ── Substrate failure-mode model (Direction C) — seeded, fail-closed ──
 // Models photonic/ternary noise (phase-drift/crosstalk/lane-failure/readout) in software.
 // effectiveVerdict = vAnd(ideal, reading): noise can cost availability, never safety.
