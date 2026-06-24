@@ -1,6 +1,6 @@
 {
   "name": "@logicn/observability",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "Actuator-style operational observability for a LogicN app: a health/liveness/readiness surface, app metrics (request counts, latencies, error rates), and structured app logs. The app-operator's ops view — distinct from @logicn/governance-telemetry (which exports governance STRUCTURE). Surfaces through the App Kernel as health routes + a metrics collector. Fail-closed, zero ambient authority.",
   "license": "Apache-2.0",
   "private": true,

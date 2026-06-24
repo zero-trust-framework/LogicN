@@ -1,6 +1,6 @@
 {
   "name": "@logicn/ext-bridge-quantum",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN governed bridge for IBM ffsim — out-of-process fermionic quantum simulation under contract, Tower audit lifecycle + attestation",
   "license": "Apache-2.0",
   "private": true,

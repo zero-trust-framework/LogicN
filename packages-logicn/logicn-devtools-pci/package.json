@@ -1,6 +1,6 @@
 {
   "name": "@logicn/devtools-pci",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "description": "PCI DSS 4.0.1 compliance audit for LogicN programs. Static analysis maps PCI requirements to LogicN contract patterns: cardholder data protection (Req 3), transit encryption (Req 4), access control (Req 7), audit logging (Req 10), secure development (Req 6). CI-runnable, no infrastructure needed.",
   "type": "module",
   "main": "./dist/index.js",

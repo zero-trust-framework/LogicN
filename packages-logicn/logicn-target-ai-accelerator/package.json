@@ -1,6 +1,6 @@
 {
   "name": "@logicn/target-ai-accelerator",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN NPU, TPU and AI accelerator target planning contracts.",
   "license": "Apache-2.0",
   "private": true,

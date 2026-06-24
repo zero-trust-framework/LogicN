@@ -1,6 +1,6 @@
 {
   "name": "@logicn/cli",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN compiler and runtime CLI — compile .lln programs to WASM, run them, type-check with governance.",
   "type": "module",
   "bin": {

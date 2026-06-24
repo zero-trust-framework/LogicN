@@ -1,6 +1,6 @@
 {
   "name": "@logicn/core-cli",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN developer command-line interface for checking, building, serving, reporting and running safe tasks.",
   "license": "Apache-2.0",
   "private": true,

@@ -1,6 +1,6 @@
 {
   "name": "@logicn/core-sentinel-power",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN Sentinel Power (LSP) — thermal/power envelope governor with deterministic kernel down-tiering. Citizen Protocol v1.4.",
   "license": "Apache-2.0",
   "private": true,

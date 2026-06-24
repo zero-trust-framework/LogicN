@@ -1,6 +1,6 @@
 {
   "name": "@logicn/ext-photonic-emulator",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN photonic-PPU backend: a physics-faithful (Rung-2) MZI-mesh / micro-ring ternary-MAC emulator + the partition cost-model router behind the neutral Brain/Brawn bridge contract. Digital stays the default; photonic only on a proven net win; fail-closed to digital. EMULATED, not silicon (no measured speedup).",
   "license": "Apache-2.0",
   "private": true,

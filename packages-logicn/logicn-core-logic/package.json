@@ -1,6 +1,6 @@
 {
   "name": "@logicn/core-logic",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN multi-state logic concepts including Tri, Decision, BoolBoundary and Omni logic.",
   "license": "Apache-2.0",
   "private": true,

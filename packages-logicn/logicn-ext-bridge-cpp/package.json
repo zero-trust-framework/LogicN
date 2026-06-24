@@ -1,6 +1,6 @@
 {
   "name": "@logicn/ext-bridge-cpp",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "description": "Native CPU/GPU execution bridges (BitNet ternary) implementing the Tower InferenceBridge contract — simulator fallback, native addon seam",
   "license": "Apache-2.0",
   "private": true,

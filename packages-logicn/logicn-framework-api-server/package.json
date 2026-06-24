@@ -1,6 +1,6 @@
 {
   "name": "@logicn/framework-api-server",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN HTTP API-server adapter: a thin node:http transport that buffers the request body under a hard DoS cap and hands every request to the non-bypassable App Kernel. It never pre-empts a kernel gate except the additive body cap.",
   "license": "Apache-2.0",
   "private": true,

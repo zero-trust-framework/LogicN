@@ -1,6 +1,6 @@
 {
   "name": "@logicn/devtools-security",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "description": "Security analysis, audit, and testing tools for LogicN programs. Runs all security checks (taint, profiles, governance, hardware, path sandbox, ReDoS guard) and produces structured audit reports. Designed for CI integration — lightweight, no runtime dependency.",
   "license": "Apache-2.0",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@logicn/core-vector",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN vector value, lane, operation and report concepts.",
   "license": "Apache-2.0",
   "private": true,

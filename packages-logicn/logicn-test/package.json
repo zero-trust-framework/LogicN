@@ -1,6 +1,6 @@
 {
   "name": "@logicn/test",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "The consolidated LogicN test harness — one named, consumable package that runs unit, e2e, conformance (R6) and fidelity-differential (walker ≡ bytecode ≡ WASM) checks against a LogicN workspace.",
   "license": "Apache-2.0",
   "type": "module",

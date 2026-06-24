@@ -1,6 +1,6 @@
 {
   "name": "@logicn/core",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN / LogicN language package, examples, schemas and prototype CLI.",
   "license": "Apache-2.0",
   "type": "commonjs",

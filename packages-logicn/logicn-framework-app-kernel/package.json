@@ -1,6 +1,6 @@
 {
   "name": "@logicn/framework-app-kernel",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "Optional LogicN secure App Kernel: the fixed, non-bypassable governed request pipeline + secure-default route policy resolver. The fusion host for protocol/capability packages.",
   "license": "Apache-2.0",
   "private": true,

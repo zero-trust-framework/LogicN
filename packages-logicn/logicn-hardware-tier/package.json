@@ -1,6 +1,6 @@
 {
   "name": "@logicn/hardware-tier",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN Tri-Pipe topology: the cached, attested hardware() capability directive {binary|hybrid|photonic} + the per-tier package loader (photonic > hybrid > binary, fail-closed to binary). Capability preference picks the package; the 0053 per-kernel router still gates actual offload — worst case == binary == today.",
   "license": "Apache-2.0",
   "private": true,

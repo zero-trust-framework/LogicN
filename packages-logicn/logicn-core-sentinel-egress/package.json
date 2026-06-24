@@ -1,6 +1,6 @@
 {
   "name": "@logicn/core-sentinel-egress",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN Sentinel Egress — governed audit egress: fixed ring buffer + batched HMAC-chained tamper-evident flush. Citizen Protocol v1.6.",
   "license": "Apache-2.0",
   "private": true,

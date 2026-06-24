@@ -1,6 +1,6 @@
 {
   "name": "@logicn/devtools-naming",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "description": "Naming standard enforcer for LogicN: detects abbreviations, implicit types, missing intent. Promotes Zero-Ambiguity / Maximum-Semantics coding.",
   "license": "Apache-2.0",
   "type": "module",

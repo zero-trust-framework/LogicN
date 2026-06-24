@@ -1,6 +1,6 @@
 {
   "name": "@logicn/ai",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN AI inference contracts, model metadata, safety policy and reports.",
   "license": "Apache-2.0",
   "private": true,

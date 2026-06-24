@@ -1,6 +1,6 @@
 {
   "name": "@logicn/tools-benchmark",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN benchmark and diagnostics contracts for logic, compute targets, fallback behaviour and safe reporting.",
   "license": "Apache-2.0",
   "private": true,

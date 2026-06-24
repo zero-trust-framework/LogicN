@@ -1,6 +1,6 @@
 {
   "name": "@logicn/core-sentinel-state",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN Sentinel State (LSS) — atomic, HMAC-verified state snapshots + cold-boot recovery. Citizen Protocol v1.5.",
   "license": "Apache-2.0",
   "private": true,

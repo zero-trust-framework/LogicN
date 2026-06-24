@@ -1,6 +1,6 @@
 {
   "name": "@logicn/ext-secrets-vault",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "description": "HashiCorp Vault provider for LogicN contract.secrets {} blocks. Implements dual-token ephemeral rotation with zero-downtime handshake. Non-core: vault mechanics live outside the deterministic compiler core.",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@logicn/data-db",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN typed database boundary contracts for model, query, command, response, archive and report flows.",
   "license": "Apache-2.0",
   "private": true,

@@ -1,6 +1,6 @@
 {
   "name": "@logicn/devtools-graph-project",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0-beta.2",
   "description": "LogicN project knowledge graph contracts for package, document, policy and report relationships.",
   "license": "Apache-2.0",
   "private": true,
