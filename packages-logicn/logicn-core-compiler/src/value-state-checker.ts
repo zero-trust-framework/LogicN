@@ -1509,16 +1509,20 @@ class ValueStateChecker {
           break; // One diagnostic per call site is enough
         }
       }
-      // Inter-flow secret / embedding propagation (intra-procedural checker can't follow
-      // into the callee body, so a sealed/redacted handoff can't be proven here). Surface
-      // it as a WARNING — fail-loud without breaking legitimate secret-helper patterns.
+      // Inter-flow secret / embedding propagation (intra-procedural checker can't follow into the
+      // callee body, so a sealed/redacted handoff can't be proven here). In PRODUCTION this fails
+      // CLOSED (error): an unsealed secret/embedding crossing an unverified flow boundary is a real
+      // exfiltration path and must not ship — the discharge is seal()/redact() at the boundary. In
+      // development it stays a WARNING (fail-loud, migration-friendly), mirroring the mode-gated
+      // escalation below (~L1716). Inter-procedural seal/redact discharge tracking is the precise
+      // future fix (RD-0124 audit NOW-2 option b); until then, production fail-closed is the safe default.
       for (const arg of callArgs) {
         const lookup = (n: string) => this.lookupBinding(n);
         if (derivesFromSecret(arg, lookup)) {
           this.diagnostics.push({
             code: "LLN-SECRET-002",
             name: "SecretCrossesFlowBoundary",
-            severity: "warning",
+            severity: this.mode === "production" ? "error" : "warning",
             message: `A secret value is passed to flow '${calleeName}', which may transmit it off-host. The checker does not follow into the callee — seal/redact it or confirm '${calleeName}' keeps it within a trusted boundary.`,
             ...(node.location !== undefined ? { location: node.location } : {}),
             suggestedFix: `Pass redact(...) instead, or audit '${calleeName}' for egress.`,
@@ -1534,7 +1538,7 @@ class ValueStateChecker {
           this.diagnostics.push({
             code: "LLN-PRIVACY-002",
             name: "EmbeddingCrossesFlowBoundary",
-            severity: "warning",
+            severity: this.mode === "production" ? "error" : "warning",
             message: `A cleartext semantic embedding is passed to flow '${calleeName}', which may egress it. The checker does not follow into the callee — seal() it or confirm '${calleeName}' keeps it within a trusted boundary.`,
             ...(node.location !== undefined ? { location: node.location } : {}),
             suggestedFix: `Pass seal(...) instead, or audit '${calleeName}' for egress.`,

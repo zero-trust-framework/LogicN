@@ -105,6 +105,34 @@ ${rhs}
   });
 });
 
+// RD-0124 NOW-2: in PRODUCTION the cross-flow secret/embedding handoff fails CLOSED (error), not just a
+// warning — an unsealed secret crossing an inter-procedurally-unverified flow boundary must not ship.
+describe("egress hardening — A4 cross-flow FAILS CLOSED in production (RD-0124 NOW-2)", () => {
+  const SRC = (rhs) => `secure flow egress(v: String) -> Int
+contract { effects { network.outbound } }
+{
+  let r = http.post("u", v)
+  return 0
+}
+secure flow caller(req: Request) -> Int
+contract { effects { ai.inference  network.outbound } secrets { credential k { provider "vault" } } }
+{
+${rhs}
+  return 0
+}`;
+  const chkProd = (src) => checkValueStates(parseProgram(src, "test.lln").ast, "production");
+  it("a secret crossing a flow boundary → LLN-SECRET-002 ERROR in production", () => {
+    const r = chkProd(SRC('  let kk = secret.get("api")\n  let z = egress(kk)'));
+    const d = r.diagnostics.find((x) => x.code === "LLN-SECRET-002");
+    assert.ok(d && d.severity === "error", codes(r));
+  });
+  it("an embedding crossing a flow boundary → LLN-PRIVACY-002 ERROR in production", () => {
+    const r = chkProd(SRC('  let e = EmbeddingModel.run(req)\n  let z = egress(e)'));
+    const d = r.diagnostics.find((x) => x.code === "LLN-PRIVACY-002");
+    assert.ok(d && d.severity === "error", codes(r));
+  });
+});
+
 // ── Container read-back: store in a record/array, read an element back, then egress ──
 // The adversarial review flagged this as a possible gap; the propagation (container binding is
 // tagged; member/index access carries the flag to the new binding) actually closes it. Locked in.
