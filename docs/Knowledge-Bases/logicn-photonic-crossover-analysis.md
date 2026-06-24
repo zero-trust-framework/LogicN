@@ -1,5 +1,15 @@
 # LogicN Photonic Compute Crossover Analysis
 
+> **⚠️ SUPERSEDED (2026-06-24, R&D 0115).** This document's placement rule (the 500M-element
+> heuristic, "Phase-44 pending", no nanosecond model) is **STALE** — do not cite it as the live
+> rule. The live per-op placement decision is the **absolute-ns cost model** in
+> `PartitionDecider` (`logicn-ext-photonic-emulator/src/partition-decider.ts`), composed by
+> `ExecutionRouter` (`logicn-tri-pipe/src/execution-router.ts`), which models the DAC/ADC
+> conversion tax and fails safe to digital (worst case == binary == today). See
+> [`logicn-rd-0115-hybrid-photonic-binary-placement-2026-06-24.md`](logicn-rd-0115-hybrid-photonic-binary-placement-2026-06-24.md)
+> and [`logicn-rd-0110-photonic-matmul-refutation-deepened-2026-06-24.md`](logicn-rd-0110-photonic-matmul-refutation-deepened-2026-06-24.md).
+> Retained for the ternary-encoding background below, not for its crossover heuristic.
+
 ## Overview
 
 The Kleene ternary logic operators (Tri.and, Tri.or, Tri.not) have an elegant equivalence
