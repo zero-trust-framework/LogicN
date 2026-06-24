@@ -77,6 +77,14 @@ export type { CapabilityLease, LeaseDecision, LeaseDenyReason } from "./lease.js
 export { checkQuorum, meetsQuorum, quorumVerdict } from "./quorum.js";
 export type { SignerVote, QuorumDecision, QuorumDenyReason } from "./quorum.js";
 
+// ── LLN-RETAIN-001 sound-erasure gate (R&D 0116/0118) — the Substrate Dispatch Gateway runtime defense ──
+// admitSubstrateWrite is fail-closed K3: an eraseModel is NEVER taken from a drive's self-report;
+// `overwrite` needs a verified signed attestation, else fail-closed to the stricter `crypto-only`.
+// A cleartext secret to crypto-only media is UNERASABLE (overwrite-erase impossible) -> DENY; seal
+// (KEM-DEM) first and "delete" by destroying the DEK. Closes the R&D 0116 WORM-media fail-open.
+export { admitSubstrateWrite, effectiveEraseModel, STORAGE_ADMIT_CAP } from "./substrate-erasure.js";
+export type { EraseModel, SubstrateDescriptor, WritePayload, SubstrateWriteAdmission } from "./substrate-erasure.js";
+
 // ── Substrate failure-mode model (Direction C) — seeded, fail-closed ──
 // Models photonic/ternary noise (phase-drift/crosstalk/lane-failure/readout) in software.
 // effectiveVerdict = vAnd(ideal, reading): noise can cost availability, never safety.
