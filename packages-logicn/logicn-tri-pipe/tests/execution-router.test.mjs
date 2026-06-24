@@ -79,3 +79,54 @@ test("PROPERTY: photonic IFF (offload-capable tier ∧ ternary precision ∧ the
   }
   assert.equal(violations, 0, `${violations}/${checks} routing-composition violations`);
 });
+
+// ── capability gate (the grant half of lane selection — TRACK b) ─────────────────────────────────
+
+test("DEFAULT (no cap operand) = unchanged: ternary photonic net-win kernel still routes photonic", () => {
+  const d = router.route({ opClass: "feedforward", routing: cloud, capability: { targetId: "photonic", attestationVerified: true, componentFullyEligible: true }, kernel: big });
+  assert.equal(d.offloadTarget, "photonic");
+  assert.equal(d.photonic, true);
+  assert.equal(d.laneGranted, true);   // digital-or-granted; no operand ⇒ granted
+});
+
+test("cap DENIES the photonic lane → falls back to digital, never throws, never routes ungranted", () => {
+  const d = router.route({ opClass: "feedforward", routing: cloud, capability: { targetId: "photonic", attestationVerified: true, componentFullyEligible: true }, kernel: big, capCheck: () => false });
+  assert.equal(d.offloadTarget, "digital");
+  assert.equal(d.photonic, false);
+  assert.equal(d.laneGranted, false);
+  assert.match(d.offloadReason, /not granted/);
+  assert.match(d.offloadReason, /wanted photonic/);   // records what the net-win router wanted
+});
+
+test("cap GRANTS the photonic lane → identical to the default photonic route", () => {
+  const d = router.route({ opClass: "feedforward", routing: cloud, capability: { targetId: "photonic", attestationVerified: true, componentFullyEligible: true }, kernel: big, capCheck: (l) => l === "photonic" });
+  assert.equal(d.offloadTarget, "photonic");
+  assert.equal(d.photonic, true);
+  assert.equal(d.laneGranted, true);
+});
+
+test("grantedLanes allow-list: photonic absent → fall back to digital", () => {
+  const d = router.route({ opClass: "feedforward", routing: cloud, capability: { targetId: "photonic", attestationVerified: true, componentFullyEligible: true }, kernel: big, grantedLanes: ["noisy"] });
+  assert.equal(d.offloadTarget, "digital");
+  assert.equal(d.laneGranted, false);
+});
+
+test("grantedLanes allow-list: photonic present → photonic route survives", () => {
+  const d = router.route({ opClass: "feedforward", routing: cloud, capability: { targetId: "photonic", attestationVerified: true, componentFullyEligible: true }, kernel: big, grantedLanes: ["photonic"] });
+  assert.equal(d.offloadTarget, "photonic");
+  assert.equal(d.laneGranted, true);
+});
+
+test("deny-by-default AND: capCheck grants but grantedLanes omits → denied", () => {
+  const d = router.route({ opClass: "feedforward", routing: cloud, capability: { targetId: "photonic", attestationVerified: true, componentFullyEligible: true }, kernel: big, capCheck: () => true, grantedLanes: ["noisy"] });
+  assert.equal(d.offloadTarget, "digital");
+  assert.equal(d.laneGranted, false);
+});
+
+test("cap gate is INERT when the route was already digital (binary tier) — laneGranted stays true", () => {
+  const airgap2 = { governanceTier: 1, fp4HardwareAvailable: false, airGapped: true };
+  const d = router.route({ opClass: "feedforward", routing: airgap2, capability: { targetId: "cpu", attestationVerified: true }, kernel: big, capCheck: () => false });
+  assert.equal(d.tier, "binary");
+  assert.equal(d.offloadTarget, "digital");   // already digital — gate never downgrades further
+  assert.equal(d.laneGranted, true);          // digital is always granted (safe floor)
+});

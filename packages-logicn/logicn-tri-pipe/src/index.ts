@@ -12,6 +12,6 @@ export {
 
 // The LogicN Execution Router — one decision across all routing axes (tier × precision × offload).
 export {
-  type CapabilityInput, type ExecutionRouteInput, type ExecutionDecision,
+  type CapabilityInput, type ExecutionRouteInput, type ExecutionDecision, type Lane,
   ExecutionRouter, createExecutionRouter,
 } from "./execution-router.js";
