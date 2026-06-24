@@ -35,3 +35,15 @@
 ## Science-paper bottom line
 
 Consistent with the standing strategy ([`logicn-ip-paper-strategy.md`](../../../LogicN-R-AND-D)): **0 patents** (the framework adds no new crypto/science by design). The **measured-negatives** are the only paper-worthy lane, and they cohere into **one potential paper** — *"Latency is not work: measured negatives on governing photonic/exotic substrates"* — bundling `RD-0110` (latency-O(1) vs work-Θ(N²)), `RD-0117` (the Safe-Floor Theorem + the ~1.0–1.1× Amdahl ceiling on governed dataflow), and `RD-0116` (no exotic medium replaces a digital integrity anchor; overwrite-erasure is unsound on WORM media). Everything else is **defensive-pub** (`RD-0111/0113/0116/0118`) or **positioning** (`RD-0114`). No single result on its own clears the bar for a standalone flagship paper; the *bundle of measured-negatives on a named machine* does, if the owner wants to publish.
+
+### Paper written + the later batch graded (2026-06-24 EOD)
+
+- **DRAFTED:** the bundle note now exists — `LogicN-ScientificPapers/latency-is-not-work-measured-negatives-photonic-substrates-2026-06-24.md` (Result A = ML-DSA photonic Amdahl wash, B = latency-O(1)/work-Θ(N²), C = holographic not-O(1)/not-PB; + Safe-Floor; + honesty bar). **One novelty gate open before submission** (§7): §1's `f≈0.28` is measured pure-JS; a **native/SIMD (AVX2 liboqs/pqclean) re-measurement** is needed to clear reviewer-novelty (~0.62 today). §2/§3/§4 are not gated. Until then it is an **internal draft**, not a submission.
+- **The later batch (RD-0122/0125/0126/0109) is pre-graded NO PAPER → defensive-pub only.** The K3 resolution-boundary / "third execution paradigm" is an *application of Kleene 1938* (explicit on the papers-repo NO list). It is concept-settled and **doubly red-teamed** (my RD-0125 red-team found+fixed HOLE-1; the independent bridge 0109 ran ~30 attacks, 0 holes; both grounded on the shipped dist) — but that strengthens *confidence*, not *novelty*. Defensive-pub, not a paper. The "two flagged defensive earlier" = **0037** (trit-0 masking → Apache-Arrow validity-bitmap pattern + SQL-3VL pitfall) and the **K3-uniform-spine combination** (RD-0113 DP).
+
+## Open todos (R&D-side, 2026-06-24 EOD)
+
+- **Paper:** native/SIMD re-measurement of ML-DSA offloadable `f` (the only thing between the draft and a submittable eprint). *Owner-gated: publish or not.*
+- **RD-0126 build queue:** A-1 transitive crypto-pin compiler invariant (substrate-inference, reactive→structural) — **NEXT build**. A-2 (derive isCrypto from effects) **DONE** (`8d8bdd7`). Rest TRACK/HW-gated.
+- **Audit NOW-tier:** NOW-1 false-memory-gate **DONE** (+ emitter lint), NOW-2 cross-flow egress fail-closed **DONE**, NOW-3 gate-injection CI **DONE**. Remaining: NOW-4 (quarantine env-key CLI test + compiler-suite-in-CI), NOW-5 (`ext-tmf` inclusion.ts), NOW-6 (2 RED r6-corpus assertions).
+- **Resolution paradigm residuals (TRACK-until-consumer per RD-0122):** productionize the delivery engine · the atomicity/transaction gap (gate-entry ≠ rollback) · lease-bounded snapshot / mid-flight revocation (RD-0125 HOLE-2).
