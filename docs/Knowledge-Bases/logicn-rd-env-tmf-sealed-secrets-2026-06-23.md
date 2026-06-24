@@ -96,6 +96,13 @@ MUST-AVOID build constraint (restated): never decrypt env.tmf to a temp file on 
 - Bitnami Sealed-Secrets (github.com/bitnami/sealed-secrets) — the strong asymmetric form: only the cluster decrypts; developers can only encrypt. The model for the local-edit-vs-read-back asymmetry.
 - age — modern file encryption; the at-rest + integrity baseline.
 - HashiCorp Vault auto-unseal / secret-zero literature — confirms caveat (i): moving secret-zero to one anchored key is the standard outcome, not elimination.
+
+**Competitive landscape (owner R&D 2026-06-24) — the OSS market splits in two, and neither half does both:**
+- **Diskless INJECTORS (solve fetching, NOT confinement):** Keyway (`keyway run --`, no `.env` on disk, gRPC fetch → process memory), Infisical / Doppler (`infisical run --` / `doppler run --`, cloud KMS → env), 1Password CLI (`op run`, `op://` references resolved at boot). *Where they fail AZT:* they inject into the UNSHIELDED OS environment (`process.env` / `os.environ`) — a rogue npm package or an AI agent in the same process does `console.log(process.env)` and exfiltrates everything. No SealTaint isolation; no governed editor.
+- **Encrypted EDITORS (the temp-file flaw):** SOPS / Ansible-Vault (`sops edit` decrypts plaintext to a `/tmp` or `/dev/shm` temp file, opens it in `$EDITOR`; a crash leaves the plaintext on the SSD — getsops #624/#1044), and the GnuPG+Vim hack (`gpg -d | vim -`, which still writes a `.swp` swap file unless perfectly configured). None edits diskless.
+
+**LogicN differentiation (why `@logicn/ext-secrets-tmf` is structurally net-new, though still a COMPOSITION):** (1) replaces `$EDITOR` with a sandboxed in-arena buffer — NO `/tmp`/`.swp`/`$EDITOR`, plaintext never touches the SSD; (2) replaces `process.env` with the **SealTaint** governed arena — secrets cannot be read by a rogue library/agent (compile-time taint + arena confinement), unlike the injectors' open env; (3) **atomic write-only in-memory rotation** (K3-`0` hold → pointer swap → zero-wipe), no app restart — none of the OSS tools do live zero-downtime rotation. The OSS community solved FETCHING; LogicN secures EDITING + MEMORY-CONFINEMENT. Still defensive-pub (composition of known patterns), not novel science.
+
 Paper verdict: defensive-pub (or none). No new crypto, no new science -> 0 patent value. A short defensive-publication note (the SOPS/Sealed-Secrets pattern on the .tmf container, with the in-memory-only editor as the one differentiating hardening) is the ceiling.
 
 ## 7. Effort / sequencing
