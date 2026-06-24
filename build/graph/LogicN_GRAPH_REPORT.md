@@ -1,15 +1,15 @@
 # LogicN Graph Report
 
 Workspace: LogicN-app
-Generated: 2026-06-24T12:40:26.888Z
+Generated: 2026-06-24T22:46:53.553Z
 
 ## Summary
 
 - Packages: 91
-- Documents: 2227
-- Types/interfaces: 1899
-- Functions: 867
-- Relationships: 5757
+- Documents: 2251
+- Types/interfaces: 1924
+- Functions: 879
+- Relationships: 5824
 
 ## Package Nodes
 
@@ -71,39 +71,39 @@ Generated: 2026-06-24T12:40:26.888Z
 - logicn-devtools-graph-project (packages-logicn/logicn-devtools-graph-project/README.md)
 - logicn-framework-example-app (packages-logicn/logicn-framework-example-app/README.md)
 - logicn-api-protocol-rest (packages-logicn/logicn-api-protocol-rest/README.md)
-- logicn-substrate-math (packages-logicn/logicn-substrate-math/README.md)
-- logicn-ext-bridge-quantum (packages-logicn/logicn-ext-bridge-quantum/README.md)
-- logicn-inference-bridge-contract (packages-logicn/logicn-inference-bridge-contract/README.md)
-- logicn-core-economics (packages-logicn/logicn-core-economics/README.md)
-- logicn-core-sentinel-egress (packages-logicn/logicn-core-sentinel-egress/README.md)
-- logicn-core-sentinel-io (packages-logicn/logicn-core-sentinel-io/README.md)
-- logicn-core-sentinel-memory (packages-logicn/logicn-core-sentinel-memory/README.md)
-- logicn-core-sentinel-power (packages-logicn/logicn-core-sentinel-power/README.md)
-- logicn-core-sentinel-state (packages-logicn/logicn-core-sentinel-state/README.md)
-- logicn-core-sentinel-time (packages-logicn/logicn-core-sentinel-time/README.md)
-- logicn-tower-citizen (packages-logicn/logicn-tower-citizen/README.md)
+- logicn-substrate-math (packages-logicn/logicn-substrate-math/package.json)
+- logicn-ext-bridge-quantum (packages-logicn/logicn-ext-bridge-quantum/package.json)
+- logicn-inference-bridge-contract (packages-logicn/logicn-inference-bridge-contract/package.json)
+- logicn-core-economics (packages-logicn/logicn-core-economics/package.json)
+- logicn-core-sentinel-egress (packages-logicn/logicn-core-sentinel-egress/package.json)
+- logicn-core-sentinel-io (packages-logicn/logicn-core-sentinel-io/package.json)
+- logicn-core-sentinel-memory (packages-logicn/logicn-core-sentinel-memory/package.json)
+- logicn-core-sentinel-power (packages-logicn/logicn-core-sentinel-power/package.json)
+- logicn-core-sentinel-state (packages-logicn/logicn-core-sentinel-state/package.json)
+- logicn-core-sentinel-time (packages-logicn/logicn-core-sentinel-time/package.json)
+- logicn-tower-citizen (packages-logicn/logicn-tower-citizen/package.json)
 - logicn-tri-pipe (packages-logicn/logicn-tri-pipe/README.md)
 - logicn-ext-tmf (packages-logicn/logicn-ext-tmf/README.md)
-- logicn-ext-bridge-bitnet (packages-logicn/logicn-ext-bridge-bitnet/README.md)
-- logicn-ext-bridge-cpp (packages-logicn/logicn-ext-bridge-cpp/README.md)
+- logicn-ext-bridge-bitnet (packages-logicn/logicn-ext-bridge-bitnet/package.json)
+- logicn-ext-bridge-cpp (packages-logicn/logicn-ext-bridge-cpp/package.json)
 - logicn-ext-photonic-emulator (packages-logicn/logicn-ext-photonic-emulator/README.md)
-- logicn-ext-proof-snarkjs (packages-logicn/logicn-ext-proof-snarkjs/README.md)
-- logicn-ext-secrets-vault (packages-logicn/logicn-ext-secrets-vault/README.md)
+- logicn-ext-proof-snarkjs (packages-logicn/logicn-ext-proof-snarkjs/package.json)
+- logicn-ext-secrets-vault (packages-logicn/logicn-ext-secrets-vault/package.json)
 - logicn-ext-secrets-tmf (packages-logicn/logicn-ext-secrets-tmf/README.md)
 - logicn-governance-telemetry (packages-logicn/logicn-governance-telemetry/README.md)
 - logicn-observability (packages-logicn/logicn-observability/README.md)
 - logicn-hardware-tier (packages-logicn/logicn-hardware-tier/README.md)
-- logicn-devtools-context (packages-logicn/logicn-devtools-context/README.md)
-- logicn-devtools-flowgraph (packages-logicn/logicn-devtools-flowgraph/README.md)
+- logicn-devtools-context (packages-logicn/logicn-devtools-context/package.json)
+- logicn-devtools-flowgraph (packages-logicn/logicn-devtools-flowgraph/package.json)
 - logicn-devtools-graph-algorithms (packages-logicn/logicn-devtools-graph-algorithms/README.md)
-- logicn-devtools-intelligence (packages-logicn/logicn-devtools-intelligence/README.md)
-- logicn-devtools-kb-graph (packages-logicn/logicn-devtools-kb-graph/README.md)
-- logicn-devtools-naming (packages-logicn/logicn-devtools-naming/README.md)
-- logicn-devtools-package-graph (packages-logicn/logicn-devtools-package-graph/README.md)
-- logicn-devtools-pci (packages-logicn/logicn-devtools-pci/README.md)
+- logicn-devtools-intelligence (packages-logicn/logicn-devtools-intelligence/package.json)
+- logicn-devtools-kb-graph (packages-logicn/logicn-devtools-kb-graph/package.json)
+- logicn-devtools-naming (packages-logicn/logicn-devtools-naming/package.json)
+- logicn-devtools-package-graph (packages-logicn/logicn-devtools-package-graph/package.json)
+- logicn-devtools-pci (packages-logicn/logicn-devtools-pci/package.json)
 - logicn-devtools-project-graph (packages-logicn/logicn-devtools-project-graph/README.md)
-- logicn-devtools-provenance (packages-logicn/logicn-devtools-provenance/README.md)
-- logicn-devtools-security (packages-logicn/logicn-devtools-security/README.md)
+- logicn-devtools-provenance (packages-logicn/logicn-devtools-provenance/package.json)
+- logicn-devtools-security (packages-logicn/logicn-devtools-security/package.json)
 
 ## High-Signal Questions
 

@@ -952,6 +952,8 @@ Provides:
 - GovernanceSnapshot
 - isSafeLabel
 - effectFamily
+- GovernanceStateInput
+- buildGovernanceSnapshot
 - renderPrometheus
 - ExporterOptions
 - ExporterHandle
@@ -1053,12 +1055,12 @@ Provides:
 - bm25Search
 - ExtractionInput
 - extractFlows
+- computeIndexIntegrity
+- verifyIndexIntegrity
 - IndexBuildResult
 - search
 - searchWithIndex
 - IndexedFlow
-- SearchResult
-- SearchFilters
 
 ## logicn-devtools-kb-graph
 
@@ -1168,6 +1170,9 @@ Security analysis, audit, and testing tools for LogicN programs. Runs all securi
 
 Provides:
 - SecuritySeverity
+- SecurityVerdict
+- EXPECTED_CHECKERS
+- ExpectedChecker
 - SecurityFinding
 - SecurityAuditReport
 - SecurityAuditOptions
@@ -1176,6 +1181,3 @@ Provides:
 - checkPathSandbox
 - isPathEscape
 - PATH_SANDBOX_TEST_VECTORS
-- RegexValidationResult
-- validateRegexPattern
-- safeCompileRegex
