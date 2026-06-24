@@ -555,12 +555,30 @@ export function renderWAT(module: WATModule): string {
       const emitArenaReset = usesHeap && fn.isEntryPoint && !flowReferenced.has(fn.name);
       const emitZeroing = emitArenaReset && moduleHasSecret;
 
+      // G5 part-b (Intrusion-Triggered Arena Fill, mid-execution): when a SECRET-handling leaf flow hits a
+      // runtime invariant/trap breach it is treated as a potential intrusion — scrub secret remanence from
+      // linear memory with the SAME bulk-memory `memory.fill` as part-a, IMMEDIATELY BEFORE the fail-closed
+      // `unreachable` aborts the module, so secrets are not recoverable from a post-mortem memory image.
+      // GATE: emitArenaReset (⇒ usesHeap ⇒ the $__lln_heap global IS declared and in scope) AND this flow
+      // handlesSecrets. Non-secret flows are byte-identical — `flowBody` is `fn.body` unchanged. We rewrite
+      // ONLY the runtime-guard `(then unreachable)` breach token (trap + ensure pre/post gates emitted into
+      // the body); the compile-time `(unreachable) (; … emitter cannot lower …` lowering stubs carry no
+      // `then` and are untouched. The fill is type [] → [] (consumes its 3 i32 args, leaves nothing), so the
+      // `(then …)` statement-branch stays []→[] — valid WASM (wabt encodes memory.fill as 0xFC 0x0B).
+      const wipeSecretsOnBreach = emitArenaReset && fn.handlesSecrets === true;
+      const flowBody = wipeSecretsOnBreach
+        ? fn.body.replace(
+            /\(then unreachable\)/g,
+            `(then (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__lln_heap) (i32.const ${WAT_HEAP_BASE}))) unreachable (; G5b intrusion-wipe before trap ;))`,
+          )
+        : fn.body;
+
       // B2b zero-on-EXIT (owner-chosen, audit): eagerly destroy THIS call's secret records BEFORE returning,
       // closing the host-readable remanence window. SAFE SUBSET ONLY — a secret leaf that returns a non-heap
       // PRIMITIVE i32 (the result is a value, not a heap pointer) and has NO early `(return …)` (a single
       // tail-expression body, so a result-capturing block cannot be bypassed). Early-return flows need the #70
       // single-exit transform and stay on the lazy on-entry path until that lands.
-      const bodyArr = fn.body.split("\n").filter((l) => l.trim().length > 0);
+      const bodyArr = flowBody.split("\n").filter((l) => l.trim().length > 0);
       let locEnd = 0;
       // NB `(local ` (a DECLARATION) only — `\s` after "local" excludes `(local.set …)` (a statement),
       // which `\b` would wrongly match (boundary before the dot) and split the body mid-statement.
@@ -617,7 +635,7 @@ export function renderWAT(module: WATModule): string {
       }
       let resetInjected = false;
       // Indent each instruction line with 4 spaces inside the function.
-      for (const bodyLine of fn.body.split("\n")) {
+      for (const bodyLine of flowBody.split("\n")) {
         if (bodyLine.trim().length === 0) continue;
         if (emitArenaReset && !resetInjected && !/^\s*\(local\s/.test(bodyLine)) {
           for (const rl of resetBlock) lines.push(rl);
