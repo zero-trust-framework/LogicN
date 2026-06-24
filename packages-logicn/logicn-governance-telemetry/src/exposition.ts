@@ -118,6 +118,93 @@ interface Metric {
  * any label value that is not a safe token is dropped (and counted in
  * `logicn_telemetry_dropped_series_total`), so payload-shaped data can never egress.
  */
+// ── Producer (R&D 0120-F4): build a fail-closed snapshot from raw runtime state ──────────────────
+
+/**
+ * The raw governance state a host extracts from ALREADY-PRODUCED runtime artifacts (a RuntimeManifest's
+ * `governanceFlagsMask`, AuditWriter event counts, ExecutionAuditRecord tiers, …). This is the input
+ * the `/metrics` path was missing a producer for — nothing supplied the GovernanceSnapshot callback.
+ */
+export interface GovernanceStateInput {
+  readonly governanceFlagsMask?: number;
+  readonly allowedEffectsCount?: number;
+  readonly proofObligationsCount?: number;
+  readonly effectsObserved?: Readonly<Record<string, number>>;
+  readonly executionTiers?: Readonly<Record<string, number>>;
+  readonly auditEvents?: Readonly<Record<string, number>>;
+  readonly governanceIndeterminateTotal?: number;
+  readonly surface?: GovernanceSnapshot["surface"];
+  readonly declared?: GovernanceSnapshot["declared"];
+  readonly inflightRequests?: number;
+  readonly queueDepth?: number;
+  readonly behavioralFingerprint?: string;
+  readonly build?: string;
+}
+
+/** Keep only counts whose key is in the `allowed` label set + whose value is finite (fail-closed). */
+function allowListCounts(
+  src: Readonly<Record<string, number>> | undefined,
+  allowed: readonly string[],
+): Record<string, number> | undefined {
+  if (src === undefined) return undefined;
+  const out: Record<string, number> = {};
+  for (const k of allowed) {
+    const v = src[k];
+    if (isFiniteNum(v)) out[k] = v;
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
+/**
+ * Project raw runtime governance state into a fail-closed GovernanceSnapshot (R&D 0120-F4): decode the
+ * governance-flags mask to the known GOVERNANCE_FLAGS bits only, reduce effect names to FAMILIES (never
+ * a full per-flow effect), and ALLOW-LIST the tier/status maps to the known label sets — so a host
+ * cannot leak an arbitrary label or payload value through the exporter. A host wires:
+ *   renderPrometheus(buildGovernanceSnapshot(state))
+ */
+export function buildGovernanceSnapshot(state: GovernanceStateInput): GovernanceSnapshot {
+  const snap: Record<string, unknown> = {};
+
+  if (isFiniteNum(state.governanceFlagsMask)) {
+    const mask = state.governanceFlagsMask >>> 0;
+    const flags: Record<string, boolean> = {};
+    for (let i = 0; i < GOVERNANCE_FLAGS.length; i++) {
+      flags[GOVERNANCE_FLAGS[i]!] = ((mask >>> i) & 1) === 1;
+    }
+    snap.governanceFlags = flags;
+  }
+
+  if (isFiniteNum(state.allowedEffectsCount)) snap.allowedEffectsCount = state.allowedEffectsCount;
+  if (isFiniteNum(state.proofObligationsCount)) snap.proofObligationsCount = state.proofObligationsCount;
+  if (isFiniteNum(state.governanceIndeterminateTotal)) snap.governanceIndeterminateTotal = state.governanceIndeterminateTotal;
+  if (isFiniteNum(state.inflightRequests)) snap.inflightRequests = state.inflightRequests;
+  if (isFiniteNum(state.queueDepth)) snap.queueDepth = state.queueDepth;
+
+  // effectsObserved: reduce every key to its FAMILY (never a full effect), sum, drop unsafe labels.
+  if (state.effectsObserved !== undefined) {
+    const fam: Record<string, number> = {};
+    for (const [k, v] of Object.entries(state.effectsObserved)) {
+      if (!isFiniteNum(v)) continue;
+      const f = effectFamily(k);
+      if (!isSafeLabel(f)) continue;
+      fam[f] = (fam[f] ?? 0) + v;
+    }
+    if (Object.keys(fam).length > 0) snap.effectsObserved = fam;
+  }
+
+  const tiers = allowListCounts(state.executionTiers, EXECUTION_TIERS);
+  if (tiers !== undefined) snap.executionTiers = tiers;
+  const audits = allowListCounts(state.auditEvents, AUDIT_STATUSES);
+  if (audits !== undefined) snap.auditEvents = audits;
+
+  if (state.surface !== undefined) snap.surface = state.surface;
+  if (state.declared !== undefined) snap.declared = state.declared;
+  if (typeof state.behavioralFingerprint === "string" && isSafeLabel(state.behavioralFingerprint)) snap.behavioralFingerprint = state.behavioralFingerprint;
+  if (typeof state.build === "string" && isSafeLabel(state.build)) snap.build = state.build;
+
+  return snap as GovernanceSnapshot;
+}
+
 export function renderPrometheus(snapshot: GovernanceSnapshot): string {
   let dropped = 0;
   const keep = (labels: Readonly<Record<string, string>>): boolean => {
