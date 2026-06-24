@@ -337,10 +337,29 @@ export function runPciAudit(source: string, fileName?: string): PciAuditReport {
   // Parse
   const parsed = parseProgram(source, fileName ?? "source.lln");
 
-  // If parse failed entirely, return empty pass report
+  // FAIL-CLOSED on parse failure (#0098): a security oracle that cannot see the program is BLIND,
+  // and a blind oracle must DENY, not PASS. ANY parse error means the auditor is operating on an
+  // incomplete view of the program — whether the failure is TOTAL (no flows / empty AST) or PARTIAL
+  // (some flows parsed, but a section is malformed, e.g. an unterminated block). In every case push
+  // a high-severity LLN-PCI-000 ParseFailure so buildReport's `passed` becomes false, instead of
+  // returning a clean "pass". Mirrors the security audit-runner's parse-fail handling.
+  // NIST SP 800-207 T6 / CWE-636 (not-failing-securely) / CWE-703 / CWE-1287.
   const parseErrors = (parsed.diagnostics ?? []).filter(d => d.severity === "error");
-  if (parseErrors.length > 0 && parsed.flows.length === 0 && (parsed.ast.children ?? []).length === 0) {
-    return buildReport(source, findings, auditedAt, fileName);
+  if (parseErrors.length > 0) {
+    findings.push(makeFinding(
+      "LLN-PCI-000",
+      "ParseFailure",
+      "6.2",
+      "high",
+      `PCI audit could not fully analyze the source — it has ${parseErrors.length} parse error${parseErrors.length === 1 ? "" : "s"} (first: ${parseErrors[0]?.message ?? "unknown"}). A partially- or un-parseable source FAILS the audit (unknown -> deny); a blind oracle does not pass.`,
+      undefined,
+      fileName,
+    ));
+    // Total parse failure (no auditable AST): return now. Partial failure: fall through and audit
+    // whatever DID parse (defense in depth), with the parse-failure finding already recorded.
+    if (parsed.flows.length === 0 && (parsed.ast.children ?? []).length === 0) {
+      return buildReport(source, findings, auditedAt, fileName);
+    }
   }
 
   const ast = parsed.ast;
