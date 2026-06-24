@@ -26,9 +26,9 @@ HARD LINE       crypto/integrity stay on a deterministic core
 |---|---|---|---|
 | 1 | TMX-256 integrity core | `src/tmx256.ts` | ✅ shipped (9 golden tests) |
 | 2 | container reader/writer (§6 fail-closed) | `src/container.ts` | ✅ shipped (10 golden tests) |
-| 3 | KEM-DEM confidentiality | — | ⬜ **next** |
-| 4 | hybrid signing over the root (+ M-of-N custody) | — | ⬜ |
-| 5 | inclusion proofs + history chain + Governed Trust Capsule | — | ⬜ |
+| 3 | KEM-DEM confidentiality | `src/kemdem.ts` | ✅ shipped (14 tests: deterministic goldens + hybrid-KEM round-trip/tamper) |
+| 4 | hybrid signing over the root (+ M-of-N custody) | `spec/signature-custody-v0.md` (spec only) | ⛔ **Blocked** — needs a vetted FIPS-204 (ML-DSA-65) + Ed25519 lib (§8); `flags.signed` files fail-closed until then |
+| 5 | inclusion proofs + history chain + Governed Trust Capsule | `src/history.ts` | 🟡 partial — history chain integrity + order + §5 freshness + §8 pack shipped (16 tests); inclusion proofs + Trust Capsule + head ML-DSA signature still gated (slice 4 / #12) |
 
 The format specs each slice implements are vendored in [`spec/`](spec/) (see [`spec/PROVENANCE.md`](spec/PROVENANCE.md)
 for the R&D upstream pin and sync rule). Conformance is pinned by the inline golden vectors in `tests/`.
