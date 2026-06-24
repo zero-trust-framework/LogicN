@@ -1241,3 +1241,16 @@ import plugin assimilate "./crypto.lln" as crypto {
 ```
 
 ---
+
+## CLI output redaction — fail-closed tripwire
+
+**Status:** ENFORCED (R&D 0094-redact PART-A)  **Diagnostic:** LLN-CLI-REDACT-001
+
+CLI output is scrubbed by `redactCliOutput` / `redactCliOutputChecked` (`logicn-core-cli/src/security.ts`) before it is printed. Two detector classes:
+
+- **Assignment forms** (`api_key=…`, `token=…`, `password=…`, `secret:…`, `cookie:…`, `bearer …`) — the key/prefix is preserved, the value becomes `SecureString(redacted)`.
+- **Bare credential tokens** (PEM private-key blocks, cloud access-key IDs `AKIA…`, VCS PATs `ghp_…`, Slack `xox?-…`, JWTs `eyJ….eyJ….…`) — redacted **regardless of surrounding context**, closing the prior fail-OPEN where a bare token with no `key=` prefix printed as cleartext.
+
+A bare-token match is a **tripwire**: a raw credential reaching CLI output means an upstream boundary already leaked it. `redactCliOutputChecked` reports `{ tripwire, markers }`; `formatCliResult` surfaces `LLN-CLI-REDACT-001` (with the marker names, never the value) so an operator investigates the source rather than trusting the scrub silently. Redaction is best-effort defense-in-depth — never the primary secret boundary (`LLN-SECRET-001..003` + `redact()` remain the compiler-enforced sink discipline); it can only ever add safety.
+
+---
