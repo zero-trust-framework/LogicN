@@ -81,6 +81,15 @@ Doc: [`logicn-rd-0117-hybrid-join-2026-06-24.md`](logicn-rd-0117-hybrid-join-202
 - `RD-0117-O3` — reuse-crossover wiring spec (`reuse` + Θ(n²) weightLoad → 0110's gate exactly); reclaims only the band n∈[21,29], reuse=1 default keeps the floor.
 - `RD-0117-O4` — **measured-negative**: `decide()`/`route()` have no production call sites, p≈0, governance matrices small/sparse/reuse-1 → even a free optical core is Amdahl-capped ~1.0–1.1× → router correctly refuses photonic almost everywhere.
 
+### RD-0118 — LLN-RETAIN-001 Hardware Protection Directive, hardened
+Doc: [`logicn-rd-0118-retain-hardware-directive-2026-06-24.md`](logicn-rd-0118-retain-hardware-directive-2026-06-24.md) · Status: **decision core BUILT (12/12); directive adversarially hardened** — formalizes `RD-0116-O4` / guardrail `RD-0114-G3`
+- `RD-0118-O1` — **verdict**: yes, LLN-RETAIN-001 becomes a compiler-enforced hardware protection directive (3 stages: compiler trap · dispatch gateway · deletion witness).
+- `RD-0118-O2` — **discovery answer**: an eraseModel is never taken from a drive's self-report; `overwrite` needs a verified signed attestation, else fail-closed to the stricter `crypto-only` (`admitSubstrateWrite`/`effectiveEraseModel`, built `746e161`).
+- `RD-0118-O3` — the crypto-erase **witness** structure + invariants (no-copy / sole-custody, bottom-out at attested-overwrite silicon).
+
+### Outcomes + paper ledger
+[`logicn-rd-outcomes-table-2026-06-24.md`](logicn-rd-outcomes-table-2026-06-24.md) — the positive/negative/could-not-be-done + science-paper table for the whole `RD-0110`–`RD-0118` run, plus the R&D-driven builds shipped.
+
 ---
 
 ## Notes
