@@ -499,12 +499,19 @@ class SyncInterpreter {
         if ((left.__tag === "int" || left.__tag === "float") && (right.__tag === "int" || right.__tag === "float")) {
           const lv = left.value as number;
           const rv = right.value as number;
+          // R&D-0112 three-tier-fidelity hardening: if BOTH operands are i32, route through the CHECKED
+          // algebra (never raw `+`/Math.imul/`/`, which silently wrap or skip the /0 trap) so this fallback
+          // can never become a fail-open if a future int×int key is ever dropped from BINARY_DISPATCH.
+          // Proven dead today (every int×int op key is present in the map, lines 112-116) — this is
+          // defense-in-depth for the three-tier-divergence class that has bitten before. Float-involving
+          // ops keep native arithmetic (no i32 overflow/trap semantics apply to floats).
+          const bothInt = left.__tag === "int" && right.__tag === "int";
           switch (op) {
-            case "+": return intVal(lv + rv);
-            case "-": return intVal(lv - rv);
-            case "*": return intVal(Math.imul(lv, rv));
-            case "/": return intVal(Math.trunc(lv / rv));
-            case "%": return intVal(lv % rv);
+            case "+": return bothInt ? i32R(i32AddChecked(lv, rv)) : intVal(lv + rv);
+            case "-": return bothInt ? i32R(i32SubChecked(lv, rv)) : intVal(lv - rv);
+            case "*": return bothInt ? i32R(i32MulChecked(lv, rv)) : intVal(Math.imul(lv, rv));
+            case "/": return bothInt ? i32R(i32DivChecked(lv, rv)) : intVal(Math.trunc(lv / rv));
+            case "%": return bothInt ? i32R(i32ModChecked(lv, rv)) : intVal(lv % rv);
           }
         }
         throw new SyncNotSupported(`binary ${op} on ${left.__tag} × ${right.__tag}`);
