@@ -87,8 +87,20 @@ Doc: [`logicn-rd-0118-retain-hardware-directive-2026-06-24.md`](logicn-rd-0118-r
 - `RD-0118-O2` — **discovery answer**: an eraseModel is never taken from a drive's self-report; `overwrite` needs a verified signed Ed25519 `storage.admit` attestation, else fail-closed to the stricter `crypto-only`. BUILT: `admitSubstrateWrite`/`effectiveEraseModel` (`746e161`) + the signed rail `admitStorageSubstrate` (`1642f3e`) — lying-WORM-drive attack closed end-to-end, 20/20.
 - `RD-0118-O3` — the crypto-erase **witness** structure + invariants (no-copy / sole-custody, bottom-out at attested-overwrite silicon).
 
+### RD-0119 — Unlock + small-wins discovery sweep *(running)*
+Workflow `w4b5597yv` — finds any clean small buildable win, UNLOCKS (esp. the @noble/post-quantum ML-DSA-65 FIPS-204 verify question), cross-compares, and the 0016 generator verdict. Doc TBD on completion.
+
+### RD-0120 — Missing software-architecture sweep *(running)*
+Workflow `wvc1efjl1` — "anything missing in the software architecture we should have or consider, no matter how small?" Security/resilience/verification/DX lenses, adversarially verified. Doc TBD on completion.
+
+### Hardware protection summary
+[`logicn-hardware-protection-summary-2026-06-24.md`](logicn-hardware-protection-summary-2026-06-24.md) — consolidates what's BUILT (hardware-tier fail-closed attestation, LLN-RETAIN-001 eraseModel rail, photonic-admission, substrate noise model, Safe-Floor Theorem, calibration-as-attestation, bridge attestation) vs R&D'd/designed (ASIC cyber-physical, DRCM, hardware-as-capabilities, cross-layer resilience, future substrates). Answers "did we protect hardware + R&D it" = yes to both.
+
 ### Outcomes + paper ledger
 [`logicn-rd-outcomes-table-2026-06-24.md`](logicn-rd-outcomes-table-2026-06-24.md) — the positive/negative/could-not-be-done + science-paper table for the whole `RD-0110`–`RD-0118` run, plus the R&D-driven builds shipped.
+
+### Secret-hygiene audit
+[`logicn-secret-hygiene-audit-2026-06-24.md`](logicn-secret-hygiene-audit-2026-06-24.md) — timing-side-channel posture verified sound (0043 done); secret-zeroing zero-on-exit safe-subset + the 0055 build-ready remanence-window spec.
 
 ---
 
