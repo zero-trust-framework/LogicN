@@ -569,21 +569,22 @@ export function checkFlowEffects(
     }
   }
 
-  // LLN-TIER-001 (landing B, production-gated): a flow/guarded declaration that touches a
-  // secure-required effect under-declares the obligation — the secure-only passes (intent
-  // justification, epilogue proof, secret-egress sealing) gate on qualifier === "secure" and
-  // never attach at this tier. Floor: escalate to `secure`. Default-off (enforceTierFloor
-  // false) so existing 2-arg callers and dev/check are untouched; only build-production /
-  // build-deterministic set the flag. `pure` is intentionally excluded — pure + these effects
-  // is already a hard LLN-EFFECT-003 error above.
-  if (enforceTierFloor && (flow.qualifier === "flow" || flow.qualifier === "guarded")) {
+  // LLN-TIER-001 (landing A+B): a flow/guarded declaration that touches a secure-required effect
+  // under-declares the obligation — the secure-only passes (intent justification, epilogue proof,
+  // secret-egress sealing) gate on qualifier === "secure" and never attach at this tier. Floor:
+  // escalate to `secure`. The scan ALWAYS runs; severity is gated on enforceTierFloor — production
+  // builds (build-production / build-deterministic) ESCALATE to error (fail the build), while
+  // dev/check emit a WARNING so testers see the obligation early without the corpus-breaking error
+  // churn. `pure` is intentionally excluded — pure + these effects is already a hard LLN-EFFECT-003
+  // error above. (Landing A dev-mode warning, 2026-06-24.)
+  if (flow.qualifier === "flow" || flow.qualifier === "guarded") {
     const tierEffects = new Set<string>([...observedEffects, ...flow.declaredEffects]);
     const secureTriggers = [...tierEffects].filter((e) => SECURE_REQUIRED_EFFECTS.has(e)).sort();
     if (secureTriggers.length > 0) {
       diagnostics.push({
         code: "LLN-TIER-001",
         name: "UNDER_DECLARED_FLOW_TIER",
-        severity: "error",
+        severity: enforceTierFloor ? "error" : "warning",
         message: `${flow.qualifier} flow "${flow.name}" uses secure-tier effect(s) ${formatEffects(secureTriggers)} but is declared "${flow.qualifier}", not "secure". Secure-only obligations (intent justification, epilogue proof, secret-egress sealing) are skipped at this tier.`,
         location: flow.location,
         suggestedFix: `Declare it "secure flow ${flow.name}" so the secure-tier obligations attach.`,

@@ -85,14 +85,30 @@ describe("LLN-TIER-001 — flow-kind tier floor (enforceTierFloor=true)", () => 
   });
 });
 
-describe("LLN-TIER-001 — default-false zero-churn property", () => {
-  it("default 2-arg call: guarded flow + network.outbound emits NO LLN-TIER-001", () => {
-    const results = check(GUARDED_HTTP, undefined);
-    assert.ok(!hasDiag(results, "LLN-TIER-001"));
+describe("LLN-TIER-001 — dev/check emits a WARNING (landing A, default-off escalation)", () => {
+  function tierDiag(results) {
+    return results.flatMap((r) => r.diagnostics).find((d) => d.code === "LLN-TIER-001");
+  }
+
+  it("default 2-arg call: guarded flow + network.outbound emits LLN-TIER-001 as a WARNING", () => {
+    const diag = tierDiag(check(GUARDED_HTTP, undefined));
+    assert.ok(diag, "expected LLN-TIER-001 to fire in dev/check");
+    assert.equal(diag.severity, "warning");
   });
 
-  it("explicit enforceTierFloor=false: guarded flow + network.outbound emits NO LLN-TIER-001", () => {
-    const results = check(GUARDED_HTTP, false);
-    assert.ok(!hasDiag(results, "LLN-TIER-001"));
+  it("explicit enforceTierFloor=false: guarded flow + network.outbound emits LLN-TIER-001 as a WARNING", () => {
+    const diag = tierDiag(check(GUARDED_HTTP, false));
+    assert.ok(diag, "expected LLN-TIER-001 to fire in dev/check");
+    assert.equal(diag.severity, "warning");
+  });
+
+  it("production (enforceTierFloor=true) escalates the SAME flow to an error", () => {
+    const diag = tierDiag(check(GUARDED_HTTP, true));
+    assert.ok(diag);
+    assert.equal(diag.severity, "error");
+  });
+
+  it("secure flow under dev/check: still NO LLN-TIER-001 (no false positive)", () => {
+    assert.ok(!hasDiag(check(SECURE_HTTP, false), "LLN-TIER-001"));
   });
 });

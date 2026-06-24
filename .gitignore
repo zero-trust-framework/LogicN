@@ -33,7 +33,8 @@ build/*.lmanifest
 build/*.lmanifest.json
 build/*.governance-impact.json
 build/*.lln
-build/_*.log
+build/*.log
+build/*.txt
 build/_*.json
 build/*.snap
 # Runtime/test scratch (audit ledgers, egress/flight test dirs) — NOT build/graph or build/kb-graph

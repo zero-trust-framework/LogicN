@@ -1066,7 +1066,13 @@ Baseline comparison (governance-cost):
   if (command === "check") {
     const fx = m.checkEffects(parsed.flows, parsed.ast);
     const gov = m.verifyGovernance(parsed.ast, parsed.flows, fx, "production");
-    const allDiags = [...errors, ...gov.diagnostics];
+    // Surface the dev/check-mode tier-floor + boundary-input WARNINGS (LLN-TIER-001 / LLN-VALUESTATE-008)
+    // so a tester sees the obligation here, before a production build escalates the SAME finding to a
+    // fail-closed error. The floor scan always runs; only its severity is gated on the production profile,
+    // so in `check` these arrive as warnings. Display-only — the exit code still keys on parse errors.
+    const tierWarnings = fx.flatMap(r => (r.diagnostics ?? []).filter(d => d.code === "LLN-TIER-001"));
+    const boundaryWarnings = (m.checkValueStates(parsed.ast).diagnostics ?? []).filter(d => d.code === "LLN-VALUESTATE-008");
+    const allDiags = [...errors, ...gov.diagnostics, ...tierWarnings, ...boundaryWarnings];
     if (allDiags.length === 0) {
       console.log(`✅ ${llnFile}: 0 errors, 0 governance warnings`);
     } else {
