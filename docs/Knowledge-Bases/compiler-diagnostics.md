@@ -493,6 +493,21 @@ LLN-TYPE-022   UnreachablePattern           Pattern already covered by an earlie
 LLN-TYPE-023   DeferredTypeCheck   A type check was deferred (could not be resolved at this point)
 ```
 
+### Numeric Lowering (canonical series: LLN-NUMERIC-*)
+
+Backend numeric-lowering safety gate. A scalar numeric type that the WASM backend
+cannot yet lower **without data loss** is rejected fail-closed rather than emitted as a
+silently-truncating module — "always make the most secure choice". Enforced unconditionally
+by `checkValueStates` (value-state-checker.ts), so it fires on both the governed runtime
+and the production build. Only the data-losing 64-bit widths are gated: `Int8`/`Int16`
+widen to i32 and `Float32` widens to f64 (no value loss), so they are deliberately not
+flagged; a generic position like `Tensor<Int64,[4]>` (an opaque i32 handle whose base type
+is `Tensor`) is not flagged either.
+
+```text
+LLN-NUMERIC-001   UnsupportedNumericWidth   Scalar Int64/UInt64 not yet faithfully lowered — the WASM backend would silently truncate it from 64 to 32 bits; rejected fail-closed until i64 lowering lands
+```
+
 ### Name Resolution (canonical series: LLN-NAME-*)
 
 ```text

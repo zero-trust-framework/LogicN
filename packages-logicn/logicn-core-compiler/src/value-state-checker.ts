@@ -1968,6 +1968,89 @@ class ValueStateChecker {
  * @param ast  The root `program` node from `parseProgram()`.
  * @returns    A result object containing all value-state diagnostics.
  */
+// ---------------------------------------------------------------------------
+// LLN-NUMERIC-001 — backend numeric-lowering safety gate (fail-closed, UNCONDITIONAL)
+//
+// A scalar Int64/UInt64 type-checks (it is a valid LogicN type, and logicNTypeToWAT maps
+// it to i64), but the WASM emitter's value sites (return type, local decl, binary-op) only
+// special-case the float set and DEFAULT everything else to i32 — so a scalar `: Int64` is
+// SILENTLY TRUNCATED 64→32 bit (CWE-704), and the run fallback (tree-walker) holds the value
+// in a JS `number` that loses precision above 2^53. Either way the author asked for 64 bits
+// and silently got 32 — a fail-OPEN correctness/security hazard (e.g. a financial
+// `amount: Int64` wrapping at 2^31). Per "always make the most secure choice", we fail CLOSED:
+// the governed runtime and the production build (both run checkValueStates) reject such a flow
+// rather than emit a truncating module, until faithful i64 lowering lands.
+//
+// UNCONDITIONAL (not mode-gated): silent truncation is always wrong, and the governed runtime
+// calls checkValueStates with the default development mode — gating on production would leave
+// the zero-trust path open. SCOPE: only the data-LOSING 64-bit widths. Int8/Int16 widen to i32
+// and Float32 widens to f64 (no value loss), so they are deliberately NOT gated. The base type
+// is matched EXACTLY, so a generic position like Tensor<Int64,[4]> / Array<UInt64> (an opaque
+// i32 handle whose base is "Tensor"/"Array") is correctly NOT flagged.
+const BACKEND_UNLOWERABLE_SCALAR: ReadonlySet<string> = new Set(["Int64", "UInt64"]);
+const NUMERIC_FLOW_KINDS = new Set(["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl"]);
+const NUMERIC_BIND_KINDS = new Set(["letDecl", "mutDecl", "readonlyDecl"]);
+
+// Base type identifier from a type annotation string: strips leading governance/safety
+// qualifiers and any generic/array suffix. "protected Int64"→"Int64", "Tensor<Int64,[4]>"→"Tensor".
+function numericBaseType(typeSection: string): string {
+  let s = typeSection.trim();
+  for (const q of ["protected ", "redacted ", "unsafe ", "safe "]) {
+    if (s.startsWith(q)) s = s.slice(q.length).trim();
+  }
+  const m = s.match(/^([A-Za-z_][A-Za-z0-9_]*)/);
+  return m?.[1] ?? "";
+}
+
+function unlowerableNumericDiag(base: string, location: SourceLocation | undefined): ValueStateDiagnostic {
+  return {
+    code: "LLN-NUMERIC-001",
+    name: "UnsupportedNumericWidth",
+    severity: "error",
+    message: `Scalar '${base}' is a valid LogicN type, but the current WASM backend cannot lower it without silently truncating to 32 bits — a fail-open correctness hazard. 64-bit integers are not yet faithfully emitted, so this is rejected rather than silently narrowed.`,
+    ...(location !== undefined ? { location } : {}),
+    suggestedFix: `Use 'Int' (32-bit) if the value fits its range, model the value as a String or two Int words, or wait for faithful i64 lowering before declaring '${base}'.`,
+  };
+}
+
+// Single-pass scan for scalar Int64/UInt64 in return / parameter / local positions.
+// Kept separate from the taint walk; its diagnostics are appended in checkValueStates.
+function scanUnlowerableNumerics(root: AstNode): ValueStateDiagnostic[] {
+  const out: ValueStateDiagnostic[] = [];
+  const visit = (node: AstNode | undefined): void => {
+    if (!node) return;
+    if (NUMERIC_FLOW_KINDS.has(node.kind)) {
+      const children = node.children ?? [];
+      // Return type = first DIRECT typeRef child (param typeRefs are nested inside paramDecl).
+      const retTypeNode = children.find((c) => c.kind === "typeRef");
+      if (typeof retTypeNode?.value === "string") {
+        const base = numericBaseType(retTypeNode.value);
+        if (BACKEND_UNLOWERABLE_SCALAR.has(base)) out.push(unlowerableNumericDiag(base, retTypeNode.location ?? node.location));
+      }
+      for (const c of children) {
+        if (c.kind !== "paramDecl") continue;
+        const tr = (c.children ?? []).find((t) => t.kind === "typeRef");
+        if (typeof tr?.value === "string") {
+          const base = numericBaseType(tr.value);
+          if (BACKEND_UNLOWERABLE_SCALAR.has(base)) out.push(unlowerableNumericDiag(base, tr.location ?? c.location));
+        }
+      }
+    } else if (NUMERIC_BIND_KINDS.has(node.kind) && typeof node.value === "string") {
+      let rest = node.value;
+      if (rest.startsWith("unsafe ")) rest = rest.slice("unsafe ".length).trim();
+      else if (rest.startsWith("safe ")) rest = rest.slice("safe ".length).trim();
+      const colonIdx = rest.indexOf(":");
+      if (colonIdx !== -1) {
+        const base = numericBaseType(rest.slice(colonIdx + 1));
+        if (BACKEND_UNLOWERABLE_SCALAR.has(base)) out.push(unlowerableNumericDiag(base, node.location));
+      }
+    }
+    for (const c of node.children ?? []) visit(c);
+  };
+  visit(root);
+  return out;
+}
+
 export function checkValueStates(
   ast: AstNode,
   // R&D 0093 stage-2: in production/deterministic builds, LLN-VALUESTATE-008 (the 34B-hole
@@ -1980,5 +2063,11 @@ export function checkValueStates(
   const userFlows = collectUserFlows(ast);
   const checker = new ValueStateChecker(userGates, userFlows, mode);
   checker.check(ast);
-  return checker.getResult();
+  const result = checker.getResult();
+  // LLN-NUMERIC-001: fail-closed scan for scalar 64-bit widths the WASM backend would truncate.
+  // Always-on (correctness, not a taint rule) — merged into the result the governed runtime +
+  // production build already surface as fail-closed errors.
+  const numericDiags = scanUnlowerableNumerics(ast);
+  if (numericDiags.length === 0) return result;
+  return { ...result, diagnostics: [...result.diagnostics, ...numericDiags] };
 }
