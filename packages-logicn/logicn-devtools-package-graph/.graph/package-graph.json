@@ -1,5 +1,12 @@
 {
   "packageName": "@logicn/devtools-package-graph",
+  "scannedRoots": [
+    "src"
+  ],
+  "scannedExtensions": [
+    ".ts",
+    ".lln"
+  ],
   "nodes": [
     "src/cli.ts",
     "src/graph.ts",
