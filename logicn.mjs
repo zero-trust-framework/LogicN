@@ -27,6 +27,28 @@ import { fileURLToPath } from "node:url";
 import { execSync, spawnSync } from "node:child_process";
 import { totalmem, freemem } from "node:os";
 
+// ── Pre-governance ingest guard (threat-model: file-ingestion DoS) ────────────
+// Untrusted .lln is read into a JS string BEFORE any governance runs. The lexer's LLN-LEX-004 10MB guard
+// is POST-allocation (it checks source.length AFTER the whole file is decoded), so a 500MB file commits
+// +500MB RSS before being rejected, and a >512MB file throws an uncaught ERR_STRING_TOO_LONG that crashes
+// the CLI with no diagnostic. This statSyncs the SIZE on disk first and fails CLOSED (returns null; the
+// caller exits on a main path, continues on a batch path), so an oversized/unreadable file is rejected
+// before the allocation it would otherwise exhaust the host with.
+const MAX_SOURCE_BYTES = 10 * 1024 * 1024; // 10MB — mirrors the lexer's LLN-LEX-004 constant
+function readUntrustedSource(path) {
+  try {
+    const st = statSync(path);
+    if (st.size > MAX_SOURCE_BYTES) {
+      console.error(`❌ LLN-LEX-004: ${path} is ${(st.size / 1048576).toFixed(1)}MB, over the ${MAX_SOURCE_BYTES / 1048576}MB source limit — refusing to read (fail-closed).`);
+      return null;
+    }
+    return readFileSync(path, "utf8");
+  } catch (e) {
+    console.error(`❌ LLN-BACKEND-001: could not read ${path} — ${e instanceof Error ? e.message : String(e)} (fail-closed).`);
+    return null;
+  }
+}
+
 // ── Auto assimilation memory budget ──────────────────────────────────────────
 // Called when boot.lln declares `assimilation_memory_budget: auto`
 // OR when the governance block is omitted entirely (auto is the default).
@@ -453,7 +475,8 @@ Baseline comparison (governance-cost):
 
     for (const llnFile of llnFiles) {
       if (!existsSync(llnFile)) continue;
-      const src = readFileSync(llnFile, "utf-8");
+      const src = readUntrustedSource(llnFile);
+      if (src === null) continue; // oversized/unreadable → skip this file in the batch (fail-closed)
 
       // Extract declared effects from the file
       const effectsMatches = [...src.matchAll(/effects\s*\{([^}]*)\}/sg)];
@@ -917,7 +940,8 @@ Baseline comparison (governance-cost):
 
   if (!llnFile) { console.error("Error: no .lln file specified"); process.exit(1); }
 
-  const source = readFileSync(llnFile, "utf8");
+  const source = readUntrustedSource(llnFile);
+  if (source === null) process.exit(1); // fail-closed: oversized/unreadable .lln rejected before parse
   const parsed = m.parseProgram(source, llnFile);
   const errors = (parsed.diagnostics ?? []).filter(d => d.severity === "error");
 
@@ -1909,7 +1933,8 @@ Baseline comparison (governance-cost):
       );
       const govResult = m.verifyGovernance(parsed.ast, parsed.flows,
         m.checkEffects(parsed.flows, parsed.ast), "dev");
-      const source = readFileSync(llnFile, "utf8");
+      const source = readUntrustedSource(llnFile);
+      if (source === null) process.exit(1); // fail-closed: oversized/unreadable .lln rejected
       const baseManifest = generateManifest(source, llnFile, parsed.flows, govResult);
 
       // ── Net a: embed the fusion descriptor INTO the manifest BEFORE signing ──────
