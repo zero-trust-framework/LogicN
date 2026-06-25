@@ -20,7 +20,7 @@ import { fileURLToPath } from "node:url";
 
 import { keygen, KEM_PROFILE, TmfCryptoError } from "../dist/tmf.js";
 import {
-  initEnvTmf, setSecret, rmSecret, rotateRecipient, listSecrets, openValue, assertKemProfile, K3,
+  initEnvTmf, setSecret, rmSecret, rotateRecipient, listSecrets, openValue, assertKemProfile, validateManifest, K3,
 } from "../dist/store.js";
 import { contextFor } from "../dist/schema.js";
 import { loadAll } from "../dist/runtime.js";
@@ -160,6 +160,44 @@ test("CLI keygen REFUSES to emit the secret key to a TTY without --force (leak-h
   assert.match(err, /SEC-RAW/);
   // the secret is emitted as raw bytes, so it must NOT appear as a 64+ hex-char run on stderr
   assert.ok(!/SEC[^\n]*=[0-9a-f]{64,}/i.test(err), "secret key must not be echoed as a hex string");
+});
+
+test("manifest validation: hostile __proto__ entry and malformed SecretMeta are rejected (insecure-deserialization defense)", () => {
+  const pub = toHex(KP.publicKey);
+  const goodMeta = {
+    coordHex: toHex(coordForName("GOOD")), created: 1, rotated: 2,
+    kemProfile: KEM_PROFILE.HYBRID_X25519_ML_KEM_768,
+  };
+  const isMalformed = (e) => e instanceof TmfCryptoError && e.code === "MalformedCrypto";
+
+  // baseline: a well-formed manifest validates (no false positive)
+  assert.doesNotThrow(() =>
+    validateManifest(JSON.parse(JSON.stringify({ schema: 0, recipientPubHex: pub, entries: { GOOD: goodMeta } }))));
+
+  // 1) a __proto__ entry — an OWN data property when produced by JSON.parse (not a prototype
+  //    write), surfaced by Object.entries — must be rejected outright.
+  const protoObj = JSON.parse(`{"schema":0,"recipientPubHex":"${pub}","entries":{"__proto__":${JSON.stringify(goodMeta)}}}`);
+  assert.ok(Object.prototype.hasOwnProperty.call(protoObj.entries, "__proto__"), "precondition: __proto__ is an own key");
+  assert.throws(() => validateManifest(protoObj), isMalformed);
+
+  // 2) a malformed SecretMeta (non-hex coord) must be rejected.
+  const badCoord = JSON.parse(JSON.stringify({
+    schema: 0, recipientPubHex: pub,
+    entries: { BAD: { ...goodMeta, coordHex: "not-hex!!" } },
+  }));
+  assert.throws(() => validateManifest(badCoord), isMalformed);
+
+  // and a few more off-schema shapes fail closed: bad schema version, non-hex pub, array entries,
+  // a missing required field, and a wrong kemProfile.
+  for (const bad of [
+    { schema: 1, recipientPubHex: pub, entries: {} },
+    { schema: 0, recipientPubHex: "zz", entries: {} },
+    { schema: 0, recipientPubHex: pub, entries: [] },
+    { schema: 0, recipientPubHex: pub, entries: { X: { coordHex: goodMeta.coordHex, rotated: 2, kemProfile: 2 } } },
+    { schema: 0, recipientPubHex: pub, entries: { X: { ...goodMeta, kemProfile: 0x01 } } },
+  ]) {
+    assert.throws(() => validateManifest(JSON.parse(JSON.stringify(bad))), isMalformed, `should reject: ${JSON.stringify(bad)}`);
+  }
 });
 
 // ── CLI behavioural tests (spawn the compiled bin) ───────────────────────────

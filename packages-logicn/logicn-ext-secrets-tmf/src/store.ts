@@ -29,6 +29,7 @@ import type { TmfSection } from "./tmf.js";
 import {
   MANIFEST_COORD, SECTION_KIND_MANIFEST, coordForName, contextFor,
   packSeal, unpackSeal, secretSection, manifestSection, emptyManifest, toHex, fromHex,
+  ENV_TMF_SCHEMA_VERSION,
 } from "./schema.js";
 import type { Manifest, SecretMeta } from "./schema.js";
 import { withWiped } from "./arena.js";
@@ -63,8 +64,110 @@ function nowEpoch(): number { return Math.floor(Date.now() / 1000); }
 function manifestBytes(m: Manifest): Uint8Array {
   return new TextEncoder().encode(JSON.stringify(m));
 }
+
+// ── fail-closed manifest validation (insecure-deserialization defense) ────────
+// The manifest plaintext is authenticated-encrypted upstream (TMX merkle + AEAD open
+// in composeRead), so a NETWORK attacker can't reach it. But a malformed-but-AUTHORIZED
+// writer — one who holds the recipient key — can craft hostile manifest plaintext. We
+// therefore never deserialize that plaintext STRAIGHT into the privileged typed Manifest;
+// we structurally validate every field first (mirroring logicn-core-sentinel-io's
+// ManifestLoader.fromObject), and fail closed with MalformedCrypto on anything off-schema.
+// `entries` is rebuilt on a prototype-free object with __proto__/constructor/prototype keys
+// rejected — belt-and-braces against prototype pollution (not currently exploitable via
+// V8 JSON.parse, which makes such keys plain own-data properties, but defense-in-depth).
+
+/** Lowercase-hex recogniser. */
+const HEX_RE = /^[0-9a-f]+$/;
+/** A 16-byte coord (coordForName / MANIFEST_COORD) encodes to exactly 32 lowercase-hex chars. */
+const COORD_HEX_RE = /^[0-9a-f]{32}$/;
+/** Keys that must never name a secret — guard the freshly built entries object. */
+const FORBIDDEN_ENTRY_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+
+function isNonNegInt(n: unknown): n is number {
+  return typeof n === "number" && Number.isInteger(n) && n >= 0;
+}
+
+function malformedManifest(detail: string): never {
+  throw new TmfCryptoError("MalformedCrypto", `manifest validation: ${detail} (fail-closed)`);
+}
+
+/** Validate one decoded entry into a well-formed SecretMeta. Throws MalformedCrypto otherwise. */
+function validateSecretMeta(name: string, raw: unknown): SecretMeta {
+  const where = `entries[${JSON.stringify(name)}]`;
+  if (raw === null || typeof raw !== "object" || Array.isArray(raw)) {
+    malformedManifest(`${where} must be an object`);
+  }
+  const e = raw as Record<string, unknown>;
+  if (typeof e["coordHex"] !== "string" || !COORD_HEX_RE.test(e["coordHex"])) {
+    malformedManifest(`${where}.coordHex must be a 32-char lowercase-hex string`);
+  }
+  if (!isNonNegInt(e["created"])) {
+    malformedManifest(`${where}.created must be a non-negative integer`);
+  }
+  if (!isNonNegInt(e["rotated"])) {
+    malformedManifest(`${where}.rotated must be a non-negative integer`);
+  }
+  if (e["kemProfile"] !== KEM_PROFILE.HYBRID_X25519_ML_KEM_768) {
+    malformedManifest(`${where}.kemProfile must be the v0 hybrid profile (0x02)`);
+  }
+  if (e["category"] !== undefined && typeof e["category"] !== "string") {
+    malformedManifest(`${where}.category must be a string when present`);
+  }
+  if (e["environment"] !== undefined && typeof e["environment"] !== "string") {
+    malformedManifest(`${where}.environment must be a string when present`);
+  }
+  return {
+    coordHex: e["coordHex"] as string,
+    created: e["created"] as number,
+    rotated: e["rotated"] as number,
+    kemProfile: e["kemProfile"] as number,
+    ...(e["category"] !== undefined ? { category: e["category"] as string } : {}),
+    ...(e["environment"] !== undefined ? { environment: e["environment"] as string } : {}),
+  };
+}
+
+/**
+ * Fail-closed structural validator for an already-decoded manifest object. Rejects anything
+ * that does not match the v0 schema with TmfCryptoError("MalformedCrypto"). Rebuilds `entries`
+ * on a prototype-free object and rejects __proto__/constructor/prototype keys.
+ */
+export function validateManifest(obj: unknown): Manifest {
+  if (obj === null || typeof obj !== "object" || Array.isArray(obj)) {
+    malformedManifest("manifest must be an object");
+  }
+  const m = obj as Record<string, unknown>;
+
+  if (m["schema"] !== ENV_TMF_SCHEMA_VERSION) {
+    malformedManifest(`schema must be the v0 schema version ${ENV_TMF_SCHEMA_VERSION}`);
+  }
+  if (typeof m["recipientPubHex"] !== "string" || m["recipientPubHex"].length === 0 || !HEX_RE.test(m["recipientPubHex"])) {
+    malformedManifest("recipientPubHex must be a non-empty lowercase-hex string");
+  }
+  const rawEntries = m["entries"];
+  if (rawEntries === null || typeof rawEntries !== "object" || Array.isArray(rawEntries)) {
+    malformedManifest("entries must be an object");
+  }
+
+  const entries: Record<string, SecretMeta> = Object.create(null) as Record<string, SecretMeta>;
+  for (const [name, raw] of Object.entries(rawEntries as Record<string, unknown>)) {
+    if (FORBIDDEN_ENTRY_KEYS.has(name)) {
+      malformedManifest(`entries contains a forbidden key ${JSON.stringify(name)}`);
+    }
+    entries[name] = validateSecretMeta(name, raw);
+  }
+
+  return { schema: ENV_TMF_SCHEMA_VERSION, recipientPubHex: m["recipientPubHex"] as string, entries };
+}
+
+/** Decode + fully validate manifest bytes into a typed Manifest (fail-closed). */
 function parseManifest(b: Uint8Array): Manifest {
-  return JSON.parse(new TextDecoder().decode(b)) as Manifest;
+  let obj: unknown;
+  try {
+    obj = JSON.parse(new TextDecoder().decode(b));
+  } catch (err) {
+    malformedManifest(`not valid JSON: ${(err as Error).message}`);
+  }
+  return validateManifest(obj);
 }
 
 /** Seal one value (or the manifest) into a section payload under KEM 0x02 + commit_mode CTX. */
