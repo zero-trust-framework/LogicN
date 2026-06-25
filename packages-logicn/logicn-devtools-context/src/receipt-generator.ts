@@ -282,6 +282,11 @@ function extractContract(flowNode: AstNode, source: string, flowName: string): C
     }
 
     // ---- Secrets / epilogue flags ----
+    // Since RD-0103 (#110) the parser retains the secrets block as a dedicated
+    // node `{ kind: "secretsBlock", ... }` (braced form has no value; the
+    // no-brace form carries value "secrets:"). Epilogue still comes through
+    // parseContractSubBlock as `{ kind: "identifier", value: "epilogue:block" }`.
+    if (child.kind === "secretsBlock") { result.hasSecrets = true; continue; }
     if (child.kind === "identifier") {
       const v = child.value ?? "";
       if (v.startsWith("secrets") || v === "secrets:block") { result.hasSecrets = true; continue; }
