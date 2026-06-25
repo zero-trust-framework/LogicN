@@ -46,6 +46,19 @@ pure flow getB() -> Int
 contract { effects {} }
 { let p: Pair = Pair { b: 20, a: 11 }  return p.b }`;
 
+// The ANONYMOUS, annotation-typed literal (`let p: Pair = { b: 20, a: 11 }` — no named constructor).
+// The parser sets node.typeName ONLY for the named-ctor form, so this form had NO declared layout on the
+// store side and fell back to the literal child index (by-position) while the read side reads by declared
+// offset — re-opening the exact #32 silent-wrong-field divergence (walker getA=11, WASM getA=20). The fix
+// resolves the layout from the binding's expectedType (threaded by the letDecl site) when typeName is absent.
+const ANON_SRC = `record Pair { a: Int, b: Int }
+pure flow getA() -> Int
+contract { effects {} }
+{ let p: Pair = { b: 20, a: 11 }  return p.a }
+pure flow getB() -> Int
+contract { effects {} }
+{ let p: Pair = { b: 20, a: 11 }  return p.b }`;
+
 describe("Record field-order: WASM ≡ walker (#32)", () => {
   it("an OUT-OF-ORDER literal reads the right field on BOTH tiers (a=11, not 20)", async () => {
     const wA = await walker(SRC, "getA");
@@ -59,5 +72,19 @@ describe("Record field-order: WASM ≡ walker (#32)", () => {
     const xB = await wasm(SRC, "getB");
     assert.equal(Number(wB?.value ?? wB), 20, `walker getB`);
     assert.equal(Number(xB), 20, `WASM getB`);
+  });
+
+  it("ANONYMOUS annotation-typed out-of-order literal also reads by NAME on both tiers (a=11)", async () => {
+    const wA = await walker(ANON_SRC, "getA");
+    const xA = await wasm(ANON_SRC, "getA");
+    assert.equal(Number(wA?.value ?? wA), 11, `walker getA (anon)`);
+    assert.equal(Number(xA), 11, `WASM getA (anon) must be 11 (declared field a), not 20 — would fail pre-fix`);
+  });
+
+  it("ANONYMOUS form — the other field too (b=20 on both tiers)", async () => {
+    const wB = await walker(ANON_SRC, "getB");
+    const xB = await wasm(ANON_SRC, "getB");
+    assert.equal(Number(wB?.value ?? wB), 20, `walker getB (anon)`);
+    assert.equal(Number(xB), 20, `WASM getB (anon)`);
   });
 });

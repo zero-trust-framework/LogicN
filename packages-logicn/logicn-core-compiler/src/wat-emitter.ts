@@ -1348,14 +1348,28 @@ export function emitWATExpr(
           const recLocal = `$__lln_rec_${recordCtx.counter.n++}`;
           recordCtx.localDecls.push(`(local ${recLocal} i32)`);
           // #32 fail-open fix: store each field at its DECLARED-layout offset — the SAME map the read uses
-          // (recordLayouts.indexOf(name), line ~1184) — NOT the literal child index. An out-of-declared-order
-          // literal (`Pair { b: …, a: … }` for `record Pair { a, b }`) otherwise wrote b's value to a's slot,
-          // so a later `p.a` silently read the WRONG field (a tier-divergent silent-wrong-data fail-open: the
-          // tree-walker is by-name, the WASM tier was by-position). `typeName` is set by the parser for a
-          // named record literal; size on the DECLARED length so a reordered/short literal can't under-allocate.
-          const declaredLayout = (node as { typeName?: string }).typeName
-            ? recordLayouts?.get((node as { typeName?: string }).typeName as string)
-            : undefined;
+          // (recordLayouts, line ~1183) — NOT the literal child index. An out-of-declared-order literal
+          // (`Pair { b: …, a: … }` for `record Pair { a, b }`) otherwise wrote b's value to a's slot, so a
+          // later `p.a` silently read the WRONG field (a tier-divergent silent-wrong-data fail-open: the
+          // tree-walker is by-name, the WASM tier was by-position). Resolve the declared type from the
+          // record's own `typeName` (named-ctor literal `Pair { … }`) OR — for an ANONYMOUS annotation-typed
+          // literal (`let p: Pair = { … }`, no typeName) — from the binding's `expectedType` threaded in by
+          // the letDecl/return/arg site (line ~1802). Without the expectedType fallback the anonymous form
+          // stored by POSITION while the read side reads by DECLARED offset → the exact #32 divergence
+          // re-opened (walker by-name = 11, WASM by-position = 20). Size on the DECLARED length so a
+          // reordered/short literal can't under-allocate.
+          const declaredTypeName = (node as { typeName?: string }).typeName
+            ?? (expectedType !== undefined && recordLayouts?.has(expectedType) ? expectedType : undefined);
+          const declaredLayout = declaredTypeName ? recordLayouts?.get(declaredTypeName) : undefined;
+          // A field name foreign to a KNOWN declared layout = a malformed/ill-typed literal (the type-checker
+          // should have rejected it). Fail CLOSED rather than silently store it by position — matches the read
+          // side's fail-closed posture (line ~1191); never a silent wrong-slot write.
+          if (declaredLayout) {
+            const foreign = fields.find((f) => !declaredLayout.includes(f.value ?? ""));
+            if (foreign) {
+              return `(unreachable) (; #record: field .${foreign.value ?? "?"} not in declared layout of ${declaredTypeName} — fail-closed (#32) ;)`;
+            }
+          }
           const size = (declaredLayout?.length ?? fields.length) * WAT_REC_FIELD_SIZE;
           const parts: string[] = [`(block (result i32)`];
           // base = heap; heap += size  (per-record local → safe under nesting + calls)
