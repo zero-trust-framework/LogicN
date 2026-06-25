@@ -122,6 +122,19 @@ tests · **BLD-003** provenance · **DOC-004** doc↔source drift. Companion: [c
     artifact (graph, code-index, `.wasm`, `.lmanifest`, reports) is stamped with git-commit + tool-version +
     build-time, and CI FAILS if stale vs HEAD — "is this current?" a check, not a guess. *Basis: Debian Reproducible
     Builds (`.buildinfo`, rebuilderd GOOD/BAD, `SOURCE_DATE_EPOCH`) · folds LogicN #216.*
+21. **EVERY ZERO-TRUST REFUSAL SHIPS A "WORK WITH IT" (owner rule 2026-06-25).** No R&D verdict of REFUTE /
+    DO-NOT-BUILD / "drop ZT" rejection stands alone — it is paired, in the same artifact, with a companion
+    **"work with it"** path: the Govern-Don't-Absorb alternative that captures the value without lowering the
+    trusted core (admit as untrusted Tier-3 · isolate behind a fail-closed capability contract · emulate on CPU ·
+    govern noisy output with a signed `toleranceWitness`). A refusal is never just "no"; it is "no, AND here is the
+    governed way to get the value." The honesty bar is binding: if physics/math forbids it (crypto-on-noisy,
+    no-signaling/FTL, drop-the-MAC EUF-CMA, latency-is-not-work), the work-with-it IS the existing posture stated
+    explicitly ("keep crypto binary; admit the substrate degrade-only"), never a fabricated yes — and an adversarial
+    pass must confirm the path does not smuggle the unsafe part back. By class: physics-hard → work-with-it =
+    govern-don't-absorb (nothing net-new); unsafe-as-proposed/TCB-surface → the isolated form (capability contract /
+    WASM-Wasmtime, never a bespoke hypervisor); speculative/no-consumer → TRACK + the governed build-when-consumer
+    path. *Basis: the most-secure and most-useful choice converge when a no is paired with a governed yes; first
+    full application = the work-with-it refusal sweep.*
 
 ## Status / how to use
 These are the bar each enforcer is measured against. **Current reality (honest):** the enforcers EXIST but most
