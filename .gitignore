@@ -71,3 +71,9 @@ build/lss-test-*/
 # (externalDeps surface) are ALL governance border evidence and are TRACKED — an adversarial audit
 # (ww6c274j4) proved that ignoring the two derived ones would silently hide border drift while CI
 # `--check` is unwired (#149). Track them; revisit only once `--check` gates in CI.
+
+# ── Transient cross-session handover briefs (worker→hub coordination, never production source) ──
+# Workers drop HANDOVER-*.md at the repo ROOT to hand a finding to the hub session; they are consumed
+# into commits/KB/memory and then ARCHIVED to ../LogicN-R-AND-D/_session-bridge/handovers-archive/.
+# Ignore them at the root so a stray brief can't clutter the tree or be committed by accident.
+/HANDOVER-*.md
