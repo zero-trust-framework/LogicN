@@ -286,3 +286,9 @@ When an AI tool is generating LogicN code for this project:
 | How do `secrets {}` and `epilogue {}` work? | `logicn-design-secrets-epilogue-blocks.md` |
 | How is `economics {}` auto-inferred? | `logicn-contract-economics.md` |
 | What did the governed runtime research find? | `logicn-governed-runtime-research-2026-06-03.md` |
+| How do Int8/Int/Int64/Float lower to WASM? The i32/i64 maths? | `logicn-integer-types-and-lowering.md` |
+| How is fast/exotic/external work run *without* trusting it? | `untrusted-governed-lane.md` (+ `docs/diagrams/logicn-untrusted-governed-lane.svg`) |
+| Does a graph (GraphCast-style) help WASM / photonic / virtual-3D? | `logicn-rd-graph-wasm-photonic-2026-06-25.md` |
+| Can virtual-3D / "2-wave" photonics do high-value compute? | `rd-0114-virtual-3d-spatial-photonics-absorbed.md` |
+| What % is shippable / the current roadmap? | `logicn-percent-audit-roadmap-2026-06-25-v2.md` |
+| Which R&D is paper-worthy? | `logicn-rd-paper-ranking-0100-0113-2026-06-25.md` |
