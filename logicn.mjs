@@ -1144,7 +1144,17 @@ Baseline comparison (governance-cost):
     const boundaryWarnings = vsDiags.filter(d => d.code === "LLN-VALUESTATE-008" && d.severity !== "error");
     const allDiags = [...errors, ...gov.diagnostics, ...tierWarnings, ...valueStateErrors, ...boundaryWarnings];
     if (allDiags.length === 0) {
-      console.log(`✅ ${llnFile}: 0 errors, 0 governance warnings`);
+      // We're building the language — distinguish "compiled real content" from "found nothing". A clean
+      // parse with ZERO top-level declarations (an empty or comment-only file) must NOT report a blanket
+      // ✅, which reads as a successful compile when nothing was actually compiled. `parsed.ast.children`
+      // is the list of top-level decls (secureFlowDecl / policyDecl / typeDecl / …) — empty ⇒ no content.
+      const declCount = (parsed.ast?.children ?? []).length;
+      const flowCount = parsed.flows?.length ?? 0;
+      if (declCount === 0) {
+        console.log(`ℹ️  ${llnFile}: parsed OK, but found NO flows or declarations — nothing to compile (an empty or comment-only file?).`);
+      } else {
+        console.log(`✅ ${llnFile}: 0 errors, 0 governance warnings (${flowCount} flow(s), ${declCount} top-level declaration(s))`);
+      }
     } else {
       allDiags.forEach(d => console.log(`${d.severity === "error" ? "❌" : "⚠️"} ${d.code}: ${d.message}`));
     }
