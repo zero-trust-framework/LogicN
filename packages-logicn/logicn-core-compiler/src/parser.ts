@@ -1257,22 +1257,43 @@ class Parser {
   // ── Block and statements ───────────────────────────────────────────────────
 
   private parseBlock(): AstNode {
-    const loc = this.loc();
-    const children: AstNode[] = [];
-
-    this.expect("symbol", "{");
-    this.skipNewlines();
-
-    while (!this.currentIs("symbol", "}") && !this.isEof()) {
-      const stmt = this.parseStatement();
-      if (stmt !== undefined) {
-        children.push(stmt);
-      }
-      this.skipNewlines();
+    // LLN-PARSE-DEPTH-001 (statement-block half): the depth guard must also bound STATEMENT-BLOCK nesting
+    // (if/unless/while/for/match → block → statement → ...), not only expression nesting — otherwise a
+    // deeply-nested-block .lln re-opens the same host-stack RangeError via a different syntactic vector
+    // (DevSecOps pentest finding). Shares the SAME counter as parseExpression so the COMBINED block+expression
+    // nesting depth is bounded however the two are interleaved. try/finally so a nested ParseAborted cannot
+    // leak the counter (it unwinds to parseProgram's per-declaration catch, which stops parsing the file).
+    if (++this.exprDepth > MAX_EXPR_DEPTH) {
+      this.exprDepth--;
+      this.emit(
+        "LLN-PARSE-DEPTH-001",
+        "EXCESSIVE_NESTING",
+        `Block/statement nesting exceeds the maximum depth of ${MAX_EXPR_DEPTH} — refusing to parse (stack-exhaustion / denial-of-service guard).`,
+        this.loc(),
+        "Flatten the nesting: extract deeply-nested blocks into separate flows.",
+      );
+      throw new ParseAborted();
     }
+    try {
+      const loc = this.loc();
+      const children: AstNode[] = [];
 
-    this.expect("symbol", "}");
-    return { kind: "block", location: loc, children };
+      this.expect("symbol", "{");
+      this.skipNewlines();
+
+      while (!this.currentIs("symbol", "}") && !this.isEof()) {
+        const stmt = this.parseStatement();
+        if (stmt !== undefined) {
+          children.push(stmt);
+        }
+        this.skipNewlines();
+      }
+
+      this.expect("symbol", "}");
+      return { kind: "block", location: loc, children };
+    } finally {
+      this.exprDepth--;
+    }
   }
 
   private parseStatement(): AstNode | undefined {

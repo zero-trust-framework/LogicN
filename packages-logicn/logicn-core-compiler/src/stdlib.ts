@@ -14,6 +14,7 @@
 
 import { LLN_NONE, LLN_VOID, type LogicNValue } from "./interpreter.js";
 import { createHash as _nodeCryptoCreateHash, timingSafeEqual as _nodeCryptoTimingSafeEqual } from "node:crypto";
+import { createRequire as _createRequire } from "node:module";
 // SSRF egress protection — the hardened, deny-by-default outbound guard (normalizes numeric-IP /
 // IPv4-in-IPv6 / CGNAT / *.corp bypasses + DNS-rebind recheck). Wiring the EXISTING guard rather than
 // re-cloning the inline regex (self-audit 61-9). egress-guard is pure — no node/tower-citizen load.
@@ -142,7 +143,11 @@ export function bigIntDecimalRound(a: string, places: number): string {
   return bigIntToDecimalStr(result, places);
 }
 
-declare function require(name: string): any;
+// The dist is ESM ("type":"module"), where the CommonJS `require` is NOT defined at runtime. Several node:
+// builtins are pulled in lazily via require() (node:crypto, node:dns/promises, node:url) — without a real
+// require they throw "require is not defined" the moment that path runs (latent until the SSRF redirect-hop
+// re-guard exercised node:url). createRequire(import.meta.url) gives a working require for ALL of them.
+const require = _createRequire(import.meta.url);
 declare const process: { env?: Record<string, string | undefined> };
 
 export interface StdlibContext {
@@ -1194,40 +1199,41 @@ async function networkAsync(fullName: string, args: readonly LogicNValue[], ctx:
   const url = strVal(args[0] ?? LLN_VOID);
   if (!url) return err("NetworkError: empty URL");
 
-  // OWASP F2: SSRF — delegate to the hardened, deny-by-default egress guard (@logicn/core-network).
-  // The previous inline regex (61-9 self-audit finding) missed numeric-IP bypasses (2130706433,
-  // 0x7f000001), IPv4-in-IPv6 ([::ffff:169.254.169.254]), CGNAT (100.64/10), *.corp/*.internal/*.local,
-  // and embedded-credential URLs — guardOutboundUrl normalizes + denies them all. http + https only.
-  const egress = guardOutboundUrl(url, { allowedSchemes: ["http", "https"] });
-  if (!egress.allowed) {
-    return err(`NetworkError: SSRF — ${egress.reason} (LLN-NET-001 · ${egress.code})`);
-  }
-  // DNS-rebinding defence: a hostname that classifies public can still RESOLVE to a private IP
-  // (TOCTOU). Resolve every address and re-guard; deny if ANY is non-public. Full socket-level IP
-  // pinning (a custom undici dispatcher that connects only to the verified IP) is the further
-  // hardening — tracked; this closes the exploitable resolve-to-private rebind case.
-  if (egress.requiresDnsRecheck) {
-    let ips: string[];
-    try {
-      // require (not import) — the compiler intentionally ships no @types/node; mirror the existing
-      // node:crypto require pattern in this file and type the slice we use.
-      const dns = require("node:dns/promises") as {
-        lookup(host: string, opts: { all: true }): Promise<ReadonlyArray<{ address: string }>>;
-      };
-      const records = await dns.lookup(egress.host, { all: true });
-      ips = records.map((r) => r.address);
-    } catch {
-      return err(`NetworkError: SSRF — DNS resolution failed for '${egress.host}' (LLN-NET-001, fail-closed)`);
+  // OWASP F2: SSRF — deny-by-default egress guard (@logicn/core-network). guardHop normalizes + denies the
+  // numeric-IP / IPv4-in-IPv6 / CGNAT / *.internal / embedded-credential bypasses, plus a DNS-rebind recheck.
+  // It is applied to the ORIGINAL url AND to EVERY redirect hop — a guard-approved public URL can return
+  // `302 Location: http://169.254.169.254/`, and a guard that only checks the original URL is bypassed by the
+  // redirect (DevSecOps pentest finding). Returns an error string, or null if the hop is permitted.
+  const guardHop = async (u: string): Promise<string | null> => {
+    const eg = guardOutboundUrl(u, { allowedSchemes: ["http", "https"] });
+    if (!eg.allowed) return `NetworkError: SSRF — ${eg.reason} (LLN-NET-001 · ${eg.code})`;
+    if (eg.requiresDnsRecheck) {
+      let ips: string[];
+      try {
+        // require (not import) — the compiler intentionally ships no @types/node; mirror the existing
+        // node:crypto require pattern in this file and type the slice we use.
+        const dns = require("node:dns/promises") as {
+          lookup(host: string, opts: { all: true }): Promise<ReadonlyArray<{ address: string }>>;
+        };
+        ips = (await dns.lookup(eg.host, { all: true })).map((r) => r.address);
+      } catch {
+        return `NetworkError: SSRF — DNS resolution failed for '${eg.host}' (LLN-NET-001, fail-closed)`;
+      }
+      const rebind = guardResolvedAddresses(eg.host, ips);
+      if (!rebind.allowed) return `NetworkError: SSRF — ${rebind.reason} (LLN-NET-001 · ${rebind.code})`;
     }
-    const rebind = guardResolvedAddresses(egress.host, ips);
-    if (!rebind.allowed) {
-      return err(`NetworkError: SSRF — ${rebind.reason} (LLN-NET-001 · ${rebind.code})`);
-    }
-  }
+    return null;
+  };
+
+  const firstGuard = await guardHop(url);
+  if (firstGuard !== null) return err(firstGuard);
 
   try {
     const bodyArg = args[1];
-    const init: RequestInit = { method };
+    // redirect: "manual" — NEVER let fetch auto-follow. fetch/undici defaults to redirect:"follow", which
+    // would transparently follow a 302 to an internal/metadata host the guard never saw. We re-guard each
+    // Location ourselves before following, with a hop cap.
+    const init: RequestInit = { method, redirect: "manual" };
     if (bodyArg !== undefined && bodyArg.__tag !== "void") {
       if (bodyArg.__tag === "bytes") {
         init.body = bodyArg.value as unknown as BodyInit;
@@ -1236,12 +1242,29 @@ async function networkAsync(fullName: string, args: readonly LogicNValue[], ctx:
         (init.headers as Record<string, string>) = { "Content-Type": "application/json" };
       }
     }
-    const response = await fetch(url, init);
-    if (!response.ok) {
-      return err(`NetworkError: HTTP ${response.status} from ${url}`);
+    const { URL: NodeURL } = require("node:url") as { URL: new (input: string, base?: string) => { href: string } };
+    const MAX_REDIRECTS = 5;
+    let currentUrl = url;
+    for (let hop = 0; ; hop++) {
+      const response = await fetch(currentUrl, init);
+      if (response.status >= 300 && response.status < 400) {
+        if (hop >= MAX_REDIRECTS) return err(`NetworkError: too many redirects (>${MAX_REDIRECTS}) from ${url}`);
+        const loc = response.headers.get("location");
+        if (!loc) return err(`NetworkError: HTTP ${response.status} redirect with no Location from ${currentUrl}`);
+        let nextUrl: string;
+        try { nextUrl = new NodeURL(loc, currentUrl).href; } // resolve a relative Location against the current URL
+        catch { return err(`NetworkError: SSRF — invalid redirect target '${loc}' (LLN-NET-001)`); }
+        const hopErr = await guardHop(nextUrl); // RE-GUARD the redirect destination before following
+        if (hopErr !== null) return err(hopErr);
+        currentUrl = nextUrl;
+        continue;
+      }
+      if (!response.ok) {
+        return err(`NetworkError: HTTP ${response.status} from ${currentUrl}`);
+      }
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      return ok({ __tag: "bytes", value: bytes });
     }
-    const bytes = new Uint8Array(await response.arrayBuffer());
-    return ok({ __tag: "bytes", value: bytes });
   } catch (e) {
     return err(`NetworkError: ${e instanceof Error ? e.message : String(e)}`);
   }

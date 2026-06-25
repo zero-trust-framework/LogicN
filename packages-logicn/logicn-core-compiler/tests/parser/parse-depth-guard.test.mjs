@@ -33,6 +33,22 @@ test("deeply-nested array literals also emit LLN-PARSE-DEPTH-001 (no crash)", ()
   assert.ok(hasDepth(p), "expected LLN-PARSE-DEPTH-001 for nested arrays");
 });
 
+test("deeply-nested STATEMENT BLOCKS emit LLN-PARSE-DEPTH-001 (DevSecOps: the block-recursion vector)", () => {
+  let body = "return 1";
+  for (let i = 0; i < 4000; i++) body = `if true { ${body} }`;
+  let p;
+  assert.doesNotThrow(() => { p = parseProgram(wrap(body), "blocks.lln"); },
+    "nested statement blocks must NOT throw a RangeError — the guard must cover block recursion too");
+  assert.ok(hasDepth(p), "expected LLN-PARSE-DEPTH-001 for nested blocks");
+});
+
+test("legit moderate BLOCK nesting (depth ~8) parses clean — no false depth-trip", () => {
+  let body = "return 1";
+  for (let i = 0; i < 8; i++) body = `if x > 0 { ${body} }`;
+  const p = parseProgram(`pure flow main(x: Int) -> Int contract { effects {} } { ${body}  return 0 }`, "okblocks.lln");
+  assert.equal(errs(p).length, 0, "moderate block nesting must parse with no errors");
+});
+
 test("legit moderate nesting (depth ~12) parses clean — no false depth-trip", () => {
   const p = parseProgram(wrap("return " + "(".repeat(12) + "1 + 2" + ")".repeat(12)), "ok.lln");
   assert.equal(errs(p).length, 0, "moderate nesting must parse with no errors");
