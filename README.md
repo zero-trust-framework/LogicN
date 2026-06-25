@@ -49,7 +49,7 @@ LogicN optimises for **mathematical proof and absolute Zero-Trust containment**:
 
 ---
 
-## Benchmarks (measured 2026-06-23 — honest numbers)
+## Benchmarks (honest numbers — core scoreboard 2026-06-23; Int64 + Tower-of-Hanoi added 2026-06-25)
 
 Run on an **Intel i9-9900K (8C/16T) + NVIDIA RTX 2060**, across Rust (native, generic + AVX2), Node.js (V8), Python (CPython), LogicN's WASM output, the Stage-A interpreter tiers, and real GPU (Deno WebGPU). Harness at `packages-logicn/logicn-devtools-benchmarks`; quote the canonical **§1.5 production-ceiling scoreboard** from `npm run compare` (the standard view — the 3 diagnostic `⟨interp⟩` tiers cannot "win", and the only honest LogicN cost is the shipping **WASM ▶ production** path).
 
@@ -59,6 +59,7 @@ Run on an **Intel i9-9900K (8C/16T) + NVIDIA RTX 2060**, across Rust (native, ge
 - **Governance is not free, stated honestly:** `governance-cost` is the heavy outlier at **293×** the AVX2 winner (the per-decision K3 fold), and `collection-pipeline` is 61× — these are the cost of compiling governance *into* the binary; on the per-flow `Node/LogicN` view governed overhead is ~**24.6%**.
 - **The Stage-A `⟨interp⟩` tiers are diagnostic, not the product** — they are the WASM byte-parity oracle and are *excluded from winning* by the scoreboard standard (they can read 1.0K–1025K× slower and that is expected).
 - **`tmf-container`** is now benchmarked (Rust 161.5K/s, Node 46.4K/s). `tri-logic` and `data-query` are **excluded — not unit-aligned** (R&D 0092, no silent caps).
+- **New (2026-06-25): `tower-of-hanoi`** — a harder cross-language recursion benchmark (3-peg Hanoi n=16 with a threaded move-checksum; all five runtimes agree on `result=42452`, the truth-audit oracle). Throughput ranks Rust ~237M > Node ~114M > Python ~4M > LogicN governed (slowest, by design). And an **Int64-vs-i32 WASM micro-benchmark** (`bench-i64-vs-i32.mjs`): the newly-added faithful 64-bit lowering is **i64 ≈ i32** (add 1.06×, mul 0.95×, within noise) — exact-past-2⁵³ + overflow-trapping integers cost ~0 throughput on a 64-bit host.
 
 ---
 
@@ -75,6 +76,7 @@ Run on an **Intel i9-9900K (8C/16T) + NVIDIA RTX 2060**, across Rust (native, ge
 | **Contract-driven test generation (0016)** | 5/5 vector dimensions | fault-injection · effect-egress · capability-denial · boundary/fuzz · substrate-violation (over GIR) |
 | **Type checker / Effect checker** | ~90% | |
 | **WAT emitter** | ~89% | #128(a) fail-closed fix landed (unhandled stmt → `unreachable` trap); #128(b)/GAP-4 `forEachStmt` lowering landed (for-in → counted loop over the host array bridge); `for…where` filtered iteration lowers as a guarded loop — all execution + interpreter-fidelity tested |
+| **Faithful Int64 (i64) lowering** | lift-ready | exact 64-bit integers end-to-end — interpreter `bigint` ≡ WASM `i64`, overflow **traps** (Fork-A, no silent wrap), the walker≡WASM differential passes non-vacuously over (2⁵³,2⁶³). The `LLN-NUMERIC-001` gate stays **closed by design** (declaring a scalar `Int64` errors today); the lift is one owner-gated line + a final cross-flow check. `UInt64` still gated. Throughput i64 ≈ i32. See [integer-types](docs/Knowledge-Bases/logicn-integer-types-and-lowering.md) |
 | **Runtime interpreter** | ~87% | diagnostic tier (see Benchmarks) |
 | **Stage-B self-hosting — interpreter parity** | 100% | R6 corpus: Stage-A == Stage-B |
 | **Stage-B self-hosting — WASM execution (P9)** | in progress | `tokenize` byte-parity achieved (#143); parser/checker/verifier flows remain |
@@ -89,7 +91,7 @@ Run on an **Intel i9-9900K (8C/16T) + NVIDIA RTX 2060**, across Rust (native, ge
 | **B8 governed HTTP transport (TLSTP)** | in progress | **S1 K3 cert/channel-validation gate shipped** (`logicn-core-network`, 126 tests, fail-closed `revocation-unknown → DENY`, SEC-002 mutation-guarded) — wiring into live kernel auth + 0066 first-3 (handshake-bind · raw-byte shim · ECH/OHTTP) are next |
 | **Tri-Pipe fault tolerance (binary/hybrid/photonic)** | re-R&D | shipped: fail-closed core · arena + overflow traps · DbC post-conditions · K3 fail-safe · NMR tolerance · Freivalds verify · DRCM containment. A multi-agent stability re-R&D is in flight |
 
-**Roadmap (security-first)** → [logicn-roadmap-2026-06-23.md](docs/Knowledge-Bases/logicn-roadmap-2026-06-23.md) · **% audit** → [logicn-roadmap-and-percent-audit-2026-06-23.md](docs/Knowledge-Bases/logicn-roadmap-and-percent-audit-2026-06-23.md) · [build-roadmap](docs/Knowledge-Bases/logicn-build-roadmap.md). *Latest (2026-06-24, v1.0.0-beta.2): `LLN-TIER-001` + `LLN-VALUESTATE-008` are now enforced on the `logicn.mjs` production build path, opt-in hybrid Ed25519+ML-DSA-65 `.lmanifest` signing shipped (certified profile), and `@logicn/ext-secrets-tmf` (`env.tmf` sealed secrets) landed; the next security fix is wiring the S1 cert-gate into live kernel admission (run `node scripts/status.mjs`).*
+**Roadmap (security-first)** → [logicn-roadmap-2026-06-23.md](docs/Knowledge-Bases/logicn-roadmap-2026-06-23.md) · **% audit** → [logicn-percent-audit-roadmap-2026-06-25-v2.md](docs/Knowledge-Bases/logicn-percent-audit-roadmap-2026-06-25-v2.md) (~88% shippable) · [build-roadmap](docs/Knowledge-Bases/logicn-build-roadmap.md). *2026-06-25: faithful Int64 WASM lowering is lift-ready (gate closed by design); the Untrusted Governed Lane is documented; the Tower-of-Hanoi cross-language benchmark + the JS-quirks-vs-LogicN R&D (notes/59) landed.* *Latest (2026-06-24, v1.0.0-beta.2): `LLN-TIER-001` + `LLN-VALUESTATE-008` are now enforced on the `logicn.mjs` production build path, opt-in hybrid Ed25519+ML-DSA-65 `.lmanifest` signing shipped (certified profile), and `@logicn/ext-secrets-tmf` (`env.tmf` sealed secrets) landed; the next security fix is wiring the S1 cert-gate into live kernel admission (run `node scripts/status.mjs`).*
 
 ---
 
@@ -326,6 +328,10 @@ node packages-logicn/logicn-devtools-pci/dist/cli.js audit examples/auth-service
 | `docs/Knowledge-Bases/logicn-architecture-patterns.md` | 9 canonical patterns with feature gates |
 | `docs/Knowledge-Bases/logicn-zero-trust-engine.md` | "LogicN as a zero-trust engine" — the 4 border mandates + status |
 | `docs/Knowledge-Bases/logicn-engineering-goals.md` | 3 architectural goals — native speed, single-cycle bitmask, no system crash |
+| [`docs/Knowledge-Bases/untrusted-governed-lane.md`](docs/Knowledge-Bases/untrusted-governed-lane.md) | **Govern-Don't-Absorb** — running fast/exotic/external work *without trusting it* (decision in the core, work in the lane, No-Coercion `vAnd=min`); worked `substrate{ lane: photonic }` flow example + diagram |
+| [`docs/Knowledge-Bases/logicn-integer-types-and-lowering.md`](docs/Knowledge-Bases/logicn-integer-types-and-lowering.md) | The numeric type system + i32/i64 WASM lowering + the trapping-arithmetic maths (hard file paths) |
+| [`docs/Knowledge-Bases/logicn-rd-59-js-quirks-vs-logicn-2026-06-25.md`](docs/Knowledge-Bases/logicn-rd-59-js-quirks-vs-logicn-2026-06-25.md) | The 10 classic JavaScript bad-design quirks vs LogicN (7/10 avoided by design; the one real gap = NaN on Float) |
+| [`docs/Knowledge-Bases/logicn-percent-audit-roadmap-2026-06-25-v2.md`](docs/Knowledge-Bases/logicn-percent-audit-roadmap-2026-06-25-v2.md) | Latest %-completion audit + roadmap (~88% shippable) + the honest cross-language benchmark standing |
 | `docs/Knowledge-Bases/logicn-deterministic-runtime-containment.md` | DRCM — DSS, DWI, V_DPM, `.lmanifest`, 7-module architecture |
 | [notes/2026-06-17-zero-trust-senior-developer-project-audit.md](notes/2026-06-17-zero-trust-senior-developer-project-audit.md) | Latest independent audit (advanced-prototype verdict) |
 

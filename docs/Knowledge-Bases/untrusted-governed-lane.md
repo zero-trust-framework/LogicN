@@ -136,6 +136,52 @@ The lane touches the core at exactly two seams, both guarded:
 
 ---
 
+## 4.5 Worked example — how a developer actually uses the lane for maths
+
+A developer opts a flow's *work* onto the untrusted (low-trust) lane with a `substrate {}` block in its
+contract. The block is the **declared guarantee** the runtime must verify; the lane is admitted, never
+trusted. This compiles + verifies today (the behaviour is pinned by `substrate-contracts.test.mjs`).
+
+```lln
+// The WORK runs on the photonic lane (fast, analog, NOT bit-exact). It carries the VALUE (a score),
+// never the DECISION. `tolerance` is the guarantee the runtime cheap-verifies; `redundancy` majority-votes
+// the noisy reads (NMR); the resilience handler degrades to exact digital fail-closed.
+guarded flow scoreBatch(features: Tensor<Float,[256]>) -> Float
+contract {
+  intent { "rank a batch on the photonic co-processor — value-only, governed" }
+  effects {}                                  // pure compute: no crypto, no network, no ledger
+  substrate {
+    lane: photonic                            // ← the UNTRUSTED lane: admitted, never trusted
+    tolerance: 5e-3                            // the declared guarantee (runtime verifies, Freivalds-style)
+    redundancy: 3                             // NMR — majority-vote the analog reads
+  }
+  resilience {
+    on_substrate_fault fallback scoreBatchDigital   // degrade-only: noisy → fall back to exact digital
+  }
+}
+{
+  return Tensor.dot(features, weights)        // the high-value batched MAC the photonic lane is good at
+}
+```
+
+The line the lane may **not** cross — the *decision* stays digital, enforced at compile time:
+
+```lln
+secure flow sealResult(score: Float) -> Result<Receipt, ApiError>
+contract {
+  effects { crypto.sign }
+  substrate { lane: photonic  tolerance: 5e-3 }   // ← COMPILE ERROR: LLN-SUBSTRATE-001
+}
+{ return Ok(sign(score)) }
+// crypto.sign on a noisy (photonic) lane is REFUSED — "crypto stays on the digital, bit-exact lane".
+```
+
+So the developer's mental model is exactly the two seams of §2–§3: put the *maths* on `lane: photonic`
+(value-only, tolerance-bounded, degrade-only via `on_substrate_fault`), and the compiler **guarantees** the
+*decision* (crypto, the verdict) can never follow it onto the untrusted lane. That is why this component
+scores **low trust but high ZT-alignment** — it's untrusted *by construction*, and the fail-closed border is
+the language, not a convention.
+
 ## 5. How the lane merges into the rest of LogicN
 
 | Construct | Role as a lane seam |
