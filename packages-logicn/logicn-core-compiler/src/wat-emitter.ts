@@ -1256,6 +1256,13 @@ export function emitWATExpr(
       const lFloat165 = FLOAT_WAT_TYPES.has(lty ?? "");
       const rFloat165 = FLOAT_WAT_TYPES.has(rty ?? "");
       if (lFloat165 || rFloat165) {
+        // Decimal is NOT f64-faithful (exact base-10 money). Lowering it to an f64 op silently computed
+        // wrong money (0.1 + 0.2 = 0.30000000000000004) — a HIGH fail-open (a wrong-but-plausible value
+        // signed into a manifest). DECLINE to the exact tree-walker path (fail-closed) for ANY Decimal
+        // operand, before any f64 emission. Float/Float64/Double keep their faithful f64 lowering below.
+        if (lty === "Decimal" || rty === "Decimal") {
+          return `(unreachable) (; Decimal '${op}' is not f64-faithful — emitter declines (no silent f64 money); exact arithmetic is the walker's ;)`;
+        }
         const fOp = FLOAT_ARITH_WAT[op] ?? FLOAT_CMP_WAT[op];
         if (fOp !== undefined) {
           const L = lFloat165 ? left : `(f64.convert_i32_s ${left})`;

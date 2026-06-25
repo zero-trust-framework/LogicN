@@ -44,7 +44,10 @@ export const BACKEND_UNLOWERABLE_SCALAR: ReadonlySet<string> = new Set(["UInt64"
  * the LLN-NUMERIC-001 gate consults BACKEND_UNLOWERABLE_SCALAR. Keep them in sync only on UInt64: anything
  * the gate rejects is also fast-tier-unsafe, so it must appear in both.
  */
-export const FAST_TIER_UNLOWERABLE_SCALAR: ReadonlySet<string> = new Set(["Int64", "UInt64"]);
+// `Decimal` is here too (but NOT in the gate set — Decimal is a valid type, it must still compile): the
+// fast i32-only tiers and the WASM f64 path cannot represent exact base-10 money, so a Decimal flow must
+// bail to the tree-walker. Without this the WASM tier silently computed f64 money (0.1+0.2=0.30000…004).
+export const FAST_TIER_UNLOWERABLE_SCALAR: ReadonlySet<string> = new Set(["Int64", "UInt64", "Decimal"]);
 
 /**
  * Base type identifier from a type-annotation string: strips leading governance/safety qualifiers
