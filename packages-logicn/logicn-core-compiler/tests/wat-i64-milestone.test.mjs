@@ -22,7 +22,8 @@ pure flow sub64(a: Int64, b: Int64) -> Int64 contract { effects {} } { return a 
 pure flow mul64(a: Int64, b: Int64) -> Int64 contract { effects {} } { return a * b }
 pure flow bigLit() -> Int64 contract { effects {} } { let x: Int64 = 9223372036854775807  return x }
 pure flow foldSafe() -> Int64 contract { effects {} } { let p: Int64 = 1000000 * 1000  return p }
-pure flow mixLit(a: Int64) -> Int64 contract { effects {} } { return a + 5000000000 }`;
+pure flow mixLit(a: Int64) -> Int64 contract { effects {} } { return a + 5000000000 }
+pure flow addWiden(a: Int, b: Int) -> Int64 contract { effects {} } { let total: Int64 = a + b  return total }`;
 
 test("emitter 2b milestone: a fused Int64 module assembles under wabt + runs exact (i64, not truncated)", async () => {
   const prog = parseProgram(SRC, "i64-milestone.lln");
@@ -69,4 +70,7 @@ test("emitter 2b milestone: a fused Int64 module assembles under wabt + runs exa
   assert.equal(instance.exports.foldSafe(), 1000000000n);
   // mixed Int64 param + a >2^31 literal: the literal takes the i64 context (i64.const), not an invalid i32.const.
   assert.equal(instance.exports.mixLit(7n), 5000000007n);
+  // i32 VARIABLE operands in an Int64 context must be SIGN-EXTENDED (not treated as i64): the sum of two
+  // i32 args exceeds i32 range and stays exact in i64 (an i32 add would have overflow-trapped).
+  assert.equal(instance.exports.addWiden(2000000000, 2000000000), 4000000000n);
 });

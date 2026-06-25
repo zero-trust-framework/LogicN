@@ -1243,12 +1243,15 @@ export function emitWATExpr(
       if (lInt64 || rInt64 || wantI64) {
         const iOp = INT64_ARITH_WAT[op] ?? INT64_CMP_WAT[op];
         if (iOp !== undefined) {
-          // An operand is i64 if it is Int64-typed, the whole expr is in an Int64 context (wantI64), or it
-          // is a LITERAL sibling of an Int64 operand (the literal takes the i64 context → i64.const, no
-          // truncation). A genuine i32 operand (an Int variable) is sign-extended. Re-emit each operand
-          // with the right expected type so a literal becomes (i64.const …) rather than an invalid i32.const.
-          const li = lInt64 || wantI64 || children[0]?.kind === "numberLiteral";
-          const ri = rInt64 || wantI64 || children[1]?.kind === "numberLiteral";
+          // An operand is ALREADY i64 (no extend) iff it is Int64-typed OR it is a LITERAL in an i64 context
+          // (an Int64 sibling, or the whole expr is wantI64) → it emits (i64.const …). A genuine i32 operand
+          // (an Int *variable* / sub-expression) in an i64 context is SIGN-EXTENDED, NOT treated as i64 — the
+          // bug to avoid is letting `wantI64` mark an i32 local as i64 (would feed an i32 to an i64 helper =
+          // invalid module). `wantI64` therefore promotes a *literal* but extends a *variable*.
+          const lLit = children[0]?.kind === "numberLiteral";
+          const rLit = children[1]?.kind === "numberLiteral";
+          const li = lInt64 || ((wantI64 || rInt64) && lLit);
+          const ri = rInt64 || ((wantI64 || lInt64) && rLit);
           const Lx = children[0] ? emitWATExpr(children[0], vars, staticConsts, li ? "Int64" : undefined) : "(i64.const 0)";
           const Rx = children[1] ? emitWATExpr(children[1], vars, staticConsts, ri ? "Int64" : undefined) : "(i64.const 0)";
           const L = li ? Lx : `(i64.extend_i32_s ${Lx})`;
