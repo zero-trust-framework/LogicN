@@ -49,3 +49,11 @@ export {
   type ParityOptions, type ParityResult, type ParityReport,
   checkParity, proveBifurcatedParity,
 } from "./parity-conformance.js";
+
+// ── digital FEC for the post-ADC readout — extended Hamming(8,4) SEC-DED, fail-closed / degrade-only ──
+// Corrects 1-bit, DETECTS 2-bit (uncorrectable, never miscorrected). NOT for crypto/verdict (those stay
+// bit-exact on the digital core); a complement to NMR voting + the conformance gate, never trusted alone.
+export {
+  type EccDecode, type EccBlockResult,
+  eccEncodeNibble, eccDecodeNibble, eccEncode, eccDecode,
+} from "./digital-ecc.js";
