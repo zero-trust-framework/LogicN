@@ -859,13 +859,18 @@ export function checkStdlibEffects(
   const diagnostics: EffectDiagnostic[] = [];
   const declared = new Set(flow.declaredEffects);
   const severity: "error" | "warning" = mode === "production" ? "error" : "warning";
+  const aliasMap = buildModuleAliasMap(flowNode); // C1: resolve `let x = Module` aliases
 
   function walk(node: AstNode): void {
     if (node.kind === "callExpr") {
       const methodName = node.value ?? "";
       const receiver = node.children?.[0];
-      const receiverName =
+      const rawReceiver =
         receiver?.kind === "identifier" ? (receiver.value ?? "") : "";
+      // C1: resolve a module alias (`let x = AuditLog; x.someMethod()` → AuditLog) so an UNREGISTERED
+      // method on an aliased effectful module still requires the module's broad effect (#153 deny-by-
+      // default). The alias resolves a lowercase `x` to the capitalised module name the gate expects.
+      const receiverName = aliasMap.get(rawReceiver) ?? rawReceiver;
       const fullName =
         receiverName !== "" ? `${receiverName}.${methodName}` : methodName;
 
