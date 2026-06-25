@@ -335,8 +335,23 @@ function makeNode(
 // Parser
 // ---------------------------------------------------------------------------
 
+/** LLN-PARSE-DEPTH-001: the maximum recursive-descent expression-nesting depth. Real code never approaches
+ *  this (deeply-nested expressions are rare beyond ~20); the guard exists so an adversarial deeply-nested .lln
+ *  (e.g. ~1600 nested parens / arrays, ~3 KB) cannot overflow the host JS stack and crash the compiler with an
+ *  uncaught RangeError BEFORE any governance/admission runs. Mirrors the lexer's LLN-LEX-001 generic-nesting
+ *  guard. 256 leaves wide headroom for legit code while staying far under the host stack ceiling for the parser
+ *  AND every downstream AST walker (type-checker / verifier / interpreter), which then recurse over an AST whose
+ *  depth this bounds. */
+const MAX_EXPR_DEPTH = 256;
+
+/** Thrown by the depth guard to unwind the recursion to parseProgram's per-declaration catch — fail-closed,
+ *  never a host crash. The LLN-PARSE-DEPTH-001 diagnostic is recorded before the throw. */
+class ParseAborted extends Error {}
+
 class Parser {
   private pos = 0;
+  /** Current recursive-descent expression-nesting depth (LLN-PARSE-DEPTH-001 stack-exhaustion guard). */
+  private exprDepth = 0;
   private readonly diagnostics: ParseDiagnostic[] = [];
   private readonly flows: FlowMeta[] = [];
 
@@ -364,7 +379,16 @@ class Parser {
       this.skipNewlines();
       if (this.isEof()) break;
 
-      const decl = this.parseDeclaration();
+      let decl: AstNode | undefined;
+      try {
+        decl = this.parseDeclaration();
+      } catch (e) {
+        // The LLN-PARSE-DEPTH-001 guard (or a similar fail-closed abort) unwound this declaration's parse to
+        // avoid a host-stack overflow; the diagnostic is already recorded. Stop parsing — the file has already
+        // failed, so emit the partial (valid) program collected so far and let check/build reject on the error.
+        if (e instanceof ParseAborted) break;
+        throw e;
+      }
       if (decl !== undefined) {
         children.push(decl);
       }
@@ -1812,6 +1836,21 @@ class Parser {
    *                       Callers pass 0 (the default) to parse a full expression.
    */
   private parseExpression(minPrecedence = 0): AstNode {
+    // LLN-PARSE-DEPTH-001: fail-closed stack-exhaustion guard. An adversarial deeply-nested expression
+    // (nested parens / arrays / records) would otherwise overflow the host JS stack with an uncaught
+    // RangeError, crashing the compiler/embedder BEFORE any contract check runs. Emit a clean diagnostic and
+    // abort the parse (the file fails check/build) instead of crashing the host.
+    if (++this.exprDepth > MAX_EXPR_DEPTH) {
+      this.exprDepth--;
+      this.emit(
+        "LLN-PARSE-DEPTH-001",
+        "EXCESSIVE_NESTING",
+        `Expression nesting exceeds the maximum depth of ${MAX_EXPR_DEPTH} — refusing to parse (stack-exhaustion / denial-of-service guard).`,
+        this.loc(),
+        "Flatten the expression: bind nested sub-expressions to intermediate `let` values instead of deeply nesting them.",
+      );
+      throw new ParseAborted();
+    }
     let left = this.parsePrefixExpression();
 
     while (true) {
@@ -1886,6 +1925,7 @@ class Parser {
       left = { kind: "binaryExpr", value: op, location: loc, children: [left, right] };
     }
 
+    this.exprDepth--; // balance the LLN-PARSE-DEPTH-001 guard on the normal-return path
     return left;
   }
 
