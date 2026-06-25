@@ -89,6 +89,12 @@ export function runBoundaryGate(scopePath: string, graph: PackageGraph, check: b
   } catch {
     return { status: "FAIL", violations: ["boundary-policy.json is unreadable/corrupt"], orphanWarnings };
   }
+  // A present-but-malformed allowlist is unknown → DENY (not allow-all). If `allowedExternal` is not a
+  // string array, the allowlist is untrustworthy, so under --check fail-closed rather than letting
+  // `new Set(<non-array>)` silently admit (or mis-admit) the current surface (0116 hardening).
+  if (!Array.isArray(policy.allowedExternal) || !policy.allowedExternal.every((s) => typeof s === "string")) {
+    return { status: "FAIL", violations: ["boundary-policy.json: allowedExternal is missing or malformed — refusing to enforce a non-array allowlist (unknown → deny)"], orphanWarnings };
+  }
   const allowed = new Set(policy.allowedExternal);
   const violations = currentExternal.filter((spec) => !allowed.has(spec));
 

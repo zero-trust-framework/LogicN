@@ -103,6 +103,21 @@ test("boundary gate: a MISSING policy under --check FAILS (no delete-to-launder)
   rmSync(root, { recursive: true, force: true });
 });
 
+test("boundary gate: a malformed allowedExternal denies (unknown → deny, not allow-all)", () => {
+  const root = makeFixture({
+    "src/index.ts": `import { readFileSync } from "node:fs";\nimport axios from "axios";`,
+  });
+  // Write a policy whose allowedExternal is NOT a string array (corrupt/tampered shape).
+  const dir = join(root, ".graph");
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, "boundary-policy.json"),
+    JSON.stringify({ packageName: "@logicn/fixture", allowedExternal: "node:fs,axios" })); // string, not array
+  const result = runBoundaryGate(root, buildGraph(scanPackage(root)), true);
+  assert.equal(result.status, "FAIL"); // must NOT admit axios via a malformed allowlist
+  assert.ok(result.violations.some((v) => v.includes("malformed") || v.includes("allowedExternal")));
+  rmSync(root, { recursive: true, force: true });
+});
+
 test("boundary gate: new external dep fails --check after baseline", () => {
   const root = makeFixture({
     "src/index.ts": `import { readFileSync } from "node:fs";`,
