@@ -506,14 +506,14 @@ export function renderWAT(module: WATModule): string {
   // actually calls — their presence is a deterministic function of the bodies, so wasmHash is stable.
   const referencedHelpers = new Set<string>();
   for (const fn of module.functions) {
-    for (const name of Object.keys(I32_CHECKED_HELPERS)) {
+    for (const name of Object.keys(ALL_CHECKED_HELPERS)) {
       if (fn.body.includes(name)) referencedHelpers.add(name);
     }
   }
-  for (const name of Object.keys(I32_CHECKED_HELPERS)) {
+  for (const name of Object.keys(ALL_CHECKED_HELPERS)) {
     if (!referencedHelpers.has(name)) continue;
-    lines.push(`  ;; strict-trapping i32 helper — signed overflow traps (unreachable)`);
-    for (const hl of I32_CHECKED_HELPERS[name]!.split("\n")) lines.push(`  ${hl}`);
+    lines.push(`  ;; strict-trapping checked helper — signed overflow traps (unreachable)`);
+    for (const hl of ALL_CHECKED_HELPERS[name]!.split("\n")) lines.push(`  ${hl}`);
     lines.push("");
   }
 
@@ -826,6 +826,48 @@ const I32_CHECKED_HELPERS: Readonly<Record<string, string>> = {
     "  (i32.wrap_i64 (local.get $r)))",
   ].join("\n"),
 };
+
+/**
+ * i64 strict-trapping arithmetic helpers (Fork A=TRAP, carried to 64-bit; verified i64 plan Step 4a). Mirror
+ * of i32-arith.ts / I32_CHECKED_HELPERS, matching i64-arith.ts byte-for-byte: `+`/`-`/`*` lower to `call`
+ * these and TRAP on signed overflow; `/`/`%` use native i64.div_s/rem_s (div_s traps /0 AND INT64_MIN/-1;
+ * rem_s traps /0 only). `*` can't use a wider-type intermediate (none is wider than i64), so it detects
+ * overflow by dividing the product back — the div is GUARDED in a NESTED `if a!=0` so it is never reached at
+ * a==0 (a flat `i32.and` would still evaluate both args = a spurious div-by-zero trap). div_s(INT64_MIN,-1)
+ * traps natively, so the one product-overflow edge (e.g. -1 * INT64_MIN) traps correctly. Emitted into a
+ * module only when a flow body actually references them. NOT YET REFERENCED — the i64 binary-op routing
+ * (Step 4c) that calls them is the next 2b increment; until then this is inert, and the gate stays closed.
+ */
+const INT64_CHECKED_HELPERS: Readonly<Record<string, string>> = {
+  $lln_checked_add_i64: [
+    "(func $lln_checked_add_i64 (param $a i64) (param $b i64) (result i64)",
+    "  (local $r i64)",
+    "  (local.set $r (i64.add (local.get $a) (local.get $b)))",
+    "  ;; signed overflow iff (a^r) & (b^r) < 0",
+    "  (if (i64.lt_s (i64.and (i64.xor (local.get $a) (local.get $r)) (i64.xor (local.get $b) (local.get $r))) (i64.const 0)) (then unreachable))",
+    "  (local.get $r))",
+  ].join("\n"),
+  $lln_checked_sub_i64: [
+    "(func $lln_checked_sub_i64 (param $a i64) (param $b i64) (result i64)",
+    "  (local $r i64)",
+    "  (local.set $r (i64.sub (local.get $a) (local.get $b)))",
+    "  ;; signed overflow iff (a^b) & (a^r) < 0",
+    "  (if (i64.lt_s (i64.and (i64.xor (local.get $a) (local.get $b)) (i64.xor (local.get $a) (local.get $r))) (i64.const 0)) (then unreachable))",
+    "  (local.get $r))",
+  ].join("\n"),
+  $lln_checked_mul_i64: [
+    "(func $lln_checked_mul_i64 (param $a i64) (param $b i64) (result i64)",
+    "  (local $r i64)",
+    "  (local.set $r (i64.mul (local.get $a) (local.get $b)))",
+    "  ;; no type is wider than i64 → detect overflow by dividing the product back; nested if guards a!=0.",
+    "  (if (i64.ne (local.get $a) (i64.const 0))",
+    "    (then (if (i64.ne (i64.div_s (local.get $r) (local.get $a)) (local.get $b)) (then unreachable))))",
+    "  (local.get $r))",
+  ].join("\n"),
+};
+
+// All strict-trapping checked helpers (i32 + i64), injected on-demand when a flow body references one.
+const ALL_CHECKED_HELPERS: Readonly<Record<string, string>> = { ...I32_CHECKED_HELPERS, ...INT64_CHECKED_HELPERS };
 
 // ---------------------------------------------------------------------------
 // P9.3 — Stdlib method → host import bridge

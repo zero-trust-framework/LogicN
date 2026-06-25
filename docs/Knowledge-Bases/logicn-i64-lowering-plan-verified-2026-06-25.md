@@ -210,6 +210,51 @@ same point) in both tiers.
 Any program where the two tiers diverge, or the fused module fails to validate, is a **hard stop** — gate
 stays closed.
 
+## Step 1 STATUS (built 2026-06-25, commits d986fa6/d4a8a8f) + Step 2b grounding
+
+**Step 1 DONE (interpreter + fast-tier bail), gate still CLOSED.** Shipped: shared `numeric-lowering.ts`
+(`numericBaseType` + `parseI64Literal` + `BACKEND_UNLOWERABLE_SCALAR` + memoized `flowDeclaresUnlowerable64`);
+the bytecode VM (`compile()`) + sync fast-path (`run()`) **fail-closed bail** on any 64-bit-scalar flow (closes
+R1 incl. internal `let y:Int64`); the tree-walker has faithful Int64 origination (`evalBindingInit` reads a
+declared-Int64 literal from RAW text before the lossy eval) + neg/match/equality. +9 integration tests via
+gate-bypassing `executeFlow`; suite 3837/0; truth-audit + perf clean (no regression). Deferred (narrow,
+gate-blocked): bare-large-literal in assign/return/call-arg (1c/1d/1i) + static-const (1h).
+
+**Step 2b grounding (current source line numbers, for the next focused build).** First milestone = a fused
+`pure flow f(a:Int64,b:Int64)->Int64 { return a+b }` that VALIDATES under wat2wasm + RUNS exact. Sites
+(`wat-emitter.ts`): `FLOAT_WAT_TYPES`/`FLOAT_ARITH_WAT`/`FLOAT_CMP_WAT` model at :770-772 (add `INT64_*`
+analogues); `watStackType` :783 (add an i64-call rule before the generic match); helper-injection loops :509
++ :513 (iterate an `INT64_CHECKED_HELPERS` too); `I32_CHECKED_HELPERS` :803 (sibling for the i64 helpers);
+`inferExprType` :968 (binaryExpr Int64 contagion AFTER the float check at :989 → `return "Int64"`;
+numberLiteral :973 stays Int — no global change, would diverge tiers); `recordVarTypes` :350 (register
+annotated params at flow entry — R5); `foldToInt` call :1118 (R2 — Int64-aware or skip); binary-op float
+routing :1144-1145 (add the i64 branch + R20 Int64+Float→`unreachable` guard); local valtype :1627; return
+valtype + `$logicn_result` (find the function-signature emission — the `(result …)` site).
+
+Ready-to-paste i64 checked helpers (mirror the i32 set at :803; add/sub use the sign-bit predicate, **mul
+uses divide-back since no type is wider than i64**, with the div guarded in a NESTED `if a!=0` so it is never
+reached at a==0 — `i32.and` would still evaluate both args = div-by-zero):
+```wat
+(func $lln_checked_add_i64 (param $a i64) (param $b i64) (result i64)
+  (local $r i64) (local.set $r (i64.add (local.get $a) (local.get $b)))
+  (if (i64.lt_s (i64.and (i64.xor (local.get $a) (local.get $r)) (i64.xor (local.get $b) (local.get $r))) (i64.const 0)) (then unreachable))
+  (local.get $r))
+(func $lln_checked_sub_i64 (param $a i64) (param $b i64) (result i64)
+  (local $r i64) (local.set $r (i64.sub (local.get $a) (local.get $b)))
+  (if (i64.lt_s (i64.and (i64.xor (local.get $a) (local.get $b)) (i64.xor (local.get $a) (local.get $r))) (i64.const 0)) (then unreachable))
+  (local.get $r))
+(func $lln_checked_mul_i64 (param $a i64) (param $b i64) (result i64)
+  (local $r i64) (local.set $r (i64.mul (local.get $a) (local.get $b)))
+  ;; divide-back overflow check; div_s(INT64_MIN,-1) traps natively → that one edge traps correctly.
+  (if (i64.ne (local.get $a) (i64.const 0))
+    (then (if (i64.ne (i64.div_s (local.get $r) (local.get $a)) (local.get $b)) (then unreachable))))
+  (local.get $r))
+```
+`INT64_ARITH_WAT = {+: "call $lln_checked_add_i64", -: "…sub…", *: "…mul…", /: "i64.div_s", %: "i64.rem_s"}`;
+`INT64_CMP_WAT = {==: i64.eq, !=: i64.ne, <: i64.lt_s, >: i64.gt_s, <=: i64.le_s, >=: i64.ge_s}`. After the
+milestone validates: run the §5 corpus through the 0014 walker≡WASM differential (the worker's rd-0113 corpus
+is the Int64 slice) — only then, owner-gated, lift `Int64` from the gate. UInt64 stays gated.
+
 ## Bottom line
 Every cluster is **sound-with-fixes, not sound**. Build order: interpreter coercion (Step 1) → type-checker
 (Step 2) → emitter (Steps 3-4) → prove the §5 corpus byte-identical with an actually-validating fused module →
