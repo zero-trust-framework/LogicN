@@ -250,6 +250,12 @@ const SYMBOLS = new Set(["(", ")", "{", "}", "[", "]", ",", ":", ";", ".", "@"])
  *                and any diagnostics.
  */
 export function lex(source: string, file: string): LexResult {
+  // Strip a leading UTF-8 BOM (U+FEFF / EF BB BF) before anything else. A BOM is common from Windows
+  // editors and re-saved files; without this it lexes as "Unexpected character U+FEFF" (LLN-PARSE-001) at
+  // byte 0, aborting the file before any intended diagnostic. A BOM is only meaningful at the start, so an
+  // interior U+FEFF is left untouched. Silent strip (standard behaviour) — a leading BOM is not an error.
+  if (source.charCodeAt(0) === 0xFEFF) source = source.slice(1);
+
   // ── LLN-LEX-004 / LLN-LEX-005 / LLN-LEX-006 safety limits ─────────────────
   const MAX_FILE_SIZE  = 10 * 1024 * 1024; // 10 MB (LLN-LEX-004)
   const MAX_LINE_LENGTH = 10_000;           // chars (LLN-LEX-005)
