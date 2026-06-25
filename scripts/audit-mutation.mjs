@@ -223,7 +223,67 @@ const VSC_EGRESS = [
   },
 ];
 
-const MUTANTS = configArg ? JSON.parse(readFileSync(configArg, "utf8")) : [...BUILTIN, ...CERT, ...FUSE, ...CC_I32, ...VSC_EGRESS];
+// ── tower-citizen K3 custody + governance gates: anti-Sybil quorum + No-Coercion + deny-by-default ──────
+// Prevention coverage for the verdict-combining core (the owner-gated "quorum / No-Coercion" rule, built as
+// BEHAVIOR-gated mutation testing rather than a brittle text-anchor lint). Each mutant re-introduces a real
+// fail-open in quorum.ts / three-valued-governance.ts; a KILL proves the existing adversarial test guards it.
+const TC = "packages-logicn/logicn-tower-citizen";
+const TC_BUILD = ["node", "node_modules/typescript/lib/tsc.js", "-p", "tsconfig.json"];
+const TC_QUORUM_TEST = ["node", "--test", "tests/quorum.test.mjs"];
+const TC_GOV_TEST = ["node", "--test", "tests/three-valued-governance.test.mjs"];
+const TC_CONSENSUS_TEST = ["node", "--test", "tests/consensus-confidence.test.mjs"];
+const QUORUM_GOV = [
+  {
+    id: "quorum-distinctness-sybil",
+    file: `${TC}/src/quorum.ts`,
+    find: "  for (const verdict of bySigner.values()) if (verdict === Verdict.ALLOW) approvals += 1;",
+    replace: "  for (const v2 of votes) if (v2.verdict === Verdict.ALLOW) approvals += 1;",
+    cwd: TC, build: TC_BUILD, test: TC_QUORUM_TEST,
+    desc: "quorum counts NON-distinct signers (Sybil: one signer's M ALLOW votes reach an M-of-N quorum) — anti-Sybil distinctness removed",
+  },
+  {
+    id: "quorum-equivocation-blind",
+    file: `${TC}/src/quorum.ts`,
+    find: "    if (prev !== undefined && prev !== v.verdict) return { malformed: true, distinctApprovals: 0 }; // equivocation",
+    replace: "    if (false && prev !== undefined && prev !== v.verdict) return { malformed: true, distinctApprovals: 0 }; // equivocation",
+    cwd: TC, build: TC_BUILD, test: TC_QUORUM_TEST,
+    desc: "equivocation guard disabled — a signer presenting two conflicting verdicts is no longer malformed (authorize past a detected equivocation)",
+  },
+  {
+    id: "quorum-threshold-m-floor",
+    file: `${TC}/src/quorum.ts`,
+    find: "  if (typeof m !== \"number\" || !Number.isInteger(m) || m < 1) return { malformed: true, distinctApprovals: 0 };",
+    replace: "  if (typeof m !== \"number\" || !Number.isInteger(m) || m < 0) return { malformed: true, distinctApprovals: 0 };",
+    cwd: TC, build: TC_BUILD, test: TC_QUORUM_TEST,
+    desc: "threshold floor weakened m<1 -> m<0, so m=0 is 'valid' and 0 distinct approvals >= 0 -> ALLOW (empty-quorum fail-open)",
+  },
+  {
+    id: "no-coercion-vand-lift",
+    file: `${TC}/src/three-valued-governance.ts`,
+    find: "  return minTrit(a, b) as Verdict;",
+    replace: "  return maxTrit(a, b) as Verdict;",
+    cwd: TC, build: TC_BUILD, test: TC_GOV_TEST,
+    desc: "vAnd (Kleene AND / No-Coercion) swapped min->max: an untrusted DENY operand no longer LOWERS the verdict (a lift) — vAnd(ALLOW,DENY) would yield ALLOW",
+  },
+  {
+    id: "collapse-indeterminate-to-allow",
+    file: `${TC}/src/three-valued-governance.ts`,
+    find: "  return v === Verdict.ALLOW ? \"allow\" : \"deny\";",
+    replace: "  return v === Verdict.DENY ? \"deny\" : \"allow\";",
+    cwd: TC, build: TC_BUILD, test: TC_GOV_TEST,
+    desc: "collapse() at the boundary lets INDETERMINATE coerce to 'allow' (was deny-by-default: only ALLOW -> allow)",
+  },
+  {
+    id: "consensus-tie-to-allow",
+    file: `${TC}/src/three-valued-governance.ts`,
+    find: "  return (sum > 0 ? Verdict.ALLOW : sum < 0 ? Verdict.DENY : Verdict.INDETERMINATE);",
+    replace: "  return (sum >= 0 ? Verdict.ALLOW : sum < 0 ? Verdict.DENY : Verdict.INDETERMINATE);",
+    cwd: TC, build: TC_BUILD, test: TC_CONSENSUS_TEST,
+    desc: "consensusTritN tie (sum===0) coerces to ALLOW instead of INDETERMINATE (deny-by-default lost on a split vote)",
+  },
+];
+
+const MUTANTS = configArg ? JSON.parse(readFileSync(configArg, "utf8")) : [...BUILTIN, ...CERT, ...FUSE, ...CC_I32, ...VSC_EGRESS, ...QUORUM_GOV];
 
 function git(args) { return spawnSync("git", args, { cwd: ROOT, encoding: "utf8" }); }
 function isClean(file) { return git(["diff", "--quiet", "--", file]).status === 0; }
