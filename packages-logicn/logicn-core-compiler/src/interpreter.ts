@@ -1814,6 +1814,34 @@ class Interpreter {
       }
       return { __tag: "record", fields };
     }
+
+    // Record update: { ...base, field: expr } parsed as callExpr { value: "#record-update" }.
+    // Children are in SOURCE ORDER: spread nodes { value: "#spread", children: [baseExpr] } and field
+    // nodes { value: fieldName, children: [valueExpr] } (same shape as #record). Processing in order makes
+    // multiple spreads + field overrides compose correctly ({ ...a, ...b, f: v } → b overrides a, f wins).
+    // This existed in the parser / value-state-checker / WAT emitter (#163) but NOT the tree-walker — so
+    // `run()` and embedders returned a runtimeError while the WASM tier worked (a walker≠WASM divergence).
+    if (methodName === "#record-update") {
+      const fields = new Map<string, LogicNValue>();
+      for (const child of children) {
+        if (child.value === "#spread") {
+          const baseNode = child.children?.[0];
+          const baseVal = baseNode !== undefined ? await this.evalExpr(baseNode) : undefined;
+          if (baseVal === undefined || baseVal.__tag !== "record") {
+            return { __tag: "runtimeError", message: "record update '...' spread base is not a record" };
+          }
+          for (const [k, v] of baseVal.fields) fields.set(k, v);
+        } else if (child.kind === "identifier" && child.value !== undefined) {
+          const fieldValueNode = child.children?.[0];
+          const fieldValue = fieldValueNode !== undefined
+            ? await this.evalExpr(fieldValueNode)
+            : { __tag: "void" as const };
+          fields.set(child.value, fieldValue);
+        }
+      }
+      return { __tag: "record", fields };
+    }
+
     const forceStandalone =
       methodName === "Ok" ||
       methodName === "Err" ||
