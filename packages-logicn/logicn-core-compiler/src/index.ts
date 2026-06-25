@@ -741,6 +741,7 @@ export {
   LLN_SUBSTRATE_002,
   LLN_SUBSTRATE_003,
   LLN_SUBSTRATE_004,
+  LLN_SUBSTRATE_005,
   type GovernanceDiagnostic,
   type GovernanceVerifyResult,
   type DeploymentProfile,

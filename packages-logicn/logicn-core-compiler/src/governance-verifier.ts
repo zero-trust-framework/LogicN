@@ -316,6 +316,17 @@ export const LLN_SUBSTRATE_004 = {
   message: "An un-voted (redundancy: 1) result from a noisy lane feeds a context requiring determinism. Add a consensus vote (redundancy: tmr) or use a digital lane.",
 } as const;
 
+/** LLN-SUBSTRATE-005: an external-reach effect declared on a noisy/photonic lane (the compute-only fence).
+ *  A noisy/photonic lane is an untrusted Tier-3 compute accelerator (degrade-only); it may do pure MAC/compute
+ *  but must have ZERO network/persistence/secret/process/ledger reach — else the untrusted lane becomes a
+ *  confused deputy into trusted resources. Deny-by-default; crypto/hash/sign is owned separately by 001. */
+export const LLN_SUBSTRATE_005 = {
+  code: "LLN-SUBSTRATE-005",
+  name: "REACH_EFFECT_ON_COMPUTE_ONLY_LANE",
+  severity: "error" as const,
+  message: "A network/persistence/secret/process effect is declared on a noisy/photonic lane. That lane is an untrusted compute-only accelerator with no external reach — move the effect to a digital lane.",
+} as const;
+
 // ── LLN-ASSIMILATE codes ──────────────────────────────────────────────────────────
 //
 // LLN-ASSIMILATE-001  assimilated plugin declared outside boot.lln project manifest.

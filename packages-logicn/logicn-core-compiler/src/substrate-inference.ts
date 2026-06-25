@@ -6,10 +6,12 @@
 // verifier reads it and holds the flow to the Direction-C noise model *before any
 // silicon exists*, fail-closed:
 //   B1  crypto/hash/sign effect on a noisy lane            → LLN-SUBSTRATE-001 (always error)
+//   B0  network/persistence/secret/process effect on a     → LLN-SUBSTRATE-005 (always error)
+//       noisy/photonic lane (the compute-only fence)
 //   B2  declared tolerance unprovable at declared N        → LLN-SUBSTRATE-002 (warn dev / err prod)
 //       declared N insufficient, or pBad ≥ 0.5             → LLN-SUBSTRATE-003 (always error)
 //   B3  un-voted (N=1) noisy result into a determ. sink    → LLN-SUBSTRATE-004 (always error)
-// Priority when several fire: 001 > 004 > 003 > 002 (mirrors substrate-model.ts
+// Priority when several fire: 001 > 005 > 004 > 003 > 002 (mirrors substrate-model.ts
 // verifyToleranceUnderNoise). Safety (a noisy reading can never manufacture an ALLOW)
 // is inherited structurally from Direction A's vAnd/No-Coercion — not re-proved here.
 //
@@ -69,6 +71,20 @@ const LANE_PROFILES: Record<SubstrateLane, SubstrateNoiseParams> = {
 // where it matters most. Match the whole crypto.<head>.* family fail-closed; integrity is never
 // tolerance-bounded, so there is no crypto sub-variant that is legitimate on a noisy lane.
 const CRYPTO_EFFECT = /^crypto\.(hash|sign|verify|encrypt|decrypt|seal)(\.|$)/;
+
+// The compute-only fence (LLN-SUBSTRATE-005), DENY-BY-DEFAULT. A noisy/photonic lane is an untrusted Tier-3
+// compute accelerator (degrade-only); it may declare ONLY genuine compute effects — every other canonical
+// effect is external reach (network / persistence / secret / ledger / exec / sensitive-data) and would make
+// the untrusted lane a confused deputy into trusted resources. An allowlist (not a reach blocklist) is the
+// fail-closed choice: a NEW effect family added to the vocabulary later is denied on a noisy lane by default
+// until explicitly admitted here. crypto.* is owned separately by B1/LLN-SUBSTRATE-001 (and is never compute).
+const COMPUTE_LANE_ALLOWED_EFFECTS = new Set<string>([
+  "compute.cpu", "compute.gpu", "compute.npu", // the lane's own MAC/compute
+  "ai.inference",                               // the inference workload the photonic MAC accelerates
+  "random.generate", "clock.read",             // non-determinism sources a noisy lane legitimately reads
+  "audit.write",                                // the governance OBSERVABILITY channel (the observer's append-only
+                                                // telemetry, not external reach) — the lane shares STRUCTURE, not data
+]);
 
 // ---------------------------------------------------------------------------
 // AST extraction (reuses the resilience-inference idiom)
@@ -250,6 +266,27 @@ export function checkSubstrateViolations(
       message: `Flow '${flow.name}' declares a crypto effect on lane '${inf.lane}'. Integrity requires bit-exactness and cannot be tolerance-bounded.`,
       suggestedFix: "Move the crypto/hash/sign operation to a digital lane (substrate { lane: digital }).",
     }];
+  }
+
+  // B0 — compute-only fence (LLN-SUBSTRATE-005): a noisy/photonic lane is an untrusted Tier-3 compute
+  // accelerator with ZERO external reach. Any network/persistence/secret/process/ledger effect on it makes
+  // the untrusted lane a confused deputy into trusted resources — deny-by-default, fail-closed. (Crypto is
+  // already owned by B1 above; this catches the broader reach a crypto-only gate left open.)
+  if (laneIsNoisy) {
+    // Deny-by-default: anything that is neither an allowed compute effect nor crypto (crypto is owned by B1
+    // above, which already early-returned if present) is external reach and breaks the compute-only fence.
+    const reach = flow.declaredEffects.filter(
+      (e) => !COMPUTE_LANE_ALLOWED_EFFECTS.has(e) && !CRYPTO_EFFECT.test(e),
+    );
+    if (reach.length > 0) {
+      return [{
+        code: "LLN-SUBSTRATE-005",
+        name: "REACH_EFFECT_ON_COMPUTE_ONLY_LANE",
+        severity: "error",
+        message: `Flow '${flow.name}' declares external-reach effect(s) [${reach.join(", ")}] on lane '${inf.lane}'. A noisy/photonic lane is an untrusted compute-only accelerator with no network/persistence/secret/process reach.`,
+        suggestedFix: "Move the reach effect to a digital lane (substrate { lane: digital }), keeping the photonic lane pure-compute.",
+      }];
+    }
   }
 
   // B3 — un-voted noisy result feeding a determinism-requiring sink. The sink signal is the
