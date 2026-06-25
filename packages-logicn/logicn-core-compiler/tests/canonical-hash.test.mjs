@@ -76,16 +76,15 @@ describe("canonicalHash — basic properties", () => {
     assert.equal(canonicalHash(obj1), canonicalHash(obj2));
   });
 
-  it("Infinity is normalized to null", () => {
-    const h1 = canonicalHash({ x: Infinity });
-    const h2 = canonicalHash({ x: null });
-    assert.equal(h1, h2);
+  // #55 / LLN-FLOAT-NAN-001: a non-finite number must FAIL CLOSED, not be laundered to null. The old
+  // null-normalization made {x: Infinity}, {x: NaN} and {x: null} collide to ONE signed fingerprint — a
+  // wrong-but-plausible value signed into the proof-graph. Now it throws (matching manifest-generator / RFC 8785).
+  it("Infinity FAILS CLOSED (not laundered to null — would collide with null/NaN in a signed fingerprint)", () => {
+    assert.throws(() => canonicalHash({ x: Infinity }), /non-finite/);
   });
 
-  it("NaN is normalized to null", () => {
-    const h1 = canonicalHash({ x: NaN });
-    const h2 = canonicalHash({ x: null });
-    assert.equal(h1, h2);
+  it("NaN FAILS CLOSED (not laundered to null)", () => {
+    assert.throws(() => canonicalHash({ x: NaN }), /non-finite/);
   });
 
   it("primitive arrays are sorted for stability", () => {

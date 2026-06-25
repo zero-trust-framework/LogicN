@@ -66,8 +66,13 @@ function toCanonical(value: unknown): unknown {
   }
 
   if (typeof value === "number") {
-    if (!isFinite(value) || isNaN(value)) {
-      return null;
+    // #55 / LLN-FLOAT-NAN-001: a non-finite number (NaN / ±Inf) MUST NOT be laundered to null and signed —
+    // that collapses NaN, +Inf, -Inf and null to ONE indistinguishable fingerprint (a hash collision) and
+    // signs a wrong-but-plausible value into the proof-graph / CFG. Fail CLOSED, matching manifest-generator
+    // (RFC 8785). A non-finite reaching the canonical hasher is itself a red flag — LogicN floats can no
+    // longer be non-finite (mkFloat traps), so this only fires on a TS-layer leak.
+    if (!isFinite(value)) {
+      throw new Error("RFC 8785: non-finite numbers not allowed in a canonical hash (NaN/±Inf — LLN-FLOAT-NAN-001)");
     }
     return value;
   }
