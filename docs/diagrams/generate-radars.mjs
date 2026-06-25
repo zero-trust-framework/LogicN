@@ -54,6 +54,22 @@ const charts = [
       Rust:   [3, 9, 7, 10, 5, 7],
     },
   },
+  {
+    // The "we play a different game" chart: capabilities that are NATIVE to a ternary multi-substrate
+    // orchestrator and ABSENT (or hand-rolled, ungoverned) in binary languages. LogicN's primitives here
+    // already ship (resilience{}/fallback_digital, vAndTensor=Tensorized No-Coercion, K3 vAnd=min,
+    // freivalds verify-cheap + ToleranceWitness). Others score low because they don't ATTEMPT this natively.
+    file: "radar-4-governed-chaos.svg",
+    title: "4 · Governed Chaos & Multi-Substrate",
+    subtitle: "the category binary languages don't play in",
+    axes: ["Substrate Switch", "Fault Healing", "AI-Proposal Safety", "Tri-logic Ambiguity", "Verified Approx.", "Degrade-only"],
+    series: {
+      LogicN: [9, 7, 9, 10, 8, 9],
+      Python: [1, 2, 1, 1, 2, 1],
+      Rust:   [1, 3, 1, 1, 2, 2],
+      "C++":  [1, 2, 1, 1, 2, 1],
+    },
+  },
 ];
 
 const W = 720, H = 560, CX = 300, CY = 300, R = 210, MAXV = 10, RINGS = 5;
