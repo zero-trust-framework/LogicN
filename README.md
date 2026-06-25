@@ -36,6 +36,50 @@ LogicN optimises for **mathematical proof and absolute Zero-Trust containment**:
 
 ---
 
+## What LogicN can and cannot do (honest scope)
+
+Three plain-English blocks. The first is the mature, shipped core; the second is a real but **emulated / owner-gated** frontier; the third is the hard boundary — what LogicN deliberately will **not** do.
+
+### 1) What the governance `contract {}` block is good for *(shipped, production-grade)*
+
+The `contract {}` block declares a flow's **intent, effects, capability boundaries, and invariants**, and the compiler proves them at build time (no runtime surprise). It is strongest for:
+
+- **Authorisation that fails closed** — the three-valued **K3 gate** (`ALLOW / INDETERMINATE / DENY`); an unknown or untrusted input can only ever *lower* a verdict, never manufacture an `ALLOW` (**No-Coercion**, `vAnd = min`).
+- **Effect & capability control** — every effect (`database.write`, `crypto.sign`, `network.*`) is **denied by default** and must be declared; native OS capabilities are off unless granted.
+- **Intelligent API routing** — `+1` fast-allow / `0` step-up (MFA/WAF) / `-1` deny, with degrade-only telemetry that can throttle but never auto-admit.
+- **PII / PHI safety** — protected types + `redact()` enforced *before* data reaches an audit sink.
+- **Supply-chain provenance** — signed manifests (Ed25519, opt-in hybrid PQ), hash-pinning, revocation, closed capability masks.
+- **Regulated audit** — every governed execution emits a cryptographic receipt + append-only audit log; OWASP/injection classes are blocked at the compiler.
+
+> Best fit: financial platforms, healthcare, government/defence, regulated enterprise — anywhere "software failure is not acceptable".
+
+### 2) What the "can do something" with maths / other compute is good for *(real, but emulated today + owner-gated)*
+
+LogicN can **govern a tolerant numeric sub-kernel** as a deny-by-default, untrusted **compute-only lane** (run on a CPU **photonic emulator** today, cheap-verified, fed back as a *degrade-only* verdict under a signed tolerance witness) — **while every decision stays bit-exact on the digital core**. Useful for the *tolerant MAC half* of:
+
+| Domain (as you'd name it) | What LogicN governs |
+|---|---|
+| **Weather prediction** | the ML-surrogate (GNN/attention) half — the chaotic core is refused |
+| **Finance / stocks** | a covariance MVM on the analog lane; pricing/VaR stays bit-exact digital |
+| **3D modelling** | tolerant render/physics (transforms, GI/AO, soft-body), TMR-voted |
+| **DNA computing / genomics** | tolerant similarity/embedding inner-products |
+| **Computational chemistry** | the MD non-bonded force sub-kernel |
+| **Algebra** *(tolerant low-precision matrix)* | ternary/low-bit GEMM/MVM |
+| **K3 API routing** · **low-level quantum** | *already ship* (the admission spine · the ffsim governance gate — governs, does not execute) |
+
+> Honest fence: the optics is a **precision-limited analog accelerator (~8-bit)** — **latency ≠ work** (~1.9× emulated, never "instant / free / O(1)"), and the analog lane can only **False-DENY, never False-ALLOW**. The deliverable today is a worked-example `.lln` (see `examples/gaming-substrate/`) + a compute-only profile — **not a new math kernel, and not silicon.**
+
+### 3) What it cannot do *(the hard boundary — by design)*
+
+- **Bit-exact maths on the analog lane** — **number theory** (primes, factorization, modular arithmetic), **symbolic / high-precision algebra**, and the **DFT / quantum-chemistry core** need exact or fp64 results, so they stay on the digital lane (no analog win).
+- **`lane: gaming` (or any domain as a "lane")** — `lane` is a *hardware substrate* axis (`digital | noisy | photonic`), **not** an application domain. A game spans multiple lanes (approximate physics on `photonic`, anti-cheat signing on `digital`), so an unknown lane is **rejected** (`LLN-SUBSTRATE-002`), not silently accepted.
+- **Crypto on a noisy/photonic lane** — integrity is never tolerance-bounded; `crypto.*` on a noisy lane is denied (`LLN-SUBSTRATE-001`) no matter how much voting/averaging/ECC is stacked. **Crypto and any bit-exact result stay digital, always.**
+- **AI as an in-path authorizer** — a model may *propose* (untrusted, degrade-only), but a probabilistic/self-reported score can never *lift* a security verdict.
+- **"Instant / free / O(1)" optical compute** — refuted; light transit is N-independent in *latency*, but the *work* is Θ(N²) load + Θ(N) I/O.
+- **Not yet (roadmap, not "cannot"):** real photonic hardware (emulated today), full in-WASM self-hosting (tokenize only so far), and real in-sandbox `DSS.wasm` isolation (#102–106).
+
+---
+
 ## Who it is for
 
 | Sector | Why LogicN |
