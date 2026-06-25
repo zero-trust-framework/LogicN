@@ -1089,10 +1089,18 @@ Baseline comparison (governance-cost):
     // Surface the dev/check-mode tier-floor + boundary-input WARNINGS (LLN-TIER-001 / LLN-VALUESTATE-008)
     // so a tester sees the obligation here, before a production build escalates the SAME finding to a
     // fail-closed error. The floor scan always runs; only its severity is gated on the production profile,
-    // so in `check` these arrive as warnings. Display-only — the exit code still keys on parse errors.
+    // so in `check` these arrive as warnings — display-only, they do not fail the check.
     const tierWarnings = fx.flatMap(r => (r.diagnostics ?? []).filter(d => d.code === "LLN-TIER-001"));
-    const boundaryWarnings = (m.checkValueStates(parsed.ast).diagnostics ?? []).filter(d => d.code === "LLN-VALUESTATE-008");
-    const allDiags = [...errors, ...gov.diagnostics, ...tierWarnings, ...boundaryWarnings];
+    // Run the value-state checker ONCE and surface ALL of its ERROR-severity diagnostics, not just the
+    // migration-grade LLN-VALUESTATE-008 boundary warning. The old code filtered to VALUESTATE-008 ALONE,
+    // so a fail-closed value-state ERROR — e.g. LLN-NUMERIC-001 for a still-gated 64-bit width (UInt64)
+    // the WASM backend would silently truncate — was discarded and `check` printed "0 errors" on a file the
+    // production build rejects (the verified hole). These errors are UNCONDITIONAL (not mode-gated), so they
+    // also drive the exit code below; VALUESTATE-008 stays a dev/check WARNING and remains display-only.
+    const vsDiags = m.checkValueStates(parsed.ast).diagnostics ?? [];
+    const valueStateErrors = vsDiags.filter(d => d.severity === "error");
+    const boundaryWarnings = vsDiags.filter(d => d.code === "LLN-VALUESTATE-008" && d.severity !== "error");
+    const allDiags = [...errors, ...gov.diagnostics, ...tierWarnings, ...valueStateErrors, ...boundaryWarnings];
     if (allDiags.length === 0) {
       console.log(`✅ ${llnFile}: 0 errors, 0 governance warnings`);
     } else {
@@ -1130,7 +1138,10 @@ Baseline comparison (governance-cost):
       } catch { /* non-fatal */ }
     }
 
-    process.exit(errors.length > 0 ? 1 : 0);
+    // Exit non-zero on parse errors OR fail-closed value-state errors (e.g. LLN-NUMERIC-001 for a
+    // still-gated width) — these are unconditional correctness failures the build/run path also rejects.
+    // Tier/boundary findings stay display-only WARNINGS in check mode and do NOT affect the exit code.
+    process.exit(errors.length > 0 || valueStateErrors.length > 0 ? 1 : 0);
   }
 
   // ── logicn generate tests <file.lln> [--tap] — contract-driven test obligations (0016) ──
@@ -1835,6 +1846,7 @@ Baseline comparison (governance-cost):
   // governed-run gate at ~1699-1705 is the surfacing/exit model mirrored below.
   const { resolveSigningProfileWarned: resolveBuildProfile } = await import("./governance/profile.mjs");
   const buildIsProduction = resolveBuildProfile().profile === "production";
+  const govErrors = [];
   let fx;
   if (buildIsProduction) {
     // PRODUCTION ONLY: turn on the flow-kind tier floor (LLN-TIER-001) and escalate the boundary-input
@@ -1842,31 +1854,36 @@ Baseline comparison (governance-cost):
     // the 4th position. checkEffects/emitGIR ignore `.diagnostics` for codegen (emitGIR reads only
     // observedEffects), so the floored fx produces byte-identical GIR — the floor only adds diagnostics.
     fx = m.checkEffects(parsed.flows, parsed.ast, "production", true);
-    const govErrors = [];
     for (const result of fx) {
       for (const d of result.diagnostics ?? []) {
         if (d.severity === "error") govErrors.push(d);
       }
     }
-    // LLN-VALUESTATE-008 (bare boundary param into a governed sink) — net-new on this path, mirroring
-    // cli.ts:416. Production-gated so it can never reject a currently-valid dev/check build.
-    const valueStateResult = m.checkValueStates(parsed.ast, "production");
-    for (const d of valueStateResult.diagnostics ?? []) {
-      if (d.severity === "error") govErrors.push(d);
-    }
-    if (govErrors.length > 0) {
-      for (const d of govErrors) {
-        const loc = d.location?.line !== undefined ? ` (${llnFile}:${d.location.line}:${d.location.column ?? 0})` : "";
-        console.error(`  ⛔ ${d.code}: ${d.message}${loc}`);
-      }
-      console.error(`\n❌ Build of '${llnFile}' FAILED (fail-closed under LOGICN_PROFILE=production) — ${govErrors.length} governance error(s) above. Declare the required tier/effects (or seal/gate boundary inputs) and rebuild.`);
-      process.exit(1);
-    }
   } else {
-    // DEV / CHECK / UNSET: identical to the pre-existing 2-arg call (mode defaults to "production",
-    // enforceTierFloor defaults to false). No floor, no value-state check, nothing printed, no extra
-    // exit — the dev/check build is byte-for-byte unchanged and `fx` is the exact same value as before.
+    // DEV / CHECK / UNSET: no tier floor, checkEffects diagnostics stay advisory (mode defaults to
+    // "production", enforceTierFloor defaults to false) — `fx` is byte-identical to the pre-existing call.
     fx = m.checkEffects(parsed.flows, parsed.ast);
+  }
+  // UNCONDITIONAL value-state gate (mirror of cli.ts:416 + runtime.ts:116 — the internal compiler bin and
+  // the governed runtime BOTH run checkValueStates on every build/run). The LLN-NUMERIC-001 numeric-
+  // truncation gate is fail-closed and NOT mode-gated: a still-unlowerable 64-bit width (UInt64) the WASM
+  // backend would silently truncate 64→32 (CWE-704) MUST reject the build REGARDLESS of profile. This scan
+  // previously ran ONLY under LOGICN_PROFILE=production, so a default `build` of an unlowerable-width flow
+  // silently emitted a truncating module (the verified hole). The MODE only governs whether the
+  // migration-grade LLN-VALUESTATE-008 boundary warning ALSO escalates to a fail-closed error (production)
+  // or stays a warning (dev). Int64 is no longer rejected here — the emitter now lowers it faithfully.
+  const valueStateResult = m.checkValueStates(parsed.ast, buildIsProduction ? "production" : "development");
+  for (const d of valueStateResult.diagnostics ?? []) {
+    if (d.severity === "error") govErrors.push(d);
+  }
+  if (govErrors.length > 0) {
+    for (const d of govErrors) {
+      const loc = d.location?.line !== undefined ? ` (${llnFile}:${d.location.line}:${d.location.column ?? 0})` : "";
+      console.error(`  ⛔ ${d.code}: ${d.message}${loc}`);
+    }
+    const profileNote = buildIsProduction ? " under LOGICN_PROFILE=production" : "";
+    console.error(`\n❌ Build of '${llnFile}' FAILED (fail-closed${profileNote}) — ${govErrors.length} governance error(s) above. Declare the required tier/effects (or seal/gate boundary inputs) and rebuild.`);
+    process.exit(1);
   }
   const { gir } = m.emitGIR(parsed.ast, parsed.flows, fx);
   const watModule = m.buildWATModuleFromGIR(gir, undefined, "wasm-standalone", parsed.ast, true);
