@@ -151,3 +151,56 @@ export function decideAtBoundary(
     diagnostic,
   };
 }
+
+// ── Tensorized No-Coercion (notes/62 net-new, owner-approved 2026-06-25) ──────
+//
+// vAndTensor is a deny-by-default ARITY wrapper over the proven scalar vAnd: it folds an untrusted
+// operand tensor into a core verdict tensor element-wise, so an untrusted/substrate signal can only
+// ever LOWER each verdict, never lift it (No-Coercion holds per index: min(t*, r) ≤ t*). It is a
+// VERDICT-SHAPER ONLY — it shapes a verdict tensor and stores no value; it is NOT a query/RBAC/SQL
+// engine (per the R&D guardrail). O(N), not O(1): the cost is one minTrit per element.
+
+/**
+ * Element-wise Kleene ∧ over two trit tensors: `out[k] = vAnd(vCore[k], tSub[k])`.
+ *
+ * Fail-closed by construction:
+ *  - a length mismatch is a HARD error (never a silent pad/truncate — that would invent or drop
+ *    verdicts at the tail);
+ *  - every element is validated as a balanced trit {-1,0,+1} (a non-trit is a hard error, never
+ *    coerced) — so a garbage operand cannot smuggle a value through.
+ * No-Coercion: the untrusted `tSub` operand can only lower `vCore` toward DENY, never manufacture
+ * an ALLOW the core did not already hold.
+ */
+export function vAndTensor(vCore: Int8Array, tSub: Int8Array): Int8Array {
+  if (vCore.length !== tSub.length) {
+    throw new Error(
+      `vAndTensor: length mismatch (${vCore.length} vs ${tSub.length}) — fail-closed, no pad/truncate`,
+    );
+  }
+  const out = new Int8Array(vCore.length);
+  for (let k = 0; k < vCore.length; k++) {
+    const a = vCore[k]!;
+    const b = tSub[k]!;
+    if ((a !== -1 && a !== 0 && a !== 1) || (b !== -1 && b !== 0 && b !== 1)) {
+      throw new Error(`vAndTensor: non-trit element at index ${k} (${a}, ${b}) — fail-closed`);
+    }
+    out[k] = vAnd(a as Verdict, b as Verdict);
+  }
+  return out;
+}
+
+/**
+ * Strided 2-D view of `vAndTensor`: fold an untrusted `tSub` tensor into an `rows × cols` core
+ * verdict matrix (row-major), returning the shaped matrix flattened the same way. Same fail-closed
+ * contract as `vAndTensor` (shape mismatch / non-trit → hard error). Useful for a per-row × per-column
+ * verdict fold (e.g. a result-set classification) — still a verdict-shaper, never a data engine.
+ */
+export function vAndTensor2D(vCore: Int8Array, tSub: Int8Array, rows: number, cols: number): Int8Array {
+  if (!Number.isInteger(rows) || !Number.isInteger(cols) || rows < 0 || cols < 0) {
+    throw new Error(`vAndTensor2D: invalid shape (${rows}×${cols}) — fail-closed`);
+  }
+  if (vCore.length !== rows * cols) {
+    throw new Error(`vAndTensor2D: vCore length ${vCore.length} ≠ rows*cols ${rows * cols} — fail-closed`);
+  }
+  return vAndTensor(vCore, tSub); // element-wise; the 2-D shape is the caller's row-major interpretation
+}

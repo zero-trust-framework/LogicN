@@ -42,6 +42,7 @@ export type { TransitionPolicy, RestrictedTransition } from "./governance-enforc
 export {
   Verdict, vAnd, vOr, vNot, allOf, anyOf, collapse, authorize,
   decideAtBoundary, GOV_3VL_DIAGNOSTIC,
+  vAndTensor, vAndTensor2D,
 } from "./three-valued-governance.js";
 export type { GovernanceDiagnostic, BoundaryDecision } from "./three-valued-governance.js";
 
