@@ -241,13 +241,27 @@ export class TPLSimulator {
     return decodeTrit(encoded);
   }
 
+  /** RD-0112 R2 — erase-on-trap: any SecurityTrap / TPLIntegrityFault from a state mutator wipes ALL
+   *  trit state (reusing the shipped atomic erase()) BEFORE unwinding, so a trapped secret flow leaves
+   *  no COMMIT residue in the (exported) buffer. Fail-closed: a fault erases, it never preserves state. */
+  private eraseOnTrap<T>(fn: () => T): T {
+    try {
+      return fn();
+    } catch (e) {
+      this.erase();
+      throw e;
+    }
+  }
+
   setTrit(index: number, value: number): void {
-    this.boundsCheck(index);
-    const encoded = encodeTrit(value); // throws SecurityTrap on toxic input
-    const wordIdx = this.stateWordStart + ((index / TRITS_PER_I32) | 0);
-    const shift = tritBitShift(index);
-    // clear the 2-bit field, then OR in the new encoding
-    this.mem[wordIdx] = (this.mem[wordIdx]! & ~(0x03 << shift)) | (encoded << shift);
+    this.eraseOnTrap(() => {
+      this.boundsCheck(index);
+      const encoded = encodeTrit(value); // throws SecurityTrap on toxic input
+      const wordIdx = this.stateWordStart + ((index / TRITS_PER_I32) | 0);
+      const shift = tritBitShift(index);
+      // clear the 2-bit field, then OR in the new encoding
+      this.mem[wordIdx] = (this.mem[wordIdx]! & ~(0x03 << shift)) | (encoded << shift);
+    });
   }
 
   // ── Single virtual photonic gate (governed) ────────────────────────────────
@@ -258,27 +272,29 @@ export class TPLSimulator {
    * the GovernanceEnforcer — it requires a valid audit signature.
    */
   gate(inputIdx: number, weightIdx: number, targetIdx: number, correlationId: string): number {
-    const inputState = this.getTrit(inputIdx);
-    const weightState = this.getTrit(weightIdx);
-    const result = inputState * weightState; // ∈ {-1, 0, 1}
+    return this.eraseOnTrap(() => {
+      const inputState = this.getTrit(inputIdx);
+      const weightState = this.getTrit(weightIdx);
+      const result = inputState * weightState; // ∈ {-1, 0, 1}
 
-    // Epistemic Hold enforcement: lifting 0 → +1 is a restricted transition.
-    if (inputState === TritState.HOLD && result === TritState.COMMIT) {
-      const check = this.governance.checkTransition(TritState.HOLD, TritState.COMMIT);
-      if (!check.allowed) {
-        this.logger.logTransition({
-          correlationId, fromState: inputState, toState: result,
-          operation: "GATE_COMMIT", authorized: false,
-        });
-        throw new SecurityTrap(`Unauthorized transition 0 -> 1: ${check.reason}`);
+      // Epistemic Hold enforcement: lifting 0 → +1 is a restricted transition.
+      if (inputState === TritState.HOLD && result === TritState.COMMIT) {
+        const check = this.governance.checkTransition(TritState.HOLD, TritState.COMMIT);
+        if (!check.allowed) {
+          this.logger.logTransition({
+            correlationId, fromState: inputState, toState: result,
+            operation: "GATE_COMMIT", authorized: false,
+          });
+          throw new SecurityTrap(`Unauthorized transition 0 -> 1: ${check.reason}`);
+        }
       }
-    }
 
-    this.setTrit(targetIdx, result);
-    this.logger.logTransition({
-      correlationId, fromState: inputState, toState: result, operation: "GATE",
+      this.setTrit(targetIdx, result);
+      this.logger.logTransition({
+        correlationId, fromState: inputState, toState: result, operation: "GATE",
+      });
+      return result;
     });
-    return result;
   }
 
   // ── Ternary Multiply-Accumulate (the BitNet T-MAC) ─────────────────────────
@@ -301,47 +317,51 @@ export class TPLSimulator {
     count: number,
     correlationId: string,
   ): number {
-    if (count < 0 || weightStartTrit < 0 || weightStartTrit + count > this.sizeInTrits) {
-      throw new SecurityTrap(
-        `T-MAC range [${weightStartTrit}, ${weightStartTrit + count}) out of bounds`,
-      );
-    }
-    if (activations.length < count) {
-      throw new SecurityTrap(`T-MAC activation vector too short: ${activations.length} < ${count}`);
-    }
+    return this.eraseOnTrap(() => {
+      if (count < 0 || weightStartTrit < 0 || weightStartTrit + count > this.sizeInTrits) {
+        throw new SecurityTrap(
+          `T-MAC range [${weightStartTrit}, ${weightStartTrit + count}) out of bounds`,
+        );
+      }
+      if (activations.length < count) {
+        throw new SecurityTrap(`T-MAC activation vector too short: ${activations.length} < ${count}`);
+      }
 
-    let acc = 0; // integer accumulator — no FP in the hot loop
-    for (let i = 0; i < count; i++) {
-      const w = this.getTrit(weightStartTrit + i); // -1 | 0 | 1
-      if (w === 1) acc += activations[i]!;
-      else if (w === -1) acc -= activations[i]!;
-      // w === 0 → skip (BitNet's zero-cost path)
-    }
+      let acc = 0; // integer accumulator — no FP in the hot loop
+      for (let i = 0; i < count; i++) {
+        const w = this.getTrit(weightStartTrit + i); // -1 | 0 | 1
+        if (w === 1) acc += activations[i]!;
+        else if (w === -1) acc -= activations[i]!;
+        // w === 0 → skip (BitNet's zero-cost path)
+      }
 
-    // Guard pages must be intact after a bulk operation.
-    this.verifyIntegrity();
+      // Guard pages must be intact after a bulk operation.
+      this.verifyIntegrity();
 
-    const scaled = acc * this.scale;
-    this.logger.logTransition({
-      correlationId,
-      fromState: TritState.HOLD,
-      toState: scaled > 0 ? TritState.COMMIT : (scaled < 0 ? TritState.REJECT : TritState.HOLD),
-      operation: "TMAC",
+      const scaled = acc * this.scale;
+      this.logger.logTransition({
+        correlationId,
+        fromState: TritState.HOLD,
+        toState: scaled > 0 ? TritState.COMMIT : (scaled < 0 ? TritState.REJECT : TritState.HOLD),
+        operation: "TMAC",
+      });
+      return scaled;
     });
-    return scaled;
   }
 
   // ── Bulk load (e.g. quantized weights) ──────────────────────────────────────
 
   /** Load a run of ternary weights, validating each is in {-1,0,1}. */
   loadWeights(weights: readonly number[], startTrit = 0): void {
-    if (startTrit + weights.length > this.sizeInTrits) {
-      throw new SecurityTrap(`loadWeights overflow: ${startTrit + weights.length} > ${this.sizeInTrits}`);
-    }
-    for (let i = 0; i < weights.length; i++) {
-      this.setTrit(startTrit + i, weights[i]!); // setTrit traps toxic values
-    }
-    this.verifyIntegrity();
+    this.eraseOnTrap(() => {
+      if (startTrit + weights.length > this.sizeInTrits) {
+        throw new SecurityTrap(`loadWeights overflow: ${startTrit + weights.length} > ${this.sizeInTrits}`);
+      }
+      for (let i = 0; i < weights.length; i++) {
+        this.setTrit(startTrit + i, weights[i]!); // setTrit traps toxic values
+      }
+      this.verifyIntegrity();
+    });
   }
 
   // ── Hard erasure (Load/Execute/Erase lifecycle) ─────────────────────────────

@@ -159,13 +159,17 @@ export class StaticMemoryPool {
     this.live.delete(ptr);
     const region = this.region(rec.segment);
     const startLocal = (ptr - region.base) / this.blockBytes;
-    // 0033 use-after-free hardening (REJECT-fill on free): scrub the freed bytes to 0xFF so the block
-    // never exposes the prior tenant's COMMIT/value. In governance/trit memory each i32 slot reads back
-    // as -1 (TritState.REJECT) → live(slot) is false → the K3 gate collapses to DENY — fail-closed by
-    // construction. For Int/byte memory it is a deterministic scrub that removes the stale-data leak.
+    // 0033/0112 use-after-free hardening (REJECT-fill on free): scrub the freed bytes so the block never
+    // exposes the prior tenant's COMMIT/value. The fill byte is SEGMENT-CORRECT:
+    //   • GOVERNANCE (trit) memory packs trits 2-bit (ENC_REJECT=0b00, ENC_ILLEGAL=0b11). 0xFF = all 0b11
+    //     would decode to ENC_ILLEGAL and THROW LSM-TRIT-CORRUPT (RD-0112 R1) — NOT the documented REJECT
+    //     path. 0x00 = all 0b00 decodes cleanly to -1 (TritState.REJECT) → live(slot) is false → the K3
+    //     gate collapses to DENY, fail-closed by construction (the previously-false comment is now true).
+    //   • COMPUTE (Int/byte) memory: 0xFF is a deterministic byte scrub that removes the stale-data leak.
     // Complements the generation/assertLive guard: that traps stale *handles*; this neutralises the
     // *bytes* a recycled slot would otherwise hand to a fresh (legitimately-live) allocation before it writes.
-    new Uint8Array(this.buffer, ptr, rec.count * this.blockBytes).fill(0xff);
+    const fillByte = rec.segment === "governance" ? 0x00 : 0xff;
+    new Uint8Array(this.buffer, ptr, rec.count * this.blockBytes).fill(fillByte);
     for (let i = 0; i < rec.count; i++) region.free.push(startLocal + i);
     region.free.sort((a, b) => a - b);
   }

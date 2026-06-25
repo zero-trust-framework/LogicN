@@ -38,6 +38,25 @@ test("Test A: packing survives across word + byte boundaries (all 64 trits)", ()
   assert.deepEqual(sim.snapshot(), pattern);
 });
 
+// ── RD-0112 R2: erase-on-trap — a trapped mutator leaves no secret residue ────
+test("RD-0112 R2: a SecurityTrap during a mutator ERASES all trit state (no secret residue survives)", () => {
+  const { sim } = makeSim(16);
+  sim.setTrit(5, TritState.COMMIT); // a secret capability resident in the buffer
+  assert.equal(sim.getTrit(5), TritState.COMMIT);
+  // setTrit(toxic) throws a SecurityTrap (encodeTrit rejects out-of-set input); the eraseOnTrap wrapper
+  // wipes ALL state before re-throwing, so the trapped secret leaves no COMMIT residue in the buffer.
+  assert.throws(() => sim.setTrit(2, 7), (e) => e instanceof SecurityTrap);
+  assert.notEqual(sim.getTrit(5), TritState.COMMIT, "the secret COMMIT must NOT survive the trap — erase-on-trap wiped it to the REJECT pole");
+});
+
+test("RD-0112 R2: a loadWeights overflow trap also erases before unwinding (no residue)", () => {
+  const { sim } = makeSim(16);
+  sim.setTrit(9, TritState.COMMIT); // resident secret
+  // loadWeights past the buffer end throws a SecurityTrap; the wrapper erases before re-throwing.
+  assert.throws(() => sim.loadWeights([1, -1, 0], 15), (e) => e instanceof SecurityTrap);
+  assert.notEqual(sim.getTrit(9), TritState.COMMIT, "a trapped loadWeights leaves no COMMIT residue either");
+});
+
 test("BitNet-faithful: 16 trits pack into one i32 (4 bytes for 16 trits)", () => {
   const { sim } = makeSim(16);
   assert.equal(sim.packedByteLength(), 4); // 16 trits × 2 bits = 32 bits = 4 bytes
