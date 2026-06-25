@@ -19,6 +19,7 @@
 
 import { type AstNode, type FlowMeta } from "./parser.js";
 import { i32AddChecked, i32SubChecked, i32MulChecked, i32DivChecked, i32ModChecked, i32NegChecked, type I32Result } from "./i32-arith.js";
+import { flowDeclaresUnlowerable64 } from "./numeric-lowering.js";
 
 // ---------------------------------------------------------------------------
 // Opcodes
@@ -91,6 +92,14 @@ class BytecodeCompiler {
   }
 
   compile(flowNode: AstNode): BytecodeProgram {
+    // FAIL-CLOSED (verified i64 plan, R1): this Int32Array VM is i32-only. A flow that declares ANY
+    // unlowerable 64-bit scalar — including an INTERNAL `let y: Int64` in an int-param flow, which the
+    // per-param check below does NOT catch and which would compile to a silently-truncating i32
+    // STORE_LOCAL — must bail to the faithful tree-walker (which carries int64 as a bigint). Same
+    // BACKEND_UNLOWERABLE_SCALAR the LLN-NUMERIC-001 gate uses, so the tiers can't disagree.
+    if (flowDeclaresUnlowerable64(flowNode)) {
+      throw new BytecodeUnsupported("flow declares a 64-bit scalar (Int64/UInt64) — defer to the tree-walker");
+    }
     // Parameters → slots 0..n. The VM is integer-only — reject non-integer params.
     const INTEGER_TYPES = new Set(["Int", "Int8", "Int16", "Int32", "Bool", "Byte"]);
     const paramNodes = (flowNode.children ?? []).filter(c => c.kind === "paramDecl");

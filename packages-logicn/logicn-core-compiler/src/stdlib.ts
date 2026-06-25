@@ -1342,6 +1342,10 @@ export function logicNValuesEqual(a: LogicNValue, b: LogicNValue): boolean {
   if (a.__tag !== b.__tag) return false;
   if (a.__tag === "string" && b.__tag === "string") return a.value === b.value;
   if (a.__tag === "int" && b.__tag === "int") return a.value === b.value;
+  // Step 1g: int64 equality via bigint === so List.contains / Set / dedup of >2^53 values are exact (no
+  // round). Same-tag only (the tag guard above already separates int vs int64); mixed int/int64 equality
+  // is an owner policy decision (promote-and-compare vs same-tag-only) deferred per the verified plan.
+  if (a.__tag === "int64" && b.__tag === "int64") return a.value === b.value;
   if (a.__tag === "float" && b.__tag === "float") return a.value === b.value;
   if (a.__tag === "decimal" && b.__tag === "decimal") return bigIntDecimalCmp(a.value, b.value) === 0;
   if (a.__tag === "bool" && b.__tag === "bool") return a.value === b.value;

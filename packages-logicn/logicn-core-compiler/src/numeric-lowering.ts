@@ -13,6 +13,17 @@
  * precise fail-open. `BigInt` is exact across the whole i64 range.
  */
 import { I64_MIN, I64_MAX } from "./i64-arith.js";
+import { type AstNode } from "./parser.js";
+
+/**
+ * The scalar 64-bit widths the current backend cannot lower without silently truncating 64→32 (CWE-704).
+ * SINGLE SOURCE OF TRUTH for "what is unlowerable": the LLN-NUMERIC-001 gate (value-state-checker), the
+ * bytecode-VM bail, and the sync fast-path bail all consult this set, so the gate and the fast-tier bails
+ * can never disagree about which flows must be routed to the faithful tree-walker / rejected. Int8/Int16
+ * widen to i32 and Float32 widens to f64 (no value loss) — deliberately NOT here. Int64 is being lifted
+ * incrementally (faithful tree-walker first); UInt64 stays gated until its own unsigned layer lands.
+ */
+export const BACKEND_UNLOWERABLE_SCALAR: ReadonlySet<string> = new Set(["Int64", "UInt64"]);
 
 /**
  * Base type identifier from a type-annotation string: strips leading governance/safety qualifiers
@@ -75,4 +86,48 @@ export function parseI64Literal(rawText: string): I64LiteralResult {
   const value = neg ? -magnitude : magnitude;
   if (value < I64_MIN || value > I64_MAX) return "OutOfRange";
   return value;
+}
+
+const NUMERIC_BIND_KINDS: ReadonlySet<string> = new Set(["letDecl", "mutDecl", "readonlyDecl"]);
+
+/** The base type of a `name: Type` binding-value string, after stripping a leading safety prefix. */
+function bindingDeclaredBase(bindingValue: string): string {
+  let rest = bindingValue;
+  if (rest.startsWith("unsafe ")) rest = rest.slice("unsafe ".length).trim();
+  else if (rest.startsWith("safe ")) rest = rest.slice("safe ".length).trim();
+  const colon = rest.indexOf(":");
+  return colon === -1 ? "" : numericBaseType(rest.slice(colon + 1));
+}
+
+/**
+ * Does a flow DECLARE any unlowerable 64-bit scalar (param, return, or a binding anywhere in its body)?
+ * The fast execution tiers (bytecode VM, sync fast-path) are i32-only and would SILENTLY TRUNCATE such a
+ * value — so they bail on a `true` here and defer to the faithful tree-walker (which carries int64 as a
+ * bigint). Uses the SAME `BACKEND_UNLOWERABLE_SCALAR` + `numericBaseType` as the LLN-NUMERIC-001 gate, so a
+ * flow the gate would reject is exactly a flow the fast tiers refuse to run. Param Int64 already bails in
+ * the bytecode VM via its INTEGER_TYPES check; this also catches an INTERNAL `let y: Int64` in an int-param
+ * flow (the silent-truncation gap, the verified plan's R1).
+ */
+export function flowDeclaresUnlowerable64(flowNode: AstNode): boolean {
+  for (const c of flowNode.children ?? []) {
+    // Return type = a direct typeRef child of the flow.
+    if (c.kind === "typeRef" && typeof c.value === "string" && BACKEND_UNLOWERABLE_SCALAR.has(numericBaseType(c.value))) return true;
+    // Param type = the typeRef nested in a paramDecl.
+    if (c.kind === "paramDecl") {
+      const tr = (c.children ?? []).find((t) => t.kind === "typeRef");
+      if (typeof tr?.value === "string" && BACKEND_UNLOWERABLE_SCALAR.has(numericBaseType(tr.value))) return true;
+    }
+  }
+  // Bindings anywhere in the body.
+  let found = false;
+  const visit = (n: AstNode | undefined): void => {
+    if (n === undefined || found) return;
+    if (NUMERIC_BIND_KINDS.has(n.kind) && typeof n.value === "string" && BACKEND_UNLOWERABLE_SCALAR.has(bindingDeclaredBase(n.value))) {
+      found = true;
+      return;
+    }
+    for (const c of n.children ?? []) visit(c);
+  };
+  visit(flowNode);
+  return found;
 }

@@ -17,6 +17,7 @@ import { buildExecutionGraph, getOrLoadGraph, storeGraph, executionGraphCacheKey
 import { compileToBytecode, runBytecode } from "./bytecode-vm.js";
 import { i32AddChecked, i32SubChecked, i32MulChecked, i32DivChecked, i32ModChecked, i32NegChecked, isI32Trap, type I32Result } from "./i32-arith.js";
 import { i64AddChecked, i64SubChecked, i64MulChecked, i64DivChecked, i64ModChecked, i64NegChecked, isI64Trap, type I64Result } from "./i64-arith.js";
+import { numericBaseType, parseI64Literal, isI64LiteralError, flowDeclaresUnlowerable64 } from "./numeric-lowering.js";
 
 export type LogicNValue =
   | { readonly __tag: "int";       readonly value: number }
@@ -76,6 +77,45 @@ function i32R(r: I32Result): LogicNValue {
 /** Map a checked-i64 result to a LogicNValue: in-range → int64 (bigint); a trap → fail-closed runtimeError. */
 function i64R(r: I64Result): LogicNValue {
   return isI64Trap(r) ? { __tag: "runtimeError", message: r } : { __tag: "int64", value: r as bigint };
+}
+
+/**
+ * If `node` is an integer literal — or the unary-minus of one — parse its RAW source text to an exact
+ * i64 result. Returns `undefined` for non-literal expressions (the caller uses the evaluated value).
+ * Why the raw text and not the evaluated value: a bare `numberLiteral` evaluates via parseInt (lossy
+ * above 2^53), so an Int64 literal MUST be re-read from the source text here (verified plan, Step 1a/R22).
+ * The leading sign is essential — I64_MIN = -2^63 is accepted though its magnitude 2^63 is out of +range.
+ */
+function literalI64FromNode(node: AstNode | undefined): bigint | "OutOfRange" | "NotIntegral" | undefined {
+  if (node === undefined) return undefined;
+  if (node.kind === "numberLiteral" && typeof node.value === "string") return parseI64Literal(node.value);
+  if (node.kind === "unaryExpr" && node.value === "-") {
+    const operand = node.children?.[0];
+    if (operand?.kind === "numberLiteral" && typeof operand.value === "string") return parseI64Literal("-" + operand.value);
+  }
+  return undefined;
+}
+
+/**
+ * Coerce an evaluated value to a declared scalar Int64 (the faithful tree-walker's int64 origination
+ * hook — Step 1a). Only acts when the declared base is exactly "Int64" (UInt64 stays gated; other types
+ * pass through untouched). A literal init is re-parsed from raw text (exact, fail-closed on
+ * out-of-range/non-integral); an already-int64 value passes through; a small `int` widens exactly
+ * (an i32 value is ≤ 2^31, lossless in BigInt); a checked trap propagates. Anything else assigned to an
+ * Int64 slot is a fail-closed type error (the type-checker should have rejected it pre-lift).
+ */
+function coerceToDeclaredNumeric(declaredBase: string, value: LogicNValue, initNode: AstNode | undefined): LogicNValue {
+  if (declaredBase !== "Int64") return value;
+  const lit = literalI64FromNode(initNode);
+  if (lit !== undefined) {
+    if (isI64LiteralError(lit)) {
+      return { __tag: "runtimeError", message: lit === "OutOfRange" ? "IntegerOverflow" : `Int64 literal is not an integer` };
+    }
+    return { __tag: "int64", value: lit };
+  }
+  if (value.__tag === "int64" || value.__tag === "runtimeError") return value;
+  if (value.__tag === "int") return { __tag: "int64", value: BigInt(value.value) };
+  return { __tag: "runtimeError", message: `cannot represent ${value.__tag} as Int64` };
 }
 
 /** Singleton booleans — avoids allocating { __tag: "bool", value: ... } on every comparison. */
@@ -403,6 +443,11 @@ class SyncInterpreter {
     // Find flow node in AST
     const flowNode = this.findFlowNode(flowName);
     if (flowNode === undefined) throw new SyncNotSupported(`flow '${flowName}' not found`);
+
+    // FAIL-CLOSED (verified i64 plan, R1 sync analogue): this fast path evaluates int literals via
+    // parseInt (lossy >2^53) and stores into JS numbers — it cannot carry an Int64 faithfully. A flow
+    // declaring any unlowerable 64-bit scalar bails to the async tree-walker (the int64-bigint tier).
+    if (flowDeclaresUnlowerable64(flowNode)) throw new SyncNotSupported("flow declares a 64-bit scalar (Int64/UInt64) — defer to the tree-walker");
 
     // Set parameters in scope
     const paramNodes = (flowNode.children ?? []).filter(c => c.kind === "paramDecl");
@@ -1269,17 +1314,38 @@ class Interpreter {
     return result;
   }
 
+  /**
+   * Step 1b: evaluate a binding initializer to its DECLARED scalar type. A declared-Int64 LITERAL is read
+   * from raw source text FIRST — the evalExpr path is lossy via parseInt above 2^53, and a large NEGATIVE
+   * literal would even TRAP in i32 negation before coercion could run. Other inits evaluate normally; a
+   * declared Int64 then widens (int→int64) / passes through. Returns a runtimeError to fail the flow closed
+   * on a checked trap (caller's existing 0038 path) or a bad Int64 literal.
+   */
+  private async evalBindingInit(initNode: AstNode | undefined, declBase: string): Promise<LogicNValue> {
+    if (declBase === "Int64") {
+      const lit = literalI64FromNode(initNode);
+      if (lit !== undefined) {
+        return isI64LiteralError(lit)
+          ? { __tag: "runtimeError", message: lit === "OutOfRange" ? "IntegerOverflow" : "Int64 literal is not an integer" }
+          : { __tag: "int64", value: lit };
+      }
+    }
+    const v = initNode !== undefined ? await this.evalExpr(initNode) : LLN_VOID;
+    return isCheckedTrap(v) ? v : coerceToDeclaredNumeric(declBase, v, initNode);
+  }
+
   private async executeStatement(node: AstNode): Promise<LogicNValue | undefined> {
     switch (node.kind) {
       case "letDecl":
       case "readonlyDecl": {
         const initNode = node.children?.[0];
-        const initVal = initNode !== undefined ? await this.evalExpr(initNode) : LLN_VOID;
-        // 0038 fail-closed: a checked-op trap (overflow/div0) must FAIL THE FLOW where it occurs, not be
-        // bound to a variable and silently discarded. Propagate it (executeBlock returns it → flow errors).
-        // Soft runtimeErrors (e.g. missing field) keep value semantics so graceful handling still works.
-        if (isCheckedTrap(initVal)) return initVal;
         const { name, safetyPrefix, typeName, rawType } = parseBindingValue(node.value ?? "");
+        const letDeclBase = numericBaseType(typeName);
+        const initVal = await this.evalBindingInit(initNode, letDeclBase);
+        // 0038 fail-closed: a checked-op trap (overflow/div0) must FAIL THE FLOW where it occurs, not be
+        // bound + silently discarded. Soft runtimeErrors (e.g. missing field) keep value semantics. A bad
+        // Int64 literal (Step 1b) also fails closed. (Non-Int64 behaviour is unchanged.)
+        if (isCheckedTrap(initVal) || (letDeclBase === "Int64" && initVal.__tag === "runtimeError")) return initVal;
         const wrappedVal = wrapGovernedValue(initVal, rawType);
         // R1C: Soft-tag governed values with a non-enumerable _governed property (Phase 11D)
         if (rawType.startsWith("protected ") || rawType.startsWith("redacted ")) {
@@ -1291,9 +1357,10 @@ class Interpreter {
 
       case "mutDecl": {
         const initNode = node.children?.[0];
-        const initVal = initNode !== undefined ? await this.evalExpr(initNode) : LLN_VOID;
-        if (isCheckedTrap(initVal)) return initVal; // 0038 fail-closed: don't bind + discard a checked trap
         const { name, safetyPrefix, typeName, rawType } = parseBindingValue(node.value ?? "");
+        const mutDeclBase = numericBaseType(typeName);
+        const initVal = await this.evalBindingInit(initNode, mutDeclBase);
+        if (isCheckedTrap(initVal) || (mutDeclBase === "Int64" && initVal.__tag === "runtimeError")) return initVal;
         const value = wrapGovernedValue(initVal, rawType);
         // R1C: Soft-tag governed values with a non-enumerable _governed property (Phase 11D)
         if (rawType.startsWith("protected ") || rawType.startsWith("redacted ")) {
@@ -1553,6 +1620,8 @@ class Interpreter {
         // (overflow) and -0 canonicalizes to +0 — byte-identical to the VM (Op.NEG) and WASM,
         // instead of the raw `-x` that silently returned an out-of-i32-range value.
         if (op === "-" && operand.__tag === "int") return i32R(i32NegChecked(operand.value));
+        // Step 1e: int64 negation through the checked layer so -INT64_MIN TRAPS (it overflows i64).
+        if (op === "-" && operand.__tag === "int64") return i64R(i64NegChecked(operand.value));
         if (op === "-" && operand.__tag === "float") return { __tag: "float", value: -operand.value };
         return { __tag: "runtimeError", message: `Unary '${op}' not valid for ${operand.__tag}` };
       }
@@ -2319,6 +2388,10 @@ function matchPattern(
   // Phase 41: integer/number literal match arms — `200 => ...`
   if (subject.__tag === "int" && /^-?\d+$/.test(pattern)) {
     return { matches: subject.value === parseInt(pattern, 10) };
+  }
+  // Step 1f: int64 match arms — compare via BigInt so a >2^53 pattern matches exactly (no parseInt round).
+  if (subject.__tag === "int64" && /^-?\d+$/.test(pattern)) {
+    return { matches: subject.value === BigInt(pattern) };
   }
   if (subject.__tag === "float" && /^-?\d*\.?\d+$/.test(pattern)) {
     return { matches: subject.value === parseFloat(pattern) };

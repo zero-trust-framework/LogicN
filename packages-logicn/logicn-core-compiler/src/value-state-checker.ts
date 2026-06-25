@@ -35,7 +35,7 @@
 // =============================================================================
 
 import { type AstNode, type SourceLocation } from "./parser.js";
-import { numericBaseType } from "./numeric-lowering.js";
+import { numericBaseType, BACKEND_UNLOWERABLE_SCALAR } from "./numeric-lowering.js";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -2066,7 +2066,8 @@ class ValueStateChecker {
 // and Float32 widens to f64 (no value loss), so they are deliberately NOT gated. The base type
 // is matched EXACTLY, so a generic position like Tensor<Int64,[4]> / Array<UInt64> (an opaque
 // i32 handle whose base is "Tensor"/"Array") is correctly NOT flagged.
-const BACKEND_UNLOWERABLE_SCALAR: ReadonlySet<string> = new Set(["Int64", "UInt64"]);
+// BACKEND_UNLOWERABLE_SCALAR is now shared in ./numeric-lowering.ts so the gate, the bytecode-VM bail,
+// and the sync fast-path bail all agree on which 64-bit scalars must be rejected / routed to the walker.
 const NUMERIC_FLOW_KINDS = new Set(["flowDecl", "secureFlowDecl", "pureFlowDecl", "guardedFlowDecl"]);
 const NUMERIC_BIND_KINDS = new Set(["letDecl", "mutDecl", "readonlyDecl"]);
 
