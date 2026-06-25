@@ -3,6 +3,7 @@
   "allowedExternal": [
     "${fn.name}",
     "${imp.module}",
+    "@logicn/core-network",
     "@logicn/devtools-graph-algorithms",
     "@logicn/substrate-math",
     "@noble/post-quantum/ml-dsa.js",
@@ -11,6 +12,7 @@
     "memory",
     "node:child_process",
     "node:crypto",
+    "node:dns/promises",
     "node:fs",
     "node:fs/promises",
     "node:http",

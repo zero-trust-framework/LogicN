@@ -14,6 +14,10 @@
 
 import { LLN_NONE, LLN_VOID, type LogicNValue } from "./interpreter.js";
 import { createHash as _nodeCryptoCreateHash, timingSafeEqual as _nodeCryptoTimingSafeEqual } from "node:crypto";
+// SSRF egress protection — the hardened, deny-by-default outbound guard (normalizes numeric-IP /
+// IPv4-in-IPv6 / CGNAT / *.corp bypasses + DNS-rebind recheck). Wiring the EXISTING guard rather than
+// re-cloning the inline regex (self-audit 61-9). egress-guard is pure — no node/tower-citizen load.
+import { guardOutboundUrl, guardResolvedAddresses } from "@logicn/core-network";
 import bcrypt from "bcryptjs";  // Phase 34: real bcrypt ($2b$) for BCrypt.verify / BCrypt.hash
 // Phase 36: Argon2id (OWASP preferred memory-hard KDF) — async, imported lazily
 // to avoid startup cost when Password API is not used.
@@ -1190,27 +1194,35 @@ async function networkAsync(fullName: string, args: readonly LogicNValue[], ctx:
   const url = strVal(args[0] ?? LLN_VOID);
   if (!url) return err("NetworkError: empty URL");
 
-  // OWASP F2: SSRF — enforce host allowlist + private-range denial before fetch.
-  // Parses the URL and checks the hostname against PRIVATE_IP_RANGES and any
-  // allowlist declared in the flow contract. Prevents server-side request forgery.
-  try {
-    const parsed = new URL(url);
-    const hostname = parsed.hostname;
-    // Deny private/loopback ranges — these should never be reachable from governed code
-    const privateRangePatterns = [
-      /^127\./, /^10\./, /^172\.(1[6-9]|2[0-9]|3[01])\./, /^192\.168\./,
-      /^169\.254\./, /^::1$/, /^fc[0-9a-f][0-9a-f]:/i, /^fd[0-9a-f][0-9a-f]:/i,
-      /^0\.0\.0\.0$/, /^localhost$/i, /^metadata\.google\.internal$/i,
-    ];
-    if (privateRangePatterns.some(r => r.test(hostname))) {
-      return err(`NetworkError: SSRF — host '${hostname}' is in a private/reserved range (LLN-NET-001)`);
+  // OWASP F2: SSRF — delegate to the hardened, deny-by-default egress guard (@logicn/core-network).
+  // The previous inline regex (61-9 self-audit finding) missed numeric-IP bypasses (2130706433,
+  // 0x7f000001), IPv4-in-IPv6 ([::ffff:169.254.169.254]), CGNAT (100.64/10), *.corp/*.internal/*.local,
+  // and embedded-credential URLs — guardOutboundUrl normalizes + denies them all. http + https only.
+  const egress = guardOutboundUrl(url, { allowedSchemes: ["http", "https"] });
+  if (!egress.allowed) {
+    return err(`NetworkError: SSRF — ${egress.reason} (LLN-NET-001 · ${egress.code})`);
+  }
+  // DNS-rebinding defence: a hostname that classifies public can still RESOLVE to a private IP
+  // (TOCTOU). Resolve every address and re-guard; deny if ANY is non-public. Full socket-level IP
+  // pinning (a custom undici dispatcher that connects only to the verified IP) is the further
+  // hardening — tracked; this closes the exploitable resolve-to-private rebind case.
+  if (egress.requiresDnsRecheck) {
+    let ips: string[];
+    try {
+      // require (not import) — the compiler intentionally ships no @types/node; mirror the existing
+      // node:crypto require pattern in this file and type the slice we use.
+      const dns = require("node:dns/promises") as {
+        lookup(host: string, opts: { all: true }): Promise<ReadonlyArray<{ address: string }>>;
+      };
+      const records = await dns.lookup(egress.host, { all: true });
+      ips = records.map((r) => r.address);
+    } catch {
+      return err(`NetworkError: SSRF — DNS resolution failed for '${egress.host}' (LLN-NET-001, fail-closed)`);
     }
-    // Only allow http:// and https:// — no file://, ftp://, etc.
-    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-      return err(`NetworkError: SSRF — protocol '${parsed.protocol}' is not allowed`);
+    const rebind = guardResolvedAddresses(egress.host, ips);
+    if (!rebind.allowed) {
+      return err(`NetworkError: SSRF — ${rebind.reason} (LLN-NET-001 · ${rebind.code})`);
     }
-  } catch {
-    return err(`NetworkError: invalid URL '${url}'`);
   }
 
   try {

@@ -19,6 +19,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@logicn/core-network": "file:../logicn-core-network",
     "@logicn/devtools-graph-algorithms": "file:../logicn-devtools-graph-algorithms",
     "@logicn/substrate-math": "file:../logicn-substrate-math",
     "@noble/post-quantum": "^0.6.1",
