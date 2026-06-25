@@ -55,6 +55,17 @@ test("dotless-exponent literal is parsed as a FLOAT, not mis-read as int (9e9 �
   assert.equal(v.value, 9000000000, "9e9 must be 9_000_000_000 — the dotless-exponent mis-parse returned 9");
 });
 
+test("stdlib minters fail closed on non-finite (sqrt(neg), log(0), pow overflow) — increment 3b", async () => {
+  assertTrap(await run("return Math.sqrt(-1.0)"), "Math.sqrt(-1) → NaN");
+  assertTrap(await run("return Math.log(0.0)"), "Math.log(0) → -Inf");
+  assertTrap(await run("return Math.pow(10.0, 400.0)"), "Math.pow overflow → +Inf");
+});
+
+test("stdlib minters compute finite results normally", async () => {
+  const s = await run("return Math.sqrt(4.0)");
+  assert.equal(s?.__tag, "float"); assert.equal(s.value, 2);
+});
+
 test("FINITE floats are unaffected — no false-positive traps", async () => {
   const sum = await run("return 1.5 + 2.5");
   assert.equal(sum?.__tag, "float"); assert.equal(sum.value, 4);

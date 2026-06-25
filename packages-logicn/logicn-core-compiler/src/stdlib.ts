@@ -210,6 +210,17 @@ function numVal(v: LogicNValue): number {
   return v.__tag === "int" || v.__tag === "float" ? v.value : 0;
 }
 
+/**
+ * Float constructor for stdlib minters that can produce a NON-FINITE result — Math.sqrt(-1)→NaN,
+ * Math.log(0)→-Inf, Math.pow overflow→+Inf, an empty-list stddev / all-(-Inf) softmax→NaN. A non-finite
+ * float must NOT escape as a value: it passes EVERY range guard (every NaN comparison is false) and could be
+ * signed into a manifest. Returns a fail-closed trap (NonFiniteFloat / LLN-FLOAT-NAN-001) that the tree-walker
+ * propagates exactly like 0.0/0.0. Mirrors interpreter.ts mkFloat. (#55.)
+ */
+function floatVal(n: number): LogicNValue {
+  return Number.isFinite(n) ? { __tag: "float", value: n } : { __tag: "runtimeError", message: "NonFiniteFloat" };
+}
+
 function asList(v: LogicNValue): readonly LogicNValue[] {
   return v.__tag === "list" ? v.items : [];
 }
@@ -383,11 +394,12 @@ function stringMethod(receiver: LogicNValue, method: string, args: readonly Logi
     }
     case "toFloat": {
       const n = parseFloat(s);
-      return isNaN(n) ? err("ParseError: not a valid float") : ok({ __tag: "float", value: n });
+      // #55: reject NON-finite too — parseFloat("Infinity")/"1e400" → ±Inf, which isNaN() lets through.
+      return !Number.isFinite(n) ? err("ParseError: not a valid finite float") : ok({ __tag: "float", value: n });
     }
     case "toDecimal": {
       const n = parseFloat(s);
-      return isNaN(n) ? err("ParseError: not a valid decimal") : ok({ __tag: "decimal", value: s });
+      return !Number.isFinite(n) ? err("ParseError: not a valid decimal") : ok({ __tag: "decimal", value: s });
     }
 
     case "matchesPattern": {
@@ -977,12 +989,12 @@ function numericStatic(receiver: string, method: string, args: readonly LogicNVa
     }
     case "Float.parse": {
       const n = parseFloat(strVal(args[0] ?? LLN_VOID));
-      return Number.isNaN(n) ? err("ParseError: not a valid float") : ok({ __tag: "float", value: n });
+      return !Number.isFinite(n) ? err("ParseError: not a valid finite float") : ok({ __tag: "float", value: n });
     }
     case "Decimal.parse": {
       const s = strVal(args[0] ?? LLN_VOID);
       const n = parseFloat(s);
-      return Number.isNaN(n) ? err("ParseError: not a valid decimal") : ok({ __tag: "decimal", value: s });
+      return !Number.isFinite(n) ? err("ParseError: not a valid decimal") : ok({ __tag: "decimal", value: s });
     }
     case "Math.abs": {
       const n = numVal(args[0] ?? LLN_VOID);
@@ -1008,15 +1020,15 @@ function numericStatic(receiver: string, method: string, args: readonly LogicNVa
     case "Math.round":
       return { __tag: "int", value: Math.round(numVal(args[0] ?? LLN_VOID)) };
     case "Math.log":
-      return { __tag: "float", value: Math.log(numVal(args[0] ?? LLN_VOID)) };
+      return floatVal(Math.log(numVal(args[0] ?? LLN_VOID)));  // #55: log(0)→-Inf, log(neg)→NaN ⇒ fail-closed
     case "Math.log2":
-      return { __tag: "float", value: Math.log2(numVal(args[0] ?? LLN_VOID)) };
+      return floatVal(Math.log2(numVal(args[0] ?? LLN_VOID)));
     case "Math.sin":
       return { __tag: "float", value: Math.sin(numVal(args[0] ?? LLN_VOID)) };
     case "Math.cos":
       return { __tag: "float", value: Math.cos(numVal(args[0] ?? LLN_VOID)) };
     case "Math.tan":
-      return { __tag: "float", value: Math.tan(numVal(args[0] ?? LLN_VOID)) };
+      return floatVal(Math.tan(numVal(args[0] ?? LLN_VOID)));  // #55: tan(±Inf)→NaN ⇒ fail-closed
     case "Math.PI":
       return { __tag: "float", value: Math.PI };
     default:
@@ -1417,7 +1429,7 @@ function statisticsModule(method: string, args: readonly LogicNValue[]): LogicNV
       const n = items.length;
       const mean = items.reduce((acc, item) => acc + numVal(item), 0) / n;
       const variance = items.reduce((acc, item) => acc + Math.pow(numVal(item) - mean, 2), 0) / n;
-      return { __tag: "float", value: Math.sqrt(variance) };
+      return floatVal(Math.sqrt(variance));  // #55: empty list → n=0 → NaN ⇒ fail-closed (not a silent NaN stddev)
     }
     case "min": {
       const m = items.reduce((a, b) => numVal(a) < numVal(b) ? a : b);
@@ -1587,10 +1599,10 @@ export async function callStdlib(
       const result = Math.pow(base, exp);
       return Number.isInteger(result) && Number.isInteger(base) && Number.isInteger(exp)
         ? { __tag: "int", value: result }
-        : { __tag: "float", value: result };
+        : floatVal(result);  // #55: overflow→+Inf, pow(neg,frac)→NaN, pow(0,-1)→+Inf ⇒ fail-closed
     }
     if (fullName === "Math.sqrt") {
-      return { __tag: "float", value: Math.sqrt(numVal(args[0] ?? { __tag: "int", value: 0 })) };
+      return floatVal(Math.sqrt(numVal(args[0] ?? { __tag: "int", value: 0 })));  // #55: sqrt(neg)→NaN ⇒ fail-closed
     }
     if (fullName === "Math.clamp") {
       const n  = numVal(args[0] ?? { __tag: "int", value: 0 });
@@ -2320,9 +2332,12 @@ function tensorModule(method: string, args: readonly LogicNValue[]): LogicNValue
         expBuf[i] = Math.exp((buf[i]!) - maxVal);
         expSum += expBuf[i]!;
       }
+      // #55: an empty / all-(-Inf) input gives expSum 0 → x/0 = NaN; fail closed rather than return a list of
+      // silent NaN "probabilities" that pass every guard.
+      if (expSum === 0 || !Number.isFinite(expSum)) return { __tag: "runtimeError", message: "NonFiniteFloat" };
       const result: LogicNValue[] = [];
       for (let i = 0; i < expBuf.length; i++) {
-        result.push({ __tag: "float", value: (expBuf[i]!) / expSum });
+        result.push(floatVal((expBuf[i]!) / expSum));
       }
       return { __tag: "list", items: result };
     }
