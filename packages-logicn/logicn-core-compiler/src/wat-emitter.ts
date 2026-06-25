@@ -1269,7 +1269,23 @@ export function emitWATExpr(
 
     case "unaryExpr": {
       const op = node.value ?? "";
-      const operand = node.children?.[0] ? emitWATExpr(node.children[0], vars, staticConsts) : "(i32.const 0)";
+      const child = node.children?.[0];
+      // Step 3g: an Int64-context negation. The i32 path below over an out-of-i32 literal is an invalid
+      // module, so route i64 here. A negative Int64 LITERAL must compose into a SINGLE (i64.const -…): the
+      // magnitude of I64_MIN is 2^63, which is out of range as a POSITIVE const, so `sub 0 (const 2^63)`
+      // can't be emitted — `(i64.const -9223372036854775808)` is the only valid form.
+      const wantI64u = expectedType !== undefined && INT64_WAT_TYPES.has(numericBaseType(expectedType));
+      const childInt64 = INT64_WAT_TYPES.has(inferExprType(child) ?? "");
+      if (op === "-" && (wantI64u || childInt64)) {
+        if (child?.kind === "numberLiteral" && typeof child.value === "string" && !/[.eE]/.test(child.value)) {
+          return `(i64.const -${child.value})`;
+        }
+        // negate an i64 value via the CHECKED i64 sub so -INT64_MIN traps; sign-extend an i32 operand first.
+        const inner = child ? emitWATExpr(child, vars, staticConsts, "Int64") : "(i64.const 0)";
+        const innerI64 = childInt64 ? inner : `(i64.extend_i32_s ${inner})`;
+        return `(call $lln_checked_sub_i64 (i64.const 0) ${innerI64})`;
+      }
+      const operand = child ? emitWATExpr(child, vars, staticConsts) : "(i32.const 0)";
       if (op === "-") return `(call $lln_checked_sub_i32 (i32.const 0) ${operand})`; // -INT32_MIN overflows → trap
       if (op === "!")  return `(i32.eqz ${operand})`;
       return `(unreachable) (; unknown unary: ${op} — fail-closed (emitter cannot lower; #128-sibling) ;)`;

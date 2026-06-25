@@ -1329,9 +1329,51 @@ class Interpreter {
           ? { __tag: "runtimeError", message: lit === "OutOfRange" ? "IntegerOverflow" : "Int64 literal is not an integer" }
           : { __tag: "int64", value: lit };
       }
+      // A NON-literal Int64 init (e.g. `let p: Int64 = 1000000 * 1000000`, `let t: Int64 = a + b`) is
+      // evaluated in an Int64 CONTEXT so int operands promote to i64 and the EXACT i64 dispatch is used —
+      // NOT the i32 dispatch, which would trap on a sum/product that overflows i32 but fits i64. This keeps
+      // the walker == the emitter's wantI64 routing (the 0014 Int64 differential).
+      if (initNode !== undefined) return this.evalExprAsInt64(initNode);
     }
     const v = initNode !== undefined ? await this.evalExpr(initNode) : LLN_VOID;
     return isCheckedTrap(v) ? v : coerceToDeclaredNumeric(declBase, v, initNode);
+  }
+
+  /**
+   * Step 1 (type-directed eval): evaluate `node` in an Int64 context. Int literals/operands are promoted to
+   * int64 so arithmetic runs through the exact i64 dispatch. Recurses through binary/unary; falls back to a
+   * normal eval + int→int64 widen for anything else. A checked overflow/div-0 surfaces as a runtimeError.
+   */
+  private async evalExprAsInt64(node: AstNode): Promise<LogicNValue> {
+    const lit = literalI64FromNode(node);
+    if (lit !== undefined) {
+      return isI64LiteralError(lit)
+        ? { __tag: "runtimeError", message: lit === "OutOfRange" ? "IntegerOverflow" : "Int64 literal is not an integer" }
+        : { __tag: "int64", value: lit };
+    }
+    if (node.kind === "binaryExpr") {
+      const op = node.value ?? "";
+      const l = node.children?.[0], r = node.children?.[1];
+      if (l !== undefined && r !== undefined) {
+        const lv = await this.evalExprAsInt64(l);
+        if (lv.__tag === "runtimeError") return lv;
+        const rv = await this.evalExprAsInt64(r);
+        if (rv.__tag === "runtimeError") return rv;
+        const fn = BINARY_DISPATCH.get(dispatchKey(lv.__tag, op, rv.__tag));
+        if (fn !== undefined) return fn(lv, rv);
+      }
+    }
+    if (node.kind === "unaryExpr" && node.value === "-") {
+      const operand = node.children?.[0];
+      if (operand !== undefined) {
+        const ov = await this.evalExprAsInt64(operand);
+        if (ov.__tag === "runtimeError") return ov;
+        if (ov.__tag === "int64") return i64R(i64NegChecked(ov.value));
+        if (ov.__tag === "int")   return i64R(i64NegChecked(BigInt(ov.value)));
+      }
+    }
+    const v = await this.evalExpr(node);
+    return isCheckedTrap(v) ? v : coerceToDeclaredNumeric("Int64", v, node);
   }
 
   private async executeStatement(node: AstNode): Promise<LogicNValue | undefined> {
