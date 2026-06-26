@@ -1158,16 +1158,52 @@ class Interpreter {
         return result.value;
       },
       applyFn: async (fn: LogicNValue, arg: LogicNValue) => {
-        if (fn.__tag === "unresolved" && this.flowIndex.has(fn.name)) {
-          const callArgs = new Map<string, LogicNValue>([["arg", arg]]);
-          const sub = new Interpreter(this.ast, this.knownFlows, this.enforcer, this.capabilityHost, this.runtimeOptions, this.executionPlans);
-          sub.stepBudget = this.stepBudget; // share the global compute budget across the call tree
-          const result = await sub.runFlow(fn.name, callArgs);
-          for (const effect of result.effectsObserved) this.effectsObserved.add(effect);
-          this.auditEntries.push(...result.auditEntries);
-          return result.value;
+        // Resolve a fn-ref (an inner `fn` is declared in scope as unresolved + lives in fnIndex; a top-level
+        // flow in flowIndex) and apply it to `arg`, binding POSITIONALLY to the target's REAL parameters —
+        // NOT a hard-coded "arg". A `reduce` passes a synthetic {acc,item} record for a 2-param reducer →
+        // unpack to (param0=acc, param1=item). A fn that cannot be resolved FAILS CLOSED (a runtimeError):
+        // the old `return arg` SILENTLY echoed the input, so map/filter/reduce over a named fn returned WRONG
+        // values (the input unchanged / the init / an empty record) instead of applying the fn — a fail-open.
+        if (fn.__tag === "unresolved") {
+          const innerFn = this.fnIndex.get(fn.name);
+          const target = innerFn ?? this.flowIndex.get(fn.name);
+          if (target !== undefined) {
+            const paramNames = (target.children ?? [])
+              .filter((c) => c.kind === "paramDecl")
+              .map((p) => extractParamName(p.value ?? ""))
+              .filter((n) => n !== "");
+            const callArgs = new Map<string, LogicNValue>();
+            if (paramNames.length >= 2 && arg.__tag === "record" && arg.fields.size === 2 && arg.fields.has("acc") && arg.fields.has("item")) {
+              callArgs.set(paramNames[0]!, arg.fields.get("acc")!);   // reduce: (acc, item)
+              callArgs.set(paramNames[1]!, arg.fields.get("item")!);
+            } else if (paramNames.length >= 1) {
+              callArgs.set(paramNames[0]!, arg);                       // map/filter: single element
+            }
+            if (innerFn !== undefined) {
+              // inner fn: execute its body with the bound values in a fresh scope (lexically nested, so it
+              // can see sibling inner fns / flow params), depth-guarded + fail-closed.
+              const maxCallDepth = this.runtimeOptions.maxCallDepth ?? 2000;
+              this.callDepth += 1;
+              try {
+                if (this.callDepth > maxCallDepth) return { __tag: "runtimeError" as const, message: `Recursion depth exceeded (${maxCallDepth}) applying fn '${fn.name}'` };
+                this.pushScope();
+                try {
+                  for (const [k, v] of callArgs) this.declare(k, v);
+                  const body = [...(innerFn.children ?? [])].reverse().find((c) => c.kind === "block");
+                  return body === undefined ? LLN_VOID : (await this.executeBlock(body)) ?? LLN_VOID;
+                } finally { this.popScope(); }
+              } finally { this.callDepth -= 1; }
+            }
+            // top-level flow: run in a sub-interpreter, propagating effects + audit.
+            const sub = new Interpreter(this.ast, this.knownFlows, this.enforcer, this.capabilityHost, this.runtimeOptions, this.executionPlans);
+            sub.stepBudget = this.stepBudget; // share the global compute budget across the call tree
+            const result = await sub.runFlow(fn.name, callArgs);
+            for (const effect of result.effectsObserved) this.effectsObserved.add(effect);
+            this.auditEntries.push(...result.auditEntries);
+            return result.value;
+          }
         }
-        return arg;
+        return { __tag: "runtimeError" as const, message: `cannot apply '${fn.__tag === "unresolved" ? fn.name : fn.__tag}' as a function — pass a named fn or flow (higher-order call fails closed)` };
       },
     };
   }

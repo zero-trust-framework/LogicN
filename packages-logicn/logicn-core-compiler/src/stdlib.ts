@@ -532,6 +532,7 @@ async function listMethod(
       const filtered: LogicNValue[] = [];
       for (const item of items) {
         const result = await ctx.applyFn(fn, item);
+        if (result.__tag === "runtimeError") return result;          // fail-closed: a predicate that traps aborts the filter
         if (result.__tag === "bool" && result.value) filtered.push(item);
       }
       return { __tag: "list", items: filtered };
@@ -540,7 +541,11 @@ async function listMethod(
       const fn = args[0];
       if (fn === undefined) return receiver;
       const mapped: LogicNValue[] = [];
-      for (const item of items) mapped.push(await ctx.applyFn(fn, item));
+      for (const item of items) {
+        const m = await ctx.applyFn(fn, item);
+        if (m.__tag === "runtimeError") return m;                    // fail-closed: a mapper that traps aborts the map (not a list of nulls)
+        mapped.push(m);
+      }
       return { __tag: "list", items: mapped };
     }
     case "reduce": {
@@ -553,6 +558,7 @@ async function listMethod(
           __tag: "record",
           fields: new Map<string, LogicNValue>([["acc", acc], ["item", item]]),
         });
+        if (acc.__tag === "runtimeError") return acc;                // fail-closed: a reducer that traps aborts
       }
       return acc;
     }
