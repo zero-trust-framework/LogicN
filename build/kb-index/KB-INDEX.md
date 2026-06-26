@@ -1,4 +1,4 @@
-# Galerina KB index (599 docs)
+# Galerina KB index (600 docs)
 
 Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.mjs --code SPORE-...`
 
@@ -1935,6 +1935,11 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 `docs/Knowledge-Bases/galerina-readable-logic-forms.md`
 - codes: SPORE-READABLE-001, SPORE-READABLE-002
 - terms: readable, forms, logic, greater, amount, operator, canonical, design, limit, galerina, status, proposal, same, traditional
+
+## Galerina rebrand — crypto wire-tag re-sign ceremony (operator runbook)
+`docs/Knowledge-Bases/galerina-rebrand-resign-ceremony-runbook.md`
+- links: [[logicn-rd-0131-rebrand-galerina]]
+- terms: lln, step, galerina, spore, app, artifacts, key, re-sign, logicn, manifest, root, old, gov, sig
 
 ## Galerina — Non-P9 Residual Risks (verified catalogue)
 `docs/Knowledge-Bases/galerina-residual-risks.md`

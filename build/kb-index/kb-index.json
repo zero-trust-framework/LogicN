@@ -1,6 +1,6 @@
 {
   "generated": "kb-index",
-  "docCount": 599,
+  "docCount": 600,
   "docs": [
     {
       "rel": "docs/Knowledge-Bases/00-KB-INDEX.md",
@@ -22683,6 +22683,52 @@
         "equal",
         "expression",
         "rule"
+      ]
+    },
+    {
+      "rel": "docs/Knowledge-Bases/galerina-rebrand-resign-ceremony-runbook.md",
+      "title": "Galerina rebrand — crypto wire-tag re-sign ceremony (operator runbook)",
+      "headings": [
+        "Why this is separate",
+        "Tag migration map (owner scheme: `logicn`→`galerina`, `lln`→`spore`)",
+        "Step 1 — DUAL-ACCEPT (code; do FIRST so old persisted artifacts keep verifying mid-migration)",
+        "Step 2 — CUTOVER emitters + the App.manifest schema (code)",
+        "Step 3 — RE-SIGN the 3 root-signed artifacts (NEEDS the offline root key ab46f4c7)",
+        "Step 4 — VERIFY + FINALIZE",
+        "Rollback",
+        "See also"
+      ],
+      "codes": [],
+      "tasks": [],
+      "xrefs": [
+        "logicn-rd-0131-rebrand-galerina"
+      ],
+      "topTerms": [
+        "lln",
+        "step",
+        "galerina",
+        "spore",
+        "app",
+        "artifacts",
+        "key",
+        "re-sign",
+        "logicn",
+        "manifest",
+        "root",
+        "old",
+        "gov",
+        "sig",
+        "code",
+        "offline",
+        "rebrand",
+        "ceremony",
+        "runbook",
+        "emitters",
+        "audit",
+        "runtime",
+        "schema",
+        "dual-accept",
+        "verify"
       ]
     },
     {
