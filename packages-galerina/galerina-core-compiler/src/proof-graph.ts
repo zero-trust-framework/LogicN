@@ -670,7 +670,7 @@ export type GovernanceAlgorithm = "ed25519" | "ml-dsa-65" | "hybrid-ed25519-mlds
  * from the audit-attestation and bridge-manifest contexts so one ML-DSA key cannot be
  * cross-protocol-confused between the three signing surfaces (per the .tmf custody spec).
  */
-const PROOFGRAPH_MLDSA_CONTEXT = new TextEncoder().encode("galerin.proofgraph.governance.v1");
+const PROOFGRAPH_MLDSA_CONTEXT = new TextEncoder().encode("galerina.proofgraph.governance.v2");
 
 export interface GovernanceKeyPair {
   readonly keyId: string;

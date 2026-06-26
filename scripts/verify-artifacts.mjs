@@ -185,9 +185,12 @@ function wasmCrossCheck(cur) {
 function wireScan() {
   const hits = [];
   const srcRoot = join(REPO, "packages-galerina");
+  // Canonical wire format (owner decision 2026-06-26): product/governance contexts =
+  // galerina.*.v2 ; format/schema tags = spore.* . Flag anything OFF that canonical —
+  // the galerin.* truncation, or residual un-migrated logicn.*/lln.* old-brand tags.
   const RX = [
-    { rx: /galerin\.(proofgraph|bridge|audit|config)\.[a-z.]+v\d/g, kind: "TRUNCATED-CONTEXT", why: "domain-sep context truncated logicn.*->galerin.* (orphans pre-rebrand hybrid sigs)" },
-    { rx: /\bspore\.(gov\.sig|runtime\.audit|runtime\.manifest|gir|govdiff)\.v\d/g, kind: "RENAMED-WIRETAG", why: "wire/schema version tag renamed lln.*->spore.* (orphans pre-rebrand persisted sigs/audit chain)" },
+    { rx: /\bgalerin\.(proofgraph|bridge|audit|config)\.[a-z.]*v\d/g, kind: "TRUNCATED-CONTEXT", why: "domain-sep context still truncated galerin.* — must be galerina.*.v2" },
+    { rx: /\b(logicn|lln)\.[a-z][a-z0-9]*(?:\.[a-z0-9]+)*\.v\d/g, kind: "RESIDUAL-OLD-BRAND", why: "un-migrated old-brand wire tag (logicn.*/lln.*) — format tags must be spore.*, governance contexts galerina.*.v2" },
   ];
   const walk = (dir) => {
     let entries;

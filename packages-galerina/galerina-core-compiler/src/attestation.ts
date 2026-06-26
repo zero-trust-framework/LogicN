@@ -229,7 +229,7 @@ export function generateAttestationKey(keyId: string): AttestationKeyPair {
 // ---------------------------------------------------------------------------
 
 /** FIPS-204 domain-separation context for the audit attestation surface. */
-const AUDIT_MLDSA_CONTEXT = new TextEncoder().encode("galerin.audit.attestation.v1");
+const AUDIT_MLDSA_CONTEXT = new TextEncoder().encode("galerina.audit.attestation.v2");
 
 export interface HybridAttestationKeyPair {
   readonly keyId: string;

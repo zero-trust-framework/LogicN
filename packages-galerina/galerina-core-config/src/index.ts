@@ -1396,7 +1396,7 @@ export interface SecretReportValue {
 }
 
 export interface EnvironmentConfigReport {
-  readonly schemaVersion: "galerin.config.environment.v1";
+  readonly schemaVersion: "galerina.config.environment.v2";
   readonly mode: EnvironmentMode;
   readonly policy: EnvironmentPolicy;
   readonly variableCount: number;

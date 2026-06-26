@@ -184,7 +184,7 @@ export function attestBridge(bridge: InferenceBridge, privateKeyPem: string): In
 // ---------------------------------------------------------------------------
 
 /** FIPS-204 domain-separation context for the bridge-manifest signing surface. */
-const BRIDGE_MLDSA_CONTEXT = new TextEncoder().encode("galerin.bridge.manifest.v1");
+const BRIDGE_MLDSA_CONTEXT = new TextEncoder().encode("galerina.bridge.manifest.v2");
 
 /** Generate a hybrid Ed25519 (PEM) + ML-DSA-65 attestation keypair. */
 export async function generateHybridAttestationKeypair(): Promise<{

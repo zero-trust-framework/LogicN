@@ -6,7 +6,7 @@
 // UNATTESTED ⇒ binary (the K3 dead-zone collapses to DENY → binary, SPORE-HW-004).
 //
 // NEUTRAL by design: this package never calls verifyAttestation itself (that lives in the Tower,
-// with node:crypto, on the BRIDGE attestation surface — `galerin.bridge.manifest.v1`, NOT the audit
+// with node:crypto, on the BRIDGE attestation surface — `galerina.bridge.manifest.v2`, NOT the audit
 // surface). The caller runs verifyAttestation(att, policy) and passes the boolean result in. So the
 // directive ignores `InferenceBridge.nativeAvailable` (the gameable self-claim) entirely.
 //
