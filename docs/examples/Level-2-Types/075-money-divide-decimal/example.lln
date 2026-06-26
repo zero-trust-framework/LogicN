@@ -5,4 +5,7 @@
 /// test_status: stable
 /// ai_rule: Money<GBP> / Decimal is valid and yields Money<GBP>.
 
-let share: Money<GBP> = total / Decimal("4")
+pure flow example(total: Money<GBP>) -> Money<GBP> {
+  let share: Money<GBP> = total / Decimal("4")
+  return share
+}

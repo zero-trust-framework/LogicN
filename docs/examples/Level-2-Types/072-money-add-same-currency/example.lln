@@ -5,4 +5,7 @@
 /// test_status: stable
 /// ai_rule: Money<GBP> + Money<GBP> is valid and yields Money<GBP>.
 
-let total: Money<GBP> = subtotal + vat
+pure flow example(subtotal: Money<GBP>, vat: Money<GBP>) -> Money<GBP> {
+  let total: Money<GBP> = subtotal + vat
+  return total
+}

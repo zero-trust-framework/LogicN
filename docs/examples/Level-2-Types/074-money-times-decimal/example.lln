@@ -5,4 +5,7 @@
 /// test_status: stable
 /// ai_rule: Money<GBP> * Decimal is valid and scales the monetary amount.
 
-let vat: Money<GBP> = price * Decimal("0.20")
+pure flow example(price: Money<GBP>) -> Money<GBP> {
+  let vat: Money<GBP> = price * Decimal("0.20")
+  return vat
+}

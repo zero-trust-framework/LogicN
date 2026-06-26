@@ -64,8 +64,21 @@ feature (`LLN-PARSE-001: Unexpected keyword "const"`). **FIXED the message** (pa
 lives inside a flow; move it into a flow body"). The canonical idiom (per passing examples 060/065/068) is a
 `let` inside `pure flow example() -> T { … }`.
 
-**FIXED 2026-06-26 (9 self-contained literal examples, wrapped in a flow, each verified clean):** 005, 008, 051,
-052, 053, 054, 055, 056, 071.
+**FIXED 2026-06-26 (12 examples, wrapped in a flow, each verified clean):** 005, 008, 051, 052, 053, 054, 055,
+056, 071 (self-contained literals); 072, 074, 075 (param-wrapped — `Money` scaling: `subtotal+vat`,
+`price*Decimal`, `total/Decimal`, refs supplied as flow params).
+
+**TIER-001 ×24 is NOT a mechanical batch (investigated 2026-06-26)** — it splits two ways:
+- **mis-marked NEGATIVE examples** whose frontmatter wrongly says `expected_diagnostics: none` while the flow
+  body deliberately demonstrates a violation (e.g. 105-missing-database-effect literally has `// BUG: …` in its
+  intent). Fix = set the correct `expected_diagnostics` code(s) (frontmatter only).
+- **POSITIVE guarded-flow examples the session's NEW tier-floor rule now flags** (002-guarded-flow,
+  103-guarded-network-outbound): a `guarded flow` using a SECURE-tier effect (`network.outbound`/`database.write`)
+  draws the `LLN-TIER-001` advisory. Fixing these is DESIGN-ENTANGLED — either upgrade to `secure flow` (cascades
+  into the full secure contract scaffolding) OR change the example to a guarded-appropriate (non-secure-tier)
+  effect OR (if guarded+network is intended) acknowledge the warning in frontmatter. Needs the effect→tier
+  classification + a small owner call on whether guarded+network is a teachable pattern. Do NOT bulk-rewrite to
+  `secure` blindly.
 
 **REMAINING #37 work (ongoing):** the other ~17 SYNTAX-006 examples reference undefined identifiers
 (`user`/`price`/`email`) or have no initializer (tensors 079/080/082) — they need per-example reconstruction
