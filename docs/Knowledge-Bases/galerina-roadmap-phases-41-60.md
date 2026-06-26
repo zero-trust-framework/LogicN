@@ -458,7 +458,7 @@ roadmap is reached.
 - All security audit findings resolved (Audit Pass 3 clean)
 - All benchmark tiers green or white vs Node.js
 - CLI: `galerina check`, `galerina build`, `galerina serve`, `galerina diff` all stable
-- `@galerinaa/core-compiler`, `@galerinaa/core-economics`, `@galerinaa/devtools-security`
+- `@galerina/core-compiler`, `@galerina/core-economics`, `@galerina/devtools-security`
   published to npm (private registry or public)
 - Stage B compiles a non-trivial service end-to-end
 - Documentation complete: grammar, spec manifest, AI_INDEX, KB all consistent

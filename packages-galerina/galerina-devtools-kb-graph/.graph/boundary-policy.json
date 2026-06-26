@@ -1,5 +1,5 @@
 {
-  "packageName": "@galerinaa/devtools-kb-graph",
+  "packageName": "@galerina/devtools-kb-graph",
   "allowedExternal": [
     "node:fs",
     "node:path",

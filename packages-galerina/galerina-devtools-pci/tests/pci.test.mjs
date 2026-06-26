@@ -1,5 +1,5 @@
 /**
- * @galerinaa/devtools-pci — PCI DSS 4.0.1 Compliance Tests
+ * @galerina/devtools-pci — PCI DSS 4.0.1 Compliance Tests
  *
  * 12 tests covering all SPORE-PCI-001..010 diagnostic codes and report fields.
  */

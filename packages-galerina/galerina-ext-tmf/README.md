@@ -1,4 +1,4 @@
-# `@galerinaa/ext-tmf`
+# `@galerina/ext-tmf`
 
 The **`.tmf` (TritMesh Format) engine** for Galerina — an *ext* package (not core). It provides the
 **integrity, authenticity, and confidentiality** layer that Galerina governs: a fail-closed container

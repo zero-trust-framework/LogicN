@@ -1,5 +1,5 @@
 {
-  "name": "@galerinaa/core-sentinel-egress",
+  "name": "@galerina/core-sentinel-egress",
   "version": "1.0.0-beta.2",
   "description": "Galerina Sentinel Egress — governed audit egress: fixed ring buffer + batched HMAC-chained tamper-evident flush. Citizen Protocol v1.6.",
   "license": "Apache-2.0",

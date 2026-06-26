@@ -1,8 +1,8 @@
 /**
- * @galerinaa/ext-bridge-cpp — native CPU/GPU execution bridges for the Tower
+ * @galerina/ext-bridge-cpp — native CPU/GPU execution bridges for the Tower
  *
  * The first real implementations of the InferenceBridge contract defined in
- * @galerinaa/tower-citizen. Brings BitNet ternary kernels (MIT, C:\wwwprojects\BitNet)
+ * @galerina/tower-citizen. Brings BitNet ternary kernels (MIT, C:\wwwprojects\BitNet)
  * to the governed runtime, with the native addon as a documented seam and the
  * TPLSimulator as the deterministic fallback.
  */
@@ -16,7 +16,7 @@ export type { BitNetNativeAddon, AddonLoadResult } from "./addon-loader.js";
 
 import { BitNetCpuBridge } from "./bitnet-cpu-bridge.js";
 import { BitNetGpuBridge } from "./bitnet-gpu-bridge.js";
-import type { InferenceBridge, BridgeRegistry } from "@galerinaa/inference-bridge-contract";
+import type { InferenceBridge, BridgeRegistry } from "@galerina/inference-bridge-contract";
 
 /**
  * Build the best available ternary bridge for this machine:
@@ -35,8 +35,8 @@ export function selectTernaryBridge(): InferenceBridge {
 /**
  * Build a BridgeRegistry the Tower's HybridInferenceEngine can consume directly:
  *
- *   import { createHybridEngine } from "@galerinaa/tower-citizen";
- *   import { createCppBridgeRegistry } from "@galerinaa/ext-bridge-cpp";
+ *   import { createHybridEngine } from "@galerina/tower-citizen";
+ *   import { createCppBridgeRegistry } from "@galerina/ext-bridge-cpp";
  *   const engine = createHybridEngine({ bridges: createCppBridgeRegistry() });
  *
  * This is the concrete Brain→Brawn wiring: the engine routes ternary ops to this

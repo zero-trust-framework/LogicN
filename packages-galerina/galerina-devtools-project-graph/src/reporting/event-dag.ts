@@ -9,7 +9,7 @@ import { GraphBuilder } from "../core/builder.js";
 import type { Graph } from "../core/types.js";
 
 // ---------------------------------------------------------------------------
-// RuntimeAuditEvent types (mirrored from logicn-core-reports)
+// RuntimeAuditEvent types (mirrored from galerina-core-reports)
 // ---------------------------------------------------------------------------
 
 export type RuntimeAuditCategory =
@@ -37,7 +37,7 @@ export type RuntimeAuditStatus =
 
 /**
  * Minimal RuntimeAuditEvent shape required by the DAG builder.
- * Structurally compatible with the full RuntimeAuditEvent in logicn-core-reports.
+ * Structurally compatible with the full RuntimeAuditEvent in galerina-core-reports.
  */
 export interface RuntimeAuditEvent {
   readonly schemaVersion: "spore.runtime.audit.v1";

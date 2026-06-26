@@ -1,7 +1,7 @@
 {
-  "packageName": "@galerinaa/ext-photonic-emulator",
+  "packageName": "@galerina/ext-photonic-emulator",
   "allowedExternal": [
-    "@galerinaa/inference-bridge-contract"
+    "@galerina/inference-bridge-contract"
   ],
   "note": "Baseline auto-generated. Edit allowedExternal to widen/narrow the border. `--check` fails if an import appears that is not listed here."
 }

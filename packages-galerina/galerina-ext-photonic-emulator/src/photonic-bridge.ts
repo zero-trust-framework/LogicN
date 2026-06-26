@@ -1,6 +1,6 @@
 // photonic-bridge.ts — the photonic backend behind the neutral Brain/Brawn contract.
 //
-// PhotonicEmulatorBridge implements @galerinaa/inference-bridge-contract's InferenceBridge
+// PhotonicEmulatorBridge implements @galerina/inference-bridge-contract's InferenceBridge
 // (the SAME contract the stub ternary bridge and the native cpp/quantum bridges implement).
 // It depends ONLY on that neutral contract — never on the Tower runtime — and the contract
 // is imported by relative path to the sibling's built dist (the repo convention; resolves
@@ -67,7 +67,7 @@ export class PhotonicEmulatorBridge implements InferenceBridge, PhotonicBackend 
     // tolerance ≥ the measured epsilon. The witness binds the declared band to a measured curve.
     this.manifest = {
       bridgeId: this.bridgeId,
-      packageName: "@galerinaa/ext-photonic-emulator",
+      packageName: "@galerina/ext-photonic-emulator",
       packageHash: HEX64("0"),
       sourceEngine: "galerina/photonic-emulator",
       precision: "ternary",

@@ -165,7 +165,7 @@ describe("galerina-devtools-project-graph contracts", () => {
           path: "packages-galerina/galerina-core-security/package.json",
           kind: "json",
           text: JSON.stringify({
-            name: "@galerinaa/core-security",
+            name: "@galerina/core-security",
             description: "Reusable security primitives.",
           }),
         },

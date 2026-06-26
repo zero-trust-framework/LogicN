@@ -1,5 +1,5 @@
 {
-  "name": "@galerinaa/devtools-pci",
+  "name": "@galerina/devtools-pci",
   "version": "1.0.0-beta.2",
   "description": "PCI DSS 4.0.1 compliance audit for Galerina programs. Static analysis maps PCI requirements to Galerina contract patterns: cardholder data protection (Req 3), transit encryption (Req 4), access control (Req 7), audit logging (Req 10), secure development (Req 6). CI-runnable, no infrastructure needed.",
   "type": "module",
@@ -17,7 +17,7 @@
     "test": "node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": { "@galerinaa/core-compiler": "file:../galerina-core-compiler" },
+  "dependencies": { "@galerina/core-compiler": "file:../galerina-core-compiler" },
   "devDependencies": { "@types/node": "^25.9.1", "typescript": "^5.5.0" },
   "private": true,
   "keywords": ["galerina", "pci", "pci-dss", "compliance", "payment", "cardholder-data"]

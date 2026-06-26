@@ -1,8 +1,8 @@
 {
-  "packageName": "@galerinaa/framework-example-app",
+  "packageName": "@galerina/framework-example-app",
   "allowedExternal": [
-    "@galerinaa/framework-api-server",
-    "@galerinaa/framework-app-kernel",
+    "@galerina/framework-api-server",
+    "@galerina/framework-app-kernel",
     "node:fs",
     "node:path",
     "node:url"

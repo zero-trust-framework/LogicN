@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/devtools-security — Secret / Credential Leak Detection
+// @galerina/devtools-security — Secret / Credential Leak Detection
 //
 // Detects potential secrets in audit metadata, log entries, and structured data.
 // Based on Security Audit F5 fix in audit-writer.ts.

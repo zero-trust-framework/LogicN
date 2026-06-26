@@ -1,5 +1,5 @@
 {
-  "name": "@galerinaa/devtools-context",
+  "name": "@galerina/devtools-context",
   "version": "1.0.0-beta.2",
   "description": "Context Receipt generator for Galerina: produces minimal AI-consumable structural summaries from .spore source. 98% token reduction vs raw source while preserving full architectural intent.",
   "type": "module",
@@ -18,8 +18,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@galerinaa/core-compiler": "file:../galerina-core-compiler",
-    "@galerinaa/devtools-security": "file:../galerina-devtools-security"
+    "@galerina/core-compiler": "file:../galerina-core-compiler",
+    "@galerina/devtools-security": "file:../galerina-devtools-security"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",

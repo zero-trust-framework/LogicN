@@ -1,4 +1,4 @@
-// @galerinaa/inference-bridge-contract — the neutral Brain/Brawn contract.
+// @galerina/inference-bridge-contract — the neutral Brain/Brawn contract.
 export type { PrecisionTechnique, SchedulingTechnique, InferenceOpClass, QuantizationMethod } from "./precision-types.js";
 export type { BridgeOp, BridgeResult, InferenceBridge, BridgeRegistry, FixedScale } from "./bridge.js";
 export { assertDeterminism } from "./bridge.js";

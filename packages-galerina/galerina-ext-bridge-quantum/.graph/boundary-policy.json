@@ -1,8 +1,8 @@
 {
-  "packageName": "@galerinaa/ext-bridge-quantum",
+  "packageName": "@galerina/ext-bridge-quantum",
   "allowedExternal": [
-    "@galerinaa/inference-bridge-contract",
-    "@galerinaa/tower-citizen",
+    "@galerina/inference-bridge-contract",
+    "@galerina/tower-citizen",
     "node:child_process",
     "node:crypto"
   ],

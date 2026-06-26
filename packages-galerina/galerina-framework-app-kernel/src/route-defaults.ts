@@ -4,7 +4,7 @@
  * A minimal route declaration is a MAXIMALLY secure route. Omitting a block =
  * the secure default. Relaxing a default must be explicit, and every relaxation
  * is recorded for the security report. Under OS/HW posture `on` (#195, resolved
- * by @galerinaa/core-config), body + limit ceilings tighten further.
+ * by @galerina/core-config), body + limit ceilings tighten further.
  */
 import type {
   HttpMethod, RouteDeclaration, EffectiveRoutePolicy,
@@ -12,7 +12,7 @@ import type {
 } from "./types.js";
 import { MUTATING_METHODS } from "./types.js";
 
-/** Effective posture as resolved by @galerinaa/core-config (#195). Only on/off matters here. */
+/** Effective posture as resolved by @galerina/core-config (#195). Only on/off matters here. */
 export type EffectivePosture = "off" | "on";
 
 const KB = 1024;

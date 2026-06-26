@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/core-logic/decision — Decision v0.2 sub-path export
+// @galerina/core-logic/decision — Decision v0.2 sub-path export
 // =============================================================================
 
 export type { Decision, DecisionEvidence } from "./decision-state.js";

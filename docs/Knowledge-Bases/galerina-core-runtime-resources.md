@@ -1,7 +1,7 @@
 # Galerina Runtime-Owned Single-Instance Resources
 
 **Status:** Canonical v1 concept — replaces OOP singleton pattern  
-**Scope:** `@galerinaa/core`, `@galerinaa/core-runtime`, `@galerinaa/core-compiler` — resource declaration, lifecycle, effects, capabilities  
+**Scope:** `@galerina/core`, `@galerina/core-runtime`, `@galerina/core-compiler` — resource declaration, lifecycle, effects, capabilities  
 **Source:** NOTES TO COVER / f (2026-05-26)  
 **Related KB:** `runtime-policy-config.md`, `capabilities.md`, `galerina-core-security-secret-reference-model.md`
 
@@ -544,7 +544,7 @@ export function checkResourceUse(input: {
 
 ## 17. AstNodeKind Additions Required
 
-The following AST node kinds must be added to `@galerinaa/core`:
+The following AST node kinds must be added to `@galerina/core`:
 
 ```text
 resourceDecl          — readonly resource / resource declaration
@@ -559,14 +559,14 @@ usesDecl              — uses ResourceName in flow header
 ## 18. v1 Implementation Checklist
 
 ```text
-[ ] resourceDecl / resourceScopeDecl — add to AstNodeKind in @galerinaa/core
+[ ] resourceDecl / resourceScopeDecl — add to AstNodeKind in @galerina/core
 [ ] usesDecl — add to AstNodeKind (flow header sub-declaration)
-[ ] ResourceDeclaration type shape — add to @galerinaa/core
-[ ] ResourceManifest / ResourceManifestEntry — add to @galerinaa/core
-[ ] SPORE-RESOURCE-001..010 — add diagnostic constants to @galerinaa/core-compiler
-[ ] checkResourceUse() stub — add to @galerinaa/core-compiler
-[ ] RuntimeResourceRegistry interface — add to @galerinaa/core-runtime
-[ ] Resource report schema — add to @galerinaa/core-reports
+[ ] ResourceDeclaration type shape — add to @galerina/core
+[ ] ResourceManifest / ResourceManifestEntry — add to @galerina/core
+[ ] SPORE-RESOURCE-001..010 — add diagnostic constants to @galerina/core-compiler
+[ ] checkResourceUse() stub — add to @galerina/core-compiler
+[ ] RuntimeResourceRegistry interface — add to @galerina/core-runtime
+[ ] Resource report schema — add to @galerina/core-reports
 [ ] Resource examples — AppConfig, Database, AuditWriter, RequestContext
 [ ] Test resource override syntax — parser + compiler stub
 ```

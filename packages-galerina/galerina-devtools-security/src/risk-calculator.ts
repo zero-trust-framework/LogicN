@@ -1,7 +1,7 @@
 // =============================================================================
-// @galerinaa/devtools-security — Breach Risk Calculator
+// @galerina/devtools-security — Breach Risk Calculator
 //
-// Wraps the IBM/Ponemon 2025 breach cost model from @galerinaa/core-economics.
+// Wraps the IBM/Ponemon 2025 breach cost model from @galerina/core-economics.
 // Provides a security-focused interface for risk calculation.
 // =============================================================================
 
@@ -11,7 +11,7 @@ import {
   PER_RECORD_LOSS_USD,
   RISK_MODIFIERS,
   CLOUD_PRICING,
-} from "@galerinaa/core-economics";
+} from "@galerina/core-economics";
 
 export { DataClassification };
 

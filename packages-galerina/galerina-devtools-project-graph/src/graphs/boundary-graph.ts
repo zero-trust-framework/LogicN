@@ -5,7 +5,7 @@
 // effects and secrets do not cross boundaries illegally.
 //
 // Diagnostic codes: SPORE-PGRAPH-020..023 — project-graph-owned, the boundary-graph VIEW of trust
-// boundaries; distinct from logicn-core-compiler's own (planned) SPORE-BOUNDARY-* boundary checker.
+// boundaries; distinct from galerina-core-compiler's own (planned) SPORE-BOUNDARY-* boundary checker.
 // =============================================================================
 
 import { GraphBuilder } from "../core/builder.js";

@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/devtools-provenance — Provenance Analyzer
+// @galerina/devtools-provenance — Provenance Analyzer
 //
 // Walks each flow's AST and constructs a data lineage graph:
 //   1. Sources  — unsafe let/mut bindings → DataNode{kind:'source', isTrusted:false}
@@ -14,7 +14,7 @@ import {
   checkValueStates,
   type AstNode,
   type FlowMeta,
-} from "@galerinaa/core-compiler";
+} from "@galerina/core-compiler";
 
 import type {
   DataNode,
@@ -534,7 +534,7 @@ export interface FileProvenanceResult {
  * Falls back to EOF for the last flow.
  */
 function flowLineRange(
-  flows: readonly import("@galerinaa/core-compiler").FlowMeta[],
+  flows: readonly import("@galerina/core-compiler").FlowMeta[],
   index: number,
   totalLines: number,
 ): [number, number] {

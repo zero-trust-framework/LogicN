@@ -1,5 +1,5 @@
 {
-  "name": "@galerinaa/core-reports",
+  "name": "@galerina/core-reports",
   "version": "1.0.0-beta.2",
   "description": "Shared Galerina report schemas and report-writing contracts.",
   "license": "Apache-2.0",

@@ -1,4 +1,4 @@
-// Runner tests for @galerinaa/test.
+// Runner tests for @galerina/test.
 //
 // Hermetic: every runner is exercised against a CRAFTED tmp workspace with FAKE
 // targets (a fake run-all-tests.cjs, a fake galerina.mjs, fake node:test corpora),

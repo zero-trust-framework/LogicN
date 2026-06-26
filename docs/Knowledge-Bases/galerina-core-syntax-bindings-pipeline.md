@@ -2,7 +2,7 @@
 
 **Status:** Stage 1 — canonical decisions documented; `var`/`const` detection live in compiler; binding/pipeline checker stubs in place  
 **Scope:** `let`, `mut`, `readonly`, method-chain pipelines, rejected keywords `var`/`const`  
-**Packages:** `@galerinaa/core`, `@galerinaa/core-compiler`
+**Packages:** `@galerina/core`, `@galerina/core-compiler`
 
 ---
 
@@ -341,7 +341,7 @@ The runtime may plan:
 
 ---
 
-## 16. Type Contracts (`@galerinaa/core`)
+## 16. Type Contracts (`@galerina/core`)
 
 ```ts
 export type BindingKind = "let" | "mut" | "readonly";
@@ -377,12 +377,12 @@ New `AstNodeKind` values:
 
 | Area | Status | Notes |
 |---|---|---|
-| `BindingKind`, `BindingDeclaration` types | ✅ | `@galerinaa/core/src/index.ts` |
-| `MethodChainExpression`, `MethodChainCall` types | ✅ | `@galerinaa/core/src/index.ts` |
-| `readonlyDecl`, `methodChainExpr` AstNodeKind | ✅ | `@galerinaa/core/src/index.ts` |
-| `SPORE-SYNTAX-001..002` constants | ✅ | `@galerinaa/core-compiler` |
-| `SPORE-BINDING-001..004` constants | ✅ | `@galerinaa/core-compiler` |
-| `SPORE-PIPELINE-001..005` constants | ✅ | `@galerinaa/core-compiler` |
+| `BindingKind`, `BindingDeclaration` types | ✅ | `@galerina/core/src/index.ts` |
+| `MethodChainExpression`, `MethodChainCall` types | ✅ | `@galerina/core/src/index.ts` |
+| `readonlyDecl`, `methodChainExpr` AstNodeKind | ✅ | `@galerina/core/src/index.ts` |
+| `SPORE-SYNTAX-001..002` constants | ✅ | `@galerina/core-compiler` |
+| `SPORE-BINDING-001..004` constants | ✅ | `@galerina/core-compiler` |
+| `SPORE-PIPELINE-001..005` constants | ✅ | `@galerina/core-compiler` |
 | `var`/`const` detection in `validateCoreSyntaxSafety()` | ✅ | Real check; comment lines excluded |
 | `checkBindingReassignment()` | ✅ | Typed stub; emits correct diagnostics |
 | `checkReadonlyMutation()` | ✅ | Typed stub; emits correct diagnostics |

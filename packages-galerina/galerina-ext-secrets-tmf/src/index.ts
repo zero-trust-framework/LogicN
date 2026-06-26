@@ -1,7 +1,7 @@
-// @galerinaa/ext-secrets-tmf — sealed secrets on the .tmf container (OPTIONAL, ext tier).
+// @galerina/ext-secrets-tmf — sealed secrets on the .tmf container (OPTIONAL, ext tier).
 //
-// A THIN orchestration layer over @galerinaa/ext-tmf (format/crypto) + the
-// @galerinaa/ext-secrets-vault store DISCIPLINE. NO new crypto, NO new container bytes.
+// A THIN orchestration layer over @galerina/ext-tmf (format/crypto) + the
+// @galerina/ext-secrets-vault store DISCIPLINE. NO new crypto, NO new container bytes.
 // env.tmf = a v0 .tmf with flags.signed=0 (unsigned-but-ENCRYPTED). The signed root is GATED
 // on ext-tmf slice 4 / #7 — we never fake a signature.
 //

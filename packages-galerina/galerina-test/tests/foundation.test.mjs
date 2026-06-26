@@ -1,4 +1,4 @@
-// Foundation smoke tests for @galerinaa/test — the harness primitives.
+// Foundation smoke tests for @galerina/test — the harness primitives.
 //
 // Locks the two behaviour-bearing helpers the runners build on:
 //   - parseCounts: count-parsing LIFTED from scripts/run-all-tests.cjs (TAP + spec).

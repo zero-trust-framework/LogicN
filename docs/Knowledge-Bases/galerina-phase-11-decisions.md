@@ -210,10 +210,10 @@ await contractEnforcer.withTimeout(contract.timeouts, async () => {
 })
 ```
 
-## Decision 10 — spore-graph renamed to @galerinaa/devtools-project-graph
+## Decision 10 — spore-graph renamed to @galerina/devtools-project-graph
 
 The standalone package at `C:\laragon\www\SPORE-Graph\` is renamed from `spore-graph` to
-`@galerinaa/devtools-project-graph`. Consumed via `github:galerina/spore-graph` (not `file:` path).
+`@galerina/devtools-project-graph`. Consumed via `github:galerina/spore-graph` (not `file:` path).
 It is the **only package outside the monorepo** — all others live in `packages-galerina/`.
 
 ---

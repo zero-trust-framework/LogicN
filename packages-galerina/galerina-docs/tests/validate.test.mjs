@@ -1,5 +1,5 @@
 /**
- * Fail-closed tests for @galerinaa/docs.
+ * Fail-closed tests for @galerina/docs.
  *
  * The generator refuses to emit an empty, malformed, or misleading document, and
  * the standalone validator rejects hand-crafted invalid documents. A docs

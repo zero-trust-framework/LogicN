@@ -9,7 +9,7 @@ context; never flags generics/match-arms); +5 tests, SOT 3710. **⚠ DESIGN NOTE
 **Core-roadmap frontier (ordered, from build-roadmap "Next up"):** **#145 type-aware STRING semantics** = the big one
 (WASM execution byte-parity; `__char_to_string`/`__str_concat` host fns + type-aware lowering + String/Char var-type
 tracking — large, deserves a dedicated session) · #102–104 DSS.wasm (externally blocked) · CF-4 extract
-`@galerinaa/tpl-oracle` · record follow-ons (cross-flow return-type tracking) · #110 key rotation (security-sensitive).
+`@galerina/tpl-oracle` · record follow-ons (cross-flow return-type tracking) · #110 key rotation (security-sensitive).
 
 **State at clear (everything committed local `main`, NOT pushed — #149):** SOT `--core` **3702 green · 0 fail**;
 graph 3676/4069; both Galerina + Galerina-R-AND-D git trees CLEAN.
@@ -61,7 +61,7 @@ order-independent) + the fixtures-dist gitignore-negation so a fresh checkout pa
 [--invoke pkg:export]`. app-kernel **54/54**, SOT **3705**. **Phase B** (Component Model isolation for UNTRUSTED peers)
 = externally blocked on #102–104; **Phase C** (app-split) = speculative; §7 perf bench deferred ("no maths yet").
 **OWNER 2026-06-20: build BOTH (0050 then 0051).** **0050 exporter Slice 1 SHIPPED** — new package
-`@galerinaa/governance-telemetry` (`renderPrometheus` + closed egress fence [unsafe labels dropped+counted, effects→family,
+`@galerina/governance-telemetry` (`renderPrometheus` + closed egress fence [unsafe labels dropped+counted, effects→family,
 closed vocab] + `startExporter` read-only /metrics /healthz /readyz; +14 tests). DEFERRED: host snapshot adapter, OTLP,
 the `503 + X-Galerina-State` backpressure bridge (kernel→runtime, security-sensitive). **0051 SHIPPED** —
 `deriveImportProfile` (core-config: posture `on`⇒require-signature, `off`⇒file-path, fail-secure) + `requireSignature`

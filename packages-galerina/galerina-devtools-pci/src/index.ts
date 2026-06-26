@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/devtools-pci — Public API
+// @galerina/devtools-pci — Public API
 // =============================================================================
 
 export { runPciAudit } from "./pci-checker.js";
@@ -15,7 +15,7 @@ export {
 } from "./types.js";
 
 // Black Box compliance ledger (#146) — hash-linked, append-only compliance
-// report over the @galerinaa/core-sentinel-egress audit ledger.
+// report over the @galerina/core-sentinel-egress audit ledger.
 export {
   readEgressBatches,
   buildComplianceReport,

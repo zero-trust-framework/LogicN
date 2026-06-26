@@ -1,5 +1,5 @@
 {
-  "name": "@galerinaa/data-model",
+  "name": "@galerina/data-model",
   "version": "1.0.0-beta.2",
   "description": "Galerina typed database model, field classification and storage mapping contracts.",
   "license": "Apache-2.0",

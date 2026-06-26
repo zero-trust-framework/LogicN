@@ -1,9 +1,9 @@
 {
-  "packageName": "@galerinaa/framework-api-server",
+  "packageName": "@galerina/framework-api-server",
   "allowedExternal": [
-    "@galerinaa/core-network",
-    "@galerinaa/framework-app-kernel",
-    "@galerinaa/tower-citizen",
+    "@galerina/core-network",
+    "@galerina/framework-app-kernel",
+    "@galerina/tower-citizen",
     "node:crypto",
     "node:http",
     "node:https",

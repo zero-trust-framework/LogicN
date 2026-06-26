@@ -1,9 +1,9 @@
 // tri-pipe.ts — the Tri-Pipe capstone: hardware() → tier → one governed engine.
 //
 // Composes the three pieces built across the loop session into a single deployment call:
-//   • @galerinaa/hardware-tier        — the cached, attested hardware() capability directive (AXIS-1)
-//   • @galerinaa/ext-photonic-emulator — the physics-faithful photonic backend + 0053 router (AXIS-2)
-//   • @galerinaa/tower-citizen        — the governed HybridInferenceEngine (the digital default)
+//   • @galerina/hardware-tier        — the cached, attested hardware() capability directive (AXIS-1)
+//   • @galerina/ext-photonic-emulator — the physics-faithful photonic backend + 0053 router (AXIS-2)
+//   • @galerina/tower-citizen        — the governed HybridInferenceEngine (the digital default)
 //
 // The capability tier selects the digital backend registry AND whether the photonic offload port is
 // enabled; the per-op net-win router still decides each actual offload. binary ⇒ digital only;

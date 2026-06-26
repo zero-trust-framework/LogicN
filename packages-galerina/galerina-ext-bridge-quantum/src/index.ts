@@ -1,4 +1,4 @@
-// @galerinaa/ext-bridge-quantum — governed out-of-process bridge for IBM ffsim.
+// @galerina/ext-bridge-quantum — governed out-of-process bridge for IBM ffsim.
 // Phase 1: pure-TS governance core (contract + pre-spawn limit gate + env-detect +
 // manifest + env-absent stub backend). Phase 2 adds the real hashed Python worker.
 export * from "./quantum-contract.js";

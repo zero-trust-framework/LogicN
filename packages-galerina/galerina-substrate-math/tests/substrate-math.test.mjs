@@ -1,4 +1,4 @@
-// @galerinaa/substrate-math — golden-value oracle for the shared NMR calculus.
+// @galerina/substrate-math — golden-value oracle for the shared NMR calculus.
 // These are the SAME hand-verified constants asserted by the two consumers
 // (galerina-tower-citizen/tests/substrate-model.test.mjs and
 //  galerina-core-compiler/tests/substrate-contracts.test.mjs). With the math now living

@@ -344,16 +344,16 @@ reject), never a silent coerce-to-default — see §8.
 ## 6. Where the NMR math lives (the load-bearing dependency decision)
 
 **Verified fact (re-read in the live tree, not assumed):** `galerina-core-compiler`'s `package.json`
-depends only on `@galerinaa/devtools-graph-algorithms` and `@noble/post-quantum` (plus `argon2`,
+depends only on `@galerina/devtools-graph-algorithms` and `@noble/post-quantum` (plus `argon2`,
 `bcryptjs`, `wabt`, `wat-wasm`). It does **not** depend on `galerina-tower-citizen`, and `tower-citizen`
-depends only on `@galerinaa/inference-bridge-contract`. `governance-verifier.ts` (3263 lines) contains
+depends only on `@galerina/inference-bridge-contract`. `governance-verifier.ts` (3263 lines) contains
 **zero** references to `nmrFailureProbability` / `singleLaneErrorProbability` / `substrate-model`.
 **Therefore the verifier cannot `import` `substrate-model.ts`** — there is no edge between the packages
 and adding one (either direction) risks a cycle.
 
 **Decision — RESOLVED via package extraction (done 2026-06-15).** The spike originally shipped a
 labelled copy in the compiler (drift-controlled by §6.1's golden constants); the follow-up has since
-been executed: a new **zero-dependency workspace package `@galerinaa/substrate-math`** (`packages-galerina/
+been executed: a new **zero-dependency workspace package `@galerina/substrate-math`** (`packages-galerina/
 galerina-substrate-math`) now holds the pure compute as the **single source of truth**:
 
 - `singleLaneErrorProbability(params)`, `nmrFailureProbability(pBad, N)`, `flipProbability(params)`
@@ -403,7 +403,7 @@ The constants are the shared contract: `nmr(0.1,3)=0.028`, `nmr(0.5,N)=0.5` ∀ 
 `nmr(1,N)=1`, the strictly-decreasing-vs-non-decreasing monotonicity sweep, and the lane-profile
 `singleLaneErrorProbability` values. Both implementations are pinned to these literals, so any divergence
 between the two NMR copies fails at least one suite on the next `npm test` — symmetric, fail-fast, zero
-runtime cost. Extracting `@galerinaa/substrate-math` (§6 follow-up) would let both suites import one fixture;
+runtime cost. Extracting `@galerina/substrate-math` (§6 follow-up) would let both suites import one fixture;
 until then the duplicated-but-pinned constants achieve the same drift guarantee. New cases must cite their
 justification (spec section or hand computation), never a value copied out of a running implementation.
 
@@ -592,7 +592,7 @@ or incomplete numeric (`1e-`, `1 e - 6`) fails closed as `SPORE-SUBSTRATE-002`, 
   a fixed conservative profile; a `lane-profile.toml`-style registry (or sentinel-fed parameters, per
   failure-model §8) is future work. Until then `tolerance`/`redundancy` are checked against the
   *conservative* model — the honest direction (can't be gamed downward).
-- ✅ **DONE: `@galerinaa/substrate-math` package extraction** (§6) — the NMR compute is now a shared
+- ✅ **DONE: `@galerina/substrate-math` package extraction** (§6) — the NMR compute is now a shared
   zero-dep package; the compiler's copy is gone (thin re-export), tower-citizen wraps it. 47/47 green.
 - **`routePrecision()` lane axis** (`precision-strategy.ts`, named in failure-model §8) — route a flow
   to digital vs photonic based on the verified `substrate {}` block.
@@ -610,7 +610,7 @@ or incomplete numeric (`1e-`, `1 e - 6`) fails closed as `SPORE-SUBSTRATE-002`, 
 2. **Where do `SubstrateParameters` come from per lane?** A single conservative built-in profile for the
    spike, or a minimal `lane → params` registry now? The check's honesty depends entirely on this not
    being author-tunable downward. Leaning single conservative profile for the spike.
-3. ~~`@galerinaa/substrate-math` package now, or copy-with-oracle for the spike?~~ **RESOLVED (§6): copy +
+3. ~~`@galerina/substrate-math` package now, or copy-with-oracle for the spike?~~ **RESOLVED (§6): copy +
    golden-constant oracle for the spike** (avoids re-touching shipped Direction C + mid-spike workspace
    rewiring); package extraction is the documented follow-up (§9).
 4. **Should B3's deterministic-sink set include the `production` profile, or only `deterministic`?**

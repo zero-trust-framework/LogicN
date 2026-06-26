@@ -30,7 +30,7 @@ Why: this turns "best practice" into an enforced mode.
 Create a small neutral package, for example:
 
 ```text
-@galerinaa/inference-bridge-contract
+@galerina/inference-bridge-contract
 ```
 
 Move these there:

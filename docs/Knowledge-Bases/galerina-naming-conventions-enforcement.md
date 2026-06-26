@@ -32,7 +32,7 @@
 | constants | `SCREAMING_SNAKE` | upper-case only (compile-time `const`) |
 | effects | `dot.case` | `database.read`, `network.outbound` |
 | capabilities | `dot.case` | `host.database.read` |
-| packages | `kebab-case` | `@galerinaa/healthcare-types` |
+| packages | `kebab-case` | `@galerina/healthcare-types` |
 | files | `kebab-case` | `create-patient.spore` |
 
 ---

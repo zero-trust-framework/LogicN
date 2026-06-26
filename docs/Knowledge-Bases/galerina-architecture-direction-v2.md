@@ -284,7 +284,7 @@ Low Risk  → Maintain minimum policy
 
 Policy remains the **floor**. Economics cannot lower the floor.
 
-**Current status:** Phase 29 complete. `@galerinaa/core-economics` package with IBM/Ponemon 2025 breach matrix. `RouteDecision.governanceApproved: true` is a literal type — structurally impossible to produce an unapproved route.
+**Current status:** Phase 29 complete. `@galerina/core-economics` package with IBM/Ponemon 2025 breach matrix. `RouteDecision.governanceApproved: true` is a literal type — structurally impossible to produce an unapproved route.
 
 ---
 

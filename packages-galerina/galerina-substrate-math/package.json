@@ -1,5 +1,5 @@
 {
-  "name": "@galerinaa/substrate-math",
+  "name": "@galerina/substrate-math",
   "version": "1.0.0-beta.2",
   "description": "Pure substrate-noise math shared by the governance layer: per-lane error probability + von Neumann NMR (N-modular-redundancy) closed form. Zero runtime deps. Single source of truth for the NMR calculus used by both galerina-tower-citizen (substrate-model) and galerina-core-compiler (substrate-inference).",
   "license": "Apache-2.0",

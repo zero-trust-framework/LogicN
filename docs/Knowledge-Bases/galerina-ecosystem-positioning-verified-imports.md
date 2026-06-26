@@ -40,7 +40,7 @@ framing in **docs / north-star only**.
   kept name of the separate networking project). See [[galerina-mesh-brand-rename]].
 
 ## SHIPPED 2026-06-20 (owner green-lit, after 0050)
-- **`deriveImportProfile(resolved)`** in `@galerinaa/core-config` (`posture.ts`) — the policy binding: posture `on`
+- **`deriveImportProfile(resolved)`** in `@galerina/core-config` (`posture.ts`) — the policy binding: posture `on`
   (prod/staging/unknown/invalid) ⇒ `requireSignature` (signed-hash admission); posture `off` (dev/test) ⇒
   `allowFilePath`. Fail-secure: only an explicit `off` relaxes. Tamper is denied by the loader regardless. +4 tests.
 - **`requireSignature` enforcement** in `fuse-loader.ts` (`FusePackageOptions`) — wired into BOTH `fusePackage`

@@ -1,5 +1,5 @@
 {
-  "packageName": "@galerinaa/devtools-package-graph",
+  "packageName": "@galerina/devtools-package-graph",
   "allowedExternal": [
     "node:fs",
     "node:path"

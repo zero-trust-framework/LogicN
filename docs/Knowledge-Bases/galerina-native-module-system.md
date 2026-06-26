@@ -41,7 +41,7 @@ be accepted as stable:
 
 ```json
 {
-    "name": "@galerinaa/payments",
+    "name": "@galerina/payments",
     "version": "1.4.0",
     "galerinaPackageVersion": "1",
     "exports": {
@@ -80,11 +80,11 @@ This prevents importing type-only modules from triggering capability review.
 ## Install-Time Authority Review
 
 ```bash
-galerina install @galerinaa/payments
+galerina install @galerina/payments
 ```
 
 ```text
-Package: @galerinaa/payments@1.4.0
+Package: @galerina/payments@1.4.0
 
 Requested effects:
   network.external
@@ -118,7 +118,7 @@ The Galerina lockfile records accepted authority alongside content integrity:
 ```json
 {
     "packages": {
-        "@galerinaa/payments@1.4.0": {
+        "@galerina/payments@1.4.0": {
             "integrity": "sha256:...",
             "manifestHash": "sha256:...",
             "acceptedEffects": ["network.external", "secret.read"],
@@ -171,7 +171,7 @@ Development may use version ranges; production builds must use exact locked arte
 An update shows the governance diff before acceptance:
 
 ```text
-@galerinaa/payments updated 1.4.0 -> 1.5.0
+@galerina/payments updated 1.4.0 -> 1.5.0
 
 Added:
   payment.refund
@@ -262,16 +262,16 @@ npm is not removed immediately. Staged migration:
 galerina package init
 galerina package publish
 galerina package verify
-galerina install @galerinaa/payments
-galerina update @galerinaa/payments --review
-galerina package diff @galerinaa/payments@1.4.0 @galerinaa/payments@1.5.0
+galerina install @galerina/payments
+galerina update @galerina/payments --review
+galerina package diff @galerina/payments@1.4.0 @galerina/payments@1.5.0
 galerina package audit
 galerina package vendor
-galerina package explain @galerinaa/payments
+galerina package explain @galerina/payments
 galerina build --locked
 ```
 
-`galerina package explain @galerinaa/payments` output:
+`galerina package explain @galerina/payments` output:
 
 ```text
 Exports:

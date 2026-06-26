@@ -1,5 +1,5 @@
 /**
- * @galerinaa/tower-citizen — Integration Tests
+ * @galerina/tower-citizen — Integration Tests
  */
 
 import { describe, it, before, after } from "node:test";

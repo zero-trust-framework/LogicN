@@ -195,7 +195,7 @@ let encoded: Bytes = c.toString().encode(Encoding.UTF8)
 
 ### AST Support
 
-`charLiteral` is an `AstNodeKind` in `@galerinaa/core` — single-quoted character literals parse to this node kind.
+`charLiteral` is an `AstNodeKind` in `@galerina/core` — single-quoted character literals parse to this node kind.
 
 ### Compiler Diagnostics
 
@@ -246,7 +246,7 @@ let lowNibble: Byte = b.lowNibble()
 
 ### AST Support
 
-`byteLiteral` is an `AstNodeKind` in `@galerinaa/core` — hex or decimal byte literals (e.g. `0xFF`, `255`) parse to this node kind when the declared type is `Byte`.
+`byteLiteral` is an `AstNodeKind` in `@galerina/core` — hex or decimal byte literals (e.g. `0xFF`, `255`) parse to this node kind when the declared type is `Byte`.
 
 ### Bytes
 
@@ -358,7 +358,7 @@ module std.security {
 
 ## 8. AstNodeKind Additions (galerina-core/src/index.ts)
 
-Two new node kinds were added to `AstNodeKind` in `@galerinaa/core` on 2026-05-26:
+Two new node kinds were added to `AstNodeKind` in `@galerina/core` on 2026-05-26:
 
 | Kind | Syntax | Example |
 |---|---|---|
@@ -375,9 +375,9 @@ These sit alongside `stringLiteral`, `numberLiteral`, and `boolLiteral` in the l
 [ ] std.text module: String, Char, Encoding, DecodeError
 [ ] std.bytes module: Byte, Bytes, ReadOnlyView<T>
 [ ] std.security module: SecureString boundary rule
-[x] SPORE-STRING-001..004 in compiler diagnostics (@galerinaa/core-compiler src/index.ts)
-[x] SPORE-CHAR-001..004 in compiler diagnostics (@galerinaa/core-compiler src/index.ts)
-[x] SPORE-BYTE-001..005 in compiler diagnostics (@galerinaa/core-compiler src/index.ts)
-[x] charLiteral added to AstNodeKind (@galerinaa/core)
-[x] byteLiteral added to AstNodeKind (@galerinaa/core)
+[x] SPORE-STRING-001..004 in compiler diagnostics (@galerina/core-compiler src/index.ts)
+[x] SPORE-CHAR-001..004 in compiler diagnostics (@galerina/core-compiler src/index.ts)
+[x] SPORE-BYTE-001..005 in compiler diagnostics (@galerina/core-compiler src/index.ts)
+[x] charLiteral added to AstNodeKind (@galerina/core)
+[x] byteLiteral added to AstNodeKind (@galerina/core)
 ```

@@ -2,7 +2,7 @@
  * verdict.ts — the K3 verdict algebra, re-exported as galerina-auth's vocabulary.
  *
  * Authentication/authorization in Galerina is three-valued, not boolean. Every auth
- * FACTOR this package computes is a Kleene-K3 trit (the shipped @galerinaa/tower-citizen
+ * FACTOR this package computes is a Kleene-K3 trit (the shipped @galerina/tower-citizen
  * `Verdict`):
  *
  *   +1 ALLOW          — proof discharged, the factor may authorize
@@ -12,7 +12,7 @@
  * We re-export the verdict type, the conjunction/disjunction reducers, and the
  * boundary collapse VERBATIM from tower-citizen so a consumer of galerina-auth can
  * type and interpret a factor without reaching across into another package — the
- * same courtesy @galerinaa/core-network's cert-gate extends. We never re-implement the
+ * same courtesy @galerina/core-network's cert-gate extends. We never re-implement the
  * algebra: `vAnd`/`allOf` are the K3-conformance-pinned gates, so the oracle that
  * guards tower-citizen keeps guarding the verdicts this package produces.
  *

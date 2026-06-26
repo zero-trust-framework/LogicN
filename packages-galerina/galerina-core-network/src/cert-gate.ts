@@ -38,7 +38,7 @@ import {
 } from "../../galerina-tower-citizen/dist/index.js";
 
 // Re-export the trit + boundary types so consumers of the cert-gate can interpret
-// a verdict / decision without reaching across into @galerinaa/tower-citizen.
+// a verdict / decision without reaching across into @galerina/tower-citizen.
 export { Verdict };
 export type { BoundaryDecision, GovernanceDiagnostic };
 

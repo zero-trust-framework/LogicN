@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/devtools-provenance — Core Types
+// @galerina/devtools-provenance — Core Types
 //
 // Data lineage / provenance tracking across a Galerina codebase.
 // Maps data from sources (network, DB, user input) through transformations

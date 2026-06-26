@@ -163,11 +163,11 @@ describe("SPORE-IMPORT-001: import of non-existent file", () => {
   });
 
   it("import with valid package name (not relative) does not trigger SPORE-IMPORT-001", () => {
-    // Package imports like `import Email from "@galerinaa/core-types"` are handled
+    // Package imports like `import Email from "@galerina/core-types"` are handled
     // by resolveImports, not gatherFileImports. Non-relative imports return no results.
     const dir = createTempDir();
     try {
-      const mainSrc = `import Email from "@galerinaa/core-types"\n`;
+      const mainSrc = `import Email from "@galerina/core-types"\n`;
       const { ast } = parseProgram(mainSrc, join(dir, "main.spore"));
       const result = gatherFileImports(ast, join(dir, "main.spore"));
 

@@ -128,7 +128,7 @@
         "galerinOpsPerSecond": 356,
         "galerinOpsPerRun": 1
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.3,

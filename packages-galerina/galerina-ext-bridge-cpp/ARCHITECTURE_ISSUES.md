@@ -14,10 +14,10 @@ implemented** — they need a deliberate wider-project decision.
 
 | Package | Shape | Governance integration |
 |---|---|---|
-| `galerina-ext-bridge-cpp` (this one) | Implements the modern `InferenceBridge` contract from `@galerinaa/tower-citizen`; upholds the three Citizen One Standards (TPL Determinism, Hold-First, Zero-Copy); uses `StubTernaryBridge` as the determinism oracle. | Routed by the Tower's `HybridInferenceEngine` via the `BridgeRegistry` (see `createCppBridgeRegistry()`). |
+| `galerina-ext-bridge-cpp` (this one) | Implements the modern `InferenceBridge` contract from `@galerina/tower-citizen`; upholds the three Citizen One Standards (TPL Determinism, Hold-First, Zero-Copy); uses `StubTernaryBridge` as the determinism oracle. | Routed by the Tower's `HybridInferenceEngine` via the `BridgeRegistry` (see `createCppBridgeRegistry()`). |
 | `galerina-ext-bridge-bitnet` | Older, lower-level wrapper around the BitNet.cpp C API (`ggml_bitnet_*`). Does **not** implement `InferenceBridge`. | Has its own `TowerRuntime` lifecycle wrapper, but is not consumable by the engine's bridge registry. |
 
-Both depend on `@galerinaa/tower-citizen` (`file:../galerina-tower-citizen`).
+Both depend on `@galerina/tower-citizen` (`file:../galerina-tower-citizen`).
 
 **Why this is a wider-project issue.** Resolving it touches a *second* package
 (`galerina-ext-bridge-bitnet`) and the question of which one the platform keeps as

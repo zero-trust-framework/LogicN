@@ -1,5 +1,5 @@
 /**
- * @galerinaa/devtools-security — Integration Tests
+ * @galerina/devtools-security — Integration Tests
  */
 
 import { describe, it } from "node:test";

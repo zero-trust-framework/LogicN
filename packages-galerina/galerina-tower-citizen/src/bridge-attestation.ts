@@ -4,7 +4,7 @@
  * The bridge registry is otherwise trusted input: any in-process object can claim
  * to be a deterministic ternary bridge. Attestation closes that hole. A bridge
  * carries a signed `BridgeManifest` (the schema lives in the neutral
- * @galerinaa/inference-bridge-contract package); the Tower verifies:
+ * @galerina/inference-bridge-contract package); the Tower verifies:
  *   - the manifest is structurally valid,
  *   - its sha256 is pinned (allow-list), if a pin set is configured (CF-7 covers
  *     the native_addon_hash field the same way),
@@ -22,7 +22,7 @@ import {
   type InferenceBridge,
   type BridgeOp,
   type BridgeResult,
-} from "@galerinaa/inference-bridge-contract";
+} from "@galerina/inference-bridge-contract";
 
 export interface AttestationPolicy {
   /** Require a valid Ed25519 signature on every bridge manifest. */

@@ -106,7 +106,7 @@ a hardened, governance-first inference runtime.
   Honest finding: the proposed "ManifestRegistry/CBOR cache" was a no-op (verifyGovernance
   is already hoisted out of the timed loop); the real per-call redundancy was the re-plan.
 * **Brain/Brawn contract extraction** (audit CF-4): new neutral, zero-dependency
-  package `@galerinaa/inference-bridge-contract` owns `InferenceBridge`/`BridgeOp`/
+  package `@galerina/inference-bridge-contract` owns `InferenceBridge`/`BridgeOp`/
   `BridgeResult`/`assertDeterminism`, the precision-type vocabulary, a `FixedScale`
   fixed-point type, the **bridge-manifest schema** (sets up CF-3 attestation), and the
   determinism-oracle interface. `tower-citizen` + `ext-bridge-cpp` now import the

@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/devtools-context — Receipt Generator
+// @galerina/devtools-context — Receipt Generator
 //
 // Core logic: walks the AST produced by parseProgram to extract the structural
 // skeleton of each flow, stripped of body implementation.
@@ -14,7 +14,7 @@ import {
   type AstNode,
   type FlowMeta,
   type ParseResult,
-} from "@galerinaa/core-compiler";
+} from "@galerina/core-compiler";
 
 import type {
   FlowContextReceipt,

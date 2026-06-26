@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/devtools-security — Regex ReDoS Guard
+// @galerina/devtools-security — Regex ReDoS Guard
 //
 // Validates user-provided regex patterns before they reach new RegExp().
 // Guards against catastrophic backtracking (ReDoS).

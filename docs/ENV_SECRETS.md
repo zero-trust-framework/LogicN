@@ -582,10 +582,10 @@ Everything above governs how `.env` *values* flow through the app once loaded.
 But a plaintext `.env` file is still readable by anyone who can read the file on
 disk. For the cases where the secrets file itself must be encrypted at rest,
 Galerina ships an **optional** drop-in replacement: `env.tmf`, provided by the
-`@galerinaa/ext-secrets-tmf` package.
+`@galerina/ext-secrets-tmf` package.
 
 `env.tmf` is the SOPS / Sealed-Secrets / age pattern built on the `.tmf`
-container. It is a **thin layer** over `@galerinaa/ext-tmf` (it owns no crypto and
+container. It is a **thin layer** over `@galerina/ext-tmf` (it owns no crypto and
 no container bytes of its own — every byte primitive comes from the engine's
 `writeTmf`/`readTmf` and KEM-DEM `seal`/`open`). Each secret is sealed under a
 recipient public key; the file on disk is ciphertext only.

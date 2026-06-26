@@ -1,6 +1,6 @@
 // quantum-contract.ts — coarse-grained, JOB-oriented governed-backend contract for the
 // out-of-process ffsim quantum bridge. Distinct from the ternary, OP-oriented
-// @galerinaa/inference-bridge-contract (design §3): a quantum "job" is a whole simulation
+// @galerina/inference-bridge-contract (design §3): a quantum "job" is a whole simulation
 // (ms→s), float64/complex128, NOT bit-exact, Tier-3 untrusted, run out-of-process.
 import type { BridgeManifest, BridgeAttestation } from "../../galerina-inference-bridge-contract/dist/index.js";
 

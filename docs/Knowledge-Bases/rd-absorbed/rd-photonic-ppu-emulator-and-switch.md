@@ -42,7 +42,7 @@ remaining (owner-gated) production edits.
 ## GAP — the remaining production edits
 
 **✅ BUILT 2026-06-20 (hub, iteration 1) — `packages-galerina/galerina-ext-photonic-emulator`** (new package,
-depends ONLY on the neutral `@galerinaa/inference-bridge-contract` via the repo's relative-dist convention;
+depends ONLY on the neutral `@galerina/inference-bridge-contract` via the repo's relative-dist convention;
 production/tower-citizen left byte-unchanged). Ports the proven D1+D2 maths into real TS + re-proves it
 against the package's own compiled code (25 node:test cases + `npm run prove` 10/10, exit 0):
 1. ✅ The **`galerina-ext-photonic-emulator`** package — `PhotonicEmulatorBridge implements InferenceBridge`

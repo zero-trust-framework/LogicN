@@ -54,7 +54,7 @@ rotation** — the leaked `.env.galerina-signing` must be rotated; scrub ≠ rot
 
 **▶▶ MOST RECENT STATE — read this first (2026-06-15 late · suite 48/48 · 4,360 · 0 fail):**
 - **R&D photonic/tri — ALL 3 DIRECTIONS SHIPPED** (A 3-valued governance, C noise model, B `substrate{}`
-  contracts + `SPORE-SUBSTRATE-001..004`) + new `@galerinaa/substrate-math` pkg. Record:
+  contracts + `SPORE-SUBSTRATE-001..004`) + new `@galerina/substrate-math` pkg. Record:
   `C:\wwwprojects\Galerina-R-AND-D\photonic-tri-governance\00-OVERVIEW.md`. **Crypto UNCHANGED by design.**
 - **Quantum-resistance posture RECORDED → DECISION: KEEP SHA-256** (already quantum-OK; Grover→128-bit).
   The PQ work is the SIGNATURE: finish ML-DSA-65 over the SHA-256 digest (#34), hybrid w/ Ed25519.
@@ -96,7 +96,7 @@ rotation** — the leaked `.env.galerina-signing` must be rotated; scrub ≠ rot
     standalone `npm install`.
 - ✅ **#179 LEDGER (#146)** — `galerina ledger <egress-dir> [--json]` CLI (post-hoc, off the hot path),
   deny-by-default. `devtools-pci/src/cli.ts` + `galerina.mjs` (injection-safe spawn) + 3 CLI tests (24 total).
-- ✅ **#179 POSTURE (#195)** — `createAppKernel` resolves `'auto'` fail-secure via `@galerinaa/core-config`
+- ✅ **#179 POSTURE (#195)** — `createAppKernel` resolves `'auto'` fail-secure via `@galerina/core-config`
   `resolvePosture` (relative-dist import; single source of truth) and records the resolution on each
   audit event. **Strictly additive: default stays `'off'`, only `'auto'` triggers resolution.**
   `app-kernel/src/kernel.ts` + 5 tests (38 total).

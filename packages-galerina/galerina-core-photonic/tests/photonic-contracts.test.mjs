@@ -37,7 +37,7 @@ describe("galerina-core-photonic contracts", () => {
       amplitude: 1,
     });
     const diagnostics = validatePhotonicMapping({
-      logicPackage: "@galerinaa/core-logic",
+      logicPackage: "@galerina/core-logic",
       galeriname: "Tri",
       states: [
         { state: "Positive", signal },

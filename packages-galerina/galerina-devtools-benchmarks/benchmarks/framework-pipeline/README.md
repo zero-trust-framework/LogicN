@@ -12,7 +12,7 @@ dispatch → encode → audit.
 
 | Column | What it actually is |
 |---|---|
-| **Node.js** | **Galerina's shipped App Kernel** (`@galerinaa/framework-app-kernel`, `createAppKernel().handle()`). A **fixed, non-bypassable 12-gate pipeline** — there is no middleware chain; the gate order is compiled in and cannot be reordered or skipped. It is plain TypeScript-on-Node (not the Stage-A tree-walker), and async (Tri-Pipe audit off the critical path). |
+| **Node.js** | **Galerina's shipped App Kernel** (`@galerina/framework-app-kernel`, `createAppKernel().handle()`). A **fixed, non-bypassable 12-gate pipeline** — there is no middleware chain; the gate order is compiled in and cannot be reordered or skipped. It is plain TypeScript-on-Node (not the Stage-A tree-walker), and async (Tri-Pipe audit off the critical path). |
 | **Python** | An equivalent **sync middleware-style gate chain** (stdlib only) doing the *same* gates. A real middleware framework (FastAPI/Flask + validation/auth/rate-limit packages) would be **slower**, so this is a conservative, not a rigged, baseline. |
 
 ## Honesty notes

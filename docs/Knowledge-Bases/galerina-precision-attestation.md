@@ -14,7 +14,7 @@ behind it, and "how close to ideal was this run" was unrecorded. This lane adds 
 
 ## Increment 1 — measured manifest fields (LANDED 2026-06-15)
 
-`@galerinaa/inference-bridge-contract/src/manifest.ts` — all **optional**, **opt-in**, **hash-preserving**
+`@galerina/inference-bridge-contract/src/manifest.ts` — all **optional**, **opt-in**, **hash-preserving**
 (a manifest that sets none serializes byte-identically; existing inference/ffsim hashes unaffected — proven
 by `contract.test.mjs`). 9/9 contract tests green.
 

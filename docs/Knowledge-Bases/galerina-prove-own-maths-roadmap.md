@@ -27,7 +27,7 @@ bench**, and (c) adversarially re-audited every source-read claim against the sh
 ### 1a. Benches re-run by the hub
 | Bench (`tri-encription/bench/`) | Result (hub re-run, Node v24.16.0) | Ground truth |
 |---|---|---|
-| `tower-citizen-verify.mjs` | **27/27 PASS, exit 0** | shipped `@galerinaa/tower-citizen` `dist/*.js` vs an independent literal-Kleene-K3 oracle + raw `mem` read-back on the real `TPLSimulator` |
+| `tower-citizen-verify.mjs` | **27/27 PASS, exit 0** | shipped `@galerina/tower-citizen` `dist/*.js` vs an independent literal-Kleene-K3 oracle + raw `mem` read-back on the real `TPLSimulator` |
 | `i32-findings-verify.mjs` | **25/25 PASS, exit 0** | BigInt/i64 oracle + 18-elem boundary set + 3,000,000 random pairs (0 mismatch) — backs 0014 |
 
 ### 1b. Maths re-derived independently (hub, throwaway computation — NOT the bench's own asserts)

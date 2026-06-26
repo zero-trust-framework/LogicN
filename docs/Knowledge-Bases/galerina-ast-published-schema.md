@@ -275,7 +275,7 @@ compatibility policy
 migration guide
 ```
 
-Suggested package name: `@galerinaa/ast-schema`
+Suggested package name: `@galerina/ast-schema`
 
 ---
 
@@ -331,4 +331,4 @@ The AST must not become an overloaded universal data blob. Each concern gets its
 | `galerina-core-cli` | `galerina ast` command and mode flags |
 | `galerina-devtools-project-graph` | Graph integration and symbol cross-references |
 | `galerina-core-security` | Secret / privacy redaction rules for AST export |
-| `@galerinaa/ast-schema` | Published schema package for consumer SDKs |
+| `@galerina/ast-schema` | Published schema package for consumer SDKs |

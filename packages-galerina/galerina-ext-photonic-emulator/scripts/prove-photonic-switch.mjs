@@ -49,7 +49,7 @@ const results = [
 ];
 
 let fails = 0;
-console.log("\n-- @galerinaa/ext-photonic-emulator photonic-hardware switch — prove-own-maths (fail-closed selector) --");
+console.log("\n-- @galerina/ext-photonic-emulator photonic-hardware switch — prove-own-maths (fail-closed selector) --");
 for (const [name, ok, detail] of results) { if (!ok) fails++; console.log(`${ok ? "PASS" : "FAIL"} ${String(name).padEnd(78)} ${detail}`); }
 console.log(fails === 0
   ? `\n${results.length}/${results.length} PASS — over the full ${total}-row truth table the switch admits real silicon ONLY when present + native + the caller asserts attested=true, always returns a usable backend, and falls back to the emulator otherwise (keep-digital: it only picks the photonic compute backend). NB 'attested' is a CALLER-ASSERTED admission flag; the cryptographic verification that sets it is the deployment's responsibility — gating it on a real verifyAttestation result lands with a Rung-3+ silicon backend.`

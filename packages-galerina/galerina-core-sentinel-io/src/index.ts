@@ -1,5 +1,5 @@
 /**
- * @galerinaa/core-sentinel-io (LSIO) — Sentinel I/O.
+ * @galerina/core-sentinel-io (LSIO) — Sentinel I/O.
  *
  * Deterministic, governed, manifest-driven zero-copy data ingestion for the
  * Governed Tower. Pure TypeScript over `ArrayBuffer` / `SharedArrayBuffer`

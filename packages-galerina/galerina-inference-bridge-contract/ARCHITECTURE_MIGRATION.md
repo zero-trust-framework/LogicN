@@ -1,4 +1,4 @@
-# Migration: extracting `@galerinaa/inference-bridge-contract`
+# Migration: extracting `@galerina/inference-bridge-contract`
 
 Date: 2026-06-06 · Resolves audit finding **CF-4** (Brawn imported Brain internals)
 and enables **CF-3** (signed bridge attestation).
@@ -27,7 +27,7 @@ runtime governance/audit state.
 - `tower-citizen/src/bridge/interface.ts` is now a **re-export shim** of the
   contract, so all historical `./bridge/interface.js` imports keep working.
 - `precision-strategy.ts` imports the three precision types from the contract and
-  **re-exports** them, so `@galerinaa/tower-citizen` consumers are unaffected.
+  **re-exports** them, so `@galerina/tower-citizen` consumers are unaffected.
 - `galerina-ext-bridge-cpp` now imports the **contract** for `InferenceBridge` /
   `BridgeOp` / `BridgeResult` / `assertDeterminism`, and only the **oracle**
   (`StubTernaryBridge`) + `GovernanceEnforcer` / `AuditLogger` from the Tower.
@@ -46,6 +46,6 @@ refuses any bridge whose manifest is missing/invalid/unpinned.
 ## Deferred (next structural step)
 
 Extracting the **oracle implementation** (`TPLSimulator` / `StubTernaryBridge`)
-into its own package (e.g. `@galerinaa/tpl-oracle`) so `ext-bridge-cpp` imports NO
+into its own package (e.g. `@galerina/tpl-oracle`) so `ext-bridge-cpp` imports NO
 Tower runtime at all. Today it still imports the oracle + governance/audit from
 the Tower — the contract types are fully decoupled, the oracle is the remaining tie.

@@ -1,4 +1,4 @@
-// @galerinaa/test — the consolidated Galerina test harness.
+// @galerina/test — the consolidated Galerina test harness.
 //
 // Folds the repo's scattered test tooling into ONE named, consumable package a
 // downstream app can depend on — the way Spring ships spring-test and Cargo has

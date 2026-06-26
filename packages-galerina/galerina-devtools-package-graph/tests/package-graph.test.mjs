@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { scanPackage, buildGraph, runBoundaryGate } from "../dist/index.js";
 
 // Build a throwaway fixture package on disk.
-function makeFixture(files, pkgName = "@galerinaa/fixture") {
+function makeFixture(files, pkgName = "@galerina/fixture") {
   const root = mkdtempSync(join(tmpdir(), "pkg-graph-"));
   mkdirSync(join(root, "src"), { recursive: true });
   writeFileSync(join(root, "package.json"), JSON.stringify({ name: pkgName }));
@@ -20,7 +20,7 @@ function makeFixture(files, pkgName = "@galerinaa/fixture") {
 
 test("scanner classifies internal / node_core / workspace / thirdparty imports", () => {
   const root = makeFixture({
-    "src/index.ts": `import { a } from "./a.js";\nimport { readFileSync } from "node:fs";\nimport { x } from "@galerinaa/other";\nimport axios from "axios";`,
+    "src/index.ts": `import { a } from "./a.js";\nimport { readFileSync } from "node:fs";\nimport { x } from "@galerina/other";\nimport axios from "axios";`,
     "src/a.ts": `export const a = 1;`,
   });
   const scan = scanPackage(root);
@@ -28,7 +28,7 @@ test("scanner classifies internal / node_core / workspace / thirdparty imports",
   const kinds = idx.imports.map(i => `${i.specifier}:${i.kind}`).sort();
   assert.deepEqual(kinds, [
     "./a.js:internal",
-    "@galerinaa/other:workspace",
+    "@galerina/other:workspace",
     "axios:thirdparty",
     "node:fs:node_core",
   ]);
@@ -135,7 +135,7 @@ test("boundary gate: a malformed allowedExternal denies (unknown → deny, not a
   const dir = join(root, ".graph");
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "boundary-policy.json"),
-    JSON.stringify({ packageName: "@galerinaa/fixture", allowedExternal: "node:fs,axios" })); // string, not array
+    JSON.stringify({ packageName: "@galerina/fixture", allowedExternal: "node:fs,axios" })); // string, not array
   const result = runBoundaryGate(root, buildGraph(scanPackage(root)), true);
   assert.equal(result.status, "FAIL"); // must NOT admit axios via a malformed allowlist
   assert.ok(result.violations.some((v) => v.includes("malformed") || v.includes("allowedExternal")));
@@ -230,12 +230,12 @@ function makeMonorepo() {
       writeFileSync(full, content);
     }
   };
-  mkPkg("sibling", { name: "@galerinaa/sibling" }, { "dist/index.js": "export const x = 1;" });
+  mkPkg("sibling", { name: "@galerina/sibling" }, { "dist/index.js": "export const x = 1;" });
   mkPkg("vendor", { name: "vendor-lib" }, { "dist/index.js": "export const v = 1;" });
   mkPkg("nameless", {}, { "dist/index.js": "export const n = 1;" }); // package.json with NO name
-  mkPkg("app", { name: "@galerinaa/app" }, {
+  mkPkg("app", { name: "@galerina/app" }, {
     "host/server.ts":
-      `import { x } from "../../sibling/dist/index.js";\n` +     // → @galerinaa/sibling (workspace)
+      `import { x } from "../../sibling/dist/index.js";\n` +     // → @galerina/sibling (workspace)
       `import { v } from "../../vendor/dist/index.js";\n` +      // → vendor-lib (thirdparty)
       `import { n } from "../../nameless/dist/index.js";\n` +    // → fail-closed raw specifier (thirdparty)
       `import { c } from "./config.js";\n` +                     // → internal edge
@@ -251,9 +251,9 @@ test("escaping relative import → cross-package border edge (workspace / thirdp
 
   const byKind = (k) => graph.externalDeps.filter((d) => d.kind === k).map((d) => d.specifier).sort();
   // The escaping sibling import is attributed to the OWNING package name (stable, not a path).
-  assert.ok(byKind("workspace").includes("@galerinaa/sibling"), "sibling attributed to @galerinaa package name");
-  // A non-@galerinaa sibling is thirdparty, keyed by its package name.
-  assert.ok(byKind("thirdparty").includes("vendor-lib"), "non-@galerinaa sibling → thirdparty by name");
+  assert.ok(byKind("workspace").includes("@galerina/sibling"), "sibling attributed to @galerina package name");
+  // A non-@galerina sibling is thirdparty, keyed by its package name.
+  assert.ok(byKind("thirdparty").includes("vendor-lib"), "non-@galerina sibling → thirdparty by name");
   // A sibling whose package.json has no name → cannot attribute → fail-closed: raw specifier surfaced.
   assert.ok(byKind("thirdparty").includes("../../nameless/dist/index.js"), "nameless → raw specifier, never dropped");
   // node:fs still classified; ./config.js stays a genuine internal edge.
@@ -266,7 +266,7 @@ test("escaping relative import → cross-package border edge (workspace / thirdp
 
 test("packageGraph config overrides scanned roots/extensions", () => {
   const root = makeFixture({
-    "package.json": JSON.stringify({ name: "@galerinaa/cfg", packageGraph: { roots: ["lib"], extensions: [".ts"] } }),
+    "package.json": JSON.stringify({ name: "@galerina/cfg", packageGraph: { roots: ["lib"], extensions: [".ts"] } }),
     "lib/index.ts": `import axios from "axios";`,   // scanned (configured root)
     "src/ignored.ts": `import lodash from "lodash";`, // NOT scanned (src excluded by config)
   });
@@ -280,7 +280,7 @@ test("packageGraph config overrides scanned roots/extensions", () => {
 
 test("scanned scope is reported even when zero files match (no silent empty border)", () => {
   const root = makeFixture({
-    "package.json": JSON.stringify({ name: "@galerinaa/empty", packageGraph: { roots: ["does-not-exist"] } }),
+    "package.json": JSON.stringify({ name: "@galerina/empty", packageGraph: { roots: ["does-not-exist"] } }),
   });
   const graph = buildGraph(scanPackage(root));
   assert.equal(graph.stats.fileCount, 0);

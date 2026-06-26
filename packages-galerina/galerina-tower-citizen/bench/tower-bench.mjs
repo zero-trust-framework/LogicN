@@ -31,7 +31,7 @@ const onlyGov = args.has("--governed");
 // Try to load the cpp bridge registry (the Brawn). Absent → skip path 3.
 let createCppBridgeRegistry = null;
 try {
-  ({ createCppBridgeRegistry } = await import("@galerinaa/ext-bridge-cpp"));
+  ({ createCppBridgeRegistry } = await import("@galerina/ext-bridge-cpp"));
 } catch {
   try { ({ createCppBridgeRegistry } = await import("../../galerina-ext-bridge-cpp/dist/index.js")); }
   catch { /* cpp bridge not built — path 3 skipped */ }

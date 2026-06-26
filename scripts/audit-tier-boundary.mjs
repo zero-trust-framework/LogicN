@@ -69,8 +69,8 @@ if (process.argv.includes("--self-test")) {
   const c1 = detectLicenseContamination("// Licensed under the Business Source License 1.1\n");
   const c2 = detectLicenseContamination("// SPDX-License-Identifier: LicenseRef-Proprietary\n");
   const clean = detectLicenseContamination("// SPDX-License-Identifier: Apache-2.0\n// normal header\n");
-  const imp = detectEnterpriseImports('import { x } from "@galerinaa/enterprise-foo";', ["@galerinaa/enterprise-foo"]);
-  const impClean = detectEnterpriseImports('import { x } from "@galerinaa/core-bar";', ["@galerinaa/enterprise-foo"]);
+  const imp = detectEnterpriseImports('import { x } from "@galerina/enterprise-foo";', ["@galerina/enterprise-foo"]);
+  const impClean = detectEnterpriseImports('import { x } from "@galerina/core-bar";', ["@galerina/enterprise-foo"]);
   const ok = !!c1 && !!c2 && clean === null && imp.length === 1 && impClean.length === 0;
   console.log(`[self-test] BSL header detected: ${!!c1} | non-Apache SPDX detected: ${!!c2} | Apache clean: ${clean === null} | enterprise import detected: ${imp.length === 1} | core import clean: ${impClean.length === 0}`);
   console.log(ok ? "[self-test] PASS — both contamination detectors fire" : "[self-test] FAIL — a detector did not fire");
@@ -104,7 +104,7 @@ for (const file of files) {
   // tier rule: only meaningful once enterprise packages exist. A core file importing one is a violation.
   // (All packages default to `core`; an enterprise package importing its own tier is fine — skip those.)
   const pkgMatch = file.match(/^packages-galerina\/([^/]+)\//);
-  const pkgName = pkgMatch ? `@galerinaa/${pkgMatch[1]}` : "";
+  const pkgName = pkgMatch ? `@galerina/${pkgMatch[1]}` : "";
   const isEnterpriseFile = enterprisePkgs.includes(pkgName);
   if (!isEnterpriseFile) {
     for (const spec of detectEnterpriseImports(text, enterprisePkgs)) {

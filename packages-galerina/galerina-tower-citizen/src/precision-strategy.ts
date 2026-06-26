@@ -34,8 +34,8 @@
 // The precision/scheduling/op-class TYPES now live in the neutral Brain/Brawn
 // contract package so native bridges depend on it, not on the Tower. The routing
 // LOGIC (sensitivity tables + routePrecision) stays here. Re-exported for back-compat.
-import type { PrecisionTechnique, SchedulingTechnique, InferenceOpClass } from "@galerinaa/inference-bridge-contract";
-export type { PrecisionTechnique, SchedulingTechnique, InferenceOpClass } from "@galerinaa/inference-bridge-contract";
+import type { PrecisionTechnique, SchedulingTechnique, InferenceOpClass } from "@galerina/inference-bridge-contract";
+export type { PrecisionTechnique, SchedulingTechnique, InferenceOpClass } from "@galerina/inference-bridge-contract";
 
 /**
  * Provenance — which open-source engine each technique is derived from.
@@ -60,7 +60,7 @@ export const TECHNIQUE_BITS: Readonly<Record<PrecisionTechnique, number>> = {
 };
 
 // (SchedulingTechnique and InferenceOpClass are defined in
-// @galerinaa/inference-bridge-contract and re-exported above.)
+// @galerina/inference-bridge-contract and re-exported above.)
 
 /**
  * Sensitivity of an operation class to low-precision quantization.

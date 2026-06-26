@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/devtools-security — Security Audit Runner
+// @galerina/devtools-security — Security Audit Runner
 //
 // Orchestrates all security checks into a single structured audit report.
 // Designed for CI integration: parse source, run all checks, return JSON.
@@ -11,7 +11,7 @@
 
 import type {
   FlowMeta,
-} from "@galerinaa/core-compiler";
+} from "@galerina/core-compiler";
 
 import {
   parseProgram,
@@ -24,7 +24,7 @@ import {
   type TaintDiagnostic,
   type GovernanceDiagnostic,
   type RuntimeProfile,
-} from "@galerinaa/core-compiler";
+} from "@galerina/core-compiler";
 
 // ---------------------------------------------------------------------------
 // Report types

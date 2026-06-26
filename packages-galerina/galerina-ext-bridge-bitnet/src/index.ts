@@ -31,7 +31,7 @@
  *   Note: i-quant models produce wrong results (BitNet.cpp limitation, see ggml-bitnet.h)
  */
 
-import { TowerRuntime, PluginMetadata } from "@galerinaa/tower-citizen";
+import { TowerRuntime, PluginMetadata } from "@galerina/tower-citizen";
 
 // BitNet model descriptor — matches BitNet b1.58 2B4T model format
 export interface BitNetModelSpec {

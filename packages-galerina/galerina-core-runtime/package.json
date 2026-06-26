@@ -1,5 +1,5 @@
 {
-  "name": "@galerinaa/core-runtime",
+  "name": "@galerina/core-runtime",
   "version": "1.0.0-beta.2",
   "description": "Galerina execution engine contracts for checked and compiled runtime execution.",
   "license": "Apache-2.0",

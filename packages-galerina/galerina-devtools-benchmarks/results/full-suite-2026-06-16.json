@@ -166,7 +166,7 @@
         "galerinOpsPerSecond": 228321,
         "galerinOpsPerRun": 50000
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.37,
@@ -377,7 +377,7 @@
         "galerinOpsPerSecond": 914649,
         "galerinOpsPerRun": 63248
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.16,
@@ -601,7 +601,7 @@
         "galerinOpsPerSecond": 47526,
         "galerinOpsPerRun": 42069
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.15,
@@ -785,7 +785,7 @@
         "galerinOpsPerSecond": 626959,
         "galerinOpsPerRun": 10000
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.1,
@@ -973,7 +973,7 @@
         "galerinOpsPerSecond": 21,
         "galerinOpsPerRun": 1
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.07,
@@ -1161,7 +1161,7 @@
         "galerinOpsPerSecond": 908265,
         "galerinOpsPerRun": 10000
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.05,
@@ -1355,7 +1355,7 @@
         "galerinOpsPerSecond": 3333,
         "galerinOpsPerRun": 1
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.3,
@@ -1535,7 +1535,7 @@
         "galerinOpsPerSecond": 11111,
         "galerinOpsPerRun": 1
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.07,
@@ -1736,7 +1736,7 @@
         "galerinOpsPerSecond": 147145,
         "galerinOpsPerRun": 10000
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.22,
@@ -1946,7 +1946,7 @@
         "galerinOpsPerSecond": 412746,
         "galerinOpsPerRun": 100000
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.1,
@@ -2135,7 +2135,7 @@
         "galerinOpsPerSecond": 22832,
         "galerinOpsPerRun": 1024
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.15,
@@ -2326,7 +2326,7 @@
         "galerinOpsPerSecond": 277,
         "galerinOpsPerRun": 1
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.11,
@@ -2558,7 +2558,7 @@
         "galerinOpsPerSecond": 1124,
         "galerinOpsPerRun": 1
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.18,
@@ -2805,7 +2805,7 @@
         "galerinOpsPerSecond": 33958,
         "galerinOpsPerRun": 27000
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.18,
@@ -3017,7 +3017,7 @@
         "galerinOpsPerSecond": 246914,
         "galerinOpsPerRun": 1000
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.13,
@@ -3160,7 +3160,7 @@
         "galerinOpsPerSecond": 68250,
         "galerinOpsPerRun": 50000
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.09,
@@ -3294,7 +3294,7 @@
         "galerinOpsPerSecond": 61853,
         "galerinOpsPerRun": 32768
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.37,
@@ -3448,7 +3448,7 @@
         "galerinOpsPerSecond": 7791,
         "galerinOpsPerRun": 500
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.26,

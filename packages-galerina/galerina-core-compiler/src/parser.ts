@@ -6,19 +6,19 @@
 //
 // Entry point: parseProgram(source, file)
 //
-// AstNodeKind values mirror @galerinaa/core — structurally compatible.
-// FlowDeclarationMetadata mirrors @galerinaa/core FlowDeclarationMetadata.
+// AstNodeKind values mirror @galerina/core — structurally compatible.
+// FlowDeclarationMetadata mirrors @galerina/core FlowDeclarationMetadata.
 // =============================================================================
 
 import { lex, type Token, type LexerDiagnostic } from "./lexer.js";
 
 // ---------------------------------------------------------------------------
-// AST types (mirrors @galerinaa/core)
+// AST types (mirrors @galerina/core)
 // ---------------------------------------------------------------------------
 
 /**
  * All AST node kinds used by the Phase 4 parser.
- * Subset of the full AstNodeKind union in @galerinaa/core.
+ * Subset of the full AstNodeKind union in @galerina/core.
  */
 export type AstNodeKind =
   | "program"

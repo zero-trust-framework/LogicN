@@ -3,9 +3,9 @@
 // Galerina's execution routing was, until now, three separate routers a caller had to consult
 // individually. This is the single front door that unifies them into ONE ExecutionDecision:
 //
-//   AXIS-1  capability tier   hardware() → {binary|hybrid|photonic}   (@galerinaa/hardware-tier)
-//   AXIS-2  precision technique routePrecision(opClass, ctx)            (@galerinaa/tower-citizen)
-//   AXIS-3  per-kernel offload PartitionDecider.decide(kernel)         (@galerinaa/ext-photonic-emulator)
+//   AXIS-1  capability tier   hardware() → {binary|hybrid|photonic}   (@galerina/hardware-tier)
+//   AXIS-2  precision technique routePrecision(opClass, ctx)            (@galerina/tower-citizen)
+//   AXIS-3  per-kernel offload PartitionDecider.decide(kernel)         (@galerina/ext-photonic-emulator)
 //
 // It COMPOSES the existing, proven routers — it re-derives no routing maths. Fail-closed and
 // consistent with the Tri-Pipe: photonic offload is only ever considered for a TERNARY op on an

@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/devtools-pci — PCI DSS 4.0.1 Static Checker
+// @galerina/devtools-pci — PCI DSS 4.0.1 Static Checker
 //
 // Walks the Galerina AST and raises PCI compliance findings.
 //
@@ -16,7 +16,7 @@
 //   SPORE-PCI-010  Req 6.3  — unsafe let binding named with card-data keyword
 // =============================================================================
 
-import { parseProgram, checkValueStates, type AstNode, type AstNodeKind, NodeFlags } from "@galerinaa/core-compiler";
+import { parseProgram, checkValueStates, type AstNode, type AstNodeKind, NodeFlags } from "@galerina/core-compiler";
 import {
   type PciFinding,
   type PciAuditReport,

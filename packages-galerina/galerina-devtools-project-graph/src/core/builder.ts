@@ -13,7 +13,7 @@ import type { Graph, GraphEdge, GraphJSON, GraphNode, NodeId } from "./types.js"
  *
  * ## Usage — typed graph variants
  * Use the domain-specific factories (`buildEffectGraph`, `buildDependencyGraph`,
- * etc.) when working with the LogicN-specific graph shapes. They handle node
+ * etc.) when working with the galerina-specific graph shapes. They handle node
  * creation and edge wiring for you.
  *
  * ## Usage — ad-hoc / transient graphs

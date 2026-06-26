@@ -1,5 +1,5 @@
 /**
- * `@galerinaa/core-sentinel-egress` (LSEG) — the governed write path for the audit
+ * `@galerina/core-sentinel-egress` (LSEG) — the governed write path for the audit
  * ledger.
  *
  * Replaces ad-hoc `fs.appendFileSync` per event (a Hardened-Border leak and a

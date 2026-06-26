@@ -45,7 +45,7 @@ Do **not** trust `normThroughput` for the `galerina*` rows (it over-counts reduc
 
 - **Slowest production language = Python in 16/19** measurable benchmarks (the CPython "comparison floor"). Exceptions:
   `hardware-targets` (no Python ran → Node 911.3K/s) and `tmf-container` (Node 48.9K/s — that column **is**
-  `@galerinaa/ext-tmf`).
+  `@galerina/ext-tmf`).
 - **Slowest overall = a Galerina `⟨interp⟩` diagnostic tier** in ~14/22 — by design (per-call proof rebuild), e.g.
   `governance-cost` governed 855/s, `crypto-ops` governed 368/s. Not the shipping path.
 

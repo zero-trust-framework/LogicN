@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/devtools-naming — Naming Checker
+// @galerina/devtools-naming — Naming Checker
 //
 // Static analysis of .spore source files for naming anti-patterns.
 // Enforces "Zero Ambiguity / Maximum Semantics" naming standard.
@@ -12,7 +12,7 @@
 //   SPORE-NAMING-005  MissingIntentOnPublicFlow
 // =============================================================================
 
-import type { AstNode, FlowMeta } from "@galerinaa/core-compiler";
+import type { AstNode, FlowMeta } from "@galerina/core-compiler";
 
 // ---------------------------------------------------------------------------
 // Diagnostic types

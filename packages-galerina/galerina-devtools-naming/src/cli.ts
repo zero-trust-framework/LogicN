@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // =============================================================================
-// @galerinaa/devtools-naming — CLI
+// @galerina/devtools-naming — CLI
 //
 // galerina-naming check <file.spore> [--json] [--strict]
 //

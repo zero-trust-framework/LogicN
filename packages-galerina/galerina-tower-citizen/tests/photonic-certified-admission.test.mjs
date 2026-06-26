@@ -28,7 +28,7 @@ const CALL = { prompt: "x", correlationId: "cp", model: "bitnet_b1_58_2b", maxNe
 // SAME hybrid path registry bridges use — the self-declared booleans alone no longer admit. Build a real
 // hybrid-signed certified manifest (same key as the bridge registry) for the happy-path test.
 const CERTIFIED_MANIFEST = {
-  bridgeId: "photonic-certified", packageName: "@galerinaa/tower-citizen", packageHash: "0".repeat(64),
+  bridgeId: "photonic-certified", packageName: "@galerina/tower-citizen", packageHash: "0".repeat(64),
   sourceEngine: "microsoft/BitNet", precision: "ternary", layoutVersion: "i2s-v1",
   hardwareIdentity: "photonic-certified-backend", determinismMode: "exact", certificationProfile: "certified",
 };

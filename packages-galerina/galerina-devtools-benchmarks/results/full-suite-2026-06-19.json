@@ -158,7 +158,7 @@
         "normThroughput": null,
         "throughputUnit": "mix-ops/s"
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.44,
@@ -362,7 +362,7 @@
         "galerinOpsPerSecond": 254652,
         "galerinOpsPerRun": 63248
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.3,
@@ -592,7 +592,7 @@
         "galerinOpsPerSecond": 55738,
         "galerinOpsPerRun": 42069
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.4,
@@ -793,7 +793,7 @@
         "normThroughput": 1890359,
         "throughputUnit": "records/s"
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.26,
@@ -998,7 +998,7 @@
         "galerinOpsPerSecond": 15,
         "galerinOpsPerRun": 1
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.16,
@@ -1203,7 +1203,7 @@
         "normThroughput": 2652520,
         "throughputUnit": "elements/s"
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.15,
@@ -1414,7 +1414,7 @@
         "galerinOpsPerSecond": 699,
         "galerinOpsPerRun": 1
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.21,
@@ -1596,7 +1596,7 @@
         "galerinOpsPerSecond": 5556,
         "galerinOpsPerRun": 1
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.21,
@@ -1827,7 +1827,7 @@
         "normThroughput": 163613,
         "throughputUnit": "items/s"
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.73,
@@ -2081,7 +2081,7 @@
         "normThroughput": 431854,
         "throughputUnit": "kernel-evals/s"
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.29,
@@ -2320,7 +2320,7 @@
         "throughputUnit": "cells/s",
         "rawThroughput": 25
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.3,
@@ -2602,7 +2602,7 @@
         "galerinOpsPerSecond": 376,
         "galerinOpsPerRun": 1
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.23,
@@ -2867,7 +2867,7 @@
         "galerinOpsPerSecond": 1053,
         "galerinOpsPerRun": 1
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.36,
@@ -3163,7 +3163,7 @@
         "throughputUnit": "trit-ops/s",
         "rawThroughput": 1
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.46,
@@ -3402,7 +3402,7 @@
         "throughputUnit": "records/s",
         "rawThroughput": 128
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.48,
@@ -3569,7 +3569,7 @@
         "normThroughput": null,
         "throughputUnit": "chains/s"
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.36,
@@ -3726,7 +3726,7 @@
         "normThroughput": 77479,
         "throughputUnit": "force-evals/s"
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.72,
@@ -3904,7 +3904,7 @@
         "normThroughput": 6831,
         "throughputUnit": "records/s"
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.58,
@@ -4067,7 +4067,7 @@
         "normThroughput": 9678,
         "throughputUnit": "pixels/s"
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.61,
@@ -4306,7 +4306,7 @@
         "normThroughput": 4763464,
         "throughputUnit": "nodes/s"
       },
-      "galerinManifest": {
+      "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.32,
@@ -4387,7 +4387,7 @@
       "nodejs": {
         "runtime": "nodejs",
         "benchmark": "tmf-container-v1",
-        "note": "Node.js column = @galerinaa/ext-tmf engine (the shipped Galerina artifact)",
+        "note": "Node.js column = @galerina/ext-tmf engine (the shipped Galerina artifact)",
         "iterations": 300000,
         "containerBytes": 203,
         "integrityRoot": "43386e644c7b53aa0900cda21c15acd15f30b3fdf997950e39e7dd3dbc685212",

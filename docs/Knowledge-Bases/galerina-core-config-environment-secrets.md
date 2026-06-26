@@ -204,7 +204,7 @@ Diagnostics must never include raw secret values.
 ### Environment Config Object Example
 
 ```ts
-import { loadConfigFromObjects } from "@galerinaa/core-config"
+import { loadConfigFromObjects } from "@galerina/core-config"
 
 const result = loadConfigFromObjects({
   project: {

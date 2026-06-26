@@ -44,5 +44,5 @@
   "security": false,
   "flowgraph": false,
 
-  "_note": "Set security:true and flowgraph:true to enable @galerinaa/devtools-security and @galerinaa/devtools-flowgraph integration (adds ~2s per file). Recommended for CI but slow for local checks."
+  "_note": "Set security:true and flowgraph:true to enable @galerina/devtools-security and @galerina/devtools-flowgraph integration (adds ~2s per file). Recommended for CI but slow for local checks."
 }

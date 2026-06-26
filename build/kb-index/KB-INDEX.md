@@ -2340,7 +2340,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 - links: [[feedback-http-transport-owner-locked]] [[galerina-key-custody-rotation-decision]] [[feedback-owner-gated-means-ask]]
 - terms: transport, build, shipped, owner, key, gate, never, auth, net-new, decision-support, ternary, deny, doesn, galerina
 
-## The `.tmf` Engine (`@galerinaa/ext-tmf`)
+## The `.tmf` Engine (`@galerina/ext-tmf`)
 `docs/Knowledge-Bases/galerina-tmf-engine.md`
 - codes: SPORE-SUBSTRATE-001, SPORE-GOV-3VL-001, SPORE-CRYPTO-PQ-001
 - tasks: #34, #204

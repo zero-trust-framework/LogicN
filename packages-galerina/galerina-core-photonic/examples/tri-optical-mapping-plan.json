@@ -47,7 +47,7 @@
   ],
   "mappings": [
     {
-      "logicPackage": "@galerinaa/core-logic",
+      "logicPackage": "@galerina/core-logic",
       "galeriname": "Tri",
       "states": [
         {

@@ -1,4 +1,4 @@
-# @galerinaa/governance-telemetry
+# @galerina/governance-telemetry
 
 Blind-observability exporter for Galerina apps. It streams a service's **governance + operational
 STATE** — governance-flag mask bits, permitted/observed effect *families*, K3-INDETERMINATE
@@ -24,7 +24,7 @@ headroom. That's the unique, non-duplicable value.
 
 ## Usage
 ```ts
-import { startExporter } from "@galerinaa/governance-telemetry";
+import { startExporter } from "@galerina/governance-telemetry";
 
 const handle = await startExporter({
   port: 9090,                 // metrics port, isolated from the app's ingress (e.g. 8080)

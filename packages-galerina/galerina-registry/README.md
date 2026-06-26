@@ -1,4 +1,4 @@
-# @galerinaa/registry — Certified Package Registry
+# @galerina/registry — Certified Package Registry
 
 The Galerina certified package registry is the canonical source of governance-reviewed,
 cryptographically-signed packages for the Galerina platform.
@@ -21,7 +21,7 @@ Every package in this registry has been reviewed against the Galerina governance
 
 ```
 packages/
-  @galerinaa/
+  @galerina/
     auth/
       package.galerina.yaml     # certified auth package manifest
     healthcare/

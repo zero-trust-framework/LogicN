@@ -1,5 +1,5 @@
 /**
- * @galerinaa/docs — type model.
+ * @galerina/docs — type model.
  *
  * Two groups of types live here:
  *   1. The INPUT a caller hands the generator (`GenerateOpenApiInput`): an API
@@ -15,7 +15,7 @@
  * `x-`-prefixed keys are allowed, so the typed fields stay typed.
  *
  * The route types (`RouteDeclaration`, `EffectiveRoutePolicy`, `HttpMethod`,
- * `EffectivePosture`) are owned by `@galerinaa/framework-app-kernel`; this package
+ * `EffectivePosture`) are owned by `@galerina/framework-app-kernel`; this package
  * reads them, it does not redefine the route model.
  */
 import type {
@@ -25,7 +25,7 @@ import type {
 } from "../../galerina-framework-app-kernel/dist/index.js";
 
 // Re-export the route types we accept so consumers can import the whole surface
-// from `@galerinaa/docs` without reaching into the kernel package directly.
+// from `@galerina/docs` without reaching into the kernel package directly.
 export type { RouteDeclaration, EffectiveRoutePolicy, EffectivePosture };
 
 // ── OpenAPI document model (emitted subset) ─────────────────────────────────

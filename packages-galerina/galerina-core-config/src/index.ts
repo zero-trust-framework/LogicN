@@ -1,7 +1,7 @@
 /**
  * Canonical environment mode constants for the Galerina platform.
  *
- * EnvironmentMode is owned by this package (@galerinaa/core-config).
+ * EnvironmentMode is owned by this package (@galerina/core-config).
  * All other packages that need EnvironmentMode should import from here.
  * Once workspace links are established this will be a direct package import.
  */
@@ -27,13 +27,13 @@ export * from "./governance.js";
 
 /**
  * Diagnostic severity levels for config diagnostics.
- * Structurally compatible with DiagnosticSeverity in @galerinaa/core.
+ * Structurally compatible with DiagnosticSeverity in @galerina/core.
  */
 export type ConfigDiagnosticSeverity = "info" | "warning" | "error";
 
 /**
  * Diagnostic produced by config validation functions.
- * Structurally compatible with BaseDiagnostic in @galerinaa/core.
+ * Structurally compatible with BaseDiagnostic in @galerina/core.
  * Additional fields: path (config key), suggestedFix (human-readable fix hint).
  */
 export interface ConfigDiagnostic {

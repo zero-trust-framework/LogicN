@@ -1,7 +1,7 @@
 // =============================================================================
-// @galerinaa/devtools-pci — Black Box Compliance Ledger (#146)
+// @galerina/devtools-pci — Black Box Compliance Ledger (#146)
 //
-// Consumes the audit-egress ledger produced by @galerinaa/core-sentinel-egress
+// Consumes the audit-egress ledger produced by @galerina/core-sentinel-egress
 // (AuditEgress / readEgressLedger) and emits a structured, append-only,
 // HASH-LINKED compliance report for an auditor.
 //
@@ -25,7 +25,7 @@ import { appendFileSync, mkdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 // ---------------------------------------------------------------------------
-// Egress ledger shape (format-compatible with @galerinaa/core-sentinel-egress)
+// Egress ledger shape (format-compatible with @galerina/core-sentinel-egress)
 // ---------------------------------------------------------------------------
 
 /**
@@ -56,7 +56,7 @@ const COMPLIANCE_LEDGER_FILE = "compliance-ledger.jsonl";
  *
  * Parses each non-blank line of `<dir>/audit-egress.jsonl` into an
  * {@link EgressBatch}. Returns `[]` if the ledger file does not exist.
- * Format-compatible with `readEgressLedger` from @galerinaa/core-sentinel-egress.
+ * Format-compatible with `readEgressLedger` from @galerina/core-sentinel-egress.
  */
 export function readEgressBatches(dir: string): EgressBatch[] {
   const path = join(dir, EGRESS_LEDGER_FILE);

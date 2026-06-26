@@ -1,4 +1,4 @@
-# The `.tmf` Engine (`@galerinaa/ext-tmf`)
+# The `.tmf` Engine (`@galerina/ext-tmf`)
 
 **Status: IN PROGRESS (Phase 2, roadmap #6).** The `.tmf` (TritMesh Format) engine is being built as a
 Galerina **ext** package — `packages-galerina/galerina-ext-tmf` — under the owner decision of 2026-06-16 to

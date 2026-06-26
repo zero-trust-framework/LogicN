@@ -1,7 +1,7 @@
-// @galerinaa/ext-photonic-emulator — the photonic-PPU backend package.
+// @galerina/ext-photonic-emulator — the photonic-PPU backend package.
 //
 // A physics-faithful (Rung-2) ternary-MAC emulator + the partition cost-model router,
-// behind the neutral @galerinaa/inference-bridge-contract. Digital stays the default and is
+// behind the neutral @galerina/inference-bridge-contract. Digital stays the default and is
 // byte-unchanged; an eligible kernel routes to the emulator ONLY on a proven net win and
 // is re-verified — fail-closed to digital. EMULATED, not silicon (no measured speedup).
 //

@@ -1,5 +1,5 @@
 {
-  "name": "@galerinaa/ext-bridge-bitnet",
+  "name": "@galerina/ext-bridge-bitnet",
   "version": "1.0.0-beta.2",
   "description": "Galerina governed bridge for Microsoft BitNet.cpp — ternary CPU inference with Tower audit lifecycle",
   "license": "Apache-2.0",
@@ -19,7 +19,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@galerinaa/tower-citizen": "file:../galerina-tower-citizen"
+    "@galerina/tower-citizen": "file:../galerina-tower-citizen"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",

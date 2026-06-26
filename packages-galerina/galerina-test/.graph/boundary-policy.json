@@ -1,5 +1,5 @@
 {
-  "packageName": "@galerinaa/test",
+  "packageName": "@galerina/test",
   "allowedExternal": [
     "node:child_process",
     "node:fs",

@@ -6,7 +6,7 @@
 // (effects inherited from callees) are always computed correctly.
 //
 // Diagnostic codes: SPORE-PGRAPH-010..013 — project-graph-owned, the effect-graph VIEW of
-// effect propagation; distinct from logicn-core-compiler's authoritative SPORE-EFFECT-* codes.
+// effect propagation; distinct from galerina-core-compiler's authoritative SPORE-EFFECT-* codes.
 // =============================================================================
 
 import { GraphBuilder } from "../core/builder.js";
@@ -44,7 +44,7 @@ export interface EffectEdgeData {
 export type EffectGraph = Graph<EffectNodeData, EffectEdgeData>;
 
 // ---------------------------------------------------------------------------
-// Diagnostic constants (mirrored from logicn-core-compiler)
+// Diagnostic constants (mirrored from galerina-core-compiler)
 // ---------------------------------------------------------------------------
 
 export const LLN_PGRAPH_010 = {

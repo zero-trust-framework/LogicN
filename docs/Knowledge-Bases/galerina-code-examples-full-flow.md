@@ -833,13 +833,13 @@ intent UsePaymentAdapter {
 }
 
 // Package manifest exposes governance metadata — visible to the intent graph.
-package "@galerinaa/stripe-adapter" {
+package "@galerina/stripe-adapter" {
   effects      [network.external, secret.read, payment.charge]
   capabilities [payment.charge]
   resources    [StripeAPI, SecretVault]
 }
 
-import StripeAdapter from "@galerinaa/stripe-adapter"
+import StripeAdapter from "@galerina/stripe-adapter"
 
 governance PaymentAdapterGovernance {
   effects [
@@ -881,7 +881,7 @@ effects [network.external, secret.read, payment.charge, audit.write] {
 **Governance diff on adding this import:**
 
 ```text
-Importing @galerinaa/stripe-adapter introduces:
+Importing @galerina/stripe-adapter introduces:
   + network.external
   + secret.read
   + payment.charge

@@ -1,5 +1,5 @@
 {
-  "name": "@galerinaa/devtools-project-graph",
+  "name": "@galerina/devtools-project-graph",
   "version": "1.0.0-beta.2",
   "description": "Graph data structures, algorithms, and runtime reporting for the LogicN platform",
   "license": "Apache-2.0",

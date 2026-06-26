@@ -335,7 +335,7 @@ export type FlowTraceDecision = "allow" | "deny" | "unknown" | "conflict";
 
 /**
  * A governed trace event. All secret and PII fields must be redacted before emission.
- * Structurally compatible with FlowTraceEvent in @galerinaa/core.
+ * Structurally compatible with FlowTraceEvent in @galerina/core.
  */
 export interface FlowTraceEventRecord {
   readonly traceId: string;

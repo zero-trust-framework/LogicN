@@ -1,5 +1,5 @@
 /**
- * Generation tests for @galerinaa/docs.
+ * Generation tests for @galerina/docs.
  *
  * These drive the REAL generator over the REAL App Kernel route resolver
  * (resolveEffectiveRoutePolicy) — nothing is mocked. They assert that the emitted

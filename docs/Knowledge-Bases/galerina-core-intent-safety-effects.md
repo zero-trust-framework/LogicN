@@ -2,7 +2,7 @@
 
 **Status:** Stage 1 — type contracts and documentation complete; parser/checker stubs in place  
 **Scope:** Developer intent declarations, safety levels, security effects, flow tracing, runtime manifests  
-**Packages:** `@galerinaa/core`, `@galerinaa/core-compiler`, `@galerinaa/core-reports`
+**Packages:** `@galerina/core`, `@galerina/core-compiler`, `@galerina/core-reports`
 
 ---
 
@@ -164,7 +164,7 @@ contract {
 
 ## 5. Diagnostic Codes — SPORE-INTENT-*
 
-Defined in `@galerinaa/core-compiler` as `SPORE_INTENT_001` through `SPORE_INTENT_005`.
+Defined in `@galerina/core-compiler` as `SPORE_INTENT_001` through `SPORE_INTENT_005`.
 
 | Code | Name | Condition |
 |---|---|---|
@@ -215,7 +215,7 @@ contract {
 
 ## 7. Type Contracts
 
-### In `@galerinaa/core`
+### In `@galerina/core`
 
 ```ts
 // Note: "safe" maps to the legacy 'safe flow' qualifier (SPORE-SYNTAX-LEGACY-002).
@@ -249,7 +249,7 @@ export interface FlowDeclarationMetadata {
 }
 ```
 
-### In `@galerinaa/core-compiler`
+### In `@galerina/core-compiler`
 
 ```ts
 export interface IntentCheckResult {
@@ -269,7 +269,7 @@ export interface IntentMismatch {
 }
 ```
 
-### In `@galerinaa/core-reports`
+### In `@galerina/core-reports`
 
 ```ts
 export interface IntentReport extends LoReportBase {
@@ -313,7 +313,7 @@ export interface RuntimeFlowManifest {
 
 ## 8. AstNodeKind Additions
 
-New node kinds added to `AstNodeKind` in `@galerinaa/core`:
+New node kinds added to `AstNodeKind` in `@galerina/core`:
 
 | Kind | Syntax element | Notes |
 |---|---|---|
@@ -420,25 +420,25 @@ let count = orders.count()
 
 | Area | Status | Notes |
 |---|---|---|
-| `SafetyLevel` type | ✅ | `@galerinaa/core/src/index.ts` |
-| `IntentDeclaration` type | ✅ | `@galerinaa/core/src/index.ts` |
-| `EffectReference` type | ✅ | `@galerinaa/core/src/index.ts` |
-| `FlowDeclarationMetadata` type | ✅ | `@galerinaa/core/src/index.ts` |
-| `FlowTraceEvent` type | ✅ | `@galerinaa/core/src/index.ts` |
-| AstNodeKind additions | ✅ | 8 new node kinds in `@galerinaa/core` |
-| `IntentCheckResult`, `IntentMismatch` | ✅ | `@galerinaa/core-compiler` |
-| `SPORE-INTENT-001..005` constants | ✅ | `@galerinaa/core-compiler` |
-| `CompilerSafetyLevel`, `GovernedSurfaceKind` | ✅ | `@galerinaa/core-compiler` |
-| `FlowScope` extended to all safety levels | ✅ | `@galerinaa/core-compiler` (internal) |
+| `SafetyLevel` type | ✅ | `@galerina/core/src/index.ts` |
+| `IntentDeclaration` type | ✅ | `@galerina/core/src/index.ts` |
+| `EffectReference` type | ✅ | `@galerina/core/src/index.ts` |
+| `FlowDeclarationMetadata` type | ✅ | `@galerina/core/src/index.ts` |
+| `FlowTraceEvent` type | ✅ | `@galerina/core/src/index.ts` |
+| AstNodeKind additions | ✅ | 8 new node kinds in `@galerina/core` |
+| `IntentCheckResult`, `IntentMismatch` | ✅ | `@galerina/core-compiler` |
+| `SPORE-INTENT-001..005` constants | ✅ | `@galerina/core-compiler` |
+| `CompilerSafetyLevel`, `GovernedSurfaceKind` | ✅ | `@galerina/core-compiler` |
+| `FlowScope` extended to all safety levels | ✅ | `@galerina/core-compiler` (internal) |
 | `parseFlowStart()` regex extended | ✅ | Recognises guarded/privileged/unsafe/experimental/unsafe block |
 | `validateIntentEffects()` stub | ✅ | Returns empty result; TODOs in place for Stages 3–5 |
-| `IntentReport`, `SafetyReport`, `FlowTraceReport` | ✅ | `@galerinaa/core-reports` |
-| `RuntimeFlowManifest` type | ✅ | `@galerinaa/core-reports` |
-| `createIntentReport()` | ✅ | `@galerinaa/core-reports` |
-| `createSafetyReport()` | ✅ | `@galerinaa/core-reports` |
-| `createFlowTraceReport()` | ✅ | `@galerinaa/core-reports` |
+| `IntentReport`, `SafetyReport`, `FlowTraceReport` | ✅ | `@galerina/core-reports` |
+| `RuntimeFlowManifest` type | ✅ | `@galerina/core-reports` |
+| `createIntentReport()` | ✅ | `@galerina/core-reports` |
+| `createSafetyReport()` | ✅ | `@galerina/core-reports` |
+| `createFlowTraceReport()` | ✅ | `@galerina/core-reports` |
 | Parser support (Stage 2) | ⏳ | Blocked on `compiler/galerina.js` extension |
 | Intent/effect checker (Stage 3) | ⏳ | Stub in place; needs AST → checker wiring |
 | Manifest generation (Stage 4) | ⏳ | Types ready; generator not yet wired |
 | Runtime integration (Stage 5) | ⏳ | Deferred to runtime package |
-| CLI integration (Stage 6) | ⏳ | Deferred to `@galerinaa/core-cli` |
+| CLI integration (Stage 6) | ⏳ | Deferred to `@galerina/core-cli` |

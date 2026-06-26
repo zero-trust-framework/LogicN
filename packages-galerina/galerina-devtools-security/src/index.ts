@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/devtools-security — Public API
+// @galerina/devtools-security — Public API
 // =============================================================================
 
 // Core audit runner

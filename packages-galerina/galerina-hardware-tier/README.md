@@ -1,4 +1,4 @@
-# @galerinaa/hardware-tier
+# @galerina/hardware-tier
 
 The **Tri-Pipe topology** for Galerina: a cached, **attested** `hardware()` capability directive
 `{binary | hybrid | photonic}` plus the **per-tier package loader** that selects which `BridgeRegistry`
@@ -6,7 +6,7 @@ answers the engine's dispatch — **photonic > hybrid > binary**, with the owner
 photonic if not hybrid if not binary"* and **binary as the unconditional floor**.
 
 > **Two orthogonal axes.** AXIS-1 (this package) is a *capability preference* — it picks the **package**.
-> AXIS-2 (the 0053 `route()` in `@galerinaa/ext-photonic-emulator`) decides, **per kernel**, whether to
+> AXIS-2 (the 0053 `route()` in `@galerina/ext-photonic-emulator`) decides, **per kernel**, whether to
 > actually offload. Preference **never forces** compute onto photonics: a crypto / control-flow / small /
 > vote-infeasible kernel runs the binary-fallback bridge regardless of tier. **Worst case == binary ==
 > identical to today.**
@@ -60,6 +60,6 @@ npm run prove     # re-runnable prove-own-maths, exit 0 (H1–H5 + O1–O4; O1 s
 ```
 
 Discharges the 0054 spec's design-added obligations (§1.4 H1–H5, §5 O1–O4) against this package's compiled
-code. Composes `@galerinaa/ext-photonic-emulator`'s `route()`/cost model for the AXIS-2 sweep.
+code. Composes `@galerina/ext-photonic-emulator`'s `route()`/cost model for the AXIS-2 sweep.
 
 License: Apache-2.0.

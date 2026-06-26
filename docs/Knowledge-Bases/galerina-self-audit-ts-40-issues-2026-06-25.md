@@ -23,7 +23,7 @@ source and adopted.
 | **Supply Chain & Dependency Hijacking** ||||||
 | 60-1 | Malicious `@types` packages | partial | partial | 30 pkgs `@types/node ^25.9.1`/`^22.10.0`; `fuse-loader.ts:24-65` drops `@types/node`, hand-declares node slices | config | 62 |
 | 60-2 | Typosquatting | no | n/a | All 8 external deps spelled correctly; `audit-name-collisions.mjs` guards names | already-safe | 90 |
-| 60-3 | Dependency-confusion | partial | yes | All internal deps `file:`; `@galerinaa` scope unclaimed, `@galerinaa/core` not `private`; LANG strength SPORE-PKG-002 + `fuse-loader` registryCheck | config | 58 |
+| 60-3 | Dependency-confusion | partial | yes | All internal deps `file:`; `@galerina` scope unclaimed, `@galerina/core` not `private`; LANG strength SPORE-PKG-002 + `fuse-loader` registryCheck | config | 58 |
 | 60-4 | Deep transitive vulns | **yes** | n/a | snarkjs locks 38 entries (ejs/escodegen/static-eval…); **no `npm audit`/OSV/dependabot in CI** | ci | 48 |
 | 60-5 | Malicious lifecycle scripts | partial | yes | 0 first-party hooks; only `argon2 install` (legit gyp); no `.npmrc`/`ignore-scripts`; LANG SPORE-PKG-004 deny | config | 60 |
 | 60-6 | Unpinned deps (`^`/`~`) | **yes** | partial | 100% caret, 0 pins; locks mitigate `npm ci` but `npm install`/root absorb | config | 55 |
@@ -74,14 +74,14 @@ source and adopted.
 1. **[ZT 48 · BUILD · 61-9 SSRF — TOP PRIORITY]** Wire `egress-guard.ts` into the live `fetch` path: replace the inline hostname regex in `stdlib.ts` `networkAsync` with `guardOutboundHost(new URL(url).hostname)`, then `dns.lookup` (all addresses) → `guardResolvedAddresses()`, connect only to a verified pinned IP, block on `requiresDnsRecheck`. Reconcile the taint sink name (`Http.fetch`/`http.*`). Regressions: `[::ffff:169.254.169.254]`, `*.corp`, `100.64.x`, DNS→`127.0.0.1`.
 2. **[ZT 48 · CI · 60-4]** Add `npm audit --omit=dev --audit-level=high` (or `osv-scanner -r .`) per package + Dependabot/Renovate; gate snarkjs ext behind opt-in install.
 3. **[ZT 55 · CONFIG · 60-6]** Mandate `npm ci` everywhere + `lockfile-lint`; add a root `package-lock.json` (or document dep-free).
-4. **[ZT 58 · CONFIG · 60-3]** Claim the `@galerinaa` npm scope; `"private": true` on `@galerinaa/core` + `@galerinaa/devtools-project-graph`; keep internal deps `file:`/`workspace:`; turn `requireCertified` on in prod.
+4. **[ZT 58 · CONFIG · 60-3]** Claim the `@galerina` npm scope; `"private": true` on `@galerina/core` + `@galerina/devtools-project-graph`; keep internal deps `file:`/`workspace:`; turn `requireCertified` on in prod.
 5. **[ZT 60 · CONFIG · 60-5]** Root `.npmrc` `ignore-scripts=true`; allow-list `argon2`'s build; document `npm ci --ignore-scripts`.
 6. **[ZT 62 · BUILD · 60-8]** Extend `provenance.mjs` to cover `dist/` + CLI and **sign** with the existing `attestation.ts` hybrid signer.
 7. **[ZT 62 · BUILD · 60-11]** `galerina-devtools-project-graph`: exclude `*.map`/`*.d.ts.map` from the published tarball (`files:` allowlist or drop `sourceMap`/`declarationMap`); add a `npm pack --dry-run` CI lint.
 8. **[ZT 62 · CONFIG · 60-1]** Pin `@types/node` exactly per package; unify the major; keep the `fuse-loader` no-trust-`@types` pattern.
 9. **[ZT 60 · BUILD · 61-6]** `DataClassification` → `const enum` (or string-keyed `Record` + reject-on-undefined at `risk-calculator.ts:78`). Display-only today.
 10. **[ZT 66 · BUILD · 61-2]** Replace blind `as T` with narrowing guards, highest-trust first: `vault-client.ts:103/121` → `isKvV2Response(x: unknown)`; then `secrets-tmf store.ts:67`. Shared `assertShape` per the `manifest.ts` gold standard.
-11. **[ZT 70 · BUILD · 61-3]** Formalize the `typeof`-guard pattern into a shared `@galerinaa/schema` `parse(unknown): T | trap`; route all external/network parsers through it.
+11. **[ZT 70 · BUILD · 61-3]** Formalize the `typeof`-guard pattern into a shared `@galerina/schema` `parse(unknown): T | trap`; route all external/network parsers through it.
 12. **[ZT 74 · CONFIG · 60-20]** Overlaps #3/#5: committed root lockfile + `npm ci --ignore-scripts` + pin the crypto/wasm `^` ranges.
 13. **[ZT 80 · CONFIG · 60-10]** Set `env: { NODE_OPTIONS: '' }` on CI build/test jobs.
 14. **[ZT 82 · BUILD · 61-19]** `.catch()` at `index.ts:434` (fail-closed 500) + a process-level `unhandledRejection`/`uncaughtException` backstop.

@@ -1,4 +1,4 @@
-# @galerinaa/test
+# @galerina/test
 
 The consolidated **Galerina test harness** — one named, consumable package that
 folds the repo's scattered test tooling behind a single clean API and CLI, the
@@ -38,7 +38,7 @@ npm test            # node --test tests/*.test.mjs (against dist/)
 ## API
 
 ```ts
-import { runUnit, runE2e, runConformance, runFidelity, runAll } from "@galerinaa/test";
+import { runUnit, runE2e, runConformance, runFidelity, runAll } from "@galerina/test";
 
 const res = await runAll({ core: true });   // CheckResult { kind:"all", ok, exitCode, children, … }
 if (!res.ok) process.exit(res.exitCode);

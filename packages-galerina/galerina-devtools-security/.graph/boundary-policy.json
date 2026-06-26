@@ -1,9 +1,9 @@
 {
-  "packageName": "@galerinaa/devtools-security",
+  "packageName": "@galerina/devtools-security",
   "allowedExternal": [
-    "@galerinaa/core-compiler",
-    "@galerinaa/core-economics",
-    "@galerinaa/devtools-pci",
+    "@galerina/core-compiler",
+    "@galerina/core-economics",
+    "@galerina/devtools-pci",
     "node:fs",
     "node:path"
   ],

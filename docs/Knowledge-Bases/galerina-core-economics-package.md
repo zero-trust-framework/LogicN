@@ -97,8 +97,8 @@ galerina-core-economics
 ### Input (reads from governance layer)
 
 ```typescript
-import type { ProofGraph, GovernanceVerifyResult } from "@galerinaa/core-compiler";
-import type { ExecutionPlan } from "@galerinaa/core-compiler";
+import type { ProofGraph, GovernanceVerifyResult } from "@galerina/core-compiler";
+import type { ExecutionPlan } from "@galerina/core-compiler";
 ```
 
 ### Output (consumed by runtime layer)

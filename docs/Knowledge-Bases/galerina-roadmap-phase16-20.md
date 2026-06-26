@@ -79,8 +79,8 @@ Galerina currently resolves names within a single source file. Phase 17 extends
 resolution to the package level.
 
 - `package.galerina.yaml` files are scanned from disk at compile time
-- `import Email from "@galerinaa/healthcare-types"` resolves by looking up the
-  manifest for `@galerinaa/healthcare-types` and locating the `Email` export
+- `import Email from "@galerina/healthcare-types"` resolves by looking up the
+  manifest for `@galerina/healthcare-types` and locating the `Email` export
 - Cross-module type sharing: a type declared in one package is usable in
   another with full type-checker support
 - `SPORE-NAME-003`: cross-module shadow detection — a local name that shadows an

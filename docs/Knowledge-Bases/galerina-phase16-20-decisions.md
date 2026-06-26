@@ -62,12 +62,12 @@ TypeScript compiler dependency removed
 ## Decision 2 — Package System: Both registry and manifests
 
 ```
-Built-in @galerinaa/* packages → internal registry (hardcoded, fast)
+Built-in @galerina/* packages → internal registry (hardcoded, fast)
 User/workspace packages     → package.galerina.yaml manifests
 ```
 
 **Resolution order:**
-1. Built-in registry (for `@galerinaa/*` certified packages)
+1. Built-in registry (for `@galerina/*` certified packages)
 2. Workspace `package.galerina.yaml`
 3. Local package path
 4. Later: certified remote registry
@@ -141,7 +141,7 @@ Rule: developers remember "Semantic Graph milestone", not "Phase 18". Use both.
 
 ```
 Stage B Complete    = Medium (lexer + parser + type checker + effect checker self-hosted)
-Package System      = Both (registry for @galerinaa/*, manifests for user packages)
+Package System      = Both (registry for @galerina/*, manifests for user packages)
 executePlan() scope = All flows (PurePlan for pure, GovernedPlan for governed)
 Roadmap format      = Phase numbers + milestone names
 ```

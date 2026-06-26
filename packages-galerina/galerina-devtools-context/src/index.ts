@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/devtools-context — Public API
+// @galerina/devtools-context — Public API
 //
 // Context Receipt generator for Galerina .spore files.
 // Produces minimal AI-consumable structural summaries: ~2% token cost,

@@ -6,7 +6,7 @@ import { createHash } from "node:crypto";
 import { type AstNode, type AstNodeKind, type FlowMeta, type SourceLocation } from "./parser.js";
 import { inferFlowResilience, type FaultHandler } from "./resilience-inference.js";
 import { type EffectCheckResult } from "./effect-checker.js";
-import { SemanticGraphBuilder, type SemanticGraph } from "@galerinaa/devtools-graph-algorithms";
+import { SemanticGraphBuilder, type SemanticGraph } from "@galerina/devtools-graph-algorithms";
 import { buildExecutionPlan as _buildExecutionPlanImpl } from "./runtime/executionPlan.js";
 import type { PassiveExecutionPlan } from "./runtime/executionPlan.js";
 import { effectsToFlags } from "./type-registry.js";

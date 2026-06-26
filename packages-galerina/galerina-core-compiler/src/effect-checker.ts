@@ -8,7 +8,7 @@
 // =============================================================================
 
 import { type AstNode, type AstNodeKind, type ParseDiagnostic, type FlowMeta, type SourceLocation } from "./parser.js";
-import { buildCallGraph, topoSort, detectCycle } from "@galerinaa/devtools-graph-algorithms";
+import { buildCallGraph, topoSort, detectCycle } from "@galerina/devtools-graph-algorithms";
 import { effectsToFlags, type EffectFlagsMask, EffectCheckerFlags, type EffectCheckerFlagsMask } from "./type-registry.js";
 import { getStdlibRequiredEffects, getStdlibModuleKind } from "./stdlib-registry.js";
 

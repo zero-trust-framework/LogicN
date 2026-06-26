@@ -5,9 +5,9 @@
 //   1. loadPackageManifest with missing file → undefined
 //   2. loadPackageManifest with valid YAML → PackageManifest
 //   3. resolvePackageTypes with types list → correct array
-//   4. @galerinaa/domain-types registry includes "Email" and "UserId"
-//   5. @galerinaa/enterprise-types registry includes expected types
-//   6. @galerinaa/compute-types registry includes expected types
+//   4. @galerina/domain-types registry includes "Email" and "UserId"
+//   5. @galerina/enterprise-types registry includes expected types
+//   6. @galerina/compute-types registry includes expected types
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -199,36 +199,36 @@ describe("resolvePackageTypes — type extraction", () => {
   });
 });
 
-// ── Registry: @galerinaa/domain-types ───────────────────────────────────────────
+// ── Registry: @galerina/domain-types ───────────────────────────────────────────
 
-describe("@galerinaa/domain-types — extended registry", () => {
-  it("resolveImports includes 'Email' as a type from @galerinaa/domain-types", () => {
+describe("@galerina/domain-types — extended registry", () => {
+  it("resolveImports includes 'Email' as a type from @galerina/domain-types", () => {
     const { ast } = parseProgram(
-      `import Email from "@galerinaa/domain-types"\n`,
+      `import Email from "@galerina/domain-types"\n`,
       "test.spore",
     );
     const result = resolveImports(ast);
     assert.ok(
       result.typeNames.includes("Email"),
-      `Email should be a type from @galerinaa/domain-types, got typeNames: ${result.typeNames.join(", ")}`,
+      `Email should be a type from @galerina/domain-types, got typeNames: ${result.typeNames.join(", ")}`,
     );
   });
 
-  it("resolveImports includes 'UserId' as a type from @galerinaa/domain-types", () => {
+  it("resolveImports includes 'UserId' as a type from @galerina/domain-types", () => {
     const { ast } = parseProgram(
-      `import UserId from "@galerinaa/domain-types"\n`,
+      `import UserId from "@galerina/domain-types"\n`,
       "test.spore",
     );
     const result = resolveImports(ast);
     assert.ok(
       result.typeNames.includes("UserId"),
-      `UserId should be a type from @galerinaa/domain-types, got typeNames: ${result.typeNames.join(", ")}`,
+      `UserId should be a type from @galerina/domain-types, got typeNames: ${result.typeNames.join(", ")}`,
     );
   });
 
-  it("resolveImports resolves all @galerinaa/domain-types members as types", () => {
+  it("resolveImports resolves all @galerina/domain-types members as types", () => {
     const { ast } = parseProgram(
-      `import { Email, Url, Path, CurrencyCode, Reference, UserId, Actor, TraceId, TenantId, Deadline } from "@galerinaa/domain-types"\n`,
+      `import { Email, Url, Path, CurrencyCode, Reference, UserId, Actor, TraceId, TenantId, Deadline } from "@galerina/domain-types"\n`,
       "test.spore",
     );
     const result = resolveImports(ast);
@@ -236,30 +236,30 @@ describe("@galerinaa/domain-types — extended registry", () => {
     for (const name of expected) {
       assert.ok(
         result.typeNames.includes(name),
-        `${name} should be in typeNames for @galerinaa/domain-types`,
+        `${name} should be in typeNames for @galerina/domain-types`,
       );
     }
   });
 });
 
-// ── Registry: @galerinaa/enterprise-types ───────────────────────────────────────
+// ── Registry: @galerina/enterprise-types ───────────────────────────────────────
 
-describe("@galerinaa/enterprise-types — extended registry", () => {
-  it("resolveImports includes 'Policy' as type from @galerinaa/enterprise-types", () => {
+describe("@galerina/enterprise-types — extended registry", () => {
+  it("resolveImports includes 'Policy' as type from @galerina/enterprise-types", () => {
     const { ast } = parseProgram(
-      `import Policy from "@galerinaa/enterprise-types"\n`,
+      `import Policy from "@galerina/enterprise-types"\n`,
       "test.spore",
     );
     const result = resolveImports(ast);
     assert.ok(
       result.typeNames.includes("Policy"),
-      `Policy should be a type from @galerinaa/enterprise-types`,
+      `Policy should be a type from @galerina/enterprise-types`,
     );
   });
 
-  it("resolveImports resolves AuditRecord and AuditProof from @galerinaa/enterprise-types", () => {
+  it("resolveImports resolves AuditRecord and AuditProof from @galerina/enterprise-types", () => {
     const { ast } = parseProgram(
-      `import { AuditRecord, AuditProof, ExecutionPlan, RuntimeReport } from "@galerinaa/enterprise-types"\n`,
+      `import { AuditRecord, AuditProof, ExecutionPlan, RuntimeReport } from "@galerina/enterprise-types"\n`,
       "test.spore",
     );
     const result = resolveImports(ast);
@@ -270,18 +270,18 @@ describe("@galerinaa/enterprise-types — extended registry", () => {
   });
 });
 
-// ── Registry: @galerinaa/compute-types ──────────────────────────────────────────
+// ── Registry: @galerina/compute-types ──────────────────────────────────────────
 
-describe("@galerinaa/compute-types — extended registry", () => {
-  it("resolveImports includes 'ComputeTarget' from @galerinaa/compute-types", () => {
+describe("@galerina/compute-types — extended registry", () => {
+  it("resolveImports includes 'ComputeTarget' from @galerina/compute-types", () => {
     const { ast } = parseProgram(
-      `import ComputeTarget from "@galerinaa/compute-types"\n`,
+      `import ComputeTarget from "@galerina/compute-types"\n`,
       "test.spore",
     );
     const result = resolveImports(ast);
     assert.ok(
       result.typeNames.includes("ComputeTarget"),
-      `ComputeTarget should be a type from @galerinaa/compute-types`,
+      `ComputeTarget should be a type from @galerina/compute-types`,
     );
   });
 });

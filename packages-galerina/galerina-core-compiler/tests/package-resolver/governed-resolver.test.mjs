@@ -92,7 +92,7 @@ describe("SPORE-PKG constants: shape conformance", () => {
 
 describe("checkPackageCapabilityExpansion: SPORE-PKG-001", () => {
   const BASE_MANIFEST = {
-    name: "@galerinaa/auth",
+    name: "@galerina/auth",
     version: "1.3.0",
     exports: { types: [], flows: [], events: [] },
     capabilities: ["crypto.password.verify"],
@@ -179,7 +179,7 @@ describe("checkInstallScript: SPORE-PKG-004", () => {
 
 describe("checkPackageProvenance: SPORE-PKG-003 and SPORE-PKG-005", () => {
   const FULL_MANIFEST = {
-    name: "@galerinaa/auth",
+    name: "@galerina/auth",
     version: "1.2.0",
     exports: { types: [], flows: [], events: [] },
     hash: GOOD_HASH,
@@ -249,7 +249,7 @@ describe("checkPackageProvenance: SPORE-PKG-003 and SPORE-PKG-005", () => {
 
 describe("checkPackageProvenance: requireCertified promotes SPORE-PKG-003/005 to error", () => {
   const BARE = {
-    name: "@galerinaa/stub",
+    name: "@galerina/stub",
     version: "0.1.0",
     exports: { types: [], flows: [], events: [] },
     hash: "sha256:pending", // placeholder => invalid hash
@@ -278,7 +278,7 @@ describe("checkPackageProvenance: requireCertified promotes SPORE-PKG-003/005 to
 
   it("requireCertified:true with a fully valid package -> no provenance diagnostics", () => {
     const good = {
-      name: "@galerinaa/good", version: "1.0.0",
+      name: "@galerina/good", version: "1.0.0",
       exports: { types: [], flows: [], events: [] },
       hash: GOOD_HASH, signature: "sig:ed25519:abc",
     };
@@ -294,7 +294,7 @@ describe("checkPackageProvenance: requireCertified promotes SPORE-PKG-003/005 to
 
 describe("checkRegistryTrust: SPORE-PKG-002 untrusted-registry enforcement", () => {
   const mk = (overrides) => ({
-    name: "@galerinaa/pkg", version: "1.0.0",
+    name: "@galerina/pkg", version: "1.0.0",
     exports: { types: [], flows: [], events: [] },
     hash: GOOD_HASH, signature: "sig:ed25519:abc", ...overrides,
   });
@@ -358,7 +358,7 @@ describe("checkRegistryTrust: SPORE-PKG-002 untrusted-registry enforcement", () 
 describe("checkPackageProvenance: SPORE-PKG-006 signing-key revocation (defense-in-depth)", () => {
   const REVOKED = "8eecf4187ebc9341";
   const signed = (overrides) => ({
-    name: "@galerinaa/pkg", version: "1.0.0", exports: { types: [], flows: [], events: [] },
+    name: "@galerina/pkg", version: "1.0.0", exports: { types: [], flows: [], events: [] },
     hash: GOOD_HASH, signature: "sig:ed25519:abc", ...overrides,
   });
 
@@ -404,7 +404,7 @@ describe("checkPackageProvenance: SPORE-PKG-006 signing-key revocation (defense-
 
 describe("getResolverReport: resolver output report", () => {
   const AUTH_MANIFEST = {
-    name: "@galerinaa/auth",
+    name: "@galerina/auth",
     version: "1.2.0",
     exports: { types: ["UserId"], flows: ["verifyPassword"], events: [] },
     effects: ["audit.write"],
@@ -416,7 +416,7 @@ describe("getResolverReport: resolver output report", () => {
   };
 
   const AI_MANIFEST = {
-    name: "@galerinaa/ai",
+    name: "@galerina/ai",
     version: "0.5.0",
     exports: { types: ["EmbeddingVector"], flows: ["embed"], events: [] },
     effects: [],
@@ -436,8 +436,8 @@ describe("getResolverReport: resolver output report", () => {
     const report = getResolverReport([AUTH_MANIFEST, AI_MANIFEST], "2026-05-31T00:00:00.000Z");
     assert.equal(report.packages.length, 2);
     const names = report.packages.map((p) => p.name);
-    assert.ok(names.includes("@galerinaa/auth"), "auth must be in report");
-    assert.ok(names.includes("@galerinaa/ai"), "ai must be in report");
+    assert.ok(names.includes("@galerina/auth"), "auth must be in report");
+    assert.ok(names.includes("@galerina/ai"), "ai must be in report");
   });
 
   it("trusted package (valid hash + signature) -> trusted=true", () => {
@@ -503,11 +503,11 @@ describe("getResolverReport: resolver output report", () => {
 // ---------------------------------------------------------------------------
 
 describe("R3: Package type injection", () => {
-  it("resolveImportedTypes('@galerinaa/healthcare-types') includes 'Email'", () => {
-    const types = resolveImportedTypes("@galerinaa/healthcare-types");
+  it("resolveImportedTypes('@galerina/healthcare-types') includes 'Email'", () => {
+    const types = resolveImportedTypes("@galerina/healthcare-types");
     assert.ok(
       types.includes("Email"),
-      `Expected 'Email' in @galerinaa/healthcare-types exports, got: ${types.join(", ")}`,
+      `Expected 'Email' in @galerina/healthcare-types exports, got: ${types.join(", ")}`,
     );
   });
 
@@ -518,8 +518,8 @@ describe("R3: Package type injection", () => {
     );
   });
 
-  it("parseProgram with import Email from '@galerinaa/healthcare-types' + type usage -> 0 SPORE-TYPE-001 for Email", () => {
-    const source = `import Email from "@galerinaa/healthcare-types"
+  it("parseProgram with import Email from '@galerina/healthcare-types' + type usage -> 0 SPORE-TYPE-001 for Email", () => {
+    const source = `import Email from "@galerina/healthcare-types"
 
 flow sendWelcome(address: Email) -> String {
   return "ok"
@@ -527,7 +527,7 @@ flow sendWelcome(address: Email) -> String {
 `;
     const { ast } = parseProgram(source, "test.spore");
     // Inject the types exported by the package into the type checker
-    const injectedTypes = resolveImportedTypes("@galerinaa/healthcare-types");
+    const injectedTypes = resolveImportedTypes("@galerina/healthcare-types");
     const result = checkTypes(ast, injectedTypes);
     const type001Diags = result.diagnostics.filter((d) => d.code === "SPORE-TYPE-001" && d.message.includes("Email"));
     assert.equal(

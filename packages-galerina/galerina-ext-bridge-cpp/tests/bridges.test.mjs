@@ -8,7 +8,7 @@ import {
   loadNativeAddon,
   selectTernaryBridge,
 } from "../dist/index.js";
-import { GovernanceEnforcer } from "@galerinaa/tower-citizen";
+import { GovernanceEnforcer } from "@galerina/tower-citizen";
 
 // Pack a trit array into BitNet-faithful i32 words (same layout the simulator decodes).
 function packTrits(trits) {

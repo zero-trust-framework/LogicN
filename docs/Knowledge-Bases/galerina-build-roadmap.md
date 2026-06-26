@@ -57,7 +57,7 @@ admission, and **0055 B3** (generation tag, deferred — pervasive layout change
 
 **New package `packages-galerina/galerina-ext-photonic-emulator`** (peer to `galerina-ext-bridge-cpp`/`-quantum`),
 the hub-side production build of the R&D 0053 GAP (the owner-greenlit photonic virtualisation). Depends ONLY
-on the neutral `@galerinaa/inference-bridge-contract` (relative-dist convention, offline); **production /
+on the neutral `@galerina/inference-bridge-contract` (relative-dist convention, offline); **production /
 tower-citizen left byte-unchanged**. Ports the prove-own-maths D1 emulator (18/18) + D2 router (25/25) into
 real TS and re-proves them against the package's own compiled code.
 
@@ -92,7 +92,7 @@ spec has since LANDED → built below.
 **New package `packages-galerina/galerina-hardware-tier`** — the hub-side production of R&D 0054 (the
 owner-directed Tri-Pipe topology), built once the enc-rnd worker's spec landed
 (`tri-pipe-per-tier-packages-and-hardware-directive-spec.md`). Neutral (depends only on
-`@galerinaa/inference-bridge-contract` + `@galerinaa/ext-photonic-emulator`, relative-dist); **no production
+`@galerina/inference-bridge-contract` + `@galerina/ext-photonic-emulator`, relative-dist); **no production
 edits**. Realizes the owner's *"passive directive — what hardware is available {binary|hybrid|photonic},
 cache it; packages per tier; clearly photonic if not hybrid if not binary."*
 
@@ -166,7 +166,7 @@ to before — the 188 existing tower tests are unchanged).
   bit-exact `assertDeterminism` oracle (the analog lane is tolerance-verified, not bit-exact). A `null`
   result (ineligible / no net win / out-of-tolerance / any uncertainty) **falls through to the unchanged
   digital dispatch**. Fail-closed; **NEVER consulted in certified mode** (the dev emulator is an unattested
-  tolerance backend). The Tower stays decoupled — the port is duck-typed; `@galerinaa/ext-photonic-emulator`
+  tolerance backend). The Tower stays decoupled — the port is duck-typed; `@galerina/ext-photonic-emulator`
   ships the adapter `createPhotonicRouterPort()`.
 - **Two axes now compose end-to-end:** `hardware()`/loader (AXIS-1) picks the package; this per-op
   net-win router (AXIS-2) decides whether to actually offload — preference never forces photonics.
@@ -186,8 +186,8 @@ to before — the 188 existing tower tests are unchanged).
 **New package `packages-galerina/galerina-tri-pipe`** — the composition/application layer that ties the whole
 photonic line into a single deployment call. `createTriPipeEngine(opts)` resolves the `hardware()` tier and
 returns a governed `HybridInferenceEngine` configured for it. It is the **one package allowed to depend on
-the Tower runtime** (composes `@galerinaa/hardware-tier` + `@galerinaa/ext-photonic-emulator` +
-`@galerinaa/tower-citizen`, relative-dist).
+the Tower runtime** (composes `@galerina/hardware-tier` + `@galerina/ext-photonic-emulator` +
+`@galerina/tower-citizen`, relative-dist).
 
 - **Selection:** `binary` (cpu/wasm, or unknown/unattested) ⇒ digital stub, photonic offload **off**;
   `hybrid` (gpu/npu, whole components) / `photonic` (attested photonic + fully eligible) ⇒ digital core +
@@ -464,7 +464,7 @@ the HINT, not the feature.
      output reader (`readArray`/`readResult`/`readRecordField`, `src/wasm-runtime.ts:299-305`). `tokenize.wasm`
      == interpreter byte-for-byte (golden: `wat-p9-tokenize-parity`, 21 cases). No `;; unresolved` markers remained.
 2. **#102–#104, #106 — real DSS.wasm (Post-P9, DRCM Phase 4):** `dss/index.spore` → `build/dss.wasm`; Wasmtime component supervises DWI guests; real per-DWI fuel; DSS.wasm signs epilogue receipts.
-3. **CF-4 — extract `@galerinaa/tpl-oracle`** so the Brawn (`ext-bridge-cpp`) imports NO Tower runtime (currently pulls `StubTernaryBridge`/`GovernanceEnforcer` from `tower-citizen`).
+3. **CF-4 — extract `@galerina/tpl-oracle`** so the Brawn (`ext-bridge-cpp`) imports NO Tower runtime (currently pulls `StubTernaryBridge`/`GovernanceEnforcer` from `tower-citizen`).
 4. **CF-5 / CF-9 / CF-10** — vector T-MAC commit gate · ECC/TMR · atomic failover.
 5. **Record follow-ons** — `#record-update` lowering + cross-flow return-type tracking (so `let r = someCall()` returning a record resolves field access).
 6. **#110** — key rotation in `secrets {}`; **#69** — floor-specific dev-tools graphs.
@@ -790,7 +790,7 @@ These are recorded, not started. Each line = **status + blocker**. Do NOT implem
 - **CF-3 finish** — Tower verifies `sha256(canonicalManifestString)` + signature;
   `requireSignedBridge` in the Certified Profile; `galerina bridge attest` tool.
 - **CF-4 finish** — extract the TPL oracle (`TPLSimulator`/`StubTernaryBridge`) into
-  `@galerinaa/tpl-oracle` so the Brawn imports NO Tower runtime.
+  `@galerina/tpl-oracle` so the Brawn imports NO Tower runtime.
 - **CF-5** — vector T-MAC commit gate (`canCommit()` in `execute()`).
 - Packed-array refactor + fixed-point `i2_scale` (Phase 2 throughput).
 - ✅ Numeric policy table (2026-06-06) — `compilePolicy()` compiles `ai{}` ONCE into

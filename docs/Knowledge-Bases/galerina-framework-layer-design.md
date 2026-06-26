@@ -431,12 +431,12 @@ and they must **never** be confused with the core build target:
 
 ### 12.2 Problem — what "workspace default" means here (verified 2026-06-14)
 
-The repo root `package.json` is the **`@galerinaa/cli`** package. Verified ground truth:
+The repo root `package.json` is the **`@galerina/cli`** package. Verified ground truth:
 
 ```jsonc
 // /package.json (root) — relevant fields, AS-IS
 {
-  "name": "@galerinaa/cli",
+  "name": "@galerina/cli",
   "type": "module",
   "bin":  { "galerina": "./galerina.mjs" },   // ← the de-facto "default": the compiler/runtime CLI
   "scripts": { "test": "node scripts/run-all-tests.cjs", ... }

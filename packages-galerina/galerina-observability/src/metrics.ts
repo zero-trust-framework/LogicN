@@ -2,7 +2,7 @@
 // App metrics collector — the actuator-style operational view of request traffic:
 // counts, latencies, and error rates, per route and in aggregate. PURE (no I/O,
 // no node imports). This is the APP-OPERATOR's ops surface — NOT the governance
-// structure exported by @galerinaa/governance-telemetry.
+// structure exported by @galerina/governance-telemetry.
 //
 // FAIL-CLOSED, the observability sense: a metrics-sink failure must NEVER break
 // the request path. `record()` therefore NEVER throws — a malformed observation

@@ -45,7 +45,7 @@
 - `ext-proof-snarkjs` prover wired nowhere; `ext-bridge-bitnet` superseded scaffold (not `InferenceBridge`).
 - manifest header claims `.lmanifest = Binary CBOR (signing target)` but CLI emits JSON and signs neither.
 - **LEXER_PARITY_STATUS.md overclaims** "full parity / PARITY_ACHIEVED=true" on one trivial input.
-- `intelligence-search` benchmark reimplements BM25 inline instead of exercising `@galerinaa/devtools-intelligence`.
+- `intelligence-search` benchmark reimplements BM25 inline instead of exercising `@galerina/devtools-intelligence`.
 - **data-*/db-* (17 pkgs) template-only** yet registered as workspace members + doc-mapped.
 - 2 self-described hook scripts point at a nonexistent path (dead).
 

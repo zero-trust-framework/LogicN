@@ -1,9 +1,9 @@
-# @galerinaa/ext-photonic-emulator
+# @galerina/ext-photonic-emulator
 
 A **physics-faithful (Rung-2) photonic-PPU backend** for Galerina: a noise-carrying MZI-mesh /
 micro-ring **ternary-MAC emulator** plus the **partition cost-model router** that decides, per
 kernel, whether to offload to it. It plugs into the neutral Brain/Brawn contract
-(`@galerinaa/inference-bridge-contract`) — the same contract the stub ternary bridge and the native
+(`@galerina/inference-bridge-contract`) — the same contract the stub ternary bridge and the native
 cpp/quantum bridges implement.
 
 > **Digital stays the default and is byte-unchanged.** An eligible kernel routes to the emulator

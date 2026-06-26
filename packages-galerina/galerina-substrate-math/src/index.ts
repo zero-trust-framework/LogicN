@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/substrate-math — pure substrate-noise math (single source of truth)
+// @galerina/substrate-math — pure substrate-noise math (single source of truth)
 //
 // The closed-form calculus shared by the photonic/ternary governance layer:
 //   - singleLaneErrorProbability(params) → pBad  (per-lane error: laneFailure OR survive-then-flip)

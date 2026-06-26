@@ -139,8 +139,8 @@ describe("ProjectGraph", () => {
   function sampleGraph() {
     return buildProjectGraph(
       [
-        { id: "pkg-core", kind: "Package", label: "logicn-core" },
-        { id: "pkg-compiler", kind: "Package", label: "logicn-core-compiler" },
+        { id: "pkg-core", kind: "Package", label: "galerina-core" },
+        { id: "pkg-compiler", kind: "Package", label: "galerina-core-compiler" },
         { id: "doc-arch", kind: "Document", label: "ARCHITECTURE.md" },
       ],
       [
@@ -160,7 +160,7 @@ describe("ProjectGraph", () => {
     const g = sampleGraph();
     const filtered = queryGraph(g, "core");
     assert.ok(filtered.hasNode("pkg-core"));
-    assert.ok(filtered.hasNode("pkg-compiler")); // label contains "core" via "compiler"? no — but "logicn-core-compiler" contains "core"
+    assert.ok(filtered.hasNode("pkg-compiler")); // label contains "core" via "compiler"? no — but "galerina-core-compiler" contains "core"
   });
 
   it("explainNode returns node info string", () => {

@@ -1,6 +1,6 @@
 # LSIO — Architecture Issues / Deferred Seams
 
-`@galerinaa/core-sentinel-io` (LSIO) is intentionally pure TypeScript over
+`@galerina/core-sentinel-io` (LSIO) is intentionally pure TypeScript over
 `ArrayBuffer` / `SharedArrayBuffer` so it stays WASM-linear-memory-compatible and
 deterministic. Two items are deliberately out of scope for this build.
 

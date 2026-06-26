@@ -1,13 +1,13 @@
 
-> @galerinaa/core-compiler@0.1.0-beta.0 test
+> @galerina/core-compiler@0.1.0-beta.0 test
 > npm run typecheck && npm run build && node --test tests/*.test.mjs
 
 
-> @galerinaa/core-compiler@0.1.0-beta.0 typecheck
+> @galerina/core-compiler@0.1.0-beta.0 typecheck
 > tsc --noEmit
 
 
-> @galerinaa/core-compiler@0.1.0-beta.0 build
+> @galerina/core-compiler@0.1.0-beta.0 build
 > tsc -p tsconfig.json
 
 TAP version 13
@@ -7719,23 +7719,23 @@ ok 232 - canAccess
       ---
       duration_ms: 4.4996
       ...
-    # Subtest: resolves a single named import from @galerinaa/core-types
-    ok 2 - resolves a single named import from @galerinaa/core-types
+    # Subtest: resolves a single named import from @galerina/core-types
+    ok 2 - resolves a single named import from @galerina/core-types
       ---
       duration_ms: 0.8761
       ...
-    # Subtest: resolves PatientId and NhsNumber from @galerinaa/healthcare-types
-    ok 3 - resolves PatientId and NhsNumber from @galerinaa/healthcare-types
+    # Subtest: resolves PatientId and NhsNumber from @galerina/healthcare-types
+    ok 3 - resolves PatientId and NhsNumber from @galerina/healthcare-types
       ---
       duration_ms: 1.1207
       ...
-    # Subtest: classifies EmbeddingModel as a value (not a type) from @galerinaa/ai-types
-    ok 4 - classifies EmbeddingModel as a value (not a type) from @galerinaa/ai-types
+    # Subtest: classifies EmbeddingModel as a value (not a type) from @galerina/ai-types
+    ok 4 - classifies EmbeddingModel as a value (not a type) from @galerina/ai-types
       ---
       duration_ms: 0.5649
       ...
-    # Subtest: resolves multiple symbols from @galerinaa/ai-types
-    ok 5 - resolves multiple symbols from @galerinaa/ai-types
+    # Subtest: resolves multiple symbols from @galerina/ai-types
+    ok 5 - resolves multiple symbols from @galerina/ai-types
       ---
       duration_ms: 0.4392
       ...
@@ -7744,13 +7744,13 @@ ok 232 - canAccess
       ---
       duration_ms: 0.302
       ...
-    # Subtest: resolves PatientsDB as a value from @galerinaa/healthcare-types
-    ok 7 - resolves PatientsDB as a value from @galerinaa/healthcare-types
+    # Subtest: resolves PatientsDB as a value from @galerina/healthcare-types
+    ok 7 - resolves PatientsDB as a value from @galerina/healthcare-types
       ---
       duration_ms: 1.7085
       ...
-    # Subtest: resolves Actor and TraceId from @galerinaa/identity-types
-    ok 8 - resolves Actor and TraceId from @galerinaa/identity-types
+    # Subtest: resolves Actor and TraceId from @galerina/identity-types
+    ok 8 - resolves Actor and TraceId from @galerina/identity-types
       ---
       duration_ms: 0.459
       ...
@@ -7830,18 +7830,18 @@ ok 235 - Symbol resolver — imported value names do not emit SPORE-NAME-001
   type: 'suite'
   ...
 # Subtest: Import resolver — end-to-end pipeline integration
-    # Subtest: full pipeline: import Email from @galerinaa/core-types → no SPORE-TYPE-001 for Email
-    ok 1 - full pipeline: import Email from @galerinaa/core-types → no SPORE-TYPE-001 for Email
+    # Subtest: full pipeline: import Email from @galerina/core-types → no SPORE-TYPE-001 for Email
+    ok 1 - full pipeline: import Email from @galerina/core-types → no SPORE-TYPE-001 for Email
       ---
       duration_ms: 0.463
       ...
-    # Subtest: full pipeline: import { PatientId } from @galerinaa/healthcare-types → no type errors
-    ok 2 - full pipeline: import { PatientId } from @galerinaa/healthcare-types → no type errors
+    # Subtest: full pipeline: import { PatientId } from @galerina/healthcare-types → no type errors
+    ok 2 - full pipeline: import { PatientId } from @galerina/healthcare-types → no type errors
       ---
       duration_ms: 0.4663
       ...
-    # Subtest: full pipeline: import AiError from @galerinaa/ai-types → no type errors
-    ok 3 - full pipeline: import AiError from @galerinaa/ai-types → no type errors
+    # Subtest: full pipeline: import AiError from @galerina/ai-types → no type errors
+    ok 3 - full pipeline: import AiError from @galerina/ai-types → no type errors
       ---
       duration_ms: 0.3793
       ...

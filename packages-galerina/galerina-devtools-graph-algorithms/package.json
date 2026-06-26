@@ -1,5 +1,5 @@
 {
-  "name": "@galerinaa/devtools-graph-algorithms",
+  "name": "@galerina/devtools-graph-algorithms",
   "version": "1.0.0-beta.2",
   "description": "Internal graph data structures and algorithms for the Galerina compiler. Designed for future extraction to spore-graph.",
   "license": "Apache-2.0",

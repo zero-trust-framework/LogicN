@@ -29,7 +29,7 @@ export class StubTernaryBridge implements InferenceBridge {
    *  requireSigned it is correctly REJECTED (the simulator is not a certified kernel). */
   readonly manifest: BridgeManifest = {
     bridgeId: "stub-ternary",
-    packageName: "@galerinaa/tower-citizen",
+    packageName: "@galerina/tower-citizen",
     packageHash: "0".repeat(64),       // dev placeholder; a real build pins the package hash
     sourceEngine: "microsoft/BitNet",
     precision: "ternary",
@@ -112,7 +112,7 @@ export class StubFp4Bridge implements InferenceBridge {
    *  would reject it, which is correct: it must not stand in for a real backend. */
   readonly manifest: BridgeManifest = {
     bridgeId: "stub-fp4",
-    packageName: "@galerinaa/tower-citizen",
+    packageName: "@galerina/tower-citizen",
     packageHash: "0".repeat(64),
     sourceEngine: "NVIDIA/TransformerEngine",
     precision: "fp4_block",

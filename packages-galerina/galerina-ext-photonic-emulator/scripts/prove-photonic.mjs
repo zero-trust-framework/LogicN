@@ -84,7 +84,7 @@ const randActs = (rng, n) => { const a = new Int32Array(n); for (let i = 0; i < 
 
 // ── summary ──────────────────────────────────────────────────────────────────────────
 let fails = 0;
-console.log("\n-- @galerinaa/ext-photonic-emulator — prove-own-maths (D1 emulator + D2 router + integration) --");
+console.log("\n-- @galerina/ext-photonic-emulator — prove-own-maths (D1 emulator + D2 router + integration) --");
 for (const x of results) { if (!x.ok) fails++; console.log(`${x.ok ? "PASS" : "FAIL"} ${x.name.padEnd(58)} ${x.detail}`); }
 console.log(fails === 0
   ? `\n${results.length}/${results.length} PASS — emulator converges + matches the closed-form variance, WDM conserves energy, Freivalds catches corruption; the router never causes a slowdown and gates crypto off; the runtime path fails closed to digital. EMULATED (no measured speedup).`

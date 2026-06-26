@@ -2,7 +2,7 @@
 // lln-graph — ProjectGraph
 //
 // Workspace knowledge graph: packages, documents, flows, types, effects,
-// policies, and their relationships. Replaces logicn-devtools-project-graph.
+// policies, and their relationships. Replaces galerina-devtools-project-graph.
 //
 // Node and edge kinds are preserved identically from the existing
 // implementation so migration is a drop-in replacement.
@@ -13,7 +13,7 @@ import { bfsPath } from "../algorithms/bfs.js";
 import type { Graph, NodeId } from "../core/types.js";
 
 // ---------------------------------------------------------------------------
-// Node and edge kinds (preserved from logicn-devtools-project-graph)
+// Node and edge kinds (preserved from galerina-devtools-project-graph)
 // ---------------------------------------------------------------------------
 
 export type ProjectGraphNodeKind =

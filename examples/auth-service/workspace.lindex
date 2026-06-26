@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "builtAt": "2026-06-26T19:06:01.874Z",
+  "builtAt": "2026-06-26T23:43:03.467Z",
   "workspaceDir": "C:\\wwwprojects\\LogicN\\examples\\auth-service",
   "flows": [
     {
@@ -8801,5 +8801,5 @@
     "C:\\wwwprojects\\LogicN\\examples\\auth-service\\verifyToken.spore": "232098eea4eb3358b61c0a710686827551e62a9e37ec4a30f708b6afda76c391"
   },
   "skippedFiles": 31,
-  "integrity": "sha256:1e113faff8fea6c0a37d494f8c9e8c5c4021dfd333a90140b70d55d20299bf65"
+  "integrity": "sha256:ec870c5e95f0cc3e7c5f6d6ad3b2352090b768703e2e6df3f668ea15188f664a"
 }

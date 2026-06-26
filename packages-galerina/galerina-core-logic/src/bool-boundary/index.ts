@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerinaa/core-logic/bool-boundary — BoolBoundary v0.2 sub-path export
+// @galerina/core-logic/bool-boundary — BoolBoundary v0.2 sub-path export
 // =============================================================================
 
 export type { BoolBoundaryResult } from "./bool-boundary.js";

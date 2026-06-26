@@ -2,7 +2,7 @@
 // lln-graph — DependencyGraph
 //
 // Task execution dependency graph with cycle detection and topological sort.
-// Replaces logicn-core-tasks/src/dependency-graph.ts.
+// Replaces galerina-core-tasks/src/dependency-graph.ts.
 //
 // Error codes updated to SPORE-PGRAPH-* format for consistency.
 //

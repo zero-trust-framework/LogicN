@@ -149,7 +149,7 @@ write to it now so you're ready when the checker lands.
   the compiler proves `effects(child) ⊆ mask(parent)` down the whole dependency graph, so a hijacked deep dep
   can never *acquire* a capability your ancestors never held (0062 §3). **[IN-FLIGHT #202]** Today the border
   enforces this per-module at load; the compile-time transitive proof is the in-flight piece.
-- **The verified tier.** Deep/untrusted deps may resolve only to the curated **`@galerinaa-core/*`** verified
+- **The verified tier.** Deep/untrusted deps may resolve only to the curated **`@galerina-core/*`** verified
   namespace (signed by the pinned root) or carry their own signed + masked admission — they cannot pull
   arbitrary unverified deep deps (0062 §4, enforced at `package-resolver` `SPORE-PKG-006`). **[SHIPPED resolver]
   / [DESIGN tier rule]**
@@ -182,7 +182,7 @@ does NOT use it (evaluated + rejected in R&D 0062 §3). Three reasons:
   its ancestor declared — a hijacked deep dep can never *acquire* a capability an ancestor never held. Reuse +
   central patching **at any depth**, with the blast radius still bounded. **[IN-FLIGHT #202]**
 - **Untrusted depth IS capped — to the verified tier (the sound core of the depth-1 idea):** a 3rd-party
-  package's transitive deps must resolve to the curated **`@galerinaa-core/*` verified tier** (signed by the
+  package's transitive deps must resolve to the curated **`@galerina-core/*` verified tier** (signed by the
   pinned root) OR carry their own signed + masked admission. They cannot pull *arbitrary unverified* deep
   deps. This is effectively **"level-1-only for UNTRUSTED code"** — your instinct, scoped to where it pays,
   without the vendoring tax. **[DESIGN 0062 §4]**

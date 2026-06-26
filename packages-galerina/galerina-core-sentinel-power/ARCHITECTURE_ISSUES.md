@@ -1,6 +1,6 @@
 # LSP — Architecture Issues / Deferred Seams
 
-`@galerinaa/core-sentinel-power` (LSP) is intentionally pure TypeScript with zero
+`@galerina/core-sentinel-power` (LSP) is intentionally pure TypeScript with zero
 dependencies so it stays deterministic and WASM-linear-memory-compatible. Two
 items are deliberately out of scope for this build.
 

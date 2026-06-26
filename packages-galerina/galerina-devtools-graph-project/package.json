@@ -1,5 +1,5 @@
 {
-  "name": "@galerinaa/devtools-graph-project",
+  "name": "@galerina/devtools-graph-project",
   "version": "1.0.0-beta.2",
   "description": "Galerina project knowledge graph contracts for package, document, policy and report relationships.",
   "license": "Apache-2.0",
@@ -16,7 +16,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@galerinaa/devtools-project-graph": "file:../galerina-devtools-project-graph"
+    "@galerina/devtools-project-graph": "file:../galerina-devtools-project-graph"
   },
   "devDependencies": {
     "typescript": "^5.5.0"

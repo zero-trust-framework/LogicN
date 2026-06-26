@@ -75,7 +75,7 @@ import {
   validateWebhookTimestamp,
   validateReplayProtection,
   validateIdempotency,
-} from "@galerinaa/core-network/webhook";
+} from "@galerina/core-network/webhook";
 ```
 
 The API is composed from small explicit functions so applications can mix verification stages per provider.

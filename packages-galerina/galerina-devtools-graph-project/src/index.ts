@@ -1,4 +1,4 @@
-import { GraphBuilder, bfsPath as sporeBfsPath } from "@galerinaa/devtools-project-graph";
+import { GraphBuilder, bfsPath as sporeBfsPath } from "@galerina/devtools-project-graph";
 
 export type ProjectGraphNodeKind =
   | "Package"
@@ -1070,7 +1070,7 @@ function addPackageDependencyEdges(
 
   for (const dependency of dependencies) {
     const targetPackage = packages.find(
-      (item) => `@galerinaa/${item.name.replace(/^galerina-/, "")}` === dependency,
+      (item) => `@galerina/${item.name.replace(/^galerina-/, "")}` === dependency,
     );
     if (targetPackage === undefined) {
       continue;
