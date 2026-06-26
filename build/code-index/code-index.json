@@ -2000,7 +2000,7 @@
       "doc docs/Knowledge-Bases/logicn-diagnostic-code-conventions.md:65",
       "doc docs/Knowledge-Bases/logicn-diagnostic-code-conventions.md:66",
       "doc docs/Knowledge-Bases/logicn-task-ledger.md:527",
-      "ref scripts/code-index.mjs:91",
+      "ref scripts/code-index.mjs:106",
       "test scripts/tests/codes.test.mjs:45"
     ]
   },
@@ -2314,10 +2314,10 @@
     "family": "ANTI",
     "occurrences": 8,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/security-policy.ts:158"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 2,
     "docs": 4,
@@ -2332,7 +2332,7 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:130",
       "ref packages-logicn/logicn-core-compiler/src/security-policy.ts:146",
       "ref packages-logicn/logicn-core-compiler/src/security-policy.ts:150",
-      "emit packages-logicn/logicn-core-compiler/src/security-policy.ts:158",
+      "def packages-logicn/logicn-core-compiler/src/security-policy.ts:158",
       "test packages-logicn/logicn-core-compiler/tests/governance/flags-and-manifest.test.mjs:519",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:1052",
       "doc docs/Knowledge-Bases/logicn-governance-hierarchy.md:159"
@@ -2726,10 +2726,10 @@
     "family": "AU",
     "occurrences": 7,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:594"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 5,
@@ -2741,7 +2741,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:592",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:594",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:594",
       "doc docs/Knowledge-Bases/logicn-contract-clause-reference.md:656",
       "doc docs/Knowledge-Bases/logicn-contract-clause-reference.md:680",
       "doc docs/Knowledge-Bases/logicn-contract-clause-reference.md:700",
@@ -2944,10 +2944,11 @@
     "family": "BACKEND",
     "occurrences": 21,
     "docOnly": false,
-    "defs": [],
-    "emits": [
-      "packages-logicn/logicn-core-compiler/src/cli.ts:323",
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1763"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/cli.ts:323"
     ],
     "tests": 2,
     "refs": 4,
@@ -2962,7 +2963,7 @@
       "emit packages-logicn/logicn-core-compiler/src/cli.ts:323",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1742",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1761",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1763",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1763",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1869",
       "ref packages-logicn/logicn-core-compiler/src/monkey-patch-checker.ts:19",
       "test packages-logicn/logicn-core-compiler/tests/cli.test.mjs:38",
@@ -3176,11 +3177,13 @@
     "code": "LLN-BINDING-001",
     "namespace": "LLN",
     "family": "BINDING",
-    "occurrences": 19,
+    "occurrences": 20,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1298"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2543"
     ],
     "tests": 1,
     "refs": 2,
@@ -3197,8 +3200,9 @@
       "doc packages-logicn/logicn-core/README.md:721",
       "doc packages-logicn/logicn-core/README.md:996",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1293",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1298",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1298",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2533",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2543",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:276",
       "doc docs/COVERAGE.md:48",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:448",
@@ -3217,11 +3221,13 @@
     "code": "LLN-BINDING-002",
     "namespace": "LLN",
     "family": "BINDING",
-    "occurrences": 9,
+    "occurrences": 10,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1306"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2555"
     ],
     "tests": 1,
     "refs": 1,
@@ -3234,8 +3240,9 @@
     ],
     "allSites": [
       "doc packages-logicn/logicn-core/README.md:358",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1306",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1306",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2534",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2555",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:276",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:449",
       "doc docs/Knowledge-Bases/logicn-core-syntax-bindings-pipeline.md:101",
@@ -3248,11 +3255,13 @@
     "code": "LLN-BINDING-003",
     "namespace": "LLN",
     "family": "BINDING",
-    "occurrences": 10,
+    "occurrences": 11,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1314"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2587"
     ],
     "tests": 1,
     "refs": 1,
@@ -3266,8 +3275,9 @@
     "allSites": [
       "doc packages-logicn/logicn-core/README.md:351",
       "doc packages-logicn/logicn-core/README.md:357",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1314",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1314",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2574",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2587",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:288",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:450",
       "doc docs/Knowledge-Bases/logicn-core-syntax-bindings-pipeline.md:104",
@@ -3280,11 +3290,14 @@
     "code": "LLN-BINDING-004",
     "namespace": "LLN",
     "family": "BINDING",
-    "occurrences": 19,
+    "occurrences": 21,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1322"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2641",
+      "packages-logicn/logicn-core-compiler/src/index.ts:2680"
     ],
     "tests": 6,
     "refs": 1,
@@ -3300,8 +3313,10 @@
       "doc packages-logicn/logicn-core/README.md:334",
       "doc packages-logicn/logicn-core/README.md:573",
       "doc packages-logicn/logicn-core/README.md:724",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1322",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1322",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2641",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2652",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2680",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:557",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:571",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:575",
@@ -3323,9 +3338,10 @@
     "family": "BINDING",
     "occurrences": 54,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:1330"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:1330",
       "packages-logicn/logicn-core-compiler/src/type-checker.ts:1072"
     ],
     "tests": 39,
@@ -3339,7 +3355,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1328",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1330",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1330",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:1821",
       "ref packages-logicn/logicn-core-compiler/src/type-checker.ts:24",
       "ref packages-logicn/logicn-core-compiler/src/type-checker.ts:1066",
@@ -3400,10 +3416,10 @@
     "family": "BINDING",
     "occurrences": 5,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1338"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 1,
     "docs": 2,
@@ -3415,7 +3431,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1336",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1338",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1338",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:540",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:1012",
       "doc docs/Knowledge-Bases/logicn-diagnostic-code-taxonomy-audit-2026-06-22.md:91"
@@ -3425,11 +3441,13 @@
     "code": "LLN-BLOCK-001",
     "namespace": "LLN",
     "family": "BLOCK",
-    "occurrences": 12,
+    "occurrences": 13,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1430"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2460"
     ],
     "tests": 2,
     "refs": 1,
@@ -3443,7 +3461,8 @@
     "allSites": [
       "doc packages-logicn/logicn-core/README.md:999",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1425",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1430",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1430",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2460",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:340",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:355",
       "doc docs/COVERAGE.md:49",
@@ -3459,11 +3478,13 @@
     "code": "LLN-BLOCK-002",
     "namespace": "LLN",
     "family": "BLOCK",
-    "occurrences": 8,
+    "occurrences": 9,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1438"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2057"
     ],
     "tests": 2,
     "refs": 0,
@@ -3475,7 +3496,8 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1438",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1438",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2057",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:359",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:373",
       "doc docs/COVERAGE.md:49",
@@ -3491,10 +3513,10 @@
     "family": "BLOCK",
     "occurrences": 4,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1446"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 0,
     "docs": 3,
@@ -3505,7 +3527,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1446",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1446",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:597",
       "doc docs/Knowledge-Bases/logicn-core-syntax-typed-content-blocks.md:168",
       "doc docs/Knowledge-Bases/logicn-core-syntax-typed-content-blocks.md:271"
@@ -3517,10 +3539,10 @@
     "family": "BLOCK",
     "occurrences": 11,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1454"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 2,
     "docs": 8,
@@ -3531,7 +3553,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1454",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1454",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2080",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2083",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:598",
@@ -4232,10 +4254,10 @@
     "family": "BUILD",
     "occurrences": 36,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1754"
     ],
+    "emits": [],
     "tests": 4,
     "refs": 6,
     "docs": 25,
@@ -4253,7 +4275,7 @@
       "ref packages-logicn/logicn-core-compiler/src/cli.ts:606",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1746",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1750",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1754",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1754",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:53",
       "test packages-logicn/logicn-core-compiler/tests/phase29.test.mjs:196",
       "test packages-logicn/logicn-core-compiler/tests/phase29.test.mjs:198",
@@ -4308,10 +4330,10 @@
     "family": "BYTE",
     "occurrences": 11,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1559"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 1,
     "docs": 8,
@@ -4324,7 +4346,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core/README.md:1002",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1554",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1559",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1559",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:456",
       "doc docs/COVERAGE.md:47",
       "doc docs/COVERAGE.md:423",
@@ -4341,10 +4363,10 @@
     "family": "BYTE",
     "occurrences": 3,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1567"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 0,
     "docs": 2,
@@ -4355,7 +4377,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1567",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1567",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:623",
       "doc docs/Knowledge-Bases/logicn-core-standard-types-string-char-byte.md:296"
     ]
@@ -4366,10 +4388,10 @@
     "family": "BYTE",
     "occurrences": 3,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1575"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 0,
     "docs": 2,
@@ -4380,7 +4402,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1575",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1575",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:624",
       "doc docs/Knowledge-Bases/logicn-core-standard-types-string-char-byte.md:297"
     ]
@@ -4391,10 +4413,10 @@
     "family": "BYTE",
     "occurrences": 4,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1583"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 0,
     "docs": 2,
@@ -4405,7 +4427,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1583",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1583",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:458",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:625",
       "doc docs/Knowledge-Bases/logicn-core-standard-types-string-char-byte.md:298"
@@ -4417,10 +4439,10 @@
     "family": "BYTE",
     "occurrences": 3,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1591"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 0,
     "docs": 2,
@@ -4431,7 +4453,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1591",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1591",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:626",
       "doc docs/Knowledge-Bases/logicn-core-standard-types-string-char-byte.md:299"
     ]
@@ -4722,10 +4744,10 @@
     "family": "CHAR",
     "occurrences": 11,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1516"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 1,
     "docs": 8,
@@ -4738,7 +4760,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core/README.md:1001",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1511",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1516",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1516",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:450",
       "doc docs/COVERAGE.md:47",
       "doc docs/COVERAGE.md:423",
@@ -4755,10 +4777,10 @@
     "family": "CHAR",
     "occurrences": 3,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1524"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 0,
     "docs": 2,
@@ -4769,7 +4791,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1524",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1524",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:614",
       "doc docs/Knowledge-Bases/logicn-core-standard-types-string-char-byte.md:205"
     ]
@@ -4780,10 +4802,10 @@
     "family": "CHAR",
     "occurrences": 10,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1532"
     ],
+    "emits": [],
     "tests": 4,
     "refs": 2,
     "docs": 3,
@@ -4794,7 +4816,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1532",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1532",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:476",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:487",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:452",
@@ -4812,10 +4834,10 @@
     "family": "CHAR",
     "occurrences": 3,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1540"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 0,
     "docs": 2,
@@ -4826,7 +4848,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1540",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1540",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:616",
       "doc docs/Knowledge-Bases/logicn-core-standard-types-string-char-byte.md:207"
     ]
@@ -5159,10 +5181,10 @@
     "family": "COMPUTE",
     "occurrences": 18,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1733"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 3,
     "docs": 12,
@@ -5175,7 +5197,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1719",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1731",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1733",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1733",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:291",
       "test packages-logicn/logicn-core-compiler/tests/parser/node-flags.test.mjs:435",
       "test packages-logicn/logicn-core-compiler/tests/parser/node-flags.test.mjs:440",
@@ -6025,11 +6047,13 @@
     "code": "LLN-CONTEXT-001",
     "namespace": "LLN",
     "family": "CONTEXT",
-    "occurrences": 70,
+    "occurrences": 71,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:196"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1587"
     ],
     "tests": 35,
     "refs": 4,
@@ -6044,9 +6068,10 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:75",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:20",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:194",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:196",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:196",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:842",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1580",
+      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1587",
       "test packages-logicn/logicn-core-compiler/tests/domain-governance.test.mjs:9",
       "test packages-logicn/logicn-core-compiler/tests/domain-governance.test.mjs:196",
       "test packages-logicn/logicn-core-compiler/tests/domain-governance.test.mjs:198",
@@ -6347,11 +6372,13 @@
     "code": "LLN-CRYPTO-PQ-001",
     "namespace": "LLN",
     "family": "CRYPTO",
-    "occurrences": 29,
+    "occurrences": 30,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:279"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2129"
     ],
     "tests": 6,
     "refs": 7,
@@ -6365,9 +6392,10 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/effect-checker.ts:325",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:277",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:279",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:279",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:285",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2119",
+      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2129",
       "ref packages-logicn/logicn-core-compiler/src/substrate-inference.ts:69",
       "test packages-logicn/logicn-core-compiler/tests/crypto-pq-signing.test.mjs:1",
       "test packages-logicn/logicn-core-compiler/tests/crypto-pq-signing.test.mjs:19",
@@ -6973,10 +7001,10 @@
     "family": "EC",
     "occurrences": 6,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:570"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 4,
@@ -6988,7 +7016,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:568",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:570",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:570",
       "doc docs/Knowledge-Bases/logicn-contract-clause-reference.md:535",
       "doc docs/Knowledge-Bases/logicn-contract-clause-reference.md:584",
       "doc docs/Knowledge-Bases/logicn-governance-rules.md:689",
@@ -7001,10 +7029,10 @@
     "family": "EC",
     "occurrences": 5,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:578"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 3,
@@ -7016,7 +7044,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:576",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:578",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:578",
       "doc docs/Knowledge-Bases/logicn-contract-clause-reference.md:585",
       "doc docs/Knowledge-Bases/logicn-governance-rules.md:699",
       "doc docs/Knowledge-Bases/logicn-governance-rules.md:978"
@@ -7028,10 +7056,10 @@
     "family": "ECON",
     "occurrences": 8,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:832"
     ],
+    "emits": [],
     "tests": 3,
     "refs": 2,
     "docs": 2,
@@ -7044,7 +7072,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:827",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:830",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:832",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:832",
       "test packages-logicn/logicn-core-compiler/tests/type-registry/economics-contract.test.mjs:7",
       "test packages-logicn/logicn-core-compiler/tests/type-registry/economics-contract.test.mjs:73",
       "test packages-logicn/logicn-core-compiler/tests/type-registry/economics-contract.test.mjs:74",
@@ -7058,10 +7086,10 @@
     "family": "ECON",
     "occurrences": 3,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:842"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 1,
@@ -7073,7 +7101,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:840",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:842",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:842",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:1076"
     ]
   },
@@ -7083,10 +7111,10 @@
     "family": "ECON",
     "occurrences": 3,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:852"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 1,
@@ -7098,7 +7126,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:850",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:852",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:852",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:1077"
     ]
   },
@@ -7643,10 +7671,11 @@
     "family": "EFFECT",
     "occurrences": 70,
     "docOnly": false,
-    "defs": [],
-    "emits": [
-      "packages-logicn/logicn-core-compiler/src/effect-checker.ts:695",
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:892"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/effect-checker.ts:695"
     ],
     "tests": 42,
     "refs": 4,
@@ -7664,7 +7693,7 @@
       "emit packages-logicn/logicn-core-compiler/src/effect-checker.ts:695",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:879",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:883",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:892",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:892",
       "lln packages-logicn/logicn-core-compiler/src/self-hosted/effect-checker.lln:28",
       "lln packages-logicn/logicn-core-compiler/src/self-hosted/effect-checker.lln:139",
       "lln packages-logicn/logicn-core-compiler/src/self-hosted/effect-checker.lln:140",
@@ -7877,9 +7906,10 @@
     "family": "EVENT",
     "occurrences": 54,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/event-checker.ts:39"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/event-checker.ts:39",
       "packages-logicn/logicn-core-compiler/src/event-checker.ts:193"
     ],
     "tests": 35,
@@ -7893,7 +7923,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:4",
-      "emit packages-logicn/logicn-core-compiler/src/event-checker.ts:39",
+      "def packages-logicn/logicn-core-compiler/src/event-checker.ts:39",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:154",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:173",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:189",
@@ -7954,9 +7984,10 @@
     "family": "EVENT",
     "occurrences": 40,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/event-checker.ts:46"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/event-checker.ts:46",
       "packages-logicn/logicn-core-compiler/src/event-checker.ts:208"
     ],
     "tests": 28,
@@ -7970,7 +8001,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:5",
-      "emit packages-logicn/logicn-core-compiler/src/event-checker.ts:46",
+      "def packages-logicn/logicn-core-compiler/src/event-checker.ts:46",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:155",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:173",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:203",
@@ -8017,9 +8048,10 @@
     "family": "EVENT",
     "occurrences": 23,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/event-checker.ts:53"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/event-checker.ts:53",
       "packages-logicn/logicn-core-compiler/src/event-checker.ts:237"
     ],
     "tests": 13,
@@ -8034,7 +8066,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/scripts/cec-promotion-pass.mjs:36",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:8",
-      "emit packages-logicn/logicn-core-compiler/src/event-checker.ts:53",
+      "def packages-logicn/logicn-core-compiler/src/event-checker.ts:53",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:156",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:217",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:233",
@@ -8063,9 +8095,10 @@
     "family": "EVENT",
     "occurrences": 22,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/event-checker.ts:60"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/event-checker.ts:60",
       "packages-logicn/logicn-core-compiler/src/event-checker.ts:261"
     ],
     "tests": 14,
@@ -8079,7 +8112,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:9",
-      "emit packages-logicn/logicn-core-compiler/src/event-checker.ts:60",
+      "def packages-logicn/logicn-core-compiler/src/event-checker.ts:60",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:157",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:253",
       "emit packages-logicn/logicn-core-compiler/src/event-checker.ts:261",
@@ -8108,9 +8141,10 @@
     "family": "EVENT",
     "occurrences": 22,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/event-checker.ts:67"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/event-checker.ts:67",
       "packages-logicn/logicn-core-compiler/src/event-checker.ts:278"
     ],
     "tests": 15,
@@ -8125,7 +8159,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/scripts/cec-promotion-pass.mjs:37",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:10",
-      "emit packages-logicn/logicn-core-compiler/src/event-checker.ts:67",
+      "def packages-logicn/logicn-core-compiler/src/event-checker.ts:67",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:158",
       "ref packages-logicn/logicn-core-compiler/src/event-checker.ts:270",
       "emit packages-logicn/logicn-core-compiler/src/event-checker.ts:278",
@@ -8843,10 +8877,11 @@
     "family": "GATE",
     "occurrences": 39,
     "docOnly": false,
-    "defs": [],
-    "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:3503",
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:229"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:3503"
     ],
     "tests": 14,
     "refs": 10,
@@ -8869,7 +8904,7 @@
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:3504",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:220",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:227",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:229",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:229",
       "test packages-logicn/logicn-core-compiler/tests/governance/gate-decl.test.mjs:7",
       "test packages-logicn/logicn-core-compiler/tests/governance/gate-decl.test.mjs:9",
       "test packages-logicn/logicn-core-compiler/tests/governance/gate-decl.test.mjs:123",
@@ -9101,9 +9136,10 @@
     "family": "GOV",
     "occurrences": 44,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:400"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:400",
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1529",
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1543"
     ],
@@ -9119,7 +9155,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:28",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:398",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:400",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:400",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1164",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1514",
       "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1529",
@@ -9255,11 +9291,13 @@
     "code": "LLN-GOV-003",
     "namespace": "LLN",
     "family": "GOV",
-    "occurrences": 120,
+    "occurrences": 121,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:188"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1566"
     ],
     "tests": 53,
     "refs": 5,
@@ -9274,10 +9312,11 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:68",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:11",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:186",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:188",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:188",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:692",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1556",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1559",
+      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1566",
       "test packages-logicn/logicn-core-compiler/tests/domain-governance.test.mjs:8",
       "test packages-logicn/logicn-core-compiler/tests/domain-governance.test.mjs:201",
       "test packages-logicn/logicn-core-compiler/tests/domain-governance.test.mjs:203",
@@ -9500,11 +9539,13 @@
     "code": "LLN-GOV-005",
     "namespace": "LLN",
     "family": "GOV",
-    "occurrences": 40,
+    "occurrences": 41,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:426"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1610"
     ],
     "tests": 11,
     "refs": 4,
@@ -9519,9 +9560,10 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:69",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:13",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:424",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:426",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:426",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:616",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1600",
+      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1610",
       "lln packages-logicn/logicn-core-compiler/src/self-hosted/governance-verifier.lln:429",
       "lln packages-logicn/logicn-core-compiler/src/self-hosted/governance-verifier.lln:432",
       "lln packages-logicn/logicn-core-compiler/src/self-hosted/governance-verifier.lln:450",
@@ -9564,9 +9606,10 @@
     "family": "GOV",
     "occurrences": 22,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:392"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:392",
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1987"
     ],
     "tests": 11,
@@ -9581,7 +9624,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:29",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:390",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:392",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:392",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1093",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1983",
       "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1987",
@@ -9607,11 +9650,14 @@
     "code": "LLN-GOV-007",
     "namespace": "LLN",
     "family": "GOV",
-    "occurrences": 22,
+    "occurrences": 24,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:434"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1343",
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1630"
     ],
     "tests": 10,
     "refs": 5,
@@ -9626,10 +9672,12 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:70",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:14",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:432",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:434",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:434",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:649",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1340",
+      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1343",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1624",
+      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1630",
       "test packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:48",
       "test packages-logicn/logicn-core-compiler/tests/governance-verifier.test.mjs:580",
       "test packages-logicn/logicn-core-compiler/tests/governance-verifier.test.mjs:583",
@@ -9672,11 +9720,13 @@
     "code": "LLN-GOV-009",
     "namespace": "LLN",
     "family": "GOV",
-    "occurrences": 19,
+    "occurrences": 20,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:447"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1652"
     ],
     "tests": 8,
     "refs": 5,
@@ -9691,9 +9741,10 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:71",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:16",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:440",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:447",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:447",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:668",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1643",
+      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1652",
       "test packages-logicn/logicn-core-compiler/tests/governance-verifier.test.mjs:626",
       "test packages-logicn/logicn-core-compiler/tests/governance-verifier.test.mjs:629",
       "test packages-logicn/logicn-core-compiler/tests/governance-verifier.test.mjs:630",
@@ -9790,11 +9841,13 @@
     "code": "LLN-GOV-011",
     "namespace": "LLN",
     "family": "GOV",
-    "occurrences": 44,
+    "occurrences": 45,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:204"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1709"
     ],
     "tests": 29,
     "refs": 4,
@@ -9809,9 +9862,10 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:72",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:18",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:202",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:204",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:204",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1696",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1708",
+      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1709",
       "test packages-logicn/logicn-core-compiler/tests/domain-governance.test.mjs:8",
       "test packages-logicn/logicn-core-compiler/tests/domain-governance.test.mjs:331",
       "test packages-logicn/logicn-core-compiler/tests/domain-governance.test.mjs:334",
@@ -9856,11 +9910,13 @@
     "code": "LLN-GOV-012",
     "namespace": "LLN",
     "family": "GOV",
-    "occurrences": 42,
+    "occurrences": 43,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:212"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1727"
     ],
     "tests": 29,
     "refs": 3,
@@ -9875,8 +9931,9 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:73",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:19",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:210",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:212",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:212",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1718",
+      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1727",
       "test packages-logicn/logicn-core-compiler/tests/domain-governance.test.mjs:8",
       "test packages-logicn/logicn-core-compiler/tests/domain-governance.test.mjs:409",
       "test packages-logicn/logicn-core-compiler/tests/domain-governance.test.mjs:412",
@@ -9920,11 +9977,13 @@
     "code": "LLN-GOV-013",
     "namespace": "LLN",
     "family": "GOV",
-    "occurrences": 14,
+    "occurrences": 15,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:416"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1683"
     ],
     "tests": 1,
     "refs": 5,
@@ -9940,9 +9999,10 @@
       "ref packages-logicn/logicn-core-compiler/src/boundary-graph.ts:101",
       "ref packages-logicn/logicn-core-compiler/src/flow-dependency-analysis.ts:10",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:414",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:416",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:416",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1664",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1666",
+      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1683",
       "test packages-logicn/logicn-core-compiler/tests/governance/flags-and-manifest.test.mjs:328",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:1036",
       "doc docs/Knowledge-Bases/logicn-phase-18-23-summary.md:39",
@@ -9958,10 +10018,10 @@
     "family": "GOV",
     "occurrences": 12,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:862"
     ],
+    "emits": [],
     "tests": 4,
     "refs": 1,
     "docs": 6,
@@ -9973,7 +10033,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:860",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:862",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:862",
       "test packages-logicn/logicn-core-compiler/tests/governance/flags-and-manifest.test.mjs:313",
       "test packages-logicn/logicn-core-compiler/tests/governance/flags-and-manifest.test.mjs:314",
       "test packages-logicn/logicn-core-compiler/tests/type-registry/native-plugin-manifest.test.mjs:73",
@@ -10145,9 +10205,10 @@
     "family": "GOV",
     "occurrences": 27,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:376"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:376",
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2769"
     ],
     "tests": 11,
@@ -10162,7 +10223,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:24",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:373",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:376",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:376",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1006",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1960",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2758",
@@ -10195,9 +10256,10 @@
     "family": "GOV",
     "occurrences": 21,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:384"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:384",
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1970"
     ],
     "tests": 9,
@@ -10212,7 +10274,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:25",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:382",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:384",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:384",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1053",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1965",
       "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1970",
@@ -11026,10 +11088,10 @@
     "family": "HW",
     "occurrences": 37,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/proof-graph.ts:420"
     ],
+    "emits": [],
     "tests": 23,
     "refs": 4,
     "docs": 9,
@@ -11045,7 +11107,7 @@
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1816",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:121",
       "ref packages-logicn/logicn-core-compiler/src/proof-graph.ts:412",
-      "emit packages-logicn/logicn-core-compiler/src/proof-graph.ts:420",
+      "def packages-logicn/logicn-core-compiler/src/proof-graph.ts:420",
       "test packages-logicn/logicn-core-compiler/tests/lln-hw-enforcement.test.mjs:2",
       "test packages-logicn/logicn-core-compiler/tests/lln-hw-enforcement.test.mjs:6",
       "test packages-logicn/logicn-core-compiler/tests/lln-hw-enforcement.test.mjs:123",
@@ -11085,10 +11147,10 @@
     "family": "HW",
     "occurrences": 30,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/proof-graph.ts:434"
     ],
+    "emits": [],
     "tests": 22,
     "refs": 3,
     "docs": 4,
@@ -11102,7 +11164,7 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:94",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1826",
       "ref packages-logicn/logicn-core-compiler/src/proof-graph.ts:429",
-      "emit packages-logicn/logicn-core-compiler/src/proof-graph.ts:434",
+      "def packages-logicn/logicn-core-compiler/src/proof-graph.ts:434",
       "test packages-logicn/logicn-core-compiler/tests/lln-hw-enforcement.test.mjs:2",
       "test packages-logicn/logicn-core-compiler/tests/lln-hw-enforcement.test.mjs:7",
       "test packages-logicn/logicn-core-compiler/tests/lln-hw-enforcement.test.mjs:196",
@@ -11137,10 +11199,10 @@
     "family": "HW",
     "occurrences": 10,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/proof-graph.ts:448"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 3,
     "docs": 4,
@@ -11154,7 +11216,7 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:95",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1838",
       "ref packages-logicn/logicn-core-compiler/src/proof-graph.ts:443",
-      "emit packages-logicn/logicn-core-compiler/src/proof-graph.ts:448",
+      "def packages-logicn/logicn-core-compiler/src/proof-graph.ts:448",
       "test packages-logicn/logicn-core-compiler/tests/lln-hw-enforcement.test.mjs:2",
       "test packages-logicn/logicn-core-compiler/tests/lln-hw-enforcement.test.mjs:8",
       "ref packages-logicn/logicn-devtools-security/src/audit-runner.ts:120",
@@ -11169,10 +11231,10 @@
     "family": "HW",
     "occurrences": 33,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/proof-graph.ts:464"
     ],
+    "emits": [],
     "tests": 9,
     "refs": 6,
     "docs": 17,
@@ -11185,7 +11247,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1804",
       "ref packages-logicn/logicn-core-compiler/src/proof-graph.ts:457",
-      "emit packages-logicn/logicn-core-compiler/src/proof-graph.ts:464",
+      "def packages-logicn/logicn-core-compiler/src/proof-graph.ts:464",
       "test packages-logicn/logicn-core-compiler/tests/lln-hw-enforcement.test.mjs:157",
       "test packages-logicn/logicn-core-compiler/tests/lln-hw-enforcement.test.mjs:160",
       "test packages-logicn/logicn-core-compiler/tests/lln-hw-enforcement.test.mjs:167",
@@ -11402,10 +11464,10 @@
     "family": "ID",
     "occurrences": 4,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:586"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 2,
@@ -11417,7 +11479,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:584",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:586",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:586",
       "doc docs/Knowledge-Bases/logicn-governance-rules.md:708",
       "doc docs/Knowledge-Bases/logicn-governance-rules.md:979"
     ]
@@ -11893,10 +11955,10 @@
     "family": "INTENT",
     "occurrences": 29,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1165"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 2,
     "docs": 23,
@@ -11910,7 +11972,7 @@
       "doc packages-logicn/logicn-core/README.md:370",
       "doc packages-logicn/logicn-core/README.md:1003",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1157",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1165",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1165",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2195",
       "doc docs/COVERAGE.md:302",
       "doc docs/examples/EXAMPLES_INDEX.md:184",
@@ -11944,10 +12006,10 @@
     "family": "INTENT",
     "occurrences": 6,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1173"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 4,
@@ -11958,7 +12020,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1173",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1173",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2196",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:458",
       "doc docs/Knowledge-Bases/logicn-concept-intent.md:435",
@@ -11972,10 +12034,10 @@
     "family": "INTENT",
     "occurrences": 5,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1181"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 3,
@@ -11986,7 +12048,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1181",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1181",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2197",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:459",
       "doc docs/Knowledge-Bases/logicn-concept-intent.md:436",
@@ -11999,10 +12061,10 @@
     "family": "INTENT",
     "occurrences": 5,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1189"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 3,
@@ -12013,7 +12075,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1189",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1189",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2198",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:460",
       "doc docs/Knowledge-Bases/logicn-concept-intent.md:437",
@@ -12026,10 +12088,10 @@
     "family": "INTENT",
     "occurrences": 5,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1197"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 3,
@@ -12040,7 +12102,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1197",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1197",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2199",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:461",
       "doc docs/Knowledge-Bases/logicn-concept-intent.md:438",
@@ -12544,10 +12606,10 @@
     "family": "LEX",
     "occurrences": 43,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:29"
     ],
+    "emits": [],
     "tests": 23,
     "refs": 6,
     "docs": 13,
@@ -12559,7 +12621,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:27",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:29",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:29",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:11",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:375",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:706",
@@ -12609,10 +12671,10 @@
     "family": "LEX",
     "occurrences": 24,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:38"
     ],
+    "emits": [],
     "tests": 12,
     "refs": 5,
     "docs": 6,
@@ -12624,7 +12686,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:36",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:38",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:38",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:12",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:581",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:779",
@@ -12655,10 +12717,10 @@
     "family": "LEX",
     "occurrences": 21,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:47"
     ],
+    "emits": [],
     "tests": 11,
     "refs": 5,
     "docs": 4,
@@ -12670,7 +12732,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:45",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:47",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:47",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:13",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:523",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:536",
@@ -12698,9 +12760,10 @@
     "family": "LEX",
     "occurrences": 25,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:56"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:56",
       "packages-logicn/logicn-core-compiler/src/lexer.ts:271",
       "packages-logicn/logicn-core-compiler/src/lexer.ts:386"
     ],
@@ -12715,7 +12778,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:54",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:56",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:56",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:14",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:259",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:260",
@@ -12747,9 +12810,10 @@
     "family": "LEX",
     "occurrences": 24,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:64"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:64",
       "packages-logicn/logicn-core-compiler/src/lexer.ts:367"
     ],
     "tests": 9,
@@ -12763,7 +12827,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:62",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:64",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:64",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:15",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:259",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:261",
@@ -12794,9 +12858,10 @@
     "family": "LEX",
     "occurrences": 10,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:72"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:72",
       "packages-logicn/logicn-core-compiler/src/lexer.ts:327"
     ],
     "tests": 0,
@@ -12810,7 +12875,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:70",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:72",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:72",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:259",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:263",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:322",
@@ -13384,14 +13449,14 @@
     "code": "LLN-MEMORY-001",
     "namespace": "LLN",
     "family": "MEMORY",
-    "occurrences": 59,
+    "occurrences": 60,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1643"
     ],
+    "emits": [],
     "tests": 3,
-    "refs": 6,
+    "refs": 7,
     "docs": 47,
     "names": [
       "USE_AFTER_MOVE"
@@ -13411,7 +13476,7 @@
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1606",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1610",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1639",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1643",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1643",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:39",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:469",
       "test packages-logicn/logicn-core-compiler/tests/phase29.test.mjs:240",
@@ -13458,6 +13523,7 @@
       "doc docs/Knowledge-Bases/logicn-v1-memory-model.md:265",
       "doc docs/Knowledge-Bases/logicn-v1-memory-model.md:287",
       "ref scripts/audit-production-blockers.mjs:5",
+      "ref scripts/code-index.mjs:123",
       "ref scripts/lint-conventions.mjs:52"
     ]
   },
@@ -13467,10 +13533,10 @@
     "family": "MEMORY",
     "occurrences": 6,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1651"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 0,
     "docs": 4,
@@ -13481,7 +13547,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1651",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1651",
       "test packages-logicn/logicn-core-compiler/tests/phase29.test.mjs:242",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:319",
       "doc docs/Knowledge-Bases/logicn-compiler-phase-memory-boundaries.md:174",
@@ -13495,10 +13561,10 @@
     "family": "MEMORY",
     "occurrences": 12,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1659"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 0,
     "docs": 9,
@@ -13510,7 +13576,7 @@
     ],
     "allSites": [
       "doc packages-logicn/logicn-core/README.md:751",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1659",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1659",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:473",
       "test packages-logicn/logicn-core-compiler/tests/phase29.test.mjs:242",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:320",
@@ -13529,10 +13595,10 @@
     "family": "MEMORY",
     "occurrences": 5,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1667"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 0,
     "docs": 3,
@@ -13543,7 +13609,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1667",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1667",
       "test packages-logicn/logicn-core-compiler/tests/phase29.test.mjs:243",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:321",
       "doc docs/Knowledge-Bases/logicn-core-memory-model.md:162",
@@ -13556,10 +13622,10 @@
     "family": "MEMORY",
     "occurrences": 11,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1675"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 0,
     "docs": 8,
@@ -13571,7 +13637,7 @@
     ],
     "allSites": [
       "doc packages-logicn/logicn-core/README.md:752",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1675",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1675",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:476",
       "test packages-logicn/logicn-core-compiler/tests/phase29.test.mjs:243",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:322",
@@ -13589,10 +13655,10 @@
     "family": "MEMORY",
     "occurrences": 8,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1683"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 0,
     "docs": 5,
@@ -13603,7 +13669,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1683",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1683",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:479",
       "test packages-logicn/logicn-core-compiler/tests/phase29.test.mjs:243",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:323",
@@ -13619,10 +13685,10 @@
     "family": "MEMORY",
     "occurrences": 5,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1691"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 0,
     "docs": 3,
@@ -13633,7 +13699,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1691",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1691",
       "test packages-logicn/logicn-core-compiler/tests/phase29.test.mjs:243",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:324",
       "doc docs/Knowledge-Bases/logicn-core-memory-model.md:165",
@@ -13644,11 +13710,13 @@
     "code": "LLN-MEMORY-008",
     "namespace": "LLN",
     "family": "MEMORY",
-    "occurrences": 29,
+    "occurrences": 30,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1701"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2716"
     ],
     "tests": 11,
     "refs": 5,
@@ -13665,8 +13733,9 @@
       "doc packages-logicn/logicn-core/README.md:725",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1608",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1697",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1701",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1701",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2691",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2716",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:38",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:45",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:482",
@@ -14354,9 +14423,10 @@
     "family": "NAME",
     "occurrences": 26,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:326"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:326",
       "packages-logicn/logicn-core-compiler/src/symbol-resolver.ts:355"
     ],
     "tests": 11,
@@ -14370,7 +14440,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:324",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:326",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:326",
       "ref packages-logicn/logicn-core-compiler/src/symbol-resolver.ts:9",
       "ref packages-logicn/logicn-core-compiler/src/symbol-resolver.ts:167",
       "ref packages-logicn/logicn-core-compiler/src/symbol-resolver.ts:344",
@@ -14644,10 +14714,10 @@
     "family": "NET",
     "occurrences": 32,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/security-policy.ts:67"
     ],
+    "emits": [],
     "tests": 8,
     "refs": 9,
     "docs": 14,
@@ -14665,7 +14735,7 @@
       "ref packages-logicn/logicn-core-compiler/src/security-policy.ts:10",
       "ref packages-logicn/logicn-core-compiler/src/security-policy.ts:56",
       "ref packages-logicn/logicn-core-compiler/src/security-policy.ts:60",
-      "emit packages-logicn/logicn-core-compiler/src/security-policy.ts:67",
+      "def packages-logicn/logicn-core-compiler/src/security-policy.ts:67",
       "ref packages-logicn/logicn-core-compiler/src/stdlib.ts:1269",
       "ref packages-logicn/logicn-core-compiler/src/stdlib.ts:1280",
       "ref packages-logicn/logicn-core-compiler/src/stdlib.ts:1283",
@@ -14698,10 +14768,10 @@
     "family": "NET",
     "occurrences": 13,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/security-policy.ts:89"
     ],
+    "emits": [],
     "tests": 3,
     "refs": 3,
     "docs": 6,
@@ -14716,7 +14786,7 @@
       "ref packages-logicn/logicn-core-compiler/src/runtime/capabilityHost.ts:161",
       "ref packages-logicn/logicn-core-compiler/src/security-policy.ts:76",
       "ref packages-logicn/logicn-core-compiler/src/security-policy.ts:80",
-      "emit packages-logicn/logicn-core-compiler/src/security-policy.ts:89",
+      "def packages-logicn/logicn-core-compiler/src/security-policy.ts:89",
       "test packages-logicn/logicn-core-compiler/tests/governance/flags-and-manifest.test.mjs:473",
       "test packages-logicn/logicn-core-compiler/tests/governance/flags-and-manifest.test.mjs:492",
       "test packages-logicn/logicn-core-compiler/tests/governance/flags-and-manifest.test.mjs:493",
@@ -15246,9 +15316,10 @@
     "family": "OBS",
     "occurrences": 21,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:520"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:520",
       "packages-logicn/logicn-core-compiler/src/observability-inference.ts:178"
     ],
     "tests": 6,
@@ -15262,7 +15333,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:518",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:520",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:520",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2089",
       "ref packages-logicn/logicn-core-compiler/src/observability-inference.ts:14",
       "ref packages-logicn/logicn-core-compiler/src/observability-inference.ts:159",
@@ -16523,10 +16594,10 @@
     "family": "PGRAPH",
     "occurrences": 4,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/core/types.ts:82"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 1,
     "docs": 0,
@@ -16537,7 +16608,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-devtools-project-graph/src/core/types.ts:82",
+      "def packages-logicn/logicn-devtools-project-graph/src/core/types.ts:82",
       "ref packages-logicn/logicn-devtools-project-graph/src/graphs/dependency-graph.ts:131",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:225",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:237"
@@ -16549,10 +16620,10 @@
     "family": "PGRAPH",
     "occurrences": 2,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/core/types.ts:90"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 0,
     "docs": 0,
@@ -16563,7 +16634,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-devtools-project-graph/src/core/types.ts:90",
+      "def packages-logicn/logicn-devtools-project-graph/src/core/types.ts:90",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:286"
     ]
   },
@@ -16573,10 +16644,10 @@
     "family": "PGRAPH",
     "occurrences": 4,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/core/types.ts:98"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 1,
     "docs": 0,
@@ -16587,7 +16658,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-devtools-project-graph/src/core/types.ts:98",
+      "def packages-logicn/logicn-devtools-project-graph/src/core/types.ts:98",
       "ref packages-logicn/logicn-devtools-project-graph/src/graphs/dependency-graph.ts:64",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:197",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:201"
@@ -16599,10 +16670,10 @@
     "family": "PGRAPH",
     "occurrences": 3,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/core/types.ts:106"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 1,
     "docs": 0,
@@ -16614,7 +16685,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-devtools-project-graph/src/algorithms/fixpoint.ts:12",
-      "emit packages-logicn/logicn-devtools-project-graph/src/core/types.ts:106",
+      "def packages-logicn/logicn-devtools-project-graph/src/core/types.ts:106",
       "test packages-logicn/logicn-devtools-project-graph/tests/algorithms.test.mjs:242"
     ]
   },
@@ -16624,10 +16695,10 @@
     "family": "PGRAPH",
     "occurrences": 2,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/core/types.ts:114"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 0,
     "docs": 0,
@@ -16638,7 +16709,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-devtools-project-graph/src/core/types.ts:114",
+      "def packages-logicn/logicn-devtools-project-graph/src/core/types.ts:114",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:279"
     ]
   },
@@ -16648,10 +16719,10 @@
     "family": "PGRAPH",
     "occurrences": 5,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:51"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 2,
     "docs": 0,
@@ -16663,7 +16734,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:8",
-      "emit packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:51",
+      "def packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:51",
       "ref packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:181",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:69",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:74"
@@ -16675,10 +16746,10 @@
     "family": "PGRAPH",
     "occurrences": 2,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:58"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 0,
@@ -16689,7 +16760,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:58",
+      "def packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:58",
       "ref packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:191"
     ]
   },
@@ -16699,10 +16770,10 @@
     "family": "PGRAPH",
     "occurrences": 4,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:65"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 1,
     "docs": 0,
@@ -16713,7 +16784,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:65",
+      "def packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:65",
       "ref packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:201",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:77",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:82"
@@ -16725,10 +16796,10 @@
     "family": "PGRAPH",
     "occurrences": 2,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:72"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 0,
@@ -16739,7 +16810,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:72",
+      "def packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:72",
       "ref packages-logicn/logicn-devtools-project-graph/src/graphs/effect-graph.ts:209"
     ]
   },
@@ -16749,10 +16820,10 @@
     "family": "PGRAPH",
     "occurrences": 5,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:56"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 2,
     "docs": 0,
@@ -16764,7 +16835,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:7",
-      "emit packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:56",
+      "def packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:56",
       "ref packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:153",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:109",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:118"
@@ -16776,10 +16847,10 @@
     "family": "PGRAPH",
     "occurrences": 4,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:63"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 1,
     "docs": 0,
@@ -16790,7 +16861,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:63",
+      "def packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:63",
       "ref packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:163",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:121",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:130"
@@ -16802,10 +16873,10 @@
     "family": "PGRAPH",
     "occurrences": 2,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:70"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 0,
@@ -16816,7 +16887,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:70",
+      "def packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:70",
       "ref packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:173"
     ]
   },
@@ -16826,10 +16897,10 @@
     "family": "PGRAPH",
     "occurrences": 2,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:77"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 0,
@@ -16840,7 +16911,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:77",
+      "def packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:77",
       "ref packages-logicn/logicn-devtools-project-graph/src/graphs/boundary-graph.ts:186"
     ]
   },
@@ -16850,10 +16921,10 @@
     "family": "PGRAPH",
     "occurrences": 3,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-devtools-project-graph/src/graphs/capability-graph.ts:38"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 0,
     "docs": 0,
@@ -16864,7 +16935,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-devtools-project-graph/src/graphs/capability-graph.ts:38",
+      "def packages-logicn/logicn-devtools-project-graph/src/graphs/capability-graph.ts:38",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:315",
       "test packages-logicn/logicn-devtools-project-graph/tests/graphs.test.mjs:325"
     ]
@@ -17220,10 +17291,10 @@
     "family": "PIPELINE",
     "occurrences": 10,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1378"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 2,
     "docs": 7,
@@ -17236,7 +17307,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core/README.md:1004",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1373",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1378",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1378",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2606",
       "doc docs/COVERAGE.md:48",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:585",
@@ -17252,10 +17323,10 @@
     "family": "PIPELINE",
     "occurrences": 5,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1386"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 3,
@@ -17266,7 +17337,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1386",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1386",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2607",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:586",
       "doc docs/Knowledge-Bases/logicn-compiler-optimizations.md:199",
@@ -17279,10 +17350,10 @@
     "family": "PIPELINE",
     "occurrences": 6,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1394"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 4,
@@ -17293,7 +17364,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1394",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1394",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2608",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:587",
       "doc docs/Knowledge-Bases/logicn-compiler-optimizations.md:200",
@@ -17307,10 +17378,10 @@
     "family": "PIPELINE",
     "occurrences": 6,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1402"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 4,
@@ -17321,7 +17392,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1402",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1402",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2609",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:588",
       "doc docs/Knowledge-Bases/logicn-compiler-optimizations.md:201",
@@ -17335,10 +17406,10 @@
     "family": "PIPELINE",
     "occurrences": 6,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1410"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 4,
@@ -17349,7 +17420,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1410",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1410",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2610",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:589",
       "doc docs/Knowledge-Bases/logicn-compiler-optimizations.md:202",
@@ -17380,9 +17451,10 @@
     "family": "PKG",
     "occurrences": 30,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:375"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:375",
       "packages-logicn/logicn-core-compiler/src/package-resolver.ts:120"
     ],
     "tests": 8,
@@ -17397,7 +17469,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:370",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:373",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:375",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:375",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:91",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:102",
       "emit packages-logicn/logicn-core-compiler/src/package-resolver.ts:120",
@@ -17433,9 +17505,10 @@
     "family": "PKG",
     "occurrences": 28,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:385"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:385",
       "packages-logicn/logicn-core-compiler/src/package-resolver.ts:236",
       "packages-logicn/logicn-core-compiler/src/package-resolver.ts:250"
     ],
@@ -17450,7 +17523,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:383",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:385",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:385",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:192",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:198",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:208",
@@ -17485,9 +17558,10 @@
     "family": "PKG",
     "occurrences": 43,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:395"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:395",
       "packages-logicn/logicn-core-compiler/src/package-resolver.ts:273"
     ],
     "tests": 32,
@@ -17501,7 +17575,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:393",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:395",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:395",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:160",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:178",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:190",
@@ -17551,9 +17625,10 @@
     "family": "PKG",
     "occurrences": 20,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:405"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:405",
       "packages-logicn/logicn-core-compiler/src/package-resolver.ts:144"
     ],
     "tests": 9,
@@ -17567,7 +17642,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:403",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:405",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:405",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:134",
       "emit packages-logicn/logicn-core-compiler/src/package-resolver.ts:144",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:49",
@@ -17594,9 +17669,10 @@
     "family": "PKG",
     "occurrences": 36,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:415"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:415",
       "packages-logicn/logicn-core-compiler/src/package-resolver.ts:284"
     ],
     "tests": 17,
@@ -17610,7 +17686,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:413",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:415",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:415",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:160",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:178",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:191",
@@ -17653,9 +17729,10 @@
     "family": "PKG",
     "occurrences": 22,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:425"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:425",
       "packages-logicn/logicn-core-compiler/src/package-resolver.ts:305"
     ],
     "tests": 12,
@@ -17669,7 +17746,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:423",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:425",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:425",
       "ref packages-logicn/logicn-core-compiler/src/package-resolver.ts:53",
       "emit packages-logicn/logicn-core-compiler/src/package-resolver.ts:305",
       "test packages-logicn/logicn-core-compiler/tests/package-resolver/governed-resolver.test.mjs:9",
@@ -18064,10 +18141,10 @@
     "family": "PROFILE",
     "occurrences": 31,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/profile-checker.ts:36"
     ],
+    "emits": [],
     "tests": 18,
     "refs": 2,
     "docs": 10,
@@ -18080,7 +18157,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:103",
       "ref packages-logicn/logicn-core-compiler/src/profile-checker.ts:34",
-      "emit packages-logicn/logicn-core-compiler/src/profile-checker.ts:36",
+      "def packages-logicn/logicn-core-compiler/src/profile-checker.ts:36",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:5",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:37",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:38",
@@ -18117,10 +18194,10 @@
     "family": "PROFILE",
     "occurrences": 26,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/profile-checker.ts:44"
     ],
+    "emits": [],
     "tests": 14,
     "refs": 2,
     "docs": 9,
@@ -18133,7 +18210,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:104",
       "ref packages-logicn/logicn-core-compiler/src/profile-checker.ts:42",
-      "emit packages-logicn/logicn-core-compiler/src/profile-checker.ts:44",
+      "def packages-logicn/logicn-core-compiler/src/profile-checker.ts:44",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:49",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:54",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:62",
@@ -18165,10 +18242,10 @@
     "family": "PROFILE",
     "occurrences": 7,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/profile-checker.ts:52"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 5,
@@ -18180,7 +18257,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/profile-checker.ts:50",
-      "emit packages-logicn/logicn-core-compiler/src/profile-checker.ts:52",
+      "def packages-logicn/logicn-core-compiler/src/profile-checker.ts:52",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:415",
       "doc docs/Knowledge-Bases/logicn-diagnostic-code-taxonomy-audit-2026-06-22.md:76",
       "doc docs/Knowledge-Bases/logicn-fortified-typed-logic.md:191",
@@ -18194,10 +18271,10 @@
     "family": "PROFILE",
     "occurrences": 6,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/profile-checker.ts:60"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 4,
@@ -18210,7 +18287,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:105",
       "ref packages-logicn/logicn-core-compiler/src/profile-checker.ts:58",
-      "emit packages-logicn/logicn-core-compiler/src/profile-checker.ts:60",
+      "def packages-logicn/logicn-core-compiler/src/profile-checker.ts:60",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:416",
       "doc docs/Knowledge-Bases/logicn-roadmap-phase26-41.md:57",
       "doc docs/Knowledge-Bases/logicn-roadmap-phase26-50.md:57"
@@ -18222,10 +18299,10 @@
     "family": "PROFILE",
     "occurrences": 8,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/profile-checker.ts:68"
     ],
+    "emits": [],
     "tests": 2,
     "refs": 1,
     "docs": 4,
@@ -18238,7 +18315,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:106",
       "ref packages-logicn/logicn-core-compiler/src/profile-checker.ts:66",
-      "emit packages-logicn/logicn-core-compiler/src/profile-checker.ts:68",
+      "def packages-logicn/logicn-core-compiler/src/profile-checker.ts:68",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:417",
       "doc docs/Knowledge-Bases/logicn-roadmap-phase26-41.md:58",
       "doc docs/Knowledge-Bases/logicn-roadmap-phase26-50.md:58",
@@ -18252,10 +18329,10 @@
     "family": "PROFILE",
     "occurrences": 17,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/profile-checker.ts:76"
     ],
+    "emits": [],
     "tests": 9,
     "refs": 5,
     "docs": 2,
@@ -18267,7 +18344,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/profile-checker.ts:74",
-      "emit packages-logicn/logicn-core-compiler/src/profile-checker.ts:76",
+      "def packages-logicn/logicn-core-compiler/src/profile-checker.ts:76",
       "test packages-logicn/logicn-core-compiler/tests/security-boundary.test.mjs:133",
       "test packages-logicn/logicn-core-compiler/tests/security-boundary.test.mjs:135",
       "test packages-logicn/logicn-core-compiler/tests/security-boundary.test.mjs:138",
@@ -18291,10 +18368,10 @@
     "family": "PROFILE",
     "occurrences": 20,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/profile-checker.ts:85"
     ],
+    "emits": [],
     "tests": 10,
     "refs": 2,
     "docs": 7,
@@ -18307,7 +18384,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:107",
       "ref packages-logicn/logicn-core-compiler/src/profile-checker.ts:83",
-      "emit packages-logicn/logicn-core-compiler/src/profile-checker.ts:85",
+      "def packages-logicn/logicn-core-compiler/src/profile-checker.ts:85",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:65",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:67",
       "test packages-logicn/logicn-core-compiler/tests/security-denial-paths.test.mjs:14",
@@ -18333,10 +18410,10 @@
     "family": "PROFILE",
     "occurrences": 7,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/profile-checker.ts:93"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 2,
     "docs": 4,
@@ -18349,7 +18426,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:108",
       "ref packages-logicn/logicn-core-compiler/src/profile-checker.ts:91",
-      "emit packages-logicn/logicn-core-compiler/src/profile-checker.ts:93",
+      "def packages-logicn/logicn-core-compiler/src/profile-checker.ts:93",
       "ref packages-logicn/logicn-devtools-security/src/audit-runner.ts:112",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:420",
       "doc docs/Knowledge-Bases/logicn-roadmap-phase26-41.md:62",
@@ -18834,11 +18911,13 @@
     "code": "LLN-RAWPTR-001",
     "namespace": "LLN",
     "family": "RAWPTR",
-    "occurrences": 18,
+    "occurrences": 19,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1364"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2762"
     ],
     "tests": 1,
     "refs": 3,
@@ -18856,8 +18935,9 @@
       "doc packages-logicn/logicn-core/README.md:726",
       "doc packages-logicn/logicn-core/README.md:995",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1354",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1364",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1364",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:2727",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2762",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:47",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:550",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:635",
@@ -19164,9 +19244,10 @@
     "family": "RES",
     "occurrences": 27,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:512"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:512",
       "packages-logicn/logicn-core-compiler/src/resilience-inference.ts:316"
     ],
     "tests": 7,
@@ -19180,7 +19261,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:510",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:512",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:512",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2056",
       "ref packages-logicn/logicn-core-compiler/src/resilience-inference.ts:12",
       "ref packages-logicn/logicn-core-compiler/src/resilience-inference.ts:287",
@@ -19640,9 +19721,10 @@
     "family": "RUNTIME",
     "occurrences": 18,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/interpreter.ts:488"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/interpreter.ts:488",
       "packages-logicn/logicn-core-compiler/src/interpreter.ts:1905"
     ],
     "tests": 9,
@@ -19656,7 +19738,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/interpreter.ts:486",
-      "emit packages-logicn/logicn-core-compiler/src/interpreter.ts:488",
+      "def packages-logicn/logicn-core-compiler/src/interpreter.ts:488",
       "ref packages-logicn/logicn-core-compiler/src/interpreter.ts:1896",
       "emit packages-logicn/logicn-core-compiler/src/interpreter.ts:1905",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:35",
@@ -19682,13 +19764,13 @@
     "occurrences": 49,
     "docOnly": false,
     "defs": [
+      "packages-logicn/logicn-core-compiler/src/security-policy.ts:115",
       "scripts/audit-diagnostic-doc-drift.mjs:126"
     ],
     "emits": [
       "packages-logicn/logicn-core-compiler/src/interpreter.ts:1238",
       "packages-logicn/logicn-core-compiler/src/interpreter.ts:1350",
-      "packages-logicn/logicn-core-compiler/src/interpreter.ts:2153",
-      "packages-logicn/logicn-core-compiler/src/security-policy.ts:115"
+      "packages-logicn/logicn-core-compiler/src/interpreter.ts:2153"
     ],
     "tests": 21,
     "refs": 13,
@@ -19710,7 +19792,7 @@
       "ref packages-logicn/logicn-core-compiler/src/runtime/capabilityHost.ts:202",
       "ref packages-logicn/logicn-core-compiler/src/security-policy.ts:98",
       "ref packages-logicn/logicn-core-compiler/src/security-policy.ts:102",
-      "emit packages-logicn/logicn-core-compiler/src/security-policy.ts:115",
+      "def packages-logicn/logicn-core-compiler/src/security-policy.ts:115",
       "test packages-logicn/logicn-core-compiler/tests/governance/flags-and-manifest.test.mjs:429",
       "test packages-logicn/logicn-core-compiler/tests/governance/flags-and-manifest.test.mjs:454",
       "test packages-logicn/logicn-core-compiler/tests/interpreter-phase16.test.mjs:8",
@@ -19918,11 +20000,13 @@
     "code": "LLN-SAFETY-001",
     "namespace": "LLN",
     "family": "SAFETY",
-    "occurrences": 10,
+    "occurrences": 11,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1802"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2272"
     ],
     "tests": 2,
     "refs": 2,
@@ -19936,7 +20020,8 @@
     "allSites": [
       "doc packages-logicn/logicn-core/README.md:997",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1793",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1802",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1802",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2272",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:29",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:70",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:492",
@@ -19950,11 +20035,13 @@
     "code": "LLN-SAFETY-002",
     "namespace": "LLN",
     "family": "SAFETY",
-    "occurrences": 6,
+    "occurrences": 7,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1810"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2308"
     ],
     "tests": 2,
     "refs": 1,
@@ -19966,7 +20053,8 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1810",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1810",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2308",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:30",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:91",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:496",
@@ -19978,11 +20066,14 @@
     "code": "LLN-SAFETY-003",
     "namespace": "LLN",
     "family": "SAFETY",
-    "occurrences": 12,
+    "occurrences": 14,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1818"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2334",
+      "packages-logicn/logicn-core-compiler/src/index.ts:2356"
     ],
     "tests": 5,
     "refs": 2,
@@ -19994,7 +20085,9 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1818",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1818",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2334",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2356",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:31",
       "ref packages-logicn/logicn-core-compiler/src/stdlib-registry.ts:239",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:131",
@@ -20012,11 +20105,13 @@
     "code": "LLN-SAFETY-004",
     "namespace": "LLN",
     "family": "SAFETY",
-    "occurrences": 9,
+    "occurrences": 10,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1826"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2385"
     ],
     "tests": 5,
     "refs": 1,
@@ -20028,7 +20123,8 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1826",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1826",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2385",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:32",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:202",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:502",
@@ -20043,11 +20139,13 @@
     "code": "LLN-SAFETY-005",
     "namespace": "LLN",
     "family": "SAFETY",
-    "occurrences": 6,
+    "occurrences": 7,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1834"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2405"
     ],
     "tests": 2,
     "refs": 1,
@@ -20059,7 +20157,8 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1834",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1834",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2405",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:33",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:206",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:505",
@@ -20071,11 +20170,13 @@
     "code": "LLN-SAFETY-006",
     "namespace": "LLN",
     "family": "SAFETY",
-    "occurrences": 6,
+    "occurrences": 7,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1842"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2426"
     ],
     "tests": 2,
     "refs": 0,
@@ -20087,7 +20188,8 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1842",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1842",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2426",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:113",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:508",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:340",
@@ -20267,9 +20369,10 @@
     "family": "SEC",
     "occurrences": 67,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:1874"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:1874",
       "packages-logicn/logicn-core-compiler/src/monkey-patch-checker.ts:138"
     ],
     "tests": 39,
@@ -20285,7 +20388,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1866",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1872",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1874",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1874",
       "ref packages-logicn/logicn-core-compiler/src/lexer.ts:211",
       "ref packages-logicn/logicn-core-compiler/src/monkey-patch-checker.ts:8",
       "ref packages-logicn/logicn-core-compiler/src/monkey-patch-checker.ts:47",
@@ -20358,9 +20461,10 @@
     "family": "SEC",
     "occurrences": 40,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:1883"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:1883",
       "packages-logicn/logicn-core-compiler/src/monkey-patch-checker.ts:153"
     ],
     "tests": 24,
@@ -20375,7 +20479,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1881",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1883",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1883",
       "ref packages-logicn/logicn-core-compiler/src/monkey-patch-checker.ts:13",
       "emit packages-logicn/logicn-core-compiler/src/monkey-patch-checker.ts:153",
       "ref packages-logicn/logicn-core-compiler/src/monkey-patch-checker.ts:184",
@@ -21122,9 +21226,10 @@
     "family": "SOURCE",
     "occurrences": 53,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:1784"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:1784",
       "packages-logicn/logicn-core-compiler/src/source-escape-checker.ts:91"
     ],
     "tests": 34,
@@ -21140,7 +21245,7 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:60",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1772",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1782",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1784",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1784",
       "ref packages-logicn/logicn-core-compiler/src/monkey-patch-checker.ts:18",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:51",
       "ref packages-logicn/logicn-core-compiler/src/proof-graph.ts:487",
@@ -21382,10 +21487,11 @@
     "family": "STDLIB",
     "occurrences": 54,
     "docOnly": false,
-    "defs": [],
-    "emits": [
-      "packages-logicn/logicn-core-compiler/src/effect-checker.ts:892",
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:709"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/effect-checker.ts:892"
     ],
     "tests": 16,
     "refs": 10,
@@ -21408,7 +21514,7 @@
       "emit packages-logicn/logicn-core-compiler/src/effect-checker.ts:892",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:695",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:699",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:709",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:709",
       "ref packages-logicn/logicn-core-compiler/src/production-check.ts:55",
       "test packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:58",
       "test packages-logicn/logicn-core-compiler/tests/effect-checker/flags-and-mode.test.mjs:242",
@@ -21564,10 +21670,10 @@
     "family": "STRING",
     "occurrences": 11,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1473"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 1,
     "docs": 8,
@@ -21580,7 +21686,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core/README.md:1000",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1468",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1473",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1473",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:443",
       "doc docs/COVERAGE.md:47",
       "doc docs/COVERAGE.md:423",
@@ -21597,10 +21703,10 @@
     "family": "STRING",
     "occurrences": 4,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1481"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 0,
     "docs": 2,
@@ -21611,7 +21717,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1481",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1481",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:445",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:605",
       "doc docs/Knowledge-Bases/logicn-core-standard-types-string-char-byte.md:138"
@@ -21623,10 +21729,10 @@
     "family": "STRING",
     "occurrences": 4,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1489"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 0,
     "docs": 3,
@@ -21637,7 +21743,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1489",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1489",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:606",
       "doc docs/Knowledge-Bases/logicn-core-standard-types-string-char-byte.md:139",
       "doc docs/Knowledge-Bases/logicn-core-standard-types-string-char-byte.md:147"
@@ -21649,10 +21755,10 @@
     "family": "STRING",
     "occurrences": 3,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1497"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 0,
     "docs": 2,
@@ -21663,7 +21769,7 @@
       "warning"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1497",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1497",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:607",
       "doc docs/Knowledge-Bases/logicn-core-standard-types-string-char-byte.md:140"
     ]
@@ -21674,9 +21780,10 @@
     "family": "STYLE",
     "occurrences": 52,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:17"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:17",
       "packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:236"
     ],
     "tests": 35,
@@ -21691,7 +21798,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/cli.ts:53",
       "ref packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:5",
-      "emit packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:17",
+      "def packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:17",
       "ref packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:56",
       "ref packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:231",
       "emit packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:236",
@@ -21749,9 +21856,10 @@
     "family": "STYLE",
     "occurrences": 45,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:24"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:24",
       "packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:251"
     ],
     "tests": 36,
@@ -21765,7 +21873,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:6",
-      "emit packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:24",
+      "def packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:24",
       "ref packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:57",
       "ref packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:246",
       "emit packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:251",
@@ -21854,9 +21962,10 @@
     "family": "STYLE",
     "occurrences": 40,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:31"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:31",
       "packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:265"
     ],
     "tests": 30,
@@ -21870,7 +21979,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:7",
-      "emit packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:31",
+      "def packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:31",
       "ref packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:58",
       "ref packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:261",
       "emit packages-logicn/logicn-core-compiler/src/naming-policy-checker.ts:265",
@@ -21987,9 +22096,10 @@
     "family": "SUBSTRATE",
     "occurrences": 231,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:290"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:290",
       "packages-logicn/logicn-core-compiler/src/substrate-inference.ts:263"
     ],
     "tests": 25,
@@ -22004,7 +22114,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/effect-checker.ts:321",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:288",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:290",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:290",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2104",
       "ref packages-logicn/logicn-core-compiler/src/substrate-inference.ts:8",
       "ref packages-logicn/logicn-core-compiler/src/substrate-inference.ts:64",
@@ -22241,9 +22351,10 @@
     "family": "SUBSTRATE",
     "occurrences": 76,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:298"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:298",
       "packages-logicn/logicn-core-compiler/src/substrate-inference.ts:240",
       "packages-logicn/logicn-core-compiler/src/substrate-inference.ts:330"
     ],
@@ -22258,7 +22369,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:296",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:298",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:298",
       "ref packages-logicn/logicn-core-compiler/src/substrate-inference.ts:11",
       "emit packages-logicn/logicn-core-compiler/src/substrate-inference.ts:240",
       "emit packages-logicn/logicn-core-compiler/src/substrate-inference.ts:330",
@@ -22341,9 +22452,10 @@
     "family": "SUBSTRATE",
     "occurrences": 43,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:306"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:306",
       "packages-logicn/logicn-core-compiler/src/substrate-inference.ts:312",
       "packages-logicn/logicn-core-compiler/src/substrate-inference.ts:321"
     ],
@@ -22358,7 +22470,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:304",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:306",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:306",
       "ref packages-logicn/logicn-core-compiler/src/substrate-inference.ts:12",
       "emit packages-logicn/logicn-core-compiler/src/substrate-inference.ts:312",
       "emit packages-logicn/logicn-core-compiler/src/substrate-inference.ts:321",
@@ -22408,9 +22520,10 @@
     "family": "SUBSTRATE",
     "occurrences": 42,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:314"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:314",
       "packages-logicn/logicn-core-compiler/src/substrate-inference.ts:300"
     ],
     "tests": 11,
@@ -22424,7 +22537,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:312",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:314",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:314",
       "ref packages-logicn/logicn-core-compiler/src/substrate-inference.ts:13",
       "emit packages-logicn/logicn-core-compiler/src/substrate-inference.ts:300",
       "test packages-logicn/logicn-core-compiler/tests/substrate-contracts.test.mjs:137",
@@ -22473,9 +22586,10 @@
     "family": "SUBSTRATE",
     "occurrences": 21,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:325"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:325",
       "packages-logicn/logicn-core-compiler/src/substrate-inference.ts:283"
     ],
     "tests": 10,
@@ -22489,7 +22603,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:320",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:325",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:325",
       "ref packages-logicn/logicn-core-compiler/src/substrate-inference.ts:9",
       "ref packages-logicn/logicn-core-compiler/src/substrate-inference.ts:75",
       "ref packages-logicn/logicn-core-compiler/src/substrate-inference.ts:271",
@@ -22611,11 +22725,13 @@
     "code": "LLN-SYNTAX-001",
     "namespace": "LLN",
     "family": "SYNTAX",
-    "occurrences": 15,
+    "occurrences": 16,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1217"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2496"
     ],
     "tests": 1,
     "refs": 2,
@@ -22631,7 +22747,8 @@
       "doc packages-logicn/logicn-core/README.md:998",
       "ref packages-logicn/logicn-core/src/index.ts:150",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1212",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1217",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1217",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2496",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:250",
       "doc docs/COVERAGE.md:48",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:361",
@@ -22648,11 +22765,13 @@
     "code": "LLN-SYNTAX-002",
     "namespace": "LLN",
     "family": "SYNTAX",
-    "occurrences": 10,
+    "occurrences": 11,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1225"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:2510"
     ],
     "tests": 1,
     "refs": 0,
@@ -22664,7 +22783,8 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1225",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1225",
+      "emit packages-logicn/logicn-core-compiler/src/index.ts:2510",
       "test packages-logicn/logicn-core-compiler/tests/compiler-safety-contracts.test.mjs:256",
       "doc docs/Knowledge-Bases/compile-time-vs-runtime-authority.md:52",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:362",
@@ -22761,10 +22881,10 @@
     "family": "SYNTAX",
     "occurrences": 25,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1233"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 9,
     "docs": 13,
@@ -22780,7 +22900,7 @@
       "ref packages-logicn/logicn-core-compiler/scripts/cec-debug-003.mjs:9",
       "ref packages-logicn/logicn-core-compiler/scripts/cec-promotion-pass.mjs:30",
       "ref packages-logicn/logicn-core-compiler/scripts/cec-test-003.mjs:18",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1233",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1233",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:438",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:440",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:462",
@@ -22808,10 +22928,10 @@
     "family": "SYNTAX",
     "occurrences": 16,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1241"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 7,
     "docs": 7,
@@ -22827,7 +22947,7 @@
       "ref packages-logicn/logicn-core-compiler/scripts/cec-debug-003.mjs:10",
       "ref packages-logicn/logicn-core-compiler/scripts/cec-promotion-pass.mjs:31",
       "ref packages-logicn/logicn-core-compiler/scripts/cec-test-003.mjs:19",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1241",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1241",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:450",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:452",
       "test packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:51",
@@ -22846,10 +22966,10 @@
     "family": "SYNTAX",
     "occurrences": 20,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1249"
     ],
+    "emits": [],
     "tests": 5,
     "refs": 7,
     "docs": 7,
@@ -22865,7 +22985,7 @@
       "ref packages-logicn/logicn-core-compiler/scripts/cec-debug-003.mjs:11",
       "ref packages-logicn/logicn-core-compiler/scripts/cec-promotion-pass.mjs:32",
       "ref packages-logicn/logicn-core-compiler/scripts/cec-test-003.mjs:20",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1249",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1249",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:513",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:517",
       "test packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:52",
@@ -22888,10 +23008,10 @@
     "family": "SYNTAX",
     "occurrences": 12,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1257"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 2,
     "docs": 9,
@@ -22902,7 +23022,7 @@
       "error"
     ],
     "allSites": [
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1257",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1257",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:530",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:532",
       "doc docs/AI/DO_NOT_USE_YET.md:133",
@@ -22959,10 +23079,10 @@
     "family": "SYNTAX",
     "occurrences": 43,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:1285"
     ],
+    "emits": [],
     "tests": 15,
     "refs": 5,
     "docs": 20,
@@ -22975,7 +23095,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1273",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:1277",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:1285",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:1285",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:677",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:680",
       "ref packages-logicn/logicn-core-compiler/src/parser.ts:720",
@@ -23099,10 +23219,10 @@
     "family": "TAINT",
     "occurrences": 43,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/taint-checker.ts:118"
     ],
+    "emits": [],
     "tests": 20,
     "refs": 6,
     "docs": 16,
@@ -23118,7 +23238,7 @@
       "ref packages-logicn/logicn-core-compiler/src/cli.ts:115",
       "ref packages-logicn/logicn-core-compiler/src/cli.ts:116",
       "ref packages-logicn/logicn-core-compiler/src/taint-checker.ts:116",
-      "emit packages-logicn/logicn-core-compiler/src/taint-checker.ts:118",
+      "def packages-logicn/logicn-core-compiler/src/taint-checker.ts:118",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:6",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:83",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:88",
@@ -23164,10 +23284,10 @@
     "family": "TAINT",
     "occurrences": 8,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/taint-checker.ts:126"
     ],
+    "emits": [],
     "tests": 0,
     "refs": 1,
     "docs": 6,
@@ -23180,7 +23300,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:20",
       "ref packages-logicn/logicn-core-compiler/src/taint-checker.ts:124",
-      "emit packages-logicn/logicn-core-compiler/src/taint-checker.ts:126",
+      "def packages-logicn/logicn-core-compiler/src/taint-checker.ts:126",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:399",
       "doc docs/Knowledge-Bases/logicn-diagnostic-code-taxonomy-audit-2026-06-22.md:91",
       "doc docs/Knowledge-Bases/logicn-fortified-typed-logic.md:288",
@@ -23194,10 +23314,10 @@
     "family": "TAINT",
     "occurrences": 19,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/taint-checker.ts:134"
     ],
+    "emits": [],
     "tests": 11,
     "refs": 2,
     "docs": 5,
@@ -23210,7 +23330,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:21",
       "ref packages-logicn/logicn-core-compiler/src/taint-checker.ts:132",
-      "emit packages-logicn/logicn-core-compiler/src/taint-checker.ts:134",
+      "def packages-logicn/logicn-core-compiler/src/taint-checker.ts:134",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:99",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:104",
       "test packages-logicn/logicn-core-compiler/tests/security-boundary.test.mjs:185",
@@ -23235,10 +23355,10 @@
     "family": "TAINT",
     "occurrences": 18,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/taint-checker.ts:142"
     ],
+    "emits": [],
     "tests": 11,
     "refs": 3,
     "docs": 3,
@@ -23251,7 +23371,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:22",
       "ref packages-logicn/logicn-core-compiler/src/taint-checker.ts:140",
-      "emit packages-logicn/logicn-core-compiler/src/taint-checker.ts:142",
+      "def packages-logicn/logicn-core-compiler/src/taint-checker.ts:142",
       "ref packages-logicn/logicn-core-compiler/src/taint-checker.ts:377",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:107",
       "test packages-logicn/logicn-core-compiler/tests/phase28-profile-taint.test.mjs:112",
@@ -23275,10 +23395,10 @@
     "family": "TAINT",
     "occurrences": 9,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/taint-checker.ts:392"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 2,
     "docs": 5,
@@ -23290,7 +23410,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/taint-checker.ts:390",
-      "emit packages-logicn/logicn-core-compiler/src/taint-checker.ts:392",
+      "def packages-logicn/logicn-core-compiler/src/taint-checker.ts:392",
       "test packages-logicn/logicn-core-compiler/tests/security-boundary.test.mjs:197",
       "ref packages-logicn/logicn-devtools-security/src/audit-runner.ts:105",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:402",
@@ -23306,10 +23426,10 @@
     "family": "TAINT",
     "occurrences": 7,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/taint-checker.ts:401"
     ],
+    "emits": [],
     "tests": 1,
     "refs": 2,
     "docs": 3,
@@ -23321,7 +23441,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/taint-checker.ts:399",
-      "emit packages-logicn/logicn-core-compiler/src/taint-checker.ts:401",
+      "def packages-logicn/logicn-core-compiler/src/taint-checker.ts:401",
       "test packages-logicn/logicn-core-compiler/tests/security-boundary.test.mjs:203",
       "ref packages-logicn/logicn-devtools-security/src/audit-runner.ts:106",
       "doc docs/Knowledge-Bases/compiler-diagnostics.md:403",
@@ -23449,11 +23569,13 @@
     "code": "LLN-TENANT-001",
     "namespace": "LLN",
     "family": "TENANT",
-    "occurrences": 17,
+    "occurrences": 18,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:257"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2730"
     ],
     "tests": 9,
     "refs": 4,
@@ -23466,10 +23588,11 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:255",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:257",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:257",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2021",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2703",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2715",
+      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2730",
       "test packages-logicn/logicn-core-compiler/tests/governance/tenant-isolation.test.mjs:9",
       "test packages-logicn/logicn-core-compiler/tests/governance/tenant-isolation.test.mjs:104",
       "test packages-logicn/logicn-core-compiler/tests/governance/tenant-isolation.test.mjs:107",
@@ -23488,11 +23611,13 @@
     "code": "LLN-TENANT-002",
     "namespace": "LLN",
     "family": "TENANT",
-    "occurrences": 26,
+    "occurrences": 27,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:265"
+    ],
+    "emits": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2744"
     ],
     "tests": 20,
     "refs": 3,
@@ -23506,8 +23631,9 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:251",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:263",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:265",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:265",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2710",
+      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2744",
       "test packages-logicn/logicn-core-compiler/tests/governance/tenant-isolation.test.mjs:4",
       "test packages-logicn/logicn-core-compiler/tests/governance/tenant-isolation.test.mjs:58",
       "test packages-logicn/logicn-core-compiler/tests/governance/tenant-isolation.test.mjs:61",
@@ -23740,9 +23866,10 @@
     "family": "TERM",
     "occurrences": 31,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:408"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:408",
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2825"
     ],
     "tests": 11,
@@ -23757,7 +23884,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:30",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:406",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:408",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:408",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1145",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1999",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:2783",
@@ -24794,9 +24921,10 @@
     "family": "TYPE",
     "occurrences": 102,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:256"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:256",
       "packages-logicn/logicn-core-compiler/src/type-checker.ts:1334"
     ],
     "tests": 59,
@@ -24810,7 +24938,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:254",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:256",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:256",
       "ref packages-logicn/logicn-core-compiler/src/type-checker.ts:21",
       "ref packages-logicn/logicn-core-compiler/src/type-checker.ts:446",
       "ref packages-logicn/logicn-core-compiler/src/type-checker.ts:493",
@@ -26159,9 +26287,10 @@
     "family": "TYPE",
     "occurrences": 36,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:280"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:280",
       "packages-logicn/logicn-core-compiler/src/type-checker.ts:1387"
     ],
     "tests": 16,
@@ -26176,7 +26305,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:276",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:278",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:280",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:280",
       "ref packages-logicn/logicn-core-compiler/src/type-checker.ts:1373",
       "ref packages-logicn/logicn-core-compiler/src/type-checker.ts:1385",
       "emit packages-logicn/logicn-core-compiler/src/type-checker.ts:1387",
@@ -26218,10 +26347,10 @@
     "family": "TYPE",
     "occurrences": 16,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/index.ts:290"
     ],
+    "emits": [],
     "tests": 4,
     "refs": 2,
     "docs": 9,
@@ -26233,7 +26362,7 @@
     ],
     "allSites": [
       "ref packages-logicn/logicn-core-compiler/src/index.ts:288",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:290",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:290",
       "ref packages-logicn/logicn-core-compiler/src/type-registry.ts:630",
       "test packages-logicn/logicn-core-compiler/tests/type-registry/type-id-and-flags.test.mjs:9",
       "test packages-logicn/logicn-core-compiler/tests/type-registry/type-id-and-flags.test.mjs:277",
@@ -26446,10 +26575,10 @@
     "family": "VAL",
     "occurrences": 56,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:465"
     ],
+    "emits": [],
     "tests": 36,
     "refs": 4,
     "docs": 9,
@@ -26463,7 +26592,7 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:83",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:454",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:458",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:465",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:465",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1759",
       "lln packages-logicn/logicn-core-compiler/src/self-hosted/governance-verifier.lln:17",
       "lln packages-logicn/logicn-core-compiler/src/self-hosted/governance-verifier.lln:84",
@@ -26524,10 +26653,10 @@
     "family": "VAL",
     "occurrences": 43,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:481"
     ],
+    "emits": [],
     "tests": 27,
     "refs": 4,
     "docs": 8,
@@ -26541,7 +26670,7 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:84",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:454",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:474",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:481",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:481",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1769",
       "lln packages-logicn/logicn-core-compiler/src/self-hosted/governance-verifier.lln:18",
       "lln packages-logicn/logicn-core-compiler/src/self-hosted/governance-verifier.lln:93",
@@ -26589,10 +26718,10 @@
     "family": "VAL",
     "occurrences": 25,
     "docOnly": false,
-    "defs": [],
-    "emits": [
+    "defs": [
       "packages-logicn/logicn-core-compiler/src/governance-verifier.ts:497"
     ],
+    "emits": [],
     "tests": 16,
     "refs": 4,
     "docs": 4,
@@ -26606,7 +26735,7 @@
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:85",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:454",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:490",
-      "emit packages-logicn/logicn-core-compiler/src/governance-verifier.ts:497",
+      "def packages-logicn/logicn-core-compiler/src/governance-verifier.ts:497",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1748",
       "test packages-logicn/logicn-core-compiler/tests/lln-val-enforcement.test.mjs:2",
       "test packages-logicn/logicn-core-compiler/tests/lln-val-enforcement.test.mjs:8",
@@ -27233,9 +27362,10 @@
     "family": "VALUESTATE",
     "occurrences": 79,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:239"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:239",
       "packages-logicn/logicn-core-compiler/src/value-state-checker.ts:1815"
     ],
     "tests": 45,
@@ -27251,7 +27381,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:34",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:237",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:239",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:239",
       "ref packages-logicn/logicn-core-compiler/src/value-state-checker.ts:28",
       "ref packages-logicn/logicn-core-compiler/src/value-state-checker.ts:735",
       "ref packages-logicn/logicn-core-compiler/src/value-state-checker.ts:1765",
@@ -27336,9 +27466,10 @@
     "family": "VALUESTATE",
     "occurrences": 110,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:300"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:300",
       "packages-logicn/logicn-core-compiler/src/value-state-checker.ts:1337",
       "packages-logicn/logicn-core-compiler/src/value-state-checker.ts:1989"
     ],
@@ -27358,7 +27489,7 @@
       "ref packages-logicn/logicn-core-compiler/scripts/cec-promotion-pass.mjs:34",
       "ref packages-logicn/logicn-core-compiler/src/governance-verifier.ts:1925",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:298",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:300",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:300",
       "ref packages-logicn/logicn-core-compiler/src/type-checker.ts:36",
       "ref packages-logicn/logicn-core-compiler/src/type-checker.ts:402",
       "ref packages-logicn/logicn-core-compiler/src/type-checker.ts:1295",
@@ -27471,9 +27602,10 @@
     "family": "VALUESTATE",
     "occurrences": 53,
     "docOnly": false,
-    "defs": [],
+    "defs": [
+      "packages-logicn/logicn-core-compiler/src/index.ts:308"
+    ],
     "emits": [
-      "packages-logicn/logicn-core-compiler/src/index.ts:308",
       "packages-logicn/logicn-core-compiler/src/value-state-checker.ts:1346"
     ],
     "tests": 40,
@@ -27488,7 +27620,7 @@
     "allSites": [
       "doc packages-logicn/logicn-core-compiler/docs/Knowledge-Bases/logicn-security-invariants-matrix.md:36",
       "ref packages-logicn/logicn-core-compiler/src/index.ts:306",
-      "emit packages-logicn/logicn-core-compiler/src/index.ts:308",
+      "def packages-logicn/logicn-core-compiler/src/index.ts:308",
       "ref packages-logicn/logicn-core-compiler/src/type-checker.ts:37",
       "ref packages-logicn/logicn-core-compiler/src/type-checker.ts:1348",
       "ref packages-logicn/logicn-core-compiler/src/value-state-checker.ts:333",
@@ -27622,12 +27754,14 @@
     "code": "LLN-VAULT-001",
     "namespace": "LLN",
     "family": "VAULT",
-    "occurrences": 13,
+    "occurrences": 14,
     "docOnly": false,
     "defs": [
       "packages-logicn/logicn-core-config/src/index.ts:1314"
     ],
-    "emits": [],
+    "emits": [
+      "packages-logicn/logicn-core-config/src/index.ts:1325"
+    ],
     "tests": 1,
     "refs": 2,
     "docs": 9,
@@ -27637,6 +27771,7 @@
       "ref packages-logicn/logicn-core-config/src/index.ts:1279",
       "ref packages-logicn/logicn-core-config/src/index.ts:1313",
       "def packages-logicn/logicn-core-config/src/index.ts:1314",
+      "emit packages-logicn/logicn-core-config/src/index.ts:1325",
       "test packages-logicn/logicn-core-config/tests/config-contracts.test.mjs:306",
       "doc packages-logicn/logicn-core-config/TODO.md:35",
       "doc docs/COVERAGE.md:300",
@@ -27653,12 +27788,14 @@
     "code": "LLN-VAULT-002",
     "namespace": "LLN",
     "family": "VAULT",
-    "occurrences": 5,
+    "occurrences": 6,
     "docOnly": false,
     "defs": [
       "packages-logicn/logicn-core-config/src/index.ts:1316"
     ],
-    "emits": [],
+    "emits": [
+      "packages-logicn/logicn-core-config/src/index.ts:1336"
+    ],
     "tests": 1,
     "refs": 1,
     "docs": 2,
@@ -27667,6 +27804,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-config/src/index.ts:1315",
       "def packages-logicn/logicn-core-config/src/index.ts:1316",
+      "emit packages-logicn/logicn-core-config/src/index.ts:1336",
       "test packages-logicn/logicn-core-config/tests/config-contracts.test.mjs:307",
       "doc docs/Knowledge-Bases/logicn-core-config-vault.md:219",
       "doc docs/Knowledge-Bases/logicn-core-config-vault.md:237"
@@ -27676,12 +27814,14 @@
     "code": "LLN-VAULT-003",
     "namespace": "LLN",
     "family": "VAULT",
-    "occurrences": 5,
+    "occurrences": 6,
     "docOnly": false,
     "defs": [
       "packages-logicn/logicn-core-config/src/index.ts:1318"
     ],
-    "emits": [],
+    "emits": [
+      "packages-logicn/logicn-core-config/src/index.ts:1351"
+    ],
     "tests": 1,
     "refs": 1,
     "docs": 2,
@@ -27690,6 +27830,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-config/src/index.ts:1317",
       "def packages-logicn/logicn-core-config/src/index.ts:1318",
+      "emit packages-logicn/logicn-core-config/src/index.ts:1351",
       "test packages-logicn/logicn-core-config/tests/config-contracts.test.mjs:308",
       "doc docs/Knowledge-Bases/logicn-core-config-vault.md:220",
       "doc docs/Knowledge-Bases/logicn-core-config-vault.md:235"
@@ -27699,12 +27840,14 @@
     "code": "LLN-VAULT-004",
     "namespace": "LLN",
     "family": "VAULT",
-    "occurrences": 4,
+    "occurrences": 5,
     "docOnly": false,
     "defs": [
       "packages-logicn/logicn-core-config/src/index.ts:1320"
     ],
-    "emits": [],
+    "emits": [
+      "packages-logicn/logicn-core-config/src/index.ts:1361"
+    ],
     "tests": 1,
     "refs": 1,
     "docs": 1,
@@ -27713,6 +27856,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-config/src/index.ts:1319",
       "def packages-logicn/logicn-core-config/src/index.ts:1320",
+      "emit packages-logicn/logicn-core-config/src/index.ts:1361",
       "test packages-logicn/logicn-core-config/tests/config-contracts.test.mjs:309",
       "doc docs/Knowledge-Bases/logicn-core-config-vault.md:221"
     ]
@@ -27721,12 +27865,14 @@
     "code": "LLN-VAULT-005",
     "namespace": "LLN",
     "family": "VAULT",
-    "occurrences": 6,
+    "occurrences": 7,
     "docOnly": false,
     "defs": [
       "packages-logicn/logicn-core-config/src/index.ts:1322"
     ],
-    "emits": [],
+    "emits": [
+      "packages-logicn/logicn-core-config/src/index.ts:1371"
+    ],
     "tests": 1,
     "refs": 1,
     "docs": 3,
@@ -27735,6 +27881,7 @@
     "allSites": [
       "ref packages-logicn/logicn-core-config/src/index.ts:1321",
       "def packages-logicn/logicn-core-config/src/index.ts:1322",
+      "emit packages-logicn/logicn-core-config/src/index.ts:1371",
       "test packages-logicn/logicn-core-config/tests/config-contracts.test.mjs:310",
       "doc packages-logicn/logicn-core-config/TODO.md:35",
       "doc docs/Knowledge-Bases/logicn-core-config-vault.md:222",

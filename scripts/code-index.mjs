@@ -88,6 +88,21 @@ for (const file of FILES) {
         get(code).occ.push({ file: rel, line: i + 1, role: isDoc ? "doc" : isTest ? "test" : "emit" });
       }
     }
+    // Diagnostic-construction call with a CONST first arg: `createCompilerDiagnostic(LLN_X.code, …)`,
+    // `create*Diagnostic(LLN_X, …)`, or `make*Diag(LLN_X, …)`. The code is named by its constant
+    // IDENTIFIER (positional), which neither extractCodes (no literal string) nor the `code: IDENT`
+    // field check below sees — so these emit sites were INVISIBLE and the code showed "inline" only via
+    // its mis-counted const-def line. Window the call and resolve the FIRST constToCode identifier as an
+    // EMIT. (#65/0123 — the false-NEGATIVE half; pairs with the const-def→def fix below. `this.code`/
+    // `d.code`/`diagnostic.code` are NOT constToCode keys, so reads of a diagnostic are excluded.)
+    if (!isComment && /(?:create\w*Diagnostic|make\w*Diag)\s*\(/.test(line)) {
+      const cs = line.search(/(?:create\w*Diagnostic|make\w*Diag)\s*\(/);
+      const win = line.slice(cs) + " " + lines.slice(i + 1, Math.min(i + 5, lines.length)).join(" ");
+      for (const mm of win.matchAll(/\b([A-Za-z_]\w*)(?:\.(?:code|name|severity))?\b/g)) {
+        const cc = constToCode.get(mm[1]);
+        if (cc) { get(cc).occ.push({ file: rel, line: i + 1, role: isDoc ? "doc" : isTest ? "test" : "emit" }); break; }
+      }
+    }
     // const-identifier emit/use: `code: LLN_FOO_001_BAR` / `errorCode: ERR_X` — id ≠ hyphenated code string,
     // so extractCodes misses it; resolve via the PASS-1 map. Runs BEFORE the !codes short-circuit (the line
     // has no literal code token). This is what makes 28 const-emitted diagnostics show as live, not dead.
@@ -100,7 +115,21 @@ for (const file of FILES) {
     const codes = extractCodes(line);
     if (!codes.length) continue;
     const hasNameSev = /name:\s*"[^"]+"/.test(line) && /severity:\s*"[^"]+"/.test(line);
-    const isDef = !isComment && !isTypeDecl && (/export const\s+\w+/.test(line) || hasNameSev);
+    // A field line (code:/name:/severity:/message:) inside an `export const X = { … }` diagnostic-OBJECT
+    // DEFINITION is a DEF, not an emit — the `export const` opener sits a few lines up (a push/return/
+    // create*Diagnostic object has a call/return opener instead). Without this, a RESERVED const's
+    // `code: "LLN-X"` line is mis-read as an emit (role precedence is def>emit), so the const def is
+    // never recorded (defs=0) and the code shows "inline" — making a never-emitted reserved code (e.g.
+    // LLN-MEMORY-001..007) indistinguishable from a live one. Require `export const` so local emit objects
+    // (`const d = {…}; push(d)`) are NOT mistaken for defs. (#65/0123 — the false-POSITIVE half.)
+    let inConstObjDef = false;
+    if (!isComment && !isTypeDecl && /^\s*(?:code|name|severity|message)\s*:/.test(line)) {
+      for (let b = i - 1; b >= Math.max(0, i - 8); b--) {
+        if (/export const\s+\w+\s*=\s*\{\s*$/.test(lines[b])) { inConstObjDef = true; break; }
+        if (/(?:\.push\(|return\b|^\s*\}|;\s*$|create\w*Diagnostic\s*\(|make\w*Diag\s*\()/.test(lines[b])) break;
+      }
+    }
+    const isDef = !isComment && !isTypeDecl && (/export const\s+\w+/.test(line) || hasNameSev || inConstObjDef);
     const isMake = !isComment && /make\w*Diag\(/.test(line);
     // emit = make*Diag, a `code:`/`errorCode:` field set to a code (STRING literal OR an exported
     // constant identifier — e.g. `code: ERR_xxx` in a `{ ok:false, code, reason }` result object;

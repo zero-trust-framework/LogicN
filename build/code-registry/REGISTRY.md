@@ -8,16 +8,23 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | status | count | meaning |
 |---|---|---|
-| live | 38 | emitted with an exported constant |
-| inline | 304 | emitted, NO exported constant (R4 — Stage F) |
-| referenced | 16 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
-| dead | 0 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
+| live | 114 | emitted with an exported constant |
+| inline | 143 | emitted, NO exported constant (R4 — Stage F) |
+| referenced | 93 | defined + used/tested, emit via a pattern the indexer can't see (NOT dead) |
+| dead | 8 | defined AND truly unreferenced — RESERVED (wire or retire, std #1) |
 | phantom | 497 | doc-only mention, not in source (drift — DOC-004) |
 | ref | 147 | referenced only (no def/emit) |
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
-(none)
+- `LLN-BLOCK-003`
+- `LLN-BYTE-002`
+- `LLN-BYTE-003`
+- `LLN-BYTE-005`
+- `LLN-CHAR-002`
+- `LLN-CHAR-004`
+- `LLN-STRING-003`
+- `LLN-STRING-004`
 
 ## Catalog (by family)
 
@@ -50,7 +57,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-ANTI-ABUSE-001 | inline | UngovernesBackgroundExecution | error |
+| LLN-ANTI-ABUSE-001 | referenced | UngovernesBackgroundExecution | error |
 
 ### ARCH (2)
 
@@ -91,7 +98,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-AU-001 | inline | EPILOGUE_NONE_ON_HIGH_TRUST | error |
+| LLN-AU-001 | referenced | EPILOGUE_NONE_ON_HIGH_TRUST | error |
 | LLN-AU-002 | phantom | — | — |
 
 ### AUDIT (7)
@@ -116,7 +123,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-BACKEND-001 | inline | BackendError | error |
+| LLN-BACKEND-001 | live | BackendError | error |
 | LLN-BACKEND-002 | phantom | — | — |
 | LLN-BACKEND-003 | phantom | — | — |
 | LLN-BACKEND-004 | phantom | — | — |
@@ -135,21 +142,21 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-BINDING-001 | inline | IMMUTABLE_LET_REASSIGNMENT | error |
-| LLN-BINDING-002 | inline | READONLY_REASSIGNMENT | error |
-| LLN-BINDING-003 | inline | READONLY_PROPERTY_MUTATION | error |
-| LLN-BINDING-004 | inline | MUT_IN_PURE_CONTEXT | error |
-| LLN-BINDING-005 | inline | IMMUTABLE_BINDING_REASSIGNED | error |
-| LLN-BINDING-006 | inline | MUT_TYPE_CHANGE | error |
+| LLN-BINDING-001 | live | IMMUTABLE_LET_REASSIGNMENT | error |
+| LLN-BINDING-002 | live | READONLY_REASSIGNMENT | error |
+| LLN-BINDING-003 | live | READONLY_PROPERTY_MUTATION | error |
+| LLN-BINDING-004 | live | MUT_IN_PURE_CONTEXT | error |
+| LLN-BINDING-005 | live | IMMUTABLE_BINDING_REASSIGNED | error |
+| LLN-BINDING-006 | referenced | MUT_TYPE_CHANGE | error |
 
 ### BLOCK (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-BLOCK-001 | inline | UNKNOWN_CONTENT_BLOCK_TYPE | error |
-| LLN-BLOCK-002 | inline | UNCLOSED_CONTENT_BLOCK | error |
-| LLN-BLOCK-003 | inline | MISMATCHED_CONTENT_BLOCK_MARKER | error |
-| LLN-BLOCK-004 | inline | SECRET_IN_CONTENT_BLOCK | error |
+| LLN-BLOCK-001 | live | UNKNOWN_CONTENT_BLOCK_TYPE | error |
+| LLN-BLOCK-002 | live | UNCLOSED_CONTENT_BLOCK | error |
+| LLN-BLOCK-003 | dead | MISMATCHED_CONTENT_BLOCK_MARKER | error |
+| LLN-BLOCK-004 | referenced | SECRET_IN_CONTENT_BLOCK | error |
 
 ### BOOL (5)
 
@@ -209,18 +216,18 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-BUILD-001 | inline | NonDeterministicBuild | error |
+| LLN-BUILD-001 | referenced | NonDeterministicBuild | error |
 | LLN-BUILD-005 | phantom | — | — |
 
 ### BYTE (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-BYTE-001 | inline | BYTE_OUT_OF_RANGE | error |
-| LLN-BYTE-002 | inline | BYTE_OVERFLOW | error |
-| LLN-BYTE-003 | inline | IMPLICIT_BYTE_STRING_CONVERSION | error |
-| LLN-BYTE-004 | inline | RAW_BYTES_LOGGED | error |
-| LLN-BYTE-005 | inline | UNBOUNDED_BYTES_READ | error |
+| LLN-BYTE-001 | referenced | BYTE_OUT_OF_RANGE | error |
+| LLN-BYTE-002 | dead | BYTE_OVERFLOW | error |
+| LLN-BYTE-003 | dead | IMPLICIT_BYTE_STRING_CONVERSION | error |
+| LLN-BYTE-004 | referenced | RAW_BYTES_LOGGED | error |
+| LLN-BYTE-005 | dead | UNBOUNDED_BYTES_READ | error |
 
 ### CAP (4)
 
@@ -249,10 +256,10 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-CHAR-001 | inline | CHAR_BYTE_CONFUSION | error |
-| LLN-CHAR-002 | inline | INVALID_CHAR_LITERAL | error |
-| LLN-CHAR-003 | inline | MULTI_CHAR_LITERAL | error |
-| LLN-CHAR-004 | inline | IMPLICIT_CHAR_NUMBER_CONVERSION | error |
+| LLN-CHAR-001 | referenced | CHAR_BYTE_CONFUSION | error |
+| LLN-CHAR-002 | dead | INVALID_CHAR_LITERAL | error |
+| LLN-CHAR-003 | referenced | MULTI_CHAR_LITERAL | error |
+| LLN-CHAR-004 | dead | IMPLICIT_CHAR_NUMBER_CONVERSION | error |
 
 ### CHERI (1)
 
@@ -300,7 +307,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-COMPUTE-001 | inline | ComputeTargetIncompatiblePattern | warning |
+| LLN-COMPUTE-001 | referenced | ComputeTargetIncompatiblePattern | warning |
 | LLN-COMPUTE-002 | phantom | — | — |
 | LLN-COMPUTE-003 | phantom | — | — |
 | LLN-COMPUTE-004 | phantom | — | — |
@@ -365,7 +372,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-CONTEXT-001 | inline | REQUIRED_CONTEXT_NOT_ACCESSED | warning |
+| LLN-CONTEXT-001 | live | REQUIRED_CONTEXT_NOT_ACCESSED | warning |
 
 ### CONTRACT (4)
 
@@ -394,7 +401,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | LLN-CRYPTO-006 | phantom | — | — |
 | LLN-CRYPTO-007 | phantom | — | — |
 | LLN-CRYPTO-008 | phantom | — | — |
-| LLN-CRYPTO-PQ-001 | inline | SIGN_EFFECT_NOT_POST_QUANTUM | error |
+| LLN-CRYPTO-PQ-001 | live | SIGN_EFFECT_NOT_POST_QUANTUM | error |
 
 ### DAG (2)
 
@@ -463,16 +470,16 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-EC-001 | inline | ECONOMICS_COST_OVERFLOW | error |
-| LLN-EC-002 | inline | ECONOMICS_FAILURE_TOLERANCE_BREACHED | error |
+| LLN-EC-001 | referenced | ECONOMICS_COST_OVERFLOW | error |
+| LLN-EC-002 | referenced | ECONOMICS_FAILURE_TOLERANCE_BREACHED | error |
 
 ### ECON (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-ECON-001 | inline | BudgetExceeded | warning |
-| LLN-ECON-002 | inline | LineageMissing | info |
-| LLN-ECON-003 | inline | AiModelUnapproved | error |
+| LLN-ECON-001 | referenced | BudgetExceeded | warning |
+| LLN-ECON-002 | referenced | LineageMissing | info |
+| LLN-ECON-003 | referenced | AiModelUnapproved | error |
 
 ### EFFECT (7)
 
@@ -482,7 +489,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | LLN-EFFECT-002 | inline | OVERDECLARED_EFFECT / TRANSITIVE_EFFECT_NOT_DECLARED | warning/error |
 | LLN-EFFECT-003 | inline | EFFECT_BOUNDARY_VIOLATION | error |
 | LLN-EFFECT-004 | inline | NON_CANONICAL_EFFECT / UNKNOWN_EFFECT | error |
-| LLN-EFFECT-005 | inline | BroadAliasUsed | warning |
+| LLN-EFFECT-005 | live | BroadAliasUsed | warning |
 | LLN-EFFECT-006 | phantom | — | — |
 | LLN-EFFECT-2000 | phantom | — | — |
 
@@ -625,11 +632,11 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-EVENT-001 | inline | EventNotDeclared | error |
-| LLN-EVENT-002 | inline | EventNeverEmitted | warning |
-| LLN-EVENT-003 | inline | ContractEmitsUndeclaredEvent | error |
-| LLN-EVENT-004 | inline | DuplicateEventEmission | warning |
-| LLN-EVENT-005 | inline | EventEmittedNotInContract | warning |
+| LLN-EVENT-001 | live | EventNotDeclared | error |
+| LLN-EVENT-002 | live | EventNeverEmitted | warning |
+| LLN-EVENT-003 | live | ContractEmitsUndeclaredEvent | error |
+| LLN-EVENT-004 | live | DuplicateEventEmission | warning |
+| LLN-EVENT-005 | live | EventEmittedNotInContract | warning |
 
 ### EVIDENCE (5)
 
@@ -720,7 +727,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-GATE-001 | inline | GATE_UNKNOWN_CONDITION / GateAnnotationRequired | error |
+| LLN-GATE-001 | live | GATE_UNKNOWN_CONDITION / GateAnnotationRequired | error |
 | LLN-GATE-002 | inline | GATE_WRAPS_PURE_FLOW | — |
 
 ### GDCE (1)
@@ -745,26 +752,26 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-GOV-001 | inline | INTENT_BEHAVIOR_MISMATCH | warning |
+| LLN-GOV-001 | live | INTENT_BEHAVIOR_MISMATCH | warning |
 | LLN-GOV-002 | inline | MISSING_AUDIT_FOR_GOVERNED_SINK | — |
-| LLN-GOV-003 | inline | PROTECTED_DATA_IN_RESPONSE | error |
+| LLN-GOV-003 | live | PROTECTED_DATA_IN_RESPONSE | error |
 | LLN-GOV-004 | inline | DENIED_TARGET_SELECTED / DOMAIN_GUARD_NOT_FOUND / DOMAIN_GUARD_POLICY_VIOLATION | — |
-| LLN-GOV-005 | inline | PolicyPurposeMismatch | warning |
-| LLN-GOV-006 | inline | GOVERNANCE_PROOF_REQUIRED_BUT_MISSING | warning |
-| LLN-GOV-007 | inline | AuthorityBlockMissingReason | error |
+| LLN-GOV-005 | live | PolicyPurposeMismatch | warning |
+| LLN-GOV-006 | live | GOVERNANCE_PROOF_REQUIRED_BUT_MISSING | warning |
+| LLN-GOV-007 | live | AuthorityBlockMissingReason | error |
 | LLN-GOV-008 | ref | — | — |
-| LLN-GOV-009 | inline | PrivilegedFlowMissingCapability | warning |
+| LLN-GOV-009 | live | PrivilegedFlowMissingCapability | warning |
 | LLN-GOV-010 | inline | INTENT_MISSING_ON_SECURE_FLOW | — |
-| LLN-GOV-011 | inline | UnknownContractSet | error |
-| LLN-GOV-012 | inline | ContractSetRequirementNotMet | warning |
-| LLN-GOV-013 | inline | BoundaryViolation | error |
-| LLN-GOV-014 | inline | MissingFallbackTarget | warning |
+| LLN-GOV-011 | live | UnknownContractSet | error |
+| LLN-GOV-012 | live | ContractSetRequirementNotMet | warning |
+| LLN-GOV-013 | live | BoundaryViolation | error |
+| LLN-GOV-014 | referenced | MissingFallbackTarget | warning |
 | LLN-GOV-015 | inline | EpilogueInvalidStrategy | — |
 | LLN-GOV-016 | inline | EpilogueInvalidFailureAction | — |
 | LLN-GOV-017 | inline | InvalidPhysicalHardeningValue / PhysicalHardeningOnLowRiskFlow | — |
 | LLN-GOV-018 | inline | ManualLiabilityDeclaration | — |
-| LLN-GOV-019 | inline | LIMITS_UNKNOWN_FIELD | warning |
-| LLN-GOV-020 | inline | AUTHORITY_OVERLY_BROAD | warning |
+| LLN-GOV-019 | live | LIMITS_UNKNOWN_FIELD | warning |
+| LLN-GOV-020 | live | AUTHORITY_OVERLY_BROAD | warning |
 | LLN-GOV-3V | phantom | — | — |
 | LLN-GOV-3VL-001 | live | INDETERMINATE_COLLAPSED_TO_DENY | — |
 | LLN-GOV-3VL-002 | phantom | — | — |
@@ -814,10 +821,10 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-HW-001 | inline | QuantumTargetRequiresFormalProof | error |
-| LLN-HW-002 | inline | SealedTargetRequiresAuditTrace | warning |
-| LLN-HW-003 | inline | AcceleratorPlaneRequiresAttestation | warning |
-| LLN-HW-004 | inline | UnknownHardwareTarget | warning |
+| LLN-HW-001 | referenced | QuantumTargetRequiresFormalProof | error |
+| LLN-HW-002 | referenced | SealedTargetRequiresAuditTrace | warning |
+| LLN-HW-003 | referenced | AcceleratorPlaneRequiresAttestation | warning |
+| LLN-HW-004 | referenced | UnknownHardwareTarget | warning |
 | LLN-HW-101 | phantom | — | — |
 | LLN-HW-102 | phantom | — | — |
 | LLN-HW-103 | phantom | — | — |
@@ -833,7 +840,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-ID-001 | inline | MANIFEST_VERIFICATION_FAILED | error |
+| LLN-ID-001 | referenced | MANIFEST_VERIFICATION_FAILED | error |
 | LLN-ID-002 | phantom | — | — |
 | LLN-ID-003 | phantom | — | — |
 
@@ -876,11 +883,11 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-INTENT-001 | inline | INTENT_BEHAVIOR_MISMATCH | error |
-| LLN-INTENT-002 | inline | MISSING_REQUIRED_INTENT | error |
-| LLN-INTENT-003 | inline | UNSAFE_MISSING_REASON_OR_FALLBACK | error |
-| LLN-INTENT-004 | inline | PRIVILEGED_MISSING_CAPABILITY | error |
-| LLN-INTENT-005 | inline | EXPERIMENTAL_IN_PRODUCTION | error |
+| LLN-INTENT-001 | referenced | INTENT_BEHAVIOR_MISMATCH | error |
+| LLN-INTENT-002 | referenced | MISSING_REQUIRED_INTENT | error |
+| LLN-INTENT-003 | referenced | UNSAFE_MISSING_REASON_OR_FALLBACK | error |
+| LLN-INTENT-004 | referenced | PRIVILEGED_MISSING_CAPABILITY | error |
+| LLN-INTENT-005 | referenced | EXPERIMENTAL_IN_PRODUCTION | error |
 | LLN-INTENT-GRAPH-001 | phantom | — | — |
 | LLN-INTENT-GRAPH-002 | phantom | — | — |
 | LLN-INTENT-GRAPH-003 | phantom | — | — |
@@ -919,12 +926,12 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-LEX-001 | inline | ExcessiveNesting | error |
-| LLN-LEX-002 | inline | OversizedToken | error |
-| LLN-LEX-003 | inline | InvalidUnicodeEscape | error |
-| LLN-LEX-004 | inline | FileTooLarge | error |
-| LLN-LEX-005 | inline | LineTooLong | warning |
-| LLN-LEX-006 | inline | TooManyDiagnostics | error |
+| LLN-LEX-001 | referenced | ExcessiveNesting | error |
+| LLN-LEX-002 | referenced | OversizedToken | error |
+| LLN-LEX-003 | referenced | InvalidUnicodeEscape | error |
+| LLN-LEX-004 | live | FileTooLarge | error |
+| LLN-LEX-005 | live | LineTooLong | warning |
+| LLN-LEX-006 | live | TooManyDiagnostics | error |
 
 ### LIMIT (1)
 
@@ -974,14 +981,14 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-MEMORY-001 | inline | USE_AFTER_MOVE | error |
-| LLN-MEMORY-002 | inline | BORROW_AFTER_MOVE | error |
-| LLN-MEMORY-003 | inline | BORROW_ESCAPES_SCOPE | error |
-| LLN-MEMORY-004 | inline | READONLY_MUTATION | error |
-| LLN-MEMORY-005 | inline | MUTABLE_ALIAS | error |
-| LLN-MEMORY-006 | inline | BOUNDS_VIOLATION | error |
-| LLN-MEMORY-007 | inline | UNCHECKED_ACCESS_OUTSIDE_UNSAFE | error |
-| LLN-MEMORY-008 | inline | UNSAFE_MEMORY_REQUIRES_FALLBACK | error |
+| LLN-MEMORY-001 | referenced | USE_AFTER_MOVE | error |
+| LLN-MEMORY-002 | referenced | BORROW_AFTER_MOVE | error |
+| LLN-MEMORY-003 | referenced | BORROW_ESCAPES_SCOPE | error |
+| LLN-MEMORY-004 | referenced | READONLY_MUTATION | error |
+| LLN-MEMORY-005 | referenced | MUTABLE_ALIAS | error |
+| LLN-MEMORY-006 | referenced | BOUNDS_VIOLATION | error |
+| LLN-MEMORY-007 | referenced | UNCHECKED_ACCESS_OUTSIDE_UNSAFE | error |
+| LLN-MEMORY-008 | live | UNSAFE_MEMORY_REQUIRES_FALLBACK | error |
 | LLN-MEMORY-SCOPE-001 | phantom | — | — |
 | LLN-MEMORY-SCOPE-002 | phantom | — | — |
 | LLN-MEMORY-SCOPE-003 | phantom | — | — |
@@ -1032,7 +1039,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 |---|---|---|---|
 | LLN-NAME-001 | inline | UndeclaredName | error |
 | LLN-NAME-002 | inline | DuplicateName | error |
-| LLN-NAME-003 | inline | CrossModuleShadow | warning |
+| LLN-NAME-003 | live | CrossModuleShadow | warning |
 | LLN-NAME-004 | phantom | — | — |
 | LLN-NAME-005 | phantom | — | — |
 
@@ -1050,8 +1057,8 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-NET-001 | inline | NetworkDestinationDenied | error |
-| LLN-NET-002 | inline | PrivateRangeAccess | error |
+| LLN-NET-001 | referenced | NetworkDestinationDenied | error |
+| LLN-NET-002 | referenced | PrivateRangeAccess | error |
 | LLN-NET-003 | phantom | — | — |
 
 ### NETWORK (8)
@@ -1099,7 +1106,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-OBS-001 | inline | OBSERVABILITY_ON_PURE_FLOW | warning |
+| LLN-OBS-001 | live | OBSERVABILITY_ON_PURE_FLOW | warning |
 | LLN-OBS-002 | inline | OBSERVABILITY_ACCESSES_PRIVACY_SCOPE | — |
 
 ### OBSERVE (1)
@@ -1212,20 +1219,20 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-PGRAPH-001 | inline | CYCLE_DETECTED | error |
-| LLN-PGRAPH-002 | inline | NODE_NOT_FOUND | error |
-| LLN-PGRAPH-003 | inline | DEPENDENCY_MISSING | error |
-| LLN-PGRAPH-004 | inline | FIXPOINT_TIMEOUT | error |
-| LLN-PGRAPH-005 | inline | INVALID_TRANSITION | error |
-| LLN-PGRAPH-010 | inline | UNDECLARED_EFFECT_IN_GRAPH | error |
-| LLN-PGRAPH-011 | inline | EFFECT_NOT_INFERRED | error |
-| LLN-PGRAPH-012 | inline | UNSAFE_EFFECT_IN_SAFE_FLOW | error |
-| LLN-PGRAPH-013 | inline | TRANSITIVE_EFFECT_UNDECLARED | error |
-| LLN-PGRAPH-020 | inline | EFFECT_CROSSES_BOUNDARY | error |
-| LLN-PGRAPH-021 | inline | SECRET_CROSSES_UNSAFE_BOUNDARY | error |
-| LLN-PGRAPH-022 | inline | UNTRUSTED_INPUT_UNVALIDATED | error |
-| LLN-PGRAPH-023 | inline | REQUIRED_POLICY_MISSING | error |
-| LLN-PGRAPH-030 | inline | CAPABILITY_NOT_GRANTED | error |
+| LLN-PGRAPH-001 | referenced | CYCLE_DETECTED | error |
+| LLN-PGRAPH-002 | referenced | NODE_NOT_FOUND | error |
+| LLN-PGRAPH-003 | referenced | DEPENDENCY_MISSING | error |
+| LLN-PGRAPH-004 | referenced | FIXPOINT_TIMEOUT | error |
+| LLN-PGRAPH-005 | referenced | INVALID_TRANSITION | error |
+| LLN-PGRAPH-010 | referenced | UNDECLARED_EFFECT_IN_GRAPH | error |
+| LLN-PGRAPH-011 | referenced | EFFECT_NOT_INFERRED | error |
+| LLN-PGRAPH-012 | referenced | UNSAFE_EFFECT_IN_SAFE_FLOW | error |
+| LLN-PGRAPH-013 | referenced | TRANSITIVE_EFFECT_UNDECLARED | error |
+| LLN-PGRAPH-020 | referenced | EFFECT_CROSSES_BOUNDARY | error |
+| LLN-PGRAPH-021 | referenced | SECRET_CROSSES_UNSAFE_BOUNDARY | error |
+| LLN-PGRAPH-022 | referenced | UNTRUSTED_INPUT_UNVALIDATED | error |
+| LLN-PGRAPH-023 | referenced | REQUIRED_POLICY_MISSING | error |
+| LLN-PGRAPH-030 | referenced | CAPABILITY_NOT_GRANTED | error |
 
 ### PHI (2)
 
@@ -1261,23 +1268,23 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-PIPELINE-001 | inline | UNKNOWN_PIPELINE_METHOD | error |
-| LLN-PIPELINE-002 | inline | PIPELINE_TYPE_MISMATCH | error |
-| LLN-PIPELINE-003 | inline | UNHANDLED_FALLIBLE_PIPELINE | error |
-| LLN-PIPELINE-004 | inline | PIPELINE_UNDECLARED_EFFECT | error |
-| LLN-PIPELINE-005 | inline | PIPELINE_READONLY_MUTATION | error |
+| LLN-PIPELINE-001 | referenced | UNKNOWN_PIPELINE_METHOD | error |
+| LLN-PIPELINE-002 | referenced | PIPELINE_TYPE_MISMATCH | error |
+| LLN-PIPELINE-003 | referenced | UNHANDLED_FALLIBLE_PIPELINE | error |
+| LLN-PIPELINE-004 | referenced | PIPELINE_UNDECLARED_EFFECT | error |
+| LLN-PIPELINE-005 | referenced | PIPELINE_READONLY_MUTATION | error |
 | LLN-PIPELINE-006 | phantom | — | — |
 
 ### PKG (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-PKG-001 | inline | CapabilityExpanded | error |
-| LLN-PKG-002 | inline | UntrustedRegistry | error |
-| LLN-PKG-003 | inline | MissingHash | warning |
-| LLN-PKG-004 | inline | InstallScriptDenied | error |
-| LLN-PKG-005 | inline | MissingSignature | warning |
-| LLN-PKG-006 | inline | RevokedSigner | error |
+| LLN-PKG-001 | live | CapabilityExpanded | error |
+| LLN-PKG-002 | live | UntrustedRegistry | error |
+| LLN-PKG-003 | live | MissingHash | warning |
+| LLN-PKG-004 | live | InstallScriptDenied | error |
+| LLN-PKG-005 | live | MissingSignature | warning |
+| LLN-PKG-006 | live | RevokedSigner | error |
 
 ### PLAN (2)
 
@@ -1316,14 +1323,14 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-PROFILE-001 | inline | RecursionInRestrictedProfile | error |
-| LLN-PROFILE-002 | inline | UnboundedLoopInStrictProfile | error |
-| LLN-PROFILE-003 | inline | ExceptionControlFlowProhibited | error |
-| LLN-PROFILE-004 | inline | JitProhibitedInStrictProfile | error |
-| LLN-PROFILE-005 | inline | DynamicPackageLoadProhibited | error |
-| LLN-PROFILE-005B | inline | DynamicRegexInStrictProfile | error |
-| LLN-PROFILE-006 | inline | MissingRuntimeBudget | warning |
-| LLN-PROFILE-007 | inline | DynamicRuntimeMutationProhibited | error |
+| LLN-PROFILE-001 | referenced | RecursionInRestrictedProfile | error |
+| LLN-PROFILE-002 | referenced | UnboundedLoopInStrictProfile | error |
+| LLN-PROFILE-003 | referenced | ExceptionControlFlowProhibited | error |
+| LLN-PROFILE-004 | referenced | JitProhibitedInStrictProfile | error |
+| LLN-PROFILE-005 | referenced | DynamicPackageLoadProhibited | error |
+| LLN-PROFILE-005B | referenced | DynamicRegexInStrictProfile | error |
+| LLN-PROFILE-006 | referenced | MissingRuntimeBudget | warning |
+| LLN-PROFILE-007 | referenced | DynamicRuntimeMutationProhibited | error |
 
 ### PROOF (8)
 
@@ -1384,7 +1391,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-RAWPTR-001 | inline | RAW_POINTER_OUTSIDE_UNSAFE | error |
+| LLN-RAWPTR-001 | live | RAW_POINTER_OUTSIDE_UNSAFE | error |
 
 ### READABLE (2)
 
@@ -1420,7 +1427,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-RES-001 | inline | RESILIENCE_RETRY_ON_MUTATION | error |
+| LLN-RES-001 | live | RESILIENCE_RETRY_ON_MUTATION | error |
 
 ### RESOURCE (10)
 
@@ -1471,7 +1478,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | LLN-RUNTIME-002 | inline | — | — |
 | LLN-RUNTIME-003 | inline | — | — |
 | LLN-RUNTIME-004 | inline | — | — |
-| LLN-RUNTIME-005 | inline | UnauthorizedGovernedValueAccess | error |
+| LLN-RUNTIME-005 | live | UnauthorizedGovernedValueAccess | error |
 | LLN-RUNTIME-006 | live | RateLimitExceeded | error |
 | LLN-RUNTIME-007 | inline | — | — |
 | LLN-RUNTIME-009 | phantom | — | — |
@@ -1487,12 +1494,12 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-SAFETY-001 | inline | TRI_BRANCH_CONDITION | error |
-| LLN-SAFETY-002 | inline | UNSAFE_LOGIC_ASSIGNMENT | error |
-| LLN-SAFETY-003 | inline | TRI_UNKNOWN_AS_TRUE | error |
-| LLN-SAFETY-004 | inline | SECRET_LITERAL | error |
-| LLN-SAFETY-005 | inline | UNSAFE_DYNAMIC_CODE | error |
-| LLN-SAFETY-006 | inline | TRI_MATCH_NOT_EXHAUSTIVE | error |
+| LLN-SAFETY-001 | live | TRI_BRANCH_CONDITION | error |
+| LLN-SAFETY-002 | live | UNSAFE_LOGIC_ASSIGNMENT | error |
+| LLN-SAFETY-003 | live | TRI_UNKNOWN_AS_TRUE | error |
+| LLN-SAFETY-004 | live | SECRET_LITERAL | error |
+| LLN-SAFETY-005 | live | UNSAFE_DYNAMIC_CODE | error |
+| LLN-SAFETY-006 | live | TRI_MATCH_NOT_EXHAUSTIVE | error |
 | LLN-SAFETY-007 | phantom | — | — |
 | LLN-SAFETY-008 | phantom | — | — |
 | LLN-SAFETY-AGE-001 | phantom | — | — |
@@ -1511,8 +1518,8 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | code | status | name(s) | severity |
 |---|---|---|---|
 | LLN-SEC-014 | ref | — | — |
-| LLN-SEC-020 | inline | RuntimeMutation / RuntimeMutationProhibited | error |
-| LLN-SEC-021 | inline | PrototypeMutation / PrototypeMutationProhibited | error |
+| LLN-SEC-020 | live | RuntimeMutation / RuntimeMutationProhibited | error |
+| LLN-SEC-021 | live | PrototypeMutation / PrototypeMutationProhibited | error |
 | LLN-SEC-PATCH-001 | phantom | — | — |
 
 ### SECRET (8)
@@ -1546,7 +1553,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-SOURCE-ESCAPE-001 | inline | SourceLevelEvalEscape | error |
+| LLN-SOURCE-ESCAPE-001 | live | SourceLevelEvalEscape | error |
 
 ### STATE (6)
 
@@ -1570,7 +1577,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-STDLIB-001 | inline | StdlibEffectNotDeclared | error |
+| LLN-STDLIB-001 | live | StdlibEffectNotDeclared | error |
 | LLN-STDLIB-002 | inline | UnknownEffectfulStdlibCall | — |
 
 ### STEP (2)
@@ -1590,20 +1597,20 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-STRING-001 | inline | INVALID_UTF8_DECODE | error |
-| LLN-STRING-002 | inline | SECRET_STORED_AS_STRING | error |
-| LLN-STRING-003 | inline | IMPLICIT_STRING_BYTE_CONVERSION | error |
-| LLN-STRING-004 | inline | AMBIGUOUS_STRING_LENGTH | warning |
+| LLN-STRING-001 | referenced | INVALID_UTF8_DECODE | error |
+| LLN-STRING-002 | referenced | SECRET_STORED_AS_STRING | error |
+| LLN-STRING-003 | dead | IMPLICIT_STRING_BYTE_CONVERSION | error |
+| LLN-STRING-004 | dead | AMBIGUOUS_STRING_LENGTH | warning |
 
 ### STYLE (9)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-STYLE-001 | inline | FlowNameCamelCase | warning |
-| LLN-STYLE-002 | inline | TypeNamePascalCase | warning |
+| LLN-STYLE-001 | live | FlowNameCamelCase | warning |
+| LLN-STYLE-002 | live | TypeNamePascalCase | warning |
 | LLN-STYLE-003 | phantom | — | — |
 | LLN-STYLE-004 | phantom | — | — |
-| LLN-STYLE-SEC-001 | inline | SensitiveBindingType | warning |
+| LLN-STYLE-SEC-001 | live | SensitiveBindingType | warning |
 | LLN-STYLE-SEC-002 | phantom | — | — |
 | LLN-STYLE-SEC-003 | phantom | — | — |
 | LLN-STYLE-SEC-004 | phantom | — | — |
@@ -1613,11 +1620,11 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-SUBSTRATE-001 | inline | CRYPTO_ON_NOISY_LANE | error |
-| LLN-SUBSTRATE-002 | inline | TOLERANCE_UNACHIEVABLE_UNDER_NOISE | error |
-| LLN-SUBSTRATE-003 | inline | REDUNDANCY_INSUFFICIENT | error |
-| LLN-SUBSTRATE-004 | inline | UNVOTED_ANALOG_INTO_DETERMINISTIC | error |
-| LLN-SUBSTRATE-005 | inline | REACH_EFFECT_ON_COMPUTE_ONLY_LANE | error |
+| LLN-SUBSTRATE-001 | live | CRYPTO_ON_NOISY_LANE | error |
+| LLN-SUBSTRATE-002 | live | TOLERANCE_UNACHIEVABLE_UNDER_NOISE | error |
+| LLN-SUBSTRATE-003 | live | REDUNDANCY_INSUFFICIENT | error |
+| LLN-SUBSTRATE-004 | live | UNVOTED_ANALOG_INTO_DETERMINISTIC | error |
+| LLN-SUBSTRATE-005 | live | REACH_EFFECT_ON_COMPUTE_ONLY_LANE | error |
 
 ### SUPPLY (5)
 
@@ -1633,17 +1640,17 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-SYNTAX-001 | inline | VAR_NOT_SUPPORTED | error |
-| LLN-SYNTAX-002 | inline | CONST_NOT_SUPPORTED | error |
+| LLN-SYNTAX-001 | live | VAR_NOT_SUPPORTED | error |
+| LLN-SYNTAX-002 | live | CONST_NOT_SUPPORTED | error |
 | LLN-SYNTAX-003 | ref | — | — |
 | LLN-SYNTAX-004 | phantom | — | — |
 | LLN-SYNTAX-005 | ref | — | — |
-| LLN-SYNTAX-006 | inline | LET_AT_TOP_LEVEL | error |
-| LLN-SYNTAX-007 | inline | MUT_AT_TOP_LEVEL | error |
-| LLN-SYNTAX-008 | inline | UNSAFE_LET_AT_TOP_LEVEL | error |
-| LLN-SYNTAX-009 | inline | EMIT_AT_TOP_LEVEL | error |
+| LLN-SYNTAX-006 | referenced | LET_AT_TOP_LEVEL | error |
+| LLN-SYNTAX-007 | referenced | MUT_AT_TOP_LEVEL | error |
+| LLN-SYNTAX-008 | referenced | UNSAFE_LET_AT_TOP_LEVEL | error |
+| LLN-SYNTAX-009 | referenced | EMIT_AT_TOP_LEVEL | error |
 | LLN-SYNTAX-010 | ref | — | — |
-| LLN-SYNTAX-LEGACY-001 | inline | LegacyEffectsSyntax | warning |
+| LLN-SYNTAX-LEGACY-001 | referenced | LegacyEffectsSyntax | warning |
 | LLN-SYNTAX-LEGACY-002 | ref | — | — |
 | LLN-SYNTAX-LEGACY-003 | ref | — | — |
 | LLN-SYNTAX-RLF-001 | phantom | — | — |
@@ -1652,12 +1659,12 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-TAINT-001 | inline | TaintedValueAtInjectionSink | error |
-| LLN-TAINT-002 | inline | UnvalidatedValueAtLogicSink | warning |
-| LLN-TAINT-003 | inline | WrongContextUntaint | error |
-| LLN-TAINT-004 | inline | DiscouragedSanitiser | warning |
-| LLN-TAINT-005 | inline | TaintedValueAtHeaderSink | error |
-| LLN-TAINT-006 | inline | SsrfPolicyInsufficient | warning |
+| LLN-TAINT-001 | referenced | TaintedValueAtInjectionSink | error |
+| LLN-TAINT-002 | referenced | UnvalidatedValueAtLogicSink | warning |
+| LLN-TAINT-003 | referenced | WrongContextUntaint | error |
+| LLN-TAINT-004 | referenced | DiscouragedSanitiser | warning |
+| LLN-TAINT-005 | referenced | TaintedValueAtHeaderSink | error |
+| LLN-TAINT-006 | referenced | SsrfPolicyInsufficient | warning |
 | LLN-TAINT-007 | phantom | — | — |
 
 ### TARGET (5)
@@ -1674,8 +1681,8 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-TENANT-001 | inline | DANGLING_TENANT_SCOPE_BINDING | warning |
-| LLN-TENANT-002 | inline | UNSCOPED_TENANT_DATA_ACCESS | error |
+| LLN-TENANT-001 | live | DANGLING_TENANT_SCOPE_BINDING | warning |
+| LLN-TENANT-002 | live | UNSCOPED_TENANT_DATA_ACCESS | error |
 | LLN-TENANT-003 | ref | — | — |
 
 ### TENSOR (10)
@@ -1697,7 +1704,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-TERM-001 | inline | TERMINATION_ANNOTATION_MISSING | warning |
+| LLN-TERM-001 | live | TERMINATION_ANNOTATION_MISSING | warning |
 | LLN-TERM-002 | phantom | — | — |
 | LLN-TERM-003 | phantom | — | — |
 
@@ -1762,7 +1769,7 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | LLN-TYPE-0 | ref | — | — |
 | LLN-TYPE-001 | inline | UnknownType | — |
 | LLN-TYPE-002 | live | QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol / TypeMismatch | warning/error |
-| LLN-TYPE-003 | inline | InvalidNominalConversion | error |
+| LLN-TYPE-003 | live | InvalidNominalConversion | error |
 | LLN-TYPE-004 | inline | InvalidBinaryOperation | — |
 | LLN-TYPE-005 | inline | InvalidCallArgType | — |
 | LLN-TYPE-006 | ref | — | — |
@@ -1783,8 +1790,8 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | LLN-TYPE-021 | ref | — | — |
 | LLN-TYPE-022 | inline | UnreachablePattern | — |
 | LLN-TYPE-023 | inline | DeferredTypeCheck / MissingWildcardArm | warning |
-| LLN-TYPE-030 | inline | TensorElementTypeMismatch | error |
-| LLN-TYPE-031 | inline | TensorDimensionMismatch | error |
+| LLN-TYPE-030 | live | TensorElementTypeMismatch | error |
+| LLN-TYPE-031 | referenced | TensorDimensionMismatch | error |
 | LLN-TYPE-032 | phantom | — | — |
 | LLN-TYPE-033 | phantom | — | — |
 | LLN-TYPE-1000 | phantom | — | — |
@@ -1806,9 +1813,9 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | code | status | name(s) | severity |
 |---|---|---|---|
 | LLN-VAL-00 | ref | — | — |
-| LLN-VAL-001 | inline | SafetyCriticalMissingAudit | error |
-| LLN-VAL-002 | inline | SafetyCriticalMissingDeterminism | error |
-| LLN-VAL-003 | inline | UnknownValueClassification | error |
+| LLN-VAL-001 | referenced | SafetyCriticalMissingAudit | error |
+| LLN-VAL-002 | referenced | SafetyCriticalMissingDeterminism | error |
+| LLN-VAL-003 | referenced | UnknownValueClassification | error |
 | LLN-VAL-004 | phantom | — | — |
 | LLN-VAL-005 | phantom | — | — |
 | LLN-VAL-006 | phantom | — | — |
@@ -1839,20 +1846,20 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 | LLN-VALUESTATE-002 | inline | UnsafeConditionalUpgrade | — |
 | LLN-VALUESTATE-003 | inline | UnsafeValueReachedGovernedSink | — |
 | LLN-VALUESTATE-004 | inline | TaintedValuePropagation | error |
-| LLN-VALUESTATE-005 | inline | DERIVED_UNSAFE_VALUE_AT_SINK / DerivedUnsafeValueAtSink | error |
-| LLN-VALUESTATE-006 | inline | ProtectedBoundaryViolation / ProtectedValueAtAuditLog | error |
-| LLN-VALUESTATE-007 | inline | RedactedBoundaryViolation | error |
+| LLN-VALUESTATE-005 | live | DERIVED_UNSAFE_VALUE_AT_SINK / DerivedUnsafeValueAtSink | error |
+| LLN-VALUESTATE-006 | live | ProtectedBoundaryViolation / ProtectedValueAtAuditLog | error |
+| LLN-VALUESTATE-007 | live | RedactedBoundaryViolation | error |
 | LLN-VALUESTATE-008 | inline | BoundaryInputUnclean | — |
 
 ### VAULT (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| LLN-VAULT-001 | referenced | — | — |
-| LLN-VAULT-002 | referenced | — | — |
-| LLN-VAULT-003 | referenced | — | — |
-| LLN-VAULT-004 | referenced | — | — |
-| LLN-VAULT-005 | referenced | — | — |
+| LLN-VAULT-001 | live | — | — |
+| LLN-VAULT-002 | live | — | — |
+| LLN-VAULT-003 | live | — | — |
+| LLN-VAULT-004 | live | — | — |
+| LLN-VAULT-005 | live | — | — |
 
 ### VERIFY (3)
 

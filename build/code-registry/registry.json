@@ -3,10 +3,11 @@
   "total": 1002,
   "counts": {
     "ref": 147,
-    "inline": 304,
+    "inline": 143,
     "phantom": 497,
-    "live": 38,
-    "referenced": 16
+    "live": 114,
+    "referenced": 93,
+    "dead": 8
   },
   "entries": [
     {
@@ -1339,15 +1340,15 @@
       "code": "LLN-ANTI-ABUSE-001",
       "family": "ANTI",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UngovernesBackgroundExecution"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 4
     },
@@ -1551,15 +1552,15 @@
       "code": "LLN-AU-001",
       "family": "AU",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "EPILOGUE_NONE_ON_HIGH_TRUST"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 5
     },
@@ -1675,15 +1676,15 @@
       "code": "LLN-BACKEND-001",
       "family": "BACKEND",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "BackendError"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 2,
       "docs": 13
     },
@@ -1791,14 +1792,14 @@
       "code": "LLN-BINDING-001",
       "family": "BINDING",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "IMMUTABLE_LET_REASSIGNMENT"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 1,
       "docs": 15
@@ -1807,14 +1808,14 @@
       "code": "LLN-BINDING-002",
       "family": "BINDING",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "READONLY_REASSIGNMENT"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 1,
       "docs": 6
@@ -1823,14 +1824,14 @@
       "code": "LLN-BINDING-003",
       "family": "BINDING",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "READONLY_PROPERTY_MUTATION"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 1,
       "docs": 7
@@ -1839,15 +1840,15 @@
       "code": "LLN-BINDING-004",
       "family": "BINDING",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "MUT_IN_PURE_CONTEXT"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 2,
       "tests": 6,
       "docs": 11
     },
@@ -1855,15 +1856,15 @@
       "code": "LLN-BINDING-005",
       "family": "BINDING",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "IMMUTABLE_BINDING_REASSIGNED"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 39,
       "docs": 8
     },
@@ -1871,15 +1872,15 @@
       "code": "LLN-BINDING-006",
       "family": "BINDING",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "MUT_TYPE_CHANGE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 2
     },
@@ -1887,14 +1888,14 @@
       "code": "LLN-BLOCK-001",
       "family": "BLOCK",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "UNKNOWN_CONTENT_BLOCK_TYPE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 2,
       "docs": 8
@@ -1903,14 +1904,14 @@
       "code": "LLN-BLOCK-002",
       "family": "BLOCK",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "UNCLOSED_CONTENT_BLOCK"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 2,
       "docs": 5
@@ -1919,15 +1920,15 @@
       "code": "LLN-BLOCK-003",
       "family": "BLOCK",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "dead",
       "names": [
         "MISMATCHED_CONTENT_BLOCK_MARKER"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 3
     },
@@ -1935,15 +1936,15 @@
       "code": "LLN-BLOCK-004",
       "family": "BLOCK",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "SECRET_IN_CONTENT_BLOCK"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 8
     },
@@ -2310,15 +2311,15 @@
       "code": "LLN-BUILD-001",
       "family": "BUILD",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "NonDeterministicBuild"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 4,
       "docs": 25
     },
@@ -2338,15 +2339,15 @@
       "code": "LLN-BYTE-001",
       "family": "BYTE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "BYTE_OUT_OF_RANGE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 8
     },
@@ -2354,15 +2355,15 @@
       "code": "LLN-BYTE-002",
       "family": "BYTE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "dead",
       "names": [
         "BYTE_OVERFLOW"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 2
     },
@@ -2370,15 +2371,15 @@
       "code": "LLN-BYTE-003",
       "family": "BYTE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "dead",
       "names": [
         "IMPLICIT_BYTE_STRING_CONVERSION"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 2
     },
@@ -2386,15 +2387,15 @@
       "code": "LLN-BYTE-004",
       "family": "BYTE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "RAW_BYTES_LOGGED"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 2
     },
@@ -2402,15 +2403,15 @@
       "code": "LLN-BYTE-005",
       "family": "BYTE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "dead",
       "names": [
         "UNBOUNDED_BYTES_READ"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 2
     },
@@ -2576,15 +2577,15 @@
       "code": "LLN-CHAR-001",
       "family": "CHAR",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "CHAR_BYTE_CONFUSION"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 8
     },
@@ -2592,15 +2593,15 @@
       "code": "LLN-CHAR-002",
       "family": "CHAR",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "dead",
       "names": [
         "INVALID_CHAR_LITERAL"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 2
     },
@@ -2608,15 +2609,15 @@
       "code": "LLN-CHAR-003",
       "family": "CHAR",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "MULTI_CHAR_LITERAL"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 4,
       "docs": 3
     },
@@ -2624,15 +2625,15 @@
       "code": "LLN-CHAR-004",
       "family": "CHAR",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "dead",
       "names": [
         "IMPLICIT_CHAR_NUMBER_CONVERSION"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 2
     },
@@ -2844,15 +2845,15 @@
       "code": "LLN-COMPUTE-001",
       "family": "COMPUTE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "ComputeTargetIncompatiblePattern"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 12
     },
@@ -3388,14 +3389,14 @@
       "code": "LLN-CONTEXT-001",
       "family": "CONTEXT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "REQUIRED_CONTEXT_NOT_ACCESSED"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 35,
       "docs": 25
@@ -3560,14 +3561,14 @@
       "code": "LLN-CRYPTO-PQ-001",
       "family": "CRYPTO",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "SIGN_EFFECT_NOT_POST_QUANTUM"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 6,
       "docs": 15
@@ -3914,15 +3915,15 @@
       "code": "LLN-EC-001",
       "family": "EC",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "ECONOMICS_COST_OVERFLOW"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 4
     },
@@ -3930,15 +3931,15 @@
       "code": "LLN-EC-002",
       "family": "EC",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "ECONOMICS_FAILURE_TOLERANCE_BREACHED"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 3
     },
@@ -3946,15 +3947,15 @@
       "code": "LLN-ECON-001",
       "family": "ECON",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "BudgetExceeded"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 3,
       "docs": 2
     },
@@ -3962,15 +3963,15 @@
       "code": "LLN-ECON-002",
       "family": "ECON",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "LineageMissing"
       ],
       "severities": [
         "info"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 1
     },
@@ -3978,15 +3979,15 @@
       "code": "LLN-ECON-003",
       "family": "ECON",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "AiModelUnapproved"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 1
     },
@@ -4062,15 +4063,15 @@
       "code": "LLN-EFFECT-005",
       "family": "EFFECT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "BroadAliasUsed"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 42,
       "docs": 15
     },
@@ -4162,15 +4163,15 @@
       "code": "LLN-EVENT-001",
       "family": "EVENT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "EventNotDeclared"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 35,
       "docs": 9
     },
@@ -4178,15 +4179,15 @@
       "code": "LLN-EVENT-002",
       "family": "EVENT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "EventNeverEmitted"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 28,
       "docs": 5
     },
@@ -4194,15 +4195,15 @@
       "code": "LLN-EVENT-003",
       "family": "EVENT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "ContractEmitsUndeclaredEvent"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 13,
       "docs": 3
     },
@@ -4210,15 +4211,15 @@
       "code": "LLN-EVENT-004",
       "family": "EVENT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "DuplicateEventEmission"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 14,
       "docs": 3
     },
@@ -4226,15 +4227,15 @@
       "code": "LLN-EVENT-005",
       "family": "EVENT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "EventEmittedNotInContract"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 15,
       "docs": 1
     },
@@ -4664,7 +4665,7 @@
       "code": "LLN-GATE-001",
       "family": "GATE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "GATE_UNKNOWN_CONDITION",
         "GateAnnotationRequired"
@@ -4672,8 +4673,8 @@
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 14,
       "docs": 13
     },
@@ -4791,15 +4792,15 @@
       "code": "LLN-GOV-001",
       "family": "GOV",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "INTENT_BEHAVIOR_MISMATCH"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 3,
+      "defs": 1,
+      "emits": 2,
       "tests": 23,
       "docs": 12
     },
@@ -4821,14 +4822,14 @@
       "code": "LLN-GOV-003",
       "family": "GOV",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "PROTECTED_DATA_IN_RESPONSE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 53,
       "docs": 50
@@ -4853,14 +4854,14 @@
       "code": "LLN-GOV-005",
       "family": "GOV",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "PolicyPurposeMismatch"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 11,
       "docs": 15
@@ -4869,15 +4870,15 @@
       "code": "LLN-GOV-006",
       "family": "GOV",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "GOVERNANCE_PROOF_REQUIRED_BUT_MISSING"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 11,
       "docs": 4
     },
@@ -4885,15 +4886,15 @@
       "code": "LLN-GOV-007",
       "family": "GOV",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "AuthorityBlockMissingReason"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 2,
       "tests": 10,
       "docs": 6
     },
@@ -4913,14 +4914,14 @@
       "code": "LLN-GOV-009",
       "family": "GOV",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "PrivilegedFlowMissingCapability"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 8,
       "docs": 5
@@ -4943,14 +4944,14 @@
       "code": "LLN-GOV-011",
       "family": "GOV",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "UnknownContractSet"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 29,
       "docs": 7
@@ -4959,14 +4960,14 @@
       "code": "LLN-GOV-012",
       "family": "GOV",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "ContractSetRequirementNotMet"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 29,
       "docs": 8
@@ -4975,14 +4976,14 @@
       "code": "LLN-GOV-013",
       "family": "GOV",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "BoundaryViolation"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 1,
       "docs": 7
@@ -4991,15 +4992,15 @@
       "code": "LLN-GOV-014",
       "family": "GOV",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "MissingFallbackTarget"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 4,
       "docs": 6
     },
@@ -5064,15 +5065,15 @@
       "code": "LLN-GOV-019",
       "family": "GOV",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "LIMITS_UNKNOWN_FIELD"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 11,
       "docs": 6
     },
@@ -5080,15 +5081,15 @@
       "code": "LLN-GOV-020",
       "family": "GOV",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "AUTHORITY_OVERLY_BROAD"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 9,
       "docs": 4
     },
@@ -5472,15 +5473,15 @@
       "code": "LLN-HW-001",
       "family": "HW",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "QuantumTargetRequiresFormalProof"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 23,
       "docs": 9
     },
@@ -5488,15 +5489,15 @@
       "code": "LLN-HW-002",
       "family": "HW",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "SealedTargetRequiresAuditTrace"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 22,
       "docs": 4
     },
@@ -5504,15 +5505,15 @@
       "code": "LLN-HW-003",
       "family": "HW",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "AcceleratorPlaneRequiresAttestation"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 4
     },
@@ -5520,15 +5521,15 @@
       "code": "LLN-HW-004",
       "family": "HW",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UnknownHardwareTarget"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 9,
       "docs": 17
     },
@@ -5656,15 +5657,15 @@
       "code": "LLN-ID-001",
       "family": "ID",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "MANIFEST_VERIFICATION_FAILED"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 2
     },
@@ -5892,15 +5893,15 @@
       "code": "LLN-INTENT-001",
       "family": "INTENT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "INTENT_BEHAVIOR_MISMATCH"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 23
     },
@@ -5908,15 +5909,15 @@
       "code": "LLN-INTENT-002",
       "family": "INTENT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "MISSING_REQUIRED_INTENT"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 4
     },
@@ -5924,15 +5925,15 @@
       "code": "LLN-INTENT-003",
       "family": "INTENT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UNSAFE_MISSING_REASON_OR_FALLBACK"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 3
     },
@@ -5940,15 +5941,15 @@
       "code": "LLN-INTENT-004",
       "family": "INTENT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "PRIVILEGED_MISSING_CAPABILITY"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 3
     },
@@ -5956,15 +5957,15 @@
       "code": "LLN-INTENT-005",
       "family": "INTENT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "EXPERIMENTAL_IN_PRODUCTION"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 3
     },
@@ -6194,15 +6195,15 @@
       "code": "LLN-LEX-001",
       "family": "LEX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "ExcessiveNesting"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 23,
       "docs": 13
     },
@@ -6210,15 +6211,15 @@
       "code": "LLN-LEX-002",
       "family": "LEX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "OversizedToken"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 12,
       "docs": 6
     },
@@ -6226,15 +6227,15 @@
       "code": "LLN-LEX-003",
       "family": "LEX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "InvalidUnicodeEscape"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 11,
       "docs": 4
     },
@@ -6242,15 +6243,15 @@
       "code": "LLN-LEX-004",
       "family": "LEX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "FileTooLarge"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 3,
+      "defs": 1,
+      "emits": 2,
       "tests": 5,
       "docs": 10
     },
@@ -6258,15 +6259,15 @@
       "code": "LLN-LEX-005",
       "family": "LEX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "LineTooLong"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 9,
       "docs": 7
     },
@@ -6274,15 +6275,15 @@
       "code": "LLN-LEX-006",
       "family": "LEX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "TooManyDiagnostics"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 0,
       "docs": 4
     },
@@ -6636,15 +6637,15 @@
       "code": "LLN-MEMORY-001",
       "family": "MEMORY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "USE_AFTER_MOVE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 3,
       "docs": 47
     },
@@ -6652,15 +6653,15 @@
       "code": "LLN-MEMORY-002",
       "family": "MEMORY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "BORROW_AFTER_MOVE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 4
     },
@@ -6668,15 +6669,15 @@
       "code": "LLN-MEMORY-003",
       "family": "MEMORY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "BORROW_ESCAPES_SCOPE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 9
     },
@@ -6684,15 +6685,15 @@
       "code": "LLN-MEMORY-004",
       "family": "MEMORY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "READONLY_MUTATION"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 3
     },
@@ -6700,15 +6701,15 @@
       "code": "LLN-MEMORY-005",
       "family": "MEMORY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "MUTABLE_ALIAS"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 8
     },
@@ -6716,15 +6717,15 @@
       "code": "LLN-MEMORY-006",
       "family": "MEMORY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "BOUNDS_VIOLATION"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 5
     },
@@ -6732,15 +6733,15 @@
       "code": "LLN-MEMORY-007",
       "family": "MEMORY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UNCHECKED_ACCESS_OUTSIDE_UNSAFE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 3
     },
@@ -6748,14 +6749,14 @@
       "code": "LLN-MEMORY-008",
       "family": "MEMORY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "UNSAFE_MEMORY_REQUIRES_FALLBACK"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 11,
       "docs": 12
@@ -7077,15 +7078,15 @@
       "code": "LLN-NAME-003",
       "family": "NAME",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "CrossModuleShadow"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 11,
       "docs": 8
     },
@@ -7197,15 +7198,15 @@
       "code": "LLN-NET-001",
       "family": "NET",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "NetworkDestinationDenied"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 8,
       "docs": 14
     },
@@ -7213,15 +7214,15 @@
       "code": "LLN-NET-002",
       "family": "NET",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "PrivateRangeAccess"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 3,
       "docs": 6
     },
@@ -7499,15 +7500,15 @@
       "code": "LLN-OBS-001",
       "family": "OBS",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "OBSERVABILITY_ON_PURE_FLOW"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 6,
       "docs": 7
     },
@@ -8203,15 +8204,15 @@
       "code": "LLN-PGRAPH-001",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "CYCLE_DETECTED"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 0
     },
@@ -8219,15 +8220,15 @@
       "code": "LLN-PGRAPH-002",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "NODE_NOT_FOUND"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 0
     },
@@ -8235,15 +8236,15 @@
       "code": "LLN-PGRAPH-003",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "DEPENDENCY_MISSING"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 0
     },
@@ -8251,15 +8252,15 @@
       "code": "LLN-PGRAPH-004",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "FIXPOINT_TIMEOUT"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 0
     },
@@ -8267,15 +8268,15 @@
       "code": "LLN-PGRAPH-005",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "INVALID_TRANSITION"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 0
     },
@@ -8283,15 +8284,15 @@
       "code": "LLN-PGRAPH-010",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UNDECLARED_EFFECT_IN_GRAPH"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 0
     },
@@ -8299,15 +8300,15 @@
       "code": "LLN-PGRAPH-011",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "EFFECT_NOT_INFERRED"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 0
     },
@@ -8315,15 +8316,15 @@
       "code": "LLN-PGRAPH-012",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UNSAFE_EFFECT_IN_SAFE_FLOW"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 0
     },
@@ -8331,15 +8332,15 @@
       "code": "LLN-PGRAPH-013",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "TRANSITIVE_EFFECT_UNDECLARED"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 0
     },
@@ -8347,15 +8348,15 @@
       "code": "LLN-PGRAPH-020",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "EFFECT_CROSSES_BOUNDARY"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 0
     },
@@ -8363,15 +8364,15 @@
       "code": "LLN-PGRAPH-021",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "SECRET_CROSSES_UNSAFE_BOUNDARY"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 0
     },
@@ -8379,15 +8380,15 @@
       "code": "LLN-PGRAPH-022",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UNTRUSTED_INPUT_UNVALIDATED"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 0
     },
@@ -8395,15 +8396,15 @@
       "code": "LLN-PGRAPH-023",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "REQUIRED_POLICY_MISSING"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 0
     },
@@ -8411,15 +8412,15 @@
       "code": "LLN-PGRAPH-030",
       "family": "PGRAPH",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "CAPABILITY_NOT_GRANTED"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 0
     },
@@ -8607,15 +8608,15 @@
       "code": "LLN-PIPELINE-001",
       "family": "PIPELINE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UNKNOWN_PIPELINE_METHOD"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 7
     },
@@ -8623,15 +8624,15 @@
       "code": "LLN-PIPELINE-002",
       "family": "PIPELINE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "PIPELINE_TYPE_MISMATCH"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 3
     },
@@ -8639,15 +8640,15 @@
       "code": "LLN-PIPELINE-003",
       "family": "PIPELINE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UNHANDLED_FALLIBLE_PIPELINE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 4
     },
@@ -8655,15 +8656,15 @@
       "code": "LLN-PIPELINE-004",
       "family": "PIPELINE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "PIPELINE_UNDECLARED_EFFECT"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 4
     },
@@ -8671,15 +8672,15 @@
       "code": "LLN-PIPELINE-005",
       "family": "PIPELINE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "PIPELINE_READONLY_MUTATION"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 4
     },
@@ -8699,15 +8700,15 @@
       "code": "LLN-PKG-001",
       "family": "PKG",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "CapabilityExpanded"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 8,
       "docs": 16
     },
@@ -8715,15 +8716,15 @@
       "code": "LLN-PKG-002",
       "family": "PKG",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "UntrustedRegistry"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 3,
+      "defs": 1,
+      "emits": 2,
       "tests": 13,
       "docs": 6
     },
@@ -8731,15 +8732,15 @@
       "code": "LLN-PKG-003",
       "family": "PKG",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "MissingHash"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 32,
       "docs": 5
     },
@@ -8747,15 +8748,15 @@
       "code": "LLN-PKG-004",
       "family": "PKG",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "InstallScriptDenied"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 9,
       "docs": 6
     },
@@ -8763,15 +8764,15 @@
       "code": "LLN-PKG-005",
       "family": "PKG",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "MissingSignature"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 17,
       "docs": 12
     },
@@ -8779,15 +8780,15 @@
       "code": "LLN-PKG-006",
       "family": "PKG",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "RevokedSigner"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 12,
       "docs": 6
     },
@@ -8954,15 +8955,15 @@
       "code": "LLN-PROFILE-001",
       "family": "PROFILE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "RecursionInRestrictedProfile"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 18,
       "docs": 10
     },
@@ -8970,15 +8971,15 @@
       "code": "LLN-PROFILE-002",
       "family": "PROFILE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UnboundedLoopInStrictProfile"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 14,
       "docs": 9
     },
@@ -8986,15 +8987,15 @@
       "code": "LLN-PROFILE-003",
       "family": "PROFILE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "ExceptionControlFlowProhibited"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 5
     },
@@ -9002,15 +9003,15 @@
       "code": "LLN-PROFILE-004",
       "family": "PROFILE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "JitProhibitedInStrictProfile"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 4
     },
@@ -9018,15 +9019,15 @@
       "code": "LLN-PROFILE-005",
       "family": "PROFILE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "DynamicPackageLoadProhibited"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 2,
       "docs": 4
     },
@@ -9034,15 +9035,15 @@
       "code": "LLN-PROFILE-005B",
       "family": "PROFILE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "DynamicRegexInStrictProfile"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 9,
       "docs": 2
     },
@@ -9050,15 +9051,15 @@
       "code": "LLN-PROFILE-006",
       "family": "PROFILE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "MissingRuntimeBudget"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 10,
       "docs": 7
     },
@@ -9066,15 +9067,15 @@
       "code": "LLN-PROFILE-007",
       "family": "PROFILE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "DynamicRuntimeMutationProhibited"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 4
     },
@@ -9382,14 +9383,14 @@
       "code": "LLN-RAWPTR-001",
       "family": "RAWPTR",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "RAW_POINTER_OUTSIDE_UNSAFE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 1,
       "docs": 13
@@ -9578,15 +9579,15 @@
       "code": "LLN-RES-001",
       "family": "RES",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "RESILIENCE_RETRY_ON_MUTATION"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 7,
       "docs": 12
     },
@@ -9834,15 +9835,15 @@
       "code": "LLN-RUNTIME-005",
       "family": "RUNTIME",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "UnauthorizedGovernedValueAccess"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 9,
       "docs": 4
     },
@@ -9857,8 +9858,8 @@
       "severities": [
         "error"
       ],
-      "defs": 1,
-      "emits": 4,
+      "defs": 2,
+      "emits": 3,
       "tests": 21,
       "docs": 10
     },
@@ -9974,14 +9975,14 @@
       "code": "LLN-SAFETY-001",
       "family": "SAFETY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "TRI_BRANCH_CONDITION"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 2,
       "docs": 5
@@ -9990,14 +9991,14 @@
       "code": "LLN-SAFETY-002",
       "family": "SAFETY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "UNSAFE_LOGIC_ASSIGNMENT"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 2,
       "docs": 2
@@ -10006,15 +10007,15 @@
       "code": "LLN-SAFETY-003",
       "family": "SAFETY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "TRI_UNKNOWN_AS_TRUE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 2,
       "tests": 5,
       "docs": 4
     },
@@ -10022,14 +10023,14 @@
       "code": "LLN-SAFETY-004",
       "family": "SAFETY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "SECRET_LITERAL"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 5,
       "docs": 2
@@ -10038,14 +10039,14 @@
       "code": "LLN-SAFETY-005",
       "family": "SAFETY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "UNSAFE_DYNAMIC_CODE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 2,
       "docs": 2
@@ -10054,14 +10055,14 @@
       "code": "LLN-SAFETY-006",
       "family": "SAFETY",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "TRI_MATCH_NOT_EXHAUSTIVE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 2,
       "docs": 3
@@ -10168,7 +10169,7 @@
       "code": "LLN-SEC-020",
       "family": "SEC",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "RuntimeMutation",
         "RuntimeMutationProhibited"
@@ -10176,8 +10177,8 @@
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 39,
       "docs": 14
     },
@@ -10185,7 +10186,7 @@
       "code": "LLN-SEC-021",
       "family": "SEC",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "PrototypeMutation",
         "PrototypeMutationProhibited"
@@ -10193,8 +10194,8 @@
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 24,
       "docs": 6
     },
@@ -10430,15 +10431,15 @@
       "code": "LLN-SOURCE-ESCAPE-001",
       "family": "SOURCE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "SourceLevelEvalEscape"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 34,
       "docs": 9
     },
@@ -10546,15 +10547,15 @@
       "code": "LLN-STDLIB-001",
       "family": "STDLIB",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "StdlibEffectNotDeclared"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 16,
       "docs": 26
     },
@@ -10612,15 +10613,15 @@
       "code": "LLN-STRING-001",
       "family": "STRING",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "INVALID_UTF8_DECODE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 8
     },
@@ -10628,15 +10629,15 @@
       "code": "LLN-STRING-002",
       "family": "STRING",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "SECRET_STORED_AS_STRING"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 2
     },
@@ -10644,15 +10645,15 @@
       "code": "LLN-STRING-003",
       "family": "STRING",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "dead",
       "names": [
         "IMPLICIT_STRING_BYTE_CONVERSION"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 3
     },
@@ -10660,15 +10661,15 @@
       "code": "LLN-STRING-004",
       "family": "STRING",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "dead",
       "names": [
         "AMBIGUOUS_STRING_LENGTH"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 2
     },
@@ -10676,15 +10677,15 @@
       "code": "LLN-STYLE-001",
       "family": "STYLE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "FlowNameCamelCase"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 35,
       "docs": 11
     },
@@ -10692,15 +10693,15 @@
       "code": "LLN-STYLE-002",
       "family": "STYLE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "TypeNamePascalCase"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 36,
       "docs": 4
     },
@@ -10732,15 +10733,15 @@
       "code": "LLN-STYLE-SEC-001",
       "family": "STYLE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "SensitiveBindingType"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 30,
       "docs": 5
     },
@@ -10796,15 +10797,15 @@
       "code": "LLN-SUBSTRATE-001",
       "family": "SUBSTRATE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "CRYPTO_ON_NOISY_LANE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 25,
       "docs": 183
     },
@@ -10812,15 +10813,15 @@
       "code": "LLN-SUBSTRATE-002",
       "family": "SUBSTRATE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "TOLERANCE_UNACHIEVABLE_UNDER_NOISE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 3,
+      "defs": 1,
+      "emits": 2,
       "tests": 32,
       "docs": 38
     },
@@ -10828,15 +10829,15 @@
       "code": "LLN-SUBSTRATE-003",
       "family": "SUBSTRATE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "REDUNDANCY_INSUFFICIENT"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 3,
+      "defs": 1,
+      "emits": 2,
       "tests": 12,
       "docs": 22
     },
@@ -10844,15 +10845,15 @@
       "code": "LLN-SUBSTRATE-004",
       "family": "SUBSTRATE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "UNVOTED_ANALOG_INTO_DETERMINISTIC"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 11,
       "docs": 26
     },
@@ -10860,15 +10861,15 @@
       "code": "LLN-SUBSTRATE-005",
       "family": "SUBSTRATE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "REACH_EFFECT_ON_COMPUTE_ONLY_LANE"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 10,
       "docs": 5
     },
@@ -10936,14 +10937,14 @@
       "code": "LLN-SYNTAX-001",
       "family": "SYNTAX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "VAR_NOT_SUPPORTED"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 1,
       "docs": 11
@@ -10952,14 +10953,14 @@
       "code": "LLN-SYNTAX-002",
       "family": "SYNTAX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "CONST_NOT_SUPPORTED"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 1,
       "docs": 8
@@ -11004,15 +11005,15 @@
       "code": "LLN-SYNTAX-006",
       "family": "SYNTAX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "LET_AT_TOP_LEVEL"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 13
     },
@@ -11020,15 +11021,15 @@
       "code": "LLN-SYNTAX-007",
       "family": "SYNTAX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "MUT_AT_TOP_LEVEL"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 7
     },
@@ -11036,15 +11037,15 @@
       "code": "LLN-SYNTAX-008",
       "family": "SYNTAX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UNSAFE_LET_AT_TOP_LEVEL"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 5,
       "docs": 7
     },
@@ -11052,15 +11053,15 @@
       "code": "LLN-SYNTAX-009",
       "family": "SYNTAX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "EMIT_AT_TOP_LEVEL"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 9
     },
@@ -11080,15 +11081,15 @@
       "code": "LLN-SYNTAX-LEGACY-001",
       "family": "SYNTAX",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "LegacyEffectsSyntax"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 15,
       "docs": 20
     },
@@ -11132,15 +11133,15 @@
       "code": "LLN-TAINT-001",
       "family": "TAINT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "TaintedValueAtInjectionSink"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 20,
       "docs": 16
     },
@@ -11148,15 +11149,15 @@
       "code": "LLN-TAINT-002",
       "family": "TAINT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UnvalidatedValueAtLogicSink"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 0,
       "docs": 6
     },
@@ -11164,15 +11165,15 @@
       "code": "LLN-TAINT-003",
       "family": "TAINT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "WrongContextUntaint"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 11,
       "docs": 5
     },
@@ -11180,15 +11181,15 @@
       "code": "LLN-TAINT-004",
       "family": "TAINT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "DiscouragedSanitiser"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 11,
       "docs": 3
     },
@@ -11196,15 +11197,15 @@
       "code": "LLN-TAINT-005",
       "family": "TAINT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "TaintedValueAtHeaderSink"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 5
     },
@@ -11212,15 +11213,15 @@
       "code": "LLN-TAINT-006",
       "family": "TAINT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "SsrfPolicyInsufficient"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 1,
       "docs": 3
     },
@@ -11300,14 +11301,14 @@
       "code": "LLN-TENANT-001",
       "family": "TENANT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "DANGLING_TENANT_SCOPE_BINDING"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 9,
       "docs": 3
@@ -11316,14 +11317,14 @@
       "code": "LLN-TENANT-002",
       "family": "TENANT",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "UNSCOPED_TENANT_DATA_ACCESS"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
+      "defs": 1,
       "emits": 1,
       "tests": 20,
       "docs": 2
@@ -11464,15 +11465,15 @@
       "code": "LLN-TERM-001",
       "family": "TERM",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "TERMINATION_ANNOTATION_MISSING"
       ],
       "severities": [
         "warning"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 11,
       "docs": 12
     },
@@ -11784,15 +11785,15 @@
       "code": "LLN-TYPE-003",
       "family": "TYPE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "InvalidNominalConversion"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 59,
       "docs": 33
     },
@@ -12143,15 +12144,15 @@
       "code": "LLN-TYPE-030",
       "family": "TYPE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "TensorElementTypeMismatch"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 16,
       "docs": 11
     },
@@ -12159,15 +12160,15 @@
       "code": "LLN-TYPE-031",
       "family": "TYPE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "TensorDimensionMismatch"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 4,
       "docs": 9
     },
@@ -12307,15 +12308,15 @@
       "code": "LLN-VAL-001",
       "family": "VAL",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "SafetyCriticalMissingAudit"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 36,
       "docs": 9
     },
@@ -12323,15 +12324,15 @@
       "code": "LLN-VAL-002",
       "family": "VAL",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "SafetyCriticalMissingDeterminism"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 27,
       "docs": 8
     },
@@ -12339,15 +12340,15 @@
       "code": "LLN-VAL-003",
       "family": "VAL",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "referenced",
       "names": [
         "UnknownValueClassification"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 1,
+      "defs": 1,
+      "emits": 0,
       "tests": 16,
       "docs": 4
     },
@@ -12545,7 +12546,7 @@
       "code": "LLN-VALUESTATE-005",
       "family": "VALUESTATE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "DERIVED_UNSAFE_VALUE_AT_SINK",
         "DerivedUnsafeValueAtSink"
@@ -12553,8 +12554,8 @@
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 45,
       "docs": 23
     },
@@ -12562,7 +12563,7 @@
       "code": "LLN-VALUESTATE-006",
       "family": "VALUESTATE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "ProtectedBoundaryViolation",
         "ProtectedValueAtAuditLog"
@@ -12570,8 +12571,8 @@
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 3,
+      "defs": 1,
+      "emits": 2,
       "tests": 77,
       "docs": 16
     },
@@ -12579,15 +12580,15 @@
       "code": "LLN-VALUESTATE-007",
       "family": "VALUESTATE",
       "namespace": "LLN",
-      "status": "inline",
+      "status": "live",
       "names": [
         "RedactedBoundaryViolation"
       ],
       "severities": [
         "error"
       ],
-      "defs": 0,
-      "emits": 2,
+      "defs": 1,
+      "emits": 1,
       "tests": 40,
       "docs": 3
     },
@@ -12609,11 +12610,11 @@
       "code": "LLN-VAULT-001",
       "family": "VAULT",
       "namespace": "LLN",
-      "status": "referenced",
+      "status": "live",
       "names": [],
       "severities": [],
       "defs": 1,
-      "emits": 0,
+      "emits": 1,
       "tests": 1,
       "docs": 9
     },
@@ -12621,11 +12622,11 @@
       "code": "LLN-VAULT-002",
       "family": "VAULT",
       "namespace": "LLN",
-      "status": "referenced",
+      "status": "live",
       "names": [],
       "severities": [],
       "defs": 1,
-      "emits": 0,
+      "emits": 1,
       "tests": 1,
       "docs": 2
     },
@@ -12633,11 +12634,11 @@
       "code": "LLN-VAULT-003",
       "family": "VAULT",
       "namespace": "LLN",
-      "status": "referenced",
+      "status": "live",
       "names": [],
       "severities": [],
       "defs": 1,
-      "emits": 0,
+      "emits": 1,
       "tests": 1,
       "docs": 2
     },
@@ -12645,11 +12646,11 @@
       "code": "LLN-VAULT-004",
       "family": "VAULT",
       "namespace": "LLN",
-      "status": "referenced",
+      "status": "live",
       "names": [],
       "severities": [],
       "defs": 1,
-      "emits": 0,
+      "emits": 1,
       "tests": 1,
       "docs": 1
     },
@@ -12657,11 +12658,11 @@
       "code": "LLN-VAULT-005",
       "family": "VAULT",
       "namespace": "LLN",
-      "status": "referenced",
+      "status": "live",
       "names": [],
       "severities": [],
       "defs": 1,
-      "emits": 0,
+      "emits": 1,
       "tests": 1,
       "docs": 3
     },
