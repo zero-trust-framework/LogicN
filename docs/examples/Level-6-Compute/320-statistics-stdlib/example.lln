@@ -20,7 +20,9 @@ pure flow mean(values: Array<Decimal>) -> Decimal {
   }
   let total: Decimal = values.reduce(Decimal("0"), add)
   let count: Int = values.length()
-  return total / Decimal.fromInt(count)
+  // Decimal division needs an EXPLICIT rounding policy + scale — the mean uses banker's rounding at 4 dp
+  // (LLN-NUMERIC-OP-001: the bare `/` is a compile-reject that redirects here).
+  return total.divide(Decimal.fromInt(count), 4, "halfEven")
 }
 
 // Scale each value in the array by a multiplier.

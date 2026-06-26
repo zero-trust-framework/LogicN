@@ -240,8 +240,11 @@ pure flow test() -> Decimal {
     assert.ok(noErrors(result), `Unexpected errors: ${result.diagnostics.map((d) => d.code + ": " + d.message).join("; ")}`);
   });
 
-  it("Decimal / Decimal produces no type errors", () => {
-    const result = parseAndCheck(`
+  it("Decimal '/' REDIRECTS to the method form (LLN-NUMERIC-OP-001), and the method type-checks clean", () => {
+    // The bare operator was previously type-OK but TRAPPED at runtime (decimal '/' has no dispatch) — the
+    // "compiler promises what the runtime can't deliver" class. It is now a compile-reject that redirects to
+    // the obligation-carrying method form (explicit rounding + scale; #53/#54).
+    const bad = parseAndCheck(`
 pure flow test() -> Decimal {
   let total: Decimal = Decimal("600.00")
   let shares: Decimal = Decimal("3.0")
@@ -249,7 +252,18 @@ pure flow test() -> Decimal {
   return perShare
 }
 `);
-    assert.ok(noErrors(result), `Unexpected errors: ${result.diagnostics.map((d) => d.code + ": " + d.message).join("; ")}`);
+    assert.ok(bad.diagnostics.some((d) => d.code === "LLN-NUMERIC-OP-001"),
+      `expected the Decimal '/' redirect, got: ${bad.diagnostics.map((d) => d.code).join(",")}`);
+
+    const good = parseAndCheck(`
+pure flow test() -> Decimal {
+  let total: Decimal = Decimal("600.00")
+  let shares: Decimal = Decimal("3.0")
+  let perShare: Decimal = total.divide(shares, 2, "halfEven")
+  return perShare
+}
+`);
+    assert.ok(noErrors(good), `method form should type-check clean: ${good.diagnostics.map((d) => d.code + ": " + d.message).join("; ")}`);
   });
 });
 

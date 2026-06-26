@@ -129,6 +129,57 @@ test("interpreter: Decimal * Decimal exact (VAT-style 100.00 * 0.20)", async () 
   assert.equal(r.value.value, "20.0000");
 });
 
+// ── the partial-operator resolution end-to-end (#53/#54): redirect + method form ──
+function tcDiags(expr, ret = "Decimal") {
+  const SRC = `pure flow probe() -> ${ret} {\n  return ${expr}\n}`;
+  const p = parseProgram(SRC, "probe.lln");
+  resolveSymbols(p.ast);
+  const tc = checkTypes(p.ast);
+  return [...(p.diagnostics ?? []), ...(tc?.diagnostics ?? [])];
+}
+
+test("Decimal '/' is a compile REDIRECT (LLN-NUMERIC-OP-001) carrying the method suggestedCode", () => {
+  const d = tcDiags('Decimal("1") / Decimal("3")').find((x) => x.code === "LLN-NUMERIC-OP-001");
+  assert.ok(d, "expected LLN-NUMERIC-OP-001 on Decimal '/'");
+  assert.equal(d.severity, "error");
+  assert.equal(d.suggestedCode, 'total.divide(qty, 2, "halfEven")');
+});
+
+test("Decimal '%' redirects to a.remainder(b)", () => {
+  const d = tcDiags('Decimal("1") % Decimal("3")').find((x) => x.code === "LLN-NUMERIC-OP-001");
+  assert.ok(d, "expected LLN-NUMERIC-OP-001 on Decimal '%'");
+  assert.equal(d.suggestedCode, "total.remainder(qty)");
+});
+
+test("Money / Decimal is NOT redirected (legitimate scaling, not a partial Decimal op)", () => {
+  assert.ok(!tcDiags('gbp("100.00") / Decimal("3")', "Money").some((x) => x.code === "LLN-NUMERIC-OP-001"));
+});
+
+test("a.divide(b, scale, mode) computes the exact rounded result end-to-end", async () => {
+  const r = await runDecimal('Decimal("1").divide(Decimal("3"), 2, "halfEven")');
+  assert.equal(r.value.__tag, "decimal", `got ${JSON.stringify(r.value)}`);
+  assert.equal(r.value.value, "0.33");
+  const r2 = await runDecimal('Decimal("2").divide(Decimal("3"), 4, "halfEven")');
+  assert.equal(r2.value.value, "0.6667");
+});
+
+test("a.remainder(b) is exact end-to-end", async () => {
+  const r = await runDecimal('Decimal("10").remainder(Decimal("3"))');
+  assert.equal(r.value.value, "1");
+});
+
+test("a.divide(b, …) by zero fails closed with the propagating DivisionByZero trap", async () => {
+  const r = await runDecimal('Decimal("1").divide(Decimal("0"), 2, "halfEven")');
+  assert.equal(r.value.__tag, "runtimeError");
+  assert.equal(r.value.message, "DivisionByZero");
+});
+
+test("a.divide(b, …) with an unknown rounding mode fails closed", async () => {
+  const r = await runDecimal('Decimal("1").divide(Decimal("3"), 2, "nearest")');
+  assert.equal(r.value.__tag, "runtimeError");
+  assert.match(r.value.message, /unknown rounding mode/);
+});
+
 test("interpreter: Decimal - Decimal exact", async () => {
   const r = await runDecimal('Decimal("0.30") - Decimal("0.10")');
   assert.equal(r.value.value, "0.20");

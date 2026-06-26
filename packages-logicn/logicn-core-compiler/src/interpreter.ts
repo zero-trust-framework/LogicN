@@ -17,7 +17,7 @@ import { buildExecutionGraph, getOrLoadGraph, storeGraph, executionGraphCacheKey
 import { compileToBytecode, runBytecode } from "./bytecode-vm.js";
 import { i32AddChecked, i32SubChecked, i32MulChecked, i32DivChecked, i32ModChecked, i32NegChecked, isI32Trap, type I32Result } from "./i32-arith.js";
 import { i64AddChecked, i64SubChecked, i64MulChecked, i64DivChecked, i64ModChecked, i64NegChecked, isI64Trap, type I64Result } from "./i64-arith.js";
-import { decAdd, decSub, decMul, decCompare, isDecTrap, type DecResult } from "./decimal-arith.js";
+import { decAdd, decSub, decMul, decCompare, isDecTrap, decDiv, decRem, isRoundMode, type DecResult } from "./decimal-arith.js";
 import { numericBaseType, parseI64Literal, isI64LiteralError, flowDeclaresUnlowerable64 } from "./numeric-lowering.js";
 
 export type LogicNValue =
@@ -83,6 +83,21 @@ function i64R(r: I64Result): LogicNValue {
 /** Map an exact-decimal result to a LogicNValue: the canonical string → decimal; malformed → fail-closed. */
 function decimalR(r: DecResult): LogicNValue {
   return isDecTrap(r) ? { __tag: "runtimeError", message: `Malformed decimal operand` } : { __tag: "decimal", value: r as string };
+}
+
+/** Like decimalR, but maps a DivideByZero trap to the PROPAGATING "DivisionByZero" (whitelisted in
+ * isCheckedTrap) so `a.divide(b, …)` by zero fails closed up the expression, exactly like integer /0. */
+function decDivR(r: DecResult): LogicNValue {
+  if (!isDecTrap(r)) return { __tag: "decimal", value: r };
+  return { __tag: "runtimeError", message: r === "DivideByZero" ? "DivisionByZero" : "Malformed decimal operand" };
+}
+
+/** Coerce a numeric arg (decimal / int / float) to a canonical decimal STRING for exact decimal methods. */
+function toDecimalString(v: LogicNValue | undefined): string | null {
+  if (v === undefined) return null;
+  if (v.__tag === "decimal") return v.value;
+  if (v.__tag === "int" || v.__tag === "float") return String(v.value);
+  return null;
 }
 
 /** Decimal ordering comparison → Bool, fail-closed: a malformed operand traps (never a silent `false`). */
@@ -882,6 +897,8 @@ const STD_METHOD_NAMES = new Set([
   "toInt", "toFloat", "toDecimal",
   // Int / Float / Bool methods
   "abs",
+  // Decimal partial-operator method forms (#53/#54): the obligation-carrying `/` and `%`
+  "divide", "remainder",
   // Array
   "first", "last", "push", "append", "filter", "reduce", "sum", "reverse", "join", "find",
   "toList", "toArray", "take", "drop", "flatMap", "zip", "sortBy", "sort",
@@ -2251,6 +2268,31 @@ class Interpreter {
         case "toFloat":  return { __tag: "float", value: n };
         case "toInt":    return { __tag: "some" as const, value: intVal(Math.trunc(n)) };
         case "abs":      return receiver.__tag === "int" ? intVal(Math.abs(n)) : { __tag: "float" as const, value: Math.abs(n) };
+      }
+    }
+
+    // Decimal methods — the OBLIGATION-carrying forms of the partial operators `/` and `%` (#53/#54).
+    // `a.divide(b, scale, mode)` makes the rounding policy EXPLICIT (no silent default-rounding on money);
+    // `a.remainder(b)` is exact. Both fail closed on /0 (propagating DivisionByZero) and on a bad policy.
+    if (receiver.__tag === "decimal") {
+      switch (method) {
+        case "divide": {
+          const divisor = toDecimalString(args[0]);
+          const scaleV = args[1];
+          const modeV = args[2];
+          if (divisor === null) return { __tag: "runtimeError", message: "Decimal.divide: divisor must be a Decimal/Int/Float" };
+          if (scaleV?.__tag !== "int") return { __tag: "runtimeError", message: "Decimal.divide: scale must be an Int (the number of fractional digits)" };
+          const mode = modeV?.__tag === "string" ? modeV.value : "halfEven";
+          if (!isRoundMode(mode)) return { __tag: "runtimeError", message: `Decimal.divide: unknown rounding mode '${mode}' (use halfEven/halfUp/halfDown/up/down/ceiling/floor)` };
+          return decDivR(decDiv(receiver.value, divisor, scaleV.value as number, mode));
+        }
+        case "remainder": {
+          const divisor = toDecimalString(args[0]);
+          if (divisor === null) return { __tag: "runtimeError", message: "Decimal.remainder: divisor must be a Decimal/Int/Float" };
+          return decDivR(decRem(receiver.value, divisor));
+        }
+        case "toStr":
+        case "toString": return { __tag: "string", value: receiver.value };
       }
     }
 

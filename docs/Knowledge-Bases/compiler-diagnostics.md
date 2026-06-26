@@ -505,7 +505,8 @@ flagged; a generic position like `Tensor<Int64,[4]>` (an opaque i32 handle whose
 is `Tensor`) is not flagged either.
 
 ```text
-LLN-NUMERIC-001   UnsupportedNumericWidth   Scalar Int64/UInt64 not yet faithfully lowered — the WASM backend would silently truncate it from 64 to 32 bits; rejected fail-closed until i64 lowering lands
+LLN-NUMERIC-001     UnsupportedNumericWidth   Scalar Int64/UInt64 not yet faithfully lowered — the WASM backend would silently truncate it from 64 to 32 bits; rejected fail-closed until i64 lowering lands
+LLN-NUMERIC-OP-001  PartialDecimalOperator    Operator '/' or '%' on a Decimal is rejected and redirected to the obligation-carrying method form — exact decimal division is non-terminating (1/3) and needs an explicit rounding policy + scale (a silent default rounding on money is a fail-open). Use a.divide(b, scale, mode) / a.remainder(b); modes: halfEven|halfUp|halfDown|up|down|ceiling|floor
 ```
 
 ### Web fail-closed contract (canonical series: LLN-WEB-*) — RESERVED, RD-0100

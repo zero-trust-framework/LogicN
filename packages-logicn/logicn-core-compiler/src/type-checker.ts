@@ -750,6 +750,9 @@ class TypeChecker {
         const receiverNode = node.children?.[0];
         const receiverType = receiverNode !== undefined ? this.inferType(receiverNode) : undefined;
 
+        // Decimal partial-operator method forms (#53/#54): a.divide(b, scale, mode) / a.remainder(b) → Decimal.
+        if (receiverType === "Decimal" && (method === "divide" || method === "remainder")) return "Decimal";
+
         // R5C: Validation gates — validate.<field>(raw) → "protected <Field>"
         // e.g. validate.email(raw) → "protected Email"
         //      validate.userId(raw) → "protected UserId"
@@ -1509,6 +1512,37 @@ class TypeChecker {
         return;
       }
       return; // Money<C> / Money<C> → Decimal ratio, valid
+    }
+
+    // ── Decimal partial-operator REDIRECT (#53/#54) ──────────────────────────
+    // `/` and `%` on a Decimal are PARTIAL: exact decimal division is non-terminating (1/3 = 0.333…) and
+    // needs an EXPLICIT rounding policy + scale. A silent default-rounding on money is itself a fail-open, so
+    // the bare operator is a compile-reject that REDIRECTS to the obligation-carrying method form (the owner's
+    // "turn no into yes, this way"). Money/Decimal scaling is valid (handled above / by moneyBinary) → exclude
+    // any Money operand here.
+    if ((leftBase === "Decimal" || rightBase === "Decimal") &&
+        leftBase !== "Money" && rightBase !== "Money" &&
+        (op === "/" || op === "%")) {
+      if (op === "/") {
+        this.diagnostics.push(makeTCDiag(
+          "LLN-NUMERIC-OP-001",
+          "PartialDecimalOperator",
+          "Operator '/' is not available for Decimal — exact decimal division is non-terminating (1/3 = 0.333…) and needs an explicit rounding policy + scale (a silent default rounding on money is a fail-open).",
+          location,
+          'Use the method form a.divide(b, scale, rounding) — e.g. total.divide(qty, 2, "halfEven"). Modes: halfEven|halfUp|halfDown|up|down|ceiling|floor.',
+          'total.divide(qty, 2, "halfEven")',
+        ));
+      } else {
+        this.diagnostics.push(makeTCDiag(
+          "LLN-NUMERIC-OP-001",
+          "PartialDecimalOperator",
+          "Operator '%' is not available for Decimal — use the exact method form (modulo on a value that supports a rounding policy must be explicit).",
+          location,
+          "Use the method form a.remainder(b) — e.g. total.remainder(qty).",
+          "total.remainder(qty)",
+        ));
+      }
+      return;
     }
 
     // String + non-String = error
