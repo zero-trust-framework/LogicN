@@ -69,7 +69,7 @@ contract {
   return {
     eventId: retEventId,
     statusValid: retStatusValid,
-    schemaVersion: "lln.runtime.audit.v1",
+    schemaVersion: "spore.runtime.audit.v1",
     chained: true
   }
 }
