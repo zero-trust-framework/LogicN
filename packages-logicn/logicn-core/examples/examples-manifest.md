@@ -57,13 +57,16 @@ response shapes, and webhook-style input.
 
 ### Memory (3)
 
-These cover the v1 memory model: borrow, move, and rejection of unsafe patterns.
+These cover LogicN's memory model. LogicN is **value-semantics** (no shared mutable aliasing,
+no references, no raw pointers) — `borrow`/`move` are reserved-but-unenforced surface, and there
+is no "use after move" / borrow error class. The genuine consume-once guarantee for linear
+resources is LLN-AFFINE-001 in the production value-state checker (#65 / RD-0130).
 
 | File | Demonstrates | Expected |
 |---|---|---|
-| `borrow-scope.lln` | Scoped borrow; owner is valid after borrow ends | ACCEPT |
-| `move-cleanup.lln` | Move semantics; resource owned and cleaned up | ACCEPT |
-| `reject-use-after-move.lln` | Use after move — rejected with LLN-MEMORY-001 | REJECT |
+| `borrow-scope.lln` | Scoped `borrow` syntax (reserved; unenforced) | ACCEPT |
+| `move-cleanup.lln` | `move` annotation; value owned by the binding (reserved; unenforced) | ACCEPT |
+| `value-semantics-ownership.lln` | Value semantics: re-use after `move` is ACCEPTED (no use-after-move class; cf. LLN-AFFINE-001) | ACCEPT |
 
 ### Concurrency (2)
 
@@ -117,7 +120,7 @@ inputs but must not be parsed as correct programs:
 
 | File | Expected diagnostic | Reason |
 |---|---|---|
-| `reject-use-after-move.lln` | `LLN-MEMORY-001` | Use after ownership move |
+| _(none)_ | — | The use-after-move fixture was retired in #65 — LogicN is value-semantics, so there is no use-after-move / borrow error class to reject. The consume-once guarantee is LLN-AFFINE-001, exercised in the production compiler's value-state tests (not this prototype corpus). |
 
 ---
 
@@ -140,12 +143,13 @@ Phase 4 accept corpus:
   rollback.lln
   borrow-scope.lln
   move-cleanup.lln
+  value-semantics-ownership.lln
   parallel-api-calls.lln
   workers.lln (pending grammar confirmation)
   source-map-error.lln (pending grammar confirmation)
 
 Phase 4 reject corpus (intentional failures):
-  reject-use-after-move.lln → LLN-MEMORY-001
+  (none — the use-after-move reject fixture was retired in #65; LogicN is value-semantics)
 
 Post-v1 (excluded from Phase 4 tests):
   gpu-plan.lln
