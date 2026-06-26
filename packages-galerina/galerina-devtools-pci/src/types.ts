@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerina/devtools-pci — PCI DSS 4.0.1 Compliance Types
+// @galerinaa/devtools-pci — PCI DSS 4.0.1 Compliance Types
 //
 // Type definitions for PCI audit findings and reports.
 // Schema version: spore.pci-audit.v1

@@ -1,5 +1,5 @@
 /**
- * @galerina/core-sentinel-power (LSP) — the Tower's Environmental Governor.
+ * @galerinaa/core-sentinel-power (LSP) — the Tower's Environmental Governor.
  *
  * A deterministic thermal/power policy engine that down-tiers the inference
  * kernel BEFORE the hardware throttles, keeping execution cadence predictable.

@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/core-economics",
+  "name": "@galerinaa/core-economics",
   "version": "1.0.0-beta.2",
   "description": "CostGraph, ValueGraph, and risk-adjusted execution routing for the Galerina platform. Economics is a constraint layer that sits below governance — it can pull the emergency brake on a safe path, but never press the gas pedal on an unsafe one.",
   "license": "Apache-2.0",

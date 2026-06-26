@@ -7,7 +7,7 @@ const HASH = "sha256:" + "a".repeat(64);
 const pkg = (name, extra = {}) => ({ name, version: "1.0.0", exports: {}, hash: HASH, ...extra });
 
 test("emits a well-formed CycloneDX 1.5 BOM with SHA-256 hashes for verified components", () => {
-  const r = generateCycloneDxSbom([pkg("@galerina/core"), pkg("@galerina/cli")]);
+  const r = generateCycloneDxSbom([pkg("@galerinaa/core"), pkg("@galerinaa/cli")]);
   assert.equal(r.bom.bomFormat, "CycloneDX");
   assert.equal(r.bom.specVersion, "1.5");
   assert.equal(r.bom.components.length, 2);
@@ -18,12 +18,12 @@ test("emits a well-formed CycloneDX 1.5 BOM with SHA-256 hashes for verified com
 });
 
 test("FAIL-CLOSED: a component without a valid sha256 is UNVERIFIED + SPORE-SBOM-001 + complete:false", () => {
-  const r = generateCycloneDxSbom([pkg("@galerina/core"), pkg("@galerina/bad", { hash: undefined })]);
+  const r = generateCycloneDxSbom([pkg("@galerinaa/core"), pkg("@galerinaa/bad", { hash: undefined })]);
   assert.equal(r.complete, false, "an unverifiable component must make the BOM incomplete");
   assert.equal(r.diagnostics.length, 1);
   assert.equal(r.diagnostics[0].code, "SPORE-SBOM-001");
-  assert.equal(r.diagnostics[0].component, "@galerina/bad@1.0.0");
-  const bad = r.bom.components.find((c) => c.name === "@galerina/bad");
+  assert.equal(r.diagnostics[0].component, "@galerinaa/bad@1.0.0");
+  const bad = r.bom.components.find((c) => c.name === "@galerinaa/bad");
   assert.equal(bad.hashes, undefined, "no hashes entry for an unverifiable component (never fake integrity)");
   assert.ok(bad.properties.some((p) => p.name === "galerina:integrity" && p.value === "UNVERIFIED"));
   assert.ok(r.bom.metadata.properties.some((p) => p.name === "galerina:complete" && p.value === "false"));
@@ -31,14 +31,14 @@ test("FAIL-CLOSED: a component without a valid sha256 is UNVERIFIED + SPORE-SBOM
 
 test("FAIL-CLOSED: a malformed hash (sha256:pending / wrong length) is rejected, not trusted", () => {
   for (const bad of ["sha256:pending", "sha256:abc", "deadbeef", "sha256:" + "z".repeat(64)]) {
-    const r = generateCycloneDxSbom([pkg("@galerina/x", { hash: bad })]);
+    const r = generateCycloneDxSbom([pkg("@galerinaa/x", { hash: bad })]);
     assert.equal(r.complete, false, `'${bad}' must be rejected`);
     assert.equal(r.diagnostics[0].code, "SPORE-SBOM-001");
   }
 });
 
 test("carries the GOVERNANCE footprint as CycloneDX properties (registry/signer/effects/capabilities)", () => {
-  const r = generateCycloneDxSbom([pkg("@galerina/pay", {
+  const r = generateCycloneDxSbom([pkg("@galerinaa/pay", {
     registry: "https://reg.galerina.dev", signerKeyId: "k1", signature: "sig",
     effects: ["network.outbound", "audit.write"], capabilities: ["payment.charge"], installScript: "deny",
   })]);
@@ -53,11 +53,11 @@ test("carries the GOVERNANCE footprint as CycloneDX properties (registry/signer/
 });
 
 test("DETERMINISTIC: no wall-clock unless a timestamp is supplied; identical input → identical BOM", () => {
-  const a = generateCycloneDxSbom([pkg("@galerina/core")]);
-  const b = generateCycloneDxSbom([pkg("@galerina/core")]);
+  const a = generateCycloneDxSbom([pkg("@galerinaa/core")]);
+  const b = generateCycloneDxSbom([pkg("@galerinaa/core")]);
   assert.equal(JSON.stringify(a.bom), JSON.stringify(b.bom), "default emission must be byte-identical");
   assert.equal(a.bom.metadata.timestamp, undefined, "no timestamp by default (reproducible)");
-  const t = generateCycloneDxSbom([pkg("@galerina/core")], { timestamp: "2026-06-24T00:00:00Z", rootName: "app" });
+  const t = generateCycloneDxSbom([pkg("@galerinaa/core")], { timestamp: "2026-06-24T00:00:00Z", rootName: "app" });
   assert.equal(t.bom.metadata.timestamp, "2026-06-24T00:00:00Z");
   assert.equal(t.bom.metadata.component.name, "app");
 });

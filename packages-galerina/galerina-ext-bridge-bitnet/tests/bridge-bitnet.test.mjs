@@ -1,5 +1,5 @@
 /**
- * @galerina/ext-bridge-bitnet — Integration Tests
+ * @galerinaa/ext-bridge-bitnet — Integration Tests
  *
  * Stage A: verifies governed lifecycle (stub inference).
  * Stage B: wire ggml_bitnet_mul_mat_task_compute() for real inference.

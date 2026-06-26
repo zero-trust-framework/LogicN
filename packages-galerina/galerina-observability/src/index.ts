@@ -1,11 +1,11 @@
-// @galerina/observability — actuator-style operational observability for a Galerina app.
+// @galerinaa/observability — actuator-style operational observability for a Galerina app.
 //
 // The APP-OPERATOR's ops view: a health/liveness/readiness surface, app metrics
 // (request counts, latencies, error rates) and structured app logs — surfaced
 // THROUGH the App Kernel as health routes + a metrics collector. Fail-closed,
 // zero ambient authority, additive (it changes nothing in the kernel or core).
 //
-// DISTINCT from @galerina/governance-telemetry: that package exports governance
+// DISTINCT from @galerinaa/governance-telemetry: that package exports governance
 // STRUCTURE ("log the contract, not the payload") for Prometheus; THIS package is
 // the app's own health/metrics/logs — the operational, not the governance, lens.
 export * from "./metrics.js";

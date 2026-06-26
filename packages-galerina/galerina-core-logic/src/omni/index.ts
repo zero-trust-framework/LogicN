@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerina/core-logic/omni — OmniState v0.2 sub-path export
+// @galerinaa/core-logic/omni — OmniState v0.2 sub-path export
 // =============================================================================
 
 export type { OmniState, OmniEvidence, OmniDecision } from "./omni-state.js";

@@ -13,7 +13,7 @@ import {
   graphFromJSON,
   effectsOf,
   callers,
-} from "@galerina/devtools-graph-algorithms";
+} from "@galerinaa/devtools-graph-algorithms";
 
 // ---------------------------------------------------------------------------
 // Helpers

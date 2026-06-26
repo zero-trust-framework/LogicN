@@ -66,9 +66,9 @@ export interface CheckConfig {
   readonly rules?: Readonly<Record<string, "error" | "warning" | "info" | "off">>;
   /** Glob patterns for files/dirs to exclude. */
   readonly ignore?: readonly string[];
-  /** Run @galerina/devtools-security checks (runSecurityAudit). Default: false */
+  /** Run @galerinaa/devtools-security checks (runSecurityAudit). Default: false */
   readonly security?: boolean;
-  /** Run @galerina/devtools-flowgraph checks (checkFlowGraph). Default: false */
+  /** Run @galerinaa/devtools-flowgraph checks (checkFlowGraph). Default: false */
   readonly flowgraph?: boolean;
   /** Minimum severity to report: "error" | "warning" | "info". Default: "info" */
   readonly minSeverity?: "error" | "warning" | "info";

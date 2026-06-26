@@ -1,7 +1,7 @@
 // =============================================================================
 // galerina-core — canonical shared types for the Galerina platform
 //
-// Package: @galerina/core
+// Package: @galerinaa/core
 // Role:    Foundational type definitions for compiler, runtime, and tooling.
 //          The compiler itself (compiler/galerina.js) stays in plain CJS.
 //          This module provides typed contracts for downstream packages.
@@ -28,7 +28,7 @@ export interface SourceLocation {
  * Every package-specific diagnostic type (LogicDiagnostic, ConfigDiagnostic,
  * SecurityDiagnostic, etc.) is structurally compatible with this interface.
  * Once workspace links are established, package diagnostics will formally
- * extend BaseDiagnostic via imports from @galerina/core.
+ * extend BaseDiagnostic via imports from @galerinaa/core.
  */
 export interface BaseDiagnostic {
   /** Structured diagnostic code in SPORE-SERIES-NNN format. */
@@ -424,7 +424,7 @@ export interface BuildManifest {
 
 // ---------------------------------------------------------------------------
 // Note: EnvironmentMode is the canonical type for deployment environments.
-// It is defined and owned by @galerina/core-config. When workspace links are
+// It is defined and owned by @galerinaa/core-config. When workspace links are
 // established, packages that need EnvironmentMode should import it from there.
 // ---------------------------------------------------------------------------
 // Compiler diagnostic helpers

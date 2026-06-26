@@ -36,7 +36,7 @@ Supersedes: `galerina-audit-2026-06-01.md`
 | 27 | WASM instantiation (wabt) — 8/8 benchmarks, native speed | ✅ |
 | 27B | Sync fast-path — 14.3× tree-walker speedup | ✅ |
 | 28 | Profile enforcement (strict/high_integrity) + Tainted<T>/SafeFor<Context,T> | ✅ |
-| 29 | @galerina/core-economics — CostGraph, ValueGraph, IBM matrix, RouteDecision | ✅ |
+| 29 | @galerinaa/core-economics — CostGraph, ValueGraph, IBM matrix, RouteDecision | ✅ |
 | 30 | ProofGraph caching by ExecutionSignature (67% hit rate) | ✅ |
 | 31 | Bytecode VM — Int32Array opcodes, 14.3× over sync tree-walker | ✅ |
 | 31B | Bytecode VM auto-wired into executeFlow (220K calls/sec) | ✅ |

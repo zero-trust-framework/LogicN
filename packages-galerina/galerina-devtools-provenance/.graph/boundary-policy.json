@@ -1,7 +1,7 @@
 {
-  "packageName": "@galerina/devtools-provenance",
+  "packageName": "@galerinaa/devtools-provenance",
   "allowedExternal": [
-    "@galerina/core-compiler",
+    "@galerinaa/core-compiler",
     "node:fs",
     "node:path"
   ],

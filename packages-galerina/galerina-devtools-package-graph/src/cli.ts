@@ -54,7 +54,7 @@ function main(): void {
   }
   console.log(`  Internal edges:     ${graph.stats.internalEdgeCount}`);
   console.log(`  External deps:      ${graph.stats.externalDepCount} ` +
-    `(node:${graph.stats.nodeCoreCount} · @galerina:${graph.stats.workspaceCount} · 3rd-party:${graph.stats.thirdpartyCount})`);
+    `(node:${graph.stats.nodeCoreCount} · @galerinaa:${graph.stats.workspaceCount} · 3rd-party:${graph.stats.thirdpartyCount})`);
   console.log(`  Orphan files:       ${graph.stats.orphanCount}`);
 
   if (graph.stats.thirdpartyCount > 0) {

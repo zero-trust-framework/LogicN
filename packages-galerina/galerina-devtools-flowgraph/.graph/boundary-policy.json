@@ -1,7 +1,7 @@
 {
-  "packageName": "@galerina/devtools-flowgraph",
+  "packageName": "@galerinaa/devtools-flowgraph",
   "allowedExternal": [
-    "@galerina/core-compiler",
+    "@galerinaa/core-compiler",
     "node:fs"
   ],
   "note": "Baseline auto-generated. Edit allowedExternal to widen/narrow the border. `--check` fails if an import appears that is not listed here."

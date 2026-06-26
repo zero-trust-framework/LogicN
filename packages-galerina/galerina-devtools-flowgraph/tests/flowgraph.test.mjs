@@ -1,4 +1,4 @@
-// @galerina/devtools-flowgraph — comprehensive test suite
+// @galerinaa/devtools-flowgraph — comprehensive test suite
 // Uses node:test (built-in, no extra deps) and constructs FlowGraph objects
 // directly rather than going through the parser, to keep tests fast and hermetic.
 

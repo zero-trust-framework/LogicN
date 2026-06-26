@@ -1,5 +1,5 @@
 /**
- * @galerina/devtools-security — 0084-secaudit-unknown fail-closed regression tests.
+ * @galerinaa/devtools-security — 0084-secaudit-unknown fail-closed regression tests.
  *
  * Proves: a blind/partial audit (parse failure) is verdict="indeterminate" /
  * passed=false (unknown -> deny), while a genuinely clean program where every

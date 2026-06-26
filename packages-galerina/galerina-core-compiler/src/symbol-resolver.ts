@@ -259,7 +259,7 @@ class SymbolResolver {
   }
 
   private collectTopLevelDeclarations(node: AstNode): void {
-    // R3: Package type injection — seed types from known @galerina/* packages
+    // R3: Package type injection — seed types from known @galerinaa/* packages
     if (node.kind === "importDecl" && node.value !== undefined) {
       const packageMatch = node.value.match(/from\s+["']([^"']+)["']/);
       if (packageMatch?.[1] !== undefined) {

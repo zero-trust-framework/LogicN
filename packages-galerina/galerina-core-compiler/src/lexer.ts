@@ -4,7 +4,7 @@
 // Tokenises Galerina .spore source text using the v1 keyword table.
 // Source of truth: docs/Knowledge-Bases/v1-reserved-keywords.md
 //
-// Types declared locally mirror @galerina/core — structurally compatible.
+// Types declared locally mirror @galerinaa/core — structurally compatible.
 // Replace with workspace imports once package links are in place.
 //
 // Diagnostics emitted by this module:
@@ -16,7 +16,7 @@
 // =============================================================================
 
 // ---------------------------------------------------------------------------
-// Token types (mirrors @galerina/core)
+// Token types (mirrors @galerinaa/core)
 // ---------------------------------------------------------------------------
 
 export type TokenKind =

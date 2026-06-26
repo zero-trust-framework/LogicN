@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/tri-pipe",
+  "name": "@galerinaa/tri-pipe",
   "version": "1.0.0-beta.2",
   "description": "The Tri-Pipe capstone: createTriPipeEngine() composes the hardware() capability directive + the photonic backend/router + the governed HybridInferenceEngine into one call, selecting the digital registry and photonic offload by the resolved {binary|hybrid|photonic} tier. Digital is the default; photonic only on a proven net win; fail-closed to binary.",
   "license": "Apache-2.0",
@@ -15,10 +15,10 @@
     "prove": "node scripts/prove-tri-pipe.mjs"
   },
   "dependencies": {
-    "@galerina/inference-bridge-contract": "file:../galerina-inference-bridge-contract",
-    "@galerina/hardware-tier": "file:../galerina-hardware-tier",
-    "@galerina/ext-photonic-emulator": "file:../galerina-ext-photonic-emulator",
-    "@galerina/tower-citizen": "file:../galerina-tower-citizen"
+    "@galerinaa/inference-bridge-contract": "file:../galerina-inference-bridge-contract",
+    "@galerinaa/hardware-tier": "file:../galerina-hardware-tier",
+    "@galerinaa/ext-photonic-emulator": "file:../galerina-ext-photonic-emulator",
+    "@galerinaa/tower-citizen": "file:../galerina-tower-citizen"
   },
   "devDependencies": { "@types/node": "^22.10.0", "typescript": "^5.5.0" },
   "keywords": ["galerina", "tri-pipe", "photonic", "capstone", "composition", "hardware", "fail-closed"],

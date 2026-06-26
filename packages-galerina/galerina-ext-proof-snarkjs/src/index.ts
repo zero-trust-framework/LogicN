@@ -9,7 +9,7 @@
 //   ProverBackend        — interface (re-exported for consumers)
 //
 // Usage:
-//   import { createSnarkjsProver } from "@galerina/ext-proof-snarkjs";
+//   import { createSnarkjsProver } from "@galerinaa/ext-proof-snarkjs";
 //   const prover = createSnarkjsProver();
 //   const receipt = await generateEpilogueReceipt({
 //     strategy: "zk_snark_receipt",

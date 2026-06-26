@@ -925,7 +925,7 @@ Provides:
 
 ## galerina-ext-secrets-tmf
 
-OPTIONAL sealed-secrets-on-.tmf layer for Galerina. env.tmf = an encrypted-at-rest replacement for plaintext .env, edited through a governed in-memory-only CLI (no temp file, no $EDITOR, no .swp). Thin orchestration over @galerina/ext-tmf (format/crypto) + the ext-secrets-vault store discipline. No new crypto, no new container bytes; crypto stays Binary (SPORE-SUBSTRATE-001). Unsigned-but-encrypted (flags.signed=0); signed root gated on ext-tmf slice 4/#7.
+OPTIONAL sealed-secrets-on-.tmf layer for Galerina. env.tmf = an encrypted-at-rest replacement for plaintext .env, edited through a governed in-memory-only CLI (no temp file, no $EDITOR, no .swp). Thin orchestration over @galerinaa/ext-tmf (format/crypto) + the ext-secrets-vault store discipline. No new crypto, no new container bytes; crypto stays Binary (SPORE-SUBSTRATE-001). Unsigned-but-encrypted (flags.signed=0); signed root gated on ext-tmf slice 4/#7.
 
 Provides:
 - SecretConfigSource
@@ -960,7 +960,7 @@ Provides:
 
 ## galerina-observability
 
-Actuator-style operational observability for a Galerina app: a health/liveness/readiness surface, app metrics (request counts, latencies, error rates), and structured app logs. The app-operator's ops view — distinct from @galerina/governance-telemetry (which exports governance STRUCTURE). Surfaces through the App Kernel as health routes + a metrics collector. Fail-closed, zero ambient authority.
+Actuator-style operational observability for a Galerina app: a health/liveness/readiness surface, app metrics (request counts, latencies, error rates), and structured app logs. The app-operator's ops view — distinct from @galerinaa/governance-telemetry (which exports governance STRUCTURE). Surfaces through the App Kernel as health routes + a metrics collector. Fail-closed, zero ambient authority.
 
 Provides:
 - HealthStatus
@@ -1130,7 +1130,7 @@ Provides:
 
 ## galerina-devtools-project-graph
 
-Graph data structures, algorithms, and runtime reporting for the Galerina platform
+Graph data structures, algorithms, and runtime reporting for the LogicN platform
 
 Provides:
 - bfsPath

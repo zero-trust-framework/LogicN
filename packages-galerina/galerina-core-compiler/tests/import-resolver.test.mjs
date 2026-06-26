@@ -3,7 +3,7 @@
 //
 // Covers:
 //   1. resolveImports() recognises importDecl nodes in the AST
-//   2. Names from @galerina/* packages are correctly classified as type/value
+//   2. Names from @galerinaa/* packages are correctly classified as type/value
 //   3. Symbol resolver accepts imported value names without SPORE-NAME-001
 //   4. Type checker accepts imported type names without SPORE-TYPE-001
 // =============================================================================
@@ -43,8 +43,8 @@ flow test(x: Int) -> Int {
     assert.equal(result.valueNames.length, 0);
   });
 
-  it("resolves a single named import from @galerina/core-types", () => {
-    const { ast } = parse(`import Email from "@galerina/core-types"
+  it("resolves a single named import from @galerinaa/core-types", () => {
+    const { ast } = parse(`import Email from "@galerinaa/core-types"
 
 flow test(e: Email) -> String {
   return "ok"
@@ -54,12 +54,12 @@ flow test(e: Email) -> String {
     assert.equal(result.symbols.length, 1);
     assert.equal(result.symbols[0].name, "Email");
     assert.equal(result.symbols[0].kind, "type");
-    assert.equal(result.symbols[0].sourceModule, "@galerina/core-types");
+    assert.equal(result.symbols[0].sourceModule, "@galerinaa/core-types");
     assert.ok(result.typeNames.includes("Email"));
   });
 
-  it("resolves PatientId and NhsNumber from @galerina/healthcare-types", () => {
-    const { ast } = parse(`import { PatientId, NhsNumber } from "@galerina/healthcare-types"
+  it("resolves PatientId and NhsNumber from @galerinaa/healthcare-types", () => {
+    const { ast } = parse(`import { PatientId, NhsNumber } from "@galerinaa/healthcare-types"
 
 flow test(id: PatientId) -> String {
   return "ok"
@@ -73,8 +73,8 @@ flow test(id: PatientId) -> String {
     assert.equal(result.symbols[1].kind, "type");
   });
 
-  it("classifies EmbeddingModel as a value (not a type) from @galerina/ai-types", () => {
-    const { ast } = parse(`import EmbeddingModel from "@galerina/ai-types"
+  it("classifies EmbeddingModel as a value (not a type) from @galerinaa/ai-types", () => {
+    const { ast } = parse(`import EmbeddingModel from "@galerinaa/ai-types"
 `);
     const result = resolveImports(ast);
     assert.equal(result.symbols.length, 1);
@@ -82,8 +82,8 @@ flow test(id: PatientId) -> String {
     assert.ok(result.valueNames.includes("EmbeddingModel"));
   });
 
-  it("resolves multiple symbols from @galerina/ai-types", () => {
-    const { ast } = parse(`import { Label, ClassificationResult, AiError } from "@galerina/ai-types"
+  it("resolves multiple symbols from @galerinaa/ai-types", () => {
+    const { ast } = parse(`import { Label, ClassificationResult, AiError } from "@galerinaa/ai-types"
 `);
     const result = resolveImports(ast);
     const names = result.symbols.map((s) => s.name);
@@ -106,8 +106,8 @@ flow test(id: PatientId) -> String {
     assert.equal(result.symbols[0].sourceModule, "some-external-package");
   });
 
-  it("resolves PatientsDB as a value from @galerina/healthcare-types", () => {
-    const { ast } = parse(`import PatientsDB from "@galerina/healthcare-types"
+  it("resolves PatientsDB as a value from @galerinaa/healthcare-types", () => {
+    const { ast } = parse(`import PatientsDB from "@galerinaa/healthcare-types"
 `);
     const result = resolveImports(ast);
     assert.equal(result.symbols.length, 1);
@@ -115,8 +115,8 @@ flow test(id: PatientId) -> String {
     assert.ok(result.valueNames.includes("PatientsDB"));
   });
 
-  it("resolves Actor and TraceId from @galerina/identity-types", () => {
-    const { ast } = parse(`import { Actor, TraceId } from "@galerina/identity-types"
+  it("resolves Actor and TraceId from @galerinaa/identity-types", () => {
+    const { ast } = parse(`import { Actor, TraceId } from "@galerinaa/identity-types"
 `);
     const result = resolveImports(ast);
     const names = result.symbols.map((s) => s.name);
@@ -286,8 +286,8 @@ flow test() -> String {
 // ── End-to-end: import → resolve → check ─────────────────────────────────────
 
 describe("Import resolver — end-to-end pipeline integration", () => {
-  it("full pipeline: import Email from @galerina/core-types → no SPORE-TYPE-001 for Email", () => {
-    const source = `import Email from "@galerina/core-types"
+  it("full pipeline: import Email from @galerinaa/core-types → no SPORE-TYPE-001 for Email", () => {
+    const source = `import Email from "@galerinaa/core-types"
 
 flow sendEmail(addr: Email) -> String {
   return "ok"
@@ -307,8 +307,8 @@ flow sendEmail(addr: Email) -> String {
     );
   });
 
-  it("full pipeline: import { PatientId } from @galerina/healthcare-types → no type errors", () => {
-    const source = `import { PatientId, NhsNumber } from "@galerina/healthcare-types"
+  it("full pipeline: import { PatientId } from @galerinaa/healthcare-types → no type errors", () => {
+    const source = `import { PatientId, NhsNumber } from "@galerinaa/healthcare-types"
 
 flow getPatient(id: PatientId, nhs: NhsNumber) -> String {
   return "ok"
@@ -326,8 +326,8 @@ flow getPatient(id: PatientId, nhs: NhsNumber) -> String {
     );
   });
 
-  it("full pipeline: import AiError from @galerina/ai-types → no type errors", () => {
-    const source = `import { Label, AiError } from "@galerina/ai-types"
+  it("full pipeline: import AiError from @galerinaa/ai-types → no type errors", () => {
+    const source = `import { Label, AiError } from "@galerinaa/ai-types"
 
 flow classify(text: String) -> Result<Label, AiError> {
   return Ok("positive")

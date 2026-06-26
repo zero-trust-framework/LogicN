@@ -3,9 +3,9 @@
 // indicates that relevant files were edited this turn.
 //
 // Execution order (matches the dependency chain):
-//   1. @galerina/devtools-project-graph — upstream library (C:\laragon\www\SPORE-Graph, when created)
-//   2. galerina-core-*, galerina-devtools-graph-algorithms  — packages that may depend on @galerina/devtools-project-graph
-//   3. galerina-devtools-graph-project  — downstream consumer of @galerina/devtools-project-graph
+//   1. @galerinaa/devtools-project-graph — upstream library (C:\laragon\www\SPORE-Graph, when created)
+//   2. galerina-core-*, galerina-devtools-graph-algorithms  — packages that may depend on @galerinaa/devtools-project-graph
+//   3. galerina-devtools-graph-project  — downstream consumer of @galerinaa/devtools-project-graph
 //
 // Outputs a JSON { systemMessage } result so Claude Code shows a status chip.
 
@@ -56,9 +56,9 @@ function runTest(dir, label) {
 const results = [];
 let allPassed = true;
 
-// 1. @galerina/devtools-project-graph — run first; core packages depend on it
+// 1. @galerinaa/devtools-project-graph — run first; core packages depend on it
 if (fs.existsSync(SPORE_GRAPH_DIR) && hasTestScript(SPORE_GRAPH_DIR)) {
-  const r = runTest(SPORE_GRAPH_DIR, '@galerina/devtools-project-graph');
+  const r = runTest(SPORE_GRAPH_DIR, '@galerinaa/devtools-project-graph');
   results.push(r);
   if (!r.passed) allPassed = false;
 }
@@ -77,7 +77,7 @@ for (const { name, dir } of corePackages) {
   if (!r.passed) allPassed = false;
 }
 
-// 3. galerina-devtools-graph-project — run last; downstream of @galerina/devtools-project-graph
+// 3. galerina-devtools-graph-project — run last; downstream of @galerinaa/devtools-project-graph
 if (allPassed) {
   const graphDir = path.join(PACKAGES_DIR, GRAPH_PKG);
   if (hasTestScript(graphDir)) {

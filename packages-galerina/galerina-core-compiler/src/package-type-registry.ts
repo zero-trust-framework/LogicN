@@ -1,29 +1,29 @@
 // =============================================================================
 // Galerina Phase R3 — Package Type Registry
 //
-// Provides a static map of known @galerina/* package names to the type names
+// Provides a static map of known @galerinaa/* package names to the type names
 // they export. Used by the symbol resolver and type checker to suppress
 // SPORE-TYPE-001 for types imported from known packages.
 //
 // This registry is the source of truth for cross-module type injection.
-// When an `import X from "@galerina/foo"` statement is encountered, all types
+// When an `import X from "@galerinaa/foo"` statement is encountered, all types
 // listed for that package are pre-registered so no unknown-type diagnostic
 // fires for them.
 // =============================================================================
 
 export const KNOWN_PACKAGE_TYPES: ReadonlyMap<string, readonly string[]> = new Map([
-  ["@galerina/healthcare-types", ["Email", "PatientId", "DOB", "PhoneNumber", "MedicalRecordId", "DiagnosisCode", "ProcedureCode", "ProviderNpi"]],
-  ["@galerina/financial-types", ["Amount", "CurrencyCode", "AccountId", "TransactionId", "PaymentMethodId", "InvoiceId", "ReceiptId"]],
-  ["@galerina/auth-types", ["UserId", "SessionId", "AuthToken", "RefreshToken", "PermissionId", "RoleId"]],
-  ["@galerina/common-types", ["Url", "IpAddress", "Hostname", "Port", "TraceId", "CorrelationId"]],
-  ["@galerina/ai-types", ["ModelId", "PromptId", "EmbeddingId", "InferenceResult", "ClassificationLabel"]],
+  ["@galerinaa/healthcare-types", ["Email", "PatientId", "DOB", "PhoneNumber", "MedicalRecordId", "DiagnosisCode", "ProcedureCode", "ProviderNpi"]],
+  ["@galerinaa/financial-types", ["Amount", "CurrencyCode", "AccountId", "TransactionId", "PaymentMethodId", "InvoiceId", "ReceiptId"]],
+  ["@galerinaa/auth-types", ["UserId", "SessionId", "AuthToken", "RefreshToken", "PermissionId", "RoleId"]],
+  ["@galerinaa/common-types", ["Url", "IpAddress", "Hostname", "Port", "TraceId", "CorrelationId"]],
+  ["@galerinaa/ai-types", ["ModelId", "PromptId", "EmbeddingId", "InferenceResult", "ClassificationLabel"]],
   // Phase R3: expanded domain type packages
-  ["@galerina/order-types", ["OrderId", "OrderStatus", "LineItem", "OrderTotal", "ShippingAddress", "DeliveryEstimate"]],
-  ["@galerina/patient-types", ["PatientId", "MedicalRecord", "Diagnosis", "Prescription", "LabResult", "ConsentRecord"]],
-  ["@galerina/notification-types", ["NotificationId", "NotificationChannel", "NotificationPayload", "DeliveryStatus"]],
-  ["@galerina/identity-types", ["IdentityId", "VerificationCode", "BiometricHash", "DeviceFingerprint"]],
-  ["@galerina/document-types", ["DocumentId", "DocumentType", "DocumentStatus", "Signature", "Timestamp"]],
-  ["@galerina/webhook-types", ["WebhookId", "WebhookEvent", "WebhookPayload", "DeliveryAttempt"]],
+  ["@galerinaa/order-types", ["OrderId", "OrderStatus", "LineItem", "OrderTotal", "ShippingAddress", "DeliveryEstimate"]],
+  ["@galerinaa/patient-types", ["PatientId", "MedicalRecord", "Diagnosis", "Prescription", "LabResult", "ConsentRecord"]],
+  ["@galerinaa/notification-types", ["NotificationId", "NotificationChannel", "NotificationPayload", "DeliveryStatus"]],
+  ["@galerinaa/identity-types", ["IdentityId", "VerificationCode", "BiometricHash", "DeviceFingerprint"]],
+  ["@galerinaa/document-types", ["DocumentId", "DocumentType", "DocumentStatus", "Signature", "Timestamp"]],
+  ["@galerinaa/webhook-types", ["WebhookId", "WebhookEvent", "WebhookPayload", "DeliveryAttempt"]],
 ]);
 
 // ---------------------------------------------------------------------------
@@ -61,7 +61,7 @@ export function resolveImportedTypes(packageName: string): readonly string[] {
  *   1. KNOWN_PACKAGE_TYPES (fastest, static registry)
  *   2. package.galerina.yaml from node_modules (Phase 11E; stub returns [] here)
  *
- * @param packageName   The npm/package name, e.g. "@galerina/order-types".
+ * @param packageName   The npm/package name, e.g. "@galerinaa/order-types".
  * @param _projectRoot  Optional project root path (used in Phase 11E for manifest lookup).
  * @returns             The type names exported by this package, or [] if unknown.
  */

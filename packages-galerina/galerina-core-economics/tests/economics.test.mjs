@@ -1,5 +1,5 @@
 /**
- * @galerina/core-economics — CostGraph + ValueGraph tests (Phase 29)
+ * @galerinaa/core-economics — CostGraph + ValueGraph tests (Phase 29)
  */
 
 import { describe, it } from "node:test";

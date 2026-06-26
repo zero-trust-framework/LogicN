@@ -1,13 +1,13 @@
 
-> @logicn/core-compiler@0.1.0-beta.0 test
+> @galerinaa/core-compiler@0.1.0-beta.0 test
 > npm run typecheck && npm run build && node --test tests/*.test.mjs
 
 
-> @logicn/core-compiler@0.1.0-beta.0 typecheck
+> @galerinaa/core-compiler@0.1.0-beta.0 typecheck
 > tsc --noEmit
 
 
-> @logicn/core-compiler@0.1.0-beta.0 build
+> @galerinaa/core-compiler@0.1.0-beta.0 build
 > tsc -p tsconfig.json
 
 TAP version 13
@@ -362,7 +362,7 @@ ok 18 - deadline exceeded
     not ok 2 - Level-1-Basics/003-secure-flow
       ---
       duration_ms: 17.9093
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-1-Basics/003-secure-flow: expected no errors, got: SPORE-VALUESTATE-006
@@ -375,7 +375,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -719,7 +719,7 @@ ok 18 - deadline exceeded
     not ok 69 - Level-3-Effects/111-local-fn-effect-not-covered-by-parent
       ---
       duration_ms: 2.692
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: 'Level-3-Effects/111-local-fn-effect-not-covered-by-parent: expected diagnostic SPORE-EFFECT-001, got: SPORE-TYPE-001, SPORE-TYPE-001, SPORE-TYPE-001, SPORE-EFFECT-002, SPORE-GOV-002'
       code: 'ERR_ASSERTION'
@@ -728,7 +728,7 @@ ok 18 - deadline exceeded
       actual: false
       operator: '=='
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:171:18)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:171:18)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -745,7 +745,7 @@ ok 18 - deadline exceeded
     not ok 71 - Level-3-Effects/113-secure-flow-with-effects
       ---
       duration_ms: 1.5279
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-3-Effects/113-secure-flow-with-effects: expected no errors, got: SPORE-VALUESTATE-006, SPORE-VALUESTATE-006
@@ -758,7 +758,7 @@ ok 18 - deadline exceeded
       actual: 2
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -795,7 +795,7 @@ ok 18 - deadline exceeded
     not ok 77 - Level-3-Effects/120-effect-summary-example
       ---
       duration_ms: 2.2324
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-3-Effects/120-effect-summary-example: expected no errors, got: SPORE-VALUESTATE-006, SPORE-VALUESTATE-006
@@ -808,7 +808,7 @@ ok 18 - deadline exceeded
       actual: 2
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -925,7 +925,7 @@ ok 18 - deadline exceeded
     not ok 99 - Level-4-Security/173-validation-chain
       ---
       duration_ms: 1.1159
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-4-Security/173-validation-chain: expected no errors, got: SPORE-VALUESTATE-006
@@ -938,7 +938,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -950,7 +950,7 @@ ok 18 - deadline exceeded
     not ok 100 - Level-4-Security/174-multiple-protected-values
       ---
       duration_ms: 1.6363
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-4-Security/174-multiple-protected-values: expected no errors, got: SPORE-VALUESTATE-006, SPORE-VALUESTATE-006
@@ -963,7 +963,7 @@ ok 18 - deadline exceeded
       actual: 2
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -975,7 +975,7 @@ ok 18 - deadline exceeded
     not ok 101 - Level-4-Security/175-security-summary-example
       ---
       duration_ms: 2.3733
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-4-Security/175-security-summary-example: expected no errors, got: SPORE-VALUESTATE-006, SPORE-VALUESTATE-006, SPORE-VALUESTATE-006
@@ -988,7 +988,7 @@ ok 18 - deadline exceeded
       actual: 3
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1005,7 +1005,7 @@ ok 18 - deadline exceeded
     not ok 103 - Level-4-Security/177-secret-serialization
       ---
       duration_ms: 0.8359
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: 'Level-4-Security/177-secret-serialization: expected diagnostic SPORE-SECRET-003, got: SPORE-NAME-001'
       code: 'ERR_ASSERTION'
@@ -1014,7 +1014,7 @@ ok 18 - deadline exceeded
       actual: false
       operator: '=='
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:171:18)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:171:18)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1031,7 +1031,7 @@ ok 18 - deadline exceeded
     not ok 105 - Level-5-Governance/202-secure-intent-boundary
       ---
       duration_ms: 1.3372
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-5-Governance/202-secure-intent-boundary: expected no errors, got: SPORE-VALUESTATE-006
@@ -1044,7 +1044,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1066,7 +1066,7 @@ ok 18 - deadline exceeded
     not ok 108 - Level-5-Governance/208-audit-proof-required
       ---
       duration_ms: 1.0061
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-5-Governance/208-audit-proof-required: expected no errors, got: SPORE-VALUESTATE-006
@@ -1079,7 +1079,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1106,7 +1106,7 @@ ok 18 - deadline exceeded
     not ok 112 - Level-5-Governance/213-governance-summary-example
       ---
       duration_ms: 3.7609
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-5-Governance/213-governance-summary-example: expected no errors, got: SPORE-VALUESTATE-006, SPORE-VALUESTATE-006
@@ -1119,7 +1119,7 @@ ok 18 - deadline exceeded
       actual: 2
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1131,7 +1131,7 @@ ok 18 - deadline exceeded
     not ok 113 - Level-5-Governance/214-contract-secure-flow
       ---
       duration_ms: 2.1183
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-5-Governance/214-contract-secure-flow: expected no errors, got: SPORE-VALUESTATE-006
@@ -1144,7 +1144,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1156,7 +1156,7 @@ ok 18 - deadline exceeded
     not ok 114 - Level-5-Governance/215-contract-set
       ---
       duration_ms: 2.6387
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-5-Governance/215-contract-set: expected no errors, got: SPORE-VALUESTATE-006
@@ -1169,7 +1169,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1231,7 +1231,7 @@ ok 18 - deadline exceeded
     not ok 125 - Level-5-Governance/226-full-16-section-minimal
       ---
       duration_ms: 2.5139
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-5-Governance/226-full-16-section-minimal: expected no errors, got: SPORE-VALUESTATE-006
@@ -1244,7 +1244,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1361,7 +1361,7 @@ ok 18 - deadline exceeded
     not ok 147 - Level-7-AI/353-protected-ai-input
       ---
       duration_ms: 0.9321
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-7-AI/353-protected-ai-input: expected no errors, got: SPORE-VALUESTATE-006
@@ -1374,7 +1374,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1401,7 +1401,7 @@ ok 18 - deadline exceeded
     not ok 151 - Level-7-AI/360-ai-audit-redacted
       ---
       duration_ms: 0.8774
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-7-AI/360-ai-audit-redacted: expected no errors, got: SPORE-VALUESTATE-006
@@ -1414,7 +1414,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1436,7 +1436,7 @@ ok 18 - deadline exceeded
     not ok 154 - Level-7-AI/365-ai-summary-flow
       ---
       duration_ms: 1.216
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-7-AI/365-ai-summary-flow: expected no errors, got: SPORE-VALUESTATE-006
@@ -1449,7 +1449,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1551,7 +1551,7 @@ ok 18 - deadline exceeded
     not ok 173 - Level-9-Enterprise/451-healthcare-patient-create
       ---
       duration_ms: 1.0238
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-9-Enterprise/451-healthcare-patient-create: expected no errors, got: SPORE-VALUESTATE-006, SPORE-VALUESTATE-006, SPORE-EFFECT-004
@@ -1564,7 +1564,7 @@ ok 18 - deadline exceeded
       actual: 3
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1576,7 +1576,7 @@ ok 18 - deadline exceeded
     not ok 174 - Level-9-Enterprise/453-financial-payment-charge
       ---
       duration_ms: 3.5806
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-9-Enterprise/453-financial-payment-charge: expected no errors, got: SPORE-VALUESTATE-006
@@ -1589,7 +1589,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1611,7 +1611,7 @@ ok 18 - deadline exceeded
     not ok 177 - Level-9-Enterprise/459-multi-protected-values
       ---
       duration_ms: 0.8908
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-9-Enterprise/459-multi-protected-values: expected no errors, got: SPORE-VALUESTATE-006, SPORE-VALUESTATE-006, SPORE-VALUESTATE-006, SPORE-EFFECT-004
@@ -1624,7 +1624,7 @@ ok 18 - deadline exceeded
       actual: 4
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1636,7 +1636,7 @@ ok 18 - deadline exceeded
     not ok 178 - Level-9-Enterprise/460-authority-data-sharing
       ---
       duration_ms: 1.4901
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-9-Enterprise/460-authority-data-sharing: expected no errors, got: SPORE-VALUESTATE-006, SPORE-EFFECT-004
@@ -1649,7 +1649,7 @@ ok 18 - deadline exceeded
       actual: 2
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1661,7 +1661,7 @@ ok 18 - deadline exceeded
     not ok 179 - Level-9-Enterprise/462-policy-purpose
       ---
       duration_ms: 1.0805
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-9-Enterprise/462-policy-purpose: expected no errors, got: SPORE-VALUESTATE-006
@@ -1674,7 +1674,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1686,7 +1686,7 @@ ok 18 - deadline exceeded
     not ok 180 - Level-9-Enterprise/465-enterprise-summary
       ---
       duration_ms: 1.4105
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-9-Enterprise/465-enterprise-summary: expected no errors, got: SPORE-VALUESTATE-006, SPORE-VALUESTATE-006, SPORE-EFFECT-004
@@ -1699,7 +1699,7 @@ ok 18 - deadline exceeded
       actual: 3
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1711,7 +1711,7 @@ ok 18 - deadline exceeded
     not ok 181 - Level-9-Enterprise/468-full-contract-model
       ---
       duration_ms: 1.3765
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-9-Enterprise/468-full-contract-model: expected no errors, got: SPORE-VALUESTATE-006
@@ -1724,7 +1724,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1736,7 +1736,7 @@ ok 18 - deadline exceeded
     not ok 182 - Level-9-Enterprise/469-contract-financial-payment
       ---
       duration_ms: 1.5309
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-9-Enterprise/469-contract-financial-payment: expected no errors, got: SPORE-VALUESTATE-006, SPORE-VALUESTATE-006
@@ -1749,7 +1749,7 @@ ok 18 - deadline exceeded
       actual: 2
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1761,7 +1761,7 @@ ok 18 - deadline exceeded
     not ok 183 - Level-9-Enterprise/471-medical-medication-check
       ---
       duration_ms: 10.2372
-      location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:153:5'
+      location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:153:5'
       failureType: 'testCodeFailure'
       error: |-
         Level-9-Enterprise/471-medical-medication-check: expected no errors, got: SPORE-VALUESTATE-006
@@ -1774,7 +1774,7 @@ ok 18 - deadline exceeded
       actual: 1
       operator: 'strictEqual'
       stack: |-
-        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-logicn/logicn-core-compiler/tests/cec-integration.test.mjs:161:16)
+        TestContext.<anonymous> (file:///C:/laragon/www/LO/packages-galerina/galerina-core-compiler/tests/cec-integration.test.mjs:161:16)
         Test.runInAsyncScope (node:async_hooks:211:14)
         Test.run (node:internal/test_runner/test:979:25)
         Suite.processPendingSubtests (node:internal/test_runner/test:677:18)
@@ -1817,7 +1817,7 @@ not ok 19 - CEC integration — stable examples
   ---
   duration_ms: 286.3297
   type: 'suite'
-  location: 'C:\\laragon\\www\\LO\\packages-logicn\\logicn-core-compiler\\tests\\cec-integration.test.mjs:145:1'
+  location: 'C:\\laragon\\www\\LO\\packages-galerina\\galerina-core-compiler\\tests\\cec-integration.test.mjs:145:1'
   failureType: 'subtestsFailed'
   error: '26 subtests failed'
   code: 'ERR_TEST_FAILURE'
@@ -2030,7 +2030,7 @@ ok 23 - CLI module load
   duration_ms: 11.1247
   type: 'suite'
   ...
-# Subtest: logicn-core-compiler syntax safety contracts
+# Subtest: galerina-core-compiler syntax safety contracts
     # Subtest: rejects Tri values used directly as branch conditions
     ok 1 - rejects Tri values used directly as branch conditions
       ---
@@ -2172,7 +2172,7 @@ ok 23 - CLI module load
       duration_ms: 0.2723
       ...
     1..28
-ok 24 - logicn-core-compiler syntax safety contracts
+ok 24 - galerina-core-compiler syntax safety contracts
   ---
   duration_ms: 31.4917
   type: 'suite'
@@ -7719,23 +7719,23 @@ ok 232 - canAccess
       ---
       duration_ms: 4.4996
       ...
-    # Subtest: resolves a single named import from @logicn/core-types
-    ok 2 - resolves a single named import from @logicn/core-types
+    # Subtest: resolves a single named import from @galerinaa/core-types
+    ok 2 - resolves a single named import from @galerinaa/core-types
       ---
       duration_ms: 0.8761
       ...
-    # Subtest: resolves PatientId and NhsNumber from @logicn/healthcare-types
-    ok 3 - resolves PatientId and NhsNumber from @logicn/healthcare-types
+    # Subtest: resolves PatientId and NhsNumber from @galerinaa/healthcare-types
+    ok 3 - resolves PatientId and NhsNumber from @galerinaa/healthcare-types
       ---
       duration_ms: 1.1207
       ...
-    # Subtest: classifies EmbeddingModel as a value (not a type) from @logicn/ai-types
-    ok 4 - classifies EmbeddingModel as a value (not a type) from @logicn/ai-types
+    # Subtest: classifies EmbeddingModel as a value (not a type) from @galerinaa/ai-types
+    ok 4 - classifies EmbeddingModel as a value (not a type) from @galerinaa/ai-types
       ---
       duration_ms: 0.5649
       ...
-    # Subtest: resolves multiple symbols from @logicn/ai-types
-    ok 5 - resolves multiple symbols from @logicn/ai-types
+    # Subtest: resolves multiple symbols from @galerinaa/ai-types
+    ok 5 - resolves multiple symbols from @galerinaa/ai-types
       ---
       duration_ms: 0.4392
       ...
@@ -7744,13 +7744,13 @@ ok 232 - canAccess
       ---
       duration_ms: 0.302
       ...
-    # Subtest: resolves PatientsDB as a value from @logicn/healthcare-types
-    ok 7 - resolves PatientsDB as a value from @logicn/healthcare-types
+    # Subtest: resolves PatientsDB as a value from @galerinaa/healthcare-types
+    ok 7 - resolves PatientsDB as a value from @galerinaa/healthcare-types
       ---
       duration_ms: 1.7085
       ...
-    # Subtest: resolves Actor and TraceId from @logicn/identity-types
-    ok 8 - resolves Actor and TraceId from @logicn/identity-types
+    # Subtest: resolves Actor and TraceId from @galerinaa/identity-types
+    ok 8 - resolves Actor and TraceId from @galerinaa/identity-types
       ---
       duration_ms: 0.459
       ...
@@ -7830,18 +7830,18 @@ ok 235 - Symbol resolver — imported value names do not emit SPORE-NAME-001
   type: 'suite'
   ...
 # Subtest: Import resolver — end-to-end pipeline integration
-    # Subtest: full pipeline: import Email from @logicn/core-types → no SPORE-TYPE-001 for Email
-    ok 1 - full pipeline: import Email from @logicn/core-types → no SPORE-TYPE-001 for Email
+    # Subtest: full pipeline: import Email from @galerinaa/core-types → no SPORE-TYPE-001 for Email
+    ok 1 - full pipeline: import Email from @galerinaa/core-types → no SPORE-TYPE-001 for Email
       ---
       duration_ms: 0.463
       ...
-    # Subtest: full pipeline: import { PatientId } from @logicn/healthcare-types → no type errors
-    ok 2 - full pipeline: import { PatientId } from @logicn/healthcare-types → no type errors
+    # Subtest: full pipeline: import { PatientId } from @galerinaa/healthcare-types → no type errors
+    ok 2 - full pipeline: import { PatientId } from @galerinaa/healthcare-types → no type errors
       ---
       duration_ms: 0.4663
       ...
-    # Subtest: full pipeline: import AiError from @logicn/ai-types → no type errors
-    ok 3 - full pipeline: import AiError from @logicn/ai-types → no type errors
+    # Subtest: full pipeline: import AiError from @galerinaa/ai-types → no type errors
+    ok 3 - full pipeline: import AiError from @galerinaa/ai-types → no type errors
       ---
       duration_ms: 0.3793
       ...

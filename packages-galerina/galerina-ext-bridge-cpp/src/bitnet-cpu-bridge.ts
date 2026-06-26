@@ -3,7 +3,7 @@
  *
  * Governed CPU ternary bridge for Microsoft BitNet (MIT). Wraps the native
  * ggml-bitnet kernels when the compiled addon is present; otherwise falls back to
- * the byte-faithful TPLSimulator from @galerina/tower-citizen.
+ * the byte-faithful TPLSimulator from @galerinaa/tower-citizen.
  *
  * Upholds the three Citizen One Bridge Standards:
  *   1. Determinism Hook — every native result is cross-checked against the
@@ -21,14 +21,14 @@ import {
   type BridgeOp,
   type BridgeResult,
   type BridgeManifest,
-} from "@galerina/inference-bridge-contract";
+} from "@galerinaa/inference-bridge-contract";
 // The determinism oracle + governance/audit are the Tower's reference
 // implementation (still imported from the Tower — oracle extraction deferred).
 import {
   StubTernaryBridge,
   GovernanceEnforcer,
   AuditLogger,
-} from "@galerina/tower-citizen";
+} from "@galerinaa/tower-citizen";
 import { loadNativeAddon, type BitNetNativeAddon } from "./addon-loader.js";
 import { detectCpu, type CpuCapability } from "./hardware-detect.js";
 
@@ -59,7 +59,7 @@ export class BitNetCpuBridge implements InferenceBridge {
     this.reference = new StubTernaryBridge(logger, this.governance);
     this.manifest = {
       bridgeId: this.bridgeId,
-      packageName: "@galerina/ext-bridge-cpp",
+      packageName: "@galerinaa/ext-bridge-cpp",
       packageHash: "0".repeat(64), // filled by `galerina bridge-attest` at release time
       ...(load.addonHash !== undefined ? { nativeAddonHash: load.addonHash } : {}),
       sourceEngine: "microsoft/BitNet",

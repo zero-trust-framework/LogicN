@@ -1,5 +1,5 @@
 {
-  "packageName": "@galerina/ext-tmf",
+  "packageName": "@galerinaa/ext-tmf",
   "allowedExternal": [
     "@noble/ciphers",
     "@noble/post-quantum",

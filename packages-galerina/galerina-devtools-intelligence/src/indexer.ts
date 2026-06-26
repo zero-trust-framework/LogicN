@@ -11,7 +11,7 @@
 import { readdir, readFile, stat, writeFile, readFile as readFileAsync } from "node:fs/promises";
 import { join, resolve, relative } from "node:path";
 import { createHash, createHmac } from "node:crypto";
-import { parseProgram } from "@galerina/core-compiler";
+import { parseProgram } from "@galerinaa/core-compiler";
 import { extractFlows } from "./extractor.js";
 import type { IndexedFlow, WorkspaceIndex } from "./types.js";
 

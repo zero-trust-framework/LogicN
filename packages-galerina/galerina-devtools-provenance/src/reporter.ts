@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerina/devtools-provenance — Report Renderer
+// @galerinaa/devtools-provenance — Report Renderer
 //
 // Renders a ProvenanceGraph as a human-readable text report or JSON.
 // =============================================================================

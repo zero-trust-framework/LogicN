@@ -1,16 +1,16 @@
 // =============================================================================
 // galerina-core-logic — v0.1 stable exports
 //
-// Package: @galerina/core-logic
+// Package: @galerinaa/core-logic
 // Role:    Multi-state logic primitives: Tri (numeric), LogicDefinition,
 //          TruthTable, and Omni logic contracts.
 //
 // v0.2 types (TriState, Decision, BoolBoundary, OmniState) are exported from
 // sub-path imports:
-//   @galerina/core-logic/tri
-//   @galerina/core-logic/decision
-//   @galerina/core-logic/bool-boundary
-//   @galerina/core-logic/omni
+//   @galerinaa/core-logic/tri
+//   @galerinaa/core-logic/decision
+//   @galerinaa/core-logic/bool-boundary
+//   @galerinaa/core-logic/omni
 // =============================================================================
 
 export type Tri = -1 | 0 | 1;
@@ -29,12 +29,12 @@ export type TriBoolPolicy =
   | "unknown_as_true"
   | "unknown_as_error";
 
-/** Matches DiagnosticSeverity in @galerina/core — kept local until workspace links are in place. */
+/** Matches DiagnosticSeverity in @galerinaa/core — kept local until workspace links are in place. */
 export type LogicDiagnosticSeverity = "info" | "warning" | "error";
 
 /**
  * Diagnostic produced by logic validation functions.
- * Structurally compatible with BaseDiagnostic in @galerina/core.
+ * Structurally compatible with BaseDiagnostic in @galerinaa/core.
  * Additional field: path — dot-path into the validated structure.
  */
 export interface LogicDiagnostic {

@@ -9,7 +9,7 @@
 > borrow/move ownership tier is a **non-goal**; `USE_AFTER_MOVE` (SPORE-MEMORY-001) was honest-retired as RESERVED in #65 — consume-once already ships as `SPORE-AFFINE-001`.
 
 **Status:** Canonical v1 decision (memory-safety stance superseded — see banner)  
-**Scope:** `@galerina/core`, `@galerina/core-compiler` — binding rules, ownership, borrows, bounds checks, unsafe boundary  
+**Scope:** `@galerinaa/core`, `@galerinaa/core-compiler` — binding rules, ownership, borrows, bounds checks, unsafe boundary  
 **Source:** NOTES TO COVER / d, e (2026-05-26)  
 **Related KB:** `galerina-core-syntax-bindings-pipeline.md`, `galerina-core-standard-types-string-char-byte.md`
 
@@ -272,7 +272,7 @@ pinned            → post-v1 — required for DMA transfers
 [x] SPORE-SYNTAX-001 (var) / SPORE-SYNTAX-002 (const) enforced
 [x] SPORE-BINDING-001..004 — binding reassignment/mutation diagnostics
 [ ] move / borrow / copy — call-site keywords in parser
-[ ] SPORE-MEMORY-001..008 — diagnostic constants in @galerina/core-compiler
+[ ] SPORE-MEMORY-001..008 — diagnostic constants in @galerinaa/core-compiler
 [ ] borrow checker — symbol table + scope tracking in compiler passes
 [ ] bounds check enforcement — runtime check injection in code gen
 [ ] unsafe block FFI interface — native interface declaration in parser

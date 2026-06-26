@@ -16,7 +16,7 @@ export interface FfsimManifestInputs {
 export function buildFfsimManifest(i: FfsimManifestInputs): BridgeManifest {
   return {
     bridgeId: "ffsim-quantum-v1",
-    packageName: "@galerina/ext-bridge-quantum",
+    packageName: "@galerinaa/ext-bridge-quantum",
     packageHash: i.packageHash,
     sourceEngine: "qiskit-community/ffsim",
     layoutVersion: "ffsim-job-v1",

@@ -29,12 +29,12 @@ import { Verdict, vAnd } from "./three-valued-governance.js";
 import { dispatchDeadZone, type OnIndeterminate } from "./deadzone-dispatcher.js";
 // Pure NMR compute is the shared single source of truth (also used by the compiler's
 // substrate-inference). This module keeps the SubstrateParamError-throwing validation
-// wrappers below; the math itself lives in @galerina/substrate-math.
+// wrappers below; the math itself lives in @galerinaa/substrate-math.
 import {
   flipProbability as mathFlipProbability,
   singleLaneErrorProbability as mathSingleLaneErrorProbability,
   nmrFailureProbability as mathNmrFailureProbability,
-} from "@galerina/substrate-math";
+} from "@galerinaa/substrate-math";
 
 // ── Errors ────────────────────────────────────────────────────────────────────
 
@@ -62,7 +62,7 @@ export interface SubstrateParameters {
 }
 
 // Calibration gains (PHASE/XTALK/READOUT) and the per-lane error formula now live in
-// @galerina/substrate-math (the shared single source of truth). This module wraps that
+// @galerinaa/substrate-math (the shared single source of truth). This module wraps that
 // compute with SubstrateParamError-throwing validation.
 function clamp(x: number, lo: number, hi: number): number {
   return x < lo ? lo : x > hi ? hi : x;
@@ -91,7 +91,7 @@ function assertTritValue(t: number): asserts t is -1 | 0 | 1 {
 /**
  * Single-lane error probability pBad (validated wrapper). Validation throws
  * SubstrateParamError (including the seed check); the pure compute is delegated to
- * @galerina/substrate-math so the simulator and the compiler verifier share ONE implementation.
+ * @galerinaa/substrate-math so the simulator and the compiler verifier share ONE implementation.
  */
 export function singleLaneErrorProbability(p: SubstrateParameters): number {
   validateParams(p);
@@ -230,7 +230,7 @@ export function effectiveVerdict(ideal: Verdict, reading: -1 | 0 | 1): Verdict {
 /**
  * Conservative residual error of N-modular redundancy (validated wrapper). Validation
  * throws SubstrateParamError; the pure von Neumann NMR closed form is delegated to
- * @galerina/substrate-math (shared with the compiler — single source of truth).
+ * @galerinaa/substrate-math (shared with the compiler — single source of truth).
  */
 export function nmrFailureProbability(pBad: number, N: number): number {
   assertProb("pBad", pBad);

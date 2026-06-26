@@ -6,7 +6,7 @@
 //                        H3 attested-not-asserted · H4 preference monotonicity · H5 K3→DENY.
 //   D3 orthogonality (§5): O1 product ≤ Tdigital · O2 preference never forces offload ·
 //                          O3 fall-through · O4 whole-component convergence to -hybrid.
-// Composes the 0053 route() (@galerina/ext-photonic-emulator) for the AXIS-2 cost model.
+// Composes the 0053 route() (@galerinaa/ext-photonic-emulator) for the AXIS-2 cost model.
 //
 //   Run:  npm run prove   (or: node scripts/prove-hardware-tier.mjs)   — exit 0 iff all pass.
 
@@ -96,7 +96,7 @@ const realized = (k) => { const d = decider.decide(k); return d.target === "phot
 
 // summary
 let fails = 0;
-console.log("\n-- @galerina/hardware-tier — prove-own-maths (0054 D1 directive H1–H5 + D3 orthogonality O1–O4) --");
+console.log("\n-- @galerinaa/hardware-tier — prove-own-maths (0054 D1 directive H1–H5 + D3 orthogonality O1–O4) --");
 for (const r of results) { if (!r.ok) fails++; console.log(`${r.ok ? "PASS" : "FAIL"} ${r.name.padEnd(64)} ${r.detail}`); }
 console.log(fails === 0
   ? `\n${results.length}/${results.length} PASS — the hardware() directive is total + fail-closed + deployment-stable + attested-not-asserted + monotone (photonic≻hybrid≻binary), and the two axes compose orthogonally with NO slower-than-binary path. Worst case == binary == today.`

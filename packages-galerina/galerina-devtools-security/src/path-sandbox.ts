@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerina/devtools-security — Path Sandbox
+// @galerinaa/devtools-security — Path Sandbox
 //
 // Segment-safe filesystem path confinement checking.
 // Extracted from stdlib.ts Security Audit F3 fix so it can be:

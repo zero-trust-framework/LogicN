@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerina/devtools-context — Markdown Renderer
+// @galerinaa/devtools-context — Markdown Renderer
 //
 // Renders a FlowContextReceipt as a human-readable Markdown document.
 // Optimised for AI consumption: structured, terse, no body code.

@@ -100,7 +100,7 @@ import {
 // /tri — TriState v0.2
 // =============================================================================
 
-describe("@galerina/core-logic/tri — TriState v0.2", () => {
+describe("@galerinaa/core-logic/tri — TriState v0.2", () => {
   it("TRI_STATE_TRUE and TRI_STATE_FALSE are canonical singletons", () => {
     assert.equal(TRI_STATE_TRUE.kind, "true");
     assert.equal(TRI_STATE_TRUE.value, true);
@@ -265,7 +265,7 @@ describe("@galerina/core-logic/tri — TriState v0.2", () => {
 // /decision — Decision v0.2
 // =============================================================================
 
-describe("@galerina/core-logic/decision — Decision v0.2", () => {
+describe("@galerinaa/core-logic/decision — Decision v0.2", () => {
   it("canonical constructors produce correct discriminant shapes", () => {
     const a = allow("granted");
     const d = deny("forbidden");
@@ -447,7 +447,7 @@ describe("@galerina/core-logic/decision — Decision v0.2", () => {
 // /bool-boundary — BoolBoundary enforcement
 // =============================================================================
 
-describe("@galerina/core-logic/bool-boundary — BoolBoundary enforcement", () => {
+describe("@galerinaa/core-logic/bool-boundary — BoolBoundary enforcement", () => {
   const ctx = { boundaryName: "payment.authorize", actor: "checkout-service" };
 
   it("TriState true passes the boundary with value=true", () => {
@@ -537,7 +537,7 @@ describe("@galerina/core-logic/bool-boundary — BoolBoundary enforcement", () =
 // /omni — OmniState advisory reasoning
 // =============================================================================
 
-describe("@galerina/core-logic/omni — OmniState advisory reasoning", () => {
+describe("@galerinaa/core-logic/omni — OmniState advisory reasoning", () => {
   it("OMNI_STATES includes all 8 states; OMNI_UNCERTAIN_STATES includes 6", () => {
     assert.equal(OMNI_STATES.length, 8);
     assert.equal(OMNI_UNCERTAIN_STATES.size, 6);

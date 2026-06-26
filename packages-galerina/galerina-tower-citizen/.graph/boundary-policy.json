@@ -1,8 +1,8 @@
 {
-  "packageName": "@galerina/tower-citizen",
+  "packageName": "@galerinaa/tower-citizen",
   "allowedExternal": [
-    "@galerina/inference-bridge-contract",
-    "@galerina/substrate-math",
+    "@galerinaa/inference-bridge-contract",
+    "@galerinaa/substrate-math",
     "@noble/post-quantum/ml-dsa.js",
     "node:crypto",
     "node:fs",

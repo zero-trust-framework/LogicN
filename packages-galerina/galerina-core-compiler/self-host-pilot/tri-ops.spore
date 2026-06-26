@@ -3,7 +3,7 @@
 //
 // Pure scalar-trit logic over balanced ternary {-1, 0, 1}, re-implementing the
 // numeric `Tri` operations from
-//   packages-logicn/logicn-core-logic/src/index.ts
+//   packages-galerina/galerina-core-logic/src/index.ts
 // (triNot / triAnd / triOr / triNor).
 //
 // Encoding (identical to the .ts numeric Tri type):

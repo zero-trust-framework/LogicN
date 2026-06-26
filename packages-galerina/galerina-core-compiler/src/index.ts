@@ -1,7 +1,7 @@
 // =============================================================================
 // galerina-core-compiler — compiler pipeline contracts
 //
-// Package: @galerina/core-compiler
+// Package: @galerinaa/core-compiler
 // Role:    Parsing, checking, diagnostics, and IR contracts for the
 //          Galerina compiler pipeline.
 //
@@ -494,7 +494,7 @@ export {
   cyclomaticComplexity,
   renderComplexityComment,
 } from "./flow-complexity.js";
-export type { SemanticGraph } from "@galerina/devtools-graph-algorithms";
+export type { SemanticGraph } from "@galerinaa/devtools-graph-algorithms";
 
 // Phase 15 — Passive Execution Plans
 export {
@@ -1110,7 +1110,7 @@ export interface CoreSyntaxSafetyOptions {
 // ---------------------------------------------------------------------------
 
 /**
- * All recognised flow safety levels — mirrors SafetyLevel in @galerina/core.
+ * All recognised flow safety levels — mirrors SafetyLevel in @galerinaa/core.
  * Kept local until workspace links are in place.
  */
 export type CompilerSafetyLevel =
@@ -1907,7 +1907,7 @@ export type GovernedSurfaceKind =
 // Private internal types
 // ---------------------------------------------------------------------------
 
-// Mirrors ContentBlockType in @galerina/core — kept local until workspace links are in place.
+// Mirrors ContentBlockType in @galerinaa/core — kept local until workspace links are in place.
 type ContentBlockType = "html" | "dom" | "script" | "css";
 
 const VALID_CONTENT_BLOCK_TYPES: ReadonlySet<string> = new Set<ContentBlockType>([

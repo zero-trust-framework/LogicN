@@ -7,7 +7,7 @@
  * require that addon and reports whether it is present.
  *
  * When absent (the current state on a clean checkout), bridges fall back to the
- * byte-faithful TPLSimulator from @galerina/tower-citizen — correct results, just
+ * byte-faithful TPLSimulator from @galerinaa/tower-citizen — correct results, just
  * not native SIMD speed. nativeAvailable=false makes this explicit to callers.
  */
 

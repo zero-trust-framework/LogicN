@@ -80,11 +80,11 @@ const patternsDir = join(ROOT, "tests", "patterns");
 if (existsSync(patternsDir)) {
   const patternFiles = readdirSync(patternsDir).filter(f => f.endsWith(".spore"));
   // Use galerina.mjs (Stage A compiler) — not the legacy galerina-core-cli
-  const galerinMjs = join(ROOT, "galerina.mjs");
+  const galerinaMjs = join(ROOT, "galerina.mjs");
   let patternOk = true;
   const patternDetails = [];
   for (const f of patternFiles) {
-    const res = spawnSync("node", [galerinMjs, "check", join(patternsDir, f)],
+    const res = spawnSync("node", [galerinaMjs, "check", join(patternsDir, f)],
       { cwd: ROOT, encoding: "utf8", shell: isWin, timeout: 30000 });
     const passed = res.status === 0;
     if (!passed) { patternOk = false; patternDetails.push(`${f}: FAIL`); }

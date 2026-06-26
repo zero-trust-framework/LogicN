@@ -102,7 +102,7 @@ const rint = (n) => Math.floor(rnd() * n);
 
 // summary
 let fails = 0;
-console.log("\n-- @galerina/core-network egress guard — prove-own-maths (SSRF classifier + fail-closed guard) --");
+console.log("\n-- @galerinaa/core-network egress guard — prove-own-maths (SSRF classifier + fail-closed guard) --");
 for (const r of results) { if (!r.ok) fails++; console.log(`${r.ok ? "PASS" : "FAIL"} ${r.name.padEnd(70)} ${r.detail}`); }
 console.log(fails === 0
   ? `\n${results.length}/${results.length} PASS — every IANA special range (and its decimal/hex/octal/IPv4-mapped disguises) classifies non-public, public addresses are not over-blocked, and the guard is total + fail-closed (deny-by-default, 20k-input fuzz: 0 throws, 0 leaks).`

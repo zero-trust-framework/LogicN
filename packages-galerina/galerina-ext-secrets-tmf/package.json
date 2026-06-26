@@ -1,7 +1,7 @@
 {
-  "name": "@galerina/ext-secrets-tmf",
+  "name": "@galerinaa/ext-secrets-tmf",
   "version": "1.0.0-beta.2",
-  "description": "OPTIONAL sealed-secrets-on-.tmf layer for Galerina. env.tmf = an encrypted-at-rest replacement for plaintext .env, edited through a governed in-memory-only CLI (no temp file, no $EDITOR, no .swp). Thin orchestration over @galerina/ext-tmf (format/crypto) + the ext-secrets-vault store discipline. No new crypto, no new container bytes; crypto stays Binary (SPORE-SUBSTRATE-001). Unsigned-but-encrypted (flags.signed=0); signed root gated on ext-tmf slice 4/#7.",
+  "description": "OPTIONAL sealed-secrets-on-.tmf layer for Galerina. env.tmf = an encrypted-at-rest replacement for plaintext .env, edited through a governed in-memory-only CLI (no temp file, no $EDITOR, no .swp). Thin orchestration over @galerinaa/ext-tmf (format/crypto) + the ext-secrets-vault store discipline. No new crypto, no new container bytes; crypto stays Binary (SPORE-SUBSTRATE-001). Unsigned-but-encrypted (flags.signed=0); signed root gated on ext-tmf slice 4/#7.",
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
@@ -18,7 +18,7 @@
     "lint:secrets": "node scripts/lint-no-secret-egress.mjs"
   },
   "dependencies": {
-    "@galerina/ext-tmf": "file:../galerina-ext-tmf",
+    "@galerinaa/ext-tmf": "file:../galerina-ext-tmf",
     "@noble/hashes": "^2.2.0"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-// envtmf.test.mjs — node:test suite for @galerina/ext-secrets-tmf.
+// envtmf.test.mjs — node:test suite for @galerinaa/ext-secrets-tmf.
 //
 // Proves the security properties the design doc requires:
 //   - env.tmf seal/open round-trip

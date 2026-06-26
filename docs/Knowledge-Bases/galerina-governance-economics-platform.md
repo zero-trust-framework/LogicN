@@ -524,7 +524,7 @@ controls, its own PCI-DSS template, its own FCA trading rule set.
 Phase 38+ introduces the Governance Marketplace:
 
 ```galerina
-use governance_shape FCA_Trading_v2 from @galerina/certified-shapes
+use governance_shape FCA_Trading_v2 from @galerinaa/certified-shapes
 
 flow executeTrade(order: TradeOrder) -> Result<TradeConfirmation, TradeError>
 using FCA_Trading_v2
@@ -562,10 +562,10 @@ The commercial implications are significant:
 
 ```galerina
 // Future: governance shapes from the certified registry
-use governance_shape HIPAA_SafeHarbour_v3    from @galerina/certified-shapes
-use governance_shape PCI_DSS_v4              from @galerina/certified-shapes
-use governance_shape GDPR_Article30_v2       from @galerina/certified-shapes
-use governance_shape ISO27001_Annex_A_v2022  from @galerina/certified-shapes
+use governance_shape HIPAA_SafeHarbour_v3    from @galerinaa/certified-shapes
+use governance_shape PCI_DSS_v4              from @galerinaa/certified-shapes
+use governance_shape GDPR_Article30_v2       from @galerinaa/certified-shapes
+use governance_shape ISO27001_Annex_A_v2022  from @galerinaa/certified-shapes
 ```
 
 A governance shape is a composable, versioned, signed contract set. An

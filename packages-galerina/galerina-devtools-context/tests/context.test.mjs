@@ -1,5 +1,5 @@
 /**
- * @galerina/devtools-context — Integration Tests
+ * @galerinaa/devtools-context — Integration Tests
  *
  * Tests the Context Receipt generator against both inline fixtures and
  * real auth-service .spore examples.

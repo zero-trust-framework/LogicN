@@ -1,10 +1,10 @@
-# @galerina/ext-secrets-tmf
+# @galerinaa/ext-secrets-tmf
 
 OPTIONAL, SEPARATE (`private:true`, `ext` tier, not auto-loaded) sealed-secrets layer for Galerina.
 
 `env.tmf` is an **encrypted-at-rest replacement for a plaintext `.env`**, edited through a governed
-**in-memory-only** CLI. It is a THIN orchestration layer over the shipped `@galerina/ext-tmf`
-(format/crypto) and the `@galerina/ext-secrets-vault` store **discipline**. It adds **NO new crypto**
+**in-memory-only** CLI. It is a THIN orchestration layer over the shipped `@galerinaa/ext-tmf`
+(format/crypto) and the `@galerinaa/ext-secrets-vault` store **discipline**. It adds **NO new crypto**
 and **NO new container bytes**; crypto stays Binary (SPORE-SUBSTRATE-001).
 
 This is the SOPS / Bitnami-Sealed-Secrets / age pattern applied to the `.tmf` container, with one
@@ -81,7 +81,7 @@ The recipient secret key is supplied to the CLI as a **passphrase-wrapped** blob
 - One reserved **manifest** section (fixed-sentinel coord) holds the sealed `{ name → coord }`
   directory + per-secret metadata (`created`/`rotated`/`category`/`environment`/`kem_profile`).
 
-**Signed root is DEFERRED.** ML-DSA-65 over the TMX root is `@galerina/ext-tmf` slice 4 / #7
+**Signed root is DEFERRED.** ML-DSA-65 over the TMX root is `@galerinaa/ext-tmf` slice 4 / #7
 (unbuilt); `readTmf` rejects any signed file today. v0 `env.tmf` ships **unsigned-but-encrypted**
 and **never fakes a signature**. The bench (P7) confirms a signed-flag file is rejected.
 
@@ -156,6 +156,6 @@ npm run lint:secrets    # the no-egress CI gate
 node ../../tri-encription/bench/rd-0104-env-tmf-secrets-security.mjs   # the load-bearing security bench
 ```
 
-`@galerina/ext-tmf` is resolved during in-staging build via a `paths` alias (tsconfig) and a local
-`node_modules/@galerina/ext-tmf` junction to the shipped package. Once the hub absorbs this package
+`@galerinaa/ext-tmf` is resolved during in-staging build via a `paths` alias (tsconfig) and a local
+`node_modules/@galerinaa/ext-tmf` junction to the shipped package. Once the hub absorbs this package
 into `packages-galerina/`, the workspace resolves it natively.

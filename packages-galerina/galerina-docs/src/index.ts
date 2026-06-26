@@ -1,4 +1,4 @@
-// @galerina/docs — public surface.
+// @galerinaa/docs — public surface.
 //
 // An OpenAPI 3.x generator over the App Kernel's governed route table. The two
 // entry points (`generateOpenApi` and its spec-named alias `exportOpenApi`) take

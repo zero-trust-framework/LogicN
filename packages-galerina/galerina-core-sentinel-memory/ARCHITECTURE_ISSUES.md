@@ -1,6 +1,6 @@
 # LSM — Architecture Issues / Deferred Seams
 
-This package (`@galerina/core-sentinel-memory`) is intentionally pure TypeScript over
+This package (`@galerinaa/core-sentinel-memory`) is intentionally pure TypeScript over
 `ArrayBuffer` / `SharedArrayBuffer` so it stays WASM-linear-memory-compatible. Two
 items are deliberately out of scope for this build:
 

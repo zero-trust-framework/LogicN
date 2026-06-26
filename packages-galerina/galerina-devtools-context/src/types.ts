@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerina/devtools-context — Core Types
+// @galerinaa/devtools-context — Core Types
 //
 // FlowContextReceipt: the minimal AI-consumable structural summary of a flow.
 // ~2% of raw source tokens, 100% of architectural intent preserved.

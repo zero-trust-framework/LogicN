@@ -1,5 +1,5 @@
 {
-  "packageName": "@galerina/ext-secrets-vault",
+  "packageName": "@galerinaa/ext-secrets-vault",
   "allowedExternal": [
     "node:http",
     "node:https"

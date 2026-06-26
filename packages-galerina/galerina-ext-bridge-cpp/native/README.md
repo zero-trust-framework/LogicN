@@ -1,9 +1,9 @@
 # Native Addon Contract — bitnet_addon.node
 
-This directory documents the **C++ N-API seam** that turns `@galerina/ext-bridge-cpp`
+This directory documents the **C++ N-API seam** that turns `@galerinaa/ext-bridge-cpp`
 from a simulator-backed bridge into a native-SIMD bridge. Until the addon is
 compiled, the bridges run the byte-faithful `TPLSimulator` from
-`@galerina/tower-citizen` and report `nativeAvailable: false`.
+`@galerinaa/tower-citizen` and report `nativeAvailable: false`.
 
 ## Source
 

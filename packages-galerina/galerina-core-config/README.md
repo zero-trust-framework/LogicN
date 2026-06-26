@@ -104,7 +104,7 @@ must not be loaded into or printed by this package.
 ## Example
 
 ```ts
-import { loadConfigFromObjects } from "@galerina/core-config";
+import { loadConfigFromObjects } from "@galerinaa/core-config";
 
 const result = loadConfigFromObjects({
   project: {

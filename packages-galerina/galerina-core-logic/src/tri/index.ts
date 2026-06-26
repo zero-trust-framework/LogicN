@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerina/core-logic/tri — TriState v0.2 sub-path export
+// @galerinaa/core-logic/tri — TriState v0.2 sub-path export
 // =============================================================================
 
 export type { TriState } from "./tri-state.js";

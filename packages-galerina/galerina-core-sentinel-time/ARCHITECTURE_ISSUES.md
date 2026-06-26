@@ -1,6 +1,6 @@
 # LST — Architecture Issues / Deferred Seams
 
-This package (`@galerina/core-sentinel-time`) is pure TypeScript with no node /
+This package (`@galerinaa/core-sentinel-time`) is pure TypeScript with no node /
 third-party dependencies. It provides the Tower's deterministic **Logical
 Clock** — a monotonic integer counter that replaces wall-clock time so audit
 trails and governance are replayable regardless of OS jitter. Two items are

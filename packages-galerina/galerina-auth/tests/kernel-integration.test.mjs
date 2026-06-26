@@ -18,7 +18,7 @@ try {
 } catch {
   createAppKernel = undefined;
 }
-const skip = createAppKernel ? false : "@galerina/framework-app-kernel dist not built";
+const skip = createAppKernel ? false : "@galerinaa/framework-app-kernel dist not built";
 
 const NOW = 1_000_000;
 function goodCert(over = {}) {

@@ -133,20 +133,20 @@ authority that import requires — not only at call sites, and not only after a 
 Without import-time warnings:
 
 ```galerina
-import { charge } from "@galerina/payments"
+import { charge } from "@galerinaa/payments"
 // No warning. The developer doesn't know this requires payment.charge.
 ```
 
 ### Import-Time Warning
 
 ```galerina
-import { charge } from "@galerina/payments/charge"
+import { charge } from "@galerinaa/payments/charge"
 ```
 
 ```text
 Warning: SPORE-CAPABILITY-IMPORT-001
 
-Importing @galerina/payments/charge introduces:
+Importing @galerinaa/payments/charge introduces:
   effects:      network.external, secret.read
   capabilities: payment.charge, payment.refund, webhook.verify
   resources:    outbound HTTPS to api.stripe.com
@@ -159,7 +159,7 @@ Your calling flow must declare or inherit these capabilities.
 The compiler builds a graph of all capabilities transitively required across packages:
 
 ```text
-@galerina/payments/charge
+@galerinaa/payments/charge
   → requires payment.charge
   → requires secret.read
   → requires network.external (api.stripe.com)
@@ -174,7 +174,7 @@ Package exports carry split authority declarations:
 
 ```json
 {
-  "name": "@galerina/payments",
+  "name": "@galerinaa/payments",
   "exports": {
     "./types": {
       "effects": [],
@@ -199,11 +199,11 @@ Importing `./types` carries no authority. Importing `./charge` does.
 On `galerina install`, the complete authority summary is shown before acceptance:
 
 ```bash
-galerina install @galerina/payments
+galerina install @galerinaa/payments
 ```
 
 ```text
-Package: @galerina/payments@1.4.0
+Package: @galerinaa/payments@1.4.0
 
 Effects:       network.external, secret.read
 Capabilities:  payment.charge, payment.refund, webhook.verify

@@ -1,5 +1,5 @@
 {
-  "packageName": "@galerina/ext-proof-snarkjs",
+  "packageName": "@galerinaa/ext-proof-snarkjs",
   "allowedExternal": [
     "node:crypto"
   ],

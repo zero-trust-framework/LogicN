@@ -1,7 +1,7 @@
 {
-  "packageName": "@galerina/devtools-pci",
+  "packageName": "@galerinaa/devtools-pci",
   "allowedExternal": [
-    "@galerina/core-compiler",
+    "@galerinaa/core-compiler",
     "node:crypto",
     "node:fs",
     "node:path"

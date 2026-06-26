@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { readFileSync } from "node:fs";
-import { parseProgram } from "@galerina/core-compiler";
+import { parseProgram } from "@galerinaa/core-compiler";
 import { buildFlowGraph, flowGraphToJson, flowGraphToMermaid } from "./flow-graph.js";
 import { checkFlowGraph } from "./diagnostics.js";
 

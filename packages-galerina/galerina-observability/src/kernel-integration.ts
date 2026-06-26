@@ -1,7 +1,7 @@
 // =============================================================================
 // App Kernel integration — surface observability THROUGH the kernel, ADDITIVELY.
 //
-// This file changes NOTHING in @galerina/framework-app-kernel. It only consumes the
+// This file changes NOTHING in @galerinaa/framework-app-kernel. It only consumes the
 // kernel's already-exported, stable seams:
 //   • RouteDeclaration[] + HandlerDispatch  → actuator endpoints (health probes + /metrics)
 //   • AuditSink                              → counts/error-rates off the kernel's audit pipe
@@ -10,7 +10,7 @@
 // passes INTO `createAppKernel({ routes, dispatch, auditSink })`.
 //
 // Type-only imports resolve against the kernel's built `dist/` .d.ts — the same
-// relative-dist convention kernel.ts itself uses for @galerina/core-config (#155 will
+// relative-dist convention kernel.ts itself uses for @galerinaa/core-config (#155 will
 // swap these for bare specifiers once workspaces land). No runtime dependency edge.
 //
 // FAIL-CLOSED: instrumentation never breaks a handler — a metrics fault is swallowed

@@ -14,7 +14,7 @@ test("assertDeterminism throws on a non-deterministic ternary result", () => {
 });
 
 test("validateManifestShape enforces hashes + certified determinism", () => {
-  const base = { bridgeId: "bitnet-cpu", packageName: "@galerina/ext-bridge-cpp", packageHash: H, sourceEngine: "microsoft/BitNet", precision: "ternary", layoutVersion: "i2s-v1", hardwareIdentity: "x86_64-avx2", determinismMode: "exact", certificationProfile: "certified" };
+  const base = { bridgeId: "bitnet-cpu", packageName: "@galerinaa/ext-bridge-cpp", packageHash: H, sourceEngine: "microsoft/BitNet", precision: "ternary", layoutVersion: "i2s-v1", hardwareIdentity: "x86_64-avx2", determinismMode: "exact", certificationProfile: "certified" };
   assert.equal(validateManifestShape(base).ok, true);
   assert.equal(validateManifestShape({ ...base, packageHash: "nothex" }).ok, false);
   assert.equal(validateManifestShape({ ...base, determinismMode: "unverified" }).ok, false, "certified cannot be unverified");
@@ -35,7 +35,7 @@ test("oracleAgrees compares the scaled integer accumulator bit-exactly", () => {
 
 test("validateManifestShape: determinismMode=tolerance is admissible ONLY when fully pinned (fail-closed, ffsim §13.1)", () => {
   const tol = {
-    bridgeId: "ffsim-quantum-v1", packageName: "@galerina/ext-bridge-quantum", packageHash: H,
+    bridgeId: "ffsim-quantum-v1", packageName: "@galerinaa/ext-bridge-quantum", packageHash: H,
     sourceEngine: "qiskit-community/ffsim", layoutVersion: "ffsim-job-v1", hardwareIdentity: "py-ffsim-oop",
     determinismMode: "tolerance", certificationProfile: "certified",
     domain: "quantum", tolerance: 1e-8, pinnedEnvHash: H, backendArtifactHash: H,  // precision OMITTED (N/A for quantum)
@@ -52,7 +52,7 @@ test("validateManifestShape: determinismMode=tolerance is admissible ONLY when f
 
 test("canonicalManifestString: extension fields leave existing inference-manifest hashes byte-identical", () => {
   const inf = {
-    bridgeId: "bitnet-cpu", packageName: "@galerina/ext-bridge-cpp", packageHash: H, nativeAddonHash: H,
+    bridgeId: "bitnet-cpu", packageName: "@galerinaa/ext-bridge-cpp", packageHash: H, nativeAddonHash: H,
     sourceEngine: "microsoft/BitNet", precision: "ternary", layoutVersion: "i2s-v1",
     hardwareIdentity: "x86_64-avx2", determinismMode: "exact", certificationProfile: "certified",
   };
@@ -81,7 +81,7 @@ test("#201 fidelity floor is fail-closed: minFidelity requires a measured value 
 
 test("#201 witness invariant: a tolerance backend may not CLAIM a tighter band than it MEASURED", () => {
   const tol = {
-    bridgeId: "ffsim", packageName: "@galerina/ext-bridge-quantum", packageHash: H, sourceEngine: "ffsim",
+    bridgeId: "ffsim", packageName: "@galerinaa/ext-bridge-quantum", packageHash: H, sourceEngine: "ffsim",
     layoutVersion: "v1", hardwareIdentity: "oop", determinismMode: "tolerance", certificationProfile: "certified",
     domain: "quantum", tolerance: 1e-6, pinnedEnvHash: H, backendArtifactHash: H,
   };
@@ -97,7 +97,7 @@ test("#201 witness invariant: a tolerance backend may not CLAIM a tighter band t
 });
 
 test("#201 measured fields are opt-in + hash-preserving (non-opted manifests keep their pinned pre-image)", () => {
-  const inf = { bridgeId: "bitnet-cpu", packageName: "@galerina/ext-bridge-cpp", packageHash: H, nativeAddonHash: H, sourceEngine: "microsoft/BitNet", precision: "ternary", layoutVersion: "i2s-v1", hardwareIdentity: "x86_64-avx2", determinismMode: "exact", certificationProfile: "certified" };
+  const inf = { bridgeId: "bitnet-cpu", packageName: "@galerinaa/ext-bridge-cpp", packageHash: H, nativeAddonHash: H, sourceEngine: "microsoft/BitNet", precision: "ternary", layoutVersion: "i2s-v1", hardwareIdentity: "x86_64-avx2", determinismMode: "exact", certificationProfile: "certified" };
   const expected = JSON.stringify([inf.bridgeId, inf.packageName, inf.packageHash, inf.nativeAddonHash, inf.sourceEngine, inf.precision, inf.layoutVersion, inf.hardwareIdentity, inf.determinismMode, inf.certificationProfile]);
   assert.equal(canonicalManifestString(inf), expected, "no measured fields -> pre-image unchanged");
   // an ffsim-style tolerance manifest (old ext, no measured) is unchanged; opting into a
@@ -110,7 +110,7 @@ test("#201 measured fields are opt-in + hash-preserving (non-opted manifests kee
 });
 
 test("#201 quantizationMethod: a bridge can honestly declare its storage method; opt-in + hash-preserving + monotonic tiers", () => {
-  const inf = { bridgeId: "bitnet-cpu", packageName: "@galerina/ext-bridge-cpp", packageHash: H, nativeAddonHash: H, sourceEngine: "microsoft/BitNet", precision: "ternary", layoutVersion: "i2s-v1", hardwareIdentity: "x86_64-avx2", determinismMode: "exact", certificationProfile: "certified" };
+  const inf = { bridgeId: "bitnet-cpu", packageName: "@galerinaa/ext-bridge-cpp", packageHash: H, nativeAddonHash: H, sourceEngine: "microsoft/BitNet", precision: "ternary", layoutVersion: "i2s-v1", hardwareIdentity: "x86_64-avx2", determinismMode: "exact", certificationProfile: "certified" };
   const expected = JSON.stringify([inf.bridgeId, inf.packageName, inf.packageHash, inf.nativeAddonHash, inf.sourceEngine, inf.precision, inf.layoutVersion, inf.hardwareIdentity, inf.determinismMode, inf.certificationProfile]);
   assert.equal(canonicalManifestString(inf), expected, "no method -> base pre-image unchanged");
   const gptq = canonicalManifestString({ ...inf, quantizationMethod: "gptq" });

@@ -55,7 +55,7 @@ This created duplicated algorithm code, no shared diagnostic format, and no comm
 ## Installation
 
 ```sh
-npm install @galerina/devtools-project-graph
+npm install @galerinaa/devtools-project-graph
 ```
 
 Or, if you are working inside the Galerina monorepo before the package is published:
@@ -63,7 +63,7 @@ Or, if you are working inside the Galerina monorepo before the package is publis
 ```json
 // package.json
 "dependencies": {
-  "@galerina/devtools-project-graph": "github:galerina/lln-graph"
+  "@galerinaa/devtools-project-graph": "github:galerina/lln-graph"
 }
 ```
 
@@ -74,7 +74,7 @@ Or, if you are working inside the Galerina monorepo before the package is publis
 ### Effect graph — validate effect declarations
 
 ```ts
-import { buildEffectGraph, propagateEffects, validateEffects } from "@galerina/devtools-project-graph";
+import { buildEffectGraph, propagateEffects, validateEffects } from "@galerinaa/devtools-project-graph";
 
 const graph = buildEffectGraph([
   { flowName: "dbQuery",  safetyLevel: "guarded", declaredEffects: ["database.read"], inferredEffects: ["database.read"], calls: [] },
@@ -89,7 +89,7 @@ const diagnostics = validateEffects(propagated);
 ### Dependency graph — resolve execution order
 
 ```ts
-import { buildDependencyGraph, resolveDependencies } from "@galerina/devtools-project-graph";
+import { buildDependencyGraph, resolveDependencies } from "@galerinaa/devtools-project-graph";
 
 const { graph } = buildDependencyGraph([
   { name: "install" },
@@ -105,7 +105,7 @@ const result = resolveDependencies(graph);
 ### Proof chain — hash five build artefacts
 
 ```ts
-import { buildProofChain, upgradeExecutionProofV1ToV2 } from "@galerina/devtools-project-graph";
+import { buildProofChain, upgradeExecutionProofV1ToV2 } from "@galerinaa/devtools-project-graph";
 
 const v1 = await buildProofChain({
   manifestPath:  "build/reports/runtime-manifest.json",
@@ -122,7 +122,7 @@ const v2 = upgradeExecutionProofV1ToV2(v1);
 ### JSONL audit writer
 
 ```ts
-import { createJsonlWriter } from "@galerina/devtools-project-graph";
+import { createJsonlWriter } from "@galerinaa/devtools-project-graph";
 
 const writer = createJsonlWriter("build/reports/runtime-audit.jsonl");
 await writer.append({
@@ -142,7 +142,7 @@ await writer.close();
 If you have an existing `{ nodes[], edges[] }` structure (e.g. from a JSON file or an older API) and want to use lln-graph's algorithms on it, build a transient graph and discard it:
 
 ```ts
-import { GraphBuilder, bfsPath } from "@galerina/devtools-project-graph";
+import { GraphBuilder, bfsPath } from "@galerinaa/devtools-project-graph";
 
 function findPathInLegacyGraph(legacy, fromId, toId) {
   const builder = new GraphBuilder();

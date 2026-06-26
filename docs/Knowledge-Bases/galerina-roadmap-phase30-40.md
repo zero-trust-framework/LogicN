@@ -97,18 +97,18 @@ Import resolution works end-to-end so CEC examples using domain types compile.
   files. `galerina package sign` signs manifests with Ed25519. SPORE-PKG-001..005
   are enforced in all CI runs. A lockfile format (`galerina.lock`) is defined.
 
-- **31B — @galerina/auth published.**
-  `packages/@galerina/auth/package.galerina.yaml` gains: hash, Ed25519 signature,
+- **31B — @galerinaa/auth published.**
+  `packages/@galerinaa/auth/package.galerina.yaml` gains: hash, Ed25519 signature,
   capability list (`secret.read`, `crypto.verify`, `audit.write`), and a type
   export for `SessionToken`, `AuthResult`. Import resolution wired in 11E (see 31D).
 
-- **31C — @galerina/healthcare and @galerina/ai published.**
-  `@galerina/healthcare`: PHI-governed types (`PatientId`, `PHI`, `ClinicalNote`),
+- **31C — @galerinaa/healthcare and @galerinaa/ai published.**
+  `@galerinaa/healthcare`: PHI-governed types (`PatientId`, `PHI`, `ClinicalNote`),
   HIPAA capability requirements (`phi.read`, `audit.write`, `database.read`).
-  `@galerina/ai`: Tensor inference types (`EmbeddingVector`, `ClassificationResult`),
+  `@galerinaa/ai`: Tensor inference types (`EmbeddingVector`, `ClassificationResult`),
   NPU capability requirements (`ai.inference`, `audit.write`).
 
-- **31D — `import Email from "@galerina/healthcare-types"` resolves correctly.**
+- **31D — `import Email from "@galerinaa/healthcare-types"` resolves correctly.**
   Phase 11E (import resolver) is completed. `resolveImports()` in `import-resolver.ts`
   resolves cross-module types against `KNOWN_PACKAGE_TYPES` and installed manifests.
   Domain types `Email`, `PatientId`, `CurrencyCode` resolve in CEC Level 8/9 examples.
@@ -120,12 +120,12 @@ Import resolution works end-to-end so CEC examples using domain types compile.
 
 ### Key milestone
 
-`import Email from "@galerina/healthcare-types"` compiles in `getPatient.spore` with 0
+`import Email from "@galerinaa/healthcare-types"` compiles in `getPatient.spore` with 0
 errors. Package lockfile generated and committed for the three core packages.
 
 ### Primary example proving it
 
-`examples/healthcare/getPatient.spore` with the `@galerina/healthcare` import fully
+`examples/healthcare/getPatient.spore` with the `@galerinaa/healthcare` import fully
 resolved. `verifyGovernance("production")` produces zero governance violations.
 PHI protection contract verified by the runtime manifest.
 
@@ -257,8 +257,8 @@ Rate limiting from Phase 11C is fully wired.
   - Combined rate limit = min of both
   - Combined memory arena = min of both
   - Deny-wins: if either policy denies a capability call, it is denied
-  A service can load a base policy (from `@galerina/auth`) and a domain policy
-  (from `@galerina/healthcare`) and have them compose without manual merging.
+  A service can load a base policy (from `@galerinaa/auth`) and a domain policy
+  (from `@galerinaa/healthcare`) and have them compose without manual merging.
 
 - **34B — Multi-tenant capability isolation.**
   `capabilityHost.ts` gains a tenant ID parameter. Each tenant gets its own
@@ -310,7 +310,7 @@ Third-party auditors can verify the chain without the source code.
 ### What it delivers
 
 - **35A — HIPAA governance template.**
-  `packages/@galerina/healthcare/hipaa-template.spore` — a contract set that any
+  `packages/@galerinaa/healthcare/hipaa-template.spore` — a contract set that any
   Galerina service can `use HipaaBaseContract`:
   - Requires `audit.write` with retention duration declared
   - Requires `phi.read` effect for any PHI field access
@@ -320,7 +320,7 @@ Third-party auditors can verify the chain without the source code.
   The template is enforced at compile time by `verifyGovernance("production")`.
 
 - **35B — PCI-DSS flow patterns.**
-  `packages/@galerina/finance/pci-dss-template.spore` — a contract set for payment
+  `packages/@galerinaa/finance/pci-dss-template.spore` — a contract set for payment
   flows:
   - `CardNumber` is always `protected` and never logged
   - `CVV` is `redacted` after initial validation — irreversibly
@@ -489,7 +489,7 @@ link across service boundaries. Federated policy evaluation is operational.
 ### What it delivers
 
 - **38A — Multi-service governance.**
-  A Galerina service can declare `trusts "@galerina/auth" version "^1.0"` in its
+  A Galerina service can declare `trusts "@galerinaa/auth" version "^1.0"` in its
   `package.galerina.yaml`. The governance verifier checks that the trusted service's
   runtime manifest is signed and its capabilities are a subset of what is granted.
   SPORE-GOV-FEDERATED-001: cross-service trust without a signed manifest.
@@ -633,9 +633,9 @@ Performance is within 10× of Node.js for pure governed flows.
   The Galerina registry publishes certified packages with Ed25519 or ML-DSA
   signatures, content hashes, and capability declarations reviewed by the
   Galerina governance committee. Certified packages:
-  `@galerina/auth`, `@galerina/healthcare`, `@galerina/ai`, `@galerina/finance`,
-  `@galerina/observability`, `@galerina/vault`, `@galerina/messaging`,
-  `@galerina/identity`, `@galerina/audit`, `@galerina/compliance` (10 packages).
+  `@galerinaa/auth`, `@galerinaa/healthcare`, `@galerinaa/ai`, `@galerinaa/finance`,
+  `@galerinaa/observability`, `@galerinaa/vault`, `@galerinaa/messaging`,
+  `@galerinaa/identity`, `@galerinaa/audit`, `@galerinaa/compliance` (10 packages).
   All packages enforce SPORE-PKG-001..005 in CI.
 
 - **40D — Production deployment at 3 real organisations.**

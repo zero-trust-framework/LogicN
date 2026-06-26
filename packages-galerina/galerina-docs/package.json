@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/docs",
+  "name": "@galerinaa/docs",
   "version": "1.0.0-beta.2",
   "description": "Galerina API documentation generator: emits a valid OpenAPI 3.x document from the App Kernel's governed route table (EffectiveRoutePolicy / RouteDeclaration) and contract metadata. The generated spec documents exactly the gates the kernel enforces — auth, body limits, idempotency, rate limits, and the error contract — and fails closed rather than emit an invalid or misleading governance contract.",
   "license": "Apache-2.0",
@@ -16,7 +16,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@galerina/framework-app-kernel": "file:../galerina-framework-app-kernel"
+    "@galerinaa/framework-app-kernel": "file:../galerina-framework-app-kernel"
   },
   "devDependencies": {
     "typescript": "^5.5.0"

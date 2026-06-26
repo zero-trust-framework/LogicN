@@ -2,7 +2,7 @@
 
 > A grounded reference for how Galerina stays correct and stays up. Every mechanism below is in the
 > shipped code and exercised by the suite (53/53 packages · 4,984 tests). The maths is the actual
-> closed form used at runtime (`@galerina/substrate-math`, `freivalds.ts`, `three-valued-governance.ts`),
+> closed form used at runtime (`@galerinaa/substrate-math`, `freivalds.ts`, `three-valued-governance.ts`),
 > not an illustration. Distilled from the 2026-06-21 Tri-Pipe fault-tolerance re-R&D (`wpa9c3wqk`:
 > 4 pipes mapped, 24 hardenings adversarially verified).
 
@@ -179,7 +179,7 @@ closing the one live, code-confirmed break of "fail-safe-to-Binary / no system c
 Emulator-only today (every result honestly reports `executedNatively=false`); perf is **projected**,
 not measured. The governance, however, is exact.
 
-### 6.1 The noise model (`@galerina/substrate-math`)
+### 6.1 The noise model (`@galerinaa/substrate-math`)
 
 ```
 pFlip  = 0.5·phaseDriftSigma + 0.5·crosstalkCoeff + 0.5·readoutSigma          // survive-but-flip

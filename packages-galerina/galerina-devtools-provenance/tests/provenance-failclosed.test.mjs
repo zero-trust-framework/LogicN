@@ -1,5 +1,5 @@
 /**
- * @galerina/devtools-provenance — 0098-prov-parsefail fail-closed regression tests.
+ * @galerinaa/devtools-provenance — 0098-prov-parsefail fail-closed regression tests.
  *
  * Proves:
  *  (Fix A) a source-level ungated sink is flagged even when the value-state

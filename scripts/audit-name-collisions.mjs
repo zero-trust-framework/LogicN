@@ -2,7 +2,7 @@
 // audit-name-collisions.mjs — stop confusingly-similar names from recurring (RD-0124).
 //
 // Born from the graph-project / project-graph tangle: two packages whose names are reordered-token
-// near-anagrams (`@galerina/devtools-graph-project` vs `@galerina/devtools-project-graph`) — identical
+// near-anagrams (`@galerinaa/devtools-graph-project` vs `@galerinaa/devtools-project-graph`) — identical
 // token-multiset {devtools, graph, project}, trivially confused, and one had silently become a stray
 // nested clone. This lint makes that class of name collision a hard, machine-checked error.
 //

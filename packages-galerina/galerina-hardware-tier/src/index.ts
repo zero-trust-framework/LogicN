@@ -1,4 +1,4 @@
-// @galerina/hardware-tier — the Tri-Pipe hardware() directive + per-tier package loader.
+// @galerinaa/hardware-tier — the Tri-Pipe hardware() directive + per-tier package loader.
 //
 // Realizes the owner's Tri-Pipe topology (0054): a cached, ATTESTED capability directive
 // `hardware() ∈ {binary|hybrid|photonic}` (AXIS-1, picks the package) composed over the EXISTING
@@ -6,9 +6,9 @@
 // binary always the floor). Fail-closed everywhere; preference NEVER forces compute onto photonics
 // (the 0053 per-kernel router still gates actual offload — AXIS-2). Worst case == binary == today.
 //
-// Neutral: depends only on @galerina/inference-bridge-contract (types). The attestation result is
+// Neutral: depends only on @galerinaa/inference-bridge-contract (types). The attestation result is
 // injected (verifyAttestation lives in the Tower, on the BRIDGE surface). Composes the photonic
-// substrate from @galerina/ext-photonic-emulator.
+// substrate from @galerinaa/ext-photonic-emulator.
 
 export {
   type GovernanceClass, type TierProfile,

@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/tools-benchmark",
+  "name": "@galerinaa/tools-benchmark",
   "version": "1.0.0-beta.2",
   "description": "Galerina benchmark and diagnostics contracts for logic, compute targets, fallback behaviour and safe reporting.",
   "license": "Apache-2.0",

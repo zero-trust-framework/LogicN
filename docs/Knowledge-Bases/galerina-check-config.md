@@ -81,11 +81,11 @@ Minimum severity to report:
 - `"error"` — suppress warnings and info (CI mode)
 
 ### `security`
-When `true`, runs `@galerina/devtools-security` checks (runSecurityAudit) on each file.
+When `true`, runs `@galerinaa/devtools-security` checks (runSecurityAudit) on each file.
 Adds ~2s per file. Recommended for CI pipelines, off by default for local speed.
 
 ### `flowgraph`
-When `true`, runs `@galerina/devtools-flowgraph` checks (SPORE-GRAPH-001..006) on each file.
+When `true`, runs `@galerinaa/devtools-flowgraph` checks (SPORE-GRAPH-001..006) on each file.
 Detects cycles, dead flows, authority escalation, PII leakage, missing audit coverage.
 
 ## Rules at a Glance

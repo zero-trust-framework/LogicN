@@ -114,7 +114,7 @@ Resolution:
 
 ```json
 {
-  "name": "@galerina/payments",
+  "name": "@galerinaa/payments",
   "version": "1.4.0",
   "galerinaPackageVersion": "1",
   "exports": {
@@ -137,13 +137,13 @@ Resolution:
 ### Install-Time Authority Review
 
 ```bash
-galerina install @galerina/payments
+galerina install @galerinaa/payments
 ```
 
 Output:
 
 ```text
-Package:     @galerina/payments@1.4.0
+Package:     @galerinaa/payments@1.4.0
 
 Requested effects:
   network.external
@@ -172,7 +172,7 @@ If an update changes authority:
 ```text
 SPORE-SUPPLY-002: dependency permission set changed
 
-Package:    @galerina/payments@1.4.3
+Package:    @galerinaa/payments@1.4.3
 New effect: file.write
 
 Resolution:
@@ -257,12 +257,12 @@ galerina.lock.json
 ## CLI Commands
 
 ```bash
-galerina package install @galerina/payments
+galerina package install @galerinaa/payments
 galerina package verify
-galerina package review @galerina/payments@1.4.2
-galerina package update @galerina/payments --review
-galerina package explain @galerina/payments
-galerina package diff @galerina/payments@1.4.0 @galerina/payments@1.5.0
+galerina package review @galerinaa/payments@1.4.2
+galerina package update @galerinaa/payments --review
+galerina package explain @galerinaa/payments
+galerina package diff @galerinaa/payments@1.4.0 @galerinaa/payments@1.5.0
 galerina package audit
 galerina build --locked
 ```

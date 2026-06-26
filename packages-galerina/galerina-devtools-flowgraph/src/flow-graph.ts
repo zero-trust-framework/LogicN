@@ -1,5 +1,5 @@
-// @galerina/devtools-flowgraph — Flow graph construction
-import type { AstNode, FlowMeta } from "@galerina/core-compiler";
+// @galerinaa/devtools-flowgraph — Flow graph construction
+import type { AstNode, FlowMeta } from "@galerinaa/core-compiler";
 
 export interface FlowNode {
   readonly name: string;

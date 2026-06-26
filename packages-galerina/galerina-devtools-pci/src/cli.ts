@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // =============================================================================
-// @galerina/devtools-pci — CLI
+// @galerinaa/devtools-pci — CLI
 //
 // galerina-pci audit <file.spore> [--json]
 // galerina-pci audit <directory> [--json]

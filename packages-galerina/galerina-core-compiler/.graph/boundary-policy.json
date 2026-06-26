@@ -1,9 +1,9 @@
 {
-  "packageName": "@galerina/core-compiler",
+  "packageName": "@galerinaa/core-compiler",
   "allowedExternal": [
-    "@galerina/core-network",
-    "@galerina/devtools-graph-algorithms",
-    "@galerina/substrate-math",
+    "@galerinaa/core-network",
+    "@galerinaa/devtools-graph-algorithms",
+    "@galerinaa/substrate-math",
     "@noble/post-quantum/ml-dsa.js",
     "argon2",
     "bcryptjs",

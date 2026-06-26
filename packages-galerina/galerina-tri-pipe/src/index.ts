@@ -1,7 +1,7 @@
-// @galerina/tri-pipe — the Tri-Pipe capstone: hardware() → tier → one governed engine.
+// @galerinaa/tri-pipe — the Tri-Pipe capstone: hardware() → tier → one governed engine.
 //
-// Composes @galerina/hardware-tier (the capability directive) + @galerina/ext-photonic-emulator (the
-// photonic backend + net-win router) + @galerina/tower-citizen (the governed engine) into a single
+// Composes @galerinaa/hardware-tier (the capability directive) + @galerinaa/ext-photonic-emulator (the
+// photonic backend + net-win router) + @galerinaa/tower-citizen (the governed engine) into a single
 // `createTriPipeEngine()` call. Digital stays the default; photonic only on a proven-win eligible
 // kernel; fail-closed to binary. Worst case == binary == today.
 

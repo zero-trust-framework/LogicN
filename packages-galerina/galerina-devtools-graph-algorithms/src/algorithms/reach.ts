@@ -1,11 +1,11 @@
 import { bfsReachable } from "./bfs.js";
 import type { Graph, NodeId } from "../core/types.js";
 
-// NOTE: a near-identical reachability module lives in `@galerina/devtools-project-graph`,
+// NOTE: a near-identical reachability module lives in `@galerinaa/devtools-project-graph`,
 // which is a SEPARATE, externally-maintained vendored repo (its own git remote/history).
 // Do NOT "consolidate" these two — coupling a compiler-used package to vendored code via a
 // brittle relative path is the wrong trade (see the #200 nested-repo absorb/submodule
-// decision). This package (`@galerina/devtools-graph-algorithms`) is the canonical copy for
+// decision). This package (`@galerinaa/devtools-graph-algorithms`) is the canonical copy for
 // the parent repo; keep its behaviour in lockstep with the documented contract below.
 
 /**

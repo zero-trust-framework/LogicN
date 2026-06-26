@@ -1,14 +1,14 @@
-# @galerina/tri-pipe
+# @galerinaa/tri-pipe
 
 The **Tri-Pipe capstone** — one governed engine, selected by hardware capability. `createTriPipeEngine()`
 composes the three pieces of Galerina's photonic line into a single deployment call:
 
-- **`@galerina/hardware-tier`** — the cached, **attested** `hardware()` capability directive (AXIS-1)
-- **`@galerina/ext-photonic-emulator`** — the physics-faithful photonic backend + the 0053 net-win router (AXIS-2)
-- **`@galerina/tower-citizen`** — the governed `HybridInferenceEngine` (the digital default)
+- **`@galerinaa/hardware-tier`** — the cached, **attested** `hardware()` capability directive (AXIS-1)
+- **`@galerinaa/ext-photonic-emulator`** — the physics-faithful photonic backend + the 0053 net-win router (AXIS-2)
+- **`@galerinaa/tower-citizen`** — the governed `HybridInferenceEngine` (the digital default)
 
 ```ts
-import { createTriPipeEngine } from "@galerina/tri-pipe";
+import { createTriPipeEngine } from "@galerinaa/tri-pipe";
 
 const { tier, photonicEnabled, engine } = createTriPipeEngine({
   targetId: "photonic",            // the attested hardware target
@@ -51,7 +51,7 @@ Galerina's execution routing lived in three separate routers a caller had to con
 into one `ExecutionDecision`:
 
 ```ts
-import { createExecutionRouter } from "@galerina/tri-pipe";
+import { createExecutionRouter } from "@galerinaa/tri-pipe";
 const router = createExecutionRouter();
 const decision = router.route({
   opClass: "feedforward",
@@ -64,9 +64,9 @@ const decision = router.route({
 
 | Axis | Source router | Decides |
 |---|---|---|
-| AXIS-1 capability tier | `hardware()` (`@galerina/hardware-tier`) | binary / hybrid / photonic |
-| AXIS-2 precision technique | `routePrecision` (`@galerina/tower-citizen`) | ternary / fp4 / fp8 / fp16 |
-| AXIS-3 per-kernel offload | `PartitionDecider` (`@galerina/ext-photonic-emulator`) | digital / photonic |
+| AXIS-1 capability tier | `hardware()` (`@galerinaa/hardware-tier`) | binary / hybrid / photonic |
+| AXIS-2 precision technique | `routePrecision` (`@galerinaa/tower-citizen`) | ternary / fp4 / fp8 / fp16 |
+| AXIS-3 per-kernel offload | `PartitionDecider` (`@galerinaa/ext-photonic-emulator`) | digital / photonic |
 
 **Photonic IFF** offload-capable tier (hybrid/photonic) **∧** ternary precision **∧** the per-kernel
 net-win router says photonic. A binary tier, a non-ternary precision (e.g. an fp16 sensitivity-critical

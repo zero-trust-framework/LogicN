@@ -1,4 +1,4 @@
-// @galerina/devtools-flowgraph — Diagnostics
+// @galerinaa/devtools-flowgraph — Diagnostics
 import type { FlowGraph } from "./flow-graph.js";
 
 export type GraphSeverity = "error" | "warning" | "info";

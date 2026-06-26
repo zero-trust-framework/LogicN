@@ -1,8 +1,8 @@
 /**
- * @galerina/devtools-pci — Black Box Compliance Ledger Tests (#146)
+ * @galerinaa/devtools-pci — Black Box Compliance Ledger Tests (#146)
  *
  * Verifies the compliance-ledger module that consumes the audit-egress ledger
- * (from @galerina/core-sentinel-egress) and emits a structured, append-only,
+ * (from @galerinaa/core-sentinel-egress) and emits a structured, append-only,
  * HASH-LINKED compliance report (who/what/effect/decision/timestamp).
  *
  * Tests exercise the REAL AuditEgress writer end-to-end, plus the module's own

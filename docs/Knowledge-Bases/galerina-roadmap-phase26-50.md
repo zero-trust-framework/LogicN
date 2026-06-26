@@ -203,11 +203,11 @@ This is the first demonstration of Galerina as a real service, not just a compil
 ---
 
 ## Phase 38 — Governance Marketplace Foundation
-**Focus: `use governance_shape FCA_Trading_v2` from @galerina/certified-shapes**
+**Focus: `use governance_shape FCA_Trading_v2` from @galerinaa/certified-shapes**
 **Dependencies: Phase 37 (ValueGraph stable)**
 
 - Define the `governance_shape` import syntax in parser
-- Create `@galerina/certified-shapes` package (local registry first)
+- Create `@galerinaa/certified-shapes` package (local registry first)
 - FCA trading shape: required effects, audit trail, PII handling
 - Aerospace shape: safety_critical + deterministic_execution
 - Shape verification: compiler checks flow against imported shape
@@ -317,7 +317,7 @@ Expected: strict profile adds ~15-30% compile time (extra checks), ~0% runtime o
 ---
 
 ## Phase 46 — Governance Marketplace Public Beta
-**Focus: `@galerina/certified-shapes` published, community contributions**
+**Focus: `@galerinaa/certified-shapes` published, community contributions**
 **Dependencies: Phase 38 (marketplace foundation)**
 
 - Registry at https://marketplace.galerina.dev
@@ -373,7 +373,7 @@ For aerospace, industrial control, and real-time systems:
 2. ✅ All governance layers implemented and enforced
 3. ✅ WASM deployment working (wasmtime + Deno)
 4. ✅ Stage B compiling Stage A utilities (partial self-hosting)
-5. ✅ `@galerina/certified-shapes` with at least 5 certified shapes
+5. ✅ `@galerinaa/certified-shapes` with at least 5 certified shapes
 6. ✅ GovernanceSignature on all production ProofGraphs
 7. ✅ Test suite: 3,500+ tests, 0 failures
 8. ✅ Benchmark: governed overhead < 10% on production workloads

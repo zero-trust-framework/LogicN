@@ -2,7 +2,7 @@
 
 **Status:** 🟢 **PHASE 0 + PHASE 1 IMPLEMENTED (2026-06-15).** The package
 `packages-galerina/galerina-ext-bridge-quantum` now exists and is in the suite (49/49 · 4,518 · 0 fail, verified 2026-06-17; bridge has 21 tests, now Phase 1.5):
-- **Phase 0** — shared `@galerina/inference-bridge-contract` manifest extended (`determinismMode:"tolerance"`,
+- **Phase 0** — shared `@galerinaa/inference-bridge-contract` manifest extended (`determinismMode:"tolerance"`,
   optional `domain`/`tolerance`/`pinnedEnvHash`/`backendArtifactHash`, `precision` optional), the
   fail-closed tolerance rule (§9.1.3), additively + hash-preserving. Verified across bitnet/cpp/tower-citizen.
 - **Phase 1** — the pure-TS governance core: `subspace.ts` (the §6 governor, fail-closed overflow→Infinity),
@@ -28,7 +28,7 @@ path as a noisy `lane` (§5.4, §9). Integrity stays bit-exact on the determinis
 core; only the *compute* is tolerance-bounded.
 
 **Date:** 2026-06-15 · **Author layer:** Layer 2A/2B design proposal · **Task:** #199 (🔲 not started)
-**Proposed package:** `@galerina/ext-bridge-quantum` (dir `packages-galerina/galerina-ext-bridge-quantum`)
+**Proposed package:** `@galerinaa/ext-bridge-quantum` (dir `packages-galerina/galerina-ext-bridge-quantum`)
 **First backend:** IBM **`ffsim`** (qiskit-community/ffsim, Apache-2.0)
 **Provenance:** `notes/33-IBM-FFSIM.md` (the user's eval — *see §2, it contains errors this design corrects*),
 IBM Quantum blog `ibm.com/quantum/blog/ffsim`, local clone `C:\wwwprojects\IBM-FFSIM\ffsim`.
@@ -81,7 +81,7 @@ external compute engine — the hardest bridge case the project has tackled so f
 
 ## 3. Why ffsim is a *different shape* of bridge than BitNet
 
-The existing `InferenceBridge` contract (`@galerina/inference-bridge-contract`:
+The existing `InferenceBridge` contract (`@galerinaa/inference-bridge-contract`:
 `BridgeOp` / `BridgeResult`) is built for a **ternary GEMM hot path**: packed-trit
 weights, an `Int32Array` activation vector, a scaled-integer accumulator, and
 **bit-exact determinism** verified against a `TernaryOracle`. ffsim breaks every one
@@ -273,7 +273,7 @@ neutral `inference-bridge-contract`, which is ternary-specific).
 
 ```ts
 // quantum-contract.ts — coarse-grained governed-job contract for out-of-process backends.
-import type { BridgeManifest, BridgeAttestation } from "@galerina/inference-bridge-contract";
+import type { BridgeManifest, BridgeAttestation } from "@galerinaa/inference-bridge-contract";
 
 export type QuantumOp =
   | "hartree_fock_state"
@@ -410,7 +410,7 @@ Reuse `tower-citizen/bridge-attestation.ts` (Ed25519, `verifyAttestation` fails
 ```ts
 const FFSIM_MANIFEST: BridgeManifest = {
   bridgeId:            "ffsim-quantum-v1",
-  packageName:         "@galerina/ext-bridge-quantum",
+  packageName:         "@galerinaa/ext-bridge-quantum",
   packageHash:         "<sha256 of the built TS package>",
   nativeAddonHash:     undefined,                       // no in-process addon
   backendArtifactHash: "<sha256(venv lock + ffsim wheel + ffsim_worker.py)>",  // NEW
@@ -426,7 +426,7 @@ const FFSIM_MANIFEST: BridgeManifest = {
 };
 ```
 
-### 9.1 Ratified schema change to `@galerina/inference-bridge-contract/manifest.ts`
+### 9.1 Ratified schema change to `@galerinaa/inference-bridge-contract/manifest.ts`
 
 This touches a shared neutral package (consumed by #137) — **Phase 0**, do it first,
 re-run that package's `.graph/BOUNDARY.md`, and update `canonicalManifestString`
@@ -478,12 +478,12 @@ all three pins are present, and the consuming flow is `SPORE-SUBSTRATE-001`-clea
 ```spore
 /*
  * Example: governed ground-state energy via IBM ffsim (out-of-process, under contract).
- * Phase 1.5 IMPLEMENTED — @galerina/ext-bridge-quantum exists (governance + hybrid attestation, 21 tests); out-of-process EXEC is Phase 2. The quantum {} contract sub-block is still design-stage.
+ * Phase 1.5 IMPLEMENTED — @galerinaa/ext-bridge-quantum exists (governance + hybrid attestation, 21 tests); out-of-process EXEC is Phase 2. The quantum {} contract sub-block is still design-stage.
  * See: docs/Knowledge-Bases/galerina-ext-bridge-quantum-design.md
  */
 
 ;; Import the quantum backend across the Toxic Border, demand-loaded, deny-by-default.
-import plugin safe "@galerina/ext-bridge-quantum" as Quantum {
+import plugin safe "@galerinaa/ext-bridge-quantum" as Quantum {
   contract {
     intent "Fermionic quantum-chemistry simulation backend (IBM ffsim, untrusted, out-of-process)"
     access {
@@ -588,7 +588,7 @@ packages-galerina/galerina-ext-bridge-quantum/
 
 ```json
 {
-  "name": "@galerina/ext-bridge-quantum",
+  "name": "@galerinaa/ext-bridge-quantum",
   "version": "0.1.0",
   "description": "Galerina governed bridge for IBM ffsim — out-of-process fermionic quantum simulation under contract, Tower audit lifecycle + attestation",
   "license": "Apache-2.0",
@@ -603,8 +603,8 @@ packages-galerina/galerina-ext-bridge-quantum/
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@galerina/tower-citizen": "file:../galerina-tower-citizen",
-    "@galerina/inference-bridge-contract": "file:../galerina-inference-bridge-contract"
+    "@galerinaa/tower-citizen": "file:../galerina-tower-citizen",
+    "@galerinaa/inference-bridge-contract": "file:../galerina-inference-bridge-contract"
   },
   "devDependencies": { "@types/node": "^25.9.1", "typescript": "^5.5.0" },
   "keywords": ["galerina", "ffsim", "quantum", "bridge", "governance", "out-of-process"],
@@ -647,7 +647,7 @@ export function createQuantumBridgeRegistry(): QuantumBridgeRegistry {
 **Phase 0 — ratify the shared-package changes first (they gate everything):**
 - [x] Decisions ratified 2026-06-15 (§13) — no design left to settle; this phase is *implementation*.
 - [ ] Confirm `verifySubstrate` (`substrate-inference.ts` / `substrate-model.ts`) already fires `SPORE-SUBSTRATE-001` for a `lane: noisy` flow carrying any crypto effect, and `SPORE-SUBSTRATE-004` for an un-voted noisy→deterministic feed. If the `float64`/BLAS+Rayon lane noise profile for B2 is missing, add it (§13.8). **No new crypto-exclusion machinery — reuse the shipped pass.**
-- [ ] Extend `@galerina/inference-bridge-contract/manifest.ts`: `DeterminismMode += "tolerance"`, optional `tolerance` / `pinnedEnvHash` / `backendArtifactHash`; update `validateManifestShape` + `canonicalManifestString` (field order!) + tests. *(Touches a neutral package consumed by #137 — re-run its boundary report.)*
+- [ ] Extend `@galerinaa/inference-bridge-contract/manifest.ts`: `DeterminismMode += "tolerance"`, optional `tolerance` / `pinnedEnvHash` / `backendArtifactHash`; update `validateManifestShape` + `canonicalManifestString` (field order!) + tests. *(Touches a neutral package consumed by #137 — re-run its boundary report.)*
 
 **Phase 1 — pure-TS governance core (no ffsim needed; fully testable):**
 - [ ] Scaffold the package (layout §11.1); copy `tsconfig.json` from ext-bridge-bitnet.
@@ -671,7 +671,7 @@ export function createQuantumBridgeRegistry(): QuantumBridgeRegistry {
 - [ ] One worked example flow under `examples/` (small molecule, e.g. H₂/H₄ in a minimal basis) with a `quantum {}` block; mark experimental.
 - [ ] `galerina border-check` recognises the package; manifest signing via `galerina bridge attest`.
 - [ ] Update SOT runtime status, KB index (done here), task ledger (done here → flip #199 status).
-- [ ] `.graph/BOUNDARY.md` for the package (run `@galerina/devtools-package-graph`).
+- [ ] `.graph/BOUNDARY.md` for the package (run `@galerinaa/devtools-package-graph`).
 
 ---
 

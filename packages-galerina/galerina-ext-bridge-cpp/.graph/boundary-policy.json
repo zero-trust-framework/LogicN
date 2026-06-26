@@ -1,8 +1,8 @@
 {
-  "packageName": "@galerina/ext-bridge-cpp",
+  "packageName": "@galerinaa/ext-bridge-cpp",
   "allowedExternal": [
-    "@galerina/inference-bridge-contract",
-    "@galerina/tower-citizen",
+    "@galerinaa/inference-bridge-contract",
+    "@galerinaa/tower-citizen",
     "node:child_process",
     "node:crypto",
     "node:fs",

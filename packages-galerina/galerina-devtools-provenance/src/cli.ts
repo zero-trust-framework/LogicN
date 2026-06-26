@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // =============================================================================
-// @galerina/devtools-provenance — CLI
+// @galerinaa/devtools-provenance — CLI
 //
 // Commands:
 //   galerina-provenance trace <file.spore> [--flow <name>]

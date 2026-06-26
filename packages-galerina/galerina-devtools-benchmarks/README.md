@@ -1,4 +1,4 @@
-# @galerina/devtools-benchmarks
+# @galerinaa/devtools-benchmarks
 
 Runtime comparison benchmarks for the Galerina language runtime. Three compute-heavy workloads run across six runtimes, measuring raw throughput and the overhead introduced by Galerina's governance and manifest verification layers.
 

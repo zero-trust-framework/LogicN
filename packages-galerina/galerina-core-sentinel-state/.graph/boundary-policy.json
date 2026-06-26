@@ -1,5 +1,5 @@
 {
-  "packageName": "@galerina/core-sentinel-state",
+  "packageName": "@galerinaa/core-sentinel-state",
   "allowedExternal": [
     "node:crypto",
     "node:fs",

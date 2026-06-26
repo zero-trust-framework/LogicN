@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // =============================================================================
-// @galerina/devtools-security — CLI
+// @galerinaa/devtools-security — CLI
 //
 // galerina-security audit <file.spore> [--profile strict,high_integrity] [--json]
 // galerina-security risk <classification> <records> <probability>
@@ -18,8 +18,8 @@ import { runSecurityAudit, type SecurityAuditOptions } from "./audit-runner.js";
 import { checkPathSandbox } from "./path-sandbox.js";
 import { validateRegexPattern } from "./regex-guard.js";
 import { assessRisk, formatRiskAssessment, DataClassification } from "./risk-calculator.js";
-import type { RuntimeProfile } from "@galerina/core-compiler";
-import { runPciAudit } from "@galerina/devtools-pci";
+import type { RuntimeProfile } from "@galerinaa/core-compiler";
+import { runPciAudit } from "@galerinaa/devtools-pci";
 
 const args = process.argv.slice(2);
 const command = args[0];

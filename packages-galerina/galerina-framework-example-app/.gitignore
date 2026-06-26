@@ -3,6 +3,7 @@ build/
 dist/
 packages/*/dist/
 galerin_modules/
+galerina_modules/
 node_modules/
 
 # Secrets are runtime-only and MUST never be committed.

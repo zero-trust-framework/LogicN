@@ -41,7 +41,7 @@ const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const APP_TEMPLATE_DIR = resolve(SCRIPT_DIR, "..", "packages-galerina", "galerina-framework-example-app");
 // The example app's own identity strings, replaced with the new app's name on copy.
 const TEMPLATE_PKG_NAME = "galerina-framework-example-app";
-const TEMPLATE_SCOPED_NAME = "@galerina/framework-example-app";
+const TEMPLATE_SCOPED_NAME = "@galerinaa/framework-example-app";
 // Directory names never copied into a new app — regenerated build artifacts, deps.
 const COPY_SKIP_DIRS = new Set(["dist", "build", "node_modules", ".git"]);
 
@@ -247,7 +247,7 @@ function substituteName(text, name) {
     // can't change without the offline re-sign ceremony, even though the example app's actual entry
     // file is now `src/App.spore`. A freshly-scaffolded app is UNSIGNED, so rewrite those stale refs
     // to current Galerina values so the new manifest + entry + name are consistent.
-    .split("@galerina/framework-example-app").join(name)
+    .split("@galerinaa/framework-example-app").join(name)
     .split("galerina-framework-example-app").join(name)
     .split("spore.app.v1").join("spore.app.v1")
     .split("src/App.spore").join("src/App.spore");

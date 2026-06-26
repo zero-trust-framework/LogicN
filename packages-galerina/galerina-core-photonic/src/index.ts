@@ -22,7 +22,7 @@ export interface OpticalChannel {
 }
 
 export interface PhotonicMapping {
-  readonly logicPackage: "@galerina/core-logic";
+  readonly logicPackage: "@galerinaa/core-logic";
   readonly galeriname: string;
   readonly states: readonly {
     readonly state: string;

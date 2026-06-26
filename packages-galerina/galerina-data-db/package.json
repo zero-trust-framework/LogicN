@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/data-db",
+  "name": "@galerinaa/data-db",
   "version": "1.0.0-beta.2",
   "description": "Galerina typed database boundary contracts for model, query, command, response, archive and report flows.",
   "license": "Apache-2.0",

@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/core-sentinel-io",
+  "name": "@galerinaa/core-sentinel-io",
   "version": "1.0.0-beta.2",
   "description": "Galerina Sentinel I/O (LSIO) — deterministic, governed, manifest-driven zero-copy data ingestion with HMAC-SHA256 integrity. Citizen Protocol v1.1.",
   "license": "Apache-2.0",

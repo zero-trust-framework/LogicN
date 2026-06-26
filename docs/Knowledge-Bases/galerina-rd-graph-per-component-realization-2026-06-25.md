@@ -71,7 +71,7 @@ scanner blind spots, **not** the gate logic.
 
 **TRACK (additive/owner-gated):** cross-check source-import border vs runtime `fuse.capabilities` at admission;
 declared-deps↔graph cross-check (catches the snarkjs gap before first import); class invariants (`ext-bridge-*`/
-`ext-photonic-*` allowlists may not contain `@galerina/core-*`; `fileCount===0` CI invariant for stay-stub
+`ext-photonic-*` allowlists may not contain `@galerinaa/core-*`; `fileCount===0` CI invariant for stay-stub
 `web-*`); scrub the 3 junk specifiers (`${fn.name}`,`${imp.module}`,`memory`) from the core-compiler allowlist +
 fix the scanner so WAT-codegen strings aren't extracted as imports; repair the `ext-bridge-cpp` baseline.
 

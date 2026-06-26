@@ -1,4 +1,4 @@
-# @galerina/docs
+# @galerinaa/docs
 
 The Galerina **API documentation generator**. It turns the App Kernel's governed
 route table into a valid **OpenAPI 3.x** document, so a Galerina service ships the
@@ -18,7 +18,7 @@ The spec there states the rule this package obeys:
 Given the routes a Galerina app declares (the App Kernel's `RouteDeclaration[]`)
 or the fully-resolved policies the kernel actually enforces
 (`EffectiveRoutePolicy[]`, from
-[`galerina-framework-app-kernel`](../galerina-framework-app-kernel)), `@galerina/docs`
+[`galerina-framework-app-kernel`](../galerina-framework-app-kernel)), `@galerinaa/docs`
 emits an OpenAPI 3.x document whose every operation reflects the **real governed
 behaviour**:
 
@@ -42,7 +42,7 @@ for client generation, contract review, and gateway configuration.
 
 ## Security posture — fail closed
 
-`@galerina/docs` follows the same zero-trust defaults as the rest of Galerina:
+`@galerinaa/docs` follows the same zero-trust defaults as the rest of Galerina:
 
 - **It never invents permissive defaults.** An auth-required route is documented
   as requiring authentication; a `public` route is documented with `security: []`
@@ -59,8 +59,8 @@ for client generation, contract review, and gateway configuration.
 ## Usage
 
 ```ts
-import { generateOpenApi, exportOpenApi } from "@galerina/docs";
-import { resolveEffectiveRoutePolicy } from "@galerina/framework-app-kernel";
+import { generateOpenApi, exportOpenApi } from "@galerinaa/docs";
+import { resolveEffectiveRoutePolicy } from "@galerinaa/framework-app-kernel";
 
 // From the declarations a developer writes (resolved through the secure defaults):
 const doc = generateOpenApi({

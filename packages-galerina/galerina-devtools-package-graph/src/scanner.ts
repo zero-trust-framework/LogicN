@@ -7,7 +7,7 @@
  *
  *   internal   — relative path that resolves INSIDE the package  ("./x", "../y")
  *   node_core  — Node.js built-in                                ("node:fs", "fs")
- *   workspace  — sibling Galerina package                          ("@galerina/...")
+ *   workspace  — sibling Galerina package                          ("@galerinaa/...")
  *   thirdparty — any other bare specifier                        ("axios", "lodash")
  *
  * Scope (roots × extensions):
@@ -29,7 +29,7 @@
  *   resolve such an import to the sibling package that owns it and record it as a
  *   workspace/thirdparty border dependency keyed by that package's NAME (stable across
  *   the importing file's depth, and identical whether the import is written as a
- *   relative path or the bare `@galerina/...` specifier).
+ *   relative path or the bare `@galerinaa/...` specifier).
  *
  * Regex-based (no TypeScript-compiler dependency) to keep the tool dependency-light
  * and aligned with the existing scan-and-report devtools pattern. It recognises:
@@ -81,7 +81,7 @@ function classify(specifier: string): EdgeKind {
   if (specifier.startsWith("node:")) return "node_core";
   const bare = specifier.split("/")[0] ?? specifier;
   if (NODE_BUILTINS.has(bare)) return "node_core";
-  if (specifier.startsWith("@galerina/")) return "workspace";
+  if (specifier.startsWith("@galerinaa/")) return "workspace";
   return "thirdparty";
 }
 
@@ -203,7 +203,7 @@ function resolveOwningPackage(
       try {
         const name = JSON.parse(readFileSync(pj, "utf-8")).name;
         if (typeof name === "string" && name.length > 0) {
-          result = { name, kind: name.startsWith("@galerina/") ? "workspace" : "thirdparty" };
+          result = { name, kind: name.startsWith("@galerinaa/") ? "workspace" : "thirdparty" };
         }
       } catch { /* unreadable package.json → null (fail-closed in caller) */ }
       for (const v of visited) cache.set(v, result);

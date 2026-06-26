@@ -2,7 +2,7 @@
 
 **Status:** Stage 1 — parser state tracking live in compiler; `SPORE-BLOCK-001..004` constants defined; `validateTypedContentBlock()` stub in place  
 **Scope:** `html`, `dom`, `script`, `css` heredoc-style embedded content blocks  
-**Packages:** `@galerina/core`, `@galerina/core-compiler`
+**Packages:** `@galerinaa/core`, `@galerinaa/core-compiler`
 
 ---
 
@@ -170,7 +170,7 @@ Even though the compiler suspends its checks while inside a content block, the f
 
 ---
 
-## 9. Type Contracts (`@galerina/core`)
+## 9. Type Contracts (`@galerinaa/core`)
 
 ```ts
 /**
@@ -217,7 +217,7 @@ New `AstNodeKind` value:
 
 ---
 
-## 10. Compiler API (`@galerina/core-compiler`)
+## 10. Compiler API (`@galerinaa/core-compiler`)
 
 ### `validateCoreSyntaxSafety()` — content block tracking (live)
 
@@ -255,11 +255,11 @@ Stage 2 will implement:
 
 | Area | Status | Notes |
 |---|---|---|
-| `ContentBlockType`, `CONTENT_BLOCK_TYPES` | ✅ | `@galerina/core/src/index.ts` |
-| `TypedContentBlockExpression` interface | ✅ | `@galerina/core/src/index.ts` |
-| `typedContentBlockExpr` AstNodeKind | ✅ | `@galerina/core/src/index.ts` |
-| `SPORE-BLOCK-001..004` constants | ✅ | `@galerina/core-compiler` |
-| `SPORE_BLOCK_DIAGNOSTICS` array | ✅ | `@galerina/core-compiler` |
+| `ContentBlockType`, `CONTENT_BLOCK_TYPES` | ✅ | `@galerinaa/core/src/index.ts` |
+| `TypedContentBlockExpression` interface | ✅ | `@galerinaa/core/src/index.ts` |
+| `typedContentBlockExpr` AstNodeKind | ✅ | `@galerinaa/core/src/index.ts` |
+| `SPORE-BLOCK-001..004` constants | ✅ | `@galerinaa/core-compiler` |
+| `SPORE_BLOCK_DIAGNOSTICS` array | ✅ | `@galerinaa/core-compiler` |
 | Content block state tracking in `validateCoreSyntaxSafety()` | ✅ | Real check; brace depth suspended inside blocks |
 | `SPORE-BLOCK-001` unknown type detection | ✅ | `parseContentBlockOpen()` |
 | `SPORE-BLOCK-002` unclosed block detection | ✅ | Post-loop check |

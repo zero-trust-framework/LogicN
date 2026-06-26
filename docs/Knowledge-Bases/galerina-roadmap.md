@@ -64,7 +64,7 @@ Full register: `docs/Knowledge-Bases/galerina-residual-risks.md`.
 | #156 | Hardened-border enforcement-cost benchmarks (governance-tax, context-switch; memory-sanitizer ⛔#147) | benchmark-enforcement-cost-spec |
 | #157 | Forensic diagnostics: differential observability (start here) · causality traces · RV · perf-drift plugin | diagnostics-spec |
 | #158 | Governance-ready vector quantization plugin (TurboQuant clean-room, TS→WASM, attestation-gated) | task #158 |
-| CF-4 | extract `@galerina/tpl-oracle` so the Brawn imports no Tower runtime | — |
+| CF-4 | extract `@galerinaa/tpl-oracle` so the Brawn imports no Tower runtime | — |
 | CF-5/9/10 | vector commit gate · ECC/TMR · atomic failover | — |
 
 ---

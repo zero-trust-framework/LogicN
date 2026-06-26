@@ -1,5 +1,5 @@
 {
-  "packageName": "@galerina/core-sentinel-egress",
+  "packageName": "@galerinaa/core-sentinel-egress",
   "allowedExternal": [
     "node:crypto",
     "node:fs",

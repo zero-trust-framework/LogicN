@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/api-protocol-rest",
+  "name": "@galerinaa/api-protocol-rest",
   "version": "1.0.0-beta.2",
   "description": "Reference REST protocol-adapter (L3): /src governed flow → fusable .wasm, fused via the App Kernel. Proves the /src → .wasm → fused path end-to-end.",
   "license": "Apache-2.0",

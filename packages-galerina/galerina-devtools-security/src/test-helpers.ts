@@ -1,11 +1,11 @@
 // =============================================================================
-// @galerina/devtools-security — Security Test Helpers
+// @galerinaa/devtools-security — Security Test Helpers
 //
 // Utilities for writing security tests in Galerina projects.
 // Import in your test files to get fluent security assertion APIs.
 //
 // Usage:
-//   import { SecurityTestHelper } from "@galerina/devtools-security";
+//   import { SecurityTestHelper } from "@galerinaa/devtools-security";
 //   const s = new SecurityTestHelper();
 //   await s.assertBlocked(source, "SPORE-TAINT-001");
 //   await s.assertAllowed(source);

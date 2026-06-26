@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerina/devtools-naming — Public API
+// @galerinaa/devtools-naming — Public API
 // =============================================================================
 
 // Core naming checker (low-level AST-based API)

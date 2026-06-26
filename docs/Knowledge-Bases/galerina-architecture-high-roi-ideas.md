@@ -120,7 +120,7 @@ Flow Graph, Type Graph, Effect Graph, Contract Graph, Capability Graph.
 Many compiler passes become graph lookups instead of repeated AST traversals.
 
 **Status:** `buildSemanticGraph()`, `buildAiGraph()` in `gir-emitter.ts`.
-`@galerina/devtools-graph-algorithms` package provides BFS, DFS, topoSort, fixpoint.
+`@galerinaa/devtools-graph-algorithms` package provides BFS, DFS, topoSort, fixpoint.
 See `galerina-ai-semantic-graph-output.md`.
 
 ---

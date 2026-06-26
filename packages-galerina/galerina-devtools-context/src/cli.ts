@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // =============================================================================
-// @galerina/devtools-context — CLI
+// @galerinaa/devtools-context — CLI
 //
 // galerina-context receipt <file.spore> [--flow <flowName>] [--json] [--markdown] [--summary]
 //

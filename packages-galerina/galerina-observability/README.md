@@ -1,4 +1,4 @@
-# @galerina/observability
+# @galerinaa/observability
 
 Actuator-style **operational observability** for a Galerina app — the app-operator's
 health/metrics/logs view, surfaced **through the App Kernel**.
@@ -12,9 +12,9 @@ framework provides (cf. Spring Boot's `spring-boot-starter-actuator`):
 - **Structured app logs** — leveled, structured records to a pluggable sink, with
   redaction of sensitive fields.
 
-## Not the same thing as `@galerina/governance-telemetry`
+## Not the same thing as `@galerinaa/governance-telemetry`
 
-| | `@galerina/observability` (this package) | `@galerina/governance-telemetry` |
+| | `@galerinaa/observability` (this package) | `@galerinaa/governance-telemetry` |
 |---|---|---|
 | Lens | **Operational** — the app operator's health/metrics/logs | **Governance** — the contract's structure |
 | Question it answers | "Is my app up? How fast? How many errors?" | "What does this app's governance state look like?" |
@@ -37,7 +37,7 @@ They are complementary base starters, not duplicates.
 - **Zero ambient authority.** Importing or constructing this starts no server, opens no
   file, reads no env. The default log sink is in-memory; the clock and timers are
   injectable. A host opts *into* output channels explicitly.
-- **Additive.** Nothing in `@galerina/framework-app-kernel` or `galerina-core` changes. The
+- **Additive.** Nothing in `@galerinaa/framework-app-kernel` or `galerina-core` changes. The
   integration consumes only the kernel's already-exported seams (`RouteDeclaration[]`,
   `HandlerDispatch`, `AuditSink`). Type-only imports resolve against the kernel's built
   `dist/` (the same relative-dist convention `kernel.ts` itself uses, pending workspaces #155).
@@ -48,8 +48,8 @@ They are complementary base starters, not duplicates.
 ## Wiring it into the App Kernel
 
 ```ts
-import { createAppKernel } from "@galerina/framework-app-kernel";
-import { createObservability } from "@galerina/observability";
+import { createAppKernel } from "@galerinaa/framework-app-kernel";
+import { createObservability } from "@galerinaa/observability";
 
 const obs = createObservability();
 
@@ -88,7 +88,7 @@ Do not use both on the same collector — they would double-count.
 ## Layout
 
 ```
-package.json            @galerina/observability (private, ESM, Apache-2.0)
+package.json            @galerinaa/observability (private, ESM, Apache-2.0)
 tsconfig.json           strict, NodeNext, declaration output to dist/
 src/
   metrics.ts            MetricsCollector + renderMetricsPrometheus (app_* namespace)

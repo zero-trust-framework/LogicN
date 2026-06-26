@@ -1,11 +1,11 @@
 // =============================================================================
-// @galerina/devtools-naming — Naming Audit Runner
+// @galerinaa/devtools-naming — Naming Audit Runner
 //
 // Orchestrates: parse source → walk AST → run naming checks → return report.
 // Designed for CI integration: parse, check, return JSON.
 // =============================================================================
 
-import { parseProgram } from "@galerina/core-compiler";
+import { parseProgram } from "@galerinaa/core-compiler";
 import {
   checkNaming,
   type NamingCheckResult,

@@ -27,7 +27,7 @@ The 10 phases below take the runtime from 0% to ~50% (first governed HTTP servic
 | Phase | Status | Delivered |
 |---|---|---|
 | **28** | ✅ DONE | `checkProfiles` (SPORE-PROFILE-001/002/006), `checkTaint` (SPORE-TAINT-001/003/004), OWASP catalogue |
-| **29** | ✅ DONE | `@galerina/core-economics` package — CostGraph, ValueGraph, IBM risk matrix, RouteDecision (governanceApproved literal) |
+| **29** | ✅ DONE | `@galerinaa/core-economics` package — CostGraph, ValueGraph, IBM risk matrix, RouteDecision (governanceApproved literal) |
 | **30** | ✅ DONE | `buildProofGraphCached` — ExecutionSignature-keyed proof shape cache (67% hit rate on same-shape flows) |
 | **31** | ✅ DONE | Bytecode VM — Int32Array opcodes, 14.3× over sync tree-walker, ~300× over async governed |
 | **32** | ✅ DONE | `galerina diff` governance delta CLI (exit 2 on authority widening) + governance-diff module |

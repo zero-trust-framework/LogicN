@@ -2,7 +2,7 @@
 
 **Status:** Reference diagram  
 **Scope:** `galerina-core*` package family — logical dependency graph and runtime data flow  
-**Note:** Workspace package links (`@galerina/*` imports across packages) are pending; packages are currently standalone with types duplicated locally. These diagrams show the intended logical relationships.
+**Note:** Workspace package links (`@galerinaa/*` imports across packages) are pending; packages are currently standalone with types duplicated locally. These diagrams show the intended logical relationships.
 
 ---
 
@@ -13,35 +13,35 @@ The `galerina-core*` packages form a layered dependency graph: foundation types 
 ```mermaid
 graph TB
     subgraph Foundation["Foundation Layer"]
-        core["@galerina/core\nAST node kinds · AstNodeKind\nCompilerDiagnostic · SafetyLevel\nCONTENT_BLOCK_TYPES\ncreateDiagnostic · hasErrors · filterBySeverity"]
-        logic["@galerina/core-logic\nTriState (v0.2 discriminated union)\nDecision (4-state: allow/deny/review/unknown)\nBoolBoundary · OmniState (8-value)\nsub-paths: /tri /decision /bool-boundary /omni"]
+        core["@galerinaa/core\nAST node kinds · AstNodeKind\nCompilerDiagnostic · SafetyLevel\nCONTENT_BLOCK_TYPES\ncreateDiagnostic · hasErrors · filterBySeverity"]
+        logic["@galerinaa/core-logic\nTriState (v0.2 discriminated union)\nDecision (4-state: allow/deny/review/unknown)\nBoolBoundary · OmniState (8-value)\nsub-paths: /tri /decision /bool-boundary /omni"]
     end
 
     subgraph SecurityLayer["Security Layer"]
-        security["@galerina/core-security\nSecureStringReference · redactText\nPermissionModel · decidePermission\nCryptographicPolicy · SecurityReport\nSPORE-SECURITY-001…"]
+        security["@galerinaa/core-security\nSecureStringReference · redactText\nPermissionModel · decidePermission\nCryptographicPolicy · SecurityReport\nSPORE-SECURITY-001…"]
     end
 
     subgraph ConfigLayer["Config & Environment Layer"]
-        config["@galerina/core-config\nProjectConfig · EnvironmentConfig\nRuntimeConfigHandoff · loadConfigFromObjects\nVault (SPORE-VAULT-001–005)\ndefaultEnvironmentPolicy · GALERINA_ENVIRONMENT_MODES"]
+        config["@galerinaa/core-config\nProjectConfig · EnvironmentConfig\nRuntimeConfigHandoff · loadConfigFromObjects\nVault (SPORE-VAULT-001–005)\ndefaultEnvironmentPolicy · GALERINA_ENVIRONMENT_MODES"]
     end
 
     subgraph IOLayer["I/O Governance Layer"]
-        network["@galerina/core-network\nNetworkPolicy · defineNetworkPolicy\nNetworkReport · selectNetworkBackend\nDEFAULT_TLS_POLICY\nWebhookVerificationConfig (specified)"]
-        reports["@galerina/core-reports\nAll LoReport kinds (14 canonical)\ncreateBuildReport · createSecurityReport\ncreateProcessingReport · createFlowTraceReport\nserializeReportJson · validateLoReport"]
+        network["@galerinaa/core-network\nNetworkPolicy · defineNetworkPolicy\nNetworkReport · selectNetworkBackend\nDEFAULT_TLS_POLICY\nWebhookVerificationConfig (specified)"]
+        reports["@galerinaa/core-reports\nAll LoReport kinds (14 canonical)\ncreateBuildReport · createSecurityReport\ncreateProcessingReport · createFlowTraceReport\nserializeReportJson · validateLoReport"]
     end
 
     subgraph ExecutionLayer["Execution Layer"]
-        runtime["@galerina/core-runtime\nRuntimeContext · createRuntimeContext\nRuntimeEffectPolicy · decideRuntimeEffect\nDEFAULT_RUNTIME_EFFECT_POLICY\ncreateRuntimeReport"]
-        compute["@galerina/core-compute\nRuntimeTarget (11 values)\nGpuPlan · OpticalPlan · WasmTarget\nCompatibilityReport\n(stubs — Phase 3)"]
-        tasks["@galerina/core-tasks\nAsync task / worker model\nStructured Await contracts\n(stubs — Phase 3)"]
+        runtime["@galerinaa/core-runtime\nRuntimeContext · createRuntimeContext\nRuntimeEffectPolicy · decideRuntimeEffect\nDEFAULT_RUNTIME_EFFECT_POLICY\ncreateRuntimeReport"]
+        compute["@galerinaa/core-compute\nRuntimeTarget (11 values)\nGpuPlan · OpticalPlan · WasmTarget\nCompatibilityReport\n(stubs — Phase 3)"]
+        tasks["@galerinaa/core-tasks\nAsync task / worker model\nStructured Await contracts\n(stubs — Phase 3)"]
     end
 
     subgraph CompilerLayer["Compiler Layer"]
-        compiler["@galerina/core-compiler\nvalidateCoreSyntaxSafety\ncheckBindingReassignment · checkReadonlyMutation\nvalidateIntentEffects (stub)\nSPORE-SYNTAX/BINDING/PIPELINE/INTENT/BLOCK/STRING/CHAR/BYTE-*"]
+        compiler["@galerinaa/core-compiler\nvalidateCoreSyntaxSafety\ncheckBindingReassignment · checkReadonlyMutation\nvalidateIntentEffects (stub)\nSPORE-SYNTAX/BINDING/PIPELINE/INTENT/BLOCK/STRING/CHAR/BYTE-*"]
     end
 
     subgraph CLILayer["CLI Layer"]
-        cli["@galerina/core-cli\ngalerina check · galerina fmt · galerina build\ngalerina verify · galerina deploy\ngalerina explain · galerina plan"]
+        cli["@galerinaa/core-cli\ngalerina check · galerina fmt · galerina build\ngalerina verify · galerina deploy\ngalerina explain · galerina plan"]
     end
 
     core --> compiler
@@ -76,13 +76,13 @@ flowchart TD
     HTTP["HTTP Request\n(external — untrusted)"]
     Node["Node.js Server\n(host transport)"]
     APIServer["galerina-framework-api-server\n(route dispatch, boundary check)"]
-    Config["@galerina/core-config\nRuntime Policy Config\nVault · EnvironmentConfig"]
-    Security["@galerina/core-security\nPermission check\nSecret redaction"]
-    Compiler["@galerina/core-compiler\nSyntax safety · Intent check\n14-pass pipeline → Governed IR"]
-    Runtime["@galerina/core-runtime\nEffect gating · RuntimeContext\nCapability locking"]
-    Logic["@galerina/core-logic\nTriState · Decision · BoolBoundary\nOmni conversion"]
-    Network["@galerina/core-network\nOutbound policy check\nTLS/SSRF enforcement"]
-    Reports["@galerina/core-reports\nAudit events · FlowTrace\nSecurityReport · RuntimeReport"]
+    Config["@galerinaa/core-config\nRuntime Policy Config\nVault · EnvironmentConfig"]
+    Security["@galerinaa/core-security\nPermission check\nSecret redaction"]
+    Compiler["@galerinaa/core-compiler\nSyntax safety · Intent check\n14-pass pipeline → Governed IR"]
+    Runtime["@galerinaa/core-runtime\nEffect gating · RuntimeContext\nCapability locking"]
+    Logic["@galerinaa/core-logic\nTriState · Decision · BoolBoundary\nOmni conversion"]
+    Network["@galerinaa/core-network\nOutbound policy check\nTLS/SSRF enforcement"]
+    Reports["@galerinaa/core-reports\nAudit events · FlowTrace\nSecurityReport · RuntimeReport"]
     Response["HTTP Response\n(safe, typed, redacted)"]
 
     HTTP --> Node
@@ -104,7 +104,7 @@ flowchart TD
 
 ## 3. Compile-Time Pipeline Flow
 
-Source `.spore` files pass through the prototype parser (Stage 1, in `@galerina/core/compiler/`) and the compiler contract layer (`@galerina/core-compiler`). The 14-pass pipeline produces Governed IR and a RuntimeManifest.
+Source `.spore` files pass through the prototype parser (Stage 1, in `@galerinaa/core/compiler/`) and the compiler contract layer (`@galerinaa/core-compiler`). The 14-pass pipeline produces Governed IR and a RuntimeManifest.
 
 ```mermaid
 flowchart LR
@@ -139,34 +139,34 @@ Each package owns a diagnostic namespace. The `SPORE-*` format is `SPORE-SERIES-
 
 | Prefix | Owner | Count | Status |
 |---|---|---|---|
-| `SPORE-SYNTAX-*` | `@galerina/core-compiler` | 002 | Implemented |
-| `SPORE-BINDING-*` | `@galerina/core-compiler` | 004 | Implemented |
-| `SPORE-PIPELINE-*` | `@galerina/core-compiler` | 005 | Constants only (stubs) |
-| `SPORE-INTENT-*` | `@galerina/core-compiler` | 005 | Constants only (stubs) |
-| `SPORE-BLOCK-*` | `@galerina/core-compiler` | 004 | Implemented |
-| `SPORE-STRING-*` | `@galerina/core-compiler` | 004 | Constants only |
-| `SPORE-CHAR-*` | `@galerina/core-compiler` | 004 | Constants only |
-| `SPORE-BYTE-*` | `@galerina/core-compiler` | 005 | Constants only |
-| `SPORE-EFFECT-*` | `@galerina/core-compiler` | 004 | Specified — not implemented |
-| `SPORE-BOUNDARY-*` | `@galerina/core-compiler` | 004 | Specified — not implemented |
-| `SPORE-TRI-*` | `@galerina/core-logic` | 005 | Implemented |
-| `SPORE-DECISION-*` | `@galerina/core-logic` | 005 | Implemented |
-| `SPORE-BOOL-BOUNDARY-*` | `@galerina/core-logic` | 005 | Implemented |
-| `SPORE-OMNI-*` | `@galerina/core-logic` | 005 | Implemented |
-| `SPORE-CONFIG-*` | `@galerina/core-config` | 027 | Partially implemented |
-| `SPORE-VAULT-*` | `@galerina/core-config` | 005 | Implemented |
-| `SPORE-NETWORK-*` | `@galerina/core-network` | 008 | Specified — not implemented |
-| `SPORE-WASM-*` | `@galerina/core-compute` | 004 | Specified — not implemented |
-| `SPORE-COMPAT-*` | `@galerina/core-compute` | 004 | Specified — not implemented |
-| `SPORE-REPORT-*` | `@galerina/core-reports` | 005 | Specified — not implemented |
-| `SPORE-PROOF-*` | `@galerina/core-reports` | 005 | Specified — not implemented |
-| `SPORE-DENIAL-*` | `@galerina/core-reports` | 004 | Specified — not implemented |
-| `SPORE-EVIDENCE-*` | `@galerina/core-reports` | 004 | Specified — not implemented |
-| `Galerina_RUNTIME_*` | `@galerina/core-runtime` | (open) | Implemented |
-| `Galerina_SECURITY_*` | `@galerina/core-security` | (open) | Implemented |
-| `Galerina_NETWORK_*` | `@galerina/core-network` | (open) | Implemented |
-| `Galerina_REPORT_*` | `@galerina/core-reports` | (open) | Implemented |
-| `Galerina_COMPILER_*` | `@galerina/core-compiler` | (open) | Implemented (scanner codes) |
+| `SPORE-SYNTAX-*` | `@galerinaa/core-compiler` | 002 | Implemented |
+| `SPORE-BINDING-*` | `@galerinaa/core-compiler` | 004 | Implemented |
+| `SPORE-PIPELINE-*` | `@galerinaa/core-compiler` | 005 | Constants only (stubs) |
+| `SPORE-INTENT-*` | `@galerinaa/core-compiler` | 005 | Constants only (stubs) |
+| `SPORE-BLOCK-*` | `@galerinaa/core-compiler` | 004 | Implemented |
+| `SPORE-STRING-*` | `@galerinaa/core-compiler` | 004 | Constants only |
+| `SPORE-CHAR-*` | `@galerinaa/core-compiler` | 004 | Constants only |
+| `SPORE-BYTE-*` | `@galerinaa/core-compiler` | 005 | Constants only |
+| `SPORE-EFFECT-*` | `@galerinaa/core-compiler` | 004 | Specified — not implemented |
+| `SPORE-BOUNDARY-*` | `@galerinaa/core-compiler` | 004 | Specified — not implemented |
+| `SPORE-TRI-*` | `@galerinaa/core-logic` | 005 | Implemented |
+| `SPORE-DECISION-*` | `@galerinaa/core-logic` | 005 | Implemented |
+| `SPORE-BOOL-BOUNDARY-*` | `@galerinaa/core-logic` | 005 | Implemented |
+| `SPORE-OMNI-*` | `@galerinaa/core-logic` | 005 | Implemented |
+| `SPORE-CONFIG-*` | `@galerinaa/core-config` | 027 | Partially implemented |
+| `SPORE-VAULT-*` | `@galerinaa/core-config` | 005 | Implemented |
+| `SPORE-NETWORK-*` | `@galerinaa/core-network` | 008 | Specified — not implemented |
+| `SPORE-WASM-*` | `@galerinaa/core-compute` | 004 | Specified — not implemented |
+| `SPORE-COMPAT-*` | `@galerinaa/core-compute` | 004 | Specified — not implemented |
+| `SPORE-REPORT-*` | `@galerinaa/core-reports` | 005 | Specified — not implemented |
+| `SPORE-PROOF-*` | `@galerinaa/core-reports` | 005 | Specified — not implemented |
+| `SPORE-DENIAL-*` | `@galerinaa/core-reports` | 004 | Specified — not implemented |
+| `SPORE-EVIDENCE-*` | `@galerinaa/core-reports` | 004 | Specified — not implemented |
+| `Galerina_RUNTIME_*` | `@galerinaa/core-runtime` | (open) | Implemented |
+| `Galerina_SECURITY_*` | `@galerinaa/core-security` | (open) | Implemented |
+| `Galerina_NETWORK_*` | `@galerinaa/core-network` | (open) | Implemented |
+| `Galerina_REPORT_*` | `@galerinaa/core-reports` | (open) | Implemented |
+| `Galerina_COMPILER_*` | `@galerinaa/core-compiler` | (open) | Implemented (scanner codes) |
 
 ---
 
@@ -174,14 +174,14 @@ Each package owns a diagnostic namespace. The `SPORE-*` format is `SPORE-SERIES-
 
 | Package | Tests | Status |
 |---|---|---|
-| `@galerina/core` | 9 | All passing |
-| `@galerina/core-compiler` | 20 | All passing |
-| `@galerina/core-logic` | 51 | All passing |
-| `@galerina/core-config` | 17 | All passing |
-| `@galerina/core-security` | 14 | All passing |
-| `@galerina/core-network` | 12 | All passing |
-| `@galerina/core-reports` | 15 | All passing |
-| `@galerina/core-runtime` | 12 | All passing |
-| `@galerina/core-compute` | 5 | All passing |
-| `@galerina/core-cli` | 6 | All passing |
+| `@galerinaa/core` | 9 | All passing |
+| `@galerinaa/core-compiler` | 20 | All passing |
+| `@galerinaa/core-logic` | 51 | All passing |
+| `@galerinaa/core-config` | 17 | All passing |
+| `@galerinaa/core-security` | 14 | All passing |
+| `@galerinaa/core-network` | 12 | All passing |
+| `@galerinaa/core-reports` | 15 | All passing |
+| `@galerinaa/core-runtime` | 12 | All passing |
+| `@galerinaa/core-compute` | 5 | All passing |
+| `@galerinaa/core-cli` | 6 | All passing |
 | **Total** | **161** | **All passing** |

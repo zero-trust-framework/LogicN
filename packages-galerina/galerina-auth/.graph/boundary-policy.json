@@ -1,8 +1,8 @@
 {
-  "packageName": "@galerina/auth",
+  "packageName": "@galerinaa/auth",
   "allowedExternal": [
-    "@galerina/core-network",
-    "@galerina/tower-citizen"
+    "@galerinaa/core-network",
+    "@galerinaa/tower-citizen"
   ],
   "note": "Baseline auto-generated. Edit allowedExternal to widen/narrow the border. `--check` fails if an import appears that is not listed here."
 }

@@ -1005,7 +1005,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 ## Galerina Framework API Server v0.2
 `docs/Knowledge-Bases/galerina-framework-api-server-v02.md`
 - codes: SPORE-NETWORK-001, SPORE-NETWORK-006, SPORE-NETWORK-007, SPORE-BOUNDARY-001, SPORE-EFFECT-002
-- terms: request, string, api, boundary, error, replay, governance, server, route, runtime, webhook, galerinroutemanifest, authentication, replaystore
+- terms: request, string, api, boundary, error, replay, governance, server, route, runtime, webhook, galerinaroutemanifest, authentication, replaystore
 
 ## Galerina Framework Layer — Design & Scope Decision
 `docs/Knowledge-Bases/galerina-framework-layer-design.md`
@@ -1939,7 +1939,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 ## Galerina rebrand — crypto wire-tag re-sign ceremony (operator runbook)
 `docs/Knowledge-Bases/galerina-rebrand-resign-ceremony-runbook.md`
 - links: [[galerina-rd-0131-rebrand-galerina]]
-- terms: spore, step, galerina, spore, app, artifacts, key, re-sign, galerin, manifest, root, old, gov, sig
+- terms: spore, step, galerina, spore, app, artifacts, key, re-sign, galerina, manifest, root, old, gov, sig
 
 ## Galerina — Non-P9 Residual Risks (verified catalogue)
 `docs/Knowledge-Bases/galerina-residual-risks.md`
@@ -2340,7 +2340,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 - links: [[feedback-http-transport-owner-locked]] [[galerina-key-custody-rotation-decision]] [[feedback-owner-gated-means-ask]]
 - terms: transport, build, shipped, owner, key, gate, never, auth, net-new, decision-support, ternary, deny, doesn, galerina
 
-## The `.tmf` Engine (`@galerina/ext-tmf`)
+## The `.tmf` Engine (`@galerinaa/ext-tmf`)
 `docs/Knowledge-Bases/galerina-tmf-engine.md`
 - codes: SPORE-SUBSTRATE-001, SPORE-GOV-3VL-001, SPORE-CRYPTO-PQ-001
 - tasks: #34, #204

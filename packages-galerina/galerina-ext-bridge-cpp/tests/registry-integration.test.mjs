@@ -1,13 +1,13 @@
 // registry-integration.test.mjs — the Brain→Brawn wiring across the package seam.
 //
-// Proves that the Tower's HybridInferenceEngine (the Brain, in @galerina/tower-citizen)
+// Proves that the Tower's HybridInferenceEngine (the Brain, in @galerinaa/tower-citizen)
 // dispatches ternary ops to THIS package's BitNet bridge (the Brawn) when handed a
 // registry from createCppBridgeRegistry() — and that the result is bit-identical to
 // the in-package simulator (the determinism oracle / Citizen Standard 1).
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createHybridEngine } from "@galerina/tower-citizen";
+import { createHybridEngine } from "@galerinaa/tower-citizen";
 import { createCppBridgeRegistry } from "../dist/index.js";
 
 const cid = (s) => `CPP-${s}-${process.pid}-${Math.random().toString(36).slice(2, 8)}`;

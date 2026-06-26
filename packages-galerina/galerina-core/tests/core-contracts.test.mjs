@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-// @galerina/core is CommonJS — use default import then destructure for safety.
+// @galerinaa/core is CommonJS — use default import then destructure for safety.
 import pkg from "../dist/index.js";
 
 const {
@@ -11,7 +11,7 @@ const {
   CONTENT_BLOCK_TYPES,
 } = pkg;
 
-describe("@galerina/core utility contracts", () => {
+describe("@galerinaa/core utility contracts", () => {
   it("createCompilerDiagnostic builds the canonical diagnostic shape", () => {
     const loc = { file: "auth.spore", line: 12, column: 5 };
 

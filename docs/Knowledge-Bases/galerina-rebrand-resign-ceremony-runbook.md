@@ -7,7 +7,7 @@
 
 > **UPDATE 2026-06-26 (verify session — CODE HALF APPLIED).** The wire-format migration is now DONE in source and
 > green. The 4 governance **contexts** are `galerina.*.v2` (deliberate v-bump — owner's choice, supersedes the
-> "keep v1" note below; old `logicn.*.v1`/`galerin.*.v1` artifacts fail closed rather than silently mis-verify),
+> "keep v1" note below; old `logicn.*.v1`/`galerina.*.v1` artifacts fail closed rather than silently mis-verify),
 > and the `lln.*` format tags the rebrand had MISSED in `galerina-devtools-project-graph`
 > (`graph`/`execution.proof`/`runtime.audit`) are now `spore.*`, matching the compiler. Full suite + the integrity
 > scanner (`scripts/verify-artifacts.mjs` section 4) are green. **What REMAINS operator-gated:** re-signing the
@@ -22,15 +22,15 @@ inside a signed payload invalidates the signature and the codemod cannot re-sign
   manifests). It is **offline by design** (`governance/trust-anchor.json` pins it; see the offline
   key-ceremony runbook). It is NOT `.env.galerina-signing` (that holds the *operational* key `9c2d7d4502a2eedd`).
 - The current tree is **internally consistent and GREEN** at the OLD tags (verifiers, emitters, and the
-  3 artifacts all use `galerin.*`/`spore.*`). This ceremony moves them to the new brand atomically + re-signs.
+  3 artifacts all use `galerina.*`/`spore.*`). This ceremony moves them to the new brand atomically + re-signs.
 
 ## Tag migration map (owner scheme: `galerin`→`galerina`, `spore`→`spore`)
 | Old (preserved) | New | Where |
 |---|---|---|
-| `galerin.proofgraph.governance.v1` | `galerina.proofgraph.governance.v2` ✅ APPLIED | ProofGraph context |
-| `galerin.bridge.manifest.v1` | `galerina.bridge.manifest.v2` ✅ APPLIED | bridge attestation |
-| `galerin.audit.attestation.v1` | `galerina.audit.attestation.v2` ✅ APPLIED | audit attestation |
-| `galerin.config.environment.v1` | `galerina.config.environment.v2` ✅ APPLIED | env config (serialized schemaVersion) |
+| `galerina.proofgraph.governance.v1` | `galerina.proofgraph.governance.v2` ✅ APPLIED | ProofGraph context |
+| `galerina.bridge.manifest.v1` | `galerina.bridge.manifest.v2` ✅ APPLIED | bridge attestation |
+| `galerina.audit.attestation.v1` | `galerina.audit.attestation.v2` ✅ APPLIED | audit attestation |
+| `galerina.config.environment.v1` | `galerina.config.environment.v2` ✅ APPLIED | env config (serialized schemaVersion) |
 | `spore.gov.sig.v1` / `.v2` | `spore.gov.sig.v1` / `.v2` | governance signature algorithm (v2 = hybrid Ed25519+ML-DSA) |
 | `spore.runtime.audit.v1` | `spore.runtime.audit.v1` | audit-event schemaVersion |
 | `spore.runtime.manifest.v1` | `spore.runtime.manifest.v1` | runtime manifest schema |
@@ -51,7 +51,7 @@ Widen every verify GATE to accept old OR new, but DON'T change emitters yet. Fil
   - gate L882 `… !== "spore.gov.sig.v2"` → also allow `"spore.gov.sig.v2"`
 - `packages-galerina/galerina-core-compiler/src/audit-writer.ts`
   - type L29 + gate L77 `!== "spore.runtime.audit.v1"` → also allow `"spore.runtime.audit.v1"`
-- The 4 `galerin.*` contexts: wherever a verifier compares the context string, accept the `galerina.*` twin.
+- The 4 `galerina.*` contexts: wherever a verifier compares the context string, accept the `galerina.*` twin.
 - **Add a NEW-tag fixture test** for each gate (sign a fixture with the new tag, assert it verifies) — this is
   what proves dual-accept actually works; the existing suite only exercises the old tags.
 - Gate: full suite stays **60/60** (old path unbroken) AND the new-tag fixtures pass.
@@ -81,7 +81,7 @@ the codemod broke them). Re-signing replaces them with migrated content + a fres
   example-app fuse test, audit-chain, proof-chain).
 - `node scripts/lint-conventions.mjs` → enforcing audits + provenance green.
 - Regen build/ catalogs+graph (`code-index`/`gen-code-registry`/`kb-index`/`graph-all`/`audit-coverage`).
-- After a release with dual-accept, REMOVE the old-tag acceptance from the Step-1 gates (drop `spore.*`/`galerin.*`).
+- After a release with dual-accept, REMOVE the old-tag acceptance from the Step-1 gates (drop `spore.*`/`galerina.*`).
 - Update `version.json` + any doc that still cites the old wire tags.
 
 ## Rollback

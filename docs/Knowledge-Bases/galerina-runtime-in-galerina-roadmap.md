@@ -164,7 +164,7 @@ Audit trail writes to Deno KV. ProofGraph downloadable from `/governance/proof`.
 **Impact: `use governance_shape HIPAA_PHI_v1` — governance shapes importable in source**
 
 ```galerina
-use governance_shape @galerina/compliance-hipaa:HIPAA_PHI_v1
+use governance_shape @galerinaa/compliance-hipaa:HIPAA_PHI_v1
 
 secure flow processPatient(...) contract { ... }
 // HIPAA requirements auto-injected from the shape
@@ -268,7 +268,7 @@ contract {
 **Goal:** Galerina v1.0 — full runtime in Galerina, production deployed, certified shapes.
 
 ### Phase 46 — Compliance Packages Public Beta
-`@galerina/compliance-eu-ai-act`, `@galerina/compliance-hipaa`, `@galerina/compliance-soc2` released.
+`@galerinaa/compliance-eu-ai-act`, `@galerinaa/compliance-hipaa`, `@galerinaa/compliance-soc2` released.
 
 ### Phase 47 — Hardware Attestation (Intel TXT/SGX)
 ProofGraph includes hardware attestation quote when native code runs inside SGX enclave.

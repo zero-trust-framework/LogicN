@@ -3,7 +3,7 @@ import { writeTmf } from "../../../galerina-ext-tmf/dist/index.js";
 
 // tmf-container — ".tmf trust-container CREATION" throughput.
 //
-// THE NODE.JS COLUMN IS LITERALLY GALERINA'S SHIPPED ENGINE. `@galerina/ext-tmf` is
+// THE NODE.JS COLUMN IS LITERALLY GALERINA'S SHIPPED ENGINE. `@galerinaa/ext-tmf` is
 // pure TypeScript-on-Node (no `.spore` execution path exists), so its creation
 // throughput *is* the Node.js row. python.py and bench.rs are independent,
 // byte-identical reference implementations of the same v0 format — that is the
@@ -52,7 +52,7 @@ function runBench(iterations) {
 
   return {
     runtime: "nodejs", benchmark: "tmf-container-v1",
-    note: "Node.js column = @galerina/ext-tmf engine (the shipped Galerina artifact)",
+    note: "Node.js column = @galerinaa/ext-tmf engine (the shipped Galerina artifact)",
     iterations, containerBytes: sample.length, integrityRoot: root, checksum: acc,
     elapsedMs: Number(elapsedMs.toFixed(3)),
     operationsPerSecond: Number((iterations / (elapsedMs / 1000)).toFixed(0)),

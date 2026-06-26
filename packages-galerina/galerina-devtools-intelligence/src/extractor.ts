@@ -13,7 +13,7 @@
 // =============================================================================
 
 import { createHash } from "node:crypto";
-import { type AstNode, type FlowMeta, type ParseResult } from "@galerina/core-compiler";
+import { type AstNode, type FlowMeta, type ParseResult } from "@galerinaa/core-compiler";
 import { tokenizeWithCompounds } from "./bm25.js";
 import type { IndexedFlow } from "./types.js";
 

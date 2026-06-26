@@ -313,7 +313,7 @@ describe("CLI compatibility — platform awareness", () => {
     // Galerina install scripts must use platform-specific syntax:
     //   Linux/macOS: curl -fsSL https://galerina.io/install.sh | bash
     //   Windows:     iwr https://galerina.io/install.ps1 | iex
-    //   Universal:   npm install -g @galerina/cli
+    //   Universal:   npm install -g @galerinaa/cli
     if (isWin) {
       // Confirm the alias exists — if cmd.exe 'where curl' returns nothing or
       // PowerShell resolves to Invoke-WebRequest, install docs must warn about -fsSL.
@@ -338,7 +338,7 @@ describe("CLI compatibility — platform awareness", () => {
     assert.ok(major >= 18, `Node.js >= 18 required, found ${version}`);
   });
 
-  it("npm is available (required for npm install -g @galerina/cli)", () => {
+  it("npm is available (required for npm install -g @galerinaa/cli)", () => {
     const r = spawnSync("npm", ["--version"], { encoding: "utf8", shell: isWin, timeout: 5000 });
     assert.ok(r.status === 0 || r.error === undefined, "npm should be available");
   });

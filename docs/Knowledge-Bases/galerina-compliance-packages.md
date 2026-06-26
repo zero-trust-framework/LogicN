@@ -22,15 +22,15 @@ These are domain-specific concerns, not governance-core concerns.
 ## Proposed Package Structure
 
 ```
-@galerina/compliance-eu-ai-act     — EU AI Act Article 12, 13, 9 (high-risk AI logging)
-@galerina/compliance-hipaa         — HIPAA Security Rule §164.312 (PHI access controls)
-@galerina/compliance-soc2          — SOC 2 Trust Service Criteria (security, availability, PI)
-@galerina/compliance-sec-17a4      — SEC Rule 17a-4 (financial records authenticity)
-@galerina/compliance-iso27001      — ISO 27001 Annex A controls
-@galerina/compliance-nist-csf      — NIST CSF 2.0 Identify/Protect/Detect/Respond/Recover
-@galerina/compliance-gdpr          — GDPR Article 5, 25, 30 (data protection by design)
-@galerina/compliance-do178c        — DO-178C (avionics software, safety levels A-E)
-@galerina/compliance-iec62443      — IEC 62443 (industrial automation security)
+@galerinaa/compliance-eu-ai-act     — EU AI Act Article 12, 13, 9 (high-risk AI logging)
+@galerinaa/compliance-hipaa         — HIPAA Security Rule §164.312 (PHI access controls)
+@galerinaa/compliance-soc2          — SOC 2 Trust Service Criteria (security, availability, PI)
+@galerinaa/compliance-sec-17a4      — SEC Rule 17a-4 (financial records authenticity)
+@galerinaa/compliance-iso27001      — ISO 27001 Annex A controls
+@galerinaa/compliance-nist-csf      — NIST CSF 2.0 Identify/Protect/Detect/Respond/Recover
+@galerinaa/compliance-gdpr          — GDPR Article 5, 25, 30 (data protection by design)
+@galerinaa/compliance-do178c        — DO-178C (avionics software, safety levels A-E)
+@galerinaa/compliance-iec62443      — IEC 62443 (industrial automation security)
 ```
 
 ---
@@ -65,7 +65,7 @@ export const SPORE_EU_AI_001: SporeDiagnostic;  // High-risk AI without event lo
 
 ```galerina
 // Import a certified governance shape from the marketplace
-use governance_shape @galerina/compliance-hipaa:HIPAA_PHI_v1
+use governance_shape @galerinaa/compliance-hipaa:HIPAA_PHI_v1
 
 secure flow updatePatientRecord(readonly record: Protected<PatientRecord>)
 -> Result<Response, Error>
@@ -90,9 +90,9 @@ The shape import injects all HIPAA requirements into the flow contract. The comp
 
 **3. Optional by default** — Most Galerina users (web API, general services) don't need HIPAA or DO-178C. They shouldn't import that dependency.
 
-**4. Certifiable as units** — A `@galerina/compliance-do178c` package can be independently reviewed and certified by avionics authorities. Certifying the entire Galerina core would be impractical.
+**4. Certifiable as units** — A `@galerinaa/compliance-do178c` package can be independently reviewed and certified by avionics authorities. Certifying the entire Galerina core would be impractical.
 
-**5. Composable** — A medical device flow might use both `@galerina/compliance-hipaa` AND `@galerina/compliance-iec62443`. Both shapes compose.
+**5. Composable** — A medical device flow might use both `@galerinaa/compliance-hipaa` AND `@galerinaa/compliance-iec62443`. Both shapes compose.
 
 ---
 
@@ -100,7 +100,7 @@ The shape import injects all HIPAA requirements into the flow contract. The comp
 
 | Phase | Package | Trigger |
 |---|---|---|
-| Phase 38 | `@galerina/certified-shapes` (foundation) | Governance Marketplace foundation |
+| Phase 38 | `@galerinaa/certified-shapes` (foundation) | Governance Marketplace foundation |
 | Phase 46 | First 3 packages: HIPAA, SOC2, EU AI Act | Marketplace public beta |
 | Phase 47 | SEC 17a-4, ISO 27001 | Hardware Shield ships |
 | Phase 48 | DO-178C | Real-time governance phase |

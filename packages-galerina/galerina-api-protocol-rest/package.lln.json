@@ -1,5 +1,5 @@
 {
-  "name": "logicn-api-protocol-rest",
+  "name": "galerina-api-protocol-rest",
   "version": "0.1.0",
   "kind": "api-protocol",
   "provides": "rest",

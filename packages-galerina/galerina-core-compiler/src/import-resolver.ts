@@ -4,7 +4,7 @@
 // Resolves `import X from "module"` and `import { X, Y } from "module"`
 // declarations found in the parsed AST.
 //
-// Built-in Galerina packages (@galerina/*) are resolved from the standard type
+// Built-in Galerina packages (@galerinaa/*) are resolved from the standard type
 // registry below without needing physical package files.  External packages
 // and relative paths are silently accepted (unknown names are registered
 // without type information so the pipeline does not emit spurious errors).
@@ -44,7 +44,7 @@ export interface ImportResolveResult {
 // Standard Galerina module registry
 //
 // These are the canonical types and values exported by the built-in
-// @galerina/* packages.  Importing from these paths does not require
+// @galerinaa/* packages.  Importing from these paths does not require
 // physical package files — they resolve from this registry.
 // ---------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ interface ModuleExports {
 
 const GALERINA_MODULE_REGISTRY: ReadonlyMap<string, ModuleExports> = new Map([
   // ── Healthcare ────────────────────────────────────────────────────────
-  ["@galerina/healthcare-types", {
+  ["@galerinaa/healthcare-types", {
     types: [
       "PatientId", "NhsNumber", "PatientName", "DateOfBirth",
       "PatientRecord", "HealthRecord", "ClinicalActor",
@@ -67,7 +67,7 @@ const GALERINA_MODULE_REGISTRY: ReadonlyMap<string, ModuleExports> = new Map([
   }],
 
   // ── Financial ─────────────────────────────────────────────────────────
-  ["@galerina/financial-types", {
+  ["@galerinaa/financial-types", {
     types: [
       "AccountId", "CardNumber", "SortCode", "TransactionId",
       "CustomerId", "OrderId", "CurrencyCode",
@@ -78,7 +78,7 @@ const GALERINA_MODULE_REGISTRY: ReadonlyMap<string, ModuleExports> = new Map([
   }],
 
   // ── Identity / access ─────────────────────────────────────────────────
-  ["@galerina/identity-types", {
+  ["@galerinaa/identity-types", {
     types: [
       "UserId", "Actor", "TraceId", "TenantId", "Deadline",
       "AuthError", "PermissionError",
@@ -87,7 +87,7 @@ const GALERINA_MODULE_REGISTRY: ReadonlyMap<string, ModuleExports> = new Map([
   }],
 
   // ── AI / ML ───────────────────────────────────────────────────────────
-  ["@galerina/ai-types", {
+  ["@galerinaa/ai-types", {
     types: [
       "Label", "ClassificationResult", "EmbeddingResult", "RiskScore", "AiError",
     ],
@@ -95,7 +95,7 @@ const GALERINA_MODULE_REGISTRY: ReadonlyMap<string, ModuleExports> = new Map([
   }],
 
   // ── Core utilities ────────────────────────────────────────────────────
-  ["@galerina/core-types", {
+  ["@galerinaa/core-types", {
     types: [
       "Email", "Url", "Path", "Hostname", "Port",
       "CurrencyCode", "Reference",
@@ -106,7 +106,7 @@ const GALERINA_MODULE_REGISTRY: ReadonlyMap<string, ModuleExports> = new Map([
   }],
 
   // ── Enterprise types ──────────────────────────────────────────────────
-  ["@galerina/enterprise-types", {
+  ["@galerinaa/enterprise-types", {
     types: [
       "Policy", "AuditRecord", "AuditProof", "ExecutionPlan", "RuntimeReport",
     ],
@@ -114,7 +114,7 @@ const GALERINA_MODULE_REGISTRY: ReadonlyMap<string, ModuleExports> = new Map([
   }],
 
   // ── Compute types ─────────────────────────────────────────────────────
-  ["@galerina/compute-types", {
+  ["@galerinaa/compute-types", {
     types: [
       "ComputeTarget", "ExecutionPlan", "RuntimeReport",
     ],
@@ -122,7 +122,7 @@ const GALERINA_MODULE_REGISTRY: ReadonlyMap<string, ModuleExports> = new Map([
   }],
 
   // ── Domain types ──────────────────────────────────────────────────────
-  ["@galerina/domain-types", {
+  ["@galerinaa/domain-types", {
     types: [
       "Email", "Url", "Path", "CurrencyCode", "Reference",
       "UserId", "Actor", "TraceId", "TenantId", "Deadline",
@@ -135,9 +135,9 @@ const GALERINA_MODULE_REGISTRY: ReadonlyMap<string, ModuleExports> = new Map([
 // Import declaration parser
 //
 // Handles the raw text produced by parser.ts's parseImportDecl():
-//   "Email from \"@galerina/core-types\""
-//   "{ PatientId , NhsNumber } from \"@galerina/healthcare-types\""
-//   "* as types from \"@galerina/ai-types\""
+//   "Email from \"@galerinaa/core-types\""
+//   "{ PatientId , NhsNumber } from \"@galerinaa/healthcare-types\""
+//   "* as types from \"@galerinaa/ai-types\""
 //
 // Returns: list of { localName, moduleSource } pairs.
 // ---------------------------------------------------------------------------
@@ -191,13 +191,13 @@ function parseImportValue(raw: string): readonly RawImportItem[] {
 // Package manifest cache
 //
 // Keyed by moduleSource (e.g. "@myorg/customer-types") → type names list.
-// Populated lazily on first import of a non-@galerina/* package.
+// Populated lazily on first import of a non-@galerinaa/* package.
 // ---------------------------------------------------------------------------
 
 const manifestTypeCache = new Map<string, readonly string[]>();
 
 /**
- * Attempt to load a package.galerina.yaml for a non-@galerina/* module.
+ * Attempt to load a package.galerina.yaml for a non-@galerinaa/* module.
  * Searches in `<nodeModulesRoot>/<moduleSource>/package.galerina.yaml`.
  * Returns the exported type names, or an empty array if not found.
  */
@@ -241,8 +241,8 @@ function resolveSymbol(
     return { name: localName, sourceModule: moduleSource, kind: "type" };
   }
 
-  // Non-@galerina/* package — try package.galerina.yaml manifest
-  if (nodeModulesRoot !== undefined && !moduleSource.startsWith("@galerina/")) {
+  // Non-@galerinaa/* package — try package.galerina.yaml manifest
+  if (nodeModulesRoot !== undefined && !moduleSource.startsWith("@galerinaa/")) {
     const manifestTypes = loadExternalManifestTypes(moduleSource, nodeModulesRoot);
     if (manifestTypes.includes(localName)) {
       return { name: localName, sourceModule: moduleSource, kind: "type" };
@@ -266,7 +266,7 @@ function resolveSymbol(
  * Walks the top-level AST for `importDecl` nodes and resolves all imported
  * names against the built-in Galerina module registry.
  *
- * For non-@galerina/* imports, if `nodeModulesRoot` is provided the resolver
+ * For non-@galerinaa/* imports, if `nodeModulesRoot` is provided the resolver
  * will look for a `package.galerina.yaml` manifest inside the package directory
  * and use it to classify names as types vs values.
  *

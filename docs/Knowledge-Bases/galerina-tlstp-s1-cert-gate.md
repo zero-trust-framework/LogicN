@@ -164,7 +164,7 @@ Boundary: `decideAtBoundary(−1)` → `{decision:"deny", authorized:false, diag
 
 1. **Define the input adapter.** Write `toSubVerdicts(libResult, pins, now, ocsp): {pin_match, chain_valid, not_expired, revocation_fresh}` per the §2.3 table. **Inputs:** the TLS library's path-validation result, the host's pin set, a clock, and the OCSP/CRL outcome. **Output:** four `Verdict` trits. The default for every unmapped/missing/errored case is `0` (not `+1`) — this is the fail-closed seam.
 
-2. **Fold with the shipped K3 reduce.** `import { vAnd, allOf, Verdict } from "@galerina/tower-citizen"` (or the published name for `three-valued-governance.ts`). Compute `cert_verdict = allOf([pin_match, chain_valid, not_expired, revocation_fresh])` — reuses `allOf` (`:73-76`), which is the `vAnd`-reduce with deny-by-default on the empty set. **Do NOT** hand-roll `min`; reuse the verified gate so the K3-conformance oracle (`tests/three-valued-governance.test.mjs`) keeps covering you.
+2. **Fold with the shipped K3 reduce.** `import { vAnd, allOf, Verdict } from "@galerinaa/tower-citizen"` (or the published name for `three-valued-governance.ts`). Compute `cert_verdict = allOf([pin_match, chain_valid, not_expired, revocation_fresh])` — reuses `allOf` (`:73-76`), which is the `vAnd`-reduce with deny-by-default on the empty set. **Do NOT** hand-roll `min`; reuse the verified gate so the K3-conformance oracle (`tests/three-valued-governance.test.mjs`) keeps covering you.
 
 3. **Collapse at the boundary.** `const decision = decideAtBoundary(cert_verdict, onDiagnostic)` (`:141-153`). Forward `decision.diagnostic` (SPORE-GOV-3VL-001) to the AuditLogger egress. **Output:** `decision.authorized` gates whether the channel/flow proceeds.
 

@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/tower-citizen",
+  "name": "@galerinaa/tower-citizen",
   "version": "1.0.0-beta.2",
   "description": "Galerina Tower Citizen — TowerRuntime + AuditLogger + PluginSandbox for governed AI inference",
   "license": "Apache-2.0",
@@ -19,8 +19,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@galerina/inference-bridge-contract": "file:../galerina-inference-bridge-contract",
-    "@galerina/substrate-math": "file:../galerina-substrate-math",
+    "@galerinaa/inference-bridge-contract": "file:../galerina-inference-bridge-contract",
+    "@galerinaa/substrate-math": "file:../galerina-substrate-math",
     "@noble/post-quantum": "^0.6.1"
   },
   "devDependencies": {

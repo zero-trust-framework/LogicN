@@ -131,9 +131,9 @@ Required fix:
 
 ### CF-4: Brawn depends on Brain package internals
 
-The bridge package imports runtime values from `@galerina/tower-citizen`, not only
-types. The package graph records `@galerina/ext-bridge-cpp` depending on
-`@galerina/tower-citizen`:
+The bridge package imports runtime values from `@galerinaa/tower-citizen`, not only
+types. The package graph records `@galerinaa/ext-bridge-cpp` depending on
+`@galerinaa/tower-citizen`:
 
 - `packages-galerina/galerina-ext-bridge-cpp/.graph/package-graph.json:42`
 

@@ -1,4 +1,4 @@
-// @galerina/test — shared vocabulary for the consolidated Galerina test harness.
+// @galerinaa/test — shared vocabulary for the consolidated Galerina test harness.
 //
 // One type model for the four check kinds a downstream app runs against a Galerina
 // workspace: per-package `unit` suites, `e2e` end-to-end compile of example apps,

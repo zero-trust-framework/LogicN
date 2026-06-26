@@ -90,7 +90,7 @@ the name. "sidecar" → a deployment descriptor in the README/Helm chart, not th
    **`governanceSignature` → PLACEHOLDER (#34), never present as attested.**
 
 ## Slice 1 SHIPPED 2026-06-20 — read-only exporter (owner green-lit)
-New package **`@galerina/governance-telemetry`** (`packages-galerina/galerina-governance-telemetry/`):
+New package **`@galerinaa/governance-telemetry`** (`packages-galerina/galerina-governance-telemetry/`):
 - **`renderPrometheus(snapshot)`** — PURE serializer of a `GovernanceSnapshot` → Prometheus/OpenMetrics text. Emits the
   governance-native metrics (`galerina_governance_flag` per mask bit, `galerina_effects_observed_total{effect_family}`,
   `galerina_flow_execution_tier_total`, **`galerina_governance_indeterminate_total`** = the unknown→deny stream,

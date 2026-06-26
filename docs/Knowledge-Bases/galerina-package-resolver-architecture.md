@@ -52,7 +52,7 @@ Verified Execution Cache
 ## Package Manifest Schema (package.galerina.yaml)
 
 ```yaml
-name: "@galerina/auth"
+name: "@galerinaa/auth"
 version: "1.2.0"
 
 # Content-addressable hash — identity is the content, not the name+version
@@ -192,7 +192,7 @@ The lockfile (`package.galerina.lock`) stores:
 
 ```yaml
 packages:
-  - name: "@galerina/auth"
+  - name: "@galerinaa/auth"
     version: "1.2.0"
     hash: "sha256:3f7c4a..."
     capabilities:
@@ -232,7 +232,7 @@ Generate compact AI metadata as part of resolver output:
 {
   "packages": [
     {
-      "name": "@galerina/auth",
+      "name": "@galerinaa/auth",
       "version": "1.2.0",
       "effects": ["crypto.verify", "audit.write"],
       "capabilities": ["crypto.password.verify"],

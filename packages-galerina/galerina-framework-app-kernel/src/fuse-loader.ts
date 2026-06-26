@@ -155,7 +155,7 @@ export interface FusePackageOptions {
   /**
    * Posture-derived import profile (R&D 0051): when `true`, an unsigned import is REFUSED even if
    * `allowUnsigned` was also passed — the security posture wins, fail-secure. The host derives this
-   * from `deriveImportProfile(resolvePosture(...))` in `@galerina/core-config` (prod/mesh ⇒ true).
+   * from `deriveImportProfile(resolvePosture(...))` in `@galerinaa/core-config` (prod/mesh ⇒ true).
    * Tamper (hash/signature) is denied regardless of this flag.
    */
   readonly requireSignature?: boolean;
@@ -213,7 +213,7 @@ export type HybridManifestVerdict = "verified" | "invalid" | "unverifiable";
 
 /**
  * Injected post-quantum (hybrid) manifest-signature verifier — see {@link FusePackageOptions.hybridVerifier}.
- * MAY be async: the shipped reference verifier (`@galerina/core-compiler` `verifyGovernanceSignatureHybrid`)
+ * MAY be async: the shipped reference verifier (`@galerinaa/core-compiler` `verifyGovernanceSignatureHybrid`)
  * dynamically imports `@noble/post-quantum`, so the verdict can be a Promise — the loader awaits it.
  *
  * NOTE on `signingInput`: it is the RFC-8785 canonical manifest body. The v2 hybrid signature the Galerina CLI

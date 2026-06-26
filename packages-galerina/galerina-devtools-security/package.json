@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/devtools-security",
+  "name": "@galerinaa/devtools-security",
   "version": "1.0.0-beta.2",
   "description": "Security analysis, audit, and testing tools for Galerina programs. Runs all security checks (taint, profiles, governance, hardware, path sandbox, ReDoS guard) and produces structured audit reports. Designed for CI integration — lightweight, no runtime dependency.",
   "license": "Apache-2.0",
@@ -23,9 +23,9 @@
     "audit:json": "node dist/cli.js audit --json"
   },
   "dependencies": {
-    "@galerina/core-compiler": "file:../galerina-core-compiler",
-    "@galerina/core-economics": "file:../galerina-core-economics",
-    "@galerina/devtools-pci": "file:../galerina-devtools-pci"
+    "@galerinaa/core-compiler": "file:../galerina-core-compiler",
+    "@galerinaa/core-economics": "file:../galerina-core-economics",
+    "@galerinaa/devtools-pci": "file:../galerina-devtools-pci"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",

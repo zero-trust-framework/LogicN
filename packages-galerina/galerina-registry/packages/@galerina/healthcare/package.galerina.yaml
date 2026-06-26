@@ -1,4 +1,4 @@
-name: "@galerina/healthcare"
+name: "@galerinaa/healthcare"
 version: "0.1.0"
 registry: "https://registry.galerina.dev"
 description: "Certified healthcare data flows for Galerina — HIPAA-aligned PHI handling."

@@ -18,7 +18,7 @@ import { createRequire as _createRequire } from "node:module";
 // SSRF egress protection — the hardened, deny-by-default outbound guard (normalizes numeric-IP /
 // IPv4-in-IPv6 / CGNAT / *.corp bypasses + DNS-rebind recheck). Wiring the EXISTING guard rather than
 // re-cloning the inline regex (self-audit 61-9). egress-guard is pure — no node/tower-citizen load.
-import { guardOutboundUrl, guardResolvedAddresses } from "@galerina/core-network";
+import { guardOutboundUrl, guardResolvedAddresses } from "@galerinaa/core-network";
 import bcrypt from "bcryptjs";  // Phase 34: real bcrypt ($2b$) for BCrypt.verify / BCrypt.hash
 // Phase 36: Argon2id (OWASP preferred memory-hard KDF) — async, imported lazily
 // to avoid startup cost when Password API is not used.
@@ -1259,7 +1259,7 @@ async function networkAsync(fullName: string, args: readonly GalerinaValue[], ct
   const url = strVal(args[0] ?? SPORE_VOID);
   if (!url) return err("NetworkError: empty URL");
 
-  // OWASP F2: SSRF — deny-by-default egress guard (@galerina/core-network). guardHop normalizes + denies the
+  // OWASP F2: SSRF — deny-by-default egress guard (@galerinaa/core-network). guardHop normalizes + denies the
   // numeric-IP / IPv4-in-IPv6 / CGNAT / *.internal / embedded-credential bypasses, plus a DNS-rebind recheck.
   // It is applied to the ORIGINAL url AND to EVERY redirect hop — a guard-approved public URL can return
   // `302 Location: http://169.254.169.254/`, and a guard that only checks the original URL is bypassed by the

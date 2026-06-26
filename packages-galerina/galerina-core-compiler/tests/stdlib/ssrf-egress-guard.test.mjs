@@ -5,7 +5,7 @@
 // bypassable inline private-range regex that MISSED: IPv4-in-IPv6 metadata
 // ([::ffff:169.254.169.254]), *.internal/*.corp/*.local internal TLDs,
 // CGNAT 100.64/10, decimal/hex numeric IPs, and embedded-credential URLs.
-// It now delegates to the hardened @galerina/core-network guardOutboundUrl, which
+// It now delegates to the hardened @galerinaa/core-network guardOutboundUrl, which
 // normalizes + denies all of these fail-closed BEFORE any fetch.
 //
 // Each case below denies at the guard (no network call is made). We assert the

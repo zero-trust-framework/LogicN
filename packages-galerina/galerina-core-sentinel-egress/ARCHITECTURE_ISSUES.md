@@ -1,6 +1,6 @@
 # LSEG — Architecture Issues / Deferred Seams
 
-`@galerina/core-sentinel-egress` (LSEG) is the governed write path for the audit
+`@galerinaa/core-sentinel-egress` (LSEG) is the governed write path for the audit
 ledger: a fixed-capacity ring buffer feeding a batched, HMAC-chained,
 tamper-evident flush. It replaces ad-hoc `fs.appendFileSync` per event (a
 Hardened-Border leak and a ~1000x perf sink) with ONE disk write per batch.

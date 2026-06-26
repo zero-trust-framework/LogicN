@@ -82,8 +82,8 @@ runtime {
 
   production {
     disabled_packages [
-    "packages-logicn/logicn-tools-benchmark",
-    "packages-logicn/logicn-devtools-*"
+    "packages-galerina/galerina-tools-benchmark",
+    "packages-galerina/galerina-devtools-*"
     ]
 
     package_overrides []
@@ -104,7 +104,7 @@ runtime {
 
     spill {
       enabled true
-      path "./storage/tmp/logicn-spill"
+      path "./storage/tmp/galerina-spill"
       max_disk 2gb
       ttl 1h
       encryption true

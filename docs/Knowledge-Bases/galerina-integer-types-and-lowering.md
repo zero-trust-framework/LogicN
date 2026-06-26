@@ -176,7 +176,7 @@ Galerina is governance-first; its **governed** execution tier is orders of magni
 (see [galerina-percent-audit-roadmap-2026-06-25-v2.md] — Node is ~1549× the governed tree-walker on nbody).
 The i64 work here makes Int64 *correct*, not *fast*; the WASM tier it extends is the fastest Galerina tier but
 still below native. On the separate "could photonics make it much faster?" intuition: the
-`@galerina/ext-photonic-emulator` cost model (`npm run prove`) gives **ideal ~9.4× / realized ~1.91×** for the
+`@galerinaa/ext-photonic-emulator` cost model (`npm run prove`) gives **ideal ~9.4× / realized ~1.91×** for the
 bulk-math T-MAC — and the PartitionDecider **never** accepts a net-loss offload (it stays digital). That is a
 **modest, I/O-bound, emulated envelope** (`executedNatively=false`), not a magic speedup — which is exactly
 why the photonic overclaims were refused. Crypto and the verdict always stay digital.

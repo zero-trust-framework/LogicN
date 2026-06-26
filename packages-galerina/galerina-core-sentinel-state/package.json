@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/core-sentinel-state",
+  "name": "@galerinaa/core-sentinel-state",
   "version": "1.0.0-beta.2",
   "description": "Galerina Sentinel State (LSS) — atomic, HMAC-verified state snapshots + cold-boot recovery. Citizen Protocol v1.5.",
   "license": "Apache-2.0",

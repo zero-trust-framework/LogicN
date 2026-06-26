@@ -15,12 +15,12 @@ import {
   type InferenceBridge,
   type BridgeOp,
   type BridgeResult,
-} from "@galerina/inference-bridge-contract";
+} from "@galerinaa/inference-bridge-contract";
 import {
   StubTernaryBridge,
   GovernanceEnforcer,
   AuditLogger,
-} from "@galerina/tower-citizen";
+} from "@galerinaa/tower-citizen";
 import { detectGpu, type GpuCapability } from "./hardware-detect.js";
 
 export class BitNetGpuBridge implements InferenceBridge {

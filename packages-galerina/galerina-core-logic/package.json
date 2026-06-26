@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/core-logic",
+  "name": "@galerinaa/core-logic",
   "version": "1.0.0-beta.2",
   "description": "Galerina multi-state logic concepts including Tri, Decision, BoolBoundary and Omni logic.",
   "license": "Apache-2.0",

@@ -28,7 +28,7 @@
 | 27 | WASM instantiation (wabt) — 8/8 benchmarks, native speed | ✅ | +16 |
 | 27B | Sync fast-path — 14.3× tree-walker speedup | ✅ | — |
 | 28 | Profile enforcement (strict/high_integrity) + Tainted<T>/SafeFor<Context,T> | ✅ | +14 |
-| 29 | @galerina/core-economics — CostGraph, ValueGraph, IBM matrix, RouteDecision | ✅ | +15 |
+| 29 | @galerinaa/core-economics — CostGraph, ValueGraph, IBM matrix, RouteDecision | ✅ | +15 |
 | 30 | ProofGraph caching by ExecutionSignature (67% hit rate) | ✅ | — |
 | 31 | Bytecode VM — Int32Array opcodes, 14.3× over sync tree-walker | ✅ | +18 |
 | 31B | Bytecode VM auto-wired into executeFlow (220K calls/sec) | ✅ | — |
@@ -62,7 +62,7 @@
 | Value/Safety diagnostics | `SPORE_VAL_001/002/003` | ✅ |
 | ProofGraph caching | `buildProofGraphCached`, `getProofCacheStats` | ✅ |
 | Governance diff | `diffGovernance`, `renderGovernanceDiff` | ✅ |
-| CostGraph | `@galerina/core-economics` package | ✅ |
+| CostGraph | `@galerinaa/core-economics` package | ✅ |
 | Risk matrix (IBM 2025) | `calculateRiskCost`, `PER_RECORD_LOSS_USD` | ✅ |
 | Route decision | `selectRoute` (governanceApproved: true literal) | ✅ |
 | Hardware routing | `I9_DESKTOP`, `I5_LAPTOP`, `selectVectorTier` | ✅ |

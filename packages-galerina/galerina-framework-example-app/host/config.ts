@@ -5,13 +5,13 @@
 // loads + validates that file into a typed AppConfig, failing CLOSED: an unrecognised
 // environment or posture is rejected, and a missing/invalid file throws rather than
 // silently booting on guessed defaults. `posture` + `env` are handed to the App
-// Kernel, which resolves the effective OS/HW posture via @galerina/core-config.
+// Kernel, which resolves the effective OS/HW posture via @galerinaa/core-config.
 
 import { readFileSync } from "node:fs";
 
-/** Deployment environment (mirrors @galerina/core-config EnvironmentMode). */
+/** Deployment environment (mirrors @galerinaa/core-config EnvironmentMode). */
 export type AppEnv = "development" | "test" | "staging" | "production";
-/** Requested OS/HW security posture (mirrors @galerina/core-config SecurityPosture). */
+/** Requested OS/HW security posture (mirrors @galerinaa/core-config SecurityPosture). */
 export type AppPosture = "off" | "auto" | "on";
 
 /** The fully-validated app configuration the host runs on. */

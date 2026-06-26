@@ -27,7 +27,7 @@ one-hop or type-only check fails open. It rides the **live `checkValueStates` pa
   (a) is typed `Embedding`/`EmbeddingResult` (type backstop), or (b) is initialised from an embedding
   source, or (c) **derives** from an embedding-stamped binding.
 - **Source recognizer** (`isEmbeddingSourceExpression`): the REAL shipped symbols — the `EmbeddingModel`
-  value (`@galerina/ai-types`), canonical call `EmbeddingModel.run(...)`/`.infer`/`.embed`, plus the common
+  value (`@galerinaa/ai-types`), canonical call `EmbeddingModel.run(...)`/`.infer`/`.embed`, plus the common
   `embed`/`embedQuery`/`embedDocuments` methods. (The original design's `model.embed` matched nothing —
   caught by the adversarial review.)
 - **Propagation** (`derivesFromEmbedding`): walks slice/member/concat/record/list/non-sealing-call.

@@ -1,6 +1,6 @@
 // arena.ts — the SealTaint arena + source-agnostic zero-wiped store (Part 4 discipline).
 //
-// Mirrors the @galerina/ext-secrets-vault SecretsRotationManager zero-wipe + atomic-swap
+// Mirrors the @galerinaa/ext-secrets-vault SecretsRotationManager zero-wipe + atomic-swap
 // discipline (rotation-manager.ts:45-49 replace-wipe, :90-95 stage->swap->wipe,
 // :108-110 fail-closed getActive, :212-220 dispose), but is SOURCE-AGNOSTIC: it holds
 // raw plaintext Buffers fed from the env.tmf decrypt path — it does NOT import VaultClient

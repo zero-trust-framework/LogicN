@@ -1,5 +1,5 @@
 /**
- * @galerina/devtools-pci — 0084-pci-unknown fail-closed regression tests.
+ * @galerinaa/devtools-pci — 0084-pci-unknown fail-closed regression tests.
  *
  * Proves: unknown -> not-pass (parse failure => indeterminate; requireFullAttestation
  * surfaces the unmodelled families as a deny), while a clean fully-modelled input

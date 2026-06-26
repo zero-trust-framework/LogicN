@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/devtools-benchmarks",
+  "name": "@galerinaa/devtools-benchmarks",
   "version": "1.0.0-beta.2",
   "description": "Runtime comparison benchmarks: Python · Node.js · C++ · Rust · Galerina (governed + manifest)",
   "license": "Apache-2.0",
@@ -27,7 +27,7 @@
     "run:fault-injection":    "node src/diagnostic-runner.mjs --benchmark toxic-input --benchmark governance-violation"
   },
   "dependencies": {
-    "@galerina/core-compiler": "file:../galerina-core-compiler"
+    "@galerinaa/core-compiler": "file:../galerina-core-compiler"
   },
   "engines": { "node": ">=18" }
 }

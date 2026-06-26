@@ -1,5 +1,5 @@
 // =============================================================================
-// @galerina/core-economics — CostGraph + ValueGraph
+// @galerinaa/core-economics — CostGraph + ValueGraph
 //
 // Phase 29. Economics is a CONSTRAINT layer below governance:
 //   "Economics can pull the emergency brake on a safe path.

@@ -1,5 +1,5 @@
 /**
- * @galerina/devtools-provenance — Provenance Tests
+ * @galerinaa/devtools-provenance — Provenance Tests
  *
  * Tests the data lineage / provenance tracker using auth-service examples
  * plus synthetic sources for edge-case coverage.

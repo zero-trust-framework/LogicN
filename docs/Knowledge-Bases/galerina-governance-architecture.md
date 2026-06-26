@@ -174,7 +174,7 @@ payment.charge capability
 The capability graph understands:
 
 ```text
-imported package authority    — what does @galerina/payments bring in?
+imported package authority    — what does @galerinaa/payments bring in?
 transitive authority          — what does calling chargePayment imply?
 flow inheritance              — does a caller inherit a callee's capabilities?
 runtime escalation            — is capability acquired at runtime vs compile-time?
@@ -510,12 +510,12 @@ decisions — not just "what is fastest" but "what is legal within declared poli
 Package governance tracks the authority surface introduced by each dependency:
 
 ```text
-@galerina/payments
+@galerinaa/payments
   ├─ network.external
   ├─ secret.read
   └─ payment.charge
 
-@galerina/analytics
+@galerinaa/analytics
   ├─ database.read
   └─ ai.inference
 ```

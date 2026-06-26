@@ -1,5 +1,5 @@
 /**
- * @galerina/devtools-naming — Integration Tests
+ * @galerinaa/devtools-naming — Integration Tests
  *
  * Tests the Zero-Ambiguity / Maximum-Semantics naming checker.
  * Covers all 5 diagnostic codes: SPORE-NAMING-001..005

@@ -1,4 +1,4 @@
-# @galerina/docs — TODO
+# @galerinaa/docs — TODO
 
 ## Done (v0.1)
 - [x] OpenAPI 3.x document model (`src/types.ts`)

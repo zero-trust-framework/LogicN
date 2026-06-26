@@ -503,7 +503,7 @@ function isEmbeddingTypeName(typeName: string | undefined): boolean {
 /**
  * Returns true when `node` reads a semantic embedding from a model — the embedding
  * SOURCE. Keyed on the REAL shipped symbols (the EmbeddingModel value from
- * @galerina/ai-types, canonical call `EmbeddingModel.run(...)`), the common
+ * @galerinaa/ai-types, canonical call `EmbeddingModel.run(...)`), the common
  * embed / embedQuery / embedDocuments method names, AND any receiver whose name
  * contains "embed" (case-insensitive) — so a constructed instance var like
  * `embeddingModel.run(req)` or `myEmbedder.infer(x)` is recognized, not just the

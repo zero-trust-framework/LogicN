@@ -13,7 +13,7 @@
 > - **Owner decisions 2026-06-26:** focus = owner-gated roadmap; #34 Ed25519-only for now (keep
 >   `SPORE-CRYPTO-PQ-001` enforced); UInt64 unlock (u64-arith) AUTHORIZED; build supply-chain attestation core.
 > - **Remaining owner-gated queue:** prevention-rules (incl. `SPORE-NO-COERCION-001`, `SPORE-QUORUM-001`),
->   digital-ECC, `@galerina/ext-attestation` core, u64-arith. Shamir SSS stays blocked (ML-DSA deferred).
+>   digital-ECC, `@galerinaa/ext-attestation` core, u64-arith. Shamir SSS stays blocked (ML-DSA deferred).
 
 **Status:** v1.0.0-beta.2 · **~88% shippable / ~63% full-vision** · 60 packages · compiler suite 3,916/0.
 This session closed the threat-model's two criticals + most highs (C1, C2, H1, H2, H7, H8) plus several

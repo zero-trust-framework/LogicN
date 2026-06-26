@@ -1,4 +1,4 @@
-// @galerina/auth — standalone authentication/authorization FACTOR provider.
+// @galerinaa/auth — standalone authentication/authorization FACTOR provider.
 //
 // The way spring-security, Django contrib.auth, and NestJS passport ship auth as a
 // unit separate from the framework core, galerina-auth is the standalone home for the

@@ -29,7 +29,7 @@ const metadata = createReportMetadata({
   generator: {
     name: "galerina-core-cli",
     version: "0.1.0",
-    packageName: "@galerina/core-cli",
+    packageName: "@galerinaa/core-cli",
   },
 });
 

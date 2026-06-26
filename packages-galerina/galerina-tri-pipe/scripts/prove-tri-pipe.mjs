@@ -65,7 +65,7 @@ const targets = [...HARDWARE_TIER_PROFILES.keys(), "frobnicator", "x86_64-myster
 
 // summary
 let fails = 0;
-console.log("\n-- @galerina/tri-pipe — prove-own-maths (capability selection) --");
+console.log("\n-- @galerinaa/tri-pipe — prove-own-maths (capability selection) --");
 for (const r of results) { if (!r.ok) fails++; console.log(`${r.ok ? "PASS" : "FAIL"} ${r.name.padEnd(64)} ${r.detail}`); }
 console.log(fails === 0
   ? `\n${results.length}/${results.length} PASS — the Tri-Pipe selects backends EXACTLY by the hardware() tier; photonic offload is wired only for offload-capable tiers and never on binary; unknown/unattested capability fails closed to binary (worst case == binary == today).`

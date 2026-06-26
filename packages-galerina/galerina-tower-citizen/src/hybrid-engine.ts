@@ -219,7 +219,7 @@ export interface PhotonicKernelCost {
  * its unchanged digital dispatch. A non-null result has already passed the port's Freivalds/tolerance
  * re-verify, so it substitutes that for the bit-exact ternary `assertDeterminism` oracle on that op.
  * Duck-typed so the Tower never depends on the photonic package; a deployment injects an adapter
- * (e.g. `@galerina/ext-photonic-emulator`'s `createPhotonicRouterPort`). NEVER consulted in certified
+ * (e.g. `@galerinaa/ext-photonic-emulator`'s `createPhotonicRouterPort`). NEVER consulted in certified
  * mode (the dev emulator is an unattested tolerance backend).
  */
 export interface PhotonicOffloadPort {
@@ -912,7 +912,7 @@ export function createHybridEngine(profile: {
    * cost model to a net-win photonic kernel runs on the injected photonic backend and is accepted
    * only if it passes that backend's tolerance re-verify; otherwise the unchanged digital dispatch
    * runs. Fail-closed; NEVER used in certified mode. A deployment wires
-   * `@galerina/ext-photonic-emulator`'s `createPhotonicRouterPort()` here.
+   * `@galerinaa/ext-photonic-emulator`'s `createPhotonicRouterPort()` here.
    */
   photonic?: PhotonicConfig;
 } = {}): HybridInferenceEngine {

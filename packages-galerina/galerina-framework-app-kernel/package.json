@@ -1,5 +1,5 @@
 {
-  "name": "@galerina/framework-app-kernel",
+  "name": "@galerinaa/framework-app-kernel",
   "version": "1.0.0-beta.2",
   "description": "Optional Galerina secure App Kernel: the fixed, non-bypassable governed request pipeline + secure-default route policy resolver. The fusion host for protocol/capability packages.",
   "license": "Apache-2.0",
