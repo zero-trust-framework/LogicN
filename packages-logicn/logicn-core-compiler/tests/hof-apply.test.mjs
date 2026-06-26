@@ -71,3 +71,10 @@ test("FAIL-CLOSED across the HOF family: a trapping fn aborts find / count / sor
   assert.equal((await run("return xs.count(boom)")).__tag, "runtimeError");
   assert.equal((await run("return xs.sortBy(boom)", "Array<Int>")).__tag, "runtimeError");
 });
+
+test("partition is method-wired: splits by predicate, and fails closed on a trap (#61)", async () => {
+  const r = await run("return xs.partition(gt2)", "Array<Array<Int>>"); // [1,2,3,4], >2 ⇒ pass [3,4], fail [1,2]
+  assert.equal(r.__tag, "list");
+  assert.deepEqual(r.items.map((s) => s.items.map((i) => i.value)), [[3, 4], [1, 2]]);
+  assert.equal((await run("return xs.partition(boom)", "Array<Array<Int>>")).__tag, "runtimeError");
+});

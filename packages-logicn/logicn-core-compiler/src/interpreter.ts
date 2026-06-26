@@ -978,7 +978,7 @@ const STD_METHOD_NAMES = new Set([
   // Array
   "first", "last", "push", "append", "filter", "reduce", "sum", "reverse", "join", "find",
   "toList", "toArray", "take", "drop", "flatMap", "zip", "sortBy", "sort",
-  "min", "max", "count", "distinct", "unique", "groupBy",
+  "min", "max", "count", "distinct", "unique", "groupBy", "partition",
   // Map
   "set", "has", "size", "keys", "values", "delete", "remove", "entries", "merge",
   // Money
