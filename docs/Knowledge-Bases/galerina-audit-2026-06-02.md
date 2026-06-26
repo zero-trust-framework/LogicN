@@ -93,7 +93,7 @@ Supersedes: `galerina-audit-2026-06-01.md`
 
 - Phase 39: Ed25519 (`GovernanceSignature`) — ✅ complete
 - Phase 55: ML-DSA-65 (NIST FIPS 204) hybrid signing — ⏳ planned
-  - `lln.gov.sig.v2` artifact format (ed25519 + ml-dsa-65 dual signatures)
+  - `spore.gov.sig.v2` artifact format (ed25519 + ml-dsa-65 dual signatures)
   - `generateHybridGovernanceKeyPair` function
   - Attestation profiles: `compat`, `hybrid`, `pq_strict`
   - Diagnostics: SPORE-HW-101..104 (MissingRequiredAttestation, UnsupportedAttestationAlg, HybridAttestationIncomplete, AttestationEvidenceStale)

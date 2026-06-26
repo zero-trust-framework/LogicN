@@ -99,9 +99,9 @@ function auditFile(filePath: string, wantJson: boolean): number {
 }
 
 function auditDirectory(dirPath: string, wantJson: boolean): number {
-  let llnFiles: string[];
+  let sporeFiles: string[];
   try {
-    llnFiles = readdirSync(dirPath)
+    sporeFiles = readdirSync(dirPath)
       .filter(f => f.endsWith(".spore"))
       .map(f => join(dirPath, f));
   } catch {
@@ -109,7 +109,7 @@ function auditDirectory(dirPath: string, wantJson: boolean): number {
     return 3;
   }
 
-  if (llnFiles.length === 0) {
+  if (sporeFiles.length === 0) {
     process.stderr.write(`No .spore files found in '${dirPath}'\n`);
     return 0;
   }
@@ -117,7 +117,7 @@ function auditDirectory(dirPath: string, wantJson: boolean): number {
   const reports: PciAuditReport[] = [];
   let anyFail = false;
 
-  for (const filePath of llnFiles) {
+  for (const filePath of sporeFiles) {
     let source: string;
     try { source = readFileSync(filePath, "utf8"); }
     catch { process.stderr.write(`Cannot read '${filePath}'\n`); continue; }

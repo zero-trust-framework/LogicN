@@ -28,7 +28,7 @@ function makePureFlowAst(flowName = "add") {
 
 function makeManifest(overrides = {}) {
   return {
-    schemaVersion: "lln.runtime.manifest.v1",
+    schemaVersion: "spore.runtime.manifest.v1",
     flow: "add",
     qualifier: "pure",
     requiresAudit: false,

@@ -29,7 +29,7 @@ paths. Shared report types remain owned by `galerina-core-reports-v02.md`.
 1. Append-only: never overwrite or delete records.
 2. One record per line: no multiline JSON.
 3. Newline-terminated: each record ends with `\n`.
-4. Reject invalid `schemaVersion`; only `lln.runtime.audit.v1` is accepted.
+4. Reject invalid `schemaVersion`; only `spore.runtime.audit.v1` is accepted.
 5. Reject raw secrets; `SecureString` values must not appear in any field.
 6. No pretty-printing; use compact single-line JSON only.
 7. Preserve event order per writer instance; concurrent writers use separate
@@ -42,7 +42,7 @@ this runtime event shape for Stage 1 audit persistence:
 
 | Field | Type | Meaning | Example |
 |---|---|---|---|
-| `schemaVersion` | string | Audit schema identifier. | `"lln.runtime.audit.v1"` |
+| `schemaVersion` | string | Audit schema identifier. | `"spore.runtime.audit.v1"` |
 | `id` | string | Unique audit event id. | `"evt_01HY..."` |
 | `timestamp` | ISO8601 string | Runtime write time. | `"2026-05-29T12:00:00.000Z"` |
 | `status` | string | Runtime status. | `"Success"` |

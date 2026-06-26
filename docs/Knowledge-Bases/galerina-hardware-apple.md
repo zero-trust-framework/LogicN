@@ -93,7 +93,7 @@ In Galerina terms: the Secure Enclave is the **hardware backing for GovernanceSi
 ```typescript
 // GovernanceSignature backed by Apple Secure Enclave:
 interface SecureEnclaveBackedSignature {
-  readonly algorithm: "lln.gov.sig.v1";
+  readonly algorithm: "spore.gov.sig.v1";
   readonly signerKeyId: string;
   readonly signature: string;          // signed inside Secure Enclave
   readonly attestation: string;        // hardware attestation from Secure Enclave

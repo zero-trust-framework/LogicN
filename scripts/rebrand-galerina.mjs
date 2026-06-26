@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-// rebrand-galerina.mjs — staged, category-aware LogicN→Galerina / .lln→.spore / LLN→SPORE codemod.
+// rebrand-galerina.mjs — staged, category-aware Galerina→Galerina / .spore→.spore / LLN→SPORE codemod.
 //
 // DRY-RUN by default; pass --apply to write file edits + `git mv` renames (history preserved).
 // Operates ONLY on git-tracked files (so node_modules / dist / gitignored build artifacts are out by
 // construction). Case + WORD aware (avoids substring traps like "allnight" → "asporeight").
 //
-// Owner-locked scheme: EVERYTHING LLN → SPORE (codes LLN-→SPORE-, consts LLN_→SPORE_, bare LLN/lln→
-// SPORE/spore, .lln→.spore), LogicN/logicn/LOGICN → Galerina/galerina/GALERINA, @logicn→@galerina.
+// Owner-locked scheme: EVERYTHING SPORE → SPORE (codes SPORE-→SPORE-, consts SPORE_→SPORE_, bare LLN/lln→
+// SPORE/spore, .spore→.spore), Galerina/galerina/GALERINA → Galerina/galerina/GALERINA, @galerina→@galerina.
 // UNCHANGED: `.tmf` (compiled passport) and `TritMesh` (separate DB/umbrella brand) — both masked.
 //
-// The crypto wire-format strings — the 4 `logicn.*` domain-separation CONTEXTS and the `lln.*`
+// The crypto wire-format strings — the 4 `galerina.*` domain-separation CONTEXTS and the `spore.*`
 // signature/schema VERSION tags — are MASKED here (preserved verbatim) and migrated + re-signed in a
 // dedicated crypto stage, so the bulk brand rename keeps every signing/verification test green.
 //
@@ -42,18 +42,18 @@ const EXCLUDE = [
   /\.lock$/,
   /(^|\/)scripts\/rebrand-galerina\.mjs$/,                 // self
   /(^|\/)examples\/auth-service\/workspace\.lindex$/,      // volatile — regenerated post-rename
-  /logicn-devtools-benchmarks\/results\/.*\.json$/,        // volatile benchmark output
-  /(^|\/)logicn-ext-tmf\/spec\//,                          // vendored upstream spec — flag, don't rewrite
+  /galerina-devtools-benchmarks\/results\/.*\.json$/,        // volatile benchmark output
+  /(^|\/)galerina-ext-tmf\/spec\//,                          // vendored upstream spec — flag, don't rewrite
   /\.tmf$/,                                                // compiled/signed binary passports
   /\.(png|jpe?g|gif|ico|pdf|wasm|woff2?|ttf|eot|zip|gz)$/i, // binary assets
 ];
 const isExcluded = (p) => EXCLUDE.some((re) => re.test(p));
 
 // Spans PRESERVED verbatim in this pass:
-//  - crypto wire-tags: the 4 logicn.* contexts + the lln.* sig/schema tags (migrated in the crypto stage)
+//  - crypto wire-tags: the 4 galerina.* contexts + the spore.* sig/schema tags (migrated in the crypto stage)
 //  - separate brands the owner said keep: TritMesh (DB/umbrella) and the literal .tmf extension token
-const PRESERVE = /\b(?:logicn\.(?:proofgraph\.governance|bridge\.manifest|audit\.attestation|config\.environment)|lln\.(?:gov\.sig|runtime\.audit|runtime\.manifest|gir|govdiff))(?:\.v?\d+)?\b|TritMesh|tritmesh|TRITMESH/g;
-const CRYPTO_ONLY = /\b(?:logicn\.(?:proofgraph\.governance|bridge\.manifest|audit\.attestation|config\.environment)|lln\.(?:gov\.sig|runtime\.audit|runtime\.manifest|gir|govdiff))/;
+const PRESERVE = /\b(?:galerina\.(?:proofgraph\.governance|bridge\.manifest|audit\.attestation|config\.environment)|spore\.(?:gov\.sig|runtime\.audit|runtime\.manifest|gir|govdiff))(?:\.v?\d+)?\b|TritMesh|tritmesh|TRITMESH/g;
+const CRYPTO_ONLY = /\b(?:galerina\.(?:proofgraph\.governance|bridge\.manifest|audit\.attestation|config\.environment)|spore\.(?:gov\.sig|runtime\.audit|runtime\.manifest|gir|govdiff))/;
 const UNMASK = /@@MASK(\d+)@@/g; // ASCII sentinel (vanishingly unlikely in source; brand rules can't touch it)
 
 function transformText(s) {
@@ -62,8 +62,8 @@ function transformText(s) {
   let count = 0;
   let out = masked;
   for (const [re, to] of [
-    [/LogicN/g, "Galerina"], [/LOGICN/g, "GALERINA"], [/\blogicn\b/g, "galerina"],
-    [/LLN_/g, "SPORE_"], [/\bLLN\b/g, "SPORE"], [/\blln\b/g, "spore"], [/\blln_/g, "spore_"],
+    [/Galerina/g, "Galerina"], [/GALERINA/g, "GALERINA"], [/\bgalerina\b/g, "galerina"],
+    [/SPORE_/g, "SPORE_"], [/\bSPORE\b/g, "SPORE"], [/\bspore\b/g, "spore"], [/\bspore_/g, "spore_"],
   ]) {
     out = out.replace(re, () => { count++; return to; });
   }
@@ -71,13 +71,13 @@ function transformText(s) {
   return [out, count];
 }
 
-// Path/dir rename: logicn→galerina in any segment; *.lln → *.spore; bare lln/LLN segment → spore/SPORE.
+// Path/dir rename: galerina→galerina in any segment; *.spore → *.spore; bare spore/SPORE segment → spore/SPORE.
 function transformPath(p) {
   return p
-    .replace(/LogicN/g, "Galerina").replace(/LOGICN/g, "GALERINA").replace(/logicn/g, "galerina")
-    .replace(/\.lln$/, ".spore")
-    .replace(/(^|[\/._-])LLN([\/._-]|$)/g, "$1SPORE$2")
-    .replace(/(^|[\/._-])lln([\/._-]|$)/g, "$1spore$2");
+    .replace(/Galerina/g, "Galerina").replace(/GALERINA/g, "GALERINA").replace(/galerina/g, "galerina")
+    .replace(/\.spore$/, ".spore")
+    .replace(/(^|[\/._-])SPORE([\/._-]|$)/g, "$1SPORE$2")
+    .replace(/(^|[\/._-])spore([\/._-]|$)/g, "$1spore$2");
 }
 // Binary = a HIGH null-byte ratio (real binaries are >>1% nulls). A source file with a stray \x00
 // (e.g. a "\0" literal) round-trips safely through utf8 read→transform→write, so don't skip it.
@@ -92,7 +92,7 @@ for (const p of tracked) {
   // and new dir — excluded files MOVE with their package, they are only skipped for the text-EDIT.
   const np = transformPath(p);
   if (np !== p) {
-    const kind = /\.lln$/.test(p) ? "ext(.lln->.spore)" : /logicn/i.test(p) ? "dir/pkg(logicn->galerina)" : "lln-name";
+    const kind = /\.spore$/.test(p) ? "ext(.spore->.spore)" : /galerina/i.test(p) ? "dir/pkg(galerina->galerina)" : "spore-name";
     renames.push({ from: p, to: np, kind });
   }
   if (isExcluded(p)) { excluded++; continue; }   // skip the text-edit only
@@ -129,7 +129,7 @@ const lines = [
   `tracked scanned: ${tracked.length}   excluded: ${excluded}   binary skipped: ${binarySkipped}`,
   `RENAMES: ${renames.length}  ${JSON.stringify(byKind)}`,
   `CONTENT EDITS: ${edits.length} files, ${totalRepl} token replacements`,
-  `CRYPTO-DEFERRED (logicn.*/lln.* tags preserved this pass): ${cryptoFiles} files`,
+  `CRYPTO-DEFERRED (galerina.*/spore.* tags preserved this pass): ${cryptoFiles} files`,
   `TRITMESH preserved: ${tritmeshFiles} files contain TritMesh, changed by codemod: ${tritmeshChanged} (MUST be 0)`,
   ``,
   `## Rename samples (first 30)`,

@@ -4,7 +4,7 @@
 // builds the verifier the Galerina CLI injects: it REUSES the compiler's single-source-of-truth helpers
 // (`makeManifestEnvelope` + `verifyGovernanceSignatureHybrid`) so it cannot drift from the signer — never a
 // reimplemented context/encoding (RD-0119: the .lmanifest v2 signature is over the ProofGraph governance
-// envelope under context "logicn.proofgraph.governance.v1", base64url|base64url; using the bridge context or
+// envelope under context "galerin.proofgraph.governance.v1", base64url|base64url; using the bridge context or
 // re-deriving the payload would silently break ALL verification).
 //
 // Verdict (the loader maps these): "verified" ⇒ admit; "invalid" ⇒ the loader THROWS (tamper); a THROWN error
@@ -85,7 +85,7 @@ export function makeLmanifestHybridVerifier(): (input: LmanifestHybridVerifierIn
     const base: ProofGraph = makeManifestEnvelope(bodyHash, "1970-01-01T00:00:00.000Z");
     const envelope: ProofGraph = {
       ...base,
-      governanceSignature: { algorithm: "lln.gov.sig.v2", signerKeyId: keyId, signature, signedAt: "" },
+      governanceSignature: { algorithm: "spore.gov.sig.v2", signerKeyId: keyId, signature, signedAt: "" },
     };
     const ok = await verifyGovernanceSignatureHybrid(envelope, edDer, mlRaw);
     return ok ? "verified" : "invalid";

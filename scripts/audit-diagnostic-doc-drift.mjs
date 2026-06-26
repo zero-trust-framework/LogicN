@@ -125,7 +125,7 @@ if (isMain && process.argv.includes("--self-test")) {
   // extraction round-trips
   const defs = extractSourceDefs(["x.ts"], () => `export const X = { code: "SPORE-RUNTIME-006", name: "RateLimitExceeded", message: "A declared contract limit was exceeded." };`);
   const gotDef = defs.get("SPORE-RUNTIME-006")?.name === "RateLimitExceeded";
-  const docs = extractDocDescriptions("SPORE-RUNTIME-006   Audit event stream write failed\nLLN-X-1   y");
+  const docs = extractDocDescriptions("SPORE-RUNTIME-006   Audit event stream write failed\nSPORE-X-1   y");
   const gotDoc = docs.get("SPORE-RUNTIME-006") === "Audit event stream write failed";
   const ok = !goodDrift && badDrift && !thinDrift && gotDef && gotDoc;
   console.log(`[self-test] agree→no-drift: ${!goodDrift} | mismatch→drift: ${badDrift} | thin→no-drift: ${!thinDrift} | src-extract: ${gotDef} | doc-extract: ${gotDoc}`);

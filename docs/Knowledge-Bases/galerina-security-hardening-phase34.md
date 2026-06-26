@@ -372,7 +372,7 @@ raise `SPORE-SECURITY-001`.
 
 ```typescript
 readonly governanceSignature?: {
-  readonly algorithm: "lln.gov.sig.v1";
+  readonly algorithm: "spore.gov.sig.v1";
   readonly signerKeyId: string;
   readonly signature: string;
   readonly signedAt: string;

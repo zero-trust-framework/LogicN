@@ -1,6 +1,6 @@
-// B2 (R&D 0055) — per-flow arena reset. The bump pointer $__lln_heap was monotone (0 resets ⇒ a
+// B2 (R&D 0055) — per-flow arena reset. The bump pointer $__spore_heap was monotone (0 resets ⇒ a
 // process-lifetime leak that traps at maxPages). Now a LEAF entry-point (exported ∧ not called by any
-// other flow) resets $__lln_heap to WAT_HEAP_BASE at entry, reclaiming the previous invocation's arena.
+// other flow) resets $__spore_heap to WAT_HEAP_BASE at entry, reclaiming the previous invocation's arena.
 //
 // The leak-prevention is PROVABLE here: with the default minPages=2 (128KB) and no memory.grow, an
 // un-reset bump allocator traps after ~16,256 eight-byte records; a reset module runs unboundedly.
@@ -45,7 +45,7 @@ async function emit(src) {
 
 test("B2: a leaf entry-point that allocates emits the per-flow heap reset", async () => {
   const wat = await emit(ALLOC_FLOW);
-  assert.ok(wat.includes("(global.set $__lln_heap (i32.const 1024))"), "the reset to WAT_HEAP_BASE must be emitted");
+  assert.ok(wat.includes("(global.set $__spore_heap (i32.const 1024))"), "the reset to WAT_HEAP_BASE must be emitted");
 });
 
 test("B2: the reset prevents the monotone-bump LEAK — 50k calls run where ~16k would trap un-reset", async () => {
@@ -62,7 +62,7 @@ test("B2: the reset prevents the monotone-bump LEAK — 50k calls run where ~16k
 test("B2: leaf-guard — a callee flow (referenced by another) does NOT self-reset; only the leaf entry does", async () => {
   const wat = await emit(CALLER_CALLEE);
   // Exactly ONE reset in the whole module: at `outer` (the leaf entry), not inside `inner` (the callee).
-  const resetCount = (wat.match(/\(global\.set \$__lln_heap \(i32\.const 1024\)\)/g) || []).length;
+  const resetCount = (wat.match(/\(global\.set \$__spore_heap \(i32\.const 1024\)\)/g) || []).length;
   assert.equal(resetCount, 1, "only the leaf entry-point resets — the internally-called helper must not");
   // Sanity: it still assembles and computes outer(n) = inner(n)+inner(n) = 2n.
   const asm = await L.assembleWAT(wat);

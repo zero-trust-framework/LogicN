@@ -18,7 +18,7 @@
  * THE BOUNDARY. `composeAuthVerdict` returns a VERDICT, not a decision. That is the
  * whole contract of this package: galerina-auth supplies the authentication FACTORS;
  * the App Kernel's fixed, non-bypassable admission gate makes the call. Hand the
- * composed verdict to the kernel as `LogicnKernelRequest.channelVerdict` and let the
+ * composed verdict to the kernel as `GalerinaKernelRequest.channelVerdict` and let the
  * kernel collapse it fail-closed (`decideAtBoundary`: only `+1` admits). We do not
  * move that decision out of the kernel.
  */

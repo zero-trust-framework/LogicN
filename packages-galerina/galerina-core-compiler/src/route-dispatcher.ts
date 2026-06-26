@@ -325,7 +325,7 @@ function serializeResponseValue(value: GalerinaValue, res: any): void {
       // Strip internal bookkeeping (__-prefixed) fields before serializing.
       const clean: Record<string, unknown> = {};
       for (const [k, v] of value.fields) {
-        if (!k.startsWith("__")) clean[k] = logicNValueToJs(v);
+        if (!k.startsWith("__")) clean[k] = galerinaValueToJs(v);
       }
       res.end(JSON.stringify(clean));
       return;
@@ -349,12 +349,12 @@ function serializeResponseValue(value: GalerinaValue, res: any): void {
       return;
     }
 
-    res.end(JSON.stringify(logicNValueToJs(body)));
+    res.end(JSON.stringify(galerinaValueToJs(body)));
     return;
   }
 
   res.statusCode = 200;
-  res.end(JSON.stringify(logicNValueToJs(value)));
+  res.end(JSON.stringify(galerinaValueToJs(value)));
 }
 
 function serializeErrorValue(value: GalerinaValue, res: any): void {
@@ -375,7 +375,7 @@ function serializeErrorValue(value: GalerinaValue, res: any): void {
   res.end(JSON.stringify({ error: true, status: 500, message: "Unhandled error" }));
 }
 
-function logicNValueToJs(value: GalerinaValue): unknown {
+function galerinaValueToJs(value: GalerinaValue): unknown {
   switch (value.__tag) {
     case "string": return value.value;
     case "int":
@@ -384,17 +384,17 @@ function logicNValueToJs(value: GalerinaValue): unknown {
     case "bool": return value.value;
     case "void":
     case "none": return null;
-    case "some": return logicNValueToJs(value.value);
-    case "ok": return logicNValueToJs(value.value);
-    case "err": return { error: logicNValueToJs(value.error) };
+    case "some": return galerinaValueToJs(value.value);
+    case "ok": return galerinaValueToJs(value.value);
+    case "err": return { error: galerinaValueToJs(value.error) };
     case "secure": return "[SECURE]";
     case "protected": return "[PROTECTED]";
     case "redacted": return "[REDACTED]";
-    case "list": return value.items.map((item) => logicNValueToJs(item));
+    case "list": return value.items.map((item) => galerinaValueToJs(item));
     case "record": {
       const out: Record<string, unknown> = {};
       for (const [key, field] of value.fields) {
-        if (!key.startsWith("__")) out[key] = logicNValueToJs(field);
+        if (!key.startsWith("__")) out[key] = galerinaValueToJs(field);
       }
       return out;
     }

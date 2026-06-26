@@ -121,5 +121,5 @@ test("renderMetricsPrometheus uses the app_ namespace and exposes histogram + dr
   assert.match(text, /app_request_duration_ms_count 2/);
   assert.match(text, /app_requests_dropped_total 1/);
   // Distinct from governance-telemetry's namespace.
-  assert.ok(!text.includes("logicn_"), "app-ops metrics use app_, not logicn_");
+  assert.ok(!text.includes("galerin_"), "app-ops metrics use app_, not galerin_");
 });

@@ -12,7 +12,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import { executeFlow, parseProgram } from "../dist/index.js";
-import { logicNValuesEqual } from "../dist/stdlib.js";
+import { galerinaValuesEqual } from "../dist/stdlib.js";
 
 const run = (source, flowName, args = new Map()) => {
   const p = parseProgram(source, "int64-step1.spore");
@@ -77,15 +77,15 @@ describe("Int64 Step 1: fast-tier fail-closed bail (R1)", () => {
 });
 
 describe("Int64 Step 1: equality consumption (1g)", () => {
-  it("logicNValuesEqual compares int64 by value (exact above 2^53)", () => {
+  it("galerinaValuesEqual compares int64 by value (exact above 2^53)", () => {
     const a = { __tag: "int64", value: 9007199254740993n };
     const b = { __tag: "int64", value: 9007199254740993n };
     const c = { __tag: "int64", value: 9007199254740992n };
-    assert.equal(logicNValuesEqual(a, b), true);
-    assert.equal(logicNValuesEqual(a, c), false);
+    assert.equal(galerinaValuesEqual(a, b), true);
+    assert.equal(galerinaValuesEqual(a, c), false);
   });
 
   it("int and int64 are NOT equal (distinct tags — same-tag-only policy)", () => {
-    assert.equal(logicNValuesEqual({ __tag: "int", value: 5 }, { __tag: "int64", value: 5n }), false);
+    assert.equal(galerinaValuesEqual({ __tag: "int", value: 5 }, { __tag: "int64", value: 5n }), false);
   });
 });

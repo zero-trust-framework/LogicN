@@ -16,14 +16,14 @@ import { performance } from "node:perf_hooks";
  *
  * The runner reports all three so you can see the cache benefit clearly.
  */
-export async function runGalerinaPassiveBenchmark(llnPath, callCount = 1000) {
+export async function runGalerinaPassiveBenchmark(sporePath, callCount = 1000) {
   const compilerPath = new URL("../../galerina-core-compiler/dist/index.js", import.meta.url);
   const m = await import(compilerPath.href);
-  const source = readFileSync(llnPath, "utf8");
+  const source = readFileSync(sporePath, "utf8");
 
   // ── Pre-build ONCE (outside timed region) ────────────────────────────────
   const tSetup0 = performance.now();
-  const parsed = m.parseProgram(source, llnPath);
+  const parsed = m.parseProgram(source, sporePath);
   const errors = parsed.diagnostics.filter(d => d.severity === "error");
   if (errors.length > 0) return { runtime: "galerina-passive", error: true, reason: errors[0]?.message };
   const mainFlow = parsed.flows.find(f => f.name === "main") ?? parsed.flows[0];
@@ -36,7 +36,7 @@ export async function runGalerinaPassiveBenchmark(llnPath, callCount = 1000) {
   m.clearPureFlowCache?.();
 
   // ── Warmup call ──────────────────────────────────────────────────────────
-  const runtimeOpts = { pureFastPath: true, sourceTag: llnPath };
+  const runtimeOpts = { pureFastPath: true, sourceTag: sporePath };
   await m.executeFlow(mainFlow.name, new Map(), parsed.ast, parsed.flows,
     undefined, undefined, runtimeOpts, undefined, undefined);
 
@@ -105,15 +105,15 @@ export async function runGalerinaPassiveBenchmark(llnPath, callCount = 1000) {
  * Runs a Galerina .spore benchmark file through the governed interpreter.
  * Captures parse time, execution time, memory before/after, and CPU usage.
  */
-export async function runGalerinaBenchmark(llnPath, mode = "governed") {
+export async function runGalerinaBenchmark(sporePath, mode = "governed") {
   const compilerPath = new URL("../../galerina-core-compiler/dist/index.js", import.meta.url);
   const m = await import(compilerPath.href);
 
-  const source = readFileSync(llnPath, "utf8");
+  const source = readFileSync(sporePath, "utf8");
 
   // ── Parse ──────────────────────────────────────────────────────────────────
   const t0 = performance.now();
-  const parsed = m.parseProgram(source, llnPath);
+  const parsed = m.parseProgram(source, sporePath);
   const parseMs = performance.now() - t0;
 
   const errors = parsed.diagnostics.filter(d => d.severity === "error");
@@ -157,7 +157,7 @@ export async function runGalerinaBenchmark(llnPath, mode = "governed") {
     // pureFastPath: true enables LRU memoization for pure EffectFree flows
     // sourceTag: the benchmark file path scopes the cache so "main()" in
     // arithmetic-threshold doesn't collide with "main()" in compute-mix.
-    const runtimeOpts = { pureFastPath: true, sourceTag: llnPath };
+    const runtimeOpts = { pureFastPath: true, sourceTag: sporePath };
     result = await m.executeFlow(
       mainFlow.name, new Map(), parsed.ast, parsed.flows,
       undefined, undefined, runtimeOpts, undefined, manifest,

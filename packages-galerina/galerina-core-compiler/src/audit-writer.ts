@@ -26,7 +26,7 @@ function _randomUUID(): string {
 }
 
 export interface AuditEvent {
-  readonly schemaVersion: "lln.runtime.audit.v1";
+  readonly schemaVersion: "spore.runtime.audit.v1";
   readonly id: string;
   readonly timestamp: string;
   readonly status: "Success" | "Denied" | "Failed" | "Unsafe" | "Warning";
@@ -74,7 +74,7 @@ export function createAuditWriter(
 
   // Rule 4: reject invalid schemaVersion
   function validate(event: AuditEvent): void {
-    if (event.schemaVersion !== "lln.runtime.audit.v1") {
+    if (event.schemaVersion !== "spore.runtime.audit.v1") {
       throw new Error(`AuditWriter: invalid schemaVersion '${event.schemaVersion}'`);
     }
   }
@@ -215,7 +215,7 @@ export function buildFlowAuditEvent(
   }
 
   return {
-    schemaVersion: "lln.runtime.audit.v1",
+    schemaVersion: "spore.runtime.audit.v1",
     id: `evt_${_randomUUID()}`,
     timestamp: new Date().toISOString(),
     status,

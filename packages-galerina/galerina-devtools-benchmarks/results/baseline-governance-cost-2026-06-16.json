@@ -97,7 +97,7 @@
           "Compile (one-time): 31.8ms. Execution: pure WASM, no JS tree-walker."
         ]
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.39,
@@ -125,10 +125,10 @@
           "externalAfter": 22900615,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 356,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 356,
+        "galerinOpsPerRun": 1
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.3,
@@ -156,10 +156,10 @@
           "externalAfter": 22900615,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 1053,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 1053,
+        "galerinOpsPerRun": 1
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 2.095,

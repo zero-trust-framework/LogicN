@@ -2,7 +2,7 @@
 build/
 dist/
 packages/*/dist/
-logicn_modules/
+galerin_modules/
 node_modules/
 
 # Secrets are runtime-only and MUST never be committed.

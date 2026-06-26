@@ -31,7 +31,7 @@ token-saving dev tools** (status/rd-absorb/stray-docs, wired into the Stop caden
 ## 🔒 SECURITY — fix first (ordered by severity)
 
 1. **[HIGH] ◑ Wire the cert-gate into live kernel admission** — **kernel K3-fold + transport supply BOTH DONE
-   2026-06-23.** The `kernel.ts` auth step folds an optional `LogicnKernelRequest.channelVerdict` via
+   2026-06-23.** The `kernel.ts` auth step folds an optional `GalerinaKernelRequest.channelVerdict` via
    `decideAtBoundary`, **fail-closed** (only ALLOW admits; 0/−1 refuse; unknown→DENY by the algebra). The **api-server
    now makes the path LIVE**: a `resolveChannelVerdict(req)` hook computes the K3 verdict per request and threads it
    to the kernel (transport → `certGate` → `channelVerdict` → fold). Fail-closed: a throwing resolver → DENY (never

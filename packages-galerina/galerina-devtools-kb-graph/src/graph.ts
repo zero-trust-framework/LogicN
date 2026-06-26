@@ -12,7 +12,7 @@ export interface KBGraph {
   stats: {
     totalDocs: number;
     totalEdges: number;
-    totalLlnCodes: number;
+    totalSporeCodes: number;
     orphanCount: number;
     staleLinkCount: number;
   };
@@ -45,10 +45,10 @@ export function buildKBGraph(scanResult: ScanResult): KBGraph {
     .map(d => d.id);
 
   // Unique SPORE codes across all docs
-  const allLlnCodes = new Set<string>();
+  const allSporeCodes = new Set<string>();
   for (const doc of docs) {
     for (const code of doc.lnlCodes) {
-      allLlnCodes.add(code);
+      allSporeCodes.add(code);
     }
   }
 
@@ -60,7 +60,7 @@ export function buildKBGraph(scanResult: ScanResult): KBGraph {
     stats: {
       totalDocs: docs.length,
       totalEdges: validEdges.length,
-      totalLlnCodes: allLlnCodes.size,
+      totalSporeCodes: allSporeCodes.size,
       orphanCount: orphans.length,
       staleLinkCount: staleLinks.length,
     },

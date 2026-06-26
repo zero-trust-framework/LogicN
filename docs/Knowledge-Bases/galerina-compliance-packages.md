@@ -55,8 +55,8 @@ export function validateEUAIAct(proofGraph: ProofGraph): ComplianceResult;
 export function validateHIPAA(proofGraph: ProofGraph): ComplianceResult;
 
 // diagnostics: regulation-specific SPORE-* codes
-export const SPORE_HIPAA_001: LlnDiagnostic;  // PHI without protected_boundary
-export const SPORE_EU_AI_001: LlnDiagnostic;  // High-risk AI without event logging
+export const SPORE_HIPAA_001: SporeDiagnostic;  // PHI without protected_boundary
+export const SPORE_EU_AI_001: SporeDiagnostic;  // High-risk AI without event logging
 ```
 
 ---

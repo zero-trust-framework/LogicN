@@ -437,7 +437,7 @@ SPORE-HW-104   ATTESTATION_EVIDENCE_STALE     Attestation evidence schema versio
 ```
 
 > Phase 55: ML-DSA-65 (NIST FIPS 204) is the post-quantum signature algorithm.
-> `lln.gov.sig.v2` artifact format carries dual signatures (ed25519 + ml-dsa-65)
+> `spore.gov.sig.v2` artifact format carries dual signatures (ed25519 + ml-dsa-65)
 > in hybrid mode. `generateHybridGovernanceKeyPair` produces the key pair.
 > Attestation policy profiles: `compat` (ed25519 or ML-DSA), `hybrid` (both required),
 > `pq_strict` (ML-DSA only). See `galerina-roadmap-phases-41-60.md §Phase 55`.

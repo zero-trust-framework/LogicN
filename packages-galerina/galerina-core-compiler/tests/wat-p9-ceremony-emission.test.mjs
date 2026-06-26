@@ -59,7 +59,7 @@ describe("P9 ceremony — self-hosted lexer emits real WASM", () => {
     const tok = mod.functions.find((f) => f.name === "tokenize");
     assert.ok(tok, "tokenize flow present");
     assert.equal(isStub(tok.body), false, "tokenize emits a real body, not unreachable");
-    assert.match(wat, /global \$__lln_heap/, "record bump-allocator heap is emitted");
+    assert.match(wat, /global \$__spore_heap/, "record bump-allocator heap is emitted");
   });
 
   // Honest assembly check. `assembleWAT` falls back to a 240-byte minimal-encoder

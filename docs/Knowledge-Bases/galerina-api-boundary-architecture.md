@@ -131,15 +131,15 @@ export type HttpMethod =
   | "OPTIONS"
   | "HEAD"
 
-export interface LogicnApiManifest {
+export interface GalerinaApiManifest {
   schemaVersion: "galerina.api.manifest.v1"
   api: string
   version: string
   generatedAt: string
-  routes: LogicnRouteManifest[]
+  routes: GalerinaRouteManifest[]
 }
 
-export interface LogicnRouteManifest {
+export interface GalerinaRouteManifest {
   id: string
   method: HttpMethod
   path: string
@@ -247,7 +247,7 @@ interface StartApiServerOptions {
   port: number
   host?: string
   env: "development" | "production"
-  appKernel: LogicnAppKernel
+  appKernel: GalerinaAppKernel
 }
 
 export async function startApiServer(options: StartApiServerOptions) {
@@ -267,7 +267,7 @@ export async function startApiServer(options: StartApiServerOptions) {
 
       const body = await readBodyWithLimit(req, route.body.maxSizeBytes)
 
-      const request: LogicnKernelRequest = {
+      const request: GalerinaKernelRequest = {
         method: req.method ?? "GET",
         url: req.url ?? "/",
         headers: normalizeHeaders(req.headers),
@@ -311,7 +311,7 @@ export async function readBodyWithLimit(
     total += buffer.length
 
     if (total > maxBytes) {
-      throw new LogicnHttpError(413, "GALERINA_API_BODY_TOO_LARGE", "Request body is too large")
+      throw new GalerinaHttpError(413, "GALERINA_API_BODY_TOO_LARGE", "Request body is too large")
     }
 
     chunks.push(buffer)
@@ -328,14 +328,14 @@ export async function readBodyWithLimit(
 ### Interfaces
 
 ```ts
-export interface LogicnAppKernel {
+export interface GalerinaAppKernel {
   handle(
-    route: LogicnRouteManifest,
-    request: LogicnKernelRequest
-  ): Promise<LogicnKernelResponse>
+    route: GalerinaRouteManifest,
+    request: GalerinaKernelRequest
+  ): Promise<GalerinaKernelResponse>
 }
 
-export interface LogicnKernelRequest {
+export interface GalerinaKernelRequest {
   method: string
   url: string
   headers: Record<string, string | string[]>
@@ -345,7 +345,7 @@ export interface LogicnKernelRequest {
   receivedAt: string
 }
 
-export interface LogicnKernelResponse {
+export interface GalerinaKernelResponse {
   status: number
   headers: Record<string, string>
   body: unknown
@@ -356,10 +356,10 @@ export interface LogicnKernelResponse {
 
 ```ts
 export async function handleApiRequest(
-  route: LogicnRouteManifest,
-  request: LogicnKernelRequest,
-  runtime: LogicnRuntime
-): Promise<LogicnKernelResponse> {
+  route: GalerinaRouteManifest,
+  request: GalerinaKernelRequest,
+  runtime: GalerinaRuntime
+): Promise<GalerinaKernelResponse> {
   assertContentType(route, request)
   await assertRateLimit(route, request)
   await assertAuth(route, request)
@@ -468,8 +468,8 @@ export interface ReplayStore {
 
 ```ts
 export async function assertWebhookNotReplayed(input: {
-  route: LogicnRouteManifest
-  request: LogicnKernelRequest
+  route: GalerinaRouteManifest
+  request: GalerinaKernelRequest
   eventId: string
   receivedTimestamp: number
   replayStore: ReplayStore
@@ -478,7 +478,7 @@ export async function assertWebhookNotReplayed(input: {
   const age = Math.abs(now - input.receivedTimestamp)
 
   if (age > input.route.webhook!.replayWindowSeconds) {
-    throw new LogicnHttpError(
+    throw new GalerinaHttpError(
       401,
       "GALERINA_WEBHOOK_REPLAY_WINDOW_EXPIRED",
       "Webhook timestamp is outside the allowed replay window"
@@ -491,7 +491,7 @@ export async function assertWebhookNotReplayed(input: {
   })
 
   if (!inserted) {
-    throw new LogicnHttpError(409, "GALERINA_WEBHOOK_DUPLICATE_EVENT", "Webhook event has already been processed")
+    throw new GalerinaHttpError(409, "GALERINA_WEBHOOK_DUPLICATE_EVENT", "Webhook event has already been processed")
   }
 }
 ```
@@ -514,7 +514,7 @@ OpenAPI output is a publication artefact generated from the Galerina API
 manifest. It is not the source of truth — the Galerina manifest is authoritative.
 
 ```ts
-export function exportOpenApi(manifest: LogicnApiManifest): OpenApiDocument {
+export function exportOpenApi(manifest: GalerinaApiManifest): OpenApiDocument {
   const doc: OpenApiDocument = {
     openapi: "3.1.0",
     info: { title: manifest.api, version: manifest.version },
@@ -544,10 +544,10 @@ export function exportOpenApi(manifest: LogicnApiManifest): OpenApiDocument {
 
 ## Error Contract
 
-### LogicnHttpError
+### GalerinaHttpError
 
 ```ts
-export class LogicnHttpError extends Error {
+export class GalerinaHttpError extends Error {
   constructor(
     public readonly status: number,
     public readonly code: string,
@@ -566,8 +566,8 @@ export function mapErrorToHttpResponse(
   error: unknown,
   env: "development" | "production",
   requestId: string
-): LogicnKernelResponse {
-  if (error instanceof LogicnHttpError) {
+): GalerinaKernelResponse {
+  if (error instanceof GalerinaHttpError) {
     return {
       status: error.status,
       headers: { "content-type": "application/json" },
@@ -625,7 +625,7 @@ export async function assertNetworkAllowed(input: {
   capability: string
 }) {
   if (input.protocol === "http" && !input.policy.allowPlainHttp) {
-    throw new LogicnHttpError(403, "LN_NETWORK_INSECURE_TRANSPORT_DENIED", "Plain HTTP is not allowed")
+    throw new GalerinaHttpError(403, "LN_NETWORK_INSECURE_TRANSPORT_DENIED", "Plain HTTP is not allowed")
   }
 
   const allowed = input.policy.outbound.some((rule) =>
@@ -635,7 +635,7 @@ export async function assertNetworkAllowed(input: {
   )
 
   if (!allowed) {
-    throw new LogicnHttpError(403, "LN_NETWORK_DESTINATION_NOT_ALLOWLISTED", "Network destination is not allowlisted")
+    throw new GalerinaHttpError(403, "LN_NETWORK_DESTINATION_NOT_ALLOWLISTED", "Network destination is not allowlisted")
   }
 }
 ```
@@ -720,7 +720,7 @@ packages-galerina/
 ## Relationship to Other Systems
 
 ```text
-galerina-core-compiler    → emits LogicnApiManifest from checked API declarations
+galerina-core-compiler    → emits GalerinaApiManifest from checked API declarations
 galerina-core-network     → provides NetworkPolicy for assertNetworkAllowed()
 galerina-core-security    → redaction, auth checks, capability validation
 galerina-core-runtime     → executes typed Galerina flows

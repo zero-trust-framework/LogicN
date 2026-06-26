@@ -23,14 +23,14 @@ let alreadyStable = 0;
 let notFound = 0;
 
 for (const name of candidates) {
-  const llnFile = join(EXAMPLES_DIR, name, "example.spore");
-  if (!existsSync(llnFile)) {
+  const sporeFile = join(EXAMPLES_DIR, name, "example.spore");
+  if (!existsSync(sporeFile)) {
     console.log(`  NOT FOUND: ${name}`);
     notFound++;
     continue;
   }
 
-  const raw = readFileSync(llnFile, "utf8");
+  const raw = readFileSync(sporeFile, "utf8");
   const source = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
 
   if (/^\/\/\/\s*test_status:\s*stable/m.test(source)) {
@@ -68,7 +68,7 @@ for (const name of candidates) {
     }
   }
 
-  writeFileSync(llnFile, newSource, "utf8");
+  writeFileSync(sporeFile, newSource, "utf8");
 
   console.log(`  PROMOTED: ${name}`);
   promoted++;

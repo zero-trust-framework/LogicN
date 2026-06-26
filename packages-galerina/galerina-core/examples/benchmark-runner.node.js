@@ -124,8 +124,8 @@ function relativePerformance(summary) {
   const python = summary.python?.medianOpsPerSecond ?? null;
 
   return {
-    logicnVsNode: galerina !== null && node ? Number((galerina / node).toFixed(4)) : null,
-    logicnVsPython: galerina !== null && python ? Number((galerina / python).toFixed(4)) : null,
+    galerinVsNode: galerina !== null && node ? Number((galerina / node).toFixed(4)) : null,
+    galerinVsPython: galerina !== null && python ? Number((galerina / python).toFixed(4)) : null,
     nodeVsPython: node !== null && python ? Number((node / python).toFixed(4)) : null
   };
 }

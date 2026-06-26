@@ -43,7 +43,7 @@
         "Scaled-integer N-body — checksum matches Node and Galerina bit-for-bit"
       ]
     },
-    "logicnGoverned": {
+    "galerinGoverned": {
       "runtime": "galerina-governed",
       "mode": "governed",
       "parseMs": 4.44,
@@ -71,10 +71,10 @@
         "externalAfter": 4468257,
         "externalDelta": -60775
       },
-      "logicnOpsPerSecond": 54455,
-      "logicnOpsPerRun": 32768
+      "galerinOpsPerSecond": 54455,
+      "galerinOpsPerRun": 32768
     },
-    "logicnManifest": {
+    "galerinManifest": {
       "runtime": "galerina-manifest",
       "mode": "manifest",
       "parseMs": 1.2,
@@ -102,10 +102,10 @@
         "externalAfter": 4478129,
         "externalDelta": 0
       },
-      "logicnOpsPerSecond": 58009,
-      "logicnOpsPerRun": 32768
+      "galerinOpsPerSecond": 58009,
+      "galerinOpsPerRun": 32768
     },
-    "logicnPassive": {
+    "galerinPassive": {
       "runtime": "galerina-passive",
       "mode": "passive",
       "setupMs": 2.588,

@@ -207,7 +207,7 @@ export interface WATEmitResult {
  * Phase 19: covers primitive numeric types.
  * Phase 22: adds struct/array encoding for record types.
  */
-export function logicNTypeToWAT(typeName: string): WATValType {
+export function galerinaTypeToWAT(typeName: string): WATValType {
   switch (typeName) {
     case "Bool": case "Int": case "Int8": case "Int16": case "Int32": case "Byte": return "i32";
     case "Int64": case "UInt64": return "i64";
@@ -335,7 +335,7 @@ export const WAT_REC_FIELD_SIZE = 4;
  * Per-flow record-construction scratch. emitWATFromFlowAST sets this before walking
  * the body and clears it after; the `#record` case in emitWATExpr appends a unique
  * `(local …)` decl here (so nested records and record-returning calls each get their
- * OWN base local — no shared-global clobbering) and references the `$__lln_heap`
+ * OWN base local — no shared-global clobbering) and references the `$__spore_heap`
  * pointer. null outside a flow-body walk → records fall back to the i32.const 0
  * placeholder (preserving every non-WAT-emitter code path unchanged).
  */
@@ -486,8 +486,8 @@ export function renderWAT(module: WATModule): string {
   // restores the clean module shape for simple flows while preserving the host
   // bridge for string/array/char flows (the self-hosted compiler).
   const allBodyText = module.functions.map((fn) => fn.body ?? "").join("\n");
-  const usesTmpArr = allBodyText.includes("$__lln_tmp_arr");
-  const usesHeap = allBodyText.includes("$__lln_heap"); // P9.4b: record bump-allocator
+  const usesTmpArr = allBodyText.includes("$__spore_tmp_arr");
+  const usesHeap = allBodyText.includes("$__spore_heap"); // P9.4b: record bump-allocator
 
   const lines: string[] = ["(module"];
 
@@ -527,7 +527,7 @@ export function renderWAT(module: WATModule): string {
   // listLiteral global: only emitted when a body references it.
   if (usesTmpArr) {
     lines.push(`  ;; P9.3: temporary array ID register for listLiteral WAT emission`);
-    lines.push(`  (global $__lln_tmp_arr (mut i32) (i32.const 0))`);
+    lines.push(`  (global $__spore_tmp_arr (mut i32) (i32.const 0))`);
     lines.push(``);
   }
 
@@ -535,7 +535,7 @@ export function renderWAT(module: WATModule): string {
   // a record. Records allocate above WAT_HEAP_BASE; the low region stays null/scratch.
   if (usesHeap) {
     lines.push(`  ;; P9.4b: bump-allocator heap pointer for record struct layout`);
-    lines.push(`  (global $__lln_heap (mut i32) (i32.const ${WAT_HEAP_BASE}))`);
+    lines.push(`  (global $__spore_heap (mut i32) (i32.const ${WAT_HEAP_BASE}))`);
     lines.push(``);
   }
 
@@ -554,7 +554,7 @@ export function renderWAT(module: WATModule): string {
     lines.push("");
   }
 
-  // B2 (R&D 0055): per-flow arena reset. The bump pointer $__lln_heap is monotone — it is NEVER reset, so
+  // B2 (R&D 0055): per-flow arena reset. The bump pointer $__spore_heap is monotone — it is NEVER reset, so
   // it leaks for the life of the WASM instance (traps at maxPages). We reset it to WAT_HEAP_BASE at the
   // ENTRY of each *leaf* entry-point — exported AND not called by any other flow — reclaiming the PREVIOUS
   // top-level invocation's arena. Leaf-only is the safety guard: a reset inside a flow that another flow
@@ -602,7 +602,7 @@ export function renderWAT(module: WATModule): string {
       // runtime invariant/trap breach it is treated as a potential intrusion — scrub secret remanence from
       // linear memory with the SAME bulk-memory `memory.fill` as part-a, IMMEDIATELY BEFORE the fail-closed
       // `unreachable` aborts the module, so secrets are not recoverable from a post-mortem memory image.
-      // GATE: emitArenaReset (⇒ usesHeap ⇒ the $__lln_heap global IS declared and in scope) AND this flow
+      // GATE: emitArenaReset (⇒ usesHeap ⇒ the $__spore_heap global IS declared and in scope) AND this flow
       // handlesSecrets. Non-secret flows are byte-identical — `flowBody` is `fn.body` unchanged. We rewrite
       // ONLY the runtime-guard `(then unreachable)` breach token (trap + ensure pre/post gates emitted into
       // the body); the compile-time `(unreachable) (; … emitter cannot lower …` lowering stubs carry no
@@ -612,7 +612,7 @@ export function renderWAT(module: WATModule): string {
       const flowBody = wipeSecretsOnBreach
         ? fn.body.replace(
             /\(then unreachable\)/g,
-            `(then (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__lln_heap) (i32.const ${WAT_HEAP_BASE}))) unreachable (; G5b intrusion-wipe before trap ;))`,
+            `(then (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__spore_heap) (i32.const ${WAT_HEAP_BASE}))) unreachable (; G5b intrusion-wipe before trap ;))`,
           )
         : fn.body;
 
@@ -633,29 +633,29 @@ export function renderWAT(module: WATModule): string {
         && !bodyHasEarlyReturn && (bodyArr.length - locEnd) > 0;
 
       if (emitZeroOnExit) {
-        // G5 (Intrusion-Triggered Arena Fill): the reclaimed/secret region [WAT_HEAP_BASE, $__lln_heap) is
+        // G5 (Intrusion-Triggered Arena Fill): the reclaimed/secret region [WAT_HEAP_BASE, $__spore_heap) is
         // zeroed with the WASM bulk-memory `memory.fill` primitive — ONE atomic instruction in place of the
         // per-i32 store loop (no counter local, no bounded trip-count for an interrupt to race). The
-        // $__lln_zd/$__lln_zl ($__lln_xd/$__lln_xl on exit) marker tokens are retained in the comment so the
-        // existing "$__lln_zl/$__lln_xl emitted" secret-zeroing recognition still holds. memory.fill reads
-        // the LIVE $__lln_heap for its length, so it MUST run before the rebase. wabt encodes it as 0xFC 0x0B
+        // $__spore_zd/$__spore_zl ($__spore_xd/$__spore_xl on exit) marker tokens are retained in the comment so the
+        // existing "$__spore_zl/$__spore_xl emitted" secret-zeroing recognition still holds. memory.fill reads
+        // the LIVE $__spore_heap for its length, so it MUST run before the rebase. wabt encodes it as 0xFC 0x0B
         // (bulk-memory, default-on); an OOB fill traps cleanly — fail-closed.
         const zloop = (zd: string, zl: string) => [
           `    ;; ${zd} ${zl} — bulk-memory zero-fill [base, heap) (G5 memory.fill, was an i32.store loop)`,
-          `    (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__lln_heap) (i32.const ${WAT_HEAP_BASE})))`,
+          `    (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__spore_heap) (i32.const ${WAT_HEAP_BASE})))`,
         ];
         for (const l of bodyArr.slice(0, locEnd)) lines.push(`    ${l}`);            // the body's own locals
-        lines.push(`    (local $__lln_ret i32)`);
-        if (emitZeroing) { lines.push(`    ;; B2b on-entry: zero the reclaimed previous arena`); for (const z of zloop("$__lln_zd", "$__lln_zl")) lines.push(z); }
+        lines.push(`    (local $__spore_ret i32)`);
+        if (emitZeroing) { lines.push(`    ;; B2b on-entry: zero the reclaimed previous arena`); for (const z of zloop("$__spore_zd", "$__spore_zl")) lines.push(z); }
         lines.push(`    ;; B2 per-flow arena reset (rebase the bump pointer before this call allocates)`);
-        lines.push(`    (global.set $__lln_heap (i32.const ${WAT_HEAP_BASE}))`);
+        lines.push(`    (global.set $__spore_heap (i32.const ${WAT_HEAP_BASE}))`);
         lines.push(`    ;; capture the PRIMITIVE result, then DESTROY this call's secret records before returning`);
-        lines.push(`    (local.set $__lln_ret (block (result i32)`);
+        lines.push(`    (local.set $__spore_ret (block (result i32)`);
         for (const l of bodyArr.slice(locEnd)) lines.push(`      ${l}`);
         lines.push(`    ))`);
         lines.push(`    ;; B2b on-EXIT (owner-chosen): no host-readable secret remanence window after return`);
-        for (const z of zloop("$__lln_xd", "$__lln_xl")) lines.push(z);
-        lines.push(`    (local.get $__lln_ret)`);
+        for (const z of zloop("$__spore_xd", "$__spore_xl")) lines.push(z);
+        lines.push(`    (local.get $__spore_ret)`);
         lines.push(`  )`);
         if (fn.isEntryPoint) lines.push(`  (export "${fn.name}" (func $${fn.name}))`);
         lines.push("");
@@ -664,17 +664,17 @@ export function renderWAT(module: WATModule): string {
 
       // G5 (Intrusion-Triggered Arena Fill): zero the reclaimed arena with the WASM bulk-memory
       // `memory.fill` primitive (one atomic instruction) instead of the per-i32 store loop — no counter
-      // local. The $__lln_zd/$__lln_zl marker tokens are kept in the comment for the secret-zeroing checks.
+      // local. The $__spore_zd/$__spore_zl marker tokens are kept in the comment for the secret-zeroing checks.
       const resetBlock: string[] = [];
       if (emitZeroing) {
         resetBlock.push(`    ;; B2b (R&D 0055)/G5: zero the reclaimed arena [base, prev-heap) before rebasing — the WASM`);
         resetBlock.push(`    ;; module exports its memory, so an un-zeroed reclaimed secret arena is host-readable remanence.`);
-        resetBlock.push(`    ;; $__lln_zd $__lln_zl — bulk-memory zero-fill (G5 memory.fill, was an i32.store loop)`);
-        resetBlock.push(`    (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__lln_heap) (i32.const ${WAT_HEAP_BASE})))`);
+        resetBlock.push(`    ;; $__spore_zd $__spore_zl — bulk-memory zero-fill (G5 memory.fill, was an i32.store loop)`);
+        resetBlock.push(`    (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__spore_heap) (i32.const ${WAT_HEAP_BASE})))`);
       }
       if (emitArenaReset) {
         resetBlock.push(`    ;; B2 (R&D 0055): per-flow arena reset — reclaim the previous invocation's heap (leaf entry-point)`);
-        resetBlock.push(`    (global.set $__lln_heap (i32.const ${WAT_HEAP_BASE}))`);
+        resetBlock.push(`    (global.set $__spore_heap (i32.const ${WAT_HEAP_BASE}))`);
       }
       let resetInjected = false;
       // Indent each instruction line with 4 spaces inside the function.
@@ -825,7 +825,7 @@ const UINT64_WAT_TYPES = new Set<string>(["UInt64"]);
 const UINT64_ARITH_WAT: Readonly<Record<string, string>> = { "+": "call $spore_checked_add_u64", "-": "call $spore_checked_sub_u64", "*": "call $spore_checked_mul_u64", "/": "i64.div_u", "%": "i64.rem_u" };
 const UINT64_CMP_WAT: Readonly<Record<string, string>> = { "==": "i64.eq", "!=": "i64.ne", "<": "i64.lt_u", ">": "i64.gt_u", "<=": "i64.le_u", ">=": "i64.ge_u" };
 
-/** True for a 64-bit WAT-i64 numeric base (Int64 OR UInt64) — both store as i64 (logicNTypeToWAT), so a
+/** True for a 64-bit WAT-i64 numeric base (Int64 OR UInt64) — both store as i64 (galerinaTypeToWAT), so a
  * literal/local in either context emits i64.const / an i64 local. The SIGNEDNESS differs only in the op. */
 const is64BitWatType = (base: string): boolean => INT64_WAT_TYPES.has(base) || UINT64_WAT_TYPES.has(base);
 
@@ -992,7 +992,7 @@ const ALL_CHECKED_HELPERS: Readonly<Record<string, string>> = { ...I32_CHECKED_H
 // `arr.append(x)`, `c.isLetter()`, `opt.unwrapOr(d)`. These parse as method-style
 // callExpr nodes (value = method name, callStyle = "method", children = [receiver, ...args]).
 //
-// At the WASM boundary every value is an opaque i32 handle (see logicNTypeToWAT),
+// At the WASM boundary every value is an opaque i32 handle (see galerinaTypeToWAT),
 // so each stdlib method maps to a host import with signature (param i32…)(result i32).
 // We emit `(call $host___<name> <receiver> <args…>)`; the host (galerina.mjs
 // hostRuntime) supplies the real implementation. renderWAT usage-gates the host
@@ -1448,7 +1448,7 @@ export function emitWATExpr(
       if (name === "#record") {
         const fields = node.children ?? [];
         if (recordCtx !== null && fields.length > 0) {
-          const recLocal = `$__lln_rec_${recordCtx.counter.n++}`;
+          const recLocal = `$__spore_rec_${recordCtx.counter.n++}`;
           recordCtx.localDecls.push(`(local ${recLocal} i32)`);
           // #32 fail-open fix: store each field at its DECLARED-layout offset — the SAME map the read uses
           // (recordLayouts, line ~1183) — NOT the literal child index. An out-of-declared-order literal
@@ -1476,8 +1476,8 @@ export function emitWATExpr(
           const size = (declaredLayout?.length ?? fields.length) * WAT_REC_FIELD_SIZE;
           const parts: string[] = [`(block (result i32)`];
           // base = heap; heap += size  (per-record local → safe under nesting + calls)
-          parts.push(`  (local.set ${recLocal} (global.get $__lln_heap))`);
-          parts.push(`  (global.set $__lln_heap (i32.add (global.get $__lln_heap) (i32.const ${size})))`);
+          parts.push(`  (local.set ${recLocal} (global.get $__spore_heap))`);
+          parts.push(`  (global.set $__spore_heap (i32.add (global.get $__spore_heap) (i32.const ${size})))`);
           fields.forEach((f, i) => {
             const valNode = f.children?.[0];
             const valWat = valNode ? emitWATExpr(valNode, vars, staticConsts) : "(i32.const 0)";
@@ -1502,16 +1502,16 @@ export function emitWATExpr(
         const baseType = spreadBase !== undefined ? inferExprType(spreadBase) : undefined;
         const layout = (baseType !== undefined && recordLayouts !== null) ? recordLayouts.get(baseType) : undefined;
         if (recordCtx !== null && spreadBase !== undefined && layout !== undefined) {
-          const recLocal  = `$__lln_rec_${recordCtx.counter.n++}`;
-          const baseLocal = `$__lln_rec_${recordCtx.counter.n++}`;
+          const recLocal  = `$__spore_rec_${recordCtx.counter.n++}`;
+          const baseLocal = `$__spore_rec_${recordCtx.counter.n++}`;
           recordCtx.localDecls.push(`(local ${recLocal} i32)`);
           recordCtx.localDecls.push(`(local ${baseLocal} i32)`);
           const size = layout.length * WAT_REC_FIELD_SIZE;
           const baseWat = emitWATExpr(spreadBase, vars, staticConsts);
           const parts: string[] = [`(block (result i32)`];
           parts.push(`  (local.set ${baseLocal} ${baseWat})`);
-          parts.push(`  (local.set ${recLocal} (global.get $__lln_heap))`);
-          parts.push(`  (global.set $__lln_heap (i32.add (global.get $__lln_heap) (i32.const ${size})))`);
+          parts.push(`  (local.set ${recLocal} (global.get $__spore_heap))`);
+          parts.push(`  (global.set $__spore_heap (i32.add (global.get $__spore_heap) (i32.const ${size})))`);
           // Copy every base slot, then overwrite the updated fields by slot index.
           layout.forEach((fname, i) => {
             const off = i * WAT_REC_FIELD_SIZE;
@@ -1687,18 +1687,18 @@ export function emitWATExpr(
       // Emit: append all items to a newly created array, return its ID.
       // Because WAT doesn't have a clean "do this then return that" for expressions,
       // we use: (block (result i32) create set-global append... get-global)
-      // using global $__lln_tmp_arr as a mutable temporary.
+      // using global $__spore_tmp_arr as a mutable temporary.
       const appends = items.map(item => {
         const itemWat = emitWATExpr(item, vars, staticConsts);
         // #145a: __array_append now returns the array handle; here it is used as a
-        // statement (the temp array is tracked via $__lln_tmp_arr), so drop the result.
-        return `(drop (call $host___array_append (global.get $__lln_tmp_arr) ${itemWat}))`;
+        // statement (the temp array is tracked via $__spore_tmp_arr), so drop the result.
+        return `(drop (call $host___array_append (global.get $__spore_tmp_arr) ${itemWat}))`;
       }).join("\n  ");
       return [
         `(block (result i32)`,
-        `  (global.set $__lln_tmp_arr (call $host___array_create))`,
+        `  (global.set $__spore_tmp_arr (call $host___array_create))`,
         `  ${appends}`,
-        `  (global.get $__lln_tmp_arr)`,
+        `  (global.get $__spore_tmp_arr)`,
         `)`,
       ].join("\n");
     }
@@ -1739,7 +1739,7 @@ export function emitWATExpr(
       const noneArm = arms.find(a => a.value === "None");
       const someArm = arms.find(a => a.value === "Some");
       if ((noneArm !== undefined || someArm !== undefined) && recordCtx !== null) {
-        const scratch = `$__lln_match_${recordCtx.counter.n++}`;
+        const scratch = `$__spore_match_${recordCtx.counter.n++}`;
         recordCtx.localDecls.push(`(local ${scratch} i32)`);
         const someBind = ((): string | undefined => {
           const ch = someArm?.children ?? [];
@@ -2141,7 +2141,7 @@ function emitBlockStatements(
 
           // Evaluate the subject once into a scratch local so it can be both tested
           // (sign check) and bound (Some value). Negative ⇒ None, else ⇒ Some.
-          const scratch = `$__lln_match_${labelCounter.n++}`;
+          const scratch = `$__spore_match_${labelCounter.n++}`;
           localDecls.push(`(local ${scratch} i32)`);
           bodyLines.push(`(local.set ${scratch} ${subjectWat})`);
 
@@ -2197,8 +2197,8 @@ function emitBlockStatements(
           };
           // #164: the Ok binding's scalar type = the Result's first type arg (Result<T,E> ⇒ T).
           const okBindType = optionInnerType(inferExprType(matchSubject));
-          const scratch = `$__lln_match_${labelCounter.n++}`;
-          const valLocal = `$__lln_match_${labelCounter.n++}`;
+          const scratch = `$__spore_match_${labelCounter.n++}`;
+          const valLocal = `$__spore_match_${labelCounter.n++}`;
           localDecls.push(`(local ${scratch} i32)`);
           localDecls.push(`(local ${valLocal} i32)`);
           bodyLines.push(`(local.set ${scratch} ${subjectWat})`);
@@ -2464,17 +2464,17 @@ export function emitWATFromFlowAST(
 
   // 0040/#70: output post-conditions (`invariant { ensure result … }`). For a STRAIGHT-LINE flow
   // (no nested/early returns) emit a WASM single-exit gate: capture the tail value into
-  // $logicn_result, check each result-referencing post-condition against it, then return it
+  // $galerin_result, check each result-referencing post-condition against it, then return it
   // (fail-closed — a violation traps via `unreachable`, the value never escapes). A flow with a
   // nested/early return DECLINES to the governed interpreter (which enforces it fail-closed); the
-  // early-return → `br $logicn_exit` rewrite is the further follow-up.
+  // early-return → `br $galerin_exit` rewrite is the further follow-up.
   const resultPosts = flowResultPostconditions(flowNode);
   const singleExit = resultPosts.length > 0;
   if (singleExit && bodyHasNestedReturn(blockNode)) {
     recordLayouts = prevLayouts; recordVarTypes = prevVarTypes; enumVariants = prevEnums; currentReturnBase = prevReturnBase; // restore
     return null; // cannot capture-the-tail past an early return → interpreter enforces it
   }
-  const RESULT_LOCAL = "$logicn_result";
+  const RESULT_LOCAL = "$galerin_result";
   if (singleExit) vars.set("result", RESULT_LOCAL);
 
   const localDecls: string[] = [];
@@ -2514,7 +2514,7 @@ export function emitWATFromFlowAST(
     postGates.push(gate.replace(";; ensure", ";; post: ensure"));
   }
 
-  // 0040/#70: precompute the OUTPUT post-condition gates (against $logicn_result) here, while the
+  // 0040/#70: precompute the OUTPUT post-condition gates (against $galerin_result) here, while the
   // record/var-type context is still active (the tail after the body emit makes no emitWATExpr calls).
   // Pushed after the single-exit capture below.
   const resultPostGates: string[] = [];
@@ -2528,7 +2528,7 @@ export function emitWATFromFlowAST(
     bodyLines.push(...preGates);
   }
   // P9.4b: activate record-construction lowering for this flow body. Record locals
-  // (`$__lln_rec_N`) are appended to localDecls so they render at the top of the
+  // (`$__spore_rec_N`) are appended to localDecls so they render at the top of the
   // function (WASM requires all locals before instructions). Cleared in finally so
   // a thrown body never leaks scratch into the next flow.
   const prevRecordCtx = recordCtx;
@@ -2553,7 +2553,7 @@ export function emitWATFromFlowAST(
   // (no nested returns — excluded above); capture it, gate each result post-condition against
   // it (fail-closed: a violation traps), then return it.
   if (singleExit) {
-    bodyLines.push(`  ;; --- output post-conditions (SPORE-INV-002, single-exit on $logicn_result) ---`);
+    bodyLines.push(`  ;; --- output post-conditions (SPORE-INV-002, single-exit on $galerin_result) ---`);
     bodyLines.push(`  (local.set ${RESULT_LOCAL})`);
     bodyLines.push(...resultPostGates);
     bodyLines.push(`  (local.get ${RESULT_LOCAL})`);
@@ -2661,7 +2661,7 @@ function flowHasResultPostcondition(flowNode: AstNode): boolean {
  * match arm) — an early return that the simple capture-the-tail single-exit cannot enforce a
  * post-condition over (it would `(return …)` past the gate). Such flows DECLINE to the governed
  * interpreter (fail-closed). A top-level tail return / value-producing tail is fine (returns nothing
- * nested → false). The early-return → `br $logicn_exit` rewrite is the further follow-up.
+ * nested → false). The early-return → `br $galerin_exit` rewrite is the further follow-up.
  */
 function bodyHasNestedReturn(blockNode: AstNode): boolean {
   let nested = false;
@@ -3213,7 +3213,7 @@ export function buildWATModule(
     const rawParamTypes: readonly string[] = flow.paramTypes ?? [];
     const namedParams: WATParamDef[] = rawParamTypes.map((typeName, i) => ({
       name: `$p${i}`,
-      type: logicNTypeToWAT(typeName),
+      type: galerinaTypeToWAT(typeName),
     }));
     // WATFuncType params: just the value types (for type-checking / signature).
     const paramValTypes: WATValType[] = namedParams.map((p) => p.type);
@@ -3306,12 +3306,12 @@ export function buildWATModule(
     // aren't emitted yet, so those return types also stay i32 (unchanged). The result valtype
     // here is provably == what the body leaves on the stack because both key off FLOAT_WAT_TYPES.
     // EDGE (walker-only, unchanged): a float flow that ALSO has an `invariant { ensure result … }`
-    // output post-condition stays on the walker — $logicn_result is declared i32 (§emitWATFromFlowAST),
+    // output post-condition stays on the walker — $galerin_result is declared i32 (§emitWATFromFlowAST),
     // so the single-exit module won't assemble; it was already walker-only before this fix (no regression).
     // Step 3e: derive the result valtype from the declared return type. Float→f64 (#165); now ALSO
     // Int64→i64, since the body's i64 routing (Step 4c) leaves an i64 on the stack for an Int64-returning
     // flow — without this the `(result i32)` mismatches the i64 body → invalid module. Both 64-bit widths
-    // (Int64 AND UInt64, #52) map the function result to i64 — they store as i64 (logicNTypeToWAT); Float32
+    // (Int64 AND UInt64, #52) map the function result to i64 — they store as i64 (galerinaTypeToWAT); Float32
     // stays i32 (unchanged).
     const declaredReturn = flowReturnTypes?.get(flow.name);
     const resultVal: WATValType =
@@ -3459,18 +3459,18 @@ export function buildWATModuleFromGIR(
  * a single exit point, where post-condition invariant gates can fire.
  *
  * Pattern:
- *   (block $logicn_exit
- *     ... body with br $logicn_exit replacing return ...
+ *   (block $galerin_exit
+ *     ... body with br $galerin_exit replacing return ...
  *   )
  *   ;; post-condition gates fire here (after $exit)
- *   local.get $logicn_result
+ *   local.get $galerin_result
  *
  * Stage A (now): only emits the wrapper structure — no active post-conditions yet.
  *   The wrapper is a no-op transformation that preserves identical behavior.
  *   Post-condition gates will be injected here in Phase 4 when #70 is fully active.
  *
  * Stage B (Phase 4): `ensure returnValue > 0` expressions in invariant {} will
- *   generate post-condition gates that are injected after $logicn_exit.
+ *   generate post-condition gates that are injected after $galerin_exit.
  */
 export function wrapInSingleExit(
   bodyLines: string[],
@@ -3482,7 +3482,7 @@ export function wrapInSingleExit(
     return bodyLines;
   }
 
-  // Future: wrap body in (block $logicn_exit), inject post-condition gates after
+  // Future: wrap body in (block $galerin_exit), inject post-condition gates after
   // For now Stage A: no post-conditions, return unchanged
   return bodyLines;
 }

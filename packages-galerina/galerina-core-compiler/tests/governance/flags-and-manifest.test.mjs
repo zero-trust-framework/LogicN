@@ -205,7 +205,7 @@ contract {
 `, "production");
     const manifest = result.runtimeManifests[0];
     assert.ok(manifest !== undefined, "Manifest must exist");
-    assert.equal(manifest.schemaVersion, "lln.runtime.manifest.v1");
+    assert.equal(manifest.schemaVersion, "spore.runtime.manifest.v1");
   });
 
   it("RuntimeManifest requiresAudit is true for database.write flows", () => {

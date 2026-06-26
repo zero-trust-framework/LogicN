@@ -69,7 +69,7 @@ export function verifyIndexIntegrity(index: WorkspaceIndex): boolean {
 // File system walk
 // ---------------------------------------------------------------------------
 
-async function walkLlnFiles(dir: string): Promise<string[]> {
+async function walkSporeFiles(dir: string): Promise<string[]> {
   const results: string[] = [];
 
   async function recurse(current: string): Promise<void> {
@@ -187,14 +187,14 @@ export async function buildIndex(
   }
 
   // Walk workspace for .spore files
-  const llnFiles = await walkLlnFiles(absWorkspace);
+  const sporeFiles = await walkSporeFiles(absWorkspace);
 
   const allFlows: IndexedFlow[] = [];
   const newFileHashes: Record<string, string> = {};
   let filesIndexed = 0;
   let filesSkipped = 0;
 
-  for (const filePath of llnFiles) {
+  for (const filePath of sporeFiles) {
     // Check mtime for incremental (fast pre-filter)
     let mtime = 0;
     try {

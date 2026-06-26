@@ -1406,11 +1406,11 @@ packages-galerina/
       index.ts             (public API exports)
       cli.ts               (minimal CLI entrypoint)
       create-server.ts     (startApiServer — full 10-step pipeline)
-      load-manifest.ts     (loadManifest, assertLogicnApiManifest)
+      load-manifest.ts     (loadManifest, assertGalerinaApiManifest)
       route-table.ts       (buildRouteTable, compileRoute, :param matching)
       read-body-with-limit.ts  (streaming body limit enforcement)
       write-response.ts    (writeKernelResponse, writeJson)
-      error-mapper.ts      (LogicnHttpError, mapErrorToHttpResponse)
+      error-mapper.ts      (GalerinaHttpError, mapErrorToHttpResponse)
       webhook.ts           (verifyHmacSha256Webhook, assertWebhookVerified)
       replay-store.ts      (MemoryReplayStore implementation)
       openapi.ts           (exportOpenApi — OpenAPI 3.1 from manifest)
@@ -1443,22 +1443,22 @@ export enum HttpMethod {
 }
 ```
 
-#### LogicnApiManifest
+#### GalerinaApiManifest
 
 ```ts
-export interface LogicnApiManifest {
+export interface GalerinaApiManifest {
   schemaVersion: "galerina.api.manifest.v2"
   api: string
   version: string
   generatedAt: string
-  routes: LogicnRouteManifest[]
+  routes: GalerinaRouteManifest[]
 }
 ```
 
-#### LogicnRouteManifest
+#### GalerinaRouteManifest
 
 ```ts
-export interface LogicnRouteManifest {
+export interface GalerinaRouteManifest {
   id: string
   method: HttpMethod
   path: string
@@ -1539,17 +1539,17 @@ export interface ReplayStore {
 #### Kernel Interfaces
 
 ```ts
-export interface LogicnAppKernel {
-  handleApiRequest(input: HandleApiRequestInput): Promise<LogicnKernelResponse>
+export interface GalerinaAppKernel {
+  handleApiRequest(input: HandleApiRequestInput): Promise<GalerinaKernelResponse>
 }
 
 export interface HandleApiRequestInput {
-  route: LogicnRouteManifest
-  request: LogicnKernelRequest
+  route: GalerinaRouteManifest
+  request: GalerinaKernelRequest
   replayStore?: ReplayStore
 }
 
-export interface LogicnKernelRequest {
+export interface GalerinaKernelRequest {
   method: HttpMethod; url: string; path: string
   query: Record<string, string | string[]>
   headers: Record<string, string | string[]>
@@ -1557,7 +1557,7 @@ export interface LogicnKernelRequest {
   remoteAddress?: string; requestId: string; receivedAt: string
 }
 
-export interface LogicnKernelResponse {
+export interface GalerinaKernelResponse {
   status: number
   headers: Record<string, string>
   body?: unknown
@@ -1566,21 +1566,21 @@ export interface LogicnKernelResponse {
 export interface StartApiServerOptions {
   manifestPath: string; port: number; host?: string
   env: "development" | "production"
-  appKernel: LogicnAppKernel
+  appKernel: GalerinaAppKernel
   replayStore?: ReplayStore
 }
 ```
 
-### LogicnHttpError
+### GalerinaHttpError
 
 ```ts
-export class LogicnHttpError extends Error {
+export class GalerinaHttpError extends Error {
   constructor(
     public readonly status: number,
     public readonly code: string,
     message: string,
     public readonly safeDetails?: Record<string, unknown>
-  ) { super(message); this.name = "LogicnHttpError" }
+  ) { super(message); this.name = "GalerinaHttpError" }
 }
 ```
 
@@ -1591,7 +1591,7 @@ production returns public message only via `publicMessageForStatus(status)`.
 
 ```text
 1.  Receive HTTP request
-2.  Match method and path against LogicnApiManifest
+2.  Match method and path against GalerinaApiManifest
 3.  Reject unknown route or invalid method before body read where possible
 4.  Enforce transport-level body limit (streaming via readBodyWithLimit)
 5.  Normalize headers, path, query, request-id, and raw body
@@ -1632,7 +1632,7 @@ Raw bodies MUST never be logged.
 
 ### OpenAPI Export (src/openapi.ts)
 
-`exportOpenApi(manifest)` generates OpenAPI 3.1.0 from the `LogicnApiManifest`.
+`exportOpenApi(manifest)` generates OpenAPI 3.1.0 from the `GalerinaApiManifest`.
 OpenAPI is generated FROM the Galerina manifest — it is not the source of truth.
 
 Includes: `bearerAuth` / `apiKeyAuth` security schemes, path parameters from

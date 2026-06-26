@@ -86,7 +86,7 @@ via packages":
    REST/HTTP  ─┐
    SOAP/XML   ─┤
    gRPC       ─┼─►  Protocol Adapter (per package)  ─►  App Kernel  ─►  typed Galerina flow
-   GraphQL    ─┤        (wire → LogicnKernelRequest)     (one secure      (contract-governed)
+   GraphQL    ─┤        (wire → GalerinaKernelRequest)     (one secure      (contract-governed)
    Webhooks   ─┘                                          pipeline)
 ```
 
@@ -110,7 +110,7 @@ Why this matters:
 | gRPC / protobuf | `galerina-api-protocol-grpc` | Later | `.proto` ↔ Galerina contract mapping |
 | GraphQL | `galerina-api-protocol-graphql` | Later | schema → contract; resolver → flow |
 
-All map to the **same** `LogicnAppKernel.handleApiRequest(...)` contract. **Naming DECIDED
+All map to the **same** `GalerinaAppKernel.handleApiRequest(...)` contract. **Naming DECIDED
 (user, 2026-06-14):** protocol-adapter packages use **`galerina-api-protocol-<name>`**
 (e.g. `galerina-api-protocol-soap`) — clearer to developers than `galerina-protocol-*` or
 `galerina-framework-*`. The existing REST package keeps its name `galerina-framework-api-server`

@@ -101,8 +101,8 @@ refuted, with the reason — then refreshes the KB index. See [[feedback-rd-abso
 | 0017 | First-class fault handlers (on_*_fault) — grammar/AST/GIR design | ✓ done | `0017-fault-handler-grammar.done.md` |
 | 0018 | Capability->regulatory-control mapping + unified attestation report | ✓ done | `0018-capability-to-control-mapping-attestation.done.md` |
 | 0019 | Photonic-hardware-READY observation seam (trit-watch / wave-probe) | ✓ done | `0019-photonic-ready-observation-seam.done.md` |
-| 0020 | Disambiguate ambiguous citations · From Logicn-Encriptions R&D · Date 2026-06-18 · Status complete · doc-hygie | ✓ done | `0020-disambiguate-ambiguous-citations.done.md` |
-| 0021 | Adversarial i32 cross-tier conformance + harness corpus · From Logicn-Encriptions R&D · Date 2026-06-18 · Stat | ✓ done | `0021-adversarial-i32-conformance-and-harness-corpus.done.md` |
+| 0020 | Disambiguate ambiguous citations · From Galerina-Encriptions R&D · Date 2026-06-18 · Status complete · doc-hygie | ✓ done | `0020-disambiguate-ambiguous-citations.done.md` |
+| 0021 | Adversarial i32 cross-tier conformance + harness corpus · From Galerina-Encriptions R&D · Date 2026-06-18 · Stat | ✓ done | `0021-adversarial-i32-conformance-and-harness-corpus.done.md` |
 | 0022 | Deterministic compute-gas + zeroize-on-trap proof | ✓ done | `0022-deterministic-gas-and-zeroize-proof.done.md` |
 | 0023 | tower-citizen runtime verification access | ✓ done | `0023-tower-citizen-runtime-verification-access.done.md` |
 | 0024 | Formal-verification prototype: Z3/SMT proof of cross-tier i32 conformance | ✓ done | `0024-formal-verification-z3-i32-conformance-prototype.done.md` |

@@ -3,8 +3,8 @@
 This document defines the requirements for two Galerina tooling packages:
 
 ```text
-/packages-galerina/galerina-core-cli
-/packages-galerina/galerina-core-tasks
+/packages-galerinaa/galerinaa-core-cli
+/packages-galerinaa/galerinaa-core-tasks
 ```
 
 These packages provide command-line tooling and safe project automation. They
@@ -27,7 +27,7 @@ inspect generated artefacts
 
 ## Package Roles
 
-`galerina-core-cli` is the developer command-line interface for Galerina. It coordinates Galerina
+`galerinaa-core-cli` is the developer command-line interface for Galerina. It coordinates Galerina
 packages and provides commands such as:
 
 ```text
@@ -41,7 +41,7 @@ Galerina routes
 Galerina task
 ```
 
-`galerina-core-tasks` is the safe task runner for Galerina projects. It provides a secure
+`galerinaa-core-tasks` is the safe task runner for Galerina projects. It provides a secure
 alternative to raw shell scripts for repeatable automation such as cleaning
 build output, generating reports, generating OpenAPI files, copying safe assets,
 running checks, preparing deployment files and running build pipelines.
@@ -59,14 +59,14 @@ The relationship is:
 ```text
 Developer
   ->
-galerina-core-cli
+galerinaa-core-cli
   ->
-galerina-core-tasks when running project tasks
+galerinaa-core-tasks when running project tasks
   ->
 compiler / runtime / server packages
 ```
 
-`galerina-core-cli` may call `galerina-core-tasks`. `galerina-core-tasks` must also be usable by other tooling
+`galerinaa-core-cli` may call `galerinaa-core-tasks`. `galerinaa-core-tasks` must also be usable by other tooling
 without requiring direct terminal use.
 
 ## Required CLI Commands
@@ -141,7 +141,7 @@ material.
 
 ## Task Requirements
 
-`galerina-core-tasks` should support named tasks, descriptions, dependencies, inputs,
+`galerinaa-core-tasks` should support named tasks, descriptions, dependencies, inputs,
 outputs, permissions, effects, timeouts, safe file operations, safe environment
 access, safe logging, report generation and dry run mode.
 
@@ -194,14 +194,14 @@ run and reports that would be generated. Dry run must not modify files.
 
 ## Package Boundaries
 
-Neither `galerina-core-cli` nor `galerina-core-tasks` should contain application behaviour. They
+Neither `galerinaa-core-cli` nor `galerinaa-core-tasks` should contain application behaviour. They
 should not contain routing logic, ORM logic, authentication logic, template
 rendering, admin dashboards, payment logic, email provider logic, queue driver
 logic, CMS features or business rules.
 
 ## Early TODO
 
-For `galerina-core-cli`:
+For `galerinaa-core-cli`:
 
 ```text
 [ ] Add command router
@@ -220,7 +220,7 @@ For `galerina-core-cli`:
 [ ] Add tests
 ```
 
-For `galerina-core-tasks`:
+For `galerinaa-core-tasks`:
 
 ```text
 [ ] Define TaskDefinition type
@@ -243,17 +243,17 @@ For `galerina-core-tasks`:
 ## Final Principle
 
 ```text
-/galerina-core-cli is the developer command tool.
-/galerina-core-tasks is the safe automation/task runner.
+/galerinaa-core-cli is the developer command tool.
+/galerinaa-core-tasks is the safe automation/task runner.
 ```
 
-Terminal commands belong in `galerina-core-cli`. Automation belongs in `galerina-core-tasks`. Raw
+Terminal commands belong in `galerinaa-core-cli`. Automation belongs in `galerinaa-core-tasks`. Raw
 shell should be disabled by default, explicit when enabled, permissioned,
 limited, reported, redacted and treated as unsafe compatibility.
 
 ## Detailed CLI Requirements
 
-`galerina-core-cli` should be used for checking Galerina source, building Galerina projects, running
+`galerinaa-core-cli` should be used for checking Galerina source, building Galerina projects, running
 Galerina projects, serving Galerina APIs, generating reports, generating schemas, running
 tests, running tasks, inspecting project structure, inspecting routes,
 inspecting permissions, inspecting effects, inspecting memory behaviour and
@@ -270,7 +270,7 @@ Command responsibilities:
 | `Galerina reports` | Generate or display reports |
 | `Galerina security:check` | Check security rules and unsafe features |
 | `Galerina routes` | List declared API routes |
-| `Galerina task <name>` | Run a safe task through `galerina-core-tasks` |
+| `Galerina task <name>` | Run a safe task through `galerinaa-core-tasks` |
 | `Galerina test` | Run tests when testing support exists |
 | `Galerina new` | Create a project scaffold later |
 
@@ -295,10 +295,10 @@ DATABASE_PASSWORD=SecureString(redacted)
 AUTH_TOKEN=SecureString(redacted)
 ```
 
-Recommended `galerina-core-cli` folder structure:
+Recommended `galerinaa-core-cli` folder structure:
 
 ```text
-/packages-galerina/galerina-core-cli
+/packages-galerinaa/galerinaa-core-cli
   README.md
   TODO.md
   package.json
@@ -350,7 +350,7 @@ The first scaffold may stay smaller while keeping these boundaries clear.
 
 ## Detailed Task Requirements
 
-`galerina-core-tasks` should provide safe project automation for cleaning build output,
+`galerinaa-core-tasks` should provide safe project automation for cleaning build output,
 generating reports, generating OpenAPI files, generating JSON schemas, copying
 safe assets, running checks, running tests, preparing deployment files, running
 migration commands later, running build steps and running release checks.
@@ -521,7 +521,7 @@ Dry run must not modify files.
 
 ## Task Reports
 
-`galerina-core-tasks` should generate reports such as:
+`galerinaa-core-tasks` should generate reports such as:
 
 ```text
 build/reports/task-report.json
@@ -580,7 +580,7 @@ suggested fix.
 
 ## Safe Built-In Task Operations
 
-`galerina-core-tasks` should prefer safe built-in operations over raw shell:
+`galerinaa-core-tasks` should prefer safe built-in operations over raw shell:
 
 ```text
 filesystem.copy()
@@ -600,7 +600,7 @@ These operations must be permission checked.
 ## Recommended Task Folder Structure
 
 ```text
-/packages-galerina/galerina-core-tasks
+/packages-galerinaa/galerinaa-core-tasks
   README.md
   TODO.md
   package.json
@@ -662,7 +662,7 @@ These operations must be permission checked.
 Minimal early structure:
 
 ```text
-/packages-galerina/galerina-core-tasks
+/packages-galerinaa/galerinaa-core-tasks
   README.md
   TODO.md
   package.json
@@ -689,18 +689,18 @@ Minimal early structure:
 Flow:
 
 ```text
-galerina-core-cli
+galerinaa-core-cli
   receives command
   loads project config
   loads tasks.spore
-  calls galerina-core-tasks
-  galerina-core-tasks checks permissions
-  galerina-core-tasks runs task
-  galerina-core-tasks returns result
-  galerina-core-cli prints output
+  calls galerinaa-core-tasks
+  galerinaa-core-tasks checks permissions
+  galerinaa-core-tasks runs task
+  galerinaa-core-tasks returns result
+  galerinaa-core-cli prints output
 ```
 
-`galerina-core-tasks` should be usable without the CLI by other tools if needed.
+`galerinaa-core-tasks` should be usable without the CLI by other tools if needed.
 
 ## Production Rules
 

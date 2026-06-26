@@ -14,8 +14,8 @@
 [x] Add README.md
 [x] Document package boundary
 [x] Define v0.2 architecture position (transport boundary → kernel → runtime)
-[x] Define LogicnApiManifest: schemaVersion "galerina.api.manifest.v2", api, version, generatedAt, routes[]
-[x] Define LogicnRouteManifest: id, method, path, handler, requestType?, responseType, policies[], body, limits, reports, webhook?
+[x] Define GalerinaApiManifest: schemaVersion "galerina.api.manifest.v2", api, version, generatedAt, routes[]
+[x] Define GalerinaRouteManifest: id, method, path, handler, requestType?, responseType, policies[], body, limits, reports, webhook?
 [x] Define HttpMethod enum: GET|POST|PUT|PATCH|DELETE|OPTIONS|HEAD (7 values)
 [x] Define RoutePolicy as 7-kind discriminated union: auth|scope|body|effect|network|rateLimit|idempotency
 [x] Define AuthRoutePolicy: kind:"auth", type: "none"|"bearer"|"apiKey"|"jwt"|"oauth2"|"mtls"
@@ -30,12 +30,12 @@
 [x] Define RouteReportPolicy: audit, security, memory, network, failure (all boolean)
 [x] Define WebhookVerificationConfig: provider, secret, signatureHeader, timestampHeader?, replayWindowSeconds, expectedPrefix?, eventIdHeader?, eventIdPath?
 [x] Define ReplayStore interface: exists(key): Promise<boolean>, save(key, ttlSeconds): Promise<void>
-[x] Define LogicnAppKernel interface: handleApiRequest(input): Promise<LogicnKernelResponse>
+[x] Define GalerinaAppKernel interface: handleApiRequest(input): Promise<GalerinaKernelResponse>
 [x] Define HandleApiRequestInput: route, request, replayStore?
-[x] Define LogicnKernelRequest: method, url, path, query, headers, body (Buffer), rawBody?, remoteAddress?, requestId, receivedAt
-[x] Define LogicnKernelResponse: status, headers, body?
+[x] Define GalerinaKernelRequest: method, url, path, query, headers, body (Buffer), rawBody?, remoteAddress?, requestId, receivedAt
+[x] Define GalerinaKernelResponse: status, headers, body?
 [x] Define StartApiServerOptions: manifestPath, port, host?, env, appKernel, replayStore?
-[x] Define LogicnHttpError(status, code, message, safeDetails?): extends Error
+[x] Define GalerinaHttpError(status, code, message, safeDetails?): extends Error
 [x] Define 10-step request pipeline (create-server.ts)
 [x] Define webhook verification functions (verifyHmacSha256Webhook, assertWebhookVerified, timingSafeHexEqual)
 [x] Define route table: buildRouteTable(manifest), :param regex matching, RouteMatch
@@ -60,26 +60,26 @@
 
 ```text
 [ ] Implement HttpMethod enum (7 values)
-[ ] Implement LogicnApiManifest interface with schemaVersion literal "galerina.api.manifest.v2"
-[ ] Implement LogicnRouteManifest interface
+[ ] Implement GalerinaApiManifest interface with schemaVersion literal "galerina.api.manifest.v2"
+[ ] Implement GalerinaRouteManifest interface
 [ ] Implement all 7 RoutePolicy discriminated kinds
 [ ] Implement BodyPolicy interface
 [ ] Implement RouteLimits interface
 [ ] Implement RouteReportPolicy interface
 [ ] Implement WebhookVerificationConfig interface (use secret field, not sharedSecret)
 [ ] Implement ReplayStore interface (async: exists/save with ttlSeconds)
-[ ] Implement LogicnAppKernel interface
+[ ] Implement GalerinaAppKernel interface
 [ ] Implement HandleApiRequestInput interface
-[ ] Implement LogicnKernelRequest interface (body as Buffer)
-[ ] Implement LogicnKernelResponse interface
+[ ] Implement GalerinaKernelRequest interface (body as Buffer)
+[ ] Implement GalerinaKernelResponse interface
 [ ] Implement StartApiServerOptions interface
 ```
 
 ## Implementation — src/load-manifest.ts
 
 ```text
-[ ] Implement loadManifest(manifestPath): Promise<LogicnApiManifest>
-[ ] Implement assertLogicnApiManifest(data): asserts data is LogicnApiManifest
+[ ] Implement loadManifest(manifestPath): Promise<GalerinaApiManifest>
+[ ] Implement assertGalerinaApiManifest(data): asserts data is GalerinaApiManifest
 [ ] Validate schemaVersion === "galerina.api.manifest.v2"
 [ ] Validate all route fields present
 [ ] Fail fast on invalid manifest (startup blocker)
@@ -102,14 +102,14 @@
 ```text
 [ ] Implement readBodyWithLimit(req, maxSizeBytes): Promise<Buffer>
 [ ] Enforce limit while streaming (not after full read)
-[ ] Throw LogicnHttpError(413, "BODY_TOO_LARGE", ...) on oversize
+[ ] Throw GalerinaHttpError(413, "BODY_TOO_LARGE", ...) on oversize
 [ ] Add body-limit.test.ts coverage
 ```
 
 ## Implementation — src/error-mapper.ts
 
 ```text
-[ ] Implement LogicnHttpError class: status, code, message, safeDetails?
+[ ] Implement GalerinaHttpError class: status, code, message, safeDetails?
 [ ] Implement mapErrorToHttpResponse(error, env): { status, headers, body }
 [ ] In development: include safeDetails in response body
 [ ] In production: return publicMessageForStatus(status) only
@@ -179,7 +179,7 @@
 ## Implementation — src/openapi.ts
 
 ```text
-[ ] Implement exportOpenApi(manifest: LogicnApiManifest): OpenApiSpec
+[ ] Implement exportOpenApi(manifest: GalerinaApiManifest): OpenApiSpec
 [ ] Generate OpenAPI 3.1.0 output
 [ ] Map :param segments to path parameter objects
 [ ] Add bearerAuth / apiKeyAuth security schemes from auth policies

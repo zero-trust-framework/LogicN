@@ -2,7 +2,7 @@
  * Galerina HTTP / HTTPS API-server adapter.
  *
  * A DELIBERATELY THIN node:http / node:https transport in front of the App Kernel.
- * Its only job is to turn a raw request into a normalised `LogicnKernelRequest`,
+ * Its only job is to turn a raw request into a normalised `GalerinaKernelRequest`,
  * hand it to `kernel.handle()`, and write the kernel's typed response back onto
  * the socket. It is NOT a place for policy, middleware, auth, or routing — all
  * of that lives in the kernel's fixed, non-bypassable pipeline and MUST NOT be
@@ -38,7 +38,7 @@ import http from "node:http";
 import https from "node:https";
 import { randomUUID, createHash } from "node:crypto";
 import type { TLSSocket, DetailedPeerCertificate, SecureContextOptions } from "node:tls";
-import type { AppKernel, LogicnKernelRequest, LogicnKernelResponse } from "../../galerina-framework-app-kernel/dist/index.js";
+import type { AppKernel, GalerinaKernelRequest, GalerinaKernelResponse } from "../../galerina-framework-app-kernel/dist/index.js";
 import type { HttpMethod } from "../../galerina-framework-app-kernel/dist/index.js";
 import { Verdict } from "../../galerina-tower-citizen/dist/index.js";
 // TLSTP S1 cert-gate (fail-closed K3 fold; revocation-unknown → DENY). The adapter feeds it the
@@ -259,7 +259,7 @@ function normaliseMethod(raw: string | undefined): HttpMethod {
 
 function writeResponse(
   res: http.ServerResponse,
-  resp: LogicnKernelResponse,
+  resp: GalerinaKernelResponse,
 ): void {
   if (res.headersSent || res.writableEnded) return;
   res.writeHead(resp.status, { ...resp.headers });
@@ -499,9 +499,9 @@ async function handleRequest(
     }
   }
 
-  // (3) Normalise into a LogicnKernelRequest.
+  // (3) Normalise into a GalerinaKernelRequest.
   const { path, query } = parseUrl(req.url);
-  const kreq: LogicnKernelRequest = {
+  const kreq: GalerinaKernelRequest = {
     method: normaliseMethod(req.method),
     path,
     headers: lowercaseHeaders(req.headers),
@@ -513,7 +513,7 @@ async function handleRequest(
   };
 
   // (4) Hand to the kernel's fixed, non-bypassable pipeline. (5) Write its response.
-  let resp: LogicnKernelResponse;
+  let resp: GalerinaKernelResponse;
   try {
     resp = await kernel.handle(kreq);
   } catch {

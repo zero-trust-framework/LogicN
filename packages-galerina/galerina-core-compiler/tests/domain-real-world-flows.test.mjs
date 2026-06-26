@@ -84,9 +84,9 @@ contract { effects { database.write, audit.write } }
     assert.ok(result.effectsObserved.includes("audit.write"));
   });
 
-  it("audit schema version is lln.runtime.audit.v1", async () => {
+  it("audit schema version is spore.runtime.audit.v1", async () => {
     const result = await parseAndRun(SOURCE, "createPatient");
-    assert.equal(result.audit.schemaVersion, "lln.runtime.audit.v1");
+    assert.equal(result.audit.schemaVersion, "spore.runtime.audit.v1");
   });
 });
 

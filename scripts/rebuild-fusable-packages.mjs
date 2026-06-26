@@ -43,7 +43,7 @@ function findDescriptors(base, depth = 0, acc = []) {
 }
 
 /** Newest mtime (ms) of any .spore under `dir` (recursively, skipping build dirs). */
-function newestLlnMtime(dir, depth = 0) {
+function newestSpore(dir, depth = 0) {
   let newest = 0;
   let entries;
   try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return newest; }
@@ -54,7 +54,7 @@ function newestLlnMtime(dir, depth = 0) {
       const m = statSync(p).mtimeMs;
       if (m > newest) newest = m;
     } else if (e.isDirectory() && depth < 6) {
-      const m = newestLlnMtime(p, depth + 1);
+      const m = newestSpore(p, depth + 1);
       if (m > newest) newest = m;
     }
   }
@@ -77,7 +77,7 @@ for (const dir of pkgDirs) {
 
   const srcRoot = existsSync(join(dir, "src")) ? join(dir, "src") : dir;
   const wasm = join(dir, "dist", `${name}.wasm`);
-  const srcMtime = newestLlnMtime(srcRoot);
+  const srcMtime = newestSpore(srcRoot);
   const wasmMtime = existsSync(wasm) ? statSync(wasm).mtimeMs : 0;
 
   if (wasmMtime > 0 && wasmMtime >= srcMtime) { fresh++; continue; } // up to date — skip

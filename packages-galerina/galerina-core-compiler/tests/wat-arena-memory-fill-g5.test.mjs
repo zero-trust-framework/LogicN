@@ -38,11 +38,11 @@ test("G5(a): a secret module's zeroing uses `memory.fill`, not an i32.store loop
   const { wat } = await build(mk(true));
   assert.ok(wat.includes("memory.fill"), `the bulk-memory primitive must be emitted:\n${wat}`);
   // The retained marker tokens still flag a secret-zeroing module (back-compat with the b2b checks).
-  assert.ok(wat.includes("$__lln_zl"), "the $__lln_zl secret-zeroing marker is retained");
+  assert.ok(wat.includes("$__spore_zl"), "the $__spore_zl secret-zeroing marker is retained");
   // The old per-i32 zeroing loop (a guarded i32.store over a counter local) is GONE.
-  assert.ok(!/\(i32\.store \(local\.get \$__lln_zero_i\)/.test(wat),
+  assert.ok(!/\(i32\.store \(local\.get \$__spore_zero_i\)/.test(wat),
     "the per-i32 store zeroing loop must be replaced by memory.fill");
-  assert.ok(!wat.includes("$__lln_zero_i"), "the now-unused zeroing counter local must be dropped");
+  assert.ok(!wat.includes("$__spore_zero_i"), "the now-unused zeroing counter local must be dropped");
 });
 
 test("G5(a): the assembled binary contains the bulk-memory opcode 0xFC 0x0B (memory.fill)", async () => {
@@ -74,9 +74,9 @@ test("G5(a): zeroing STILL clears host-readable secret remanence (memory.fill �
 
 test("G5(a): a non-secret module emits NO memory.fill zeroing (it pays nothing)", async () => {
   const { wat } = await build(mk(false));
-  assert.ok(!wat.includes("$__lln_zl"), "no privacy/secrets ⇒ no secret-zeroing marker");
-  // A non-secret module still does the B2 per-flow heap REBASE (global.set $__lln_heap) but no fill.
-  assert.ok(!/memory\.fill .*\$__lln_heap/.test(wat),
+  assert.ok(!wat.includes("$__spore_zl"), "no privacy/secrets ⇒ no secret-zeroing marker");
+  // A non-secret module still does the B2 per-flow heap REBASE (global.set $__spore_heap) but no fill.
+  assert.ok(!/memory\.fill .*\$__spore_heap/.test(wat),
     "non-secret modules must not pay for a secret zero-fill");
 });
 

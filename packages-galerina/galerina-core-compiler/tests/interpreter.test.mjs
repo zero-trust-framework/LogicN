@@ -262,7 +262,7 @@ pure flow greet() -> String {
 }
 `, "greet");
 
-    assert.equal(result.audit.schemaVersion, "lln.runtime.audit.v1");
+    assert.equal(result.audit.schemaVersion, "spore.runtime.audit.v1");
   });
 
   it("records AuditLog.write calls", async () => {

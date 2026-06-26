@@ -40,7 +40,7 @@ const TRITS = [-1, 0, 1];
 // ---------------------------------------------------------------------------
 // Drive the .spore flow through the CLI and parse its integer verdict.
 // ---------------------------------------------------------------------------
-function runLln(flow, ...args) {
+function runSpore(flow, ...args) {
   const out = execFileSync(
     process.execPath,
     [GALERINA_CLI, "run", SPORE_FILE, "--invoke", flow, ...args.map(String)],
@@ -60,7 +60,7 @@ function runLln(flow, ...args) {
 test("triNot parity (.spore vs .ts) over all trits", () => {
   for (const a of TRITS) {
     const expected = ts.triNot(a);
-    const actual = runLln("triNot", a);
+    const actual = runSpore("triNot", a);
     assert.equal(
       actual,
       expected,
@@ -73,7 +73,7 @@ test("triAnd parity (.spore vs .ts) over all trit pairs", () => {
   for (const a of TRITS) {
     for (const b of TRITS) {
       const expected = ts.triAnd(a, b);
-      const actual = runLln("triAnd", a, b);
+      const actual = runSpore("triAnd", a, b);
       assert.equal(
         actual,
         expected,
@@ -87,7 +87,7 @@ test("triOr parity (.spore vs .ts) over all trit pairs", () => {
   for (const a of TRITS) {
     for (const b of TRITS) {
       const expected = ts.triOr(a, b);
-      const actual = runLln("triOr", a, b);
+      const actual = runSpore("triOr", a, b);
       assert.equal(
         actual,
         expected,
@@ -101,7 +101,7 @@ test("triNor parity (.spore vs .ts) over all trit pairs", () => {
   for (const a of TRITS) {
     for (const b of TRITS) {
       const expected = ts.triNor(a, b);
-      const actual = runLln("triNor", a, b);
+      const actual = runSpore("triNor", a, b);
       assert.equal(
         actual,
         expected,

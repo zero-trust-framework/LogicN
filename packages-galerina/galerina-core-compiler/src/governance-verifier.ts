@@ -1882,7 +1882,7 @@ class GovernanceVerifier {
       if (isProduction) {
         const arenaLimitMb = fn !== undefined ? extractArenaLimitMB(fn) : undefined;
         const manifest: RuntimeManifest = {
-          schemaVersion: "lln.runtime.manifest.v1",
+          schemaVersion: "spore.runtime.manifest.v1",
           flow: flow.name,
           qualifier: flow.qualifier,
           requiresAudit:    (mask & GovernanceFlags.RequiresAudit) !== 0,

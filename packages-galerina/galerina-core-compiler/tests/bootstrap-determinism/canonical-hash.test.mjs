@@ -226,7 +226,7 @@ describe("canonical-hash: hashPassivePlan stability", () => {
 describe("canonical-hash: hashGIR stability with realistic payload", () => {
   it("hashGIR with realistic multi-flow GIR → stable across two calls", () => {
     const gir = {
-      schemaVersion: "lln.gir.v1",
+      schemaVersion: "spore.gir.v1",
       generatedAt: "2024-01-01T00:00:00.000Z",
       flows: [
         {
@@ -250,11 +250,11 @@ describe("canonical-hash: hashGIR stability with realistic payload", () => {
 
   it("GIR with different flow order → different hash (flow arrays are ordered)", () => {
     const girA = {
-      schemaVersion: "lln.gir.v1",
+      schemaVersion: "spore.gir.v1",
       flows: [{ name: "a", qualifier: "pure flow" }, { name: "b", qualifier: "flow" }],
     };
     const girB = {
-      schemaVersion: "lln.gir.v1",
+      schemaVersion: "spore.gir.v1",
       flows: [{ name: "b", qualifier: "flow" }, { name: "a", qualifier: "pure flow" }],
     };
     const h1 = hashGIR(girA);

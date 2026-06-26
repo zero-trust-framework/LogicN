@@ -27,7 +27,7 @@ function makePureFlow(flowName = "doWork", body = "return 42") {
 
 function makeManifest(overrides = {}) {
   return {
-    schemaVersion: "lln.runtime.manifest.v1",
+    schemaVersion: "spore.runtime.manifest.v1",
     flow: "doWork",
     qualifier: "pure",
     requiresAudit: false,

@@ -23,7 +23,7 @@ export interface OpticalChannel {
 
 export interface PhotonicMapping {
   readonly logicPackage: "@galerina/core-logic";
-  readonly logicName: string;
+  readonly galerinaame: string;
   readonly states: readonly {
     readonly state: string;
     readonly signal: OpticalSignal;
@@ -129,12 +129,12 @@ export function validatePhotonicMapping(
 ): readonly PhotonicDiagnostic[] {
   const diagnostics: PhotonicDiagnostic[] = [];
 
-  if (mapping.logicName.trim().length === 0) {
+  if (mapping.galerinaame.trim().length === 0) {
     diagnostics.push(createPhotonicDiagnostic(
       "Galerina_PHOTONIC_LOGIC_NAME_REQUIRED",
       "error",
       "Photonic mapping requires a logic name.",
-      `${path}.logicName`,
+      `${path}.galerinaame`,
     ));
   }
 

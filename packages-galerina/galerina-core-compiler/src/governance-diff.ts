@@ -54,7 +54,7 @@ export interface FlowDelta {
 }
 
 export interface GovernanceDiff {
-  readonly schemaVersion: "lln.govdiff.v1";
+  readonly schemaVersion: "spore.govdiff.v1";
   readonly added: readonly FlowDelta[];
   readonly removed: readonly FlowDelta[];
   readonly changed: readonly FlowDelta[];
@@ -214,7 +214,7 @@ export function diffGovernance(
   const summary = buildSummary(added, removed, changed, widensAuthority);
 
   return {
-    schemaVersion: "lln.govdiff.v1",
+    schemaVersion: "spore.govdiff.v1",
     added, removed, changed,
     widensAuthority,
     changeClass: overallClass,

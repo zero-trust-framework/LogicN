@@ -6,7 +6,7 @@ key *custody/ceremony*, which the research below now operationalizes.
 
 ## What already exists (so #34 is NOT a code task)
 - **Hybrid signing:** `generateHybridGovernanceKeyPair` · `signProofGraphHybrid` · `verifyGovernanceSignatureHybrid`
-  in `proof-graph.ts`, via `@noble/post-quantum` `ml_dsa65` (a real dependency). Tiers `lln.gov.sig.v1` (Ed25519)
+  in `proof-graph.ts`, via `@noble/post-quantum` `ml_dsa65` (a real dependency). Tiers `spore.gov.sig.v1` (Ed25519)
   → `v2` (hybrid Ed25519+ML-DSA-65, both required) → `v3` (pq_strict). Tested: `tests/hybrid-pq-signature.test.mjs`.
 - **Secure generation:** [galerina-qrng-entropy-capability-design.md](galerina-qrng-entropy-capability-design.md) —
   the SP 800-90A/B/C conditioning pipeline that supplies *unpredictable* entropy to the key schedule. (Rule:

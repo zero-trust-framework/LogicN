@@ -225,20 +225,20 @@ describe("Stage B lexer parity: TS lexer vs lexer.spore", () => {
 
     const tsResult  = lex(FLOW_GREET_SOURCE, "parity.spore");
     const tsSig     = significantTokens(tsResult.tokens.map((t) => ({ kind: t.kind, value: t.value })));
-    const llnTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
-    const llnSig    = significantTokens(llnTokens);
+    const sporeTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
+    const sporeSig    = significantTokens(sporeTokens);
 
-    const msg = `TypeScript lexer: ${tsSig.length} tokens, lexer.spore: ${llnSig.length} tokens`;
+    const msg = `TypeScript lexer: ${tsSig.length} tokens, lexer.spore: ${sporeSig.length} tokens`;
     console.log(`  [parity] ${msg}`);
 
     if (PARITY_ACHIEVED) {
-      assert.equal(llnSig.length, tsSig.length, msg);
+      assert.equal(sporeSig.length, tsSig.length, msg);
     } else {
       // Report gap without failing
-      if (llnSig.length !== tsSig.length) {
+      if (sporeSig.length !== tsSig.length) {
         console.log(`  [parity] GAP — token counts differ. ${msg}`);
         console.log("  [parity] TS tokens:  ", tsSig.map((t) => `${t.kind}:${JSON.stringify(t.value)}`).join(", "));
-        console.log("  [parity] spore tokens: ", llnSig.map((t) => `${t.kind}:${JSON.stringify(t.value)}`).join(", "));
+        console.log("  [parity] spore tokens: ", sporeSig.map((t) => `${t.kind}:${JSON.stringify(t.value)}`).join(", "));
       }
       assert.ok(true, "Parity check (informational only — PARITY_ACHIEVED=false)");
     }
@@ -249,22 +249,22 @@ describe("Stage B lexer parity: TS lexer vs lexer.spore", () => {
 
     const tsResult  = lex(FLOW_GREET_SOURCE, "parity.spore");
     const tsSig     = significantTokens(tsResult.tokens.map((t) => ({ kind: t.kind, value: t.value })));
-    const llnTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
-    const llnSig    = significantTokens(llnTokens);
+    const sporeTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
+    const sporeSig    = significantTokens(sporeTokens);
 
-    const minLen = Math.min(tsSig.length, llnSig.length);
+    const minLen = Math.min(tsSig.length, sporeSig.length);
     const mismatches = [];
     for (let i = 0; i < minLen; i++) {
       const tsKind  = tsPascalKind(tsSig[i].kind);
-      const llnKind = llnSig[i].kind;
-      if (tsKind !== llnKind) {
-        mismatches.push(`[${i}] TS=${tsKind} spore=${llnKind} (value=${JSON.stringify(tsSig[i].value)})`);
+      const sporeKind = sporeSig[i].kind;
+      if (tsKind !== sporeKind) {
+        mismatches.push(`[${i}] TS=${tsKind} spore=${sporeKind} (value=${JSON.stringify(tsSig[i].value)})`);
       }
     }
 
     if (mismatches.length > 0) {
       console.log(`  [parity] Kind mismatches (${mismatches.length}): ${mismatches.join("; ")}`);
-    } else if (tsSig.length === llnSig.length) {
+    } else if (tsSig.length === sporeSig.length) {
       console.log("  [parity] All kind positions match!");
     }
 
@@ -280,22 +280,22 @@ describe("Stage B lexer parity: TS lexer vs lexer.spore", () => {
 
     const tsResult  = lex(FLOW_GREET_SOURCE, "parity.spore");
     const tsSig     = significantTokens(tsResult.tokens.map((t) => ({ kind: t.kind, value: t.value })));
-    const llnTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
-    const llnSig    = significantTokens(llnTokens);
+    const sporeTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
+    const sporeSig    = significantTokens(sporeTokens);
 
-    const minLen = Math.min(tsSig.length, llnSig.length);
+    const minLen = Math.min(tsSig.length, sporeSig.length);
     const mismatches = [];
     for (let i = 0; i < minLen; i++) {
-      if (tsSig[i].value !== llnSig[i].value) {
+      if (tsSig[i].value !== sporeSig[i].value) {
         mismatches.push(
-          `[${i}] TS=${JSON.stringify(tsSig[i].value)} spore=${JSON.stringify(llnSig[i].value)}`,
+          `[${i}] TS=${JSON.stringify(tsSig[i].value)} spore=${JSON.stringify(sporeSig[i].value)}`,
         );
       }
     }
 
     if (mismatches.length > 0) {
       console.log(`  [parity] Value mismatches (${mismatches.length}): ${mismatches.join("; ")}`);
-    } else if (tsSig.length === llnSig.length) {
+    } else if (tsSig.length === sporeSig.length) {
       console.log("  [parity] All value positions match!");
     }
 
@@ -313,25 +313,25 @@ describe("Stage B lexer parity: TS lexer vs lexer.spore", () => {
 
     const tsResult  = lex(FLOW_GREET_SOURCE, "parity.spore");
     const tsSig     = tsResult.tokens.map((t) => ({ kind: t.kind, value: t.value }));
-    const llnTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
+    const sporeTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
 
     console.log("\n  [parity] Side-by-side token comparison:");
     console.log("  [parity] Source:", JSON.stringify(FLOW_GREET_SOURCE));
     console.log("  [parity] idx | TS lexer              | lexer.spore             | match?");
     console.log("  [parity] ----+----------------------+----------------------+-------");
 
-    const maxLen = Math.max(tsSig.length, llnTokens.length);
+    const maxLen = Math.max(tsSig.length, sporeTokens.length);
     let matchCount = 0;
     let mismatchCount = 0;
 
     for (let i = 0; i < maxLen; i++) {
       const ts  = tsSig[i]    ? `${tsSig[i].kind}:${JSON.stringify(tsSig[i].value)}`.padEnd(22) : "(missing)".padEnd(22);
-      const spore = llnTokens[i] ? `${llnTokens[i].kind}:${JSON.stringify(llnTokens[i].value)}`.padEnd(22) : "(missing)".padEnd(22);
+      const spore = sporeTokens[i] ? `${sporeTokens[i].kind}:${JSON.stringify(sporeTokens[i].value)}`.padEnd(22) : "(missing)".padEnd(22);
       const tsKind  = tsSig[i]    ? tsPascalKind(tsSig[i].kind) : null;
-      const llnKind = llnTokens[i] ? llnTokens[i].kind          : null;
+      const sporeKind = sporeTokens[i] ? sporeTokens[i].kind          : null;
       const tsVal   = tsSig[i]    ? tsSig[i].value    : null;
-      const llnVal  = llnTokens[i] ? llnTokens[i].value : null;
-      const match   = tsKind === llnKind && tsVal === llnVal ? "OK" : "GAP";
+      const sporeVal  = sporeTokens[i] ? sporeTokens[i].value : null;
+      const match   = tsKind === sporeKind && tsVal === sporeVal ? "OK" : "GAP";
       if (match === "OK") matchCount++; else mismatchCount++;
       console.log(`  [parity] ${String(i).padStart(3)} | ${ts}| ${spore}| ${match}`);
     }

@@ -111,7 +111,7 @@ async function main() {
   // This command was historically `gen-tests`; it is now the two-word `galerina generate tests`.
   // Normalize the subcommand into an internal dispatch token (the literal string "generate tests",
   // which contains a space and therefore can never equal a single shell argv token) and drop the
-  // consumed `tests` token, leaving the downstream `llnFile = rest[0]` + parse pipeline unchanged.
+  // consumed `tests` token, leaving the downstream `sporeFile = rest[0]` + parse pipeline unchanged.
   if (command === "generate") {
     if (rest[0] === "tests") {
       command = "generate tests";
@@ -206,8 +206,8 @@ Baseline comparison (governance-cost):
     // Flag-order-robust target = the .spore arg, EXCLUDING flag-consumed tokens. AUDIT FIX: a `.spore` value
     // passed to `--tag` must not be mistaken for the deploy target (`--tag evil.spore real.spore` shadowing).
     const consumed = new Set(tagIdx >= 0 ? [tagIdx, tagIdx + 1] : []);
-    const llnFile = rest.find((a, i) => !consumed.has(i) && !a.startsWith("--") && /^[A-Za-z0-9_./\\-]+\.spore$/.test(a));
-    if (!llnFile) {
+    const sporeFile = rest.find((a, i) => !consumed.has(i) && !a.startsWith("--") && /^[A-Za-z0-9_./\\-]+\.spore$/.test(a));
+    if (!sporeFile) {
       console.error("Usage: galerina deploy <file.spore> [--tag <image-tag>] [--dev]");
       process.exit(1);
     }
@@ -231,26 +231,26 @@ Baseline comparison (governance-cost):
     // into a shell string. A `.spore` path containing shell metacharacters (backticks,
     // ;, |, $(), …) would otherwise be executed by the shell. We reject obviously
     // hostile input and dispatch via argv-based spawnSync with shell:false.
-    if (!/^[A-Za-z0-9_./\\-]+\.spore$/.test(llnFile)) {
-      console.error(`❌ Refusing to deploy: '${llnFile}' is not a safe .spore path (alphanumerics, _ . / \\ - only, must end in .spore).`);
+    if (!/^[A-Za-z0-9_./\\-]+\.spore$/.test(sporeFile)) {
+      console.error(`❌ Refusing to deploy: '${sporeFile}' is not a safe .spore path (alphanumerics, _ . / \\ - only, must end in .spore).`);
       process.exit(2);
     }
     // AUDIT FIX (path traversal): the safe-char regex still admits `../../../x.spore`. Confine the target to
     // the project root — a deploy must never compile/ship an out-of-tree file or clobber a build artifact by
     // basename collision. Reject any `..` segment and any path that resolves outside cwd.
     const root = resolve(process.cwd());
-    const absTarget = resolve(llnFile);
-    const hasDotDot = llnFile.split(/[\\/]/).includes("..");
+    const absTarget = resolve(sporeFile);
+    const hasDotDot = sporeFile.split(/[\\/]/).includes("..");
     if (hasDotDot || !(absTarget === root || absTarget.startsWith(root + sep))) {
-      console.error(`❌ Refusing to deploy: '${llnFile}' resolves outside the project root (no '..' / out-of-tree paths).`);
+      console.error(`❌ Refusing to deploy: '${sporeFile}' resolves outside the project root (no '..' / out-of-tree paths).`);
       process.exit(2);
     }
-    if (!existsSync(llnFile)) {
-      console.error(`❌ Deploy target not found: ${llnFile}`);
+    if (!existsSync(sporeFile)) {
+      console.error(`❌ Deploy target not found: ${sporeFile}`);
       process.exit(2);
     }
 
-    console.log(`\n🏰 Galerina Deploy — ${llnFile}`);
+    console.log(`\n🏰 Galerina Deploy — ${sporeFile}`);
     console.log(`   Image tag: ${imageTag}`);
     console.log(devDeploy
       ? `   Profile:   dev  ⚠️  --dev: NON-PRODUCTION deploy — signing/admission NOT enforced (local testing only)`
@@ -263,9 +263,9 @@ Baseline comparison (governance-cost):
     // argv arrays — NOT shell strings. spawnSync(shell:false) passes each arg verbatim,
     // so path contents can never be interpreted as shell syntax.
     const steps = [
-      { name: "Governance check", argv: [self, "check", llnFile] },
-      { name: "Build WASM",       argv: [self, "build", llnFile] },
-      { name: "Verify manifest",  argv: [self, "verify", llnFile] },
+      { name: "Governance check", argv: [self, "check", sporeFile] },
+      { name: "Build WASM",       argv: [self, "build", sporeFile] },
+      { name: "Verify manifest",  argv: [self, "verify", sporeFile] },
       // --governed: the health-check module has a secure flow (audit.write), so the plain WASM --invoke
       // instantiation can't satisfy the host imports. Run it through the governed interpreter instead.
       { name: "Health check",     argv: [self, "run", "examples/deployment/health-check.spore", "--invoke", "getHealthStatus", "--governed"] },
@@ -287,12 +287,12 @@ Baseline comparison (governance-cost):
     console.log(`   Receipts: build/receipt-ledger/receipts.jsonl`);
     console.log(`   Audit:    build/audit-log/audit-log.jsonl`);
     console.log(`\n   OCI packaging: see scripts/Dockerfile.galerina`);
-    console.log(`   Deployment:     ./scripts/deploy-linux.sh ${llnFile}\n`);
+    console.log(`   Deployment:     ./scripts/deploy-linux.sh ${sporeFile}\n`);
     process.exit(0);
   }
 
   // ── galerina init-env — validate capabilities against root governance policy (#65) ─
-  // Must be checked BEFORE llnFile requirement since it takes no file argument.
+  // Must be checked BEFORE sporeFile requirement since it takes no file argument.
   if (command === "init-env") {
     const m2 = await import(compilerPath);
     const { readdirSync: rds } = await import("node:fs");
@@ -478,7 +478,7 @@ Baseline comparison (governance-cost):
       ?? [];
 
     // Find all .spore files to check
-    const llnFiles = targetFile
+    const sporeFiles = targetFile
       ? [targetFile]
       : readdirSync(".", { recursive: true })
           .filter(f => String(f).endsWith(".spore") && !String(f).includes("node_modules"))
@@ -491,9 +491,9 @@ Baseline comparison (governance-cost):
     let compatible = 0;
     const report = [];
 
-    for (const llnFile of llnFiles) {
-      if (!existsSync(llnFile)) continue;
-      const src = readUntrustedSource(llnFile);
+    for (const sporeFile of sporeFiles) {
+      if (!existsSync(sporeFile)) continue;
+      const src = readUntrustedSource(sporeFile);
       if (src === null) continue; // oversized/unreadable → skip this file in the batch (fail-closed)
 
       // Extract declared effects from the file
@@ -519,14 +519,14 @@ Baseline comparison (governance-cost):
       if (blockedEffects.length > 0) {
         violations++;
         report.push({
-          file: llnFile,
+          file: sporeFile,
           status: "❌ VIOLATION",
           blocked: blockedEffects,
           allowed: declaredEffects.filter(e => !blockedEffects.includes(e)),
         });
       } else if (declaredEffects.length > 0) {
         compatible++;
-        report.push({ file: llnFile, status: "✅ compatible", blocked: [], allowed: declaredEffects });
+        report.push({ file: sporeFile, status: "✅ compatible", blocked: [], allowed: declaredEffects });
       }
     }
 
@@ -792,7 +792,7 @@ Baseline comparison (governance-cost):
   // Recursively collect every .spore source under a root (skipping build/vendor dirs), then run a
   // CROSS-FILE flow analysis so USES/USEDBY/IMPACT span files (a flow called from another file is
   // never mislabelled "safe to delete"). Returns per-file rewrite results; `write:true` persists them.
-  const collectLlnFiles = (root) => {
+  const collectSporeFiles = (root) => {
     const SKIP = new Set(["node_modules", "dist", "build", ".git", ".galerina"]);
     const out = [];
     const walk = (dir) => {
@@ -817,7 +817,7 @@ Baseline comparison (governance-cost):
     const files = [];
     const sources = new Map();
     let parseErrors = 0;
-    for (const f of collectLlnFiles(root)) {
+    for (const f of collectSporeFiles(root)) {
       try {
         const src = readFileSync(f, "utf8");
         const p = m.parseProgram(src, f);
@@ -853,7 +853,7 @@ Baseline comparison (governance-cost):
   // <name>.fuse.json fusion descriptor — ready to be FUSED into a host App Kernel.
   let packageBuild = null;
   let packageDescriptor = null;
-  let llnFile = rest[0];
+  let sporeFile = rest[0];
   {
     const pkgIdx = command === "build" ? rest.indexOf("--package") : -1;
     if (pkgIdx >= 0) {
@@ -865,7 +865,7 @@ Baseline comparison (governance-cost):
       catch (e) { console.error(`Error: invalid package.spore.json — ${e.message}`); process.exit(1); }
       if (!packageDescriptor.name) { console.error('Error: package.spore.json must declare a "name"'); process.exit(1); }
       packageBuild = pkgDir;
-      llnFile = join(pkgDir, packageDescriptor.entry || "src/index.spore");
+      sporeFile = join(pkgDir, packageDescriptor.entry || "src/index.spore");
     }
   }
 
@@ -967,11 +967,11 @@ Baseline comparison (governance-cost):
     }
   }
 
-  if (!llnFile) { console.error("Error: no .spore file specified"); process.exit(1); }
+  if (!sporeFile) { console.error("Error: no .spore file specified"); process.exit(1); }
 
-  const source = readUntrustedSource(llnFile);
+  const source = readUntrustedSource(sporeFile);
   if (source === null) process.exit(1); // fail-closed: oversized/unreadable .spore rejected before parse
-  const parsed = m.parseProgram(source, llnFile);
+  const parsed = m.parseProgram(source, sporeFile);
   const errors = (parsed.diagnostics ?? []).filter(d => d.severity === "error");
 
   // ── galerina infer — run a governed AI inference from a flow's ai {} contract ──
@@ -1044,7 +1044,7 @@ Baseline comparison (governance-cost):
     const correlationId = `INFER-${flowName}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     const receipt = await engine.infer({ prompt, correlationId, ...(model ? { model } : {}) });
 
-    console.log(`\n  Governed Inference — ${flowName}  (${llnFile})`);
+    console.log(`\n  Governed Inference — ${flowName}  (${sporeFile})`);
     console.log("  ─────────────────────────────────────────────");
     console.log(`  governance_tier:   tier-${tier} ${tier === 1 ? "(air-gapped CPU · BitNet ternary)" : tier === 2 ? "(cloud)" : "(Blackwell GPU)"}`);
     console.log(`  approved_models:   ${ai.approvedModels ? ai.approvedModels.join(", ") : "(unrestricted)"}`);
@@ -1095,7 +1095,7 @@ Baseline comparison (governance-cost):
     const flagIdx = rest.indexOf("--flow");
     const only = flagIdx >= 0 ? rest[flagIdx + 1] : undefined;
     if (only !== undefined && !depMap.has(only)) {
-      console.error(`Error: no flow named '${only}' in ${llnFile}`);
+      console.error(`Error: no flow named '${only}' in ${sporeFile}`);
       process.exit(1);
     }
     const names = only !== undefined ? [only] : [...depMap.keys()];
@@ -1118,15 +1118,15 @@ Baseline comparison (governance-cost):
     if (rest.includes("--write")) {
       const out = m.rewriteGeneratedComments(source, genLines);
       if (out !== source) {
-        writeFileSync(llnFile, out);
-        console.log(`✅ ${llnFile}: refreshed //spore: metadata on ${genLines.size} flow(s)`);
+        writeFileSync(sporeFile, out);
+        console.log(`✅ ${sporeFile}: refreshed //spore: metadata on ${genLines.size} flow(s)`);
       } else {
-        console.log(`✓ ${llnFile}: //spore: metadata already current (${genLines.size} flow(s))`);
+        console.log(`✓ ${sporeFile}: //spore: metadata already current (${genLines.size} flow(s))`);
       }
       process.exit(0);
     }
 
-    if (names.length === 0) console.log(`(${llnFile}: no flows)`);
+    if (names.length === 0) console.log(`(${sporeFile}: no flows)`);
     for (const name of names) {
       const lines = genLines.get(name);
       if (lines === undefined) continue;
@@ -1171,9 +1171,9 @@ Baseline comparison (governance-cost):
       const declCount = (parsed.ast?.children ?? []).length;
       const flowCount = parsed.flows?.length ?? 0;
       if (declCount === 0) {
-        console.log(`ℹ️  ${llnFile}: parsed OK, but found NO flows or declarations — nothing to compile (an empty or comment-only file?).`);
+        console.log(`ℹ️  ${sporeFile}: parsed OK, but found NO flows or declarations — nothing to compile (an empty or comment-only file?).`);
       } else {
-        console.log(`✅ ${llnFile}: 0 errors, 0 governance warnings (${flowCount} flow(s), ${declCount} top-level declaration(s))`);
+        console.log(`✅ ${sporeFile}: 0 errors, 0 governance warnings (${flowCount} flow(s), ${declCount} top-level declaration(s))`);
       }
     } else {
       allDiags.forEach(d => console.log(`${d.severity === "error" ? "❌" : "⚠️"} ${d.code}: ${d.message}`));
@@ -1189,11 +1189,11 @@ Baseline comparison (governance-cost):
           new URL("packages-galerina/galerina-core-compiler/dist/governance-diff.js", import.meta.url).href
         );
         // Get the HEAD~1 version of this file from git
-        const gitResult = spawnSync("git", ["show", `HEAD~1:${llnFile}`],
+        const gitResult = spawnSync("git", ["show", `HEAD~1:${sporeFile}`],
           { encoding: "utf8", cwd: process.cwd() });
         if (gitResult.status === 0) {
           const prevSource = gitResult.stdout;
-          const prevParsed = m.parseProgram(prevSource, llnFile);
+          const prevParsed = m.parseProgram(prevSource, sporeFile);
           const diff = diffGovernance(prevParsed.flows, parsed.flows);
           console.log("\n── Governance diff (HEAD~1 → current) ──");
           console.log(renderGovernanceDiff(diff));
@@ -1233,7 +1233,7 @@ Baseline comparison (governance-cost):
       ["substrate-violation", suite.substrateViolation],
     ];
     const total = dims.reduce((n, [, c]) => n + c.length, 0);
-    console.log(`\n🧪 Contract-driven test obligations — ${llnFile}`);
+    console.log(`\n🧪 Contract-driven test obligations — ${sporeFile}`);
     console.log(`   ${total} obligation(s) across ${gir.flows.length} flow(s) · 5 dimensions`);
     for (const [name, cases] of dims) {
       console.log(`\n── ${name} (${cases.length}) ──`);
@@ -1247,10 +1247,10 @@ Baseline comparison (governance-cost):
 
   // ── galerina manifest-to-dot — export manifest DAG as Graphviz DOT ────────────
   if (command === "manifest-to-dot") {
-    const name = basename(llnFile, ".spore");
+    const name = basename(sporeFile, ".spore");
     const manifestPath = `build/${name}.lmanifest`;
     if (!existsSync(manifestPath)) {
-      console.error(`❌ No manifest at ${manifestPath}. Run 'galerina build ${llnFile}' first.`);
+      console.error(`❌ No manifest at ${manifestPath}. Run 'galerina build ${sporeFile}' first.`);
       process.exit(1);
     }
     try {
@@ -1343,11 +1343,11 @@ Baseline comparison (governance-cost):
   }
 
   if (command === "verify") {
-    const name = basename(llnFile, ".spore");
+    const name = basename(sporeFile, ".spore");
     const manifestPath = `build/${name}.lmanifest`;
     if (!existsSync(manifestPath)) {
       console.error(`❌ SPORE-MANIFEST-MISSING: No manifest found at ${manifestPath}`);
-      console.error(`   Run 'galerina build ${llnFile}' first to generate the manifest.`);
+      console.error(`   Run 'galerina build ${sporeFile}' first to generate the manifest.`);
       process.exit(1);
     }
     try {
@@ -1360,11 +1360,11 @@ Baseline comparison (governance-cost):
       // Check 1: sourceHash
       const actualHash = "sha256:" + createHash("sha256").update(source, "utf8").digest("hex");
       if (manifest.sourceHash !== actualHash) {
-        console.error(`❌ SPORE-MANIFEST-TAMPER: Source hash mismatch for '${llnFile}'`);
+        console.error(`❌ SPORE-MANIFEST-TAMPER: Source hash mismatch for '${sporeFile}'`);
         console.error(`   Manifest has: ${manifest.sourceHash}`);
         console.error(`   Current file: ${actualHash}`);
         console.error(`   The source has been modified since the manifest was generated.`);
-        console.error(`   Rebuild with: galerina build ${llnFile}`);
+        console.error(`   Rebuild with: galerina build ${sporeFile}`);
         process.exit(1);
       }
 
@@ -1393,7 +1393,7 @@ Baseline comparison (governance-cost):
       // evaluated on the AUTHORITATIVE decoded-CBOR `manifest` BEFORE the signature dispatch below, so a v1 manifest
       // (and any placeholder/unsigned/missing-json variant) is refused before it can reach the classical pass path
       // (Adv #2). The acceptance predicate is a subset of what the signer writes (schemaVersion "spore.manifest.v2" +
-      // sigAlgorithm "lln.gov.sig.v2" + a both-half "|" signature; galerina.mjs:2045-2052) and of the existing v2
+      // sigAlgorithm "spore.gov.sig.v2" + a both-half "|" signature; galerina.mjs:2045-2052) and of the existing v2
       // detection (1357-1358), so a valid v2 manifest passes and flows into the untouched hybrid-verify path (Adv #4).
       // DEFAULT (non-certified) consume is byte-for-byte unchanged — the whole block is a no-op when certified is off.
       // This sits inside the outer manifest try (catch at ~1520 always exits 1), so an error here is fail-closed (Adv #5).
@@ -1408,11 +1408,11 @@ Baseline comparison (governance-cost):
           const _sigV = manifest.governanceSignature;
           const _isV2Hybrid = manifest.schemaVersion === "spore.manifest.v2"
             && _sigV && typeof _sigV === "object"
-            && _sigV.sigAlgorithm === "lln.gov.sig.v2"
+            && _sigV.sigAlgorithm === "spore.gov.sig.v2"
             && typeof _sigV.signature === "string" && _sigV.signature.includes("|");
           if (!_isV2Hybrid) {
             console.error("❌ SPORE-MANIFEST-PQ-REQUIRED: GALERINA_MANIFEST_PROFILE=certified requires a v2 hybrid Ed25519+ML-DSA-65 manifest " +
-              "(schemaVersion 'spore.manifest.v2', sigAlgorithm 'lln.gov.sig.v2', a both-half '|' signature), but this manifest is not v2 hybrid. " +
+              "(schemaVersion 'spore.manifest.v2', sigAlgorithm 'spore.gov.sig.v2', a both-half '|' signature), but this manifest is not v2 hybrid. " +
               "Refusing to accept a classical-only (v1) manifest under a post-quantum-required posture (fail-closed, no PQ downgrade). " +
               "Rebuild under certified: GALERINA_MANIFEST_PROFILE=certified galerina keygen --hybrid && galerina build.");
             process.exit(1);
@@ -1422,7 +1422,7 @@ Baseline comparison (governance-cost):
 
       const proofCount = manifest.proofObligations?.length ?? 0;
       const constraintCount = manifest.derivedConstraints?.length ?? 0;
-      console.log(`✅ ${llnFile}: manifest verified`);
+      console.log(`✅ ${sporeFile}: manifest verified`);
       console.log(`   Source hash:         ${actualHash.slice(0, 30)}...`);
       console.log(`   CBOR size:           ${manifestBytes.length}B (canonical ✅)`);
       console.log(`   Schema version:      ${manifest.schemaVersion}`);
@@ -1451,15 +1451,15 @@ Baseline comparison (governance-cost):
             const sig = jsonManifest.governanceSignature;
 
             // ── 0102 / #34: HYBRID (v2) manifest signature branch — dispatch on the signature's OWN fields ──
-            // A v2 sig is self-describing: sigAlgorithm "lln.gov.sig.v2" OR algorithm "Ed25519+ML-DSA-65" OR a
+            // A v2 sig is self-describing: sigAlgorithm "spore.gov.sig.v2" OR algorithm "Ed25519+ML-DSA-65" OR a
             // pipe in the signature (base64url never contains '|', so a classical Ed25519 sig can't trip it).
             // Checked FIRST; the classical branch below becomes `else if`, so a v2 sig is NEVER decoded by the
             // single-key Buffer.from(sig.signature,'base64') path (which would silently truncate at the '|' —
             // Adv-1 #2). This mirrors the shipped verifyGovernanceSignature v2-refusal at proof-graph.ts:763.
-            const isHybridSig = sig.sigAlgorithm === "lln.gov.sig.v2" || sig.algorithm === "Ed25519+ML-DSA-65"
+            const isHybridSig = sig.sigAlgorithm === "spore.gov.sig.v2" || sig.algorithm === "Ed25519+ML-DSA-65"
               || (typeof sig.signature === "string" && sig.signature.includes("|"));
             if (isHybridSig) {
-              if (!sig.keyId || !sig.signature || !sig.bodyHash || sig.sigAlgorithm !== "lln.gov.sig.v2" || !sig.signature.includes("|")) {
+              if (!sig.keyId || !sig.signature || !sig.bodyHash || sig.sigAlgorithm !== "spore.gov.sig.v2" || !sig.signature.includes("|")) {
                 console.error(`❌ SPORE-MANIFEST-PQ-REQUIRED: incomplete/inconsistent or non-both-half hybrid (v2) signature — fail-closed (no PQ downgrade).`);
                 process.exit(1);
               }
@@ -1501,7 +1501,7 @@ Baseline comparison (governance-cost):
                 const envelope = cc.makeManifestEnvelope(bodyHash, jsonManifest.generatedAt);
                 // Attach the persisted v2 signature in the ProofGraph-layer shape (algorithm + signature are the
                 // only fields verifyGovernanceSignatureHybrid reads; proof-graph.ts:786-789).
-                envelope.governanceSignature = { algorithm: "lln.gov.sig.v2", signerKeyId: sig.keyId, signature: sig.signature, signedAt: sig.signedAt };
+                envelope.governanceSignature = { algorithm: "spore.gov.sig.v2", signerKeyId: sig.keyId, signature: sig.signature, signedAt: sig.signedAt };
                 // Published Ed25519 pubkey is PEM → DER SPKI (verifier expects DER, proof-graph.ts:797);
                 // ML-DSA pubkey is base64 of raw bytes.
                 const edPubDer = new Uint8Array(createPublicKey(readFileSync(edPubPath, "utf-8")).export({ type: "spki", format: "der" }));
@@ -1635,7 +1635,7 @@ Baseline comparison (governance-cost):
   // Before executing, verify the source matches its manifest (if one exists).
   // This is the Stage A equivalent of the DSS.wasm admission check in Phase 5.
   if (command === "run") {
-    const name = basename(llnFile, ".spore");
+    const name = basename(sporeFile, ".spore");
     const manifestPath = `build/${name}.lmanifest`;
     if (existsSync(manifestPath)) {
       let manifest;
@@ -1650,7 +1650,7 @@ Baseline comparison (governance-cost):
           console.error(`❌ SPORE-MANIFEST-TAMPER: Source has changed since manifest was signed.`);
           console.error(`   Manifest: ${manifest.sourceHash}`);
           console.error(`   Current:  ${actualHash}`);
-          console.error(`   Rebuild with: galerina build ${llnFile}`);
+          console.error(`   Rebuild with: galerina build ${sporeFile}`);
           process.exit(1);
         }
       } catch (e) {
@@ -1683,11 +1683,11 @@ Baseline comparison (governance-cost):
           const _sigR = manifest && manifest.governanceSignature;
           const _isV2HybridR = manifest && manifest.schemaVersion === "spore.manifest.v2"
             && _sigR && typeof _sigR === "object"
-            && _sigR.sigAlgorithm === "lln.gov.sig.v2"
+            && _sigR.sigAlgorithm === "spore.gov.sig.v2"
             && typeof _sigR.signature === "string" && _sigR.signature.includes("|");
           if (!_isV2HybridR) {
             console.error("❌ SPORE-MANIFEST-PQ-REQUIRED: GALERINA_MANIFEST_PROFILE=certified requires a v2 hybrid Ed25519+ML-DSA-65 manifest " +
-              "(schemaVersion 'spore.manifest.v2', sigAlgorithm 'lln.gov.sig.v2', a both-half '|' signature), but this flow's manifest is not v2 hybrid. " +
+              "(schemaVersion 'spore.manifest.v2', sigAlgorithm 'spore.gov.sig.v2', a both-half '|' signature), but this flow's manifest is not v2 hybrid. " +
               "Refusing to run a classical-only (v1) manifest under a post-quantum-required posture (fail-closed, no PQ downgrade). " +
               "Rebuild under certified: GALERINA_MANIFEST_PROFILE=certified galerina keygen --hybrid && galerina build.");
             process.exit(1);
@@ -1718,16 +1718,16 @@ Baseline comparison (governance-cost):
           );
           const sig = manifest && manifest.governanceSignature;
           if (!sig || typeof sig !== "object" || !(sig.algorithm && sig.keyId && sig.signature)) {
-            console.error(`❌ SPORE-MANIFEST-UNSIGNED: the authoritative manifest is unsigned/placeholder but GALERINA_PROFILE=production requires a signature to run — fail-closed. Run: galerina keygen && galerina build ${llnFile}`);
+            console.error(`❌ SPORE-MANIFEST-UNSIGNED: the authoritative manifest is unsigned/placeholder but GALERINA_PROFILE=production requires a signature to run — fail-closed. Run: galerina keygen && galerina build ${sporeFile}`);
             process.exit(1);
           }
           // ── 0102 / #34: HYBRID (v2) admission branch — self-describing on the signature's own fields ──
           // A v2 sig MUST be verified with BOTH halves; it must NOT reach the classical legacy-format guard
           // (which would mis-reject the jcs v2 sig) NOR the single-key cryptoVerify below (Adv-1 #2 / Adv-2 #2).
-          const runIsHybridSig = sig.sigAlgorithm === "lln.gov.sig.v2" || sig.algorithm === "Ed25519+ML-DSA-65"
+          const runIsHybridSig = sig.sigAlgorithm === "spore.gov.sig.v2" || sig.algorithm === "Ed25519+ML-DSA-65"
             || (typeof sig.signature === "string" && sig.signature.includes("|"));
           if (runIsHybridSig) {
-            if (sig.sigAlgorithm !== "lln.gov.sig.v2" || !sig.bodyHash || !sig.keyId || !String(sig.signature).includes("|")) {
+            if (sig.sigAlgorithm !== "spore.gov.sig.v2" || !sig.bodyHash || !sig.keyId || !String(sig.signature).includes("|")) {
               console.error(`❌ SPORE-MANIFEST-PQ-REQUIRED: incomplete/inconsistent or non-both-half hybrid (v2) signature — refusing to run (fail-closed, no PQ downgrade).`);
               process.exit(1);
             }
@@ -1755,7 +1755,7 @@ Baseline comparison (governance-cost):
             }
             // Reconstruct the signed envelope via the SAME shared helper the signer/verify paths use.
             const envelope = cc.makeManifestEnvelope(runBodyHash, manifest.generatedAt);
-            envelope.governanceSignature = { algorithm: "lln.gov.sig.v2", signerKeyId: sig.keyId, signature: sig.signature, signedAt: sig.signedAt };
+            envelope.governanceSignature = { algorithm: "spore.gov.sig.v2", signerKeyId: sig.keyId, signature: sig.signature, signedAt: sig.signedAt };
             const edPubDer = new Uint8Array(createPublicKey(readFileSync(edPubPath, "utf-8")).export({ type: "spki", format: "der" }));
             const mlPubRaw = new Uint8Array(Buffer.from(readFileSync(mlPubPath, "utf-8").trim(), "base64"));
             const sigOkHybrid = await cc.verifyGovernanceSignatureHybrid(envelope, edPubDer, mlPubRaw);
@@ -1767,7 +1767,7 @@ Baseline comparison (governance-cost):
           // A legacy (pretty-JSON) signature can't be self-verified from CBOR (key order is not preserved
           // through canonical CBOR) — push toward the current canonical signer rather than mis-report it as tampered.
           if (manifestSigCanon(sig) !== "jcs") {
-            console.error(`❌ SPORE-MANIFEST-LEGACY-FORMAT: the authoritative CBOR carries a legacy-format signature that cannot be self-verified — rebuild with the current canonical signer: galerina build ${llnFile}`);
+            console.error(`❌ SPORE-MANIFEST-LEGACY-FORMAT: the authoritative CBOR carries a legacy-format signature that cannot be self-verified — rebuild with the current canonical signer: galerina build ${sporeFile}`);
             process.exit(1);
           }
           // A revoked signer is Deny even with a cryptographically valid signature.
@@ -1836,7 +1836,7 @@ Baseline comparison (governance-cost):
         gargs.set(name, v);
       });
 
-      const gres = await m.run(source, llnFile, gflow, gargs, { mode: "dev" });
+      const gres = await m.run(source, sporeFile, gflow, gargs, { mode: "dev" });
 
       for (const d of gres.diagnostics ?? []) if (d.severity === "error") console.error(`  ✗ ${d.code}: ${d.message}`);
       for (const g of gres.governanceDiagnostics ?? []) if (g.severity === "error") console.error(`  ⛔ ${g.code}: ${g.message}`);
@@ -1921,11 +1921,11 @@ Baseline comparison (governance-cost):
   }
   if (govErrors.length > 0) {
     for (const d of govErrors) {
-      const loc = d.location?.line !== undefined ? ` (${llnFile}:${d.location.line}:${d.location.column ?? 0})` : "";
+      const loc = d.location?.line !== undefined ? ` (${sporeFile}:${d.location.line}:${d.location.column ?? 0})` : "";
       console.error(`  ⛔ ${d.code}: ${d.message}${loc}`);
     }
     const profileNote = buildIsProduction ? " under GALERINA_PROFILE=production" : "";
-    console.error(`\n❌ Build of '${llnFile}' FAILED (fail-closed${profileNote}) — ${govErrors.length} governance error(s) above. Declare the required tier/effects (or seal/gate boundary inputs) and rebuild.`);
+    console.error(`\n❌ Build of '${sporeFile}' FAILED (fail-closed${profileNote}) — ${govErrors.length} governance error(s) above. Declare the required tier/effects (or seal/gate boundary inputs) and rebuild.`);
     process.exit(1);
   }
   const { gir } = m.emitGIR(parsed.ast, parsed.flows, fx);
@@ -1951,15 +1951,15 @@ Baseline comparison (governance-cost):
   if (!faithfulCompile) {
     const stubReason = assembled.diagnostics.map(d => d.message).join("; ");
     if (buildIsProduction) {
-      console.error(`  ⛔ SPORE-EMIT-STUB: '${llnFile}' did not lower to a FAITHFUL WASM module — the JS assembler produced a stub (${stubReason}).`);
-      console.error(`\n❌ Build of '${llnFile}' FAILED (fail-closed under GALERINA_PROFILE=production) — refusing to sign a non-faithful artifact: a signed stub would attest fidelity it does not have. The WASM emitter cannot yet faithfully lower this flow.`);
+      console.error(`  ⛔ SPORE-EMIT-STUB: '${sporeFile}' did not lower to a FAITHFUL WASM module — the JS assembler produced a stub (${stubReason}).`);
+      console.error(`\n❌ Build of '${sporeFile}' FAILED (fail-closed under GALERINA_PROFILE=production) — refusing to sign a non-faithful artifact: a signed stub would attest fidelity it does not have. The WASM emitter cannot yet faithfully lower this flow.`);
       process.exit(1);
     }
-    console.warn(`  ⚠ SPORE-EMIT-STUB: '${llnFile}' lowered to a NON-FAITHFUL stub (${stubReason}). The .wasm is for local inspection only — it MUST NOT be shipped (a production build will fail closed here rather than sign it).`);
+    console.warn(`  ⚠ SPORE-EMIT-STUB: '${sporeFile}' lowered to a NON-FAITHFUL stub (${stubReason}). The .wasm is for local inspection only — it MUST NOT be shipped (a production build will fail closed here rather than sign it).`);
   }
 
   if (command === "build") {
-    const name = packageBuild ? packageDescriptor.name : basename(llnFile, ".spore");
+    const name = packageBuild ? packageDescriptor.name : basename(sporeFile, ".spore");
     const outDir = packageBuild ? join(packageBuild, "dist") : "build";
     mkdirSync(outDir, { recursive: true });
     writeFileSync(`${outDir}/${name}.wasm`, assembled.wasm);
@@ -1972,9 +1972,9 @@ Baseline comparison (governance-cost):
       );
       const govResult = m.verifyGovernance(parsed.ast, parsed.flows,
         m.checkEffects(parsed.flows, parsed.ast), "dev");
-      const source = readUntrustedSource(llnFile);
+      const source = readUntrustedSource(sporeFile);
       if (source === null) process.exit(1); // fail-closed: oversized/unreadable .spore rejected
-      const baseManifest = generateManifest(source, llnFile, parsed.flows, govResult);
+      const baseManifest = generateManifest(source, sporeFile, parsed.flows, govResult);
 
       // ── Net a: embed the fusion descriptor INTO the manifest BEFORE signing ──────
       // (Fuse B2 STEP A) The fuse fields (kind/provides/seam/capabilities) and the
@@ -2206,7 +2206,7 @@ Baseline comparison (governance-cost):
 
             // FAIL-CLOSED: the shipped signer falls back to Ed25519-only (v1) if it does not recognise the
             // key as hybrid (proof-graph.ts:714). Refuse to persist anything that is not a both-halves v2.
-            if (!signedEnv.governanceSignature || signedEnv.governanceSignature.algorithm !== "lln.gov.sig.v2"
+            if (!signedEnv.governanceSignature || signedEnv.governanceSignature.algorithm !== "spore.gov.sig.v2"
                 || !signedEnv.governanceSignature.signature.includes("|")) {
               console.error("❌ SPORE-MANIFEST-PQ-REQUIRED: hybrid signing did not produce a v2 (both-half) signature — refusing to write a downgraded manifest (fail-closed).");
               process.exit(1);
@@ -2218,7 +2218,7 @@ Baseline comparison (governance-cost):
             signedManifest.schemaVersion = "spore.manifest.v2";
             signedManifest.governanceSignature = {
               algorithm: "Ed25519+ML-DSA-65",                        // hybrid, both required (NIST FIPS 204)
-              sigAlgorithm: "lln.gov.sig.v2",                        // envelope sig version — verifiers dispatch on this
+              sigAlgorithm: "spore.gov.sig.v2",                        // envelope sig version — verifiers dispatch on this
               keyId: signingKeyId,
               canon: signCanon,                                      // body canon the bodyHash binds (RFC 8785 JCS)
               bodyHash: `sha256:${bodyHash}`,                        // explicit, audit-legible body binding (defence-in-depth only)
@@ -2258,7 +2258,7 @@ Baseline comparison (governance-cost):
         );
         const impactArtifact = {
           schemaVersion: "spore.governance-impact.v1",
-          sourceFile: llnFile.replace(/\\/g, "/"),
+          sourceFile: sporeFile.replace(/\\/g, "/"),
           sourceHash: manifest.sourceHash,
           generatedAt: manifest.generatedAt,
           flowCount: parsed.flows.length,
@@ -2319,7 +2319,7 @@ Baseline comparison (governance-cost):
     // reproducible CI builds. Only //spore: lines are touched — human // comments and code are never
     // modified. Scoped to the package's own source tree, so it never rewrites files elsewhere.
     if (packageBuild && !rest.includes("--no-refresh")) {
-      const { results } = refreshGeneratedComments(dirname(llnFile), { write: true });
+      const { results } = refreshGeneratedComments(dirname(sporeFile), { write: true });
       const changed = results.filter(r => r.changed);
       if (changed.length > 0) {
         const flows = changed.reduce((n, r) => n + r.flows, 0);
@@ -2327,7 +2327,7 @@ Baseline comparison (governance-cost):
       }
     }
 
-    console.log(`✅ Compiled ${packageBuild ? packageDescriptor.name + " (package)" : llnFile}`);
+    console.log(`✅ Compiled ${packageBuild ? packageDescriptor.name + " (package)" : sporeFile}`);
     console.log(`   ${outDir}/${name}.wasm  (${assembled.wasm.byteLength} bytes)`);
     console.log(`   ${outDir}/${name}.wat   (${wat.split("\n").length} lines)`);
     if (!packageBuild) {
@@ -2420,7 +2420,7 @@ Baseline comparison (governance-cost):
         // Result/Void) run in the governed runtime, not the raw WASM --invoke surface (dogfooding #2).
         console.error(`Flow '${flowName}' exists but is NOT in the WASM --invoke surface — only pure flows returning a primitive (Int/Bool) are exported.`);
         console.error(`('${flowName}' is likely a secure/effectful flow; those run in the governed runtime, not raw WASM --invoke.)`);
-        console.error(`→ Run it under governance:  galerina run ${llnFile} --invoke ${flowName} --governed`);
+        console.error(`→ Run it under governance:  galerina run ${sporeFile} --invoke ${flowName} --governed`);
         console.error(`Invokable here (raw WASM, pure only): ${exported.join(", ") || "(none)"}`);
       } else {
         console.error(`No flow named '${flowName}'. Invokable here: ${exported.join(", ") || "(none)"}`);

@@ -85,10 +85,10 @@ describe("Phase 32: governance diff — changed flows", () => {
 });
 
 describe("Phase 32: diff output + schema", () => {
-  it("schemaVersion is lln.govdiff.v1", () => {
+  it("schemaVersion is spore.govdiff.v1", () => {
     const d = diff("pure flow a() -> Int contract { effects {} } { return 1 }",
                    "pure flow a() -> Int contract { effects {} } { return 1 }");
-    assert.equal(d.schemaVersion, "lln.govdiff.v1");
+    assert.equal(d.schemaVersion, "spore.govdiff.v1");
   });
 
   it("renderGovernanceDiff produces readable text with warning flag", () => {

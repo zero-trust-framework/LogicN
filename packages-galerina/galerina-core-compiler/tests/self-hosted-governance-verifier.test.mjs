@@ -17,9 +17,9 @@ import { dirname, join } from "node:path";
 import { parseProgram, executeFlow } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const GOV_LLN = join(__dir, "..", "src", "self-hosted", "governance-verifier.spore");
+const GOV_SPORE = join(__dir, "..", "src", "self-hosted", "governance-verifier.spore");
 
-const program = parseProgram(readFileSync(GOV_LLN, "utf8"), "governance-verifier.spore");
+const program = parseProgram(readFileSync(GOV_SPORE, "utf8"), "governance-verifier.spore");
 
 // ── value-model builders (interpreter takes tagged values / Maps) ──
 const vInt = (n) => ({ __tag: "int", value: n });

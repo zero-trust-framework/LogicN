@@ -12,21 +12,21 @@ inside a signed payload invalidates the signature and the codemod cannot re-sign
   manifests). It is **offline by design** (`governance/trust-anchor.json` pins it; see the offline
   key-ceremony runbook). It is NOT `.env.galerina-signing` (that holds the *operational* key `9c2d7d4502a2eedd`).
 - The current tree is **internally consistent and GREEN** at the OLD tags (verifiers, emitters, and the
-  3 artifacts all use `logicn.*`/`lln.*`). This ceremony moves them to the new brand atomically + re-signs.
+  3 artifacts all use `galerin.*`/`spore.*`). This ceremony moves them to the new brand atomically + re-signs.
 
-## Tag migration map (owner scheme: `logicn`→`galerina`, `lln`→`spore`)
+## Tag migration map (owner scheme: `galerin`→`galerina`, `spore`→`spore`)
 | Old (preserved) | New | Where |
 |---|---|---|
-| `logicn.proofgraph.governance.v1` | `galerina.proofgraph.governance.v1` | ProofGraph context |
-| `logicn.bridge.manifest.v1` | `galerina.bridge.manifest.v1` | bridge attestation |
-| `logicn.audit.attestation.v1` | `galerina.audit.attestation.v1` | audit attestation |
-| `logicn.config.environment.v1` | `galerina.config.environment.v1` | env config |
-| `lln.gov.sig.v1` / `.v2` | `spore.gov.sig.v1` / `.v2` | governance signature algorithm (v2 = hybrid Ed25519+ML-DSA) |
-| `lln.runtime.audit.v1` | `spore.runtime.audit.v1` | audit-event schemaVersion |
-| `lln.runtime.manifest.v1` | `spore.runtime.manifest.v1` | runtime manifest schema |
-| `lln.gir.v1` | `spore.gir.v1` | GIR schema |
-| `lln.govdiff.v1` | `spore.govdiff.v1` | gov-diff schema |
-| `lln.app.v1` | `spore.app.v1` | App.manifest schemaVersion |
+| `galerin.proofgraph.governance.v1` | `galerina.proofgraph.governance.v1` | ProofGraph context |
+| `galerin.bridge.manifest.v1` | `galerina.bridge.manifest.v1` | bridge attestation |
+| `galerin.audit.attestation.v1` | `galerina.audit.attestation.v1` | audit attestation |
+| `galerin.config.environment.v1` | `galerina.config.environment.v1` | env config |
+| `spore.gov.sig.v1` / `.v2` | `spore.gov.sig.v1` / `.v2` | governance signature algorithm (v2 = hybrid Ed25519+ML-DSA) |
+| `spore.runtime.audit.v1` | `spore.runtime.audit.v1` | audit-event schemaVersion |
+| `spore.runtime.manifest.v1` | `spore.runtime.manifest.v1` | runtime manifest schema |
+| `spore.gir.v1` | `spore.gir.v1` | GIR schema |
+| `spore.govdiff.v1` | `spore.govdiff.v1` | gov-diff schema |
+| `spore.app.v1` | `spore.app.v1` | App.manifest schemaVersion |
 
 **Version-bump decision (owner picked "versioned re-sign migration"):** RECOMMEND keeping the `.v1`/`.v2`
 suffix and only swapping the brand prefix (simplest; the suffix already versions the wire format). Only bump
@@ -37,11 +37,11 @@ the dual-accept grace window.
 Widen every verify GATE to accept old OR new, but DON'T change emitters yet. Files/lines (current):
 - `packages-galerina/galerina-core-compiler/src/proof-graph.ts`
   - type union L548: add `| "spore.gov.sig.v1" | "spore.gov.sig.v2"`
-  - gate L859 `if (alg !== "lln.gov.sig.v1")` → `if (alg !== "lln.gov.sig.v1" && alg !== "spore.gov.sig.v1")`
-  - gate L882 `… !== "lln.gov.sig.v2"` → also allow `"spore.gov.sig.v2"`
+  - gate L859 `if (alg !== "spore.gov.sig.v1")` → `if (alg !== "spore.gov.sig.v1" && alg !== "spore.gov.sig.v1")`
+  - gate L882 `… !== "spore.gov.sig.v2"` → also allow `"spore.gov.sig.v2"`
 - `packages-galerina/galerina-core-compiler/src/audit-writer.ts`
-  - type L29 + gate L77 `!== "lln.runtime.audit.v1"` → also allow `"spore.runtime.audit.v1"`
-- The 4 `logicn.*` contexts: wherever a verifier compares the context string, accept the `galerina.*` twin.
+  - type L29 + gate L77 `!== "spore.runtime.audit.v1"` → also allow `"spore.runtime.audit.v1"`
+- The 4 `galerin.*` contexts: wherever a verifier compares the context string, accept the `galerina.*` twin.
 - **Add a NEW-tag fixture test** for each gate (sign a fixture with the new tag, assert it verifies) — this is
   what proves dual-accept actually works; the existing suite only exercises the old tags.
 - Gate: full suite stays **60/60** (old path unbroken) AND the new-tag fixtures pass.
@@ -50,8 +50,8 @@ Widen every verify GATE to accept old OR new, but DON'T change emitters yet. Fil
 Now flip the EMIT side to the new tags:
 - proof-graph.ts emitters L797/L837 → `spore.gov.sig.v1`/`.v2`; audit-writer.ts L218 → `spore.runtime.audit.v1`.
 - The 4 contexts at their emit sites → `galerina.*`.
-- `App.manifest` schemaVersion `lln.app.v1` → `spore.app.v1`, and **remove the bridge hack** in
-  `scripts/galerina-new.mjs` `substituteName` (the `.split("lln.app.v1")…`/`src/App.lln` lines) + revert
+- `App.manifest` schemaVersion `spore.app.v1` → `spore.app.v1`, and **remove the bridge hack** in
+  `scripts/galerina-new.mjs` `substituteName` (the `.split("spore.app.v1")…`/`src/App.spore` lines) + revert
   `app-scaffold.test.mjs` to expect `spore.app.v1` from the migrated template directly.
 
 ## Step 3 — RE-SIGN the 3 root-signed artifacts (NEEDS the offline root key ab46f4c7)
@@ -63,7 +63,7 @@ node governance/sign-revocations.mjs          # re-signs with the migrated conte
 #    signer with the root key (the same path `galerina build`/the fuse step uses; greeting.wasm is unchanged).
 # 3. If rotating the root, update governance/trust-anchor.json pin AFTER re-signing (deliberate ceremony).
 ```
-The 3 artifacts are currently RESTORED to their original `logicn`/`lln` bytes (commit history: restored after
+The 3 artifacts are currently RESTORED to their original `galerin`/`spore` bytes (commit history: restored after
 the codemod broke them). Re-signing replaces them with migrated content + a fresh valid signature.
 
 ## Step 4 — VERIFY + FINALIZE
@@ -71,7 +71,7 @@ the codemod broke them). Re-signing replaces them with migrated content + a fres
   example-app fuse test, audit-chain, proof-chain).
 - `node scripts/lint-conventions.mjs` → enforcing audits + provenance green.
 - Regen build/ catalogs+graph (`code-index`/`gen-code-registry`/`kb-index`/`graph-all`/`audit-coverage`).
-- After a release with dual-accept, REMOVE the old-tag acceptance from the Step-1 gates (drop `lln.*`/`logicn.*`).
+- After a release with dual-accept, REMOVE the old-tag acceptance from the Step-1 gates (drop `spore.*`/`galerin.*`).
 - Update `version.json` + any doc that still cites the old wire tags.
 
 ## Rollback
@@ -79,5 +79,5 @@ the codemod broke them). Re-signing replaces them with migrated content + a fres
 era restored them from `8a2a315`). The old tags + signatures verify as-is, so rollback is clean.
 
 ## See also
-[[logicn-rd-0131-rebrand-galerina]] (the rebrand record + the operator-gated remainder) ·
+[[galerina-rd-0131-rebrand-galerina]] (the rebrand record + the operator-gated remainder) ·
 `governance/trust-anchor.json` (the pinned root) · the offline key-ceremony runbook (root-key custody).

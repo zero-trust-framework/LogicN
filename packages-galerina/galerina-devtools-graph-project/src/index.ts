@@ -1,4 +1,4 @@
-import { GraphBuilder, bfsPath as llnBfsPath } from "@galerina/devtools-project-graph";
+import { GraphBuilder, bfsPath as sporeBfsPath } from "@galerina/devtools-project-graph";
 
 export type ProjectGraphNodeKind =
   | "Package"
@@ -534,14 +534,14 @@ export function findProjectGraphPath(
   }
 
   // Build a transient spore-graph for the BFS, keyed by node id.
-  const llnBuilder = new GraphBuilder<ProjectGraphNode, ProjectGraphEdge>();
-  for (const node of graph.nodes) llnBuilder.addNode(node.id, node);
+  const sporeBuilder = new GraphBuilder<ProjectGraphNode, ProjectGraphEdge>();
+  for (const node of graph.nodes) sporeBuilder.addNode(node.id, node);
   for (const edge of graph.edges) {
-    try { llnBuilder.addEdge(edge.from, edge.to, edge); } catch { /* skip edges to unknown nodes */ }
+    try { sporeBuilder.addEdge(edge.from, edge.to, edge); } catch { /* skip edges to unknown nodes */ }
   }
-  const llnGraph = llnBuilder.build();
+  const sporeGraph = sporeBuilder.build();
 
-  const pathIds = llnBfsPath(llnGraph, from.id, to.id);
+  const pathIds = sporeBfsPath(sporeGraph, from.id, to.id);
 
   if (pathIds === null) {
     return {
@@ -652,7 +652,7 @@ export function createWorkspaceProjectGraph(
     }
 
     if (file.kind === "galerina-source") {
-      for (const symbolNode of extractLogicnSymbols(file, owner)) {
+      for (const symbolNode of extractGalerinaSymbols(file, owner)) {
         addNode(nodes, symbolNode);
 
         if (owner !== undefined) {
@@ -995,7 +995,7 @@ function extractTypeScriptExports(
   return nodes;
 }
 
-function extractLogicnSymbols(
+function extractGalerinaSymbols(
   file: ProjectGraphWorkspaceFile,
   owner?: ReturnType<typeof normalizeWorkspacePackage>,
 ): readonly ProjectGraphNode[] {

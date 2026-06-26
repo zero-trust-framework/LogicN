@@ -38,7 +38,7 @@ reasonable. Conservative backup: **SLH-DSA (FIPS 205, hash-based)** — Stage-2 
 **Status (corrected 2026-06-16 — was overstated as "to finish"):** the hybrid algorithm is **SHIPPED for
 the ProofGraph governance signature** (Phase 55: `generateHybridGovernanceKeyPair`, `signProofGraphHybrid`,
 `verifyGovernanceSignatureHybrid` in `proof-graph.ts`, via `@noble/post-quantum` `ml_dsa65` — a real
-dependency, not "planned"). Signature tiers: `lln.gov.sig.v1` (Ed25519, compat) → `v2` (hybrid, both
+dependency, not "planned"). Signature tiers: `spore.gov.sig.v1` (Ed25519, compat) → `v2` (hybrid, both
 required) → `v3` (pq_strict, future). It was **untested until 2026-06-16** (`tests/hybrid-pq-signature.test.mjs`,
 proves round-trip + fail-closed + both-required).
 

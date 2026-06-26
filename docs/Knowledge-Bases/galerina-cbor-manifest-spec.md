@@ -139,7 +139,7 @@ The persisted `governanceSignature` object for a hybrid manifest is:
 ```json
 {
   "algorithm": "Ed25519+ML-DSA-65",     // hybrid, both required (NIST FIPS 204)
-  "sigAlgorithm": "lln.gov.sig.v2",      // envelope sig version — verifiers DISPATCH on this
+  "sigAlgorithm": "spore.gov.sig.v2",      // envelope sig version — verifiers DISPATCH on this
   "keyId": "<signing key id>",
   "canon": "<body canon id (RFC 8785 JCS)>",
   "bodyHash": "sha256:<hex>",            // explicit body binding (defence-in-depth only)
@@ -148,7 +148,7 @@ The persisted `governanceSignature` object for a hybrid manifest is:
 }
 ```
 
-**Both halves required.** A `lln.gov.sig.v2` signature carries the two halves
+**Both halves required.** A `spore.gov.sig.v2` signature carries the two halves
 joined by `|`. Because base64url never contains `|`, a classical Ed25519 value can
 never be mistaken for a hybrid one — verifiers dispatch on `sigAlgorithm` /
 `algorithm` / the pipe FIRST so a hybrid signature is never decoded by the
@@ -179,7 +179,7 @@ trusting the persisted `bodyHash` field as the signed input) and reject on misma
 | `SPORE-MANIFEST-PUBKEY-MISSING` | The Ed25519 and/or ML-DSA-65 published public key for the `keyId` is absent — cannot verify both halves |
 | `SPORE-MANIFEST-TAMPER` | Recomputed `bodyHash` does not match, or hybrid verification fails (both halves required) — manifest may be tampered or PQ-downgraded |
 
-See `galerina-governance-signature.md` for the `lln.gov.sig.v2` ProofGraph type and
+See `galerina-governance-signature.md` for the `spore.gov.sig.v2` ProofGraph type and
 `galerina-signed-attestation.md` for the attestation-surface hybrid path.
 
 ---

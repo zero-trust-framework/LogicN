@@ -18,7 +18,7 @@ pure flow calculateVat(price: Money<GBP>) -> Money<GBP> {
 }
 `);
 
-    assert.equal(result.gir.schemaVersion, "lln.gir.v1");
+    assert.equal(result.gir.schemaVersion, "spore.gir.v1");
     assert.equal(result.gir.flows[0].qualifier, "pure");
     assert.deepEqual(result.gir.flows[0].effects.declared, []);
   });

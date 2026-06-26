@@ -40,7 +40,7 @@ Parser
 
 ```typescript
 GIRProgram {
-  schemaVersion: "lln.gir.v1"
+  schemaVersion: "spore.gir.v1"
   sourceHash: string              // SHA-256 of source text (deterministic)
   generatedAt: string             // ISO timestamp (stripped in canonical hash)
   girHash?: string                // SHA-256 of canonical GIR (post-emission)

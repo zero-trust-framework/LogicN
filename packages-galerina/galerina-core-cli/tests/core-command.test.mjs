@@ -7,7 +7,7 @@ import { describe, it } from "node:test";
 import { runCli } from "../dist/index.js";
 
 describe("Galerina core command integrations", () => {
-  it("runs check and run through galerina-core", async () => {
+  it("runs check and run through galerinaa-core", async () => {
     const cwd = await createProject();
     const check = await runCli(["check", "src"], cwd);
     const run = await runCli(["run", "src/hello.spore"], cwd);
@@ -19,7 +19,7 @@ describe("Galerina core command integrations", () => {
     assert.match(run.details?.join("\n") ?? "", /hello from Galerina/);
   });
 
-  it("runs build and reports through galerina-core", async () => {
+  it("runs build and reports through galerinaa-core", async () => {
     const cwd = await createProject();
     const build = await runCli(["build", "src", "--out", "build/debug"], cwd);
     const reports = await runCli(["reports", "src", "--out", ".build-dev"], cwd);
@@ -38,7 +38,7 @@ describe("Galerina core command integrations", () => {
     );
   });
 
-  it("runs routes and security checks through galerina-core", async () => {
+  it("runs routes and security checks through galerinaa-core", async () => {
     const cwd = await createProject();
     const routes = await runCli(["routes", "src/api.spore"], cwd);
     const security = await runCli(["security:check", "src"], cwd);
@@ -52,7 +52,7 @@ describe("Galerina core command integrations", () => {
 });
 
 async function createProject() {
-  const cwd = await mkdtemp(join(tmpdir(), "galerina-core-cli-core-"));
+  const cwd = await mkdtemp(join(tmpdir(), "galerinaa-core-cli-core-"));
   await writeFile(
     join(cwd, "src", "placeholder"),
     "",

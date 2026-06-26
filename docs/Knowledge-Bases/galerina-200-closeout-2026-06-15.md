@@ -14,7 +14,7 @@
 | `.td`→`.spore` migration audit | ✅ complete — **0 legacy `.td` files** (399 `.spore`) |
 | Doc reconciliation | ✅ SOT count 47→48/4,346→4,360; ledger header+rollup; **#143/#145 un-staled (P9 done)**; **#199 corrected (Phase 0+1 shipped)** |
 | FFSM `SESSION-HANDOFF.md` | ✅ "⚠️ SUPERSEDED" banner — it told a cold session to "start at Phase 0", but Phase 0+1 shipped & tested (12 tests). Prevented a re-build of already-shipped work |
-| **#177 graph fix** | ✅ `createFileNode` + `extractLogicnSymbols` (galerina-source nodes) + 3 new pkgs in workspace → `.spore` packages now index (api-protocol-rest 0→35, substrate-math 0→48, ext-bridge-quantum 3→170 refs; 1,312 `.spore` node-paths, was 0) |
+| **#177 graph fix** | ✅ `createFileNode` + `extractGalerinaSymbols` (galerina-source nodes) + 3 new pkgs in workspace → `.spore` packages now index (api-protocol-rest 0→35, substrate-math 0→48, ext-bridge-quantum 3→170 refs; 1,312 `.spore` node-paths, was 0) |
 | `SecretSinkMonitor` dead duplicate | ✅ deleted (user/side-session) → graph regenerated, dead node gone |
 | Full-repo deep audit | ✅ 14-cluster, 43 agents → **48 confirmed / 1 refuted**, adversarially verified |
 | External idea mining | ✅ 8 repos → 12 ranked governance ideas ([galerina-external-idea-mining-2026-06-15.md](galerina-external-idea-mining-2026-06-15.md)) |

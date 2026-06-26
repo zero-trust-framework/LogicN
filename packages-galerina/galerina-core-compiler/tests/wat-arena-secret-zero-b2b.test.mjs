@@ -42,15 +42,15 @@ contract { intent { "bodyless ${block}" } ${block} }
 { let w: Wide = Wide { a: s, b: s, c: s } return w.a }
 `;
     const { wat } = await build(src);
-    assert.ok(wat.includes("$__lln_zl"), `a body-less \`${block}\` must still emit the secret-zeroing loop (was a fail-open)`);
+    assert.ok(wat.includes("$__spore_zl"), `a body-less \`${block}\` must still emit the secret-zeroing loop (was a fail-open)`);
   }
 });
 
 test("B2b: a privacy-marked module emits the secret-zeroing loop; a plain module does NOT", async () => {
   const secret = await build(mk(true));
   const plain = await build(mk(false));
-  assert.ok(secret.wat.includes("$__lln_zl"), "privacy/secrets ⇒ zeroing loop emitted");
-  assert.ok(!plain.wat.includes("$__lln_zl"), "no privacy/secrets ⇒ no zeroing (non-secret modules pay nothing)");
+  assert.ok(secret.wat.includes("$__spore_zl"), "privacy/secrets ⇒ zeroing loop emitted");
+  assert.ok(!plain.wat.includes("$__spore_zl"), "no privacy/secrets ⇒ no zeroing (non-secret modules pay nothing)");
 });
 
 test("B2b: zeroing clears HOST-READABLE secret remanence — A/B vs the identical non-secret module", async () => {
@@ -82,7 +82,7 @@ contract { intent { "primitive secret return" } privacy { contains PII } }
 { let w: Sec = Sec { a: s, b: s } return w.a + w.b }
 `;
   const { wat, instance } = await build(src);
-  assert.ok(wat.includes("$__lln_xl"), "a primitive-returning secret leaf must emit the on-EXIT zeroing loop");
+  assert.ok(wat.includes("$__spore_xl"), "a primitive-returning secret leaf must emit the on-EXIT zeroing loop");
   const mem = new Int32Array(instance.exports.memory.buffer);
   const r = instance.exports.leak(0xBEEF);            // a SINGLE call
   assert.equal(r, 0xBEEF * 2, "the primitive result must be correct (captured before zeroing)");
@@ -97,7 +97,7 @@ contract { intent { "early return" } privacy { contains PII } }
 { let w: Sec = Sec { a: s } if s > 10 { return 1 } return w.a }
 `;
   const { wat } = await build(src);
-  assert.ok(!wat.includes("$__lln_xl"), "an early-return flow must NOT zero-on-exit (a block-wrap can't catch (return …))");
+  assert.ok(!wat.includes("$__spore_xl"), "an early-return flow must NOT zero-on-exit (a block-wrap can't catch (return …))");
 });
 
 test("B2b zero-on-exit: a HEAP-returning secret flow does NOT zero-on-exit (the return IS in the heap)", async () => {
@@ -107,7 +107,7 @@ contract { intent { "heap return" } privacy { contains PII } }
 { return Sec { a: s } }
 `;
   const { wat } = await build(src);
-  assert.ok(!wat.includes("$__lln_xl"), "a record/heap return must stay on the lazy path (can't zero the returned object)");
+  assert.ok(!wat.includes("$__spore_xl"), "a record/heap return must stay on the lazy path (can't zero the returned object)");
 });
 
 test("B2b: the secret module still executes correctly under the zeroing loop", async () => {

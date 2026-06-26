@@ -48,7 +48,7 @@ describe("Phase 55: hybrid Ed25519 + ML-DSA-65 governance signature", () => {
   it("signProofGraphHybrid produces a v2 (hybrid) signature carrying both parts", async () => {
     const kp = await generateHybridGovernanceKeyPair("hk2");
     const signed = await signProofGraphHybrid(mkPg("flow"), kp);
-    assert.equal(signed.governanceSignature?.algorithm, "lln.gov.sig.v2");
+    assert.equal(signed.governanceSignature?.algorithm, "spore.gov.sig.v2");
     assert.equal(signed.governanceSignature?.signerKeyId, "hk2");
     const parts = (signed.governanceSignature?.signature ?? "").split("|");
     assert.equal(parts.length, 2, "signature carries both Ed25519 and ML-DSA-65 parts");
@@ -120,7 +120,7 @@ describe("Phase 55: hybrid Ed25519 + ML-DSA-65 governance signature", () => {
     const edKp = generateGovernanceKeyPair("v1key");
     const signedV1 = signProofGraph(mkPg("flow"), edKp);
     const hk = await generateHybridGovernanceKeyPair("hk8");
-    // v1 carries no "|" separator and declares lln.gov.sig.v1 — the hybrid verifier
+    // v1 carries no "|" separator and declares spore.gov.sig.v1 — the hybrid verifier
     // must refuse it rather than silently accept a non-PQ signature.
     assert.equal(
       await verifyGovernanceSignatureHybrid(signedV1, edKp.publicKey, hk.mlDsaPublicKey),
@@ -132,7 +132,7 @@ describe("Phase 55: hybrid Ed25519 + ML-DSA-65 governance signature", () => {
     const edKp = generateGovernanceKeyPair("v1fallback");
     const signed = await signProofGraphHybrid(mkPg("flow"), edKp);
     // Documented fallback: a plain Ed25519 key yields an Ed25519-only v1 signature.
-    assert.equal(signed.governanceSignature?.algorithm, "lln.gov.sig.v1");
+    assert.equal(signed.governanceSignature?.algorithm, "spore.gov.sig.v1");
     assert.equal(verifyGovernanceSignature(signed, edKp.publicKey), true);
   });
 

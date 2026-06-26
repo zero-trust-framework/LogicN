@@ -22,9 +22,9 @@ import { dirname, join } from "node:path";
 import { parseProgram, executeFlow } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const EC_LLN = join(__dir, "..", "src", "self-hosted", "effect-checker.spore");
+const EC_SPORE = join(__dir, "..", "src", "self-hosted", "effect-checker.spore");
 
-const program = parseProgram(readFileSync(EC_LLN, "utf8"), "effect-checker.spore");
+const program = parseProgram(readFileSync(EC_SPORE, "utf8"), "effect-checker.spore");
 
 // ── value-model builders (interpreter takes tagged values / Maps) ──
 const vStr = (s) => ({ __tag: "string", value: String(s) });

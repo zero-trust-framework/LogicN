@@ -42,7 +42,7 @@ const POINT_SRC =
 describe("P9.4b: record construction lowers to a linear-memory struct", () => {
   it("emits the bump-allocator pattern (not a placeholder)", async () => {
     const wat = await compileToWAT(POINT_SRC);
-    assert.match(wat, /global \$__lln_heap \(mut i32\) \(i32\.const 1024\)/, "heap global emitted");
+    assert.match(wat, /global \$__spore_heap \(mut i32\) \(i32\.const 1024\)/, "heap global emitted");
     assert.match(wat, /\(block \(result i32\)/, "record block emitted");
     assert.match(wat, /i32\.store/, "field stores emitted");
     assert.doesNotMatch(wat, /return.*\(i32\.const 0\) ;; .*record/, "no placeholder for the record");

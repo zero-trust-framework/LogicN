@@ -42,19 +42,19 @@ function runPipeline(source, filePath) {
 const targets = process.argv.slice(2);
 
 for (const name of targets) {
-  const llnFile = join(EXAMPLES_DIR, name, "example.spore");
-  if (!existsSync(llnFile)) {
-    console.log(`NOT FOUND: ${llnFile}`);
+  const sporeFile = join(EXAMPLES_DIR, name, "example.spore");
+  if (!existsSync(sporeFile)) {
+    console.log(`NOT FOUND: ${sporeFile}`);
     continue;
   }
-  const raw = readFileSync(llnFile, "utf8");
+  const raw = readFileSync(sporeFile, "utf8");
   const source = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
   console.log(`\n=== ${name} ===`);
   console.log("Source:\n" + source);
 
   let diags;
   try {
-    diags = runPipeline(source, llnFile);
+    diags = runPipeline(source, sporeFile);
   } catch (err) {
     console.log(`CRASH: ${err.message}`);
     continue;

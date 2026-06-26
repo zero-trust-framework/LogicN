@@ -64,7 +64,7 @@ A 2 GB video, chunked into n = 4096 × 512 KB, E2EE'd, dropped in cold storage �
 - **Arena bump allocator.** Allocation is `ptr += size; return ptr − size` — **O(1)**, no free-list. Per-flow reset is
   `ptr = HEAP_BASE` — **O(1)** reclamation of the whole arena; secret-zeroing on reset is `fill(0)` over `[HEAP_BASE,
   ptr)`. Shipped: `wat-emitter.ts` B1 `deriveArenaWATMemory` (ceiling from `contract.memory{arena}`, `WAT_HEAP_BASE=1024`),
-  B2 per-flow `$__lln_heap` reset, B2b secret-zero on reset (R&D 0055). Galerina-compiled is GC-free monotone bump.
+  B2 per-flow `$__spore_heap` reset, B2b secret-zero on reset (R&D 0055). Galerina-compiled is GC-free monotone bump.
 - **Zero-copy boundary.** A downstream stage reads bytes in place via `(ptr, len)` instead of copying — saves the
   `O(len)` copy + an allocation per hop. (Intra-module is free today; cross-trust-boundary zero-copy is #102-106-gated.)
 - **Ring-buffer batching.** Amortize the host-boundary cost `C_switch` over `k` operations: per-op cost

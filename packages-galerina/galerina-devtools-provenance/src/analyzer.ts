@@ -773,7 +773,7 @@ import { readFileSync } from "node:fs";
 import { readdirSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
 
-export function collectLlnFiles(dir: string): string[] {
+export function collectSporeFiles(dir: string): string[] {
   const files: string[] = [];
   let entries: string[];
   try {
@@ -786,7 +786,7 @@ export function collectLlnFiles(dir: string): string[] {
     try {
       const stat = statSync(full);
       if (stat.isDirectory()) {
-        files.push(...collectLlnFiles(full));
+        files.push(...collectSporeFiles(full));
       } else if (extname(entry) === ".spore") {
         files.push(full);
       }

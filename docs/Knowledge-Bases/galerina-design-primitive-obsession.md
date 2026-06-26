@@ -212,7 +212,7 @@ interface CapabilityRequest {
 routes["POST /orders"] = handler
 
 // Good
-const route: LogicnRouteManifest = {
+const route: GalerinaRouteManifest = {
   id: "route-create-order",
   method: "POST" as HttpMethod,
   path: "/orders" as RoutePath,
@@ -265,7 +265,7 @@ galerina-core-security    → uses SecretReference, ProtectedSecret, SecretSafeS
 galerina-core-network     → uses NetworkDestinationReference, NetworkProtocol
 galerina-core-logic       → uses Decision, PolicyDecision
 galerina-core-config      → uses EnvironmentMode, ConfigValue
-galerina-framework-api-server → uses HttpMethod, RoutePath, LogicnRouteManifest
+galerina-framework-api-server → uses HttpMethod, RoutePath, GalerinaRouteManifest
 ```
 
 See also: `effect-checker-and-boundary-checker.md`,

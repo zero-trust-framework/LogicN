@@ -80,7 +80,7 @@ describe("bootstrap-determinism: EFFECT_REGISTRY hash stability", () => {
 describe("bootstrap-determinism: hashGIR idempotence", () => {
   it("hashGIR of a minimal GIR object twice → identical", () => {
     const gir = {
-      schemaVersion: "lln.gir.v1",
+      schemaVersion: "spore.gir.v1",
       generatedAt: "2024-01-01T00:00:00.000Z",
       flows: [{ name: "greet", qualifier: "pure", effects: { declared: [], observed: [], status: "compliant" } }],
     };
@@ -120,7 +120,7 @@ describe("bootstrap-determinism: different inputs produce different hashes", () 
 
 describe("bootstrap-determinism: sha256: prefix on all hash functions", () => {
   it("all hash functions return strings starting with 'sha256:'", () => {
-    const gir = { schemaVersion: "lln.gir.v1", flows: [] };
+    const gir = { schemaVersion: "spore.gir.v1", flows: [] };
 
     assert.ok(canonicalHash({ x: 1 }).startsWith("sha256:"), "canonicalHash must start with sha256:");
     assert.ok(hashSource("source").startsWith("sha256:"), "hashSource must start with sha256:");

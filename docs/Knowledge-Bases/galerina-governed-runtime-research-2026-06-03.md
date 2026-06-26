@@ -72,7 +72,7 @@ independently authored, updated, analysed, and audited without recompiling the a
 Currently Galerina `contract {}` blocks are compiled into the module they govern, coupling
 compliance lifecycle to development lifecycle.
 
-**Mapping to Galerina:** introduce versioned governance bundle files (`*.llnpolicy`) that
+**Mapping to Galerina:** introduce versioned governance bundle files (`*.sporepolicy`) that
 the runtime can load separately from the compiled module. The governance verifier binds
 the module's governance signature to the loaded bundle's hash. Compliance teams can
 update `authority {}` / `effects {}` / `privacy {}` clauses without touching application

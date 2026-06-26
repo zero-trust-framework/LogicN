@@ -5,7 +5,7 @@
 // Public interface is unchanged from the original hand-written DFS version.
 // =============================================================================
 
-import { GraphBuilder, resolveDependencies as llnResolveDependencies } from "@galerina/devtools-project-graph";
+import { GraphBuilder, resolveDependencies as sporeResolveDependencies } from "@galerina/devtools-project-graph";
 import type { LoadedTasks } from "./load-tasks.js";
 import type { TaskDefinition, TaskError } from "./types.js";
 
@@ -65,7 +65,7 @@ export function resolveTaskDependencies(
     }
   }
 
-  const result = llnResolveDependencies(builder.build());
+  const result = sporeResolveDependencies(builder.build());
 
   if (!result.ok) {
     return {

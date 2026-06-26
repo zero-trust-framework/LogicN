@@ -571,7 +571,7 @@ async function listMethod(
       return isFloat ? { __tag: "float", value: total } : { __tag: "int", value: total };
     }
     case "contains":
-      return { __tag: "bool", value: items.some((item) => logicNValuesEqual(item, args[0] ?? SPORE_VOID)) };
+      return { __tag: "bool", value: items.some((item) => galerinaValuesEqual(item, args[0] ?? SPORE_VOID)) };
     case "reverse":
       return { __tag: "list", items: [...items].reverse() };
     case "slice": {
@@ -1163,7 +1163,7 @@ function jsValueToGalerina(v: unknown): GalerinaValue {
   return { __tag: "string", value: String(v) };
 }
 
-function logicNToJsValue(v: GalerinaValue): unknown {
+function galerinaToJsValue(v: GalerinaValue): unknown {
   switch (v.__tag) {
     case "string":
       return v.value;
@@ -1178,13 +1178,13 @@ function logicNToJsValue(v: GalerinaValue): unknown {
     case "none":
       return null;
     case "some":
-      return logicNToJsValue(v.value);
+      return galerinaToJsValue(v.value);
     case "ok":
-      return logicNToJsValue(v.value);
+      return galerinaToJsValue(v.value);
     case "err":
-      return { error: logicNToJsValue(v.error) };
+      return { error: galerinaToJsValue(v.error) };
     case "list":
-      return v.items.map((item) => logicNToJsValue(item));
+      return v.items.map((item) => galerinaToJsValue(item));
     case "secure":
     case "protected":
     case "redacted":
@@ -1192,7 +1192,7 @@ function logicNToJsValue(v: GalerinaValue): unknown {
     case "record": {
       const out: Record<string, unknown> = {};
       for (const [k, val] of v.fields) {
-        if (!k.startsWith("__")) out[k] = logicNToJsValue(val);
+        if (!k.startsWith("__")) out[k] = galerinaToJsValue(val);
       }
       return out;
     }
@@ -1225,7 +1225,7 @@ function serialization(fullName: string, args: readonly GalerinaValue[]): Galeri
 
   if (fullName === "json.encode") {
     try {
-      return { __tag: "string", value: JSON.stringify(logicNToJsValue(args[0] ?? SPORE_VOID)) };
+      return { __tag: "string", value: JSON.stringify(galerinaToJsValue(args[0] ?? SPORE_VOID)) };
     } catch {
       return err("EncodeError: value cannot be serialized");
     }
@@ -1433,7 +1433,7 @@ function formatString(args: readonly GalerinaValue[]): GalerinaValue {
   return { __tag: "string", value: output };
 }
 
-export function logicNValuesEqual(a: GalerinaValue, b: GalerinaValue): boolean {
+export function galerinaValuesEqual(a: GalerinaValue, b: GalerinaValue): boolean {
   if (a.__tag !== b.__tag) return false;
   if (a.__tag === "string" && b.__tag === "string") return a.value === b.value;
   if (a.__tag === "int" && b.__tag === "int") return a.value === b.value;
@@ -1961,18 +1961,18 @@ async function setMethod(
 
     case "contains": {
       const target = args[0] ?? SPORE_VOID;
-      return { __tag: "bool", value: items.some((i) => logicNValuesEqual(i, target)) };
+      return { __tag: "bool", value: items.some((i) => galerinaValuesEqual(i, target)) };
     }
 
     case "add": {
       const item = args[0] ?? SPORE_VOID;
-      if (items.some((i) => logicNValuesEqual(i, item))) return receiver;
+      if (items.some((i) => galerinaValuesEqual(i, item))) return receiver;
       return makeSet([...items, item]);
     }
 
     case "remove": {
       const target = args[0] ?? SPORE_VOID;
-      return makeSet(items.filter((i) => !logicNValuesEqual(i, target)));
+      return makeSet(items.filter((i) => !galerinaValuesEqual(i, target)));
     }
 
     case "toList":
@@ -1982,19 +1982,19 @@ async function setMethod(
       const other = setItems(args[0] ?? SPORE_VOID);
       const merged = [...items];
       for (const item of other) {
-        if (!merged.some((i) => logicNValuesEqual(i, item))) merged.push(item);
+        if (!merged.some((i) => galerinaValuesEqual(i, item))) merged.push(item);
       }
       return makeSet(merged);
     }
 
     case "intersection": {
       const other = setItems(args[0] ?? SPORE_VOID);
-      return makeSet(items.filter((i) => other.some((o) => logicNValuesEqual(i, o))));
+      return makeSet(items.filter((i) => other.some((o) => galerinaValuesEqual(i, o))));
     }
 
     case "difference": {
       const other = setItems(args[0] ?? SPORE_VOID);
-      return makeSet(items.filter((i) => !other.some((o) => logicNValuesEqual(i, o))));
+      return makeSet(items.filter((i) => !other.some((o) => galerinaValuesEqual(i, o))));
     }
 
     case "map": {

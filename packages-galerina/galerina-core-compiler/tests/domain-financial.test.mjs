@@ -215,7 +215,7 @@ flow test() -> String {
 
 // Money comparison helpers use the subtract-and-sign approach:
 // isGreaterThan(a, b) = a.subtract(b) is positive (not negative, not zero)
-// equals(a, b)        = a.amount() == b.amount() (works via logicNValuesEqual on decimal)
+// equals(a, b)        = a.amount() == b.amount() (works via galerinaValuesEqual on decimal)
 
 describe("Financial — Money comparison at runtime", () => {
   it("isGreaterThan: 100.00 GBP > 50.00 GBP is true", async () => {
@@ -258,7 +258,7 @@ pure flow test() -> Bool {
   });
 
   it("equals: two GBP amounts with identical value (via Decimal ==)", async () => {
-    // Decimal equality uses bigIntDecimalCmp via logicNValuesEqual
+    // Decimal equality uses bigIntDecimalCmp via galerinaValuesEqual
     const result = await parseAndRun(`
 pure flow moneyEquals(a: Money<GBP>, b: Money<GBP>) -> Bool {
   return a.amount() == b.amount()
@@ -899,7 +899,7 @@ contract { effects { audit.write } }
   return "ok"
 }
 `, "processPayment");
-    assert.equal(result.audit.schemaVersion, "lln.runtime.audit.v1");
+    assert.equal(result.audit.schemaVersion, "spore.runtime.audit.v1");
   });
 
   it("validates that payment amount is positive before processing", async () => {

@@ -190,7 +190,7 @@ PQ downgrade). `signAttestationHybrid` / `verifyAttestationHybrid` in
 surface uses `signProofGraphHybrid` / `verifyGovernanceSignatureHybrid` over the
 `makeManifestEnvelope` shape.
 
-See `galerina-governance-signature.md` for the ProofGraph-layer `lln.gov.sig.v2`
+See `galerina-governance-signature.md` for the ProofGraph-layer `spore.gov.sig.v2`
 type and `galerina-cbor-manifest-spec.md` for the persisted `.lmanifest` v2 schema
 and diagnostics.
 

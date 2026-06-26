@@ -17,9 +17,9 @@ import { dirname, join } from "node:path";
 import { parseProgram, executeFlow } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const TC_LLN = join(__dir, "..", "src", "self-hosted", "type-checker.spore");
+const TC_SPORE = join(__dir, "..", "src", "self-hosted", "type-checker.spore");
 
-const program = parseProgram(readFileSync(TC_LLN, "utf8"), "type-checker.spore");
+const program = parseProgram(readFileSync(TC_SPORE, "utf8"), "type-checker.spore");
 
 // ── value-model builders (interpreter takes tagged values / Maps) ──
 const vStr = (s) => ({ __tag: "string", value: String(s) });

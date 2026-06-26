@@ -164,12 +164,12 @@ describe("Phase 39: GovernanceSignature (Ed25519)", () => {
     assert.ok(kp.publicKey instanceof Uint8Array && kp.publicKey.length > 0);
   });
 
-  it("signProofGraph produces algorithm=lln.gov.sig.v1", () => {
+  it("signProofGraph produces algorithm=spore.gov.sig.v1", () => {
     const kp = generateGovernanceKeyPair("k1");
     const sig = computeExecutionSignature(1,2,3,4,5,1,0,false);
     const pg = buildProofGraph("myFlow", sig, [], [], "2026-01-01T00:00:00Z");
     const signed = signProofGraph(pg, kp);
-    assert.equal(signed.governanceSignature?.algorithm, "lln.gov.sig.v1");
+    assert.equal(signed.governanceSignature?.algorithm, "spore.gov.sig.v1");
     assert.equal(signed.governanceSignature?.signerKeyId, "k1");
     assert.ok(signed.governanceSignature?.signature.length ?? 0 > 10);
   });

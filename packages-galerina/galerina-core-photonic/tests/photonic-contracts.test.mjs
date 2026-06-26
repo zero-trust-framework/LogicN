@@ -38,7 +38,7 @@ describe("galerina-core-photonic contracts", () => {
     });
     const diagnostics = validatePhotonicMapping({
       logicPackage: "@galerina/core-logic",
-      logicName: "Tri",
+      galerinaame: "Tri",
       states: [
         { state: "Positive", signal },
         { state: "Positive", signal },
@@ -83,6 +83,6 @@ describe("galerina-core-photonic contracts", () => {
 
     assert.equal(report.diagnostics.length, 0);
     assert.equal(report.channelCount, 3);
-    assert.equal(report.plan.mappings[0]?.logicName, "Tri");
+    assert.equal(report.plan.mappings[0]?.galerinaame, "Tri");
   });
 });

@@ -77,7 +77,7 @@ describe("makeManifestEnvelope — pins the .lmanifest signing-envelope shape", 
   it("hybrid-signs and verifies through the shipped PQ path", async () => {
     const kp = await generateHybridGovernanceKeyPair("manifest-envelope-test");
     const signed = await signProofGraphHybrid(makeManifestEnvelope(BODY_HASH, GENERATED_AT), kp);
-    assert.equal(signed.governanceSignature?.algorithm, "lln.gov.sig.v2");
+    assert.equal(signed.governanceSignature?.algorithm, "spore.gov.sig.v2");
     assert.ok((signed.governanceSignature?.signature ?? "").includes("|"), "both-half v2 signature");
     const ok = await verifyGovernanceSignatureHybrid(signed, kp.publicKey, kp.mlDsaPublicKey);
     assert.equal(ok, true, "envelope round-trips through hybrid sign+verify");

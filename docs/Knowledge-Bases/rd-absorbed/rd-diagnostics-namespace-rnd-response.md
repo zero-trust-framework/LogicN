@@ -59,7 +59,7 @@ e.g. `SPORE-META-001` *type-check/lint*). The AST check:
 // lint pass: forbid non-literal SPORE-* code construction
 // FAIL on: TemplateLiteral / BinaryExpression('+') whose (static prefix) starts with "SPORE-"
 //          when used as a `code:` property value or passed to the diagnostic emitter.
-if (node.type !== 'Literal' && reachesDiagnosticEmitter(node) && startsWithLLN(staticPrefixOf(node)))
+if (node.type !== 'Literal' && reachesDiagnosticEmitter(node) && startsWithSPORE(staticPrefixOf(node)))
   fatal('SPORE-META-001', 'diagnostic code must be a static string literal; dynamic SPORE-* construction is forbidden');
 ```
 This guarantees the Patch-1 scan sees **every** code, and keeps the namespace a static, auditable API surface.

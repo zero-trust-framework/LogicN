@@ -59,7 +59,7 @@ test("hybrid CLI round-trip: certified build emits a v2 both-half manifest, veri
     const sig = manifest.governanceSignature;
     assert.ok(sig && typeof sig === "object", "manifest carries a governanceSignature");
     assert.equal(sig.algorithm, "Ed25519+ML-DSA-65", "both-half hybrid algorithm");
-    assert.equal(sig.sigAlgorithm, "lln.gov.sig.v2", "v2 envelope signature version");
+    assert.equal(sig.sigAlgorithm, "spore.gov.sig.v2", "v2 envelope signature version");
     assert.ok(typeof sig.signature === "string" && sig.signature.includes("|"),
       "the signature concatenates BOTH halves as '<ed25519>|<mldsa>'");
 

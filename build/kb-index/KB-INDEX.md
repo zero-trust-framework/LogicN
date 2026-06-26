@@ -1005,7 +1005,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 ## Galerina Framework API Server v0.2
 `docs/Knowledge-Bases/galerina-framework-api-server-v02.md`
 - codes: SPORE-NETWORK-001, SPORE-NETWORK-006, SPORE-NETWORK-007, SPORE-BOUNDARY-001, SPORE-EFFECT-002
-- terms: request, string, api, boundary, error, replay, governance, server, route, runtime, webhook, logicnroutemanifest, authentication, replaystore
+- terms: request, string, api, boundary, error, replay, governance, server, route, runtime, webhook, galerinroutemanifest, authentication, replaystore
 
 ## Galerina Framework Layer — Design & Scope Decision
 `docs/Knowledge-Bases/galerina-framework-layer-design.md`
@@ -1078,7 +1078,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 ## Galerina — GovernanceSignature
 `docs/Knowledge-Bases/galerina-governance-signature.md`
 - codes: SPORE-GOV-SIG-001
-- terms: galerina, key, signature, gov, governancesignature, proof, lln, sig, phase, readonly, governance, hybrid, ed25519, string
+- terms: galerina, key, signature, gov, governancesignature, proof, spore, sig, phase, readonly, governance, hybrid, ed25519, string
 
 ## Galerina — Governance Verifier Architecture
 `docs/Knowledge-Bases/galerina-governance-verifier-architecture.md`
@@ -1761,7 +1761,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 ## RD-0131 — Rebrand Galerina→Galerina, .spore→.spore (R&D ONLY — DO NOT EXECUTE)
 `docs/Knowledge-Bases/galerina-rd-0131-rebrand-galerina-spore-2026-06-26.md`
 - codes: SPORE-GOV-019
-- terms: galerina, spore, lln, owner, brand, rename, replace, every, security, crypto, audit, keep, spore-, staged
+- terms: galerina, spore, spore, owner, brand, rename, replace, every, security, crypto, audit, keep, spore-, staged
 
 ## RD-0132 — Branding ecosystem follow-up (notes/68-branding-2, -3) — R&D ONLY, NO DEPLOY
 `docs/Knowledge-Bases/galerina-rd-0132-branding-ecosystem-2026-06-26.md`
@@ -1938,8 +1938,8 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina rebrand — crypto wire-tag re-sign ceremony (operator runbook)
 `docs/Knowledge-Bases/galerina-rebrand-resign-ceremony-runbook.md`
-- links: [[logicn-rd-0131-rebrand-galerina]]
-- terms: lln, step, galerina, spore, app, artifacts, key, re-sign, logicn, manifest, root, old, gov, sig
+- links: [[galerina-rd-0131-rebrand-galerina]]
+- terms: spore, step, galerina, spore, app, artifacts, key, re-sign, galerin, manifest, root, old, gov, sig
 
 ## Galerina — Non-P9 Residual Risks (verified catalogue)
 `docs/Knowledge-Bases/galerina-residual-risks.md`

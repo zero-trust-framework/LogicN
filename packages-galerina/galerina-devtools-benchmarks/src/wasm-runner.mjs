@@ -14,13 +14,13 @@ import { performance } from "node:perf_hooks";
 
 const compilerPath = new URL("../../galerina-core-compiler/dist/index.js", import.meta.url);
 
-export async function runWASMBenchmark(llnPath, opsPerRun = null) {
+export async function runWASMBenchmark(sporePath, opsPerRun = null) {
   const m = await import(compilerPath.href);
-  const source = readFileSync(llnPath, "utf8");
+  const source = readFileSync(sporePath, "utf8");
 
   // ── Compile Galerina → WAT → binary WASM ────────────────────────────────────
   const t0 = performance.now();
-  const parsed = m.parseProgram(source, llnPath);
+  const parsed = m.parseProgram(source, sporePath);
   const errs = (parsed.diagnostics ?? []).filter(d => d.severity === "error");
   if (errs.length > 0) {
     return { runtime: "wasm", error: true, reason: errs[0]?.message, compileMs: 0 };

@@ -43,11 +43,11 @@ function filteredDiags(diags) {
   return diags.filter((d) => !SUPPRESS.has(d.code));
 }
 
-const llnFile = join(EXAMPLES_DIR, "Level-1-Basics/003-secure-flow/example.spore");
-const raw = readFileSync(llnFile, "utf8");
+const sporeFile = join(EXAMPLES_DIR, "Level-1-Basics/003-secure-flow/example.spore");
+const raw = readFileSync(sporeFile, "utf8");
 const source = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
 
-const allDiags = runPipeline(source, llnFile);
+const allDiags = runPipeline(source, sporeFile);
 console.log("All diags:");
 allDiags.forEach(d => console.log(`  code=${d.code} severity=${d.severity} suppressed=${SUPPRESS.has(d.code)}`));
 

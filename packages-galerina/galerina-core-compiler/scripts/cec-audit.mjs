@@ -74,11 +74,11 @@ function parseTestStatus(source) {
 
 function loadExamples() {
   if (!existsSync(EXAMPLES_DIR)) { console.error("EXAMPLES_DIR not found:", EXAMPLES_DIR); return []; }
-  return walkDir(EXAMPLES_DIR).map((llnFile) => {
-    const raw = readFileSync(llnFile, "utf8");
+  return walkDir(EXAMPLES_DIR).map((sporeFile) => {
+    const raw = readFileSync(sporeFile, "utf8");
     const source = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
 
-    const diagFile = llnFile.replace(/example\.spore$/, "expected.diagnostics.txt");
+    const diagFile = sporeFile.replace(/example\.spore$/, "expected.diagnostics.txt");
     let rawExpected = "none";
     try { rawExpected = readFileSync(diagFile, "utf8").trim(); } catch {}
 
@@ -95,10 +95,10 @@ function loadExamples() {
     const hasReadableTypeSyntax = /result of \w+ else \w+/.test(source);
 
     // Check for future syntax proposals (from Proposed-Readable-Logic-Forms)
-    const isProposedSyntax = llnFile.replace(/\\/g, "/").includes("Proposed-Readable-Logic-Forms");
+    const isProposedSyntax = sporeFile.replace(/\\/g, "/").includes("Proposed-Readable-Logic-Forms");
 
     // Check if it's level 8/9
-    const normalized = llnFile.replace(/\\/g, "/");
+    const normalized = sporeFile.replace(/\\/g, "/");
     const isLevel89 = normalized.includes("Level-8") || normalized.includes("Level-9");
 
     const marker = "/Examples/";
@@ -109,7 +109,7 @@ function loadExamples() {
 
     return {
       name,
-      file: llnFile,
+      file: sporeFile,
       source,
       expectNone,
       expectedCodes,

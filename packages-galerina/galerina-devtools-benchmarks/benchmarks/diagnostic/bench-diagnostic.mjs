@@ -31,7 +31,7 @@ import { fileURLToPath } from "node:url";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dir, "../../../..");
-const BENCH_LLN = join(__dir, "benchmark.spore");
+const BENCH_SPORE = join(__dir, "benchmark.spore");
 const BENCH_SPORE_REL = "packages-galerina/galerina-devtools-benchmarks/benchmarks/diagnostic/benchmark.spore";
 
 // Run governance check on the diagnostic benchmark file
@@ -84,7 +84,7 @@ function timedGovernanceCheck(iterations) {
 }
 
 export async function runDiagnosticBenchmarks() {
-  const src = readFileSync(BENCH_LLN, "utf-8");
+  const src = readFileSync(BENCH_SPORE, "utf-8");
   const ITERATIONS = 50;
 
   const results = {

@@ -743,9 +743,9 @@ governed, and benchmarked. The single gate to P9 is self-hosting (Stage B).
   succeeds, else `unreachable` — protects the 3,259 compiler tests). Verified: a
   guarded flow emits real `i32.add` and the suite stays green.
 - **#120 P9.4b — record struct layout** ✅ CONSTRUCTION DONE (2026-06-06): a `#record`
-  literal now bump-allocates `fieldCount*4` bytes above `$__lln_heap` (base 1024),
+  literal now bump-allocates `fieldCount*4` bytes above `$__spore_heap` (base 1024),
   stores each field at its slot offset, and evaluates to the base pointer — per-record
-  `$__lln_rec_N` locals make it safe under nesting + record-returning calls. Verified
+  `$__spore_rec_N` locals make it safe under nesting + record-returning calls. Verified
   end-to-end: a record-returning flow assembles via wabt and executes in real WASM with
   the correct struct in linear memory (tests/wat-p9_4b-record-layout). **Field ACCESS
   also DONE** (2026-06-06): `r.field` → `i32.load` at the slot offset, resolved via a

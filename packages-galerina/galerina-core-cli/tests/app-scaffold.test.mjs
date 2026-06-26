@@ -1,7 +1,7 @@
-// app-scaffold.test.mjs — B1: `galerina new app` app-layout scaffolder.
+// app-scaffold.test.mjs — B1: `galerinaa new app` app-layout scaffolder.
 //
-// `galerina new app` copies the canonical golden template
-// (packages-galerina/galerina-framework-example-app) with the app name substituted and
+// `galerinaa new app` copies the canonical golden template
+// (packages-galerinaa/galerinaa-framework-example-app) with the app name substituted and
 // build outputs excluded. This locks that contract: the runnable layout
 // (src/App.spore + src/flows/ + App.manifest + config/ + host/ + packages/greeting/ +
 // tests/ + package.json/tsconfig.json), its zero-trust defaults (deny-by-default,
@@ -17,7 +17,7 @@ import { mkdtempSync, rmSync, existsSync, readFileSync, statSync } from "node:fs
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
-const SCAFFOLDER = fileURLToPath(new URL("../../../scripts/galerina-new.mjs", import.meta.url));
+const SCAFFOLDER = fileURLToPath(new URL("../../../scripts/galerinaa-new.mjs", import.meta.url));
 
 function runScaffold(args) {
   return spawnSync(process.execPath, [SCAFFOLDER, ...args], {
@@ -27,7 +27,7 @@ function runScaffold(args) {
 }
 
 function withTempDir(fn) {
-  const base = mkdtempSync(join(tmpdir(), "galerina-b1-"));
+  const base = mkdtempSync(join(tmpdir(), "galerinaa-b1-"));
   try {
     return fn(base);
   } finally {
@@ -35,7 +35,7 @@ function withTempDir(fn) {
   }
 }
 
-test("galerina new app — emits the full runnable golden layout (name-substituted, no build outputs)", () => {
+test("galerinaa new app — emits the full runnable golden layout (name-substituted, no build outputs)", () => {
   withTempDir((base) => {
     const target = join(base, "my-app");
     const r = runScaffold(["app", target]);
@@ -70,7 +70,7 @@ test("galerina new app — emits the full runnable golden layout (name-substitut
   });
 });
 
-test("galerina new app — App.manifest is deny-by-default (no caps, kind=app, name substituted)", () => {
+test("galerinaa new app — App.manifest is deny-by-default (no caps, kind=app, name substituted)", () => {
   withTempDir((base) => {
     const target = join(base, "secure-app");
     const r = runScaffold(["app", target]);
@@ -78,8 +78,8 @@ test("galerina new app — App.manifest is deny-by-default (no caps, kind=app, n
 
     const manifest = JSON.parse(readFileSync(join(target, "App.manifest"), "utf8"));
     assert.equal(manifest.kind, "app");
-    // A freshly-scaffolded app is unsigned, so galerina-new.mjs rewrites the golden (root-signed,
-    // preserved) App.manifest's `lln.app.v1` -> the current `spore.app.v1`.
+    // A freshly-scaffolded app is unsigned, so galerinaa-new.mjs rewrites the golden (root-signed,
+    // preserved) App.manifest's `spore.app.v1` -> the current `spore.app.v1`.
     assert.equal(manifest.schemaVersion, "spore.app.v1");
     assert.equal(manifest.entry, "src/App.spore");
     // The example app's identity string is replaced with the new app's name.
@@ -101,7 +101,7 @@ test("galerina new app — App.manifest is deny-by-default (no caps, kind=app, n
   });
 });
 
-test("galerina new app — App.spore is pure (no effects) and fail-closed (mandatory wildcard)", () => {
+test("galerinaa new app — App.spore is pure (no effects) and fail-closed (mandatory wildcard)", () => {
   withTempDir((base) => {
     const target = join(base, "fc-app");
     const r = runScaffold(["app", target]);
@@ -127,7 +127,7 @@ test("galerina new app — App.spore is pure (no effects) and fail-closed (manda
   });
 });
 
-test("galerina new app — refuses to overwrite an existing scaffold (fail-closed)", () => {
+test("galerinaa new app — refuses to overwrite an existing scaffold (fail-closed)", () => {
   withTempDir((base) => {
     const target = join(base, "twice");
     const first = runScaffold(["app", target]);
@@ -138,7 +138,7 @@ test("galerina new app — refuses to overwrite an existing scaffold (fail-close
   });
 });
 
-test("galerina new — package mode still works (backward compatible)", () => {
+test("galerinaa new — package mode still works (backward compatible)", () => {
   withTempDir((base) => {
     const target = join(base, "pkg");
     const r = runScaffold([target]); // no mode token → package mode
@@ -149,7 +149,7 @@ test("galerina new — package mode still works (backward compatible)", () => {
   });
 });
 
-test("galerina new app — bare mode token with no target dir is a usage error", () => {
+test("galerinaa new app — bare mode token with no target dir is a usage error", () => {
   const r = runScaffold(["app"]);
   assert.notEqual(r.status, 0, "`new app` with no dir must fail, not silently make a package named 'app'");
   assert.match(`${r.stdout}${r.stderr}`, /missing <target-dir>/);

@@ -45,7 +45,7 @@ graph TD
 
     subgraph DEVTOOLS["DevTools"]
         DS["galerina-devtools-security\nrunSecurityAudit · PCI DSS 4.0.1"]
-        DN["galerina-devtools-naming\nLLN-NAMING-001..005"]
+        DN["galerina-devtools-naming\nSPORE-NAMING-001..005"]
         DC["galerina-devtools-context\ncontext receipts · --summary"]
         DI["galerina-devtools-intelligence\nBM25 hybrid search"]
         DP["galerina-devtools-provenance\ndata lineage · W3C PROV-JSON"]
@@ -84,13 +84,13 @@ flowchart LR
     SRC([".spore source"]) --> LEX
 
     subgraph STATIC["Static Analysis Pipeline"]
-        LEX["Lexer\nLLN-LEX-001..006\nTokenStream"]
+        LEX["Lexer\nSPORE-LEX-001..006\nTokenStream"]
         PAR["Parser\nAST · FlowDecl\ncontract blocks\nfor/match/record"]
-        SYM["Symbol Resolver\nLLN-NAME-001..003"]
-        TYP["Type Checker\nLLN-TYPE-001..023\nAuto deferral"]
-        VSC["Value-State Checker\nLLN-VALUESTATE/TAINT\nLLN-SECRET-001..003\nsource_from · list/record taint"]
-        EFF["Effect Checker\nLLN-EFFECT-001..005\ndeny-by-default"]
-        GOV["Governance Verifier\nLLN-GOV-001..020\nLLN-TERM-001\nProofGraph\nEpilogueReceipt\nLiabilityProfile"]
+        SYM["Symbol Resolver\nSPORE-NAME-001..003"]
+        TYP["Type Checker\nSPORE-TYPE-001..023\nAuto deferral"]
+        VSC["Value-State Checker\nSPORE-VALUESTATE/TAINT\nSPORE-SECRET-001..003\nsource_from · list/record taint"]
+        EFF["Effect Checker\nSPORE-EFFECT-001..005\ndeny-by-default"]
+        GOV["Governance Verifier\nSPORE-GOV-001..020\nSPORE-TERM-001\nProofGraph\nEpilogueReceipt\nLiabilityProfile"]
     end
 
     subgraph EMIT["Code Generation"]
@@ -125,7 +125,7 @@ graph TD
     subgraph SELFHOSTED["Stage B — 8 self-hosted .spore modules"]
         L["lexer.spore\nTokenises .spore source\nAll keywords + literals"]
         P["parser.spore\nparseFlows · parseMatchArms\nparseForLoop · parseRecordLiteral\ncross-module import skip"]
-        TC2["type-checker.spore\nFlow body type checking\nLLN-TYPE subset"]
+        TC2["type-checker.spore\nFlow body type checking\nSPORE-TYPE subset"]
         EC["effect-checker.spore\nEffect validation\ndeny-by-default enforcement"]
         GV["governance-verifier.spore\ncontract block validation\nProofGraph per flow"]
         GE["gir-emitter.spore\nAST → GIR ops\nfield·arrlit·reclit·matche·arm\nname2 binding for destructure"]
@@ -277,12 +277,12 @@ graph TD
     end
 
     subgraph TOOLS["DevTools packages"]
-        SEC["galerina-devtools-security\nrunSecurityAudit\nLLN-TAINT/GATE/SECRET/GOV/PCI\n34 tests"]
-        NAM["galerina-devtools-naming\nLLN-NAMING-001..005\nabbreviation detection\n15 tests"]
+        SEC["galerina-devtools-security\nrunSecurityAudit\nSPORE-TAINT/GATE/SECRET/GOV/PCI\n34 tests"]
+        NAM["galerina-devtools-naming\nSPORE-NAMING-001..005\nabbreviation detection\n15 tests"]
         CTX["galerina-devtools-context\nContext receipts\n51-97% token reduction\n35 tests"]
         INT["galerina-devtools-intelligence\nBM25 hybrid search\n81 flows indexed\n16 tests"]
         PRV["galerina-devtools-provenance\ndata lineage graph\nW3C PROV-JSON output\n20 tests"]
-        PCI["galerina-devtools-pci\nPCI DSS 4.0.1\nLLN-PCI-001..010\n12 tests"]
+        PCI["galerina-devtools-pci\nPCI DSS 4.0.1\nSPORE-PCI-001..010\n12 tests"]
         BEN["galerina-devtools-benchmarks\n23 benchmarks\ngoverned vs Rust/WASM/Node/Python"]
     end
 

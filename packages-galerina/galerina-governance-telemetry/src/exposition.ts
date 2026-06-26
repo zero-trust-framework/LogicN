@@ -11,7 +11,7 @@
 //   • effect families are reduced to the namespace before the first '.'/'(' (so
 //     `network.outbound('https://customer-x/…')` becomes just `network`);
 //   • unknown flag/status/tier label values (outside the closed vocab) are dropped.
-// The number of dropped series is itself exported (logicn_telemetry_dropped_series_total) so the
+// The number of dropped series is itself exported (galerin_telemetry_dropped_series_total) so the
 // fence is observable. This is SPORE-SUBSTRATE-001 (crypto-on-core / no-cleartext-egress) projected
 // onto the metrics wire.
 // =============================================================================
@@ -116,7 +116,7 @@ interface Metric {
 /**
  * Render a GovernanceSnapshot as Prometheus/OpenMetrics exposition text. Pure + fail-closed:
  * any label value that is not a safe token is dropped (and counted in
- * `logicn_telemetry_dropped_series_total`), so payload-shaped data can never egress.
+ * `galerin_telemetry_dropped_series_total`), so payload-shaped data can never egress.
  */
 // ── Producer (R&D 0120-F4): build a fail-closed snapshot from raw runtime state ──────────────────
 
@@ -219,26 +219,26 @@ export function renderPrometheus(snapshot: GovernanceSnapshot): string {
 
   const metrics: Metric[] = [];
 
-  // logicn_governance_flag — one 0/1 gauge per KNOWN flag (unknown flag names dropped silently).
+  // galerin_governance_flag — one 0/1 gauge per KNOWN flag (unknown flag names dropped silently).
   if (snapshot.governanceFlags) {
     const series: Series[] = [];
     for (const flag of GOVERNANCE_FLAGS) {
       const on = snapshot.governanceFlags[flag];
       if (on === undefined) continue;
-      if (keep({ flag })) series.push({ name: "logicn_governance_flag", labels: { flag }, value: on ? 1 : 0 });
+      if (keep({ flag })) series.push({ name: "galerin_governance_flag", labels: { flag }, value: on ? 1 : 0 });
     }
-    if (series.length) metrics.push({ name: "logicn_governance_flag", type: "gauge", help: "Governance flag state (1=on) from the RuntimeManifest mask.", series });
+    if (series.length) metrics.push({ name: "galerin_governance_flag", type: "gauge", help: "Governance flag state (1=on) from the RuntimeManifest mask.", series });
   }
 
   const scalarGauge = (name: string, help: string, v: unknown): void => {
     if (isFiniteNum(v)) metrics.push({ name, type: "gauge", help, series: [{ name, value: v }] });
   };
-  scalarGauge("logicn_allowed_effects", "Count of effects the contract permits.", snapshot.allowedEffectsCount);
-  scalarGauge("logicn_proof_obligations", "Count of outstanding proof obligations.", snapshot.proofObligationsCount);
-  scalarGauge("logicn_inflight_requests", "In-flight governed requests.", snapshot.inflightRequests);
-  scalarGauge("logicn_queue_depth", "Queued requests awaiting admission.", snapshot.queueDepth);
+  scalarGauge("galerin_allowed_effects", "Count of effects the contract permits.", snapshot.allowedEffectsCount);
+  scalarGauge("galerin_proof_obligations", "Count of outstanding proof obligations.", snapshot.proofObligationsCount);
+  scalarGauge("galerin_inflight_requests", "In-flight governed requests.", snapshot.inflightRequests);
+  scalarGauge("galerin_queue_depth", "Queued requests awaiting admission.", snapshot.queueDepth);
 
-  // logicn_effects_observed_total — by FAMILY only (never effect arguments).
+  // galerin_effects_observed_total — by FAMILY only (never effect arguments).
   if (snapshot.effectsObserved) {
     const byFamily = new Map<string, number>();
     for (const [effect, count] of Object.entries(snapshot.effectsObserved)) {
@@ -248,63 +248,63 @@ export function renderPrometheus(snapshot: GovernanceSnapshot): string {
     }
     const series: Series[] = [];
     for (const [fam, count] of byFamily) {
-      if (keep({ effect_family: fam })) series.push({ name: "logicn_effects_observed_total", labels: { effect_family: fam }, value: count });
+      if (keep({ effect_family: fam })) series.push({ name: "galerin_effects_observed_total", labels: { effect_family: fam }, value: count });
     }
-    if (series.length) metrics.push({ name: "logicn_effects_observed_total", type: "counter", help: "Effects observed, by family (counts only, never arguments).", series });
+    if (series.length) metrics.push({ name: "galerin_effects_observed_total", type: "counter", help: "Effects observed, by family (counts only, never arguments).", series });
   }
 
-  // logicn_flow_execution_tier_total — KNOWN tiers only.
+  // galerin_flow_execution_tier_total — KNOWN tiers only.
   if (snapshot.executionTiers) {
     const series: Series[] = [];
     for (const tier of EXECUTION_TIERS) {
       const c = snapshot.executionTiers[tier];
       if (!isFiniteNum(c)) continue;
-      if (keep({ tier })) series.push({ name: "logicn_flow_execution_tier_total", labels: { tier }, value: c });
+      if (keep({ tier })) series.push({ name: "galerin_flow_execution_tier_total", labels: { tier }, value: c });
     }
-    if (series.length) metrics.push({ name: "logicn_flow_execution_tier_total", type: "counter", help: "Flow executions by execution tier.", series });
+    if (series.length) metrics.push({ name: "galerin_flow_execution_tier_total", type: "counter", help: "Flow executions by execution tier.", series });
   }
 
-  scalarGauge("logicn_governance_indeterminate_total", "K3-INDETERMINATE / unknown→deny verdicts (governance-deny stream).", snapshot.governanceIndeterminateTotal);
+  scalarGauge("galerin_governance_indeterminate_total", "K3-INDETERMINATE / unknown→deny verdicts (governance-deny stream).", snapshot.governanceIndeterminateTotal);
 
-  // logicn_audit_events_total — KNOWN statuses only.
+  // galerin_audit_events_total — KNOWN statuses only.
   if (snapshot.auditEvents) {
     const series: Series[] = [];
     for (const status of AUDIT_STATUSES) {
       const c = snapshot.auditEvents[status];
       if (!isFiniteNum(c)) continue;
-      if (keep({ status })) series.push({ name: "logicn_audit_events_total", labels: { status }, value: c });
+      if (keep({ status })) series.push({ name: "galerin_audit_events_total", labels: { status }, value: c });
     }
-    if (series.length) metrics.push({ name: "logicn_audit_events_total", type: "counter", help: "Audit events by status.", series });
+    if (series.length) metrics.push({ name: "galerin_audit_events_total", type: "counter", help: "Audit events by status.", series });
   }
 
-  // logicn_surface_* — governed-surface area counts (AntiAbuseReport).
+  // galerin_surface_* — governed-surface area counts (AntiAbuseReport).
   if (snapshot.surface) {
     const s = snapshot.surface;
     const rows: Array<[string, unknown]> = [
-      ["logicn_surface_network_flows", s.networkFlows],
-      ["logicn_surface_unaudited_network_flows", s.unauditedNetworkFlows],
-      ["logicn_surface_pii_flows", s.piiFlows],
-      ["logicn_surface_process_spawn_flows", s.processSpawnFlows],
+      ["galerin_surface_network_flows", s.networkFlows],
+      ["galerin_surface_unaudited_network_flows", s.unauditedNetworkFlows],
+      ["galerin_surface_pii_flows", s.piiFlows],
+      ["galerin_surface_process_spawn_flows", s.processSpawnFlows],
     ];
     for (const [name, v] of rows) {
       if (isFiniteNum(v)) metrics.push({ name, type: "gauge", help: "Governed surface-area flow count.", series: [{ name, value: v }] });
     }
   }
 
-  // logicn_declared_* — DECLARED budgets (promises), never measurements.
+  // galerin_declared_* — DECLARED budgets (promises), never measurements.
   if (snapshot.declared) {
     const d = snapshot.declared;
-    scalarGauge("logicn_declared_memory_limit_bytes", "Declared memory budget (a promise, not a measurement).", d.memoryLimitBytes);
-    scalarGauge("logicn_declared_max_concurrent", "Declared max concurrent requests (a promise).", d.maxConcurrent);
-    scalarGauge("logicn_declared_arena_limit_mb", "Declared arena limit MB (a promise).", d.arenaLimitMb);
+    scalarGauge("galerin_declared_memory_limit_bytes", "Declared memory budget (a promise, not a measurement).", d.memoryLimitBytes);
+    scalarGauge("galerin_declared_max_concurrent", "Declared max concurrent requests (a promise).", d.maxConcurrent);
+    scalarGauge("galerin_declared_arena_limit_mb", "Declared arena limit MB (a promise).", d.arenaLimitMb);
   }
 
-  // logicn_behavioral_fingerprint_info — ONE info series (structural identity, never per-flow).
+  // galerin_behavioral_fingerprint_info — ONE info series (structural identity, never per-flow).
   if (snapshot.behavioralFingerprint !== undefined) {
     const labels: Record<string, string> = { fingerprint: snapshot.behavioralFingerprint };
     if (snapshot.build !== undefined) labels.build = snapshot.build;
     if (keep(labels)) {
-      metrics.push({ name: "logicn_behavioral_fingerprint_info", type: "gauge", help: "Behavioral fingerprint (CFG-path hash) as an info series.", series: [{ name: "logicn_behavioral_fingerprint_info", labels, value: 1 }] });
+      metrics.push({ name: "galerin_behavioral_fingerprint_info", type: "gauge", help: "Behavioral fingerprint (CFG-path hash) as an info series.", series: [{ name: "galerin_behavioral_fingerprint_info", labels, value: 1 }] });
     }
   }
 
@@ -315,8 +315,8 @@ export function renderPrometheus(snapshot: GovernanceSnapshot): string {
     lines.push(`# TYPE ${m.name} ${m.type}`);
     for (const s of m.series) lines.push(renderSeries(s));
   }
-  lines.push(`# HELP logicn_telemetry_dropped_series_total Series dropped by the structure-not-data egress fence.`);
-  lines.push(`# TYPE logicn_telemetry_dropped_series_total counter`);
-  lines.push(`logicn_telemetry_dropped_series_total ${dropped}`);
+  lines.push(`# HELP galerin_telemetry_dropped_series_total Series dropped by the structure-not-data egress fence.`);
+  lines.push(`# TYPE galerin_telemetry_dropped_series_total counter`);
+  lines.push(`galerin_telemetry_dropped_series_total ${dropped}`);
   return lines.join("\n") + "\n";
 }

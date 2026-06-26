@@ -80,11 +80,11 @@ const patternsDir = join(ROOT, "tests", "patterns");
 if (existsSync(patternsDir)) {
   const patternFiles = readdirSync(patternsDir).filter(f => f.endsWith(".spore"));
   // Use galerina.mjs (Stage A compiler) — not the legacy galerina-core-cli
-  const logicnMjs = join(ROOT, "galerina.mjs");
+  const galerinMjs = join(ROOT, "galerina.mjs");
   let patternOk = true;
   const patternDetails = [];
   for (const f of patternFiles) {
-    const res = spawnSync("node", [logicnMjs, "check", join(patternsDir, f)],
+    const res = spawnSync("node", [galerinMjs, "check", join(patternsDir, f)],
       { cwd: ROOT, encoding: "utf8", shell: isWin, timeout: 30000 });
     const passed = res.status === 0;
     if (!passed) { patternOk = false; patternDetails.push(`${f}: FAIL`); }
@@ -120,12 +120,12 @@ for (const p of ["galerina-ext-secrets-vault", "galerina-ext-proof-snarkjs"]) {
 // ── 3 + 4. In-process security + naming audit sweep over auth-service ──
 const corpus = join(ROOT, "examples", "auth-service");
 if (existsSync(corpus)) {
-  const llnFiles = readdirSync(corpus).filter((f) => f.endsWith(".spore"));
+  const sporeFiles = readdirSync(corpus).filter((f) => f.endsWith(".spore"));
   try {
     const sec = await import(pathToFileURL(join(ROOT, "packages-galerina/galerina-devtools-security/dist/index.js")).href);
     const nam = await import(pathToFileURL(join(ROOT, "packages-galerina/galerina-devtools-naming/dist/index.js")).href);
     let secFindings = 0, secErrors = 0, namFindings = 0;
-    for (const f of llnFiles) {
+    for (const f of sporeFiles) {
       const src = readFileSync(join(corpus, f), "utf8");
       try {
         const sr = await sec.runSecurityAudit(src, f);
@@ -141,9 +141,9 @@ if (existsSync(corpus)) {
     // Security audit PASS = no critical/taint/profile/governance findings; VALUESTATE = tracked separately.
     const vsFindings = secFindings; // now includes VALUESTATE since checkValueStates wired in
     results.push({ name: "audit:security", ok: secErrors === 0, ms: 0,
-      detail: `${llnFiles.length} files, ${vsFindings} findings (incl. VALUESTATE), ${secErrors} errors` });
+      detail: `${sporeFiles.length} files, ${vsFindings} findings (incl. VALUESTATE), ${secErrors} errors` });
     results.push({ name: "audit:naming", ok: true, ms: 0,
-      detail: `${llnFiles.length} files, ${namFindings} naming findings` });
+      detail: `${sporeFiles.length} files, ${namFindings} naming findings` });
   } catch (e) {
     results.push({ name: "audit:devtools", ok: false, ms: 0, detail: `import failed: ${e.message}` });
   }

@@ -24,22 +24,22 @@ const RESULTS_DIR = join(__dir, "../results");
 const _builtFiles = new Set();
 
 // Build a .spore file to register a fresh manifest before running
-function buildFile(llnFile) {
-  if (_builtFiles.has(llnFile)) return;
+function buildFile(sporeFile) {
+  if (_builtFiles.has(sporeFile)) return;
   spawnSync(
     "node",
-    [join(ROOT, "galerina.mjs"), "build", llnFile],
+    [join(ROOT, "galerina.mjs"), "build", sporeFile],
     { cwd: ROOT, encoding: "utf-8", timeout: 30_000 }
   );
-  _builtFiles.add(llnFile);
+  _builtFiles.add(sporeFile);
 }
 
 // Run governance check on a .spore file — measures static analysis speed
 // Returns { success, flowCount, violations, diagnostics }
-function runGovernanceCheck(llnFile) {
+function runGovernanceCheck(sporeFile) {
   const result = spawnSync(
     "node",
-    [join(ROOT, "galerina.mjs"), "check", llnFile],
+    [join(ROOT, "galerina.mjs"), "check", sporeFile],
     { cwd: ROOT, encoding: "utf-8", timeout: 10_000 }
   );
   const output = (result.stdout ?? "") + (result.stderr ?? "");
@@ -82,15 +82,15 @@ function readRecentAuditLog(limit = 200) {
 //
 //   For the logging-throughput benchmark, two separate files are checked
 //   to measure the "Audit Tax" — governance check time for pure vs secure flows.
-async function runDiagnostic(benchId, llnFile, scenarios) {
+async function runDiagnostic(benchId, sporeFile, scenarios) {
   console.log(`\n  Diagnostic: ${benchId}`);
   const results = { id: benchId, category: "diagnostic", timestamp: new Date().toISOString(), scenarios: {} };
 
   // Warm-up governance check (cold-start excluded from timing)
-  runGovernanceCheck(llnFile);
+  runGovernanceCheck(sporeFile);
 
   for (const [scenarioName, { flow, args, expectTrap, iterations = 100, altFile }] of Object.entries(scenarios)) {
-    const targetFile = altFile ?? llnFile;
+    const targetFile = altFile ?? sporeFile;
     const start = Date.now();
     let successes = 0;
 
@@ -139,7 +139,7 @@ async function runDiagnostic(benchId, llnFile, scenarios) {
 const DIAGNOSTICS = [
   {
     id: "toxic-input",
-    llnFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/toxic-input/benchmark.spore",
+    sporeFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/toxic-input/benchmark.spore",
     scenarios: {
       // All scenarios check the same file; traps-in-src confirms all toxic traps are declared
       "toxic variants (gov check)": { expectTrap: true,  iterations: 50 },
@@ -148,7 +148,7 @@ const DIAGNOSTICS = [
   },
   {
     id: "governance-violation",
-    llnFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-violation/benchmark.spore",
+    sporeFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-violation/benchmark.spore",
     scenarios: {
       "role-denied (gov check)":    { expectTrap: true,  iterations: 50 },
       "authorised (gov check)":     { expectTrap: false, iterations: 50 },
@@ -156,14 +156,14 @@ const DIAGNOSTICS = [
   },
   {
     id: "resource-exhaustion",
-    llnFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/resource-exhaustion/benchmark.spore",
+    sporeFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/resource-exhaustion/benchmark.spore",
     scenarios: {
       "ceiling/over-budget (gov)":  { expectTrap: true,  iterations: 50 },
     },
   },
   {
     id: "logging-throughput",
-    llnFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/logging-throughput/benchmark.spore",
+    sporeFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/logging-throughput/benchmark.spore",
     scenarios: {
       // Both scenarios check the same file — it contains both pure and secure flows.
       // msPerOp difference (if any) reflects compiler analysis depth for pure vs secure.
@@ -185,7 +185,7 @@ async function main() {
 
   const allResults = [];
   for (const d of toRun) {
-    const result = await runDiagnostic(d.id, d.llnFile, d.scenarios);
+    const result = await runDiagnostic(d.id, d.sporeFile, d.scenarios);
     allResults.push(result);
   }
 

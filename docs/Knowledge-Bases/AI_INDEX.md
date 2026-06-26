@@ -129,7 +129,7 @@ Key disambiguation rules:
 - `when expr => body` is a guard arm in `match`; `200 => body` is an integer literal arm
 - `effects {}` is optional for `pure flow` — omission means no effects (pure)
 - `with effects [...]` is a **hard error** (SPORE-SYNTAX-LEGACY-001) — use `contract { effects {} }`
-- Phase 55 ML-DSA: `lln.gov.sig.v2` = dual-signature artifact (ed25519 + ml-dsa-65); `generateHybridGovernanceKeyPair` produces the key pair; SPORE-HW-101..104 are the post-quantum attestation diagnostics
+- Phase 55 ML-DSA: `spore.gov.sig.v2` = dual-signature artifact (ed25519 + ml-dsa-65); `generateHybridGovernanceKeyPair` produces the key pair; SPORE-HW-101..104 are the post-quantum attestation diagnostics
 
 ---
 

@@ -289,7 +289,7 @@ Verified state: **48/48 packages · 4,360 tests · 0 fail**; graph **3,533 nodes
 |---|---|---|
 | 200 | **Post-P9 integrity close-out (umbrella)** | ✅ in-repo portion COMPLETE |
 | 200a | Doc reconciliation (SOT/ledger counts, #143/#145 un-staled, #199 corrected, FFSM banner) | ✅ |
-| 200b | **#177 graph fix** — `createFileNode`+`extractLogicnSymbols` galerina-source nodes; +3 pkgs to workspace | ✅ |
+| 200b | **#177 graph fix** — `createFileNode`+`extractGalerinaSymbols` galerina-source nodes; +3 pkgs to workspace | ✅ |
 | 200c | `SecretSinkMonitor` dead-duplicate consolidation + graph regen | ✅ |
 | 200d | Full-repo deep audit (48 confirmed / 1 refuted; 10H/17M/21L) | ✅ |
 | 200e | External idea-mining (8 repos → 12 ranked; [galerina-external-idea-mining-2026-06-15.md](galerina-external-idea-mining-2026-06-15.md)) | ✅ |

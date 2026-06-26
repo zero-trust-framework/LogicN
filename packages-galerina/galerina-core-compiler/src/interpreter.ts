@@ -3,7 +3,7 @@
 // =============================================================================
 
 import { type AstNode, type FlowMeta, NodeFlags } from "./parser.js";
-import { callStdlib, logicNValuesEqual, moneyBinary, constantTimeStringEquals } from "./stdlib.js";
+import { callStdlib, galerinaValuesEqual, moneyBinary, constantTimeStringEquals } from "./stdlib.js";
 import { type CapabilityHost } from "./runtime/capabilityHost.js";
 import { type RuntimeContext } from "./runtime/runtimeContext.js";
 import { type ContractEnforcer } from "./runtime/contractEnforcer.js";
@@ -881,7 +881,7 @@ export interface RuntimeAuditEntry {
 }
 
 export interface ExecutionAuditRecord {
-  readonly schemaVersion: "lln.runtime.audit.v1";
+  readonly schemaVersion: "spore.runtime.audit.v1";
   readonly flowName: string;
   readonly qualifier: "flow" | "pure" | "guarded" | "secure";
   readonly startedAt: string;
@@ -1396,7 +1396,7 @@ class Interpreter {
           }
         : {};
     const audit: ExecutionAuditRecord = {
-      schemaVersion: "lln.runtime.audit.v1",
+      schemaVersion: "spore.runtime.audit.v1",
       flowName,
       qualifier,
       startedAt,
@@ -2024,8 +2024,8 @@ class Interpreter {
     const moneyResult = moneyBinary(left, op, right);
     if (moneyResult !== undefined) return moneyResult;
 
-    if (op === "==") return { __tag: "bool", value: logicNValuesEqual(left, right) };
-    if (op === "!=") return { __tag: "bool", value: !logicNValuesEqual(left, right) };
+    if (op === "==") return { __tag: "bool", value: galerinaValuesEqual(left, right) };
+    if (op === "!=") return { __tag: "bool", value: !galerinaValuesEqual(left, right) };
 
     if (left.__tag === "int" || left.__tag === "float") {
       const l = left.value;
@@ -3393,7 +3393,7 @@ export async function executeFlow(
         executionTier: "cache" as const,     // Phase 33A telemetry
         fallbackReason: "cache-hit" as const,
         audit: {
-          schemaVersion: "lln.runtime.audit.v1",
+          schemaVersion: "spore.runtime.audit.v1",
           flowName,
           qualifier: "pure",
           startedAt: now,
@@ -3440,7 +3440,7 @@ export async function executeFlow(
             diagnostics: [],
             executionTier: "bytecode" as const,
             audit: {
-              schemaVersion: "lln.runtime.audit.v1" as const,
+              schemaVersion: "spore.runtime.audit.v1" as const,
               flowName,
               qualifier: "pure" as const,
               startedAt: now,
@@ -3459,7 +3459,7 @@ export async function executeFlow(
           diagnostics: [],
           executionTier: "bytecode" as const,   // Phase 33A telemetry
           audit: {
-            schemaVersion: "lln.runtime.audit.v1" as const,
+            schemaVersion: "spore.runtime.audit.v1" as const,
             flowName,
             qualifier: "pure" as const,
             startedAt: now,
@@ -3491,7 +3491,7 @@ export async function executeFlow(
         executionTier: "sync" as const,         // Phase 33A telemetry
         fallbackReason: "non-integer-args" as const, // bytecode rejected (non-int)
         audit: {
-          schemaVersion: "lln.runtime.audit.v1" as const,
+          schemaVersion: "spore.runtime.audit.v1" as const,
           flowName,
           qualifier: "pure" as const,
           startedAt: now,
@@ -3570,7 +3570,7 @@ export async function executeFlow(
             diagnostics: [],
             executionTier: "egraph" as const,   // Phase 33A telemetry
             audit: {
-              schemaVersion: "lln.runtime.audit.v1",
+              schemaVersion: "spore.runtime.audit.v1",
               flowName,
               qualifier: "pure",
               startedAt: now,

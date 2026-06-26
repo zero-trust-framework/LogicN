@@ -28,7 +28,7 @@ flagged a few "decide-now-or-regret-later" items. Cross-refs: [[galerina-quantum
 **Every signed or serialized format carries an explicit version, and ANY format change bumps it.**
 Adding a field, a domain-separation context, or changing an encoding is a format change.
 
-- Current self-describing tags: ProofGraph governance signature `algorithm: lln.gov.sig.v1|v2`;
+- Current self-describing tags: ProofGraph governance signature `algorithm: spore.gov.sig.v1|v2`;
   audit attestation `signature.algorithm` + `schemaVersion`. Bridge attestation is distinguished by the
   presence of `mlDsaSignature` (acceptable while there is no persisted-signature migration concern).
 - **Known in-place change (allowed only because keys are ephemeral / nothing persisted):** the #34

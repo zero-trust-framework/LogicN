@@ -144,7 +144,7 @@ function packageDescriptor(name) {
   ) + "\n";
 }
 
-function indexLln(name) {
+function indexSpore(name) {
   return `// ${name} — opinionated SECURE Galerina package (scaffolded by galerina-new).
 //
 // Deny-by-default, fail-closed, least-capability:
@@ -224,7 +224,7 @@ function scaffoldPackage(absTarget, name, targetDir) {
 
   console.log(`galerina-new — scaffolding secure package "${name}" into ${absTarget}`);
   writeFileStrict(join(absTarget, "package.spore.json"), packageDescriptor(name), "package.spore.json");
-  writeFileStrict(join(absTarget, "src", "index.spore"), indexLln(name), "src/index.spore");
+  writeFileStrict(join(absTarget, "src", "index.spore"), indexSpore(name), "src/index.spore");
   writeFileStrict(join(absTarget, "README.md"), readme(name), "README.md");
   writeFileStrict(join(absTarget, "tests", ".gitkeep"), "", "tests/.gitkeep");
 
@@ -243,14 +243,14 @@ Next:
 function substituteName(text, name) {
   return text.split(TEMPLATE_SCOPED_NAME).join(name).split(TEMPLATE_PKG_NAME).join(name)
     // The golden App.manifest is root-SIGNED, so its content is PRESERVED at pre-rebrand values
-    // (name `logicn-framework-example-app`, schemaVersion `lln.app.v1`, entry `src/App.lln`) — it
+    // (name `galerina-framework-example-app`, schemaVersion `spore.app.v1`, entry `src/App.spore`) — it
     // can't change without the offline re-sign ceremony, even though the example app's actual entry
     // file is now `src/App.spore`. A freshly-scaffolded app is UNSIGNED, so rewrite those stale refs
     // to current Galerina values so the new manifest + entry + name are consistent.
-    .split("@logicn/framework-example-app").join(name)
-    .split("logicn-framework-example-app").join(name)
-    .split("lln.app.v1").join("spore.app.v1")
-    .split("src/App.lln").join("src/App.spore");
+    .split("@galerina/framework-example-app").join(name)
+    .split("galerina-framework-example-app").join(name)
+    .split("spore.app.v1").join("spore.app.v1")
+    .split("src/App.spore").join("src/App.spore");
 }
 
 // Recursively copy `srcDir` → `dstDir`, skipping build-output dirs, substituting the

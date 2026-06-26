@@ -146,7 +146,7 @@ function mark(ok: boolean): string {
 
 function printHuman(result: CheckResult): void {
   process.stdout.write(
-    `\nlogicn-test ${result.kind} — ${result.ok ? "PASS" : "FAIL"}: ${result.detail}\n`,
+    `\ngalerina-test ${result.kind} — ${result.ok ? "PASS" : "FAIL"}: ${result.detail}\n`,
   );
   for (const child of result.children ?? []) {
     process.stdout.write(

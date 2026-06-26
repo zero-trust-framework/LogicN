@@ -12,7 +12,7 @@ accelerate; the O(1) claims are category errors; reversible "uncompute" *conflic
 secret-erasure*), and the genuine wins are all **digital governance hardening on the existing arena.**
 
 ## The finding that drives it
-The bump allocator is **not yet a real arena**: the emitter emits **0 heap resets** (`$__lln_heap` grows
+The bump allocator is **not yet a real arena**: the emitter emits **0 heap resets** (`$__spore_heap` grows
 monotonically across every flow call → a process-lifetime leak that traps at 128 MB), and
 `contract.memory { arena }` is **extracted but unwired** from the emitted `(memory min max)` (an 8 MB-declared
 arena still ships a 128 MB module — a fail-OPEN: governed ≠ enforced ceiling). "Region per flow" is aspirational
@@ -33,7 +33,7 @@ until fixed.
 
 ## Build line (owner-gated production edits, all DIGITAL, one file)
 B1 wire `contract.memory{arena}` → emitted pages (`wat-emitter.ts:2771,2938`; `arenaLimitMb` already extracted;
-16× tighter). B2 per-flow `$__lln_heap` rebase + secret-slot zeroing. B3 separate-channel generation tag.
+16× tighter). B2 per-flow `$__spore_heap` rebase + secret-slot zeroing. B3 separate-channel generation tag.
 B4 keep WDM/photonic as the K3 governance-lane fold only (no perf claim). See the bridge task for line:cite detail.
 
 ## Tri-Pipe refactor answer

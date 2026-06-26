@@ -1130,7 +1130,7 @@ Provides:
 
 ## galerina-devtools-project-graph
 
-Graph data structures, algorithms, and runtime reporting for the LogicN platform
+Graph data structures, algorithms, and runtime reporting for the Galerina platform
 
 Provides:
 - bfsPath
@@ -1153,7 +1153,7 @@ Data lineage and provenance tracker for Galerina: maps data sources, transformat
 Provides:
 - FileProvenanceResult
 - analyzeFile
-- collectLlnFiles
+- collectSporeFiles
 - buildProvenanceGraph
 - DEVTOOLS_PROVENANCE_VERSION
 - renderTextReport

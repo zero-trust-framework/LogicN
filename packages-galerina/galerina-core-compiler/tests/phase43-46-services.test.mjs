@@ -143,7 +143,7 @@ describe("Phase 44: auditChainService.spore", () => {
   it("returns chained: true and correct schemaVersion", async () => {
     const r = await post({ flowName: "checkCapability", status: "Denied", timestamp: "2026-06-01T12:00:00Z" });
     assert.equal(r.json.chained, true);
-    assert.equal(r.json.schemaVersion, "lln.runtime.audit.v1");
+    assert.equal(r.json.schemaVersion, "spore.runtime.audit.v1");
   });
 
   it("status 'Success' → statusValid: true", async () => {
@@ -201,8 +201,8 @@ describe("Phase 45: proofVerifierService.spore", () => {
     assert.equal(errs.length, 0, errs.map(e => e.message).join(", "));
   });
 
-  it("algorithm 'lln.gov.sig.v1' → valid: true, strength: 3", async () => {
-    const r = await post({ algorithm: "lln.gov.sig.v1", signaturePresent: true });
+  it("algorithm 'spore.gov.sig.v1' → valid: true, strength: 3", async () => {
+    const r = await post({ algorithm: "spore.gov.sig.v1", signaturePresent: true });
     assert.equal(r.status, 200);
     assert.equal(r.json.valid, true);
     assert.equal(r.json.strength, 3);
@@ -221,7 +221,7 @@ describe("Phase 45: proofVerifierService.spore", () => {
   });
 
   it("phase39Ready matches valid field", async () => {
-    const r = await post({ algorithm: "lln.gov.sig.v1", signaturePresent: true });
+    const r = await post({ algorithm: "spore.gov.sig.v1", signaturePresent: true });
     assert.equal(r.json.phase39Ready, r.json.valid);
   });
 

@@ -16,10 +16,10 @@ console.log("\n## C1 — Native contiguous Tensor<T> footprint (note16-1)  [ZT 4
   const N = 1_000_000;
   const contiguousF32 = N * 4;                 // a real contiguous Float32 buffer
   const cpythonList   = N * 8 + N * 24;        // 8B pointer + 24B PyFloatObject header each
-  const logicnBoxed   = N * 40;                // the LIVE Galerina rep: a list of {__tag,value} GalerinaValue (~40B in V8: tag + boxed value + object header)
-  console.log(`     contiguous f32=${MB(contiguousF32)} · CPython list=${MB(cpythonList)} · Galerina boxed(live)=${MB(logicnBoxed)}`);
+  const galerinBoxed   = N * 40;                // the LIVE Galerina rep: a list of {__tag,value} GalerinaValue (~40B in V8: tag + boxed value + object header)
+  console.log(`     contiguous f32=${MB(contiguousF32)} · CPython list=${MB(cpythonList)} · Galerina boxed(live)=${MB(galerinBoxed)}`);
   ok(Math.round(cpythonList / contiguousF32) === 8, "claim direction TRUE: contiguous f32 is 8x smaller than a Python list (a 30-yr-old numpy result, NOT net-new)");
-  ok(logicnBoxed > cpythonList, "claim REFUTED as the LIVE footprint: Galerina's persistent rep is a boxed list (~40 MB) — 10x worse than the 4 MB claimed, and worse than the list it claims to beat");
+  ok(galerinBoxed > cpythonList, "claim REFUTED as the LIVE footprint: Galerina's persistent rep is a boxed list (~40 MB) — 10x worse than the 4 MB claimed, and worse than the list it claims to beat");
 }
 
 console.log("\n## C4 — AST loop-fusion / deforestation: Σ f(g(x_i))  (note16-4)  [ZT 6 / BUILD]");
@@ -81,7 +81,7 @@ console.log("\n## C8 — Tolerance-driven precision compaction f64→int8 at the
 }
 
 // C2 / C3 are size/type-system arguments (no single closed-form to assert at runtime); their verdicts:
-console.log("\n## C2 — Unified Substrate Codegen into logicnc  (note16-2)  [ZT 2 / POSITION] — framework ↓MB but TCB ↑40–1000×; substrate win bounded ~2× (Θ(N²)). Keep the delegate+attest+fence seam.");
+console.log("\n## C2 — Unified Substrate Codegen into galerinc  (note16-2)  [ZT 2 / POSITION] — framework ↓MB but TCB ↑40–1000×; substrate win bounded ~2× (Θ(N²)). Keep the delegate+attest+fence seam.");
 console.log("## C3 — Type-level layout polymorphism (Layout::ColumnMajor)  (note16-3)  [ZT 1 / REFUSE] — owner already said NO; value-identical, 6.7× annotation blow-up + r! lattice into the core TCB for zero value-safety.");
 
 console.log(`\n=== RD-0127 proof: ${pass} PASS / ${fail} FAIL ===`);

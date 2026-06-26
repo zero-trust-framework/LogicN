@@ -294,7 +294,7 @@ export type GovernanceFlagsMask = number;
 // ---------------------------------------------------------------------------
 
 export interface RuntimeManifest {
-  readonly schemaVersion: "lln.runtime.manifest.v1";
+  readonly schemaVersion: "spore.runtime.manifest.v1";
   readonly flow: string;
   readonly qualifier: string;
   readonly requiresAudit: boolean;

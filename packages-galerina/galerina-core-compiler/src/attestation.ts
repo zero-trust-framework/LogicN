@@ -16,7 +16,7 @@ import { createHash, generateKeyPairSync, sign as cryptoSign, verify as cryptoVe
 // ---------------------------------------------------------------------------
 
 export interface GalerinaAttestation {
-  readonly artifact: "logicn.audit.attestation";
+  readonly artifact: "galerin.audit.attestation";
   readonly schemaVersion: "1.0";
   readonly flow: string;
   readonly timestamp: string;
@@ -122,7 +122,7 @@ export async function buildAttestation(
   }
 
   return {
-    artifact: "logicn.audit.attestation",
+    artifact: "galerin.audit.attestation",
     schemaVersion: "1.0",
     flow: inputs.flowName,
     timestamp: new Date().toISOString(),
@@ -229,7 +229,7 @@ export function generateAttestationKey(keyId: string): AttestationKeyPair {
 // ---------------------------------------------------------------------------
 
 /** FIPS-204 domain-separation context for the audit attestation surface. */
-const AUDIT_MLDSA_CONTEXT = new TextEncoder().encode("logicn.audit.attestation.v1");
+const AUDIT_MLDSA_CONTEXT = new TextEncoder().encode("galerin.audit.attestation.v1");
 
 export interface HybridAttestationKeyPair {
   readonly keyId: string;
@@ -380,9 +380,9 @@ export function attestationFromJson(json: string): GalerinaAttestation {
 
   const obj = parsed as Record<string, unknown>;
 
-  if (obj["artifact"] !== "logicn.audit.attestation") {
+  if (obj["artifact"] !== "galerin.audit.attestation") {
     throw new Error(
-      `attestationFromJson: invalid artifact field "${String(obj["artifact"])}", expected "logicn.audit.attestation"`,
+      `attestationFromJson: invalid artifact field "${String(obj["artifact"])}", expected "galerin.audit.attestation"`,
     );
   }
 

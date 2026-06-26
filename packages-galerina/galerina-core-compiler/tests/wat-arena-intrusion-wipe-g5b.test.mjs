@@ -44,9 +44,9 @@ test("G5(b): a secret flow emits memory.fill BEFORE the invariant-breach unreach
   // The exact folded shape: the bulk-memory fill sits INSIDE the (then …) branch, right before `unreachable`.
   assert.ok(/\(then \(memory\.fill[^\n]*\) unreachable/.test(wat),
     `the wipe must be inside the (then …) branch, before unreachable:\n${wat}`);
-  // It must use the part-a fill shape (same base + live $__lln_heap length).
-  assert.ok(/\(then \(memory\.fill \(i32\.const 1024\) \(i32\.const 0\) \(i32\.sub \(global\.get \$__lln_heap\) \(i32\.const 1024\)\)\) unreachable/.test(wat),
-    `the breach wipe must match the part-a memory.fill (base 1024, live $__lln_heap length):\n${wat}`);
+  // It must use the part-a fill shape (same base + live $__spore_heap length).
+  assert.ok(/\(then \(memory\.fill \(i32\.const 1024\) \(i32\.const 0\) \(i32\.sub \(global\.get \$__spore_heap\) \(i32\.const 1024\)\)\) unreachable/.test(wat),
+    `the breach wipe must match the part-a memory.fill (base 1024, live $__spore_heap length):\n${wat}`);
 });
 
 test("G5(b): a NON-secret flow with the same invariant does NOT wipe at the breach (byte-identical, pays nothing)", async () => {

@@ -28,7 +28,7 @@ BASE_NAME="$(basename "${SPORE_FILE%.spore}")"
 WASM_FILE="${BUILD_DIR}/${BASE_NAME}.wasm"
 MANIFEST_FILE="${BUILD_DIR}/${BASE_NAME}.lmanifest"
 MANIFEST_JSON="${BUILD_DIR}/${BASE_NAME}.lmanifest.json"
-HEALTH_LLN="examples/deployment/health-check.spore"
+HEALTH_SPORE="examples/deployment/health-check.spore"
 
 echo "Galerina Governed Runtime -- Deployment"
 echo "   File:    ${SPORE_FILE}"
@@ -77,14 +77,14 @@ fi
 # ── step 5: health check probe ───────────────────────────────────────────────
 echo ""
 echo "Running health check flow..."
-if [ -f "${HEALTH_LLN}" ]; then
-  if node galerina.mjs check "${HEALTH_LLN}" 2>&1 | grep -q "0 errors"; then
+if [ -f "${HEALTH_SPORE}" ]; then
+  if node galerina.mjs check "${HEALTH_SPORE}" 2>&1 | grep -q "0 errors"; then
     echo "Health check flow: ACCEPT (0 errors)"
   else
-    echo "Health check flow: governance warning -- review ${HEALTH_LLN}"
+    echo "Health check flow: governance warning -- review ${HEALTH_SPORE}"
   fi
 else
-  echo "Health check flow not found at ${HEALTH_LLN} -- skipping"
+  echo "Health check flow not found at ${HEALTH_SPORE} -- skipping"
 fi
 echo ""
 

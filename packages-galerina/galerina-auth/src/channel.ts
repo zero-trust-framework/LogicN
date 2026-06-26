@@ -23,7 +23,7 @@
  *
  * IMPORTANT — factor, not decision. `channelIdentityVerdict` returns the folded K3
  * `Verdict`. That value is exactly what you hand the App Kernel as
- * `LogicnKernelRequest.channelVerdict`; the KERNEL then collapses it fail-closed at
+ * `GalerinaKernelRequest.channelVerdict`; the KERNEL then collapses it fail-closed at
  * its admission gate (only an explicit `+1` admits). We stop at the verdict.
  */
 
@@ -55,7 +55,7 @@ export type { CertGateInput, CertSubVerdicts, ChainValidationOutcome, Revocation
  * four sub-verdicts, folds them (conjunction = `min`), folds any degrade-only
  * side-signals, and returns the resulting trit — WITHOUT collapsing it to a decision.
  *
- * Hand the result to the App Kernel as `LogicnKernelRequest.channelVerdict`. The
+ * Hand the result to the App Kernel as `GalerinaKernelRequest.channelVerdict`. The
  * kernel's fixed auth gate collapses it fail-closed: only `+1` (every cert factor
  * proven) admits; `0` (e.g. revocation unknown) and `−1` (e.g. revoked, expired,
  * pin mismatch) refuse.

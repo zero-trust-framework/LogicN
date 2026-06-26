@@ -144,7 +144,7 @@
           "Rust pseudo-hash — install sha2 crate for real SHA-256 numbers"
         ]
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 3.01,
@@ -172,10 +172,10 @@
           "externalAfter": 3901155,
           "externalDelta": 56
         },
-        "logicnOpsPerSecond": 202,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 202,
+        "galerinOpsPerRun": 1
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.33,
@@ -203,10 +203,10 @@
           "externalAfter": 3901155,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 4545,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 4545,
+        "galerinOpsPerRun": 1
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 0.631,

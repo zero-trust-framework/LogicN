@@ -46,7 +46,7 @@ const registryCodes = new Set(extractCodes(registryText).filter((c) => c.startsW
 // ── classify each code (from the graph) ──────────────────────────────────────
 const entry = (c) => ({
   code: c.code,
-  isLLN: String(c.code).startsWith("SPORE-"),
+  isSPORE: String(c.code).startsWith("SPORE-"),
   defs: (c.defs ?? []).length,
   emits: (c.emits ?? []).length,
   tests: c.tests ?? 0,
@@ -61,9 +61,9 @@ const docDrift = codes.filter((c) => c.docOnly);                       // docume
 // no DETECTED emit is "referenced" (emit via an uncaught pattern), NOT dead — never put it on a retire list.
 const dead = codes.filter((c) => !c.docOnly && c.defs > 0 && c.emits === 0 && c.tests === 0 && c.refs === 0);
 const inline = codes.filter((c) => c.emits > 0 && c.defs === 0);       // emitted, no exported constant (R4)
-const srcRealLLN = codes.filter((c) => c.isLLN && !c.docOnly);
+const srcRealSPORE = codes.filter((c) => c.isSPORE && !c.docOnly);
 // (1) index → audit: real SPORE diagnostics the governance registry does NOT list (blind spots)
-const registryUncovered = srcRealLLN.filter((c) => !registryCodes.has(c.code));
+const registryUncovered = srcRealSPORE.filter((c) => !registryCodes.has(c.code));
 // (2) audit → index: registry codes that don't exist anywhere in the index (phantom / stale registry)
 const registryPhantom = [...registryCodes].filter((code) => !codeSet.has(code));
 

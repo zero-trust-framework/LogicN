@@ -541,11 +541,11 @@ export interface ProofGraph {
   readonly epilogueReceipt?: EpilogueReceipt;
   /**
    * Phase 39: GovernanceSignature — quantum-resistant proof certificate.
-   * Present in production profile. algorithm: "lln.gov.sig.v1".
+   * Present in production profile. algorithm: "spore.gov.sig.v1".
    * See galerina-governance-signature.md for full spec.
    */
   readonly governanceSignature?: {
-    readonly algorithm: "lln.gov.sig.v1" | "lln.gov.sig.v2";  // v2 = Phase 55 hybrid
+    readonly algorithm: "spore.gov.sig.v1" | "spore.gov.sig.v2";  // v2 = Phase 55 hybrid
     readonly signerKeyId: string;
     readonly signature: string;
     readonly signedAt: string;
@@ -653,9 +653,9 @@ export function sharesGovernanceShape(a: ProofGraph, b: ProofGraph): boolean {
 // Phase 55 — ML-DSA upgrade (NIST FIPS 204 / @noble/post-quantum)
 //
 // Migration profile:
-//   compat      (Phase 39): Ed25519 only  — "lln.gov.sig.v1"
-//   hybrid      (Phase 55): Ed25519 + ML-DSA-65 — both required  — "lln.gov.sig.v2"
-//   pq_strict   (future):   ML-DSA-65 only — "lln.gov.sig.v3"
+//   compat      (Phase 39): Ed25519 only  — "spore.gov.sig.v1"
+//   hybrid      (Phase 55): Ed25519 + ML-DSA-65 — both required  — "spore.gov.sig.v2"
+//   pq_strict   (future):   ML-DSA-65 only — "spore.gov.sig.v3"
 //
 // The signed payload is a canonical SHA-256 hash of the deterministic proof
 // graph fields: schemaVersion + flowName + signatureHash + verified + obligations.
@@ -670,7 +670,7 @@ export type GovernanceAlgorithm = "ed25519" | "ml-dsa-65" | "hybrid-ed25519-mlds
  * from the audit-attestation and bridge-manifest contexts so one ML-DSA key cannot be
  * cross-protocol-confused between the three signing surfaces (per the .tmf custody spec).
  */
-const PROOFGRAPH_MLDSA_CONTEXT = new TextEncoder().encode("logicn.proofgraph.governance.v1");
+const PROOFGRAPH_MLDSA_CONTEXT = new TextEncoder().encode("galerin.proofgraph.governance.v1");
 
 export interface GovernanceKeyPair {
   readonly keyId: string;
@@ -777,8 +777,8 @@ function fromBase64url(s: string): Uint8Array {
 /**
  * Sign a ProofGraph with a governance key pair.
  *
- * Phase 39 (compat): Ed25519 only  → algorithm: "lln.gov.sig.v1"
- * Phase 55 (hybrid): Ed25519 + ML-DSA-65 → algorithm: "lln.gov.sig.v2"
+ * Phase 39 (compat): Ed25519 only  → algorithm: "spore.gov.sig.v1"
+ * Phase 55 (hybrid): Ed25519 + ML-DSA-65 → algorithm: "spore.gov.sig.v2"
  *
  * Returns a new ProofGraph with the governanceSignature field populated.
  * Note: ML-DSA hybrid signing is async — use signProofGraphAsync for Phase 55 keys.
@@ -794,7 +794,7 @@ export function signProofGraph(pg: ProofGraph, keyPair: GovernanceKeyPair): Proo
   return {
     ...pg,
     governanceSignature: {
-      algorithm:   "lln.gov.sig.v1",
+      algorithm:   "spore.gov.sig.v1",
       signerKeyId: keyPair.keyId,
       signature,
       signedAt:    new Date().toISOString(),
@@ -834,7 +834,7 @@ export async function signProofGraphHybrid(pg: ProofGraph, keyPair: GovernanceKe
   return {
     ...pg,
     governanceSignature: {
-      algorithm:   "lln.gov.sig.v2",   // hybrid
+      algorithm:   "spore.gov.sig.v2",   // hybrid
       signerKeyId: keyPair.keyId,
       signature,
       signedAt:    new Date().toISOString(),
@@ -845,8 +845,8 @@ export async function signProofGraphHybrid(pg: ProofGraph, keyPair: GovernanceKe
 /**
  * Verify a GovernanceSignature on a ProofGraph.
  *
- * Phase 39 (compat): accepts "lln.gov.sig.v1" (Ed25519)
- * Phase 55 (hybrid): accepts "lln.gov.sig.v2" (Ed25519 + ML-DSA-65) — async variant below
+ * Phase 39 (compat): accepts "spore.gov.sig.v1" (Ed25519)
+ * Phase 55 (hybrid): accepts "spore.gov.sig.v2" (Ed25519 + ML-DSA-65) — async variant below
  *
  * Returns true only when the signature is cryptographically valid.
  */
@@ -856,7 +856,7 @@ export function verifyGovernanceSignature(pg: ProofGraph, publicKey: Uint8Array)
   // NO SILENT DOWNGRADE: a v2 (hybrid) signature MUST be verified with BOTH halves via
   // verifyGovernanceSignatureHybrid. Validating only the classical Ed25519 half here would
   // silently drop the post-quantum guarantee — so the sync path rejects v2 outright.
-  if (alg !== "lln.gov.sig.v1") return false;
+  if (alg !== "spore.gov.sig.v1") return false;
   try {
     const payload = canonicalSigningPayload(pg);
     const sigBuf = fromBase64url(pg.governanceSignature.signature);
@@ -879,7 +879,7 @@ export async function verifyGovernanceSignatureHybrid(
   mlDsaPublicKey: Uint8Array,
 ): Promise<boolean> {
   if (!pg.governanceSignature) return false;
-  if (pg.governanceSignature.algorithm !== "lln.gov.sig.v2") return false;
+  if (pg.governanceSignature.algorithm !== "spore.gov.sig.v2") return false;
   try {
     const payload = canonicalSigningPayload(pg);
     const parts = pg.governanceSignature.signature.split("|");

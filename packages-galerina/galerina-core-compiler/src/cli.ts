@@ -78,10 +78,10 @@ export interface CheckConfig {
 function loadCheckConfig(startDir: string): CheckConfig {
   const candidates = [
     join(startDir, "galerina.check.json"),
-    join(startDir, ".logicnrc.json"),
+    join(startDir, ".galerinrc.json"),
     join(startDir, "galerina.config.json"),
     join(process.cwd(), "galerina.check.json"),
-    join(process.cwd(), ".logicnrc.json"),
+    join(process.cwd(), ".galerinrc.json"),
   ];
   for (const path of candidates) {
     if (existsSync(path)) {
@@ -241,7 +241,7 @@ type CliMode =
 // File discovery
 // ---------------------------------------------------------------------------
 
-function findLlnFiles(dir: string): string[] {
+function findSporeFiles(dir: string): string[] {
   const results: string[] = [];
 
   function walk(current: string): void {
@@ -607,9 +607,9 @@ function runVerifySelfhost(): void {
   process.stdout.write("Checking GIR determinism across .spore files...\n");
 
   const selfHostedDir = join(getSrcDir(), "self-hosted");
-  let llnFiles: string[] = [];
+  let sporeFiles: string[] = [];
   try {
-    llnFiles = readdirSync(selfHostedDir)
+    sporeFiles = readdirSync(selfHostedDir)
       .filter((f) => f.endsWith(".spore"))
       .map((f) => join(selfHostedDir, f));
   } catch {
@@ -619,7 +619,7 @@ function runVerifySelfhost(): void {
 
   let girDeterminismPassed = true;
 
-  for (const filePath of llnFiles) {
+  for (const filePath of sporeFiles) {
     let source: string;
     try {
       source = readFileSync(filePath, "utf8");
@@ -669,7 +669,7 @@ function getSrcDir(): string {
 // ---------------------------------------------------------------------------
 
 function runFixEffects(targetDir: string): void {
-  const files = findLlnFiles(targetDir);
+  const files = findSporeFiles(targetDir);
   if (files.length === 0) {
     process.stdout.write("No .spore files found.\n");
     return;
@@ -942,7 +942,7 @@ function runGovernanceDiff(baseRefArg: string): void {
   const wantJson = process.argv.includes("--json");
 
   // Collect all .spore files currently present
-  const files = findLlnFiles(process.cwd());
+  const files = findSporeFiles(process.cwd());
   const beforeFlows: FlowMeta[] = [];
   const afterFlows: FlowMeta[] = [];
 
@@ -990,7 +990,7 @@ function runGovernanceDiff(baseRefArg: string): void {
 }
 
 function runCostAnalysis(targetDir: string): void {
-  const files = findLlnFiles(targetDir);
+  const files = findSporeFiles(targetDir);
   if (files.length === 0) {
     process.stdout.write("No .spore files found.\n");
     return;
@@ -1126,7 +1126,7 @@ function runCostAnalysis(targetDir: string): void {
 
 function main(): void {
   const { mode, targetDir } = parseArgs();
-  // Load galerina.check.json / .logicnrc.json if present
+  // Load galerina.check.json / .galerinrc.json if present
   const checkConfig: CheckConfig = (mode === "check" || mode === "check-strict")
     ? loadCheckConfig(targetDir)
     : {};
@@ -1155,7 +1155,7 @@ function main(): void {
     return;
   }
 
-  const files = findLlnFiles(targetDir);
+  const files = findSporeFiles(targetDir);
   if (files.length === 0) {
     process.stdout.write("No .spore files found.\n");
     process.exit(0);
@@ -1310,7 +1310,7 @@ function runWatch(targetDir: string): void {
     fsW(targetDir, { recursive: true }, (_evt: string, filename: string | null) => recheck(filename));
   } catch {
     // Fallback: watch individual .spore files using watchFile
-    const files = findLlnFiles(targetDir);
+    const files = findSporeFiles(targetDir);
     for (const f of files) {
       fsWF(f, { interval: 500 }, () => recheck(f));
     }

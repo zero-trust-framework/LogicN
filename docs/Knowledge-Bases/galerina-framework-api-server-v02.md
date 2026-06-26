@@ -57,10 +57,10 @@ enum HttpMethod {
 
 ---
 
-## LogicnRouteManifest
+## GalerinaRouteManifest
 
 ```ts
-interface LogicnRouteManifest {
+interface GalerinaRouteManifest {
     method: HttpMethod;
 
     path: string;
@@ -95,14 +95,14 @@ Example:
 
 ---
 
-## LogicnApiManifest
+## GalerinaApiManifest
 
 ```ts
-interface LogicnApiManifest {
+interface GalerinaApiManifest {
     version: string;
 
     routes:
-        LogicnRouteManifest[];
+        GalerinaRouteManifest[];
 
     policies:
         RoutePolicy[];
@@ -229,7 +229,7 @@ function validateReplay(
     if (
         replayStore.exists(key)
     ) {
-        throw new LogicnHttpError(
+        throw new GalerinaHttpError(
             409,
             "Replay detected."
         );
@@ -287,7 +287,7 @@ function verifyHmacSha256Webhook(
 ```ts
 function validateBoundary(
     route:
-        LogicnRouteManifest
+        GalerinaRouteManifest
 ) {
 
     if (
@@ -339,7 +339,7 @@ function validateAuth(
 ```ts
 function exportOpenApi(
     manifest:
-        LogicnApiManifest
+        GalerinaApiManifest
 ): object {
 
     return {
@@ -368,10 +368,10 @@ Extended metadata:
 
 ## Error Handling
 
-### LogicnHttpError
+### GalerinaHttpError
 
 ```ts
-class LogicnHttpError
+class GalerinaHttpError
     extends Error {
 
     constructor(
@@ -394,7 +394,7 @@ function mapErrorToHttpResponse(
 
     if (
         error instanceof
-            LogicnHttpError
+            GalerinaHttpError
     ) {
         return new Response(
             error.message,
@@ -439,7 +439,7 @@ galerina-framework-api-server/
     mapErrorToHttpResponse.ts
 
   routing/
-    LogicnRouteManifest.ts
+    GalerinaRouteManifest.ts
     resolveRoute.ts
     exportOpenApi.ts
 
@@ -455,11 +455,11 @@ galerina-framework-api-server/
     verification.ts
 
   diagnostics/
-    LogicnHttpError.ts
+    GalerinaHttpError.ts
     codes.ts
 
   manifests/
-    LogicnApiManifest.ts
+    GalerinaApiManifest.ts
     RoutePolicies.ts        (7 policies)
 ```
 

@@ -26,7 +26,7 @@ existing per-call governance lifecycle:
 1. **Admission (Gatekeeper).** `checkBridgeAttestation` / capability gate / `checkAiGovernance`
    trap BEFORE compute (Hold-First). In the #105 harness: `admitAndInstantiate` verifies the
    Ed25519 attestation **before** `WebAssembly.instantiate` — Hook 1 (pre-instantiate) is DONE.
-2. **Provisioning (Sanitizer).** Fresh sandbox; record bump-allocator heap (`$__lln_heap`)
+2. **Provisioning (Sanitizer).** Fresh sandbox; record bump-allocator heap (`$__spore_heap`)
    starts at a fixed base in zeroed linear memory.
 3. **Execution.** Dispatch through the closed host-import allowlist (no ambient scope).
 4. **Finalization (Sanitizer).** `tower.erase(...)` wipes sandbox state; audit receipt flushed

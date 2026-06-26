@@ -103,20 +103,20 @@ function hasPlaceholderCodes(source) {
   return PLACEHOLDER_CODE_PATTERN.test(source);
 }
 
-function parseName(llnFile) {
-  const normalized = llnFile.replace(/\\/g, "/");
+function parseName(sporeFile) {
+  const normalized = sporeFile.replace(/\\/g, "/");
   const marker = "/Examples/";
   const after = normalized.slice(normalized.indexOf(marker) + marker.length);
   return after.replace("/example.spore", "");
 }
 
-function getLevel(llnFile) {
-  const normalized = llnFile.replace(/\\/g, "/");
+function getLevel(sporeFile) {
+  const normalized = sporeFile.replace(/\\/g, "/");
   const m = normalized.match(/Level-(\d+)-/);
   return m ? parseInt(m[1], 10) : 0;
 }
 
-function promoteFile(llnFile, source) {
+function promoteFile(sporeFile, source) {
   // Replace test_status: draft with test_status: stable
   let updated;
   if (/^\/\/\/\s*test_status:\s*draft/m.test(source)) {
@@ -132,7 +132,7 @@ function promoteFile(llnFile, source) {
     );
   }
   // Preserve BOM if original had one
-  writeFileSync(llnFile, updated, "utf8");
+  writeFileSync(sporeFile, updated, "utf8");
 }
 
 // Also update examples.manifest.json
@@ -168,11 +168,11 @@ const promotedIds = new Set();
 const allFiles = walkDir(EXAMPLES_DIR);
 console.log(`Found ${allFiles.length} example files\n`);
 
-for (const llnFile of allFiles) {
-  const raw = readFileSync(llnFile, "utf8");
+for (const sporeFile of allFiles) {
+  const raw = readFileSync(sporeFile, "utf8");
   const source = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
-  const name = parseName(llnFile);
-  const level = getLevel(llnFile);
+  const name = parseName(sporeFile);
+  const level = getLevel(sporeFile);
   const { status, expectedDiag } = parseHeader(source);
 
   // Skip already-stable examples
@@ -204,7 +204,7 @@ for (const llnFile of allFiles) {
   }
 
   // Read expected.diagnostics.txt if present
-  const diagFile = llnFile.replace(/example\.spore$/, "expected.diagnostics.txt");
+  const diagFile = sporeFile.replace(/example\.spore$/, "expected.diagnostics.txt");
   let rawExpected = expectedDiag.toLowerCase() === "none" ? "none" : expectedDiag;
   try {
     rawExpected = readFileSync(diagFile, "utf8").trim();
@@ -227,7 +227,7 @@ for (const llnFile of allFiles) {
   // Run the pipeline
   let diags;
   try {
-    diags = runPipeline(source, llnFile);
+    diags = runPipeline(source, sporeFile);
   } catch (err) {
     results.keptDraft.push(name);
     draftReasons.set(name, `pipeline threw: ${err.message}`);
@@ -252,7 +252,7 @@ for (const llnFile of allFiles) {
     if (errors.length === 0) {
       results.promoted.push({ name, level, reason: "zero errors, expected none" });
       promotedIds.add(name.split("/").pop()); // id is last segment
-      promoteFile(llnFile, source);
+      promoteFile(sporeFile, source);
     } else {
       results.keptDraft.push(name);
       const errorSummary = errors.map((d) => `${d.code}`).join(", ");
@@ -269,7 +269,7 @@ for (const llnFile of allFiles) {
       // Perfect match — promote
       results.promoted.push({ name, level, reason: `codes match: ${expectedCodes.join(", ")}` });
       promotedIds.add(name.split("/").pop());
-      promoteFile(llnFile, source);
+      promoteFile(sporeFile, source);
     } else if (allExpectedFound && unexpectedCodes.length > 0) {
       results.keptDraft.push(name);
       draftReasons.set(name, `expected codes found but unexpected extras: ${unexpectedCodes.join(", ")}`);

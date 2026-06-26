@@ -398,7 +398,7 @@
       "evidence_score": 1.0,
       "generic_runtime_invariant": "Track trust labels at runtime and audit untrusted-to-sensitive boundary crossings.",
       "governance_principle": "Repeated injection findings indicate that untrusted input must not cross parser, query, or command boundaries without explicit validation and capability policy.",
-      "logicn_invariant": "Untrusted values crossing interpreter, query, template, command, or parser boundaries require governed validation and typed capability approval.",
+      "galerina_invariant": "Untrusted values crossing interpreter, query, template, command, or parser boundaries require governed validation and typed capability approval.",
       "merge_group": "deserialization-boundary",
       "merged_from": [
         "LN-SEC-2026-004"
@@ -566,7 +566,7 @@
       "evidence_score": 0.86,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-1067-review-rule",
       "merged_from": [
         "LN-SEC-2026-035"
@@ -637,7 +637,7 @@
       "evidence_score": 0.86,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-17-review-rule",
       "merged_from": [
         "LN-SEC-2026-038"
@@ -706,7 +706,7 @@
       "evidence_score": 0.86,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-178-review-rule",
       "merged_from": [
         "LN-SEC-2026-039"
@@ -777,7 +777,7 @@
       "evidence_score": 0.86,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-19-review-rule",
       "merged_from": [
         "LN-SEC-2026-040"
@@ -846,7 +846,7 @@
       "evidence_score": 0.86,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-20-review-rule",
       "merged_from": [
         "LN-SEC-2026-041"
@@ -915,7 +915,7 @@
       "evidence_score": 0.97,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-200-review-rule",
       "merged_from": [
         "LN-SEC-2026-042"
@@ -1048,7 +1048,7 @@
       "evidence_score": 0.92,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-264-review-rule",
       "merged_from": [
         "LN-SEC-2026-046"
@@ -1147,7 +1147,7 @@
       "evidence_score": 0.86,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-269-review-rule",
       "merged_from": [
         "LN-SEC-2026-047"
@@ -1216,7 +1216,7 @@
       "evidence_score": 0.86,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-276-review-rule",
       "merged_from": [
         "LN-SEC-2026-048"
@@ -1285,7 +1285,7 @@
       "evidence_score": 0.86,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-287-review-rule",
       "merged_from": [
         "LN-SEC-2026-051"
@@ -1356,7 +1356,7 @@
       "evidence_score": 0.91,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-290-review-rule-remote-user-affects-server-state",
       "merged_from": [
         "LN-SEC-2026-052"
@@ -1425,7 +1425,7 @@
       "evidence_score": 0.86,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-327-review-rule",
       "merged_from": [
         "LN-SEC-2026-054"
@@ -1494,7 +1494,7 @@
       "evidence_score": 0.91,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-384-review-rule-remote-user-affects-server-state",
       "merged_from": [
         "LN-SEC-2026-056"
@@ -1563,7 +1563,7 @@
       "evidence_score": 0.86,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-400-review-rule",
       "merged_from": [
         "LN-SEC-2026-057"
@@ -1632,7 +1632,7 @@
       "evidence_score": 0.86,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-434-review-rule",
       "merged_from": [
         "LN-SEC-2026-059"
@@ -1705,7 +1705,7 @@
       "evidence_score": 0.91,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-476-review-rule-remote-user-affects-server-state",
       "merged_from": [
         "LN-SEC-2026-060"
@@ -1776,7 +1776,7 @@
       "evidence_score": 0.91,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-77-review-rule-remote-user-affects-server-state",
       "merged_from": [
         "LN-SEC-2026-061"
@@ -1851,7 +1851,7 @@
       "evidence_score": 0.92,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "weakness-cwe-78-review-rule",
       "merged_from": [
         "LN-SEC-2026-062"
@@ -1952,7 +1952,7 @@
       "evidence_score": 1.0,
       "generic_runtime_invariant": "Validate request origin and intent token before state mutation.",
       "governance_principle": "Repeated CSRF findings indicate state-changing requests require explicit intent verification and request-boundary governance.",
-      "logicn_invariant": "State-changing requests require actor intent, origin validation, and audit policy.",
+      "galerina_invariant": "State-changing requests require actor intent, origin validation, and audit policy.",
       "merge_group": "request-intent-boundary",
       "merged_from": [
         "LN-SEC-2026-003",
@@ -2227,7 +2227,7 @@
       "evidence_score": 1.0,
       "generic_runtime_invariant": "Track trust labels at runtime and audit untrusted-to-sensitive boundary crossings.",
       "governance_principle": "Repeated injection findings indicate that untrusted input must not cross parser, query, or command boundaries without explicit validation and capability policy.",
-      "logicn_invariant": "Untrusted values crossing interpreter, query, template, command, or parser boundaries require governed validation and typed capability approval.",
+      "galerina_invariant": "Untrusted values crossing interpreter, query, template, command, or parser boundaries require governed validation and typed capability approval.",
       "merge_group": "untrusted-input-boundary",
       "merged_from": [
         "LN-SEC-2026-007",
@@ -4039,7 +4039,7 @@
       "evidence_score": 1.0,
       "generic_runtime_invariant": "Execute native extensions in isolated runtime zones when possible.",
       "governance_principle": "Repeated memory-safety findings indicate that unsafe native boundaries should be isolated, audited, or replaced with memory-safe implementations.",
-      "logicn_invariant": "Native or unsafe memory boundaries require explicit isolation and audit policy.",
+      "galerina_invariant": "Native or unsafe memory boundaries require explicit isolation and audit policy.",
       "merge_group": "memory-safety-boundary",
       "merged_from": [
         "LN-SEC-2026-012",
@@ -4973,7 +4973,7 @@
           "analysis_path": "data\\processed\\generic\\CVE-1999-0101-209decb3.generic.analysis.json",
           "external_id": "CVE-1999-0101",
           "references": [
-            "http://ciac.llnl.gov/ciac/bulletins/h-13.shtml",
+            "http://ciac.sporel.gov/ciac/bulletins/h-13.shtml",
             "https://nvd.nist.gov/vuln/detail/CVE-1999-0101"
           ],
           "source_hash": "06ad000d20ceafa19a0c1f1e2c08e6c7baebb77674fd62c2ffa2cf0bdaf83eb4",
@@ -4986,7 +4986,7 @@
           "analysis_path": "data\\processed\\generic\\CVE-1999-0101-cb334bac.generic.analysis.json",
           "external_id": "CVE-1999-0101",
           "references": [
-            "http://ciac.llnl.gov/ciac/bulletins/h-13.shtml",
+            "http://ciac.sporel.gov/ciac/bulletins/h-13.shtml",
             "https://nvd.nist.gov/vuln/detail/CVE-1999-0101"
           ],
           "source_hash": "9bddde2b8652c8d5905d9b4493a7830b137ff3491ad26fb0f197f66eebdc389f",
@@ -7110,7 +7110,7 @@
       "evidence_score": 1.0,
       "generic_runtime_invariant": "Constrain filesystem access by actor capability and sandbox root.",
       "governance_principle": "Repeated path traversal findings indicate filesystem access must be governed by canonical paths, capabilities, and sandbox boundaries.",
-      "logicn_invariant": "Filesystem operations require canonicalization and capability checks before crossing storage boundaries.",
+      "galerina_invariant": "Filesystem operations require canonicalization and capability checks before crossing storage boundaries.",
       "merge_group": "filesystem-boundary",
       "merged_from": [
         "LN-SEC-2026-018",
@@ -7525,7 +7525,7 @@
       "evidence_score": 0.96,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "secret-handling-boundary",
       "merged_from": [
         "LN-SEC-2026-021",
@@ -7702,7 +7702,7 @@
       "evidence_score": 1.0,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "concurrency-boundary",
       "merged_from": [
         "LN-SEC-2026-025",
@@ -7937,7 +7937,7 @@
       "evidence_score": 0.94,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "dependency-provenance-boundary",
       "merged_from": [
         "LN-SEC-2026-028",
@@ -9164,7 +9164,7 @@
       "evidence_score": 0.94,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "capability-boundary",
       "merged_from": [
         "LN-SEC-2026-031",
@@ -10293,7 +10293,7 @@
       "evidence_score": 0.94,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "remote-state-boundary",
       "merged_from": [
         "LN-SEC-2026-032"
@@ -11177,7 +11177,7 @@
           "analysis_path": "data\\processed\\generic\\CVE-1999-0415-996da094.generic.analysis.json",
           "external_id": "CVE-1999-0415",
           "references": [
-            "http://ciac.llnl.gov/ciac/bulletins/j-034.shtml",
+            "http://ciac.sporel.gov/ciac/bulletins/j-034.shtml",
             "http://www.cisco.com/warp/public/770/7xxconn-pub.shtml",
             "https://nvd.nist.gov/vuln/detail/CVE-1999-0415"
           ],
@@ -11191,7 +11191,7 @@
           "analysis_path": "data\\processed\\generic\\CVE-1999-0415-e82a522b.generic.analysis.json",
           "external_id": "CVE-1999-0415",
           "references": [
-            "http://ciac.llnl.gov/ciac/bulletins/j-034.shtml",
+            "http://ciac.sporel.gov/ciac/bulletins/j-034.shtml",
             "http://www.cisco.com/warp/public/770/7xxconn-pub.shtml",
             "https://nvd.nist.gov/vuln/detail/CVE-1999-0415"
           ],
@@ -11205,7 +11205,7 @@
           "analysis_path": "data\\processed\\generic\\CVE-1999-0416-490dc00c.generic.analysis.json",
           "external_id": "CVE-1999-0416",
           "references": [
-            "http://ciac.llnl.gov/ciac/bulletins/j-034.shtml",
+            "http://ciac.sporel.gov/ciac/bulletins/j-034.shtml",
             "http://www.cisco.com/warp/public/770/7xxconn-pub.shtml",
             "https://nvd.nist.gov/vuln/detail/CVE-1999-0416"
           ],
@@ -11219,7 +11219,7 @@
           "analysis_path": "data\\processed\\generic\\CVE-1999-0416-7670bc63.generic.analysis.json",
           "external_id": "CVE-1999-0416",
           "references": [
-            "http://ciac.llnl.gov/ciac/bulletins/j-034.shtml",
+            "http://ciac.sporel.gov/ciac/bulletins/j-034.shtml",
             "http://www.cisco.com/warp/public/770/7xxconn-pub.shtml",
             "https://nvd.nist.gov/vuln/detail/CVE-1999-0416"
           ],
@@ -11416,7 +11416,7 @@
       "evidence_score": 0.76,
       "generic_runtime_invariant": "Review whether this pattern should become a runtime governance policy.",
       "governance_principle": "Recurring analyzed records indicate a potentially reusable governance pattern that requires human review.",
-      "logicn_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
+      "galerina_invariant": "Potential runtime governance invariant requires human review before rule promotion.",
       "merge_group": "web-request-boundary",
       "merged_from": [
         "LN-SEC-2026-034"

@@ -610,7 +610,7 @@ export {
   extractFlowParamNames,
   findFlowNodeInAST,
   getWATImportsForEffects,
-  logicNTypeToWAT,
+  galerinaTypeToWAT,
   DEFAULT_WAT_MEMORY,
   DEFAULT_WASM_SIMD,
   WAT_SIMD_OPS,
@@ -672,7 +672,7 @@ export {
 export {
   callStdlib,
   jsObjectToGalerina,
-  logicNValuesEqual,
+  galerinaValuesEqual,
   type StdlibContext,
 } from "./stdlib.js";
 

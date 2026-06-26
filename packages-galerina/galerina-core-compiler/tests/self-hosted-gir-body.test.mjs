@@ -14,8 +14,8 @@ import { dirname, join } from "node:path";
 import { parseProgram, executeFlow } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const GIR_LLN = join(__dir, "..", "src", "self-hosted", "gir-emitter.spore");
-const program = parseProgram(readFileSync(GIR_LLN, "utf8"), "gir-emitter.spore");
+const GIR_SPORE = join(__dir, "..", "src", "self-hosted", "gir-emitter.spore");
+const program = parseProgram(readFileSync(GIR_SPORE, "utf8"), "gir-emitter.spore");
 
 const vStr = (s) => ({ __tag: "string", value: String(s) });
 const vList = (items) => ({ __tag: "list", items });

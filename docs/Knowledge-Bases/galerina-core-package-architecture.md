@@ -18,7 +18,7 @@ graph TB
     end
 
     subgraph SecurityLayer["Security Layer"]
-        security["@galerina/core-security\nSecureStringReference · redactText\nPermissionModel · decidePermission\nCryptographicPolicy · SecurityReport\nLLN-SECURITY-001…"]
+        security["@galerina/core-security\nSecureStringReference · redactText\nPermissionModel · decidePermission\nCryptographicPolicy · SecurityReport\nSPORE-SECURITY-001…"]
     end
 
     subgraph ConfigLayer["Config & Environment Layer"]
@@ -37,7 +37,7 @@ graph TB
     end
 
     subgraph CompilerLayer["Compiler Layer"]
-        compiler["@galerina/core-compiler\nvalidateCoreSyntaxSafety\ncheckBindingReassignment · checkReadonlyMutation\nvalidateIntentEffects (stub)\nLLN-SYNTAX/BINDING/PIPELINE/INTENT/BLOCK/STRING/CHAR/BYTE-*"]
+        compiler["@galerina/core-compiler\nvalidateCoreSyntaxSafety\ncheckBindingReassignment · checkReadonlyMutation\nvalidateIntentEffects (stub)\nSPORE-SYNTAX/BINDING/PIPELINE/INTENT/BLOCK/STRING/CHAR/BYTE-*"]
     end
 
     subgraph CLILayer["CLI Layer"]
@@ -113,9 +113,9 @@ flowchart LR
     Parser["Pass 3: Parser\n→ AST (AstNodeKind)"]
     TypeCheck["Pass 4: Type checker\nBinding safety · SPORE-SYNTAX/BINDING"]
     SafetyCheck["Pass 5–6: Safety checker\nSyntax safety · Content blocks\nvalidateCoreSyntaxSafety()"]
-    IntentCheck["Pass 7–8: Intent / Effect checker\nvalidateIntentEffects() — stub\nLLN-INTENT-001–005"]
-    PipelineCheck["Pass 9: Pipeline checker\ncheckMethodChain() — stub\nLLN-PIPELINE-001–005"]
-    BoundaryCheck["Pass 10–11: Boundary / Effect checker\nLLN-BOUNDARY-* / SPORE-EFFECT-*\n(specified — not yet implemented)"]
+    IntentCheck["Pass 7–8: Intent / Effect checker\nvalidateIntentEffects() — stub\nSPORE-INTENT-001–005"]
+    PipelineCheck["Pass 9: Pipeline checker\ncheckMethodChain() — stub\nSPORE-PIPELINE-001–005"]
+    BoundaryCheck["Pass 10–11: Boundary / Effect checker\nSPORE-BOUNDARY-* / SPORE-EFFECT-*\n(specified — not yet implemented)"]
     ManifestGen["Pass 12–14: Optimise · Source map · Manifest\nRuntimeManifest + ManifestIntegrity\n(specified — not yet implemented)"]
     GovernedIR["Governed IR\n+ RuntimeManifest"]
     Diagnostics["Compiler diagnostics\n(SPORE-* codes emitted per pass)"]

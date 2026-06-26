@@ -116,12 +116,12 @@ function parseTestStatus(source) {
 
 function loadExamples() {
   if (!existsSync(EXAMPLES_DIR)) return [];
-  return walkDir(EXAMPLES_DIR).map((llnFile) => {
+  return walkDir(EXAMPLES_DIR).map((sporeFile) => {
     // Strip UTF-8 BOM if present (Windows sometimes adds it)
-    const raw = readFileSync(llnFile, "utf8");
+    const raw = readFileSync(sporeFile, "utf8");
     const source = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
 
-    const diagFile = llnFile.replace(/example\.spore$/, "expected.diagnostics.txt");
+    const diagFile = sporeFile.replace(/example\.spore$/, "expected.diagnostics.txt");
     let rawExpected = "none";
     try { rawExpected = readFileSync(diagFile, "utf8").trim(); } catch { /* not present */ }
 
@@ -133,7 +133,7 @@ function loadExamples() {
       : lines.filter((l) => /^SPORE-[A-Z]+-\d+/.test(l)).map((l) => l.split(/\s/)[0]);
 
     // Human-readable name: "Level-1-Basics/001-pure-flow"
-    const normalized = llnFile.replace(/\\/g, "/");
+    const normalized = sporeFile.replace(/\\/g, "/");
     const marker = "/Examples/";
     const afterExamples = normalized.slice(normalized.indexOf(marker) + marker.length);
     const name = afterExamples.replace("/example.spore", "");
@@ -141,7 +141,7 @@ function loadExamples() {
     // Read test_status header: "stable" | "draft"
     const testStatus = parseTestStatus(source);
 
-    return { name, file: llnFile, source, expectNone, expectedCodes, testStatus };
+    return { name, file: sporeFile, source, expectNone, expectedCodes, testStatus };
   });
 }
 

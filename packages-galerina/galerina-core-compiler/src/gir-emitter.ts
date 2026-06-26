@@ -129,7 +129,7 @@ export interface GIRFlow {
 }
 
 export interface GIRProgram {
-  readonly schemaVersion: "lln.gir.v1";
+  readonly schemaVersion: "spore.gir.v1";
   readonly generatedAt: string;
   readonly flows: readonly GIRFlow[];
   /** SHA-256 of canonical GIR (set after emission). */
@@ -327,7 +327,7 @@ export function emitGIR(
 
   return {
     gir: {
-      schemaVersion: "lln.gir.v1",
+      schemaVersion: "spore.gir.v1",
       generatedAt: new Date().toISOString(),
       flows: girFlows,
       entryPoints,

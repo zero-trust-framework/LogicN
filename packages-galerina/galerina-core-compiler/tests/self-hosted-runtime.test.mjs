@@ -15,9 +15,9 @@ import { dirname, join } from "node:path";
 import { parseProgram, executeFlow } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const RUNTIME_LLN = join(__dir, "..", "src", "self-hosted", "runtime.spore");
+const RUNTIME_SPORE = join(__dir, "..", "src", "self-hosted", "runtime.spore");
 
-const program = parseProgram(readFileSync(RUNTIME_LLN, "utf8"), "runtime.spore");
+const program = parseProgram(readFileSync(RUNTIME_SPORE, "utf8"), "runtime.spore");
 
 function argsOf(obj) {
   const m = new Map();

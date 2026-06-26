@@ -126,7 +126,7 @@
         "normThroughput": null,
         "throughputUnit": "mix-ops/s"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.4,
@@ -158,7 +158,7 @@
         "normThroughput": null,
         "throughputUnit": "mix-ops/s"
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.39,
@@ -190,7 +190,7 @@
         "normThroughput": null,
         "throughputUnit": "mix-ops/s"
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 0.82,
@@ -331,7 +331,7 @@
         "reason": "RuntimeError: unreachable",
         "runtime": "wasm"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.22,
@@ -361,7 +361,7 @@
           "externalDelta": 0
         }
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.28,
@@ -391,7 +391,7 @@
           "externalDelta": 0
         }
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 0.667,
@@ -559,7 +559,7 @@
           "Compile (one-time): 3.5ms. Execution: pure WASM, no JS tree-walker."
         ]
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.41,
@@ -587,10 +587,10 @@
           "externalAfter": 22067620,
           "externalDelta": -131449
         },
-        "logicnOpsPerSecond": 48718,
-        "logicnOpsPerRun": 42069
+        "galerinOpsPerSecond": 48718,
+        "galerinOpsPerRun": 42069
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.35,
@@ -618,10 +618,10 @@
           "externalAfter": 22067620,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 50576,
-        "logicnOpsPerRun": 42069
+        "galerinOpsPerSecond": 50576,
+        "galerinOpsPerRun": 42069
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 1.135,
@@ -760,7 +760,7 @@
         "normThroughput": 600885200,
         "throughputUnit": "records/s"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.1,
@@ -791,7 +791,7 @@
         "normThroughput": 2392344,
         "throughputUnit": "records/s"
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.2,
@@ -822,7 +822,7 @@
         "normThroughput": 6622517,
         "throughputUnit": "records/s"
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 0.438,
@@ -965,7 +965,7 @@
           "Compile (one-time): 1.4ms. Execution: pure WASM, no JS tree-walker."
         ]
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.12,
@@ -993,10 +993,10 @@
           "externalAfter": 22067620,
           "externalDelta": -161311
         },
-        "logicnOpsPerSecond": 16,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 16,
+        "galerinOpsPerRun": 1
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.19,
@@ -1024,10 +1024,10 @@
           "externalAfter": 22067620,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 14,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 14,
+        "galerinOpsPerRun": 1
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 0.457,
@@ -1127,7 +1127,7 @@
         "movesPerSecond": 248640935.51,
         "iterationsPerSecond": 3794.02
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.3,
@@ -1155,10 +1155,10 @@
           "externalAfter": 22067620,
           "externalDelta": -6276
         },
-        "logicnOpsPerSecond": 98040,
-        "logicnOpsPerRun": 65535
+        "galerinOpsPerSecond": 98040,
+        "galerinOpsPerRun": 65535
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.4,
@@ -1186,10 +1186,10 @@
           "externalAfter": 22067620,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 109545,
-        "logicnOpsPerRun": 65535
+        "galerinOpsPerSecond": 109545,
+        "galerinOpsPerRun": 65535
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 0.818,
@@ -1332,7 +1332,7 @@
         "normThroughput": 226949900,
         "throughputUnit": "elements/s"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.13,
@@ -1363,7 +1363,7 @@
         "normThroughput": 2463054,
         "throughputUnit": "elements/s"
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.21,
@@ -1394,7 +1394,7 @@
         "normThroughput": 2932551,
         "throughputUnit": "elements/s"
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 0.41,
@@ -1543,7 +1543,7 @@
           "Compile (one-time): 1.5ms. Execution: pure WASM, no JS tree-walker."
         ]
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.13,
@@ -1571,10 +1571,10 @@
           "externalAfter": 22199341,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 775,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 775,
+        "galerinOpsPerRun": 1
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.19,
@@ -1602,10 +1602,10 @@
           "externalAfter": 22067620,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 1124,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 1124,
+        "galerinOpsPerRun": 1
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 0.647,
@@ -1725,7 +1725,7 @@
           "Compile (one-time): 1.3ms. Execution: pure WASM, no JS tree-walker."
         ]
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.16,
@@ -1753,10 +1753,10 @@
           "externalAfter": 22207416,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 4000,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 4000,
+        "galerinOpsPerRun": 1
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.22,
@@ -1784,10 +1784,10 @@
           "externalAfter": 22067620,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 4167,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 4167,
+        "galerinOpsPerRun": 1
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 0.693,
@@ -1956,7 +1956,7 @@
         "normThroughput": 457238100,
         "throughputUnit": "items/s"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.36,
@@ -1987,7 +1987,7 @@
         "normThroughput": 140924,
         "throughputUnit": "items/s"
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.46,
@@ -2018,7 +2018,7 @@
         "normThroughput": 137589,
         "throughputUnit": "items/s"
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 1.3,
@@ -2210,7 +2210,7 @@
         "normThroughput": 4162591,
         "throughputUnit": "kernel-evals/s"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.16,
@@ -2241,7 +2241,7 @@
         "normThroughput": 379579,
         "throughputUnit": "kernel-evals/s"
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.24,
@@ -2272,7 +2272,7 @@
         "normThroughput": 395523,
         "throughputUnit": "kernel-evals/s"
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 0.679,
@@ -2442,7 +2442,7 @@
         "normThroughput": 1738287350,
         "throughputUnit": "mul-adds/s"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.28,
@@ -2473,7 +2473,7 @@
         "normThroughput": 667781,
         "throughputUnit": "mul-adds/s"
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.34,
@@ -2504,7 +2504,7 @@
         "normThroughput": 701370,
         "throughputUnit": "mul-adds/s"
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 1.056,
@@ -2722,7 +2722,7 @@
           "Rust pseudo-hash — install sha2 crate for real SHA-256 numbers"
         ]
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.48,
@@ -2750,10 +2750,10 @@
           "externalAfter": 22067904,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 350,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 350,
+        "galerinOpsPerRun": 1
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.24,
@@ -2781,10 +2781,10 @@
           "externalAfter": 22067620,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 3448,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 3448,
+        "galerinOpsPerRun": 1
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 0.648,
@@ -2987,7 +2987,7 @@
           "Rust char-by-char HTML escape + split/join"
         ]
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.33,
@@ -3015,10 +3015,10 @@
           "externalAfter": 22078343,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 1087,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 1087,
+        "galerinOpsPerRun": 1
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.33,
@@ -3046,10 +3046,10 @@
           "externalAfter": 22067620,
           "externalDelta": 0
         },
-        "logicnOpsPerSecond": 2778,
-        "logicnOpsPerRun": 1
+        "galerinOpsPerSecond": 2778,
+        "galerinOpsPerRun": 1
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 0.959,
@@ -3282,7 +3282,7 @@
         "throughputUnit": "trit-ops/s",
         "rawThroughput": 156529466.24
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.22,
@@ -3314,7 +3314,7 @@
         "throughputUnit": "trit-ops/s",
         "rawThroughput": 1
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.49,
@@ -3346,7 +3346,7 @@
         "throughputUnit": "trit-ops/s",
         "rawThroughput": 1
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 1.252,
@@ -3387,7 +3387,7 @@
       "comparable": false,
       "unit": "trit-ops/s",
       "status": "FLAGGED",
-      "reason": "incomparable workloads — Galerina main()=runBulkTri(100000) (100k triples / 300k trit-ops); node/python/rust run nested 9-element truth-table micro-benches plus a separate 10M bulk; logicnOpsPerRun=27000 (≈27 truth-table combos ×1000) corresponds to none of these. Needs a common bulk-N trit-op path on every runtime.",
+      "reason": "incomparable workloads — Galerina main()=runBulkTri(100000) (100k triples / 300k trit-ops); node/python/rust run nested 9-element truth-table micro-benches plus a separate 10M bulk; galerinOpsPerRun=27000 (≈27 truth-table combos ×1000) corresponds to none of these. Needs a common bulk-N trit-op path on every runtime.",
       "problems": []
     }
   },
@@ -3521,7 +3521,7 @@
         "normThroughput": null,
         "throughputUnit": "records/s"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.41,
@@ -3553,7 +3553,7 @@
         "throughputUnit": "records/s",
         "rawThroughput": 106
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.51,
@@ -3585,7 +3585,7 @@
         "throughputUnit": "records/s",
         "rawThroughput": 121
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 1.271,
@@ -3626,7 +3626,7 @@
       "comparable": false,
       "unit": "records/s",
       "status": "FLAGGED",
-      "reason": "incomparable — Galerina main()=filterAndCount(1000)+groupByCategory(1000)=2000 record-scans (but logicnOpsPerRun=1000 undercounts); node/python run 7 separate query micro-benches nested under results.* with no single representative. Needs a main() recount + a chosen representative query before the numbers compare.",
+      "reason": "incomparable — Galerina main()=filterAndCount(1000)+groupByCategory(1000)=2000 record-scans (but galerinOpsPerRun=1000 undercounts); node/python run 7 separate query micro-benches nested under results.* with no single representative. Needs a main() recount + a chosen representative query before the numbers compare.",
       "problems": []
     }
   },
@@ -3688,7 +3688,7 @@
         "normThroughput": 2166554.29,
         "throughputUnit": "chains/s"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.33,
@@ -3720,7 +3720,7 @@
         "normThroughput": null,
         "throughputUnit": "chains/s"
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.36,
@@ -3752,7 +3752,7 @@
         "normThroughput": null,
         "throughputUnit": "chains/s"
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 1.04,
@@ -3846,7 +3846,7 @@
         "normThroughput": 1738049,
         "throughputUnit": "force-evals/s"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.74,
@@ -3877,7 +3877,7 @@
         "normThroughput": 71437,
         "throughputUnit": "force-evals/s"
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.59,
@@ -3908,7 +3908,7 @@
         "normThroughput": 70929,
         "throughputUnit": "force-evals/s"
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 1.805,
@@ -4024,7 +4024,7 @@
         "normThroughput": 748500,
         "throughputUnit": "records/s"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.65,
@@ -4055,7 +4055,7 @@
         "normThroughput": 5830,
         "throughputUnit": "records/s"
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.61,
@@ -4086,7 +4086,7 @@
         "normThroughput": 6499,
         "throughputUnit": "records/s"
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 1.353,
@@ -4187,7 +4187,7 @@
         "normThroughput": 22863187,
         "throughputUnit": "pixels/s"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.5,
@@ -4218,7 +4218,7 @@
         "normThroughput": 8115,
         "throughputUnit": "pixels/s"
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.58,
@@ -4249,7 +4249,7 @@
         "normThroughput": 8286,
         "throughputUnit": "pixels/s"
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 1.695,
@@ -4426,7 +4426,7 @@
         "normThroughput": 10478519,
         "throughputUnit": "nodes/s"
       },
-      "logicnGoverned": {
+      "galerinGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.36,
@@ -4457,7 +4457,7 @@
         "normThroughput": 4180123,
         "throughputUnit": "nodes/s"
       },
-      "logicnManifest": {
+      "galerinManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.22,
@@ -4488,7 +4488,7 @@
         "normThroughput": 4608345,
         "throughputUnit": "nodes/s"
       },
-      "logicnPassive": {
+      "galerinPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
         "setupMs": 1.107,

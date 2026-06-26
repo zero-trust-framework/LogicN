@@ -5,7 +5,7 @@
 export {
   analyzeFile,
   buildProvenanceGraph,
-  collectLlnFiles,
+  collectSporeFiles,
   type FileProvenanceResult,
 } from "./analyzer.js";
 

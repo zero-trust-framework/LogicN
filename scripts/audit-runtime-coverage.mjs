@@ -24,7 +24,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const INTERP = join(ROOT, "packages-galerina/galerina-core-compiler/src/interpreter.ts");
 
 // The total operator set a numeric tag is expected to service (==/!= are handled by the generic
-// logicNValuesEqual fallback for every tag, so they are excluded from the per-tag arithmetic expectation).
+// galerinaValuesEqual fallback for every tag, so they are excluded from the per-tag arithmetic expectation).
 const EXPECTED_OPS = ["+", "-", "*", "/", "%", "<", "<=", ">", ">="];
 
 // int & float are covered for ALL of EXPECTED_OPS by the homogeneous int/float fallback in evalBinary

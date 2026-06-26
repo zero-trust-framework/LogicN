@@ -60,7 +60,7 @@ describe("Proof chain — buildProofChain", () => {
     const withEvent = buildProofChain({
       ...EMPTY_INPUTS,
       auditEvents: [{
-        schemaVersion: "lln.runtime.audit.v1",
+        schemaVersion: "spore.runtime.audit.v1",
         id: "evt_1",
         timestamp: "2026-01-01T00:00:00.000Z",
         status: "Success",
@@ -114,7 +114,7 @@ describe("Proof chain — verifyProofChain", () => {
     const result = verifyProofChain(chain, {
       ...EMPTY_INPUTS,
       auditEvents: [{
-        schemaVersion: "lln.runtime.audit.v1",
+        schemaVersion: "spore.runtime.audit.v1",
         id: "injected",
         timestamp: "2026-01-01T00:00:00.000Z",
         status: "Success",

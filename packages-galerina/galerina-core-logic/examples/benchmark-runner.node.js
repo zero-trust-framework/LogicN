@@ -47,7 +47,7 @@ function parseArgs(argv) {
     seed: 123456789,
     pythonCommand: "python",
     skipPython: false,
-    skipLogicn: false,
+    skipGalerina: false,
     skipNode: false,
   };
 
@@ -60,7 +60,7 @@ function parseArgs(argv) {
       continue;
     }
     if (arg === "--skip-galerina") {
-      out.skipLogicn = true;
+      out.skipGalerina = true;
       continue;
     }
     if (arg === "--skip-node") {
@@ -130,18 +130,18 @@ function buildRuntimes(config) {
   const root = projectRootFromExamplesDir();
   const examples = path.join(root, "galerina-core", "examples");
   const compiler = path.join(root, "galerina-core", "compiler", "galerina.js");
-  const llnFile = path.join(examples, "compute-mix-throughput-benchmark.spore");
+  const sporeFile = path.join(examples, "compute-mix-throughput-benchmark.spore");
   const nodeFile = path.join(examples, "compute-mix-throughput-benchmark.node.js");
   const pythonFile = path.join(examples, "compute-mix-throughput-benchmark.py");
   const common = buildCommonArgs(config);
 
   const runtimes = [];
 
-  if (!config.skipLogicn) {
+  if (!config.skipGalerina) {
     runtimes.push({
       name: "galerina-prototype",
       command: process.execPath,
-      args: [compiler, "run", llnFile, ...common],
+      args: [compiler, "run", sporeFile, ...common],
     });
   }
 
@@ -263,7 +263,7 @@ function addComparisons(summary) {
     const galerina = summary["galerina-prototype"].medianOpsPerSecond;
     const directNode = summary.nodejs.medianOpsPerSecond;
     summary.comparison = {
-      logicnVsNodePercent: round3(((galerina - directNode) / directNode) * 100),
+      galerinVsNodePercent: round3(((galerina - directNode) / directNode) * 100),
       note: "Galerina prototype currently measures Node.js runner overhead, not native compiler performance.",
     };
   }
