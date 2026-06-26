@@ -83,3 +83,37 @@ export function applyFixEdits(source: string, edits: readonly FixEdit[]): ApplyF
   }
   return { result: out, applied, skipped };
 }
+
+export interface AutoFixOutcome {
+  readonly fixedSource: string;
+  readonly applied: number;
+  readonly skipped: number;
+  /** True iff the fix was APPLIED and a re-check confirmed it did not increase the error count. */
+  readonly accepted: boolean;
+}
+
+/**
+ * Orchestrate a safe auto-fix: apply the `FixEdit`s, then RE-CHECK the result and accept it ONLY if the fix
+ * did not increase the error count (fail-closed — never write a fix that breaks the file). Pure: `recheck`
+ * (which compiles a candidate source and returns its error count) is injected, so this is fully testable
+ * without I/O. The caller writes `fixedSource` to disk only when `accepted` (and typically only under an
+ * explicit --fix-confirm). This is the orchestration core of `logicn fix` (#56); a diagnostic-producer that
+ * emits `FixEdit`s is the remaining half.
+ */
+export function computeAutoFix(
+  source: string,
+  fixEdits: readonly FixEdit[],
+  originalErrorCount: number,
+  recheck: (candidate: string) => number,
+): AutoFixOutcome {
+  if (fixEdits.length === 0) return { fixedSource: source, applied: 0, skipped: 0, accepted: false };
+  const { result, applied, skipped } = applyFixEdits(source, fixEdits);
+  if (applied === 0) return { fixedSource: source, applied: 0, skipped, accepted: false };
+  let accepted: boolean;
+  try {
+    accepted = recheck(result) <= originalErrorCount; // fail-closed: the fix must not make things worse
+  } catch {
+    accepted = false; // a recheck that throws ⇒ reject the fix (fail-closed)
+  }
+  return { fixedSource: accepted ? result : source, applied, skipped, accepted };
+}

@@ -1,7 +1,7 @@
 // #56 safe fix applier — pure, fail-safe single-line span replacement.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { applyFixEdits } from "../dist/index.js";
+import { applyFixEdits, computeAutoFix } from "../dist/index.js";
 
 const SRC = "pure flow f() -> Void {\n  let x: Emial = bad\n  let y: Strng = z\n}\n";
 
@@ -54,6 +54,39 @@ test("an empty edit list is a no-op", () => {
   const r = applyFixEdits(SRC, []);
   assert.equal(r.applied, 0);
   assert.equal(r.result, SRC);
+});
+
+// ── computeAutoFix: re-check-gated orchestration (the core of `logicn fix`) ──
+const TYPO_FIX = [{ line: 2, column: 10, endColumn: 15, replacement: "Email" }];
+
+test("computeAutoFix ACCEPTS a fix when the re-check shows no new errors", () => {
+  // original had 1 error (the typo); the fixed source re-checks to 0 → accept.
+  const out = computeAutoFix(SRC, TYPO_FIX, 1, (cand) => (cand.includes("Emial") ? 1 : 0));
+  assert.equal(out.applied, 1);
+  assert.equal(out.accepted, true);
+  assert.match(out.fixedSource.split("\n")[1], /let x: Email = bad/);
+});
+
+test("FAIL-CLOSED: computeAutoFix REJECTS a fix that increases the error count (keeps the original)", () => {
+  // a recheck that reports MORE errors than the original → reject, return the original source untouched.
+  const out = computeAutoFix(SRC, TYPO_FIX, 1, () => 5);
+  assert.equal(out.accepted, false);
+  assert.equal(out.fixedSource, SRC);
+});
+
+test("FAIL-CLOSED: a recheck that THROWS rejects the fix", () => {
+  const out = computeAutoFix(SRC, TYPO_FIX, 1, () => { throw new Error("parse blew up"); });
+  assert.equal(out.accepted, false);
+  assert.equal(out.fixedSource, SRC);
+});
+
+test("computeAutoFix with no fixEdits is a no-op (accepted=false, source unchanged)", () => {
+  let recheckCalls = 0;
+  const out = computeAutoFix(SRC, [], 0, () => { recheckCalls++; return 0; });
+  assert.equal(out.applied, 0);
+  assert.equal(out.accepted, false);
+  assert.equal(out.fixedSource, SRC);
+  assert.equal(recheckCalls, 0); // never rechecks when there is nothing to apply
 });
 
 test("a pure insertion (column === endColumn) inserts without deleting", () => {

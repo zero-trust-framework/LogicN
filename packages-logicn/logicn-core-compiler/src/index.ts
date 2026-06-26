@@ -140,9 +140,9 @@ export {
   generateEpilogueReceipt,
   type GovernanceAlgorithm,
 } from "./proof-graph.js";
-// #56 (logicn fix --write): the safe single-line edit applier (pure, fail-safe, non-overlapping).
-export { applyFixEdits } from "./fix-edit.js";
-export type { FixEdit, ApplyFixEditsResult } from "./fix-edit.js";
+// #56 (logicn fix --write): the safe single-line edit applier + re-check-gated auto-fix orchestration.
+export { applyFixEdits, computeAutoFix } from "./fix-edit.js";
+export type { FixEdit, ApplyFixEditsResult, AutoFixOutcome } from "./fix-edit.js";
 // #49 production hybrid (Ed25519+ML-DSA-65) verifier for the fuse loader's injected hybridVerifier seam.
 export { makeLmanifestHybridVerifier } from "./lmanifest-hybrid-verifier.js";
 export type { LmanifestHybridVerdict, LmanifestHybridVerifierInput } from "./lmanifest-hybrid-verifier.js";
