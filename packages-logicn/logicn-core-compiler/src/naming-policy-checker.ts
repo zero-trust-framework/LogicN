@@ -187,7 +187,9 @@ const BINDING_KINDS = new Set<string>(["letDecl", "mutDecl", "readonlyDecl"]);
  *   typeDecl   .value: "UserId = Brand<String, \"UserId\">"
  *   recordDecl .value: "PatientRecord { ... }"
  *   enumDecl   .value: "OrderStatus { ... }"
- *   letDecl    .value: "password = ..."
+ *   letDecl    .value: "password"   (the BARE binding name — the RHS is a CHILD node, NOT part of .value;
+ *                                    the real parser never emits "password = rhs". RD-0122.)
+ * The leading-identifier regex below tolerates both the header forms above and the bare-name form.
  */
 function extractDeclName(node: AstNode): string | undefined {
   const raw = (node.value ?? "").trim();

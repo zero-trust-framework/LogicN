@@ -426,6 +426,59 @@ describe("LLN-STYLE-SEC-001 — sensitive binding names", () => {
   });
 });
 
+// ── RD-0122: SEC-001 real parsed-source coverage (false-green regression guard) ──
+// The synthetic SEC-001 tests above feed `letDecl` nodes with `value: "password = rhs"` placed
+// directly under `program` — a shape the parser NEVER emits (real: a top-level let is refused, and
+// `letDecl.value` is the BARE name "password" with the RHS in a child). extractDeclName's leading-id
+// regex recovers the name from both, so SEC-001 is NOT fail-open today — but this SECURITY guard had
+// ZERO real-AST coverage, so a future parser shape change would silently disarm it with every synthetic
+// test still green (the RD-0103 / limit-enforcer Bug-A pattern). These cases drive the TRUE parser AST.
+describe("LLN-STYLE-SEC-001 — real parsed source (RD-0122 false-green regression guard)", () => {
+  it("a real letDecl carries the BARE name ('password', not 'password = rhs')", () => {
+    const ast = parse(`flow f() -> Int {
+  let password = getSecret()
+  return 0
+}`);
+    const lets = [];
+    (function walk(n) { if (!n) return; if (n.kind === "letDecl") lets.push(n.value); for (const c of n.children ?? []) walk(c); })(ast);
+    assert.deepEqual(lets, ["password"], `real letDecl.value should be the bare name, got: ${JSON.stringify(lets)}`);
+  });
+
+  for (const name of ["password", "secret", "apiKey", "token"]) {
+    it(`SEC-001 fires on a real \`let ${name}\` inside a flow`, () => {
+      const ast = parse(`flow f(x: String) -> Int {
+  let ${name} = derive(x)
+  return 0
+}`);
+      const result = checkNamingPolicy(ast);
+      assert.ok(
+        hasDiag(result.diagnostics, "LLN-STYLE-SEC-001"),
+        `real \`let ${name}\` should fire SEC-001, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      );
+    });
+  }
+
+  it("SEC-001 does NOT fire on a benign real `let total` (no false positive)", () => {
+    const ast = parse(`flow f() -> Int {
+  let total = 1 + 2
+  return total
+}`);
+    const result = checkNamingPolicy(ast);
+    assert.ok(
+      !hasDiag(result.diagnostics, "LLN-STYLE-SEC-001"),
+      `benign \`let total\` should not fire SEC-001, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+    );
+  });
+
+  it("STYLE-001 fires on a real snake_case flow name `get_user` (true flowDecl shape)", () => {
+    const ast = parse(`flow get_user(id: String) -> String {
+  return id
+}`);
+    const result = checkNamingPolicy(ast);
+    assert.ok(hasDiag(result.diagnostics, "LLN-STYLE-001"), `real snake_case flow should fire STYLE-001`);
+  });
+});
+
 // ── Severity config override ───────────────────────────────────────────────────
 
 describe("Naming policy — severity config", () => {
