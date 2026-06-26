@@ -256,6 +256,10 @@ export interface PhotonicConfig {
   readonly kernelFor?: (op: BridgeOp) => PhotonicKernelCost;
   /** When present + verified, admits the photonic lane in CERTIFIED mode (else it stays off). */
   readonly certifiedAttestation?: PhotonicCertifiedAttestation;
+  /** H5 binding (RD-0129): the DECLARED identity of the photonic backend this router represents. In certified
+   *  mode the verified signedManifest.bridgeId MUST equal this — it binds the coupon to THIS specific backend
+   *  so a sibling certified coupon (even another photonic one) cannot stand in. Also stamps the audit trail. */
+  readonly bridgeId?: string;
 }
 
 const defaultPhotonicKernelFor = (op: BridgeOp): PhotonicKernelCost => ({ n: op.count, lane: "photonic", tolerance: 0.05 });
@@ -384,9 +388,12 @@ export class HybridInferenceEngine {
    * photonic BridgeManifest — NOT the caller's self-declared booleans (the confused-deputy). Verify the
    * supplied `signedManifest` through the SAME attestation path registry bridges use (hybrid when an ML-DSA
    * key is configured, else classical Ed25519), and ADDITIONALLY require manifest.certificationProfile ===
-   * "certified" regardless of the policy's requireCertifiedProfile flag (defense-in-depth). Runs once, caches.
+   * "certified" regardless of the policy's requireCertifiedProfile flag (defense-in-depth). It then BINDS the
+   * verified coupon to the photonic lane (RD-0129 red-team fix): the manifest's hardwareIdentity must mark a
+   * photonic backend AND its bridgeId must equal the declared PhotonicConfig.bridgeId — so a sibling certified
+   * coupon (e.g. a CPU kernel's, or a different photonic backend's) cannot stand in. Runs once, caches.
    * Fail-CLOSED at every step: no policy / no signed manifest / failed verification / non-certified profile /
-   * a throwing verifier ⇒ certified photonic stays OFF. Returns true iff cryptographically admissible.
+   * non-photonic or mismatched-id coupon / a throwing verifier ⇒ certified photonic stays OFF.
    */
   private async verifyPhotonicCertifiedAdmission(): Promise<boolean> {
     if (this.photonicCertifiedChecked) return this.photonicCertifiedVerified;
@@ -422,6 +429,28 @@ export class HybridInferenceEngine {
     }
     if (signed.manifest.certificationProfile !== "certified") {
       this.photonicCertifiedDenial = `photonic manifest profile is "${signed.manifest.certificationProfile}", not "certified"`;
+      return false;
+    }
+    // H5 LANE BINDING (red-team RD-0129): a verified certified coupon is NOT sufficient — it must describe THIS
+    // photonic backend. Without binding, ANY sibling certified coupon a deployment holds in-process (e.g. one
+    // minted for a certified CPU/native kernel on a registry bridge) could be lifted in to admit the unattested
+    // photonic lane. Bind two ways, fail-closed:
+    //   (1) the coupon must be FOR a photonic backend — its hardwareIdentity must mark one (the emulator/real
+    //       backends use "photonic-emulator-v0" / "photonic-certified-backend"); a CPU/quantum coupon is refused;
+    //   (2) the coupon must match the deployment's DECLARED photonic backend id (PhotonicConfig.bridgeId), so a
+    //       coupon for a *different* (even photonic) backend cannot stand in.
+    const hwId = signed.manifest.hardwareIdentity;
+    if (typeof hwId !== "string" || !hwId.startsWith("photonic")) {
+      this.photonicCertifiedDenial = `certified coupon is not a photonic backend (hardwareIdentity="${String(hwId)}") — a non-photonic coupon cannot admit the photonic lane`;
+      return false;
+    }
+    const declaredBridgeId = this.photonic?.bridgeId;
+    if (typeof declaredBridgeId !== "string" || declaredBridgeId.length === 0) {
+      this.photonicCertifiedDenial = "certified photonic requires PhotonicConfig.bridgeId (the declared backend identity the coupon is bound to)";
+      return false;
+    }
+    if (signed.manifest.bridgeId !== declaredBridgeId) {
+      this.photonicCertifiedDenial = `certified coupon bridgeId "${signed.manifest.bridgeId}" != declared photonic backend "${declaredBridgeId}" (coupon reuse refused)`;
       return false;
     }
     this.photonicCertifiedVerified = true;
@@ -685,7 +714,9 @@ export class HybridInferenceEngine {
         // ternaryChecksum and flagged valuesReproducible=false (split truth channels) — a downstream
         // consumer must treat it as untrusted, degrade-only.
         if (ph && Number.isFinite(ph.value)) {
-          const provId = `photonic:${ph.bridgeId}`;
+          // Stamp the trail with the DECLARED/verified backend id when available (H5: in certified mode the
+          // coupon was bound to PhotonicConfig.bridgeId), not the duck-typed router's self-reported id.
+          const provId = `photonic:${this.photonic.bridgeId ?? ph.bridgeId}`;
           used.add(provId);
           byOp.set(decision.opClass, {
             value: ph.value, executedNatively: false, bridgeId: provId,

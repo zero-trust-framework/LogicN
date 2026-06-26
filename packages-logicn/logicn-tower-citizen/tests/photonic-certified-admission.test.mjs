@@ -44,8 +44,9 @@ async function certifiedEngine(photonic) {
   });
 }
 
-test("certified + a VERIFIED attestation admits the photonic lane", async () => {
-  const eng = await certifiedEngine({ router: createPhotonicRouterPort(), kernelFor: bigKernel, certifiedAttestation: GOOD_ATTESTATION });
+test("certified + a VERIFIED attestation bound to the declared backend admits the photonic lane", async () => {
+  // H5 binding: PhotonicConfig.bridgeId must match the verified manifest's bridgeId ("photonic-certified").
+  const eng = await certifiedEngine({ router: createPhotonicRouterPort(), kernelFor: bigKernel, certifiedAttestation: GOOD_ATTESTATION, bridgeId: "photonic-certified" });
   const r = await eng.infer(CALL);
   assert.equal(r.trapFired, false);
   assert.ok(r.bridgesUsed.some((b) => b.startsWith("photonic:")), `expected a photonic: bridge, got ${JSON.stringify(r.bridgesUsed)}`);
@@ -101,6 +102,40 @@ test("H5 FAIL-CLOSED: a validly-signed but NON-certified (dev) manifest is DENIE
   const r = await eng.infer(CALL);
   assert.ok(!r.bridgesUsed.some((b) => b.startsWith("photonic:")),
     `a signed-but-dev-profile manifest must keep photonic OFF; got ${JSON.stringify(r.bridgesUsed)}`);
+});
+
+test("H5 LANE-BINDING (RD-0129): a certified CPU-kernel coupon CANNOT admit the photonic lane", async () => {
+  // The red-team repro: a VALIDLY hybrid-signed CERTIFIED manifest describing a CPU kernel (a sibling coupon a
+  // real certified deployment holds in-process) lifted into certifiedAttestation. Must be REFUSED — it does not
+  // describe a photonic backend (hardwareIdentity) and does not match the declared backend id (bridgeId).
+  const cpuManifest = { ...CERTIFIED_MANIFEST, bridgeId: "real-fp16", hardwareIdentity: "x86_64-avx2", precision: "fp16" };
+  const signedCpu = await signManifestHybrid(cpuManifest, privateKeyPem, mlDsaPrivateKey);
+  const certifiedAttestation = { attested: true, certificationProfile: "certified", toleranceWitnessed: true, signedManifest: signedCpu };
+  const eng = await certifiedEngine({ router: createPhotonicRouterPort(), kernelFor: bigKernel, certifiedAttestation, bridgeId: "photonic-certified" });
+  const r = await eng.infer(CALL);
+  assert.ok(!r.bridgesUsed.some((b) => b.startsWith("photonic:")),
+    `a certified CPU coupon must keep photonic OFF; got ${JSON.stringify(r.bridgesUsed)}`);
+  assert.ok(r.bridgesUsed.includes("stub-ternary"));
+});
+
+test("H5 LANE-BINDING (RD-0129): a certified photonic coupon for a DIFFERENT backend id is REFUSED", async () => {
+  // A valid certified PHOTONIC manifest, but for backend "other-photonic" while the deployment declared
+  // "photonic-certified". Coupon reuse across photonic backends must be refused (bridgeId binding).
+  const otherManifest = { ...CERTIFIED_MANIFEST, bridgeId: "other-photonic", hardwareIdentity: "photonic-other-v0" };
+  const signedOther = await signManifestHybrid(otherManifest, privateKeyPem, mlDsaPrivateKey);
+  const certifiedAttestation = { attested: true, certificationProfile: "certified", toleranceWitnessed: true, signedManifest: signedOther };
+  const eng = await certifiedEngine({ router: createPhotonicRouterPort(), kernelFor: bigKernel, certifiedAttestation, bridgeId: "photonic-certified" });
+  const r = await eng.infer(CALL);
+  assert.ok(!r.bridgesUsed.some((b) => b.startsWith("photonic:")),
+    `a coupon for a different photonic backend must keep photonic OFF; got ${JSON.stringify(r.bridgesUsed)}`);
+});
+
+test("H5 LANE-BINDING (RD-0129): a valid certified photonic coupon with NO declared PhotonicConfig.bridgeId is REFUSED", async () => {
+  // Without a declared backend id there is nothing to bind the coupon to → fail closed.
+  const eng = await certifiedEngine({ router: createPhotonicRouterPort(), kernelFor: bigKernel, certifiedAttestation: GOOD_ATTESTATION }); // no bridgeId
+  const r = await eng.infer(CALL);
+  assert.ok(!r.bridgesUsed.some((b) => b.startsWith("photonic:")),
+    `a coupon with no declared backend to bind to must keep photonic OFF; got ${JSON.stringify(r.bridgesUsed)}`);
 });
 
 test("control: NON-certified mode runs photonic without any attestation (existing behaviour unchanged)", async () => {
