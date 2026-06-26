@@ -1,6 +1,6 @@
 {
   "generated": "kb-index",
-  "docCount": 595,
+  "docCount": 596,
   "docs": [
     {
       "rel": "docs/Knowledge-Bases/00-KB-INDEX.md",
@@ -12582,7 +12582,8 @@
         "P0 — broken NOW (ship-wrong or fail-to-compile)",
         "P1 — genuinely stale vs new governance rules (example needs updating, not a bug)",
         "The pattern worth noting",
-        "Actions"
+        "Actions",
+        "RE-MEASURED 2026-06-26 (the 2026-06-25 numbers above are STALE — VALUESTATE-006 + BOM fixes landed)"
       ],
       "codes": [
         "LLN-PARSE-001",
@@ -12598,30 +12599,30 @@
       "xrefs": [],
       "topTerms": [
         "examples",
-        "compiler",
         "example",
-        "bom",
-        "review",
+        "compiler",
         "stale",
+        "bom",
+        "valuestate-006",
+        "flow",
         "bug",
         "genuinely",
         "pattern",
+        "decimal",
         "docs",
+        "review",
+        "fixes",
+        "needs",
         "current",
         "updating",
         "governance",
         "rules",
-        "decimal",
-        "needs",
-        "punch-list",
-        "valuestate-006",
-        "lexer",
-        "wrong",
         "broken",
-        "ship-wrong",
-        "fail-to-compile",
-        "worth",
-        "noting"
+        "frontmatter",
+        "expected",
+        "punch-list",
+        "check",
+        "fix"
       ]
     },
     {
@@ -21098,6 +21099,48 @@
       ]
     },
     {
+      "rel": "docs/Knowledge-Bases/logicn-provenance-integrity-vs-fidelity.md",
+      "title": "Provenance: integrity ≠ fidelity (#36 P1 scoping)",
+      "headings": [
+        "The standing invariant",
+        "The two concrete instances now on record",
+        "The equivalence-attestation acceptance bar (what a real P1 fix must clear)",
+        "Decision — DEFER the build, keep the invariant"
+      ],
+      "codes": [],
+      "tasks": [
+        "#36"
+      ],
+      "xrefs": [],
+      "topTerms": [
+        "invariant",
+        "fidelity",
+        "build",
+        "must",
+        "fix",
+        "provenance",
+        "integrity",
+        "scoping",
+        "record",
+        "acceptance",
+        "bar",
+        "defer",
+        "bytes",
+        "decision",
+        "differential",
+        "standing",
+        "instances",
+        "signature",
+        "emitter",
+        "stub",
+        "equivalence-attestation",
+        "keep",
+        "signed",
+        "proof",
+        "concrete"
+      ]
+    },
+    {
       "rel": "docs/Knowledge-Bases/logicn-qrng-entropy-capability-design.md",
       "title": "QRNG Entropy Capability — governed interface design (Q1 / Lane D)",
       "headings": [
@@ -27626,6 +27669,7 @@
       "title": "Threat-model — \"what has this box unleashed\" (2026-06-25)",
       "headings": [
         "Exploitable findings (sorted by severity)",
+        "Capture-replay / coupon freshness (RD-0118, 2026-06-26) — distinct from P1",
         "Confirmed well-defended (no action — credit the design)",
         "The honest net answer",
         "Fix queue",
@@ -27649,31 +27693,31 @@
       ],
       "xrefs": [],
       "topTerms": [
-        "fixed",
         "fix",
+        "fixed",
         "logicn",
         "photonic",
+        "coupon",
+        "verified",
+        "fail-closed",
+        "manifest",
         "admission",
         "gate",
-        "verified",
-        "manifest",
         "high",
-        "fail-closed",
+        "verifier",
+        "real",
         "effect",
+        "build",
+        "unsigned",
+        "hybrid",
         "session",
         "crypto",
-        "build",
-        "hybrid",
-        "real",
-        "exploitable",
-        "verifier",
-        "let",
+        "full",
+        "signed",
+        "mjs",
         "same",
-        "confirmed",
-        "fixes",
         "threat-model",
-        "deny-by-default",
-        "findings"
+        "exploitable"
       ]
     },
     {

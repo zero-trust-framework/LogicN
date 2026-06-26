@@ -485,14 +485,14 @@ Provides:
 - FuseDescriptor
 - FusedComponent
 - FusePackageOptions
+- HybridManifestVerdict
+- HybridManifestVerifier
 - CapabilityImportFactory
 - BUILTIN_CAPABILITY_NAMES
 - buildCapabilityImports
 - CompositionMember
 - CapabilitySource
 - CompositionPlan
-- planComposition
-- makeProviderFactory
 
 ## logicn-framework-api-server
 

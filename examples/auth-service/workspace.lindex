@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "builtAt": "2026-06-26T03:29:41.426Z",
+  "builtAt": "2026-06-26T05:06:08.688Z",
   "workspaceDir": "C:\\wwwprojects\\LogicN\\examples\\auth-service",
   "flows": [
     {
@@ -8808,5 +8808,5 @@
     "C:\\wwwprojects\\LogicN\\examples\\auth-service\\verifyToken.lln": "232098eea4eb3358b61c0a710686827551e62a9e37ec4a30f708b6afda76c391"
   },
   "skippedFiles": 31,
-  "integrity": "sha256:f4267588cadb529778c907fec1d45391461e75d9bebc83d9128d65d82a08decb"
+  "integrity": "sha256:72032895e62318ae051c26278dc09952b44d0e72963196a545046a1fd9f6b178"
 }

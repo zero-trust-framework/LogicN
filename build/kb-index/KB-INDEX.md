@@ -1,4 +1,4 @@
-# LogicN KB index (595 docs)
+# LogicN KB index (596 docs)
 
 Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.mjs --code LLN-...`
 
@@ -973,7 +973,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 `docs/Knowledge-Bases/logicn-docs-examples-review-2026-06-25.md`
 - codes: LLN-PARSE-001, LLN-PARSE-003, LLN-GOV-007, LLN-TIER-001, LLN-GOV-010
 - tasks: #37, #33
-- terms: examples, compiler, example, bom, review, stale, bug, genuinely, pattern, docs, current, updating, governance, rules
+- terms: examples, example, compiler, stale, bom, valuestate-006, flow, bug, genuinely, pattern, decimal, docs, review, fixes
 
 ## LogicN — Domain Guard Policies (Static Manifest Clamping)
 `docs/Knowledge-Bases/logicn-domain-guard-policies.md`
@@ -1724,6 +1724,11 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 - tasks: #0015, #128
 - terms: hub, bench, handoff, proof-closure, owed, re-derived, honest, proven, benches, erase, reports, shipped, already, queue
 
+## Provenance: integrity ≠ fidelity (#36 P1 scoping)
+`docs/Knowledge-Bases/logicn-provenance-integrity-vs-fidelity.md`
+- tasks: #36
+- terms: invariant, fidelity, build, must, fix, provenance, integrity, scoping, record, acceptance, bar, defer, bytes, decision
+
 ## QRNG Entropy Capability — governed interface design (Q1 / Lane D)
 `docs/Knowledge-Bases/logicn-qrng-entropy-capability-design.md`
 - codes: LLN-SUBSTRATE-001, LLN-GOV-3VL-001, LLN-ENTROPY-001, LLN-ENTROPY-002
@@ -2338,7 +2343,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 `docs/Knowledge-Bases/logicn-threat-model-unleashed-2026-06-25.md`
 - codes: LLN-TIER-001, LLN-VALUESTATE-008, LLN-STDLIB-002, LLN-PARSE-DEPTH-001, LLN-PARSE-001, LLN-EFFECT-003, LLN-IMPORT-005, LLN-IMPORT-006
 - tasks: #153, #49, #36, #38
-- terms: fixed, fix, logicn, photonic, admission, gate, verified, manifest, high, fail-closed, effect, session, crypto, build
+- terms: fix, fixed, logicn, photonic, coupon, verified, fail-closed, manifest, admission, gate, high, verifier, real, effect
 
 ## LogicN Three-Valued Governance — Direction A sub-spec (proved fail-closed)
 `docs/Knowledge-Bases/logicn-three-valued-governance.md`
