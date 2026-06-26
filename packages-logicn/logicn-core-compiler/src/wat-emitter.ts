@@ -816,6 +816,19 @@ const INT64_WAT_TYPES = new Set<string>(["Int64"]);
 const INT64_ARITH_WAT: Readonly<Record<string, string>> = { "+": "call $lln_checked_add_i64", "-": "call $lln_checked_sub_i64", "*": "call $lln_checked_mul_i64", "/": "i64.div_s", "%": "i64.rem_s" };
 const INT64_CMP_WAT: Readonly<Record<string, string>> = { "==": "i64.eq", "!=": "i64.ne", "<": "i64.lt_s", ">": "i64.gt_s", "<=": "i64.le_s", ">=": "i64.ge_s" };
 
+// UInt64 — the lifted 64-bit UNSIGNED width (#52). Same i64 storage, but UNSIGNED semantics: `+`/`-`/`*`
+// route to strict-trapping checked u64 helpers (overflow > 2^64-1 / underflow < 0 TRAP — no silent 2^64
+// wrap); `/`/`%` use native i64.div_u/rem_u (trap /0; unsigned has no INT_MIN/-1 overflow case);
+// comparisons are UNSIGNED (i64.lt_u/…). Byte-exact with the tree-walker's u64-arith. Lowered ONLY for
+// uint64×uint64 — a mixed UInt64×Int operand declines to the walker (the sign promotion is subtle).
+const UINT64_WAT_TYPES = new Set<string>(["UInt64"]);
+const UINT64_ARITH_WAT: Readonly<Record<string, string>> = { "+": "call $lln_checked_add_u64", "-": "call $lln_checked_sub_u64", "*": "call $lln_checked_mul_u64", "/": "i64.div_u", "%": "i64.rem_u" };
+const UINT64_CMP_WAT: Readonly<Record<string, string>> = { "==": "i64.eq", "!=": "i64.ne", "<": "i64.lt_u", ">": "i64.gt_u", "<=": "i64.le_u", ">=": "i64.ge_u" };
+
+/** True for a 64-bit WAT-i64 numeric base (Int64 OR UInt64) — both store as i64 (logicNTypeToWAT), so a
+ * literal/local in either context emits i64.const / an i64 local. The SIGNEDNESS differs only in the op. */
+const is64BitWatType = (base: string): boolean => INT64_WAT_TYPES.has(base) || UINT64_WAT_TYPES.has(base);
+
 /**
  * #165: the WASM stack type a fully-emitted expression string leaves on the stack, read from its
  * leading opcode. Used to declare a `let`/`mut` local with the SAME type as its initialiser — an
@@ -830,7 +843,7 @@ function watStackType(expr: string): WATValType {
   // Step 3d: a checked-i64 helper call leaves an i64 on the stack. The generic match below requires a `.`
   // after the head, so `(call $…` falls through to the i32 default — correct for the i32 helpers, WRONG
   // for the i64 ones (an Int64 local declared from it would get an i32 valtype → a truncating/invalid store).
-  if (/^\(call \$lln_checked_(add|sub|mul)_i64\b/.test(t)) return "i64";
+  if (/^\(call \$lln_checked_(add|sub|mul)_(i64|u64)\b/.test(t)) return "i64";
   // #55: the float finiteness guard returns its f64 argument — a `let x = a / b` local declared from it
   // must be f64, not the i32 default (which would mistype the store).
   if (/^\(call \$lln_assert_finite_f64\b/.test(t)) return "f64";
@@ -920,6 +933,38 @@ const INT64_CHECKED_HELPERS: Readonly<Record<string, string>> = {
 };
 
 /**
+ * UInt64 strict-trapping arithmetic helpers (#52). Mirror of the i64 helpers but UNSIGNED — no silent 2^64
+ * wrap. add: overflow iff the sum wraps below `a` (r <_u a). sub: underflow iff a <_u b. mul: no wider type,
+ * so detect overflow by dividing the product back UNSIGNED (i64.div_u), guarded by a!=0. `/`/`%` use native
+ * i64.div_u/rem_u (trap /0; unsigned has no INT_MIN/-1 case). Emitted only when a body references one.
+ */
+const UINT64_CHECKED_HELPERS: Readonly<Record<string, string>> = {
+  $lln_checked_add_u64: [
+    "(func $lln_checked_add_u64 (param $a i64) (param $b i64) (result i64)",
+    "  (local $r i64)",
+    "  (local.set $r (i64.add (local.get $a) (local.get $b)))",
+    "  ;; unsigned overflow iff the sum wrapped below a  →  r <_u a",
+    "  (if (i64.lt_u (local.get $r) (local.get $a)) (then unreachable))",
+    "  (local.get $r))",
+  ].join("\n"),
+  $lln_checked_sub_u64: [
+    "(func $lln_checked_sub_u64 (param $a i64) (param $b i64) (result i64)",
+    "  ;; unsigned underflow iff a <_u b (the result would be negative)",
+    "  (if (i64.lt_u (local.get $a) (local.get $b)) (then unreachable))",
+    "  (i64.sub (local.get $a) (local.get $b)))",
+  ].join("\n"),
+  $lln_checked_mul_u64: [
+    "(func $lln_checked_mul_u64 (param $a i64) (param $b i64) (result i64)",
+    "  (local $r i64)",
+    "  (local.set $r (i64.mul (local.get $a) (local.get $b)))",
+    "  ;; no type is wider than i64 → detect overflow by dividing the product back UNSIGNED; nested if guards a!=0.",
+    "  (if (i64.ne (local.get $a) (i64.const 0))",
+    "    (then (if (i64.ne (i64.div_u (local.get $r) (local.get $a)) (local.get $b)) (then unreachable))))",
+    "  (local.get $r))",
+  ].join("\n"),
+};
+
+/**
  * Float finiteness guard (#55 / LLN-FLOAT-NAN-001). WASM f64.div/add/sub/mul SILENTLY produce NaN (0/0) or
  * ±Inf (x/0, overflow) — a non-finite that passes EVERY range compare (every NaN compare is false) and could
  * be signed into a manifest. This makes the WASM tier fail-closed IDENTICALLY to the tree-walker's mkFloat:
@@ -938,7 +983,7 @@ const FLOAT_CHECKED_HELPERS: Readonly<Record<string, string>> = {
 
 // All strict-trapping checked helpers (i32 + i64 overflow, f64 non-finite), injected on-demand when a flow
 // body references one.
-const ALL_CHECKED_HELPERS: Readonly<Record<string, string>> = { ...I32_CHECKED_HELPERS, ...INT64_CHECKED_HELPERS, ...FLOAT_CHECKED_HELPERS };
+const ALL_CHECKED_HELPERS: Readonly<Record<string, string>> = { ...I32_CHECKED_HELPERS, ...INT64_CHECKED_HELPERS, ...UINT64_CHECKED_HELPERS, ...FLOAT_CHECKED_HELPERS };
 
 // ---------------------------------------------------------------------------
 // P9.3 — Stdlib method → host import bridge
@@ -1234,8 +1279,9 @@ export function emitWATExpr(
         return `(f64.const ${raw})`;
       }
       // Step 3g: an Int64-typed integer literal emits i64.const — an i32.const is INVALID for a >2^31
-      // literal and a silent truncation for a smaller one in an i64 context.
-      if (expectedType !== undefined && INT64_WAT_TYPES.has(numericBaseType(expectedType))) {
+      // literal and a silent truncation for a smaller one in an i64 context. UInt64 stores as i64 too (#52)
+      // — wat2wasm accepts an i64.const across the full [0, 2^64-1] unsigned range.
+      if (expectedType !== undefined && is64BitWatType(numericBaseType(expectedType))) {
         return `(i64.const ${raw})`;
       }
       return `(i32.const ${raw})`;
@@ -1312,13 +1358,25 @@ export function emitWATExpr(
         // (CWE-704). Fail-closed TRAP instead (inline-safe block comment).
         return `(unreachable) (; #165: i32-only op over float operand — fail-closed ;)`;
       }
-      // UInt64 is NOT yet faithfully lowered to WASM: unsigned semantics need i64.div_u / i64.lt_u + unsigned
-      // overflow/underflow helpers, which DIFFER from the signed Int64 ops below (i64.div_s/lt_s would compute
-      // a WRONG value for any operand ≥ 2^63, and the signed overflow checks don't match unsigned). Until a
-      // faithful u64 WASM emitter lands, DECLINE any UInt64 operand so the WASM tier bails to the exact
-      // tree-walker (u64-arith) — never a silent signed lowering. (#52: walker-only unlock; WASM is a follow-up.)
-      if (numericBaseType(lty ?? "") === "UInt64" || numericBaseType(rty ?? "") === "UInt64") {
-        return `(unreachable) (; UInt64 '${op}' not yet u64-faithful in WASM — emitter declines; exact unsigned arithmetic is the walker's (#52) ;)`;
+      // #52: faithful UNSIGNED-64 lowering. `+`/`-`/`*` route to the strict-trapping checked u64 helpers
+      // (overflow/underflow TRAP — no silent 2^64 wrap), `/`/`%` use native i64.div_u/rem_u (trap /0),
+      // comparisons are UNSIGNED (i64.lt_u/…) — byte-exact with the tree-walker's u64-arith. Lowered ONLY when
+      // BOTH operands are UInt64: a mixed UInt64×Int operand has a subtle sign promotion (a negative i32 has no
+      // unsigned form matching the walker's BigInt(int)+trap), so it DECLINES to the walker (fail-safe).
+      const lU64 = numericBaseType(lty ?? "") === "UInt64";
+      const rU64 = numericBaseType(rty ?? "") === "UInt64";
+      if (lU64 || rU64) {
+        if (!lU64 || !rU64) {
+          return `(unreachable) (; mixed UInt64×non-UInt64 '${op}' — emitter declines the sign promotion; the walker handles it (#52) ;)`;
+        }
+        const uOp = UINT64_ARITH_WAT[op] ?? UINT64_CMP_WAT[op];
+        if (uOp !== undefined) {
+          const Lx = children[0] ? emitWATExpr(children[0], vars, staticConsts, "UInt64") : "(i64.const 0)";
+          const Rx = children[1] ? emitWATExpr(children[1], vars, staticConsts, "UInt64") : "(i64.const 0)";
+          return `(${uOp} ${Lx} ${Rx})`;
+        }
+        // an i32-only op (bitwise) over a UInt64 operand has no u64 lowering — fail-closed.
+        return `(unreachable) (; i32-only op over UInt64 operand — fail-closed (#52) ;)`;
       }
       // Step 4c: native i64 lowering for Int64 operands — AFTER the float check (so an Int64+Float type
       // error infers Float → invalid module → walker fallback, fail-SAFE). `+`/`-`/`*` trap via the checked
@@ -1871,7 +1929,7 @@ function emitBlockStatements(
           // initialiser leaves on the stack (watStackType). Non-float/Int64 bindings stay i32, unchanged.
           const localVal: WATValType =
             FLOAT_WAT_TYPES.has(bindAnnoType) ? "f64" :
-            INT64_WAT_TYPES.has(numericBaseType(bindAnnoType)) ? "i64" :
+            is64BitWatType(numericBaseType(bindAnnoType)) ? "i64" :  // Int64 OR UInt64 (#52) → i64 local
             watStackType(initExpr);
           vars.set(varName, watLocal);
           localDecls.push(`(local ${watLocal} ${localVal})`);
@@ -3252,12 +3310,13 @@ export function buildWATModule(
     // so the single-exit module won't assemble; it was already walker-only before this fix (no regression).
     // Step 3e: derive the result valtype from the declared return type. Float→f64 (#165); now ALSO
     // Int64→i64, since the body's i64 routing (Step 4c) leaves an i64 on the stack for an Int64-returning
-    // flow — without this the `(result i32)` mismatches the i64 body → invalid module. SURGICAL: only Int64
-    // (INT64_WAT_TYPES) maps to i64; UInt64 stays i32 (gated, unrouted) and Float32 stays i32 (unchanged).
+    // flow — without this the `(result i32)` mismatches the i64 body → invalid module. Both 64-bit widths
+    // (Int64 AND UInt64, #52) map the function result to i64 — they store as i64 (logicNTypeToWAT); Float32
+    // stays i32 (unchanged).
     const declaredReturn = flowReturnTypes?.get(flow.name);
     const resultVal: WATValType =
       declaredReturn !== undefined && FLOAT_WAT_TYPES.has(declaredReturn) ? "f64" :
-      declaredReturn !== undefined && INT64_WAT_TYPES.has(numericBaseType(declaredReturn)) ? "i64" :
+      declaredReturn !== undefined && is64BitWatType(numericBaseType(declaredReturn)) ? "i64" :
       "i32";
     return {
       name: flow.name,

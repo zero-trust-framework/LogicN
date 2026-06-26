@@ -66,14 +66,16 @@ test("UInt64 comparison", async () => {
   assert.equal(r.__tag, "bool"); assert.equal(r.value, true);
 });
 
-test("WASM tier DECLINES a UInt64 op (walker-only; no silent signed-i64 lowering)", () => {
+test("WASM tier lowers a uint64×uint64 op with UNSIGNED ops (checked u64 helper), never signed i64", () => {
+  // The u64 WASM emitter now lowers uint64×uint64 faithfully (see u64-wasm-differential.test.mjs for the
+  // byte-exact walker≡WASM proof). It must use the UNSIGNED checked helper / native u64 ops, never signed i64.
   const src = `pure flow add(a: UInt64, b: UInt64) -> UInt64\ncontract { effects {} }\n{ return a + b }`;
   const p = L.parseProgram(src, "p.lln");
   assert.equal(p.diagnostics.filter((d) => d.severity === "error").length, 0);
   const fx = L.checkEffects(p.flows, p.ast);
   const { gir } = L.emitGIR(p.ast, p.flows, fx);
   const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "p", p.ast, true));
-  // the UInt64 '+' must NOT lower to a faithful signed i64 add; it declines (unreachable) → bail to walker.
-  assert.match(wat, /UInt64 .* not yet u64-faithful|unreachable/, "WASM must decline UInt64, not silently lower it");
-  assert.ok(!/lln_checked_add_i64/.test(wat) || /unreachable/.test(wat), "must not emit a signed-i64 add for UInt64");
+  assert.match(wat, /call \$lln_checked_add_u64/, "UInt64 '+' must use the strict-trapping unsigned helper");
+  assert.match(wat, /\(result i64\)/, "a UInt64-returning flow must be typed (result i64)");
+  assert.doesNotMatch(wat, /lln_checked_add_i64/, "must NOT emit a signed-i64 add for a UInt64 op");
 });
