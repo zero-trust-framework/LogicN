@@ -1,13 +1,13 @@
 # Galerina Agent
 
-`galerinaa-ai-agent` is the package for supervised AI agent definitions, tool
+`galerina-ai-agent` is the package for supervised AI agent definitions, tool
 permissions, task groups, typed messages, visibility scopes, approval gates,
 merge policies and agent reports.
 
 It belongs in:
 
 ```text
-/packages-galerinaa/galerinaa-ai-agent
+/packages-galerina/galerina-ai-agent
 ```
 
 Use this package for:
@@ -69,7 +69,7 @@ The detailed runtime design lives in `../../docs/MULTI_AGENT_RUNTIME.md`.
 
 ## Boundary
 
-`galerinaa-ai-agent` describes typed agent orchestration contracts. It does not own
+`galerina-ai-agent` describes typed agent orchestration contracts. It does not own
 model inference, vector math, target selection, runtime scheduling internals,
 sandbox implementation or security primitive implementation.
 
@@ -77,13 +77,13 @@ Related packages:
 
 | Package | Responsibility |
 |---|---|
-| `galerinaa-core-runtime` | structured concurrency, cancellation, timeout and supervision runtime |
-| `galerinaa-core-security` | permissions, redaction, secret guards, unsafe reports and policy checks |
-| `galerinaa-ai` | generic AI inference contracts and safety policy |
-| `galerinaa-core-compute` | compute target planning and fallback reports |
-| `galerinaa-core-vector` | vector, matrix, tensor and embedding operations |
-| `galerinaa-target-cpu` | CPU fallback and orchestration baseline |
-| `galerinaa-target-gpu` | GPU target planning for heavy compute |
+| `galerina-core-runtime` | structured concurrency, cancellation, timeout and supervision runtime |
+| `galerina-core-security` | permissions, redaction, secret guards, unsafe reports and policy checks |
+| `galerina-ai` | generic AI inference contracts and safety policy |
+| `galerina-core-compute` | compute target planning and fallback reports |
+| `galerina-core-vector` | vector, matrix, tensor and embedding operations |
+| `galerina-target-cpu` | CPU fallback and orchestration baseline |
+| `galerina-target-gpu` | GPU target planning for heavy compute |
 
 Agents must be:
 
@@ -200,8 +200,8 @@ See `../../docs/Knowledge-Bases/ai-self-modification-governance.md`.
 Final rule:
 
 ```text
-galerinaa-ai-agent owns agent contracts.
-galerinaa-core-runtime owns execution supervision.
-galerinaa-core-compute owns heavy compute planning.
-galerinaa-core-security owns permission and safety policy.
+galerina-ai-agent owns agent contracts.
+galerina-core-runtime owns execution supervision.
+galerina-core-compute owns heavy compute planning.
+galerina-core-security owns permission and safety policy.
 ```

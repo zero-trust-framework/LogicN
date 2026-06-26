@@ -48,7 +48,7 @@
   "mappings": [
     {
       "logicPackage": "@galerina/core-logic",
-      "galerinaame": "Tri",
+      "galeriname": "Tri",
       "states": [
         {
           "state": "Negative",

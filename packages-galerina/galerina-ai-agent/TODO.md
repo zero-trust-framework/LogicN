@@ -1,7 +1,7 @@
 # Galerina Agent TODO
 
 ```text
-[x] Create /packages-galerinaa/galerinaa-ai-agent
+[x] Create /packages-galerina/galerina-ai-agent
 [x] Add README.md
 [x] Add TODO.md
 [x] Add package metadata

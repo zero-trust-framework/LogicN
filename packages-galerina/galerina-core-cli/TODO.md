@@ -1,7 +1,7 @@
 # Galerina CLI TODO
 
 ```text
-[x] Create /packages-galerinaa/galerinaa-core-cli
+[x] Create /packages-galerina/galerina-core-cli
 [x] Add README.md
 [x] Add TODO.md
 [x] Add package.json
@@ -17,7 +17,7 @@
 [x] Add Galerina reports command integration
 [x] Add Galerina security:check command integration
 [x] Add Galerina routes command integration
-[x] Add Galerina task command integration with galerinaa-core-tasks
+[x] Add Galerina task command integration with galerina-core-tasks
 [ ] Complete Galerina build command — full 14-pass pipeline with artefact generation
 [ ]   - emit runtime-manifest.json, compiler-report.json, effect-report.json, capability-report.json
 [ ]   - emit audit-report.json, build-hash.txt

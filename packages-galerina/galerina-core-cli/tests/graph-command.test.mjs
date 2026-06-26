@@ -8,21 +8,21 @@ import { runCli } from "../dist/index.js";
 
 describe("Galerina graph command", () => {
   it("generates graph JSON and report files from workspace metadata", async () => {
-    const cwd = await mkdtemp(join(tmpdir(), "galerinaa-core-cli-graph-"));
+    const cwd = await mkdtemp(join(tmpdir(), "galerina-core-cli-graph-"));
     await writeFile(
-      join(cwd, "galerinaa.workspace.json"),
+      join(cwd, "galerina.workspace.json"),
       `${JSON.stringify(
         {
           name: "Galerina-test",
           packages: [
-            "packages-galerinaa/galerinaa-core",
-            "packages-galerinaa/galerinaa-core-security",
-            "packages-galerinaa/galerinaa-devtools-project-graph",
+            "packages-galerina/galerina-core",
+            "packages-galerina/galerina-core-security",
+            "packages-galerina/galerina-devtools-project-graph",
           ],
           docs: {
-            language: "packages-galerinaa/galerinaa-core",
-            security: "packages-galerinaa/galerinaa-core-security",
-            projectGraph: "packages-galerinaa/galerinaa-devtools-project-graph",
+            language: "packages-galerina/galerina-core",
+            security: "packages-galerina/galerina-core-security",
+            projectGraph: "packages-galerina/galerina-devtools-project-graph",
           },
         },
         null,
@@ -38,20 +38,20 @@ describe("Galerina graph command", () => {
 
     const result = await runCli(["graph", "--out", "graph-out"], cwd);
     const graph = JSON.parse(
-      await readFile(join(cwd, "graph-out", "galerinaa-devtools-project-graph.json"), "utf8"),
+      await readFile(join(cwd, "graph-out", "galerina-devtools-project-graph.json"), "utf8"),
     );
     const report = await readFile(
       join(cwd, "graph-out", "Galerina_GRAPH_REPORT.md"),
       "utf8",
     );
-    const aiMap = await readFile(join(cwd, "graph-out", "galerinaa-ai-map.md"), "utf8");
+    const aiMap = await readFile(join(cwd, "graph-out", "galerina-ai-map.md"), "utf8");
     const html = await readFile(
-      join(cwd, "graph-out", "galerinaa-devtools-project-graph.html"),
+      join(cwd, "graph-out", "galerina-devtools-project-graph.html"),
       "utf8",
     );
 
     assert.equal(result.ok, true);
-    assert.equal(graph.nodes.some((node) => node.id === "package:galerinaa-core"), true);
+    assert.equal(graph.nodes.some((node) => node.id === "package:galerina-core"), true);
     assert.equal(
       graph.nodes.some((node) => node.id === "doc:AGENTS.md"),
       true,
@@ -64,16 +64,16 @@ describe("Galerina graph command", () => {
     assert.match(aiMap, /Galerina AI Map/);
     assert.match(html, /Galerina Project Graph/);
 
-    const query = await runCli(["graph", "query", "galerinaa-core-security", "--out", "graph-out"], cwd);
+    const query = await runCli(["graph", "query", "galerina-core-security", "--out", "graph-out"], cwd);
     const explain = await runCli(
-      ["graph", "explain", "package:galerinaa-core-security", "--out", "graph-out"],
+      ["graph", "explain", "package:galerina-core-security", "--out", "graph-out"],
       cwd,
     );
     const path = await runCli(
       [
         "graph",
         "path",
-        "package:galerinaa-devtools-project-graph",
+        "package:galerina-devtools-project-graph",
         "report:project-graph",
         "--out",
         "graph-out",
@@ -82,9 +82,9 @@ describe("Galerina graph command", () => {
     );
 
     assert.equal(query.ok, true);
-    assert.match(query.details?.join("\n") ?? "", /package:galerinaa-core-security/);
+    assert.match(query.details?.join("\n") ?? "", /package:galerina-core-security/);
     assert.equal(explain.ok, true);
-    assert.match(explain.message, /galerinaa-core-security/);
+    assert.match(explain.message, /galerina-core-security/);
     assert.equal(path.ok, true);
   });
 });

@@ -8,7 +8,7 @@ import { runCli } from "../dist/index.js";
 
 describe("Galerina task command", () => {
   it("lists and dry-runs tasks from tasks.spore", async () => {
-    const cwd = await mkdtemp(join(tmpdir(), "galerinaa-core-cli-task-"));
+    const cwd = await mkdtemp(join(tmpdir(), "galerina-core-cli-task-"));
 
     await writeFile(
       join(cwd, "tasks.spore"),
@@ -50,7 +50,7 @@ task build {
   });
 
   it("reports missing task files safely", async () => {
-    const cwd = await mkdtemp(join(tmpdir(), "galerinaa-core-cli-task-missing-"));
+    const cwd = await mkdtemp(join(tmpdir(), "galerina-core-cli-task-missing-"));
     const result = await runCli(["task", "build"], cwd);
 
     assert.equal(result.ok, false);

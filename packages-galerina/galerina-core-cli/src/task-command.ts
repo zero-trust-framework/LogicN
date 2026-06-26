@@ -7,7 +7,7 @@ import {
   runTask,
   type LoadedTasks,
   type TaskResult
-} from "../../galerinaa-core-tasks/dist/index.js";
+} from "../../galerina-core-tasks/dist/index.js";
 import type { CliContext, CliResult } from "./types.js";
 
 export async function runTaskCommand(context: CliContext): Promise<CliResult> {
@@ -27,7 +27,7 @@ export async function runTaskCommand(context: CliContext): Promise<CliResult> {
       message: `Task file not found: ${relativeTaskFile(context, taskFile)}`,
       details: [
         "Create tasks.spore in the repository root or pass --file <path>.",
-        "Example: Galerina task generateReports --file packages-galerinaa/galerinaa-core-tasks/examples/tasks.spore --dry-run"
+        "Example: Galerina task generateReports --file packages-galerina/galerina-core-tasks/examples/tasks.spore --dry-run"
       ]
     };
   }

@@ -46,34 +46,34 @@ failure behaviour
 Recommended package split:
 
 ```text
-packages-galerinaa/galerinaa-core
+packages-galerina/galerina-core
   flow, secure flow, async flow, compute flow, Result, Option, match, records
 
-packages-galerinaa/galerinaa-core-runtime
+packages-galerina/galerina-core-runtime
   structured concurrency, cancellation, timeouts, memory limits, supervision
 
-packages-galerinaa/galerinaa-core-security
+packages-galerina/galerina-core-security
   permissions, redaction, tool safety, unsafe reports, policy checks
 
-packages-galerinaa/galerinaa-ai-agent
+packages-galerina/galerina-ai-agent
   agent definitions, tools, task groups, merge policies and agent reports
 
-packages-galerinaa/galerinaa-core-compute
+packages-galerina/galerina-core-compute
   compute auto, target planning, fallback rules and compute reports
 
-packages-galerinaa/galerinaa-core-vector
+packages-galerina/galerina-core-vector
   Vector<T>, Matrix<T>, Tensor<T>, embeddings, distance functions, batches
 
-packages-galerinaa/galerinaa-target-cpu
+packages-galerina/galerina-target-cpu
   CPU execution, x86_64, arm64, riscv64 and vector fallback
 
-packages-galerinaa/galerinaa-target-gpu
+packages-galerina/galerina-target-gpu
   GPU execution/planning for CUDA, ROCm, OpenCL, Vulkan and WebGPU backends
 
-packages-galerinaa/galerinaa-target-ai-accelerator
+packages-galerina/galerina-target-ai-accelerator
   NPU, TPU and AI-chip planning
 
-packages-galerinaa/galerinaa-target-photonic
+packages-galerina/galerina-target-photonic
   future photonic planning and simulation
 ```
 
@@ -354,7 +354,7 @@ RISC-V later
 Recommended package:
 
 ```text
-packages-galerinaa/galerinaa-target-cpu
+packages-galerina/galerina-target-cpu
 ```
 
 Example target report:
@@ -391,7 +391,7 @@ large numeric arrays
 Recommended package:
 
 ```text
-packages-galerinaa/galerinaa-target-gpu
+packages-galerina/galerina-target-gpu
 ```
 
 Galerina source should stay generic.
@@ -767,7 +767,7 @@ large security audits
 Possible package:
 
 ```text
-packages-galerinaa/Galerina-queue
+packages-galerina/Galerina-queue
 ```
 
 Future model:
