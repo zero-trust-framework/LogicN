@@ -458,6 +458,7 @@ File system capability paths are canonicalized at compile time. Relative path co
 | Log / audit output | LLN-SECRET-001 | `redact()` |
 | Network / egress (http/https/fetch/email) | LLN-SECRET-002 | `redact()` |
 | Serialize / JSON / audit record | LLN-SECRET-003 | `redact()` |
+| Branch / control flow (timing side-channel, CWE-208) | LLN-SECRET-004 *(warning)* | `Crypto.constantTimeEquals()` / `redact()` / balance both arms |
 
 Any value that **reads from OR is derived from** `secret.get()`, `vault.read()`, `kms.decrypt()`, or `secrets.*` is classified `SecureString` and inherits all sink restrictions. Derivation propagates: a secret carried through `slice` / concatenation / member access / record field / a non-redacting call STAYS `SecureString` (`derivesFromSecret`). **`redact()` is the sole declassifier.**
 
@@ -944,6 +945,7 @@ Under `@experimental_profile(drcm_core_v1)`, the compiler:
 | LLN-SECRET-001 | Security | Secret flows to log/audit sink | ENFORCED |
 | LLN-SECRET-002 | Security | Secret flows to network/egress | ENFORCED |
 | LLN-SECRET-003 | Security | Secret flows to serialize/record | ENFORCED |
+| LLN-SECRET-004 | Security | Secret-dependent branch (timing side-channel, CWE-208) | ENFORCED (warning) |
 | LLN-PRIVACY-002 | Privacy | Cleartext semantic embedding flows to network/egress (vec2text-invertible) | ENFORCED |
 | LLN-PRIVACY-001 | Privacy | `privacy {}` block `deny protected X to Y` clause | PLANNED Phase 10C+ |
 | LLN-CRYPTO-PQ-001 | Crypto | `crypto.sign` in a certified profile must declare a PQ/hybrid algorithm (crypto.sign.hybrid/mldsa65/slhdsa) | ENFORCED (certified profiles) |

@@ -1154,7 +1154,28 @@ class ValueStateChecker {
     const [_condition, thenBlock, elseBlock] = node.children ?? [];
 
     // Walk the condition expression first (does NOT clear taint).
-    if (_condition !== undefined) this.walkNode(_condition);
+    if (_condition !== undefined) {
+      this.walkNode(_condition);
+
+      // LLN-SECRET-004 — secret-dependent branch = timing side-channel (CWE-208): the arm taken (and thus
+      // observable execution time) depends on secret material. constantTimeEquals()/redact() are the
+      // sanctioned declassifiers (already exempt in derivesFromSecret), so the canonical secure comparison
+      // is NOT flagged. Advisory WARNING (not mode-gated to error): unlike secret EGRESS, secret BRANCHING
+      // is sometimes benign (provably balanced arms), so this surfaces the pattern for review rather than
+      // blocking. (RD-0130 #3 constant-time lint; the honest scope of "side-channel resistance".)
+      if (derivesFromSecret(_condition, (name) => this.lookupBinding(name))) {
+        this.diagnostics.push({
+          code: "LLN-SECRET-004",
+          name: "SecretDependentBranch",
+          severity: "warning",
+          message: `This 'if' branches on a secret-derived value, so the arm taken — and thus the flow's observable execution time — depends on secret material (timing side-channel, CWE-208).`,
+          ...(_condition.location !== undefined ? { location: _condition.location } : {}),
+          suggestedFix: `Compare secrets with Crypto.constantTimeEquals(...), redact(...) before branching, or confirm both arms are constant-time.`,
+          why: `Branch selection on secret material makes the observable timing data-dependent; an attacker who can measure latency can recover bits of the secret.`,
+          risk: `Timing analysis of the two arms can leak the secret (the classic case: early-return on the first mismatching byte of a comparison).`,
+        });
+      }
+    }
 
     // Walk then/else branches and collect safe-mut declarations from each.
     if (thenBlock !== undefined && elseBlock !== undefined) {
