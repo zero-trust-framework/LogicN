@@ -437,7 +437,12 @@ export const LLN_GOV_007 = {
   message: `Authority block must include a reason declaration. Add: reason "Explain why this authority is needed"`,
 } as const;
 
-/** LLN-GOV-009: privileged flow declares no effects or capabilities. */
+/** LLN-GOV-009: privileged flow declares no effects or capabilities.
+ *  RESERVED / currently UNREACHABLE on real source: the `privileged` flow qualifier is NOT yet wired in the
+ *  parser, so real `privileged flow {…}` emits LLN-PARSE-001 (verified) and recovers as a plain flow — this
+ *  check can only fire on a synthetic AST. Kept for when the qualifier lands; do NOT read it as an active
+ *  enforced rule. (RD-0122 false-green audit: dead-check + synthetic-only test; real-source tripwire is in
+ *  governance-verifier.test.mjs.) */
 export const LLN_GOV_009 = {
   code: "LLN-GOV-009",
   name: "PrivilegedFlowMissingCapability",
@@ -1635,9 +1640,11 @@ class GovernanceVerifier {
       }
     }
 
-    // ── LLN-GOV-009: privileged flow without capability ───────────────────
-    // If a flow has qualifier "privileged" but declares no effects or contract,
-    // emit a warning.
+    // ── LLN-GOV-009: privileged flow without capability (RESERVED — see LLN_GOV_009) ──
+    // If a flow has qualifier "privileged" but declares no effects or contract, emit a warning.
+    // NOTE (RD-0122): the `privileged` qualifier is NOT wired in the parser — real `privileged flow` →
+    // LLN-PARSE-001 (recovers as a plain flow), so isPrivilegedFlow only matches a synthetic AST and this
+    // branch is currently unreachable on real code. Kept for when/if the qualifier is implemented.
     if (flowNode !== undefined && isPrivilegedFlow(flowNode, flow)) {
       const hasEffects = flow.declaredEffects.length > 0;
       const hasContract = (flowNode.children ?? []).some((c) => c.kind === "contractDecl");

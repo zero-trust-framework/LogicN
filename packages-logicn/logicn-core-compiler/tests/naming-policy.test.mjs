@@ -479,6 +479,40 @@ describe("LLN-STYLE-SEC-001 — real parsed source (RD-0122 false-green regressi
   });
 });
 
+// ── RD-0122: STYLE-002 real parsed-source coverage for record/enum names ─────────
+// The synthetic STYLE-002 tests above feed recordDecl/enumDecl nodes with full-header values
+// ("patientRecord { name: String }") — the real parser emits the BARE name ("PatientRecord")
+// with fields/variants in children. typeDecl had real-source coverage; record/enum did not.
+// (Worker RD-0122 follow-up, verified 13/13 against the true parser.)
+describe("LLN-STYLE-002 — real parsed source (RD-0122 record/enum coverage)", () => {
+  it("a real recordDecl carries the BARE name ('PatientRecord', not 'PatientRecord { ... }')", () => {
+    const ast = parse(`record PatientRecord { name: String }`);
+    let val;
+    (function walk(n) { if (!n || val) return; if (n.kind === "recordDecl") { val = n.value; return; } for (const c of n.children ?? []) walk(c); })(ast);
+    assert.equal(val, "PatientRecord", `real recordDecl.value should be the bare name, got: ${JSON.stringify(val)}`);
+  });
+
+  it("STYLE-002 fires on a real snake_case record name `patient_record`", () => {
+    const result = checkNamingPolicy(parse(`record patient_record { name: String }`));
+    assert.ok(hasDiag(result.diagnostics, "LLN-STYLE-002"), `real snake_case record should fire STYLE-002`);
+  });
+
+  it("STYLE-002 does NOT fire on a real PascalCase record `PatientRecord`", () => {
+    const result = checkNamingPolicy(parse(`record PatientRecord { name: String }`));
+    assert.ok(!hasDiag(result.diagnostics, "LLN-STYLE-002"), `PascalCase record should be clean`);
+  });
+
+  it("STYLE-002 fires on a real snake_case enum name `order_status`", () => {
+    const result = checkNamingPolicy(parse(`enum order_status { New }`));
+    assert.ok(hasDiag(result.diagnostics, "LLN-STYLE-002"), `real snake_case enum should fire STYLE-002`);
+  });
+
+  it("STYLE-002 does NOT fire on a real PascalCase enum `OrderStatus`", () => {
+    const result = checkNamingPolicy(parse(`enum OrderStatus { New }`));
+    assert.ok(!hasDiag(result.diagnostics, "LLN-STYLE-002"), `PascalCase enum should be clean`);
+  });
+});
+
 // ── Severity config override ───────────────────────────────────────────────────
 
 describe("Naming policy — severity config", () => {

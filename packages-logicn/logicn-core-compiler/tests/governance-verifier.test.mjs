@@ -669,6 +669,18 @@ describe("Governance verifier — LLN-GOV-009 privileged flow missing capability
     assert.equal(LLN_GOV_009.name, "PrivilegedFlowMissingCapability");
     assert.equal(LLN_GOV_009.severity, "warning");
   });
+
+  // RD-0122 tripwire: GOV-009 is RESERVED / unreachable on real source. The `privileged` flow qualifier is
+  // not wired in the parser, so the test above can only fire GOV-009 on a SYNTHETIC AST. This documents the
+  // real behavior and is a tripwire: if someone wires `privileged` (this stops emitting LLN-PARSE-001),
+  // GOV-009 becomes reachable and will need genuine real-source coverage — and this test will start failing.
+  it("RD-0122: real `privileged flow` is rejected at parse (LLN-PARSE-001) — GOV-009 is synthetic-only today", () => {
+    const { diagnostics } = parseProgram(`privileged flow doThing() -> Int {\n  return 1\n}`, "test.lln");
+    assert.ok(
+      diagnostics.some((d) => d.code === "LLN-PARSE-001"),
+      `real 'privileged flow' should emit LLN-PARSE-001 (qualifier not wired), got: ${diagnostics.map((d) => d.code).join(", ")}`,
+    );
+  });
 });
 
 // =============================================================================
