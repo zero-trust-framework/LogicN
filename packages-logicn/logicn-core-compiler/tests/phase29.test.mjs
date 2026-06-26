@@ -231,4 +231,23 @@ describe("Phase 29C: checkProductionReadiness", () => {
     ]);
     assert.ok(Object.isFrozen(r.blockers), "blockers should be frozen");
   });
+
+  // #65 / RD-0130 tripwire: the RESERVED (un-emitted) memory codes must NEVER be production
+  // blockers — a blocker no pass can emit is a false capability claim (RD-0124). LogicN is
+  // value-semantics, so 001..007 (use-after-move / borrow-* / readonly-mutation / mutable-alias /
+  // compile-time bounds / unchecked-access) have no emitter. Only LLN-MEMORY-008 (wired via
+  // detectUnsafeBlockWithoutReason) is a memory blocker. Re-adding any of 001..007 here flips this red.
+  it("reserved memory codes LLN-MEMORY-001..007 are NOT production blockers; 008 is", () => {
+    for (const code of [
+      "LLN-MEMORY-001", "LLN-MEMORY-002", "LLN-MEMORY-003",
+      "LLN-MEMORY-004", "LLN-MEMORY-005", "LLN-MEMORY-006", "LLN-MEMORY-007",
+    ]) {
+      // severity "warning" isolates blocker-set membership from the error count.
+      const r = checkProductionReadiness([{ code, severity: "warning", message: code }]);
+      assert.equal(r.blockers.length, 0, `${code} must NOT be a production blocker (RESERVED, no emitter — value-semantics #65)`);
+      assert.equal(r.ready, true, `${code} as a warning must leave the program production-ready`);
+    }
+    const r8 = checkProductionReadiness([{ code: "LLN-MEMORY-008", severity: "warning", message: "unsafe block missing reason" }]);
+    assert.ok(r8.blockers.some((b) => b.includes("LLN-MEMORY-008")), "LLN-MEMORY-008 (the one WIRED memory code) must remain a production blocker");
+  });
 });

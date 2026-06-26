@@ -1604,9 +1604,41 @@ export const LLN_BYTE_DIAGNOSTICS = [
 
 // ---------------------------------------------------------------------------
 // Memory diagnostics — LLN-MEMORY-001..008
+//
+// HONEST STATUS (#65 / RD-0130, 2026-06-26). Of this family ONLY LLN-MEMORY-008
+// is WIRED (emitter detectUnsafeBlockWithoutReason; the `unsafe block` construct
+// must declare a reason + fallback). LLN-MEMORY-001..007 are RESERVED / NOT
+// EMITTED: no compiler pass produces them and none is planned.
+//
+// WHY (and why that is correct, not a gap): LogicN is VALUE-SEMANTICS — no shared
+// mutable aliasing (a mutated copy never affects its source), no references, no
+// raw pointers, no manual malloc/free. The live runtime is a GC tree-walker; the
+// production path is WASM (monotonic per-flow bump heap + capability-sandboxed,
+// bounds-checked linear memory — no free). So the Rust-borrow-checker bug classes
+// these codes name — 001 use-after-move, 002 borrow-after-move, 003
+// borrow-escapes-scope, 004 readonly-mutation-through-a-ref, 005 mutable-alias —
+// cannot occur by construction. 006 BOUNDS_VIOLATION names a COMPILE-TIME bounds
+// proof we do not ship; bounds are enforced at RUNTIME (WASM trap / interpreter
+// guard). 007 unchecked-access-outside-unsafe has no scanner (008 covers the
+// unsafe-block obligation that matters).
+//
+// The ONE linear-resource guarantee LogicN genuinely needs — consume-once
+// ("a passport used twice") — ships + is enforced as LLN-AFFINE-001
+// (value-state-checker.ts), NOT via these codes. `move`/`borrow`/`pinned` are
+// reserved lexer keywords: parsed, currently unenforced.
+//
+// DO NOT add 001..007 to PRODUCTION_BLOCKERS (production-check.ts): a blocker no
+// pass can emit is a FALSE capability claim (RD-0124; enforced by
+// scripts/audit-production-blockers.mjs, and the phase29 reserved-codes tripwire).
+// Re-classify one as live ONLY if LogicN ever gains shared mutable references AND
+// a real detector is wired. They stay defined (namespace stability — the
+// catalog/registry/expected-diagnostics reference them), not deleted. Canonical
+// stance: docs/Knowledge-Bases/logicn-memory-safety-model.md.
 // ---------------------------------------------------------------------------
 
-/** A moved value was used again after ownership transferred. */
+// --- LLN-MEMORY-001..007: RESERVED / NOT-EMITTED (value-semantics; see family header) ---
+
+/** RESERVED (no compiler pass emits this): a moved value used again after ownership transferred. */
 export const LLN_MEMORY_001 = {
   code: "LLN-MEMORY-001",
   name: "USE_AFTER_MOVE",
@@ -1662,7 +1694,9 @@ export const LLN_MEMORY_007 = {
   message: "Unchecked index or memory access must be inside an approved unsafe block with a declared reason and fallback.",
 } as const;
 
-/** An unsafe memory operation has no declared safe fallback. */
+// --- LLN-MEMORY-008: the ONE WIRED memory code (emitter: detectUnsafeBlockWithoutReason) ---
+
+/** An unsafe memory operation has no declared safe fallback. (WIRED — emitted by detectUnsafeBlockWithoutReason.) */
 export const LLN_MEMORY_008 = {
   code: "LLN-MEMORY-008",
   name: "UNSAFE_MEMORY_REQUIRES_FALLBACK",
