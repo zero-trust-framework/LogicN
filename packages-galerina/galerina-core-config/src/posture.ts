@@ -150,3 +150,46 @@ export function deriveImportProfile(resolved: ResolvedPosture): ImportProfile {
       : `Posture 'off': file-path / unsigned imports permitted (dev/test only).`,
   };
 }
+
+// ── Force-HTTPS outbound egress (boot setting — owner: "force https on http") ────────────────────────
+// Plaintext (http) outbound egress leaks payload + credentials in the clear. The DEFAULT is to FORCE
+// HTTPS — deny plaintext PUBLIC egress and lock the effective port to 443 — regardless of posture (it is
+// never a safe default, even at posture 'off'; the SSRF host guard already blocks internal hosts separately).
+// An operator may opt OUT only via an EXPLICIT env flag, so the relaxation is chosen and surfaced, never
+// silent. This is the boot/main SETTING; the runtime half is read at the outbound dial (core-compiler stdlib).
+
+/** The env flag that relaxes force-HTTPS (operator override). Absent / anything-but-truthy ⇒ force HTTPS. */
+export const ALLOW_PLAINTEXT_EGRESS_ENV = "GALERINA_ALLOW_PLAINTEXT_EGRESS" as const;
+
+/** The resolved outbound-egress TLS posture (the force-HTTPS boot setting). */
+export interface EgressTlsSetting {
+  /** Require TLS (https): an otherwise-allowed plaintext PUBLIC host is denied. */
+  readonly requireTls: boolean;
+  /** Effective-port allow-list when TLS is required (standard HTTPS). Empty when relaxed. */
+  readonly allowedPorts: readonly number[];
+  /** True iff force-HTTPS was relaxed by the explicit operator opt-out (surfaced, not silent). */
+  readonly relaxed: boolean;
+  readonly rationale: string;
+}
+
+/**
+ * Resolve the force-HTTPS egress boot setting. FAIL-SECURE: forces HTTPS (requireTls, port 443) by
+ * default; relaxes ONLY when the operator EXPLICITLY sets `GALERINA_ALLOW_PLAINTEXT_EGRESS` to a truthy
+ * value ("true"/"1"). Pass `process.env[ALLOW_PLAINTEXT_EGRESS_ENV]`.
+ */
+export function resolveEgressTls(allowPlaintextEnv?: string): EgressTlsSetting {
+  const relaxed = allowPlaintextEnv === "true" || allowPlaintextEnv === "1";
+  return relaxed
+    ? {
+        requireTls: false,
+        allowedPorts: [],
+        relaxed: true,
+        rationale: `Force-HTTPS relaxed by ${ALLOW_PLAINTEXT_EGRESS_ENV} — plaintext egress permitted (operator override; not for production).`,
+      }
+    : {
+        requireTls: true,
+        allowedPorts: [443],
+        relaxed: false,
+        rationale: "Force-HTTPS (default): plaintext public egress denied; effective port locked to 443.",
+      };
+}
