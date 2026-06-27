@@ -1,6 +1,6 @@
 {
   "generated": "kb-index",
-  "docCount": 600,
+  "docCount": 605,
   "docs": [
     {
       "rel": "docs/Knowledge-Bases/00-KB-INDEX.md",
@@ -4642,8 +4642,8 @@
         "phase",
         "audit",
         "galerina",
-        "tests",
         "spore",
+        "tests",
         "status",
         "documented",
         "files",
@@ -5374,10 +5374,10 @@
         "dss",
         "build",
         "security",
+        "spore",
         "manifest",
         "built",
         "complete",
-        "spore",
         "fail-closed",
         "full",
         "tasks",
@@ -5544,12 +5544,12 @@
         "ed25519",
         "implementation",
         "key",
+        "spore",
         "galerina",
         "binary",
         "encoding",
         "parser",
         "json",
-        "spore",
         "rfc",
         "envelope",
         "schemaversion",
@@ -9299,7 +9299,10 @@
         "5. Test Coverage Summary (2026-05-26)"
       ],
       "codes": [
-        "SPORE-VAULT-001"
+        "SPORE-SECURITY-001",
+        "SPORE-VAULT-001",
+        "SPORE-INTENT-001",
+        "SPORE-PIPELINE-001"
       ],
       "tasks": [],
       "xrefs": [],
@@ -12343,6 +12346,10 @@
       "codes": [
         "SPORE-INV-004",
         "SPORE-INV-001",
+        "SPORE-TYPE-001",
+        "SPORE-SECRET-001",
+        "SPORE-EFFECT-001",
+        "SPORE-CAP-001",
         "SPORE-INV-003"
       ],
       "tasks": [
@@ -12707,7 +12714,7 @@
         "galerina",
         "galerinahttperror",
         "httpmethod",
-        "galerinapimanifest"
+        "galerinaapimanifest"
       ]
     },
     {
@@ -12766,7 +12773,7 @@
         "galerinahttperror",
         "protection",
         "boolean",
-        "galerinapimanifest",
+        "galerinaapimanifest",
         "handleapirequest",
         "function",
         "validatereplay",
@@ -13776,10 +13783,10 @@
         "galerina",
         "key",
         "signature",
+        "spore",
         "gov",
         "governancesignature",
         "proof",
-        "spore",
         "sig",
         "phase",
         "readonly",
@@ -21115,31 +21122,31 @@
       "tasks": [],
       "xrefs": [],
       "topTerms": [
+        "spore",
         "galerina",
-        "spore",
-        "spore",
         "owner",
         "brand",
         "rename",
+        "spore-",
         "replace",
+        "codes",
         "every",
         "security",
         "crypto",
         "audit",
         "keep",
-        "spore-",
+        "rebrand",
+        "contexts",
+        "tags",
         "staged",
         "safe",
         "artifacts",
         "blanket",
         "token",
         "fail-closed",
-        "codes",
         "update",
         "landmine",
-        "rebrand",
-        "signature",
-        "fail-open"
+        "execute"
       ]
     },
     {
@@ -21185,6 +21192,240 @@
         "line",
         "collision",
         "compiled"
+      ]
+    },
+    {
+      "rel": "docs/Knowledge-Bases/galerina-rd-0133-memory-safety-safer-than-rust-2026-06-26.md",
+      "title": "RD-0133 — Galerina memory-safety: \"as-safe-or-safer than Rust\" positioning",
+      "headings": [
+        "Thesis (verified)",
+        "The plan (when un-deferred → #65, a small honesty fix)",
+        "Status"
+      ],
+      "codes": [
+        "SPORE-MEMORY-001",
+        "SPORE-AFFINE-001",
+        "SPORE-SECRET-001"
+      ],
+      "tasks": [
+        "#65"
+      ],
+      "xrefs": [
+        "galerina-rd-0130-frontier-domains-positioning"
+      ],
+      "topTerms": [
+        "galerina",
+        "honesty",
+        "rust",
+        "fix",
+        "positioning",
+        "status",
+        "rd-0133",
+        "memory-safety",
+        "as-safe-or-safer",
+        "codes",
+        "thesis",
+        "verified",
+        "plan",
+        "un-deferred",
+        "small",
+        "fail-open",
+        "real",
+        "pointers",
+        "wasm",
+        "checker",
+        "bug",
+        "safer",
+        "deferred",
+        "owner",
+        "retiring"
+      ]
+    },
+    {
+      "rel": "docs/Knowledge-Bases/galerina-rd-0134-beyond-1-bit-photonic-ternary-2026-06-26.md",
+      "title": "RD-0134 — \"Beyond 1-bit\": photonic ternary {−1,0,+1} AI compute",
+      "headings": [
+        "Summary",
+        "⚠ Honesty fence (apply RD-0130 before any positioning)",
+        "Status"
+      ],
+      "codes": [
+        "SPORE-SUBSTRATE-001"
+      ],
+      "tasks": [],
+      "xrefs": [
+        "galerina-rd-0130-frontier-domains-positioning",
+        "galerina-substrate-failure-model"
+      ],
+      "topTerms": [
+        "ternary",
+        "bit",
+        "photonic",
+        "honesty",
+        "compute",
+        "status",
+        "fence",
+        "rd-0130",
+        "rd-0134",
+        "beyond",
+        "summary",
+        "apply",
+        "before",
+        "positioning",
+        "analog",
+        "lane",
+        "never",
+        "source",
+        "deferred",
+        "sound",
+        "false-deny",
+        "false-allow",
+        "claims",
+        "must",
+        "stripped"
+      ]
+    },
+    {
+      "rel": "docs/Knowledge-Bases/galerina-rd-0135-tritmesh-scaling-limits-2026-06-26.md",
+      "title": "RD-0135 — TritMesh database scaling limits (AZT honesty bar)",
+      "headings": [
+        "Summary",
+        "⚠ Scope note",
+        "Status"
+      ],
+      "codes": [],
+      "tasks": [],
+      "xrefs": [
+        "galerina-rd-0132-branding-ecosystem"
+      ],
+      "topTerms": [
+        "tritmesh",
+        "azt",
+        "bar",
+        "honesty",
+        "scope",
+        "note",
+        "database",
+        "scaling",
+        "status",
+        "rd-0135",
+        "limits",
+        "summary",
+        "galerina",
+        "deferred",
+        "owner",
+        "sound",
+        "enumerates",
+        "real",
+        "physical",
+        "ceilings",
+        "claiming",
+        "infinite",
+        "rd-0132",
+        "taxonomy",
+        "forward-vision"
+      ]
+    },
+    {
+      "rel": "docs/Knowledge-Bases/galerina-rd-0136-galerina-playbook-runbook-2026-06-26.md",
+      "title": "RD-0136 — Galerina Playbook + Runbook (operational docs design)",
+      "headings": [
+        "Summary",
+        "⚠ Honesty fence (apply RD-0130 before drafting)",
+        "Status"
+      ],
+      "codes": [],
+      "tasks": [],
+      "xrefs": [
+        "galerina-rd-0130-frontier-domains-positioning"
+      ],
+      "topTerms": [
+        "runbook",
+        "playbook",
+        "galerina",
+        "operational",
+        "docs",
+        "status",
+        "honesty",
+        "rd-0136",
+        "design",
+        "hardware",
+        "summary",
+        "fence",
+        "apply",
+        "rd-0130",
+        "before",
+        "drafting",
+        "ops",
+        "cheri",
+        "lane",
+        "fallback",
+        "silicon",
+        "photonic",
+        "buildable",
+        "compliance",
+        "real"
+      ]
+    },
+    {
+      "rel": "docs/Knowledge-Bases/galerina-rd-0138-0143-photonic-security-automation.md",
+      "title": "RD-0138..0143 — \"Automate the defence\" with photonic / tri / Tower-Citizen / Tri-Pipe",
+      "headings": [
+        "The one pattern, across all six",
+        "Per-note verdicts",
+        "RD-0138 — Data Privacy · **ZT 5**",
+        "RD-0139 — Supply-Chain · **ZT 6**",
+        "RD-0140 — Audit / Provenance · **ZT 6**",
+        "RD-0141 — Capability Control · **ZT 5**",
+        "RD-0142 — Fail-Close Auth · **ZT 4** (lowest)",
+        "RD-0143 — Two net-new categories · **ZT 5**",
+        "RD-0137 — Tarmeties (housekeeping, prior hub assessment) · **ZT 7**",
+        "Honest residuals + handover"
+      ],
+      "codes": [
+        "SPORE-SUBSTRATE-001",
+        "SPORE-PRIVACY-002"
+      ],
+      "tasks": [
+        "#110"
+      ],
+      "xrefs": [
+        "feedback-rd-prove-own-maths",
+        "feedback-rd-absorb-positive-and-negative",
+        "feedback-rd-refusal-pairs-with-work-with-it",
+        "logicn-fhe-encrypted-similarity-verdict",
+        "logicn-owner-decisions-2026-06-26",
+        "logicn-social-ecosystem-cloud-native",
+        "logicn-notes-37-38-39-verdict",
+        "logicn-auth-package",
+        "logicn-secrets-management-rd-2026-06-23"
+      ],
+      "topTerms": [
+        "photonic",
+        "tower-citizen",
+        "tri-pipe",
+        "capability",
+        "auth",
+        "rd-0138",
+        "data",
+        "re-derives",
+        "lane",
+        "audit",
+        "refute",
+        "net-new",
+        "automate",
+        "defence",
+        "hub",
+        "proof",
+        "sound",
+        "partialreturn",
+        "optical",
+        "supply-chain",
+        "six",
+        "shipped",
+        "declassifier",
+        "privacy",
+        "provenance"
       ]
     },
     {
@@ -22419,6 +22660,7 @@
       "headings": [
         "Pending (dispatched to the R&D bridge — awaiting `done/`)",
         "Adopted / Designed (recent)",
+        "2026-06-27 — RD-0137..0143 (\"automate the defence\" with photonic/tri/Tower-Citizen/Tri-Pipe)",
         "Refuted — and WHY we did not adopt (the negative record)",
         "Complete R&D ledger — all bridge `done/` files (swept 95, 2026-06-23)"
       ],
@@ -22432,6 +22674,7 @@
         "#34",
         "#0089",
         "#212",
+        "#110",
         "#194",
         "#205"
       ],
@@ -22439,31 +22682,31 @@
         "feedback-rd-absorb-positive-and-negative"
       ],
       "topTerms": [
-        "refuted",
         "photonic",
+        "refuted",
         "adopted",
         "verdict",
         "bridge",
         "galerina",
+        "shipped",
+        "tri",
         "governance",
         "why",
         "designed",
         "design",
-        "contract",
-        "shipped",
         "owner",
-        "invariant",
-        "pending",
+        "contract",
         "full",
-        "tri",
         "fail-closed",
+        "invariant",
+        "net-new",
+        "tri-pipe",
+        "pending",
         "substrate",
+        "notes",
+        "mixed",
         "log",
-        "table",
-        "gap",
-        "crypto",
-        "gir",
-        "notes"
+        "table"
       ]
     },
     {
@@ -22690,7 +22933,7 @@
       "title": "Galerina rebrand — crypto wire-tag re-sign ceremony (operator runbook)",
       "headings": [
         "Why this is separate",
-        "Tag migration map (owner scheme: `galerina`→`galerina`, `spore`→`spore`)",
+        "Tag migration map (owner scheme: `galerin`→`galerina`, `spore`→`spore`)",
         "Step 1 — DUAL-ACCEPT (code; do FIRST so old persisted artifacts keep verifying mid-migration)",
         "Step 2 — CUTOVER emitters + the App.manifest schema (code)",
         "Step 3 — RE-SIGN the 3 root-signed artifacts (NEEDS the offline root key ab46f4c7)",
@@ -22705,30 +22948,30 @@
       ],
       "topTerms": [
         "spore",
+        "galerina",
         "step",
-        "galerina",
-        "spore",
-        "app",
         "artifacts",
+        "app",
         "key",
-        "re-sign",
-        "galerina",
-        "manifest",
-        "root",
         "old",
-        "gov",
-        "sig",
+        "root",
+        "manifest",
+        "re-sign",
         "code",
         "offline",
+        "gov",
+        "sig",
         "rebrand",
+        "verify",
+        "governance",
+        "runtime",
+        "audit",
         "ceremony",
         "runbook",
+        "json",
         "emitters",
-        "audit",
-        "runtime",
         "schema",
-        "dual-accept",
-        "verify"
+        "dual-accept"
       ]
     },
     {
@@ -24032,11 +24275,17 @@
         "7. DevTools Ecosystem"
       ],
       "codes": [
-        "SPORE-EFFECT-001",
-        "SPORE-GOV-010",
+        "SPORE-NAMING-001",
+        "SPORE-LEX-001",
+        "SPORE-NAME-001",
+        "SPORE-TYPE-001",
         "SPORE-SECRET-001",
+        "SPORE-EFFECT-001",
+        "SPORE-GOV-001",
         "SPORE-TERM-001",
-        "SPORE-GOV-017"
+        "SPORE-GOV-010",
+        "SPORE-GOV-017",
+        "SPORE-PCI-001"
       ],
       "tasks": [],
       "xrefs": [],
@@ -32458,13 +32707,13 @@
         "secret",
         "sha256",
         "jsonl",
+        "spore",
         "status",
         "file",
         "report",
         "log",
         "format",
-        "text",
-        "hash"
+        "text"
       ]
     },
     {
@@ -34664,6 +34913,7 @@
         "2) What the \"can do something\" with maths / other compute is good for *(real, but emulated today + owner-gated)*",
         "3) What it cannot do *(the hard boundary — by design)*",
         "Who it is for",
+        "Capability radars",
         "Benchmarks (honest numbers — core scoreboard 2026-06-23; Int64 + Tower-of-Hanoi added 2026-06-25)",
         "Build Progress",
         "What makes it different",
@@ -34687,6 +34937,7 @@
         "SPORE-TIER-001",
         "SPORE-VALUESTATE-008",
         "SPORE-PKG-006",
+        "SPORE-MATCH-001",
         "SPORE-LEX-001",
         "SPORE-NAME-001",
         "SPORE-TYPE-001",
@@ -34704,18 +34955,23 @@
       ],
       "xrefs": [],
       "topTerms": [
-        "galerina",
         "docs",
+        "galerina",
         "governed",
         "wasm",
         "knowledge-bases",
+        "div",
+        "governance",
         "core",
         "shipped",
         "runtime",
-        "governance",
         "audit",
+        "svg",
+        "width",
         "real",
         "package",
+        "diagrams",
+        "sub",
         "contract",
         "build",
         "architecture",
@@ -34723,12 +34979,7 @@
         "execution",
         "design",
         "compiler",
-        "signed",
-        "tests",
-        "honest",
-        "flow",
-        "fail-closed",
-        "gate"
+        "signed"
       ]
     },
     {

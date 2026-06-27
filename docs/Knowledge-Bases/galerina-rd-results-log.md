@@ -58,6 +58,27 @@ refuted, with the reason — then refreshes the KB index. See [[feedback-rd-abso
 | notes/50 — backend roadmap + tri/photonic primer + photonics pointers | already-shipped (0 net-new buildable) | ~95% reference; primer re-derives K3 + substrate + blind-observability; SAX already mined today (S-parameter-composition); gdsfactory/Meep/Photontorch **REFUTED** (keep physics/sim outside the governance boundary) | three-valued-governance.ts · galerina-external-idea-mining-2026-06-23.md |
 | notes/51 — NumPy→TS: full numeric/ndarray/linalg in core? | ❌ REFUTED (by design) | Full NumPy parity in core = NO by design; core governs numeric SHAPES (core-vector types), compute behind ext-bridge-cpp/-bitnet; `for x in xs where c` = the shipped `np.where` analog; ndarray/broadcasting REFUTE; dense linalg (inv/det/eig) = TRACK behind a future Toxic-Border ext-bridge on real demand | core-vector/src/index.ts · ext-bridge-cpp/src/index.ts |
 
+## 2026-06-27 — RD-0137..0143 ("automate the defence" with photonic/tri/Tower-Citizen/Tri-Pipe)
+
+Owner notes `75-improvments-r-d-1..6`. Proof: `scripts/rd-0138-0143-photonic-security-suite-proof.mjs`
+(8/8 V GREEN, 4 excluded). Full doc: [photonic-security-automation](galerina-rd-0138-0143-photonic-security-automation.md).
+ZT score = how zero-trust-sound *as written* (0–10). Deep per-claim matrix handed to the encryption R&D worker.
+
+| RD | Topic | ZT | Verdict | Why (one line) |
+|---|---|---|---|---|
+| 0137 | Tarmeties (2nd ungoverned/speed product) | 7 | 🔒 GATED (post-v1) | theoretical; one fail-open landmine = governed-artifact-run-ungoverned mode confusion |
+| 0138 | Data Privacy | 5 | 🔀 MIXED | AI-cage ✅ re-derives `governAiProposal`; Lane-0 auto-mask ⚠️ fail-open unless declassifier; optical FHE ❌ |
+| 0139 | Supply-Chain | 6 | 🔀 MIXED | package charters ✅ re-derive `boundary-policy`/`fuse-loader`; photonic 0-latency audit ❌; attestation core net-new |
+| 0140 | Audit / Provenance | 6 | 🔀 MIXED | lineage DAG + audit-receipt ✅ shipped; optical PUF signature ❌ (PAC-learnable); WDM=blind-observability exporter |
+| 0141 | Capability Control | 5 | 🔀 MIXED | temporal leasing ✅ re-derives `lease.ts`; optical phase-gate-as-authority ❌ (No-Coercion + 0-cycle) |
+| 0142 | Fail-Close Auth | 4 | 🔀 MIXED (lowest) | attestation ✅ shipped; **Lane-0 "serve SYNTHETIC data on auth-drop" ❌ most anti-ZT**; optical heartbeat-as-gate ❌ |
+| 0143 | Net-new: Zero-Storage Secrets + Polymorphic Obfuscation | 5 | 🔀 MIXED | secrets digital-half ✅ (≈shipped, `#110`); photonic wave-keys ❌; **obfuscation ❌ security-by-obscurity = anti-ZT** |
+
+**Cross-cutting net-new (owner-gated):** formalize "Tri-Pipe Lane 0" as a typed, audited **declassifier rail**
+(extend `partialReturn` with a `SPORE-DECLASSIFY-*` obligation so "mask-and-continue" is only reachable through it).
+**Proved (V1–V3):** No-Coercion ⇒ photonic state can't be the gate/signature; Lane-0 mask-and-continue is fail-open
+vs the shipped fail-closed `maskByVerdict`; "0 CPU cycles" refuted (latency≠work).
+
 ## Refuted — and WHY we did not adopt (the negative record)
 | Idea | Verdict | Why refuted |
 |---|---|---|

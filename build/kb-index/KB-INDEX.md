@@ -1,4 +1,4 @@
-# Galerina KB index (600 docs)
+# Galerina KB index (605 docs)
 
 Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.mjs --code SPORE-...`
 
@@ -350,7 +350,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 ## Galerina — Full Audit 2026-06-02
 `docs/Knowledge-Bases/galerina-audit-2026-06-02.md`
 - codes: SPORE-HW-001, SPORE-SYNTAX-010, SPORE-HW-101, SPORE-SYNTAX-006, SPORE-SYNTAX-LEGACY-001, SPORE-STYLE-001, SPORE-TAINT-001, SPORE-PROFILE-001
-- terms: phase, audit, galerina, tests, spore, status, documented, files, stage, grammar, counts, security, self-hosting, runtime
+- terms: phase, audit, galerina, spore, tests, status, documented, files, stage, grammar, counts, security, self-hosting, runtime
 
 ## Galerina — Audit Coverage & R&D Standards (#219)
 `docs/Knowledge-Bases/galerina-audit-coverage-and-rd-standards.md`
@@ -422,7 +422,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 `docs/Knowledge-Bases/galerina-cbor-manifest-spec.md`
 - codes: SPORE-INV-000
 - tasks: #102, #104, #77, #78, #79, #80, #34
-- terms: cbor, tag, manifest, hybrid, lmanifest, signature, type, ed25519, implementation, key, galerina, binary, encoding, parser
+- terms: cbor, tag, manifest, hybrid, lmanifest, signature, type, ed25519, implementation, key, spore, galerina, binary, encoding
 
 ## Galerina Check Configuration — `galerina.check.json`
 `docs/Knowledge-Bases/galerina-check-config.md`
@@ -707,7 +707,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Core Package Architecture
 `docs/Knowledge-Bases/galerina-core-package-architecture.md`
-- codes: SPORE-VAULT-001
+- codes: SPORE-SECURITY-001, SPORE-VAULT-001, SPORE-INTENT-001, SPORE-PIPELINE-001
 - terms: galerina, implemented, runtime, compiler, core-compiler, package, core, specified, flow, security, pass, passing, config, pipeline
 
 ## Galerina Core Photonic: Backend Architecture and Governance Model
@@ -970,7 +970,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Floor 3: Proof Zone Graph
 `docs/Knowledge-Bases/galerina-floor3-proof-zone-graph.md`
-- codes: SPORE-INV-004, SPORE-INV-001, SPORE-INV-003
+- codes: SPORE-INV-004, SPORE-INV-001, SPORE-TYPE-001, SPORE-SECRET-001, SPORE-EFFECT-001, SPORE-CAP-001, SPORE-INV-003
 - tasks: #69, #36
 - terms: floor, invariant, wat, zone, proof, expr, map, phase, ensure, single-exit, subgraph, end, runtime, emitter
 
@@ -1078,7 +1078,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 ## Galerina — GovernanceSignature
 `docs/Knowledge-Bases/galerina-governance-signature.md`
 - codes: SPORE-GOV-SIG-001
-- terms: galerina, key, signature, gov, governancesignature, proof, spore, sig, phase, readonly, governance, hybrid, ed25519, string
+- terms: galerina, key, signature, spore, gov, governancesignature, proof, sig, phase, readonly, governance, hybrid, ed25519, string
 
 ## Galerina — Governance Verifier Architecture
 `docs/Knowledge-Bases/galerina-governance-verifier-architecture.md`
@@ -1761,13 +1761,43 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 ## RD-0131 — Rebrand Galerina→Galerina, .spore→.spore (R&D ONLY — DO NOT EXECUTE)
 `docs/Knowledge-Bases/galerina-rd-0131-rebrand-galerina-spore-2026-06-26.md`
 - codes: SPORE-GOV-019
-- terms: galerina, spore, spore, owner, brand, rename, replace, every, security, crypto, audit, keep, spore-, staged
+- terms: spore, galerina, owner, brand, rename, spore-, replace, codes, every, security, crypto, audit, keep, rebrand
 
 ## RD-0132 — Branding ecosystem follow-up (notes/68-branding-2, -3) — R&D ONLY, NO DEPLOY
 `docs/Knowledge-Bases/galerina-rd-0132-branding-ecosystem-2026-06-26.md`
 - tasks: #67
 - links: [[galerina-rd-0131-rebrand-galerina]]
 - terms: spore, tmf, galerina, notes, brand, source, owner, authorized, tritmesh, overclaim, branding-2, deploy, coherent, product
+
+## RD-0133 — Galerina memory-safety: "as-safe-or-safer than Rust" positioning
+`docs/Knowledge-Bases/galerina-rd-0133-memory-safety-safer-than-rust-2026-06-26.md`
+- codes: SPORE-MEMORY-001, SPORE-AFFINE-001, SPORE-SECRET-001
+- tasks: #65
+- links: [[galerina-rd-0130-frontier-domains-positioning]]
+- terms: galerina, honesty, rust, fix, positioning, status, rd-0133, memory-safety, as-safe-or-safer, codes, thesis, verified, plan, un-deferred
+
+## RD-0134 — "Beyond 1-bit": photonic ternary {−1,0,+1} AI compute
+`docs/Knowledge-Bases/galerina-rd-0134-beyond-1-bit-photonic-ternary-2026-06-26.md`
+- codes: SPORE-SUBSTRATE-001
+- links: [[galerina-rd-0130-frontier-domains-positioning]] [[galerina-substrate-failure-model]]
+- terms: ternary, bit, photonic, honesty, compute, status, fence, rd-0130, rd-0134, beyond, summary, apply, before, positioning
+
+## RD-0135 — TritMesh database scaling limits (AZT honesty bar)
+`docs/Knowledge-Bases/galerina-rd-0135-tritmesh-scaling-limits-2026-06-26.md`
+- links: [[galerina-rd-0132-branding-ecosystem]]
+- terms: tritmesh, azt, bar, honesty, scope, note, database, scaling, status, rd-0135, limits, summary, galerina, deferred
+
+## RD-0136 — Galerina Playbook + Runbook (operational docs design)
+`docs/Knowledge-Bases/galerina-rd-0136-galerina-playbook-runbook-2026-06-26.md`
+- links: [[galerina-rd-0130-frontier-domains-positioning]]
+- terms: runbook, playbook, galerina, operational, docs, status, honesty, rd-0136, design, hardware, summary, fence, apply, rd-0130
+
+## RD-0138..0143 — "Automate the defence" with photonic / tri / Tower-Citizen / Tri-Pipe
+`docs/Knowledge-Bases/galerina-rd-0138-0143-photonic-security-automation.md`
+- codes: SPORE-SUBSTRATE-001, SPORE-PRIVACY-002
+- tasks: #110
+- links: [[feedback-rd-prove-own-maths]] [[feedback-rd-absorb-positive-and-negative]] [[feedback-rd-refusal-pairs-with-work-with-it]] [[logicn-fhe-encrypted-similarity-verdict]] [[logicn-owner-decisions-2026-06-26]] [[logicn-social-ecosystem-cloud-native]] [[logicn-notes-37-38-39-verdict]] [[logicn-auth-package]] [[logicn-secrets-management-rd-2026-06-23]]
+- terms: photonic, tower-citizen, tri-pipe, capability, auth, rd-0138, data, re-derives, lane, audit, refute, net-new, automate, defence
 
 ## R&D — Phase 34B boundary param auto-taint: verified state + build-ready spec
 `docs/Knowledge-Bases/galerina-rd-34b-paramtaint-buildspec-2026-06-24.md`
@@ -1910,9 +1940,9 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 ## Galerina — R&D Results Log (quick-lookup verdict table)
 `docs/Knowledge-Bases/galerina-rd-results-log.md`
 - codes: SPORE-PERM-001, SPORE-GDCE-001, SPORE-PRIVACY-002
-- tasks: #102, #34, #0089, #212, #194, #205
+- tasks: #102, #34, #0089, #212, #110, #194, #205
 - links: [[feedback-rd-absorb-positive-and-negative]]
-- terms: refuted, photonic, adopted, verdict, bridge, galerina, governance, why, designed, design, contract, shipped, owner, invariant
+- terms: photonic, refuted, adopted, verdict, bridge, galerina, shipped, tri, governance, why, designed, design, owner, contract
 
 ## Galerina syntax 7-axis sweep (2026-06-25) — PARTIAL (4/8 categories; 4 rate-limited, to resume)
 `docs/Knowledge-Bases/galerina-rd-syntax-7axis-sweep-2026-06-25.md`
@@ -1939,7 +1969,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 ## Galerina rebrand — crypto wire-tag re-sign ceremony (operator runbook)
 `docs/Knowledge-Bases/galerina-rebrand-resign-ceremony-runbook.md`
 - links: [[galerina-rd-0131-rebrand-galerina]]
-- terms: spore, step, galerina, spore, app, artifacts, key, re-sign, galerina, manifest, root, old, gov, sig
+- terms: spore, galerina, step, artifacts, app, key, old, root, manifest, re-sign, code, offline, gov, sig
 
 ## Galerina — Non-P9 Residual Risks (verified catalogue)
 `docs/Knowledge-Bases/galerina-residual-risks.md`
@@ -2049,7 +2079,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Runtime and Component Structure
 `docs/Knowledge-Bases/galerina-runtime-component-structure.md`
-- codes: SPORE-EFFECT-001, SPORE-GOV-010, SPORE-SECRET-001, SPORE-TERM-001, SPORE-GOV-017
+- codes: SPORE-NAMING-001, SPORE-LEX-001, SPORE-NAME-001, SPORE-TYPE-001, SPORE-SECRET-001, SPORE-EFFECT-001, SPORE-GOV-001, SPORE-TERM-001, SPORE-GOV-010, SPORE-GOV-017, SPORE-PCI-001
 - terms: style, fill, color, fff, subgraph, end, runtime, spore, flow, pipeline, stage, wasm, exec, sync
 
 ## Galerina — Runtime Governance Actors (naming map + flow protocol)
@@ -2938,6 +2968,6 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina
 `README.md`
-- codes: SPORE-SUBSTRATE-002, SPORE-SUBSTRATE-001, SPORE-FAULT-001, SPORE-NUMERIC-001, SPORE-TIER-001, SPORE-VALUESTATE-008, SPORE-PKG-006, SPORE-LEX-001, SPORE-NAME-001, SPORE-TYPE-001, SPORE-EFFECT-001, SPORE-GOV-001, SPORE-TERM-001, SPORE-PCI-001
+- codes: SPORE-SUBSTRATE-002, SPORE-SUBSTRATE-001, SPORE-FAULT-001, SPORE-NUMERIC-001, SPORE-TIER-001, SPORE-VALUESTATE-008, SPORE-PKG-006, SPORE-MATCH-001, SPORE-LEX-001, SPORE-NAME-001, SPORE-TYPE-001, SPORE-EFFECT-001, SPORE-GOV-001, SPORE-TERM-001, SPORE-PCI-001
 - tasks: #102, #143, #128, #163, #165
-- terms: galerina, docs, governed, wasm, knowledge-bases, core, shipped, runtime, governance, audit, real, package, contract, build
+- terms: docs, galerina, governed, wasm, knowledge-bases, div, governance, core, shipped, runtime, audit, svg, width, real
