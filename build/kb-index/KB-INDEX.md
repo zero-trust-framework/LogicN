@@ -921,9 +921,9 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 - tasks: #201
 - terms: pii, phi, owner, category, write, classification, read, effect, map, brand, sub-step, audit, unlock, build
 
-## Outbound egress: force-HTTPS boot setting + local-dev loopback exception
+## Outbound egress: force-HTTPS boot setting + local-dev loopback + internal-proxy allow-list
 `docs/Knowledge-Bases/galerina-egress-tls-boot-setting.md`
-- terms: force-https, egress, loopback, ssrf, tests, outbound, plaintext, boot, exception, http, localhost, fail-secure, setting, local-dev
+- terms: ssrf, egress, force-https, loopback, allow-list, plaintext, internal-proxy, internal, tests, outbound, http, every, port, hosts
 
 ## Galerina — Engineering Goals & Master Plan
 `docs/Knowledge-Bases/galerina-engineering-goals.md`
@@ -1396,8 +1396,8 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 ## Galerina — Outstanding R&D + To-Dos catalog (2026-06-23)
 `docs/Knowledge-Bases/galerina-outstanding-rd-and-todos-2026-06-23.md`
 - codes: SPORE-PERM-001, SPORE-GDCE-001
-- tasks: #13, #14, #15, #16, #163, #165, #161, #128, #34, #102, #11, #12, #149
-- terms: build, audit, arch-rd, galerina-architecture-rd-2026-06-23, todo, phase, status, photonic, missing, packages, doc, galerina, catalog, incomplete
+- tasks: #13, #14, #15, #16, #102, #163, #165, #161, #128, #34, #11, #12, #149
+- terms: build, audit, arch-rd, galerina-architecture-rd-2026-06-23, todo, phase, status, photonic, missing, packages, design, doc, galerina, catalog
 
 ## Galerina Package Manifest Specification
 `docs/Knowledge-Bases/galerina-package-manifest-spec.md`
@@ -1962,7 +1962,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 - codes: SPORE-PERM-001, SPORE-GDCE-001, SPORE-PRIVACY-002
 - tasks: #102, #34, #0089, #212, #110, #194, #205
 - links: [[feedback-rd-absorb-positive-and-negative]]
-- terms: photonic, refuted, verdict, adopted, mixed, why, bridge, galerina, notes, governed, shipped, tri, governance, net-new
+- terms: photonic, refuted, verdict, adopted, mixed, galerina, bridge, why, shipped, notes, governed, designed, tri, governance
 
 ## Galerina syntax 7-axis sweep (2026-06-25) — PARTIAL (4/8 categories; 4 rate-limited, to resume)
 `docs/Knowledge-Bases/galerina-rd-syntax-7axis-sweep-2026-06-25.md`

@@ -57,7 +57,8 @@ refuted, with the reason — then refreshes the KB index. See [[feedback-rd-abso
 | notes/47 (DRCM precursor) + architecture blueprint PDF | already-shipped (~90% re-derive) · 🧪 deliverable WRITTEN | June-3 precursor of shipped DRCM (DbC / SPORE-PRIVACY-002 / SPORE-MONO + signed `.lmanifest` + ASIC + WASI #102-106 + PCI/OWASP 0084); net-new = numbered-PCI-requirement→artifact **compliance-evidence mapping TABLE** — now written (honest grading: enforced vs ⚠ aspirational isolation vs 🔑 PQ-placeholder; discloses 7/12 checker gap) | [PCI evidence map](galerina-pci-dss-evidence-mapping.md) · governance-verifier.ts |
 | notes/50 — backend roadmap + tri/photonic primer + photonics pointers | already-shipped (0 net-new buildable) | ~95% reference; primer re-derives K3 + substrate + blind-observability; SAX already mined today (S-parameter-composition); gdsfactory/Meep/Photontorch **REFUTED** (keep physics/sim outside the governance boundary) | three-valued-governance.ts · galerina-external-idea-mining-2026-06-23.md |
 | notes/51 — NumPy→TS: full numeric/ndarray/linalg in core? | ❌ REFUTED (by design) | Full NumPy parity in core = NO by design; core governs numeric SHAPES (core-vector types), compute behind ext-bridge-cpp/-bitnet; `for x in xs where c` = the shipped `np.where` analog; ndarray/broadcasting REFUTE; dense linalg (inv/det/eig) = TRACK behind a future Toxic-Border ext-bridge on real demand | core-vector/src/index.ts · ext-bridge-cpp/src/index.ts |
-| **RD-0150** — Graph as the standard data model for **API / DB I/O** border (security/speed/organisation) | 🧪 DESIGNED (concept) | **HYBRID property-graph**: graph SPINE for reachability/capability/verdict/provenance + columnar/SoA PAYLOAD for bulk scans. Isolation goes STRUCTURAL (no edge=no reach) → `Q∩S_user` = K3 reachability; closes CWE-639/285 + realizes NIST T1/T4. **Wins security+organisation, mixed on speed** (loses bulk scans/aggregations to SoA — why note 54 chose it), **introduces CWE-400** (mandatory traversal-budget gate) + MUST carry the 0037 separate-presence-channel discipline. Crypto stays digital; topology photonic-accelerable only outside the gate. 3 open problems (cross-tenant edge crypto custody is hardest). Owner-assigned 2026-06-27; verify lenses failed → worker honesty-pass | [graph-as-data-io concept](galerina-rd-0150-graph-as-data-io-border-concept.md) (wf `wf_a3d324a3-815`) |
+| **RD-0150** — Graph as the standard data model for **API / DB I/O** border (security/speed/organisation) | 🧪 DESIGNED (concept) · **ZT 7** (hub) | **HYBRID property-graph**: graph SPINE for reachability/capability/verdict/provenance + columnar/SoA PAYLOAD for bulk scans. Isolation goes STRUCTURAL (no edge=no reach) → `Q∩S_user` = K3 reachability; closes CWE-639/285 + realizes NIST T1/T4. **Wins security+organisation, mixed on speed** (loses bulk scans/aggregations to SoA — why note 54 chose it), **introduces CWE-400** (mandatory traversal-budget gate) + MUST carry the 0037 separate-presence-channel discipline. Crypto stays digital; topology photonic-accelerable only outside the gate. 3 open problems (cross-tenant edge crypto custody is hardest). Owner-assigned 2026-06-27; verify lenses failed → worker honesty-pass | [graph-as-data-io concept](galerina-rd-0150-graph-as-data-io-border-concept.md) (wf `wf_a3d324a3-815`) |
+| **Egress hardening + note-54 IDOR border + audit redaction (hub session 2026-06-27)** | ✅ SHIPPED | (A) network TLS+port enforcement at the outbound dial · (C) `redactText` central redaction sink in audit-receipt metadata · (D) note-54 per-user data hard border `Qexecuted = Q ∩ S_user` (IDOR/CWE-639) → prod · force-HTTPS boot setting + local-dev loopback + internal-proxy allow-list (`GALERINA_ALLOW_PLAINTEXT_EGRESS` / `..._ALLOW_LOCALHOST` / `..._EGRESS_ALLOWED_HOSTS`). Full suite 60/60·5,945 | e474b1f · 4baf422 · a4471a6 · 5f73cb2 · 74d720c · b6033e1 · [egress doc](galerina-egress-tls-boot-setting.md) · tower-citizen/data-plane-border.ts |
 
 ## 2026-06-27 — RD-0137..0143 ("automate the defence" with photonic/tri/Tower-Citizen/Tri-Pipe)
 
@@ -99,16 +100,9 @@ RD-0138-0143. **NB: RD-0148 (note 11) is a byte-identical DUPLICATE of RD-0147 (
 Freivalds + the Lane-0 declassifier rail (RD-0138-0143). **Proved:** V1 K3-0=availability-not-safety; V2 substrate-
 blend Safe-Floor; V3 shadow-fork must run behind the note-54 border (ties to this session's D).
 
-## 2026-06-27 — RD-0150 (Graph as the data spine for API/DB I/O — per-tenant zero-trust border)
-
-Worker-authored design-only concept (owner-assigned RD-0150; workflow `graph-as-data-border-concept`). Full doc:
-[graph-as-data-io-border](galerina-rd-0150-graph-as-data-io-border-concept.md). ZT **7** (hub-assigned).
-
-| RD | Topic | ZT | Verdict | Why (one line) |
-|---|---|---|---|---|
-| 0150 | Graph as the data spine (API/DB I/O border) | 7 | 🧪 DESIGN (hybrid) | **Win on SECURITY + ORGANISATION** (structural isolation: "no edge = no reach", IDOR structurally closed, one substrate), **mixed on SPEED** (graph wins reachability/lineage, SoA wins bulk scans) → **HYBRID property-graph** (graph SPINE + columnar PAYLOAD). Carries the 0037 separate-presence-channel discipline + a MANDATORY traversal-budget gate (else CWE-400 DoS). 3 open problems; hardest = cross-tenant edge crypto custody. No measured perf number; build owner-gated behind a RED/perf harness. |
-
 ## 2026-06-27 — RD-0151..0153 (Dynamic Assimilation · Tri-Logic Ambiguity · Governed AI, notes 13-15)
+
+> RD-0150 (graph-as-data-spine, ZT 7) is in the **Adopted / Designed** table above — not repeated here.
 
 Owner notes `75-improvments-r-d-13..15` (RD-0150 reserved in worker session). Proof
 `scripts/rd-0151-0153-assimilation-ambiguity-neural-proof.mjs` (6/6 V GREEN). Full doc:
