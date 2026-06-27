@@ -15,6 +15,7 @@
 // =============================================================================
 
 import { appendFileSync } from "node:fs";
+import { redactText } from "@galerina/core-security";
 import { type RuntimeAuditEntry } from "./interpreter.js";
 import { type EvidenceRecord, type DenialRecord } from "./proof-chain.js";
 
@@ -210,7 +211,12 @@ export function buildFlowAuditEvent(
   const metadata: Record<string, string> = {};
   for (const entry of entries) {
     for (const [key, value] of Object.entries(entry.fields)) {
-      metadata[`${entry.event}.${key}`] = value;
+      // Central redaction sink (Rule 5 — "redact before writing"): mask known secret patterns
+      // (api-key/password assignments, Bearer tokens, private-key blocks) in audit field VALUES before they
+      // enter the append-only record. This PRESERVES the compliance record minus the secret instead of letting
+      // checkNoSecrets throw the whole event away, and catches assignment-style secrets that checkNoSecrets'
+      // narrow value-patterns miss. checkNoSecrets still fires (fail-closed) on anything left unredacted.
+      metadata[`${entry.event}.${key}`] = redactText(value).text;
     }
   }
 
