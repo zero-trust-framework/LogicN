@@ -25,7 +25,7 @@ import {
 // ---------------------------------------------------------------------------
 
 function pipeline(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const symbolResult = resolveSymbols(parsed.ast);
   const typeResult = checkTypes(parsed.ast);
   const vsResult = checkValueStates(parsed.ast);
@@ -52,7 +52,7 @@ function hasDiag(diags, code) {
 // =============================================================================
 
 describe("Governance conformance — Suite 1: Capability proof", () => {
-  it("declared database.read only but body calls AuditLog.write emits SPORE-EFFECT-001 or SPORE-EFFECT-002", () => {
+  it("declared database.read only but body calls AuditLog.write emits FUNGI-EFFECT-001 or FUNGI-EFFECT-002", () => {
     // AuditLog.write is an audit.write sink; only database.read is declared.
     // The effect checker detects the undeclared audit.write call.
     const diags = pipeline(`
@@ -63,11 +63,11 @@ contract { effects { database.read } }
   return Ok(Response.ok({}))
 }
 `);
-    const hasEffectError = hasDiag(diags, "SPORE-EFFECT-001") || hasDiag(diags, "SPORE-EFFECT-002");
+    const hasEffectError = hasDiag(diags, "FUNGI-EFFECT-001") || hasDiag(diags, "FUNGI-EFFECT-002");
     assert.ok(hasEffectError, `Expected an effect violation, got: ${diags.map((d) => d.code).join(", ")}`);
   });
 
-  it("pure flow that calls a database function emits SPORE-EFFECT-003", () => {
+  it("pure flow that calls a database function emits FUNGI-EFFECT-003", () => {
     // OrdersDB.find is a recognised database-read sink in the effect checker.
     const diags = pipeline(`
 pure flow findOrder(id: Int) -> String {
@@ -75,7 +75,7 @@ pure flow findOrder(id: Int) -> String {
   return "found"
 }
 `);
-    assert.ok(hasDiag(diags, "SPORE-EFFECT-003"), `Expected SPORE-EFFECT-003, got: ${diags.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(diags, "FUNGI-EFFECT-003"), `Expected FUNGI-EFFECT-003, got: ${diags.map((d) => d.code).join(", ")}`);
   });
 
   it("pure flow with only pure math produces no effect errors", () => {
@@ -84,7 +84,7 @@ pure flow add(a: Int, b: Int) -> Int {
   return a + b
 }
 `);
-    const effectErrors = diags.filter((d) => d.code.startsWith("SPORE-EFFECT-"));
+    const effectErrors = diags.filter((d) => d.code.startsWith("FUNGI-EFFECT-"));
     assert.equal(effectErrors.length, 0, `Unexpected effect errors: ${effectErrors.map((d) => d.code).join(", ")}`);
   });
 
@@ -97,7 +97,7 @@ contract { effects { network.outbound } }
   return Ok(rawResponse)
 }
 `);
-    assert.ok(!hasDiag(diags, "SPORE-EFFECT-001"), `Unexpected SPORE-EFFECT-001 for correctly declared network.outbound`);
+    assert.ok(!hasDiag(diags, "FUNGI-EFFECT-001"), `Unexpected FUNGI-EFFECT-001 for correctly declared network.outbound`);
   });
 });
 
@@ -116,11 +116,11 @@ contract { effects { database.read } }
   return Ok(rawEmail)
 }
 `);
-    const vsErrors = diags.filter((d) => d.code.startsWith("SPORE-VALUESTATE-"));
+    const vsErrors = diags.filter((d) => d.code.startsWith("FUNGI-VALUESTATE-"));
     assert.equal(vsErrors.length, 0, `Unexpected value-state errors: ${vsErrors.map((d) => d.code).join(", ")}`);
   });
 
-  it("unsafe let directly to AuditLog.write emits SPORE-VALUESTATE-003", () => {
+  it("unsafe let directly to AuditLog.write emits FUNGI-VALUESTATE-003", () => {
     const diags = pipeline(`
 secure flow processEmail(raw: String) -> Result<String, Error>
 contract { effects { database.read audit.write } }
@@ -130,10 +130,10 @@ contract { effects { database.read audit.write } }
   return Ok(rawEmail)
 }
 `);
-    assert.ok(hasDiag(diags, "SPORE-VALUESTATE-003"), `Expected SPORE-VALUESTATE-003, got: ${diags.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(diags, "FUNGI-VALUESTATE-003"), `Expected FUNGI-VALUESTATE-003, got: ${diags.map((d) => d.code).join(", ")}`);
   });
 
-  it("two-hop taint: rawEmail.trim() at governed sink emits SPORE-VALUESTATE-005", () => {
+  it("two-hop taint: rawEmail.trim() at governed sink emits FUNGI-VALUESTATE-005", () => {
     const diags = pipeline(`
 secure flow processEmail(raw: String) -> Result<String, Error>
 contract { effects { database.read audit.write } }
@@ -144,7 +144,7 @@ contract { effects { database.read audit.write } }
   return Ok(trimmed)
 }
 `);
-    assert.ok(hasDiag(diags, "SPORE-VALUESTATE-005"), `Expected SPORE-VALUESTATE-005, got: ${diags.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(diags, "FUNGI-VALUESTATE-005"), `Expected FUNGI-VALUESTATE-005, got: ${diags.map((d) => d.code).join(", ")}`);
   });
 
   it("protected email through redact() produces no value-state error at audit sink", () => {
@@ -158,7 +158,7 @@ contract { effects { database.read audit.write } }
   return Ok(rawEmail)
 }
 `);
-    const vsErrors = diags.filter((d) => d.code.startsWith("SPORE-VALUESTATE-"));
+    const vsErrors = diags.filter((d) => d.code.startsWith("FUNGI-VALUESTATE-"));
     assert.equal(vsErrors.length, 0, `Unexpected value-state errors after redact(): ${vsErrors.map((d) => d.code).join(", ")}`);
   });
 });
@@ -168,7 +168,7 @@ contract { effects { database.read audit.write } }
 // =============================================================================
 
 describe("Governance conformance — Suite 3: Response exposure", () => {
-  it("response { denies { email } } + body returns email field emits SPORE-GOV-003", () => {
+  it("response { denies { email } } + body returns email field emits FUNGI-GOV-003", () => {
     const diags = pipeline(`
 flow getPatient(readonly request: Request) -> GetPatientResult
 contract {
@@ -186,10 +186,10 @@ contract {
   return Ok(Response.ok({ patientId: patient.id, email: patient.email }))
 }
 `);
-    assert.ok(hasDiag(diags, "SPORE-GOV-003"), `Expected SPORE-GOV-003, got: ${diags.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(diags, "FUNGI-GOV-003"), `Expected FUNGI-GOV-003, got: ${diags.map((d) => d.code).join(", ")}`);
   });
 
-  it("response { denies { email } } + body returns only { patientId } produces no SPORE-GOV-003", () => {
+  it("response { denies { email } } + body returns only { patientId } produces no FUNGI-GOV-003", () => {
     const diags = pipeline(`
 flow getPatient(readonly request: Request) -> GetPatientResult
 contract {
@@ -208,7 +208,7 @@ contract {
   return Ok(Response.ok({ patientId: patient.id, name: patient.name }))
 }
 `);
-    assert.ok(!hasDiag(diags, "SPORE-GOV-003"), "Unexpected SPORE-GOV-003 when no denied fields are returned");
+    assert.ok(!hasDiag(diags, "FUNGI-GOV-003"), "Unexpected FUNGI-GOV-003 when no denied fields are returned");
   });
 });
 
@@ -217,7 +217,7 @@ contract {
 // =============================================================================
 
 describe("Governance conformance — Suite 4: Context requirement enforcement", () => {
-  it("context { require actor } + body reads context.actor produces no SPORE-CONTEXT-001", () => {
+  it("context { require actor } + body reads context.actor produces no FUNGI-CONTEXT-001", () => {
     const diags = pipeline(`
 flow getRecord(readonly request: Request) -> GetRecordResult
 contract {
@@ -235,10 +235,10 @@ contract {
   return Ok(Response.ok({ id: record.id }))
 }
 `);
-    assert.ok(!hasDiag(diags, "SPORE-CONTEXT-001"), "Unexpected SPORE-CONTEXT-001 when context.actor is accessed");
+    assert.ok(!hasDiag(diags, "FUNGI-CONTEXT-001"), "Unexpected FUNGI-CONTEXT-001 when context.actor is accessed");
   });
 
-  it("context { require actor } + body never reads actor emits SPORE-CONTEXT-001", () => {
+  it("context { require actor } + body never reads actor emits FUNGI-CONTEXT-001", () => {
     const diags = pipeline(`
 flow getRecord(readonly request: Request) -> GetRecordResult
 contract {
@@ -255,7 +255,7 @@ contract {
   return Ok(Response.ok({ id: record.id }))
 }
 `);
-    assert.ok(hasDiag(diags, "SPORE-CONTEXT-001"), `Expected SPORE-CONTEXT-001, got: ${diags.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(diags, "FUNGI-CONTEXT-001"), `Expected FUNGI-CONTEXT-001, got: ${diags.map((d) => d.code).join(", ")}`);
   });
 });
 
@@ -264,7 +264,7 @@ contract {
 // =============================================================================
 
 describe("Governance conformance — Suite 5: Contract set validation", () => {
-  it("use DeclaredSet where set exists produces no SPORE-GOV-011", () => {
+  it("use DeclaredSet where set exists produces no FUNGI-GOV-011", () => {
     const diags = pipeline(`
 contract set OrderPolicy {
   rules {}
@@ -281,10 +281,10 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!hasDiag(diags, "SPORE-GOV-011"), "Unexpected SPORE-GOV-011 when contract set is declared");
+    assert.ok(!hasDiag(diags, "FUNGI-GOV-011"), "Unexpected FUNGI-GOV-011 when contract set is declared");
   });
 
-  it("use UndeclaredSet where set does not exist emits SPORE-GOV-011", () => {
+  it("use UndeclaredSet where set does not exist emits FUNGI-GOV-011", () => {
     const diags = pipeline(`
 flow createOrder(request: Request) -> Result<Response, ApiError>
 contract {
@@ -295,7 +295,7 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(hasDiag(diags, "SPORE-GOV-011"), `Expected SPORE-GOV-011, got: ${diags.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(diags, "FUNGI-GOV-011"), `Expected FUNGI-GOV-011, got: ${diags.map((d) => d.code).join(", ")}`);
   });
 });
 
@@ -304,7 +304,7 @@ contract {
 // =============================================================================
 
 describe("Governance conformance — Suite 6: Event checking", () => {
-  it("emit PatientCreated with global event PatientCreated declared produces no SPORE-EVENT-001", () => {
+  it("emit PatientCreated with global event PatientCreated declared produces no FUNGI-EVENT-001", () => {
     const diags = pipeline(`
 event PatientCreated
 
@@ -315,10 +315,10 @@ contract { effects { database.write } }
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!hasDiag(diags, "SPORE-EVENT-001"), "Unexpected SPORE-EVENT-001 when event is declared");
+    assert.ok(!hasDiag(diags, "FUNGI-EVENT-001"), "Unexpected FUNGI-EVENT-001 when event is declared");
   });
 
-  it("emit UndeclaredEvent with no global event declaration emits SPORE-EVENT-001", () => {
+  it("emit UndeclaredEvent with no global event declaration emits FUNGI-EVENT-001", () => {
     const diags = pipeline(`
 flow createPatient(request: Request) -> Result<Response, ApiError>
 contract { effects { database.write } }
@@ -327,6 +327,6 @@ contract { effects { database.write } }
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(hasDiag(diags, "SPORE-EVENT-001"), `Expected SPORE-EVENT-001, got: ${diags.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(diags, "FUNGI-EVENT-001"), `Expected FUNGI-EVENT-001, got: ${diags.map((d) => d.code).join(", ")}`);
   });
 });

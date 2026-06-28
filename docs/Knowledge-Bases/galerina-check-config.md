@@ -23,9 +23,9 @@ a field inherits the built-in default.
   "profile": "production",
 
   "rules": {
-    "SPORE-TAINT-001": "error",
-    "SPORE-STYLE-001": "off",
-    "SPORE-PROFILE-006": "warning"
+    "FUNGI-TAINT-001": "error",
+    "FUNGI-STYLE-001": "off",
+    "FUNGI-PROFILE-006": "warning"
   },
 
   "ignore": [
@@ -63,9 +63,9 @@ Example — turn off style advisory, keep security as error:
 ```json
 {
   "rules": {
-    "SPORE-STYLE-001": "off",
-    "SPORE-TAINT-001": "error",
-    "SPORE-SYNTAX-010": "error"
+    "FUNGI-STYLE-001": "off",
+    "FUNGI-TAINT-001": "error",
+    "FUNGI-SYNTAX-010": "error"
   }
 }
 ```
@@ -85,7 +85,7 @@ When `true`, runs `@galerina/devtools-security` checks (runSecurityAudit) on eac
 Adds ~2s per file. Recommended for CI pipelines, off by default for local speed.
 
 ### `flowgraph`
-When `true`, runs `@galerina/devtools-flowgraph` checks (SPORE-GRAPH-001..006) on each file.
+When `true`, runs `@galerina/devtools-flowgraph` checks (FUNGI-GRAPH-001..006) on each file.
 Detects cycles, dead flows, authority escalation, PII leakage, missing audit coverage.
 
 ## Rules at a Glance
@@ -101,14 +101,14 @@ Detects cycles, dead flows, authority escalation, PII leakage, missing audit cov
 {
   "profile": "strict",
   "rules": {
-    "SPORE-TAINT-001": "error",
-    "SPORE-TAINT-003": "error",
-    "SPORE-TAINT-005": "error",
-    "SPORE-VAL-001": "error",
-    "SPORE-VAL-002": "error",
-    "SPORE-SYNTAX-010": "error",
-    "SPORE-SYNTAX-LEGACY-001": "error",
-    "SPORE-STYLE-001": "off"
+    "FUNGI-TAINT-001": "error",
+    "FUNGI-TAINT-003": "error",
+    "FUNGI-TAINT-005": "error",
+    "FUNGI-VAL-001": "error",
+    "FUNGI-VAL-002": "error",
+    "FUNGI-SYNTAX-010": "error",
+    "FUNGI-SYNTAX-LEGACY-001": "error",
+    "FUNGI-STYLE-001": "off"
   },
   "ignore": ["tests/**", "generated/**"],
   "minSeverity": "warning",
@@ -135,13 +135,13 @@ Key codes to configure:
 
 | Code | What it checks | Recommended |
 |---|---|---|
-| SPORE-TAINT-001 | SQL injection | `"error"` |
-| SPORE-TAINT-005 | HTTP header injection | `"error"` |
-| SPORE-TAINT-006 | SSRF | `"error"` |
-| SPORE-VAL-001/002 | safety_critical invariants | `"error"` |
-| SPORE-SYNTAX-010 | `else if` hard error | `"error"` |
-| SPORE-SYNTAX-LEGACY-001 | `with effects` removed | `"error"` |
-| SPORE-STYLE-001 | Advisory only | `"off"` or `"warning"` |
-| SPORE-PROFILE-006 | Missing runtime budget | `"warning"` |
-| SPORE-GRAPH-001 | Cycle detected | `"error"` (requires `flowgraph: true`) |
-| SPORE-GRAPH-005 | Missing audit coverage | `"warning"` (requires `flowgraph: true`) |
+| FUNGI-TAINT-001 | SQL injection | `"error"` |
+| FUNGI-TAINT-005 | HTTP header injection | `"error"` |
+| FUNGI-TAINT-006 | SSRF | `"error"` |
+| FUNGI-VAL-001/002 | safety_critical invariants | `"error"` |
+| FUNGI-SYNTAX-010 | `else if` hard error | `"error"` |
+| FUNGI-SYNTAX-LEGACY-001 | `with effects` removed | `"error"` |
+| FUNGI-STYLE-001 | Advisory only | `"off"` or `"warning"` |
+| FUNGI-PROFILE-006 | Missing runtime budget | `"warning"` |
+| FUNGI-GRAPH-001 | Cycle detected | `"error"` (requires `flowgraph: true`) |
+| FUNGI-GRAPH-005 | Missing audit coverage | `"warning"` (requires `flowgraph: true`) |

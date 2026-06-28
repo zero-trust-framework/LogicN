@@ -2,7 +2,7 @@
 // @galerina/devtools-pci — PCI DSS 4.0.1 Compliance Types
 //
 // Type definitions for PCI audit findings and reports.
-// Schema version: spore.pci-audit.v1
+// Schema version: fungi.pci-audit.v1
 // =============================================================================
 
 /** The PCI DSS 4.0.1 requirement codes covered by static analysis. */
@@ -29,7 +29,7 @@ export type PciVerdict = "pass" | "fail" | "indeterminate";
 
 /**
  * PCI DSS families that this STATIC source-level checker does NOT model and
- * therefore CANNOT attest from a .spore program alone (infrastructure / process
+ * therefore CANNOT attest from a .fungi program alone (infrastructure / process
  * families). Listing them as "not attested" — rather than silently folding them
  * into passedRequirements — is the deny-by-default fix for 0084-pci-unknown:
  *   1  — install & maintain network security controls
@@ -47,7 +47,7 @@ export const PCI_UNMODELLED_FAMILIES: readonly PciUnmodelledFamily[] = [
 
 /** A single PCI compliance finding raised by static analysis. */
 export interface PciFinding {
-  readonly code: string;            // SPORE-PCI-001..010
+  readonly code: string;            // FUNGI-PCI-001..010
   readonly name: string;
   readonly pciRequirement: PciRequirement;
   readonly severity: "critical" | "high" | "medium";
@@ -56,9 +56,9 @@ export interface PciFinding {
   readonly file?: string;
 }
 
-/** Full PCI compliance audit report for a single .spore source file. */
+/** Full PCI compliance audit report for a single .fungi source file. */
 export interface PciAuditReport {
-  readonly schemaVersion: "spore.pci-audit.v1";
+  readonly schemaVersion: "fungi.pci-audit.v1";
   readonly pciDssVersion: "4.0.1";
   readonly source: string;
   readonly findings: readonly PciFinding[];

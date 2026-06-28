@@ -1,5 +1,5 @@
 none
-// SPORE-GOV-002 is the target diagnostic for this example.
-// SPORE-GOV-002 is suppressed in the current compiler wave (Wave 2 false-positive resolution).
-// The example is stable: SPORE-TYPE-001 is suppressed; SPORE-EFFECT-002 is a warning
-// and SPORE-HINT-COMPUTE-001 is info — no unsuppressed errors.
+// FUNGI-GOV-002 is the target diagnostic for this example.
+// FUNGI-GOV-002 is suppressed in the current compiler wave (Wave 2 false-positive resolution).
+// The example is stable: FUNGI-TYPE-001 is suppressed; FUNGI-EFFECT-002 is a warning
+// and FUNGI-HINT-COMPUTE-001 is info — no unsuppressed errors.

@@ -307,4 +307,4 @@ The key principle: `no_ambient_cloud_authority`. Google Cloud's identity and acc
 - `galerina-hardware-arm.md` — ARM architecture (Axion is ARM-based)
 - `galerina-master-architecture.md` — Hardware governance rule
 - `galerina-core-economics-package.md` — CostGraph routing to cloud targets
-- `examples/healthcare/runMedicalRiskInference.spore` — Full medical AI example
+- `examples/healthcare/runMedicalRiskInference.fungi` — Full medical AI example

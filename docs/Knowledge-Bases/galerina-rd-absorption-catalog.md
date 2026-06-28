@@ -34,7 +34,7 @@ classification sweep (2026-06-17), pinned to R&D commit **`238f07a`** (Lane E de
 | tmf/research/photonic-lane-E-qkd-confidentiality.md *(CORRECTED task-0004, 2026-06-17 — 10 edits)* | `rd-absorbed/rd-photonic-lane-e-qkd-confidentiality.md` | galerina-quantum-resilience-roadmap.md |
 | tmf/spec/revocation-registry-v0.md *(roadmap #2, 2026-06-17; bench 28/28)* | `rd-absorbed/rd-revocation-registry-v0.md` | galerina-key-custody-and-rotation.md + galerina-tmf-engine.md (engine Slice-5 conformance) |
 | tmf/spec/qrng-conditioning-pipeline-v0.md *(roadmap #3, 2026-06-17; bench 17/17)* | `rd-absorbed/rd-qrng-conditioning-pipeline-v0.md` | galerina-quantum-resilience-roadmap.md (entropy.qrng interface) |
-| tmf/research/qrng-q1-entropy-capability-grounding-survey.md *(bridge task 0005, 2026-06-18; NEW; SP 800-90A/B/C grounding; QRNG = entropy source not primitive)* | `rd-absorbed/rd-qrng-q1-entropy-capability-grounding-survey.md` | galerina-qrng-entropy-capability-design.md (the `entropy.qrng` capability + SPORE-ENTROPY-001/002 fail-closed) |
+| tmf/research/qrng-q1-entropy-capability-grounding-survey.md *(bridge task 0005, 2026-06-18; NEW; SP 800-90A/B/C grounding; QRNG = entropy source not primitive)* | `rd-absorbed/rd-qrng-q1-entropy-capability-grounding-survey.md` | galerina-qrng-entropy-capability-design.md (the `entropy.qrng` capability + FUNGI-ENTROPY-001/002 fail-closed) |
 | tmf/spec/selective-disclosure-ann-v0.md *(roadmap §1 #4, 2026-06-17; bench 17/17; verdict5_clean)* | `rd-absorbed/rd-selective-disclosure-ann-v0.md` | galerina-tmf-engine.md (two-keyed .tmf sections; embedding-only ANN) |
 | tmf/research/fhe-encrypted-similarity-v0.md *(roadmap "Later/research", 2026-06-17 — **last open in-bounds R&D item**; verdict **TRACK-NOT-BUILD**)* | `rd-absorbed/rd-fhe-encrypted-similarity-v0.md` | galerina-tmf-engine.md (FHE is digital/crypto-on-core-OK but solves a threat model Galerina doesn't have; selective-disclosure ANN dominates once a trusted zone exists) |
 | tmf/research/photonic-ternary-in-tls.md | `rd-absorbed/rd-photonic-ternary-in-tls.md` | (bridge task 0002) |
@@ -43,12 +43,12 @@ classification sweep (2026-06-17), pinned to R&D commit **`238f07a`** (Lane E de
 | tmf/research/encryption-architecture.md | `rd-absorbed/rd-tmf-research-encryption-architecture.md` | galerina-tmf-engine.md |
 | tmf/research/open-questions.md | `rd-absorbed/rd-tmf-research-open-questions.md` | galerina-tmf-engine.md |
 | tmf/research/ternary-in-cryptography.md | `rd-absorbed/rd-tmf-research-ternary-in-cryptography.md` | galerina-quantum-resistance-posture.md |
-| tri-encription/research/SPORE-AMD-024-tmf-confidentiality.md | `rd-absorbed/rd-tmf-confidentiality-layout.md` | galerina-tmf-engine.md / tmf-encryption-v0 |
+| tri-encription/research/FUNGI-AMD-024-tmf-confidentiality.md | `rd-absorbed/rd-tmf-confidentiality-layout.md` | galerina-tmf-engine.md / tmf-encryption-v0 |
 | tri-encription/research/photonic-sha256-integrity.md | `rd-absorbed/rd-photonic-sha256-integrity.md` | galerina-hardware-future-substrates.md |
 | tri-encription/research/metadata-confidentiality.md | `rd-absorbed/rd-tri-encription-research-metadata-confidentiality.md` | galerina-privacy-embedding-egress.md |
 | tri-encription/research/quantum-resilient-tri-encryption.md | `rd-absorbed/rd-tri-encription-research-quantum-resilient-tri-encryption.md` | galerina-tmf-engine.md |
 | tri-encription/FINDINGS-AND-ROADMAP.md | `rd-absorbed/rd-tri-encription-findings-and-roadmap.md` | galerina-tmf-engine.md |
-| tri-encription/spore/README.md | `rd-absorbed/rd-tri-encription-spore-readme.md` | galerina-rd-adoption-2026-06-16.md |
+| tri-encription/fungi/README.md | `rd-absorbed/rd-tri-encription-fungi-readme.md` | galerina-rd-adoption-2026-06-16.md |
 | RD-DIRECTION.md | `rd-absorbed/rd-rd-direction.md` | galerina-rd-adoption-2026-06-16.md |
 | CROSSOVER-encryption-rnd.md | `rd-absorbed/rd-crossover-encryption-rnd.md` | galerina-tmf-engine.md |
 | ENCRYPTION-RND-FULL-BRIEF.md | `rd-absorbed/rd-encryption-rnd-full-brief.md` | galerina-tmf-engine.md |
@@ -65,7 +65,7 @@ classification sweep (2026-06-17), pinned to R&D commit **`238f07a`** (Lane E de
 | tmf/STATUS-AND-NEXT-STEPS.md | dated decision brief (engine-language fork now resolved → TS) | galerina-tmf-engine.md |
 | tmf/research/findings-and-next-intentions.md | narrative status (facts → App. A) | galerina-tmf-engine.md |
 | tmf/notes/1.md, 2.md, 3.md | early brainstorm; MeshQL/TUFC/transport are **gated R&D-only** | galerina-rd-adoption-2026-06-16.md |
-| tri-encription/spore/galerina-gaps-candidate-issues.md | dogfooding bug log (GAP-1..4) | galerina-build-roadmap.md (#125–#128) |
+| tri-encription/fungi/galerina-gaps-candidate-issues.md | dogfooding bug log (GAP-1..4) | galerina-build-roadmap.md (#125–#128) |
 | tri-encription/bench/README.md | benchmark data (numbers → App. A) | galerina-tmf-engine.md |
 | photonic-tri-governance/00-OVERVIEW.md, README.md | session work-records | galerina-photonic-tri-substrate-rd-agenda.md |
 | photonic-tri-governance/direction-b/{00,01}*.md | plan-and-log (Direction B) | galerina-substrate-contracts.md |
@@ -73,7 +73,7 @@ classification sweep (2026-06-17), pinned to R&D commit **`238f07a`** (Lane E de
 | FFSM/README.md, SESSION-HANDOFF.md | index / handoff | galerina-ext-bridge-quantum-design.md |
 | FFSM/_raw-miner-findings.md | raw ffsim source-mining (facts → App. A) | galerina-ext-bridge-quantum-design.md |
 
-Process/scratch deliberately **not** cataloged: `_session-bridge/*`, `*/notes/*` duplicates (`tri-encription/notes/1-3` == `tmf/notes/1-3`), probe `*.spore`, `spec/_vectors/*`, vendored `node_modules`.
+Process/scratch deliberately **not** cataloged: `_session-bridge/*`, `*/notes/*` duplicates (`tri-encription/notes/1-3` == `tmf/notes/1-3`), probe `*.fungi`, `spec/_vectors/*`, vendored `node_modules`.
 
 ### 3b. Bridge prove-own-maths reports — **curated, not mirrored** (2026-06-18)
 The `_session-bridge/done/*` reports are process docs (not mirrored verbatim, per the rule above), but the
@@ -105,10 +105,10 @@ merge, no shared crypto substrate." So Galerina **references** the seam + confor
 
 | TritMesh doc(s) | Disposition |
 |---|---|
-| `docs/design-notes/02-governance-seam-spore.md` | **captured** → `galerina-tritmesh-boundary-and-seam.md` (the PEP/PDP WASM seam) |
+| `docs/design-notes/02-governance-seam-fungi.md` | **captured** → `galerina-tritmesh-boundary-and-seam.md` (the PEP/PDP WASM seam) |
 | `galerina-issues/CONFORMANCE-FINDINGS.md` | **captured** → boundary doc (what Galerina hosts today) |
 | `galerina-issues/0001–0005` + issue `README` | **reconciled** → boundary doc table (shipped / by-design / roadmap #126/#128); see bridge task 0001 |
-| `docs/design-notes/00-provenance-and-corrections.md` | **covered** — crypto-on-core derivation = `SPORE-SUBSTRATE-001` (already in KB) |
+| `docs/design-notes/00-provenance-and-corrections.md` | **covered** — crypto-on-core derivation = `FUNGI-SUBSTRATE-001` (already in KB) |
 | `research/encryption-on-photonic-substrates.md` | **covered/superseded** — 2026-06-15 predecessor; current form is the `rd-absorbed/` lane docs + `galerina-quantum-resilience-roadmap.md` (TritMesh *inherits* the invariant from Galerina) |
 | `docs/ARCHITECTURE.md`, `docs/ROADMAP.md`, `governance/README.md` | **TritMesh-owned product** (MeshQL, ANN/HNSW, balanced-ternary entity model, `.tmf` product layout) — pointer only, not Galerina knowledge |
 | repo `CLAUDE` / `README` / `docs/LICENSE-NOTE` | repo meta / legal — skip |

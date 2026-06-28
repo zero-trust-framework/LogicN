@@ -20,7 +20,7 @@ import {
 // ---------------------------------------------------------------------------
 
 function parseFlows(source) {
-  return parseProgram(source, "test.spore");
+  return parseProgram(source, "test.fungi");
 }
 
 const SIMPLE_FLOW_SOURCE = `
@@ -207,7 +207,7 @@ describe("run() with emitSemanticGraph: true", () => {
   it("returns semanticGraph field in result", async () => {
     const result = await run(
       SIMPLE_FLOW_SOURCE,
-      "test.spore",
+      "test.fungi",
       "greet",
       new Map(),
       { emitSemanticGraph: true },
@@ -224,7 +224,7 @@ describe("run() with emitSemanticGraph: true", () => {
   it("does not include semanticGraph when option is not set", async () => {
     const result = await run(
       SIMPLE_FLOW_SOURCE,
-      "test.spore",
+      "test.fungi",
       "greet",
     );
 
@@ -254,7 +254,7 @@ contract { effects { ai.inference } }
 
 describe("buildAiGraph — version field is '2'", () => {
   it("AI graph version is '2'", () => {
-    const parsed = parseProgram(SIMPLE_FLOW_SOURCE, "test.spore");
+    const parsed = parseProgram(SIMPLE_FLOW_SOURCE, "test.fungi");
     const graph = buildAiGraph(parsed.ast, parsed.flows);
     assert.equal(graph.version, "2", "AI graph version should be '2'");
   });
@@ -262,7 +262,7 @@ describe("buildAiGraph — version field is '2'", () => {
 
 describe("buildAiGraph — capabilities mapped from effects", () => {
   it("AI graph includes capabilities mapped from effects", () => {
-    const parsed = parseProgram(EFFECT_FLOW_FOR_AI, "test.spore");
+    const parsed = parseProgram(EFFECT_FLOW_FOR_AI, "test.fungi");
     const graph = buildAiGraph(parsed.ast, parsed.flows);
     const flow = graph.flows.find((f) => f.name === "saveOrder");
     assert.ok(flow !== undefined, "saveOrder flow should be present in AI graph");
@@ -273,7 +273,7 @@ describe("buildAiGraph — capabilities mapped from effects", () => {
   });
 
   it("AI graph maps ai.inference to host.ai.inference", () => {
-    const parsed = parseProgram(AI_INFERENCE_FLOW, "test.spore");
+    const parsed = parseProgram(AI_INFERENCE_FLOW, "test.fungi");
     const graph = buildAiGraph(parsed.ast, parsed.flows);
     const flow = graph.flows.find((f) => f.name === "classify");
     assert.ok(flow !== undefined, "classify flow should be present in AI graph");
@@ -284,7 +284,7 @@ describe("buildAiGraph — capabilities mapped from effects", () => {
   });
 
   it("pure flow with no effects has empty capabilities array", () => {
-    const parsed = parseProgram(SIMPLE_FLOW_SOURCE, "test.spore");
+    const parsed = parseProgram(SIMPLE_FLOW_SOURCE, "test.fungi");
     const graph = buildAiGraph(parsed.ast, parsed.flows);
     const flow = graph.flows.find((f) => f.name === "greet");
     assert.ok(flow !== undefined, "greet flow should be present in AI graph");
@@ -294,13 +294,13 @@ describe("buildAiGraph — capabilities mapped from effects", () => {
 
 describe("buildAiGraph — diagnostics field is an array", () => {
   it("AI graph diagnostics field is an array", () => {
-    const parsed = parseProgram(SIMPLE_FLOW_SOURCE, "test.spore");
+    const parsed = parseProgram(SIMPLE_FLOW_SOURCE, "test.fungi");
     const graph = buildAiGraph(parsed.ast, parsed.flows);
     assert.ok(Array.isArray(graph.diagnostics), "diagnostics should be an array");
   });
 
   it("AI graph diagnostics is empty for a clean flow", () => {
-    const parsed = parseProgram(SIMPLE_FLOW_SOURCE, "test.spore");
+    const parsed = parseProgram(SIMPLE_FLOW_SOURCE, "test.fungi");
     const graph = buildAiGraph(parsed.ast, parsed.flows);
     assert.equal(graph.diagnostics.length, 0, "diagnostics should be empty for a clean flow");
   });
@@ -308,13 +308,13 @@ describe("buildAiGraph — diagnostics field is an array", () => {
 
 describe("buildAiGraph — no values field", () => {
   it("AI graph does NOT include a 'values' field", () => {
-    const parsed = parseProgram(EFFECT_FLOW_FOR_AI, "test.spore");
+    const parsed = parseProgram(EFFECT_FLOW_FOR_AI, "test.fungi");
     const graph = buildAiGraph(parsed.ast, parsed.flows);
     assert.ok(!("values" in graph), "AI graph must not contain a 'values' field");
   });
 
   it("AI graph flows do NOT include a 'values' field", () => {
-    const parsed = parseProgram(EFFECT_FLOW_FOR_AI, "test.spore");
+    const parsed = parseProgram(EFFECT_FLOW_FOR_AI, "test.fungi");
     const graph = buildAiGraph(parsed.ast, parsed.flows);
     for (const flow of graph.flows) {
       assert.ok(!("values" in flow), `Flow '${flow.name}' must not contain a 'values' field`);
@@ -326,7 +326,7 @@ describe("run() with emitAiGraph: true — version 2 format", () => {
   it("returns aiGraphJson field when emitAiGraph is true", async () => {
     const result = await run(
       SIMPLE_FLOW_SOURCE,
-      "test.spore",
+      "test.fungi",
       "greet",
       new Map(),
       { emitAiGraph: true },
@@ -340,7 +340,7 @@ describe("run() with emitAiGraph: true — version 2 format", () => {
   it("aiGraphJson from run() has diagnostics array and no values field", async () => {
     const result = await run(
       SIMPLE_FLOW_SOURCE,
-      "test.spore",
+      "test.fungi",
       "greet",
       new Map(),
       { emitAiGraph: true },

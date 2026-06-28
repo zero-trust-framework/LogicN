@@ -9,7 +9,7 @@ re-running the toolchain.
 
 ## Flow: getPatient
 
-**Source:** `getPatient.spore`
+**Source:** `getPatient.fungi`
 **Qualifier:** `secure`
 
 ### Declared Effects
@@ -37,7 +37,7 @@ The following fields are declared PHI in the `privacy` block:
 
 Both fields are redacted before any response or audit write. The compiler
 enforces `require redaction before audit.write`, meaning the effect checker
-will emit `SPORE-EFFECT-*` diagnostics if `redact()` is not called before
+will emit `FUNGI-EFFECT-*` diagnostics if `redact()` is not called before
 `AuditLog.write`.
 
 The `deny protected PatientId to response.body` rule prevents the raw

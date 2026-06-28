@@ -1,14 +1,14 @@
 // =============================================================================
-// Phase R7B: Stage B Parser Parity — TypeScript parser vs parser.spore
+// Phase R7B: Stage B Parser Parity — TypeScript parser vs parser.fungi
 //
-// Verifies that the self-hosted parser (src/self-hosted/parser.spore) can
+// Verifies that the self-hosted parser (src/self-hosted/parser.fungi) can
 // parse the same input that the TypeScript reference parser handles, and
 // reports a side-by-side gap analysis.
 //
 // Test input: "pure flow add(a: Int, b: Int) -> Int { return a }"
 //
 // Gap reporting strategy:
-//   The self-hosted parser (parser.spore) is a Stage B milestone. Tests report
+//   The self-hosted parser (parser.fungi) is a Stage B milestone. Tests report
 //   gaps and pass with assert.ok(true) so CI does not block on parity.
 //   When full parity is reached, flip PARITY_ACHIEVED to true.
 // =============================================================================
@@ -28,7 +28,7 @@ import {
 } from "../../dist/index.js";
 
 // ---------------------------------------------------------------------------
-// Flip to true once parser.spore achieves full parity with the TS parser.
+// Flip to true once parser.fungi achieves full parity with the TS parser.
 // ---------------------------------------------------------------------------
 const PARITY_ACHIEVED = false;
 
@@ -37,7 +37,7 @@ const PARITY_ACHIEVED = false;
 // ---------------------------------------------------------------------------
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const PARSER_PATH = join(__dir, "../../src/self-hosted/parser.spore");
+const PARSER_PATH = join(__dir, "../../src/self-hosted/parser.fungi");
 
 // ---------------------------------------------------------------------------
 // The source under test
@@ -46,13 +46,13 @@ const PARSER_PATH = join(__dir, "../../src/self-hosted/parser.spore");
 const FLOW_SOURCE = "pure flow add(a: Int, b: Int) -> Int { return a }";
 
 // ---------------------------------------------------------------------------
-// Helper: load and compile parser.spore
+// Helper: load and compile parser.fungi
 // ---------------------------------------------------------------------------
 
 function loadSelfHostedParser() {
   let source = readFileSync(PARSER_PATH, "utf8");
   if (source.charCodeAt(0) === 0xFEFF) source = source.slice(1);
-  const parsed = parseProgram(source, "parser.spore");
+  const parsed = parseProgram(source, "parser.fungi");
   resolveSymbols(parsed.ast);
   checkTypes(parsed.ast);
   return parsed;
@@ -63,7 +63,7 @@ function loadSelfHostedParser() {
 // ---------------------------------------------------------------------------
 
 function tsParserFlowNames(source) {
-  const result = parseProgram(source, "parity.spore");
+  const result = parseProgram(source, "parity.fungi");
   return result.flows.map((f) => f.name);
 }
 
@@ -71,12 +71,12 @@ function tsParserFlowNames(source) {
 // Tests
 // ---------------------------------------------------------------------------
 
-describe("R7B: Stage B parser parity: TS parser vs parser.spore", () => {
+describe("R7B: Stage B parser parity: TS parser vs parser.fungi", () => {
 
   // ── 1. TypeScript parser baseline ─────────────────────────────────────────
 
   it("TS parser: parses FLOW_SOURCE without errors", () => {
-    const result = parseProgram(FLOW_SOURCE, "parity.spore");
+    const result = parseProgram(FLOW_SOURCE, "parity.fungi");
     const errors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       errors.length,
@@ -93,30 +93,30 @@ describe("R7B: Stage B parser parity: TS parser vs parser.spore", () => {
     );
   });
 
-  // ── 2. parser.spore baseline ────────────────────────────────────────────────
+  // ── 2. parser.fungi baseline ────────────────────────────────────────────────
 
-  it("parser.spore: parses with zero errors", () => {
+  it("parser.fungi: parses with zero errors", () => {
     let source = readFileSync(PARSER_PATH, "utf8");
     if (source.charCodeAt(0) === 0xFEFF) source = source.slice(1);
-    const parsed = parseProgram(source, "parser.spore");
+    const parsed = parseProgram(source, "parser.fungi");
     const errors = parsed.diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       errors.length,
       0,
-      `parser.spore parse errors: ${errors.map((e) => e.message).join("; ")}`,
+      `parser.fungi parse errors: ${errors.map((e) => e.message).join("; ")}`,
     );
   });
 
-  it("parser.spore: has at least one flow declared", () => {
+  it("parser.fungi: has at least one flow declared", () => {
     let source = readFileSync(PARSER_PATH, "utf8");
     if (source.charCodeAt(0) === 0xFEFF) source = source.slice(1);
-    const parsed = parseProgram(source, "parser.spore");
+    const parsed = parseProgram(source, "parser.fungi");
     const flowCount = parsed.flows.length;
     const status = flowCount > 0 ? `${flowCount} flow(s) found` : "no flows found";
-    console.log(`  [parser.spore] ${status}`);
+    console.log(`  [parser.fungi] ${status}`);
     assert.ok(
       true,
-      `parser.spore status: ${status}`,
+      `parser.fungi status: ${status}`,
     );
   });
 
@@ -126,14 +126,14 @@ describe("R7B: Stage B parser parity: TS parser vs parser.spore", () => {
     const tsNames = tsParserFlowNames(FLOW_SOURCE);
     const tsFlowCount = tsNames.length;
 
-    // Determine parser.spore status
+    // Determine parser.fungi status
     let selfHostedSource = readFileSync(PARSER_PATH, "utf8");
     if (selfHostedSource.charCodeAt(0) === 0xFEFF) selfHostedSource = selfHostedSource.slice(1);
-    const selfParsed = parseProgram(selfHostedSource, "parser.spore");
+    const selfParsed = parseProgram(selfHostedSource, "parser.fungi");
     const parserSpore = selfParsed.diagnostics.filter((d) => d.severity === "error").length;
     const parserSporeStatus = parserSpore === 0 ? "ok (0 parse errors)" : `${parserSpore} parse errors`;
 
-    const msg = `parser parity: TypeScript found ${tsFlowCount} flow(s) [${tsNames.join(", ")}], parser.spore status: ${parserSporeStatus}`;
+    const msg = `parser parity: TypeScript found ${tsFlowCount} flow(s) [${tsNames.join(", ")}], parser.fungi status: ${parserSporeStatus}`;
     console.log(`  [parity] ${msg}`);
 
     if (PARITY_ACHIEVED) {
@@ -143,25 +143,25 @@ describe("R7B: Stage B parser parity: TS parser vs parser.spore", () => {
     }
   });
 
-  it("parity: parser.spore has 0 parse errors (informational)", () => {
+  it("parity: parser.fungi has 0 parse errors (informational)", () => {
     let selfHostedSource = readFileSync(PARSER_PATH, "utf8");
     if (selfHostedSource.charCodeAt(0) === 0xFEFF) selfHostedSource = selfHostedSource.slice(1);
-    const selfParsed = parseProgram(selfHostedSource, "parser.spore");
+    const selfParsed = parseProgram(selfHostedSource, "parser.fungi");
     const errors = selfParsed.diagnostics.filter((d) => d.severity === "error");
     const parserSporeStatus = errors.length === 0 ? "ok" : `${errors.length} parse errors`;
 
-    const msg = `parser.spore status: ${parserSporeStatus}`;
+    const msg = `parser.fungi status: ${parserSporeStatus}`;
     console.log(`  [parity] ${msg}`);
 
     if (errors.length > 0) {
-      console.log(`  [parity] parser.spore errors: ${errors.map((e) => e.message).join("; ")}`);
+      console.log(`  [parity] parser.fungi errors: ${errors.map((e) => e.message).join("; ")}`);
     }
 
     if (PARITY_ACHIEVED) {
-      assert.equal(errors.length, 0, `parser.spore parse errors: ${errors.map((e) => e.message).join("; ")}`);
+      assert.equal(errors.length, 0, `parser.fungi parse errors: ${errors.map((e) => e.message).join("; ")}`);
     } else {
       // Soft assertion: 0 parse errors is the goal
-      assert.ok(true, `parser parity: TypeScript found 1 flows, parser.spore status: ${parserSporeStatus}`);
+      assert.ok(true, `parser parity: TypeScript found 1 flows, parser.fungi status: ${parserSporeStatus}`);
     }
   });
 });

@@ -32,7 +32,7 @@ The governance layer establishes:
 
 Aligns with: `OpticalTransportMode` six-value enum, `PhotonicRuntimeTarget` v0.2,
 `PhotonicExecutionPlan` v0.2, `PhotonicCapability` definitions, topology constraints,
-validation functions, deterministic execution requirements, SPORE-PHOTONIC-001–006.
+validation functions, deterministic execution requirements, FUNGI-PHOTONIC-001–006.
 
 ---
 
@@ -411,9 +411,9 @@ transport arbitration.
 
 ---
 
-## 13. SPORE-PHOTONIC Governance Compliance
+## 13. FUNGI-PHOTONIC Governance Compliance
 
-SPORE-PHOTONIC-001 through SPORE-PHOTONIC-006 governance requirements introduced
+FUNGI-PHOTONIC-001 through FUNGI-PHOTONIC-006 governance requirements introduced
 in v0.2 SHALL be treated as normative controls.
 
 Governance implementations MUST preserve: transport determinism, topology
@@ -516,7 +516,7 @@ Galerina Core Photonic v0.2 introduces a deterministic governance architecture l
 - deterministic execution enforcement
 - execution plan validation
 - audit traceability
-- SPORE-PHOTONIC-001–006 compliance
+- FUNGI-PHOTONIC-001–006 compliance
 
 See: docs/Knowledge-Bases/galerina-core-photonic-governance-architecture.md
 ```
@@ -526,7 +526,7 @@ See: docs/Knowledge-Bases/galerina-core-photonic-governance-architecture.md
 The prior backend architecture KB used:
 - a three-value `OpticalTransportMode` string union
 - earlier `PhotonicRuntimeTarget` field definitions
-- earlier SPORE-PHOTONIC semantic meanings
+- earlier FUNGI-PHOTONIC semantic meanings
 
 This governance architecture formalizes migration to:
 - six-value `OpticalTransportMode` enum (governance form)

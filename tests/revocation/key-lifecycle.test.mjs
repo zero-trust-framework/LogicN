@@ -11,7 +11,7 @@ import { join } from "node:path";
 import { assessSigningKey, provisionDevKey } from "../../governance/key-lifecycle.mjs";
 
 function freshRoot() {
-  const d = mkdtempSync(join(tmpdir(), "spore-key-"));
+  const d = mkdtempSync(join(tmpdir(), "fungi-key-"));
   mkdirSync(join(d, "governance"), { recursive: true });
   // Unsigned registry (graceful trust) listing one known-revoked key.
   writeFileSync(
@@ -33,27 +33,27 @@ function writePub(d, keyId) {
 }
 const has = (r, code, sev) => r.diagnostics.some((x) => x.code === code && (!sev || x.severity === sev));
 
-test("no key + dev → auto-provision (SPORE-KEY-001 notice, not fatal)", () => {
+test("no key + dev → auto-provision (FUNGI-KEY-001 notice, not fatal)", () => {
   const r = assessSigningKey({ rootDir: freshRoot(), profile: "dev" });
   assert.equal(r.action, "auto-provision");
   assert.equal(r.fatal, false);
-  assert.ok(has(r, "SPORE-KEY-001", "notice"));
+  assert.ok(has(r, "FUNGI-KEY-001", "notice"));
 });
 
-test("no key + production → fail-closed (SPORE-KEY-001 error)", () => {
+test("no key + production → fail-closed (FUNGI-KEY-001 error)", () => {
   const r = assessSigningKey({ rootDir: freshRoot(), profile: "production" });
   assert.equal(r.fatal, true);
   assert.equal(r.action, "fail-closed");
-  assert.ok(has(r, "SPORE-KEY-001", "error"));
+  assert.ok(has(r, "FUNGI-KEY-001", "error"));
 });
 
-test("revoked key → fail-closed (SPORE-KEY-004), every diagnostic carries remediation", () => {
+test("revoked key → fail-closed (FUNGI-KEY-004), every diagnostic carries remediation", () => {
   const d = freshRoot();
   writeEnv(d, { GALERINA_SIGNING_KEY_ID: "revokedkey00000", GALERINA_SIGNING_PRIVATE_KEY_B64: "x" });
   writePub(d, "revokedkey00000");
   const r = assessSigningKey({ rootDir: d });
   assert.equal(r.fatal, true);
-  assert.ok(has(r, "SPORE-KEY-004"));
+  assert.ok(has(r, "FUNGI-KEY-004"));
   assert.ok(r.diagnostics.every((x) => typeof x.fix === "string" && x.fix.length > 0));
 });
 
@@ -71,7 +71,7 @@ test("fresh valid key → ok, silent (no diagnostics)", () => {
   assert.equal(r.diagnostics.length, 0);
 });
 
-test("stale key → warning (SPORE-KEY-002), NOT fatal (still usable while rotating)", () => {
+test("stale key → warning (FUNGI-KEY-002), NOT fatal (still usable while rotating)", () => {
   const d = freshRoot();
   const old = new Date(Date.now() - 200 * 86_400_000).toISOString();
   writeEnv(d, {
@@ -82,7 +82,7 @@ test("stale key → warning (SPORE-KEY-002), NOT fatal (still usable while rotat
   writePub(d, "stalekey0000001");
   const r = assessSigningKey({ rootDir: d, staleDays: 90 });
   assert.equal(r.fatal, false);
-  assert.ok(has(r, "SPORE-KEY-002", "warning"));
+  assert.ok(has(r, "FUNGI-KEY-002", "warning"));
 });
 
 test("provisionDevKey is zero-touch: creates a key the assessor then accepts", () => {

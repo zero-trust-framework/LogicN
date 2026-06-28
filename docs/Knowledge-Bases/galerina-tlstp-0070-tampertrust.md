@@ -10,7 +10,7 @@
 
 ## 1. What it is + why adopted
 
-The TamperTrust resolver is the **lawful form** of the owner's "use photonic/optical physical state as an auth factor" proposal (notes/42-auth Doc001 §4 / Doc003 §3B): instead of letting a measured physical deviation `δ` *authenticate*, it turns `δ` into a **degrade-only K3 governance verdict** that can only push an upstream decision toward DENY, never manufacture an ALLOW (done report §0–§3; grounding D3, net-new #2). It was adopted because it reuses the shipped governance kernel *verbatim* — `vAnd`/`effectiveVerdict` (Kleene meet, `three-valued-governance.ts:48-51`, `substrate-model.ts:204-206`), the noisy-lane tolerance gate `verifyToleranceUnderNoise` with `SPORE-SUBSTRATE-001..004` (`substrate-model.ts:300-335`), the erasure-to-0 read rule (`substrate-model.ts:167-185`), and the audited boundary collapse `decideAtBoundary` (`three-valued-governance.ts:141-153`) — adding **zero new crypto and zero new gate semantics**. Identity stays Binary (Ed25519 + ML-DSA-65); the TamperTrust verdict is bound as a **`cnf`-row caveat under** that digital signature (RFC 8747 confirmation key), defense-in-depth, **never sole**. Honest tiering: the **governance resolver is buildable today** against the deterministic photonic emulator; the **optical sensing front-end is aspirational-HW** (`emulator.ts:27,43` reports `deterministic=false`, `ENOB_CEILING=8`) and no "unspoofable" claim is made (optical PUFs are PAC-learnable).
+The TamperTrust resolver is the **lawful form** of the owner's "use photonic/optical physical state as an auth factor" proposal (notes/42-auth Doc001 §4 / Doc003 §3B): instead of letting a measured physical deviation `δ` *authenticate*, it turns `δ` into a **degrade-only K3 governance verdict** that can only push an upstream decision toward DENY, never manufacture an ALLOW (done report §0–§3; grounding D3, net-new #2). It was adopted because it reuses the shipped governance kernel *verbatim* — `vAnd`/`effectiveVerdict` (Kleene meet, `three-valued-governance.ts:48-51`, `substrate-model.ts:204-206`), the noisy-lane tolerance gate `verifyToleranceUnderNoise` with `FUNGI-SUBSTRATE-001..004` (`substrate-model.ts:300-335`), the erasure-to-0 read rule (`substrate-model.ts:167-185`), and the audited boundary collapse `decideAtBoundary` (`three-valued-governance.ts:141-153`) — adding **zero new crypto and zero new gate semantics**. Identity stays Binary (Ed25519 + ML-DSA-65); the TamperTrust verdict is bound as a **`cnf`-row caveat under** that digital signature (RFC 8747 confirmation key), defense-in-depth, **never sole**. Honest tiering: the **governance resolver is buildable today** against the deterministic photonic emulator; the **optical sensing front-end is aspirational-HW** (`emulator.ts:27,43` reports `deterministic=false`, `ENOB_CEILING=8`) and no "unspoofable" claim is made (optical PUFs are PAC-learnable).
 
 ---
 
@@ -52,11 +52,11 @@ Key asymmetry: the **only** way to obtain `r = +1` is a clean read strictly insi
 Before a noisy `r` is allowed to *confirm* anything, the read must **provably converge** under N-modular voting, else it denies. The gate runs with `ctx = { hasCryptoEffect:false, laneIsNoisy:true, sinkRequiresDeterminism:true }` and applies a fixed priority (`substrate-model.ts:298, 309-333`):
 
 ```
-  001  hasCryptoEffect ∧ laneIsNoisy                       → DENY  SPORE-SUBSTRATE-001  (never: crypto stays Binary)
-  004  laneIsNoisy ∧ sinkRequiresDeterminism ∧ N = 1       → DENY  SPORE-SUBSTRATE-004  (un-voted read into a det. sink)
-  003  ¬met ∧ (pBad ≥ 0.5)                                 → DENY  SPORE-SUBSTRATE-003  (voting cannot converge)
-  003  ¬met ∧ N > 1                                        → DENY  SPORE-SUBSTRATE-003  (declared N still short)
-  002  ¬met ∧ N = 1                                        → DENY  SPORE-SUBSTRATE-002  (tolerance unmet at N=1)
+  001  hasCryptoEffect ∧ laneIsNoisy                       → DENY  FUNGI-SUBSTRATE-001  (never: crypto stays Binary)
+  004  laneIsNoisy ∧ sinkRequiresDeterminism ∧ N = 1       → DENY  FUNGI-SUBSTRATE-004  (un-voted read into a det. sink)
+  003  ¬met ∧ (pBad ≥ 0.5)                                 → DENY  FUNGI-SUBSTRATE-003  (voting cannot converge)
+  003  ¬met ∧ N > 1                                        → DENY  FUNGI-SUBSTRATE-003  (declared N still short)
+  002  ¬met ∧ N = 1                                        → DENY  FUNGI-SUBSTRATE-002  (tolerance unmet at N=1)
   ----                                                     → ALLOW (tolerance proven)
 ```
 
@@ -108,7 +108,7 @@ The single `+1` cell (bottom-right) requires `t* = +1` **and** `r = +1`.
 ```
   e = +1  → allow,  no diagnostic
   e = −1  → deny,   no diagnostic (ordinary policy denial)
-  e =  0  → deny,   emit SPORE-GOV-3VL-001 (INDETERMINATE_COLLAPSED_TO_DENY)
+  e =  0  → deny,   emit FUNGI-GOV-3VL-001 (INDETERMINATE_COLLAPSED_TO_DENY)
 ```
 
 ### 2.5 The No-Coercion theorem (degrade-only, structural)
@@ -171,18 +171,18 @@ Two sub-cases, both denying.
 1. **Quantise.** `dead = true` ⇒ `r = 0` (mirrors `NoisyLane.read` erasure-to-0, `substrate-model.ts:170-172`).
 2. **Tolerance gate.** `met = true` (params fine).
 3. **Fold.** `e = vAnd(+1, 0) = min(+1, 0) = 0`.
-4. **Boundary.** `decideAtBoundary(0)` ⇒ **deny** + **`SPORE-GOV-3VL-001`** (`INDETERMINATE_COLLAPSED_TO_DENY`).
+4. **Boundary.** `decideAtBoundary(0)` ⇒ **deny** + **`FUNGI-GOV-3VL-001`** (`INDETERMINATE_COLLAPSED_TO_DENY`).
 
 **Outcome: DENY (audited).** Unknown → DENY, with a diagnostic that is structurally impossible to drop.
 
 **C2 — un-voted noisy read into a deterministic sink.** Same as A (`δ = 1.8`, `r` would be `+1`) **but declared `N = 1`** and `ctx.sinkRequiresDeterminism = true`.
 1. **Quantise.** `r = +1` provisionally.
-2. **Tolerance gate.** Branch 004 fires first: `laneIsNoisy ∧ sinkRequiresDeterminism ∧ N === 1` ⇒ **DENY `SPORE-SUBSTRATE-004`** (`substrate-model.ts:315-317`). The gate's verdict is `DENY`, short-circuiting the fold.
+2. **Tolerance gate.** Branch 004 fires first: `laneIsNoisy ∧ sinkRequiresDeterminism ∧ N === 1` ⇒ **DENY `FUNGI-SUBSTRATE-004`** (`substrate-model.ts:315-317`). The gate's verdict is `DENY`, short-circuiting the fold.
 3. **Result.** Resolver returns DENY before any confirm is possible.
 
 **Outcome: DENY.** An un-voted analog reading is never allowed to confirm a determinism-requiring decision.
 
-**C3 (variant) — noisy lane, voting cannot converge.** If the sensing profile were the degraded one (`phaseDriftSigma = 0.6`, `crosstalkCoeff = 0.6`, `readoutSigma = 6.0`, `laneFailureProb = 0.2`): `pFlip` clamps to `1.0`, `pBad = 1.0 ≥ 0.5`, so `redundancyHelps = false`; even `N = 7` gives `ε_model = 1.0 > ε_decl`. Branch 003 fires ⇒ **DENY `SPORE-SUBSTRATE-003`** ("majority voting does not converge"). A lane this noisy can never produce a trustworthy confirm.
+**C3 (variant) — noisy lane, voting cannot converge.** If the sensing profile were the degraded one (`phaseDriftSigma = 0.6`, `crosstalkCoeff = 0.6`, `readoutSigma = 6.0`, `laneFailureProb = 0.2`): `pFlip` clamps to `1.0`, `pBad = 1.0 ≥ 0.5`, so `redundancyHelps = false`; even `N = 7` gives `ε_model = 1.0 > ε_decl`. Branch 003 fires ⇒ **DENY `FUNGI-SUBSTRATE-003`** ("majority voting does not converge"). A lane this noisy can never produce a trustworthy confirm.
 
 ---
 
@@ -196,15 +196,15 @@ Two sub-cases, both denying.
 
 2. **Quantiser `deviationToTrit(δ, τ, dead): Verdict`.** Implement §2.1 exactly. **HARD PART:** the dead-lane branch MUST be tested *first* and MUST return `0`, never ±1 — this is the erasure-to-0 invariant (`substrate-model.ts:167-172, 180`). Do not "default to +1 when uncertain."
 
-3. **Tolerance gate.** Call `verifyToleranceUnderNoise(params, guarantee, ctx, profile)` (`substrate-model.ts:300-335`) with `ctx = { hasCryptoEffect:false, laneIsNoisy:true, sinkRequiresDeterminism:true }`. If `decision.verdict === DENY`, return it immediately (do not fold). **HARD PART:** set `hasCryptoEffect:false` deliberately and document why — if anyone ever wires a crypto effect onto this lane, 001 (`SPORE-SUBSTRATE-001`, `substrate-model.ts:310-312`) must fire; the resolver is *not* the place to relax that. Also: pass the **same** `params` to the gate that the quantiser's noise assumptions came from (a mismatch silently lies about convergence).
+3. **Tolerance gate.** Call `verifyToleranceUnderNoise(params, guarantee, ctx, profile)` (`substrate-model.ts:300-335`) with `ctx = { hasCryptoEffect:false, laneIsNoisy:true, sinkRequiresDeterminism:true }`. If `decision.verdict === DENY`, return it immediately (do not fold). **HARD PART:** set `hasCryptoEffect:false` deliberately and document why — if anyone ever wires a crypto effect onto this lane, 001 (`FUNGI-SUBSTRATE-001`, `substrate-model.ts:310-312`) must fire; the resolver is *not* the place to relax that. Also: pass the **same** `params` to the gate that the quantiser's noise assumptions came from (a mismatch silently lies about convergence).
 
 4. **Fold.** `e = effectiveVerdict(t*, r)` (`substrate-model.ts:204-206`) where `t*` is the verdict the digital path already produced. **HARD PART:** the fold MUST run *after* the digital signature path produces `t*` — never before, never in parallel with key/sig verification. The resolver consumes a finished `t*`; it does not participate in signature checking.
 
-5. **Boundary collapse.** `decideAtBoundary(e, onDiagnostic)` (`three-valued-governance.ts:141-153`), forwarding `SPORE-GOV-3VL-001` to the `AuditLogger` egress when `e = 0`.
+5. **Boundary collapse.** `decideAtBoundary(e, onDiagnostic)` (`three-valued-governance.ts:141-153`), forwarding `FUNGI-GOV-3VL-001` to the `AuditLogger` egress when `e = 0`.
 
 6. **`cnf`-row binding (capsule integration).** Emit the resolved TamperTrust verdict as an **attenuation-only `cnf` caveat under** the capsule's Ed25519 + ML-DSA-65 signature (RFC 8747; the same `cnf` seam 0068 uses for RFC-5705 channel-binding). **HARD PART:** it must be a *caveat that can only narrow or deny*, bound **inside** the signed structure — if it rides outside the signature it is forgeable, and if it can *broaden* authority it violates the Monotonic-Security rule. Reconcile the capsule's §2-vs-§8 pre-hash contradiction (grounding D13) before wiring the reader.
 
-7. **Tests (emulator-driven).** Drive `P_actual` from `galerina-ext-photonic-emulator` (seeded `value` only). Cover: (a) within-band confirm (Example A); (b) out-of-band deny (Example B); (c) dead-lane → `0` → deny + `SPORE-GOV-3VL-001` (C1); (d) `N=1` deterministic-sink → `SPORE-SUBSTRATE-004` (C2); (e) degraded profile → `SPORE-SUBSTRATE-003` (C3); (f) a **No-Coercion exhaustive table test**: for all 9 `(t*, r)` pairs assert `vAnd(t*, r) ≤ t*` and `e = +1 ⟺ t*=+1 ∧ r=+1`; (g) a spoof test: forced `r = +1` against `t* ∈ {0,−1}` still denies. **HARD PART / the easiest thing to get wrong:** the emulator's `BridgeResult.latencyMs` is **wall-clock** (`photonic-bridge.ts:118, 128`) and `deterministic=false` (`photonic-bridge.ts:11`, `emulator.ts:27`). It MUST NEVER enter the trit path — only the seeded `value` may drive the quantiser. Folding `latencyMs` (or any non-seeded field) would inject non-determinism into a verdict and break the reproducible-build property.
+7. **Tests (emulator-driven).** Drive `P_actual` from `galerina-ext-photonic-emulator` (seeded `value` only). Cover: (a) within-band confirm (Example A); (b) out-of-band deny (Example B); (c) dead-lane → `0` → deny + `FUNGI-GOV-3VL-001` (C1); (d) `N=1` deterministic-sink → `FUNGI-SUBSTRATE-004` (C2); (e) degraded profile → `FUNGI-SUBSTRATE-003` (C3); (f) a **No-Coercion exhaustive table test**: for all 9 `(t*, r)` pairs assert `vAnd(t*, r) ≤ t*` and `e = +1 ⟺ t*=+1 ∧ r=+1`; (g) a spoof test: forced `r = +1` against `t* ∈ {0,−1}` still denies. **HARD PART / the easiest thing to get wrong:** the emulator's `BridgeResult.latencyMs` is **wall-clock** (`photonic-bridge.ts:118, 128`) and `deterministic=false` (`photonic-bridge.ts:11`, `emulator.ts:27`). It MUST NEVER enter the trit path — only the seeded `value` may drive the quantiser. Folding `latencyMs` (or any non-seeded field) would inject non-determinism into a verdict and break the reproducible-build property.
 
 ### Gotchas summary (called out explicitly)
 

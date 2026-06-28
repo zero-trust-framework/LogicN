@@ -5,7 +5,7 @@ import { parseProgram } from "../dist/index.js";
 function parseExpr(exprSource) {
   // Wrap in a pure flow so the parser has a valid context
   const source = `pure flow test(a: Int, b: Int, status: Status) -> Int {\n  return ${exprSource}\n}`;
-  const result = parseProgram(source, "test.spore");
+  const result = parseProgram(source, "test.fungi");
   // Find the binaryExpr or unaryExpr node in the return statement
   return result;
 }
@@ -146,7 +146,7 @@ describe("Readable logic forms — 'unless'", () => {
   }
   return x
 }`;
-    const result = parseProgram(source, "test.spore");
+    const result = parseProgram(source, "test.fungi");
     const ifNode = findNode(result.ast, "ifStmt");
     assert.ok(ifNode !== undefined, "Expected ifStmt node");
     assert.equal(ifNode.value, "unless");
@@ -167,7 +167,7 @@ describe("Readable logic forms — 'unless'", () => {
   }
   return x
 }`;
-    const result = parseProgram(source, "test.spore");
+    const result = parseProgram(source, "test.fungi");
     const ifNode = findNode(result.ast, "ifStmt");
     assert.ok(ifNode !== undefined, "Expected ifStmt node");
     assert.equal(ifNode.value, "unless");
@@ -181,7 +181,7 @@ describe("Readable logic forms — mixed style", () => {
     const source = `pure flow test(amount: Int, status: Status) -> Bool {
   return amount > 10 and status is Active
 }`;
-    const result = parseProgram(source, "test.spore");
+    const result = parseProgram(source, "test.fungi");
     // Should have no errors
     const errors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, `Expected no errors, got: ${errors.map((e) => e.message).join(", ")}`);
@@ -195,7 +195,7 @@ describe("Readable logic forms — mixed style", () => {
     const source = `pure flow test(a: Bool, b: Bool, c: Bool) -> Bool {
   return a and b or c
 }`;
-    const result = parseProgram(source, "test.spore");
+    const result = parseProgram(source, "test.fungi");
     // Should parse as (a and b) or c → || at top
     const orNode = findNodeWhere(result.ast, (n) => n.kind === "binaryExpr" && n.value === "||");
     assert.ok(orNode !== undefined, "Expected top-level || node");

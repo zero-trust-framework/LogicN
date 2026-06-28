@@ -6,7 +6,7 @@ import { parseProgram, checkTypes } from "../dist/index.js";
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function parseAndCheck(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   return checkTypes(parsed.ast);
 }
 
@@ -18,10 +18,10 @@ function diagsWithCode(result, code) {
   return result.diagnostics.filter((d) => d.code === code);
 }
 
-// ── Task 1: SPORE-TYPE-005 — call argument type mismatch ───────────────────────
+// ── Task 1: FUNGI-TYPE-005 — call argument type mismatch ───────────────────────
 
-describe("Type checker — SPORE-TYPE-005 InvalidCallArgType", () => {
-  it("emits SPORE-TYPE-005 when calling flow(42) where flow expects String", () => {
+describe("Type checker — FUNGI-TYPE-005 InvalidCallArgType", () => {
+  it("emits FUNGI-TYPE-005 when calling flow(42) where flow expects String", () => {
     const result = parseAndCheck(`
 flow greet(name: String) -> Void {
   return
@@ -33,12 +33,12 @@ flow test() -> Void {
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-TYPE-005"),
-      `Expected SPORE-TYPE-005 for greet(42) where greet expects String, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-TYPE-005"),
+      `Expected FUNGI-TYPE-005 for greet(42) where greet expects String, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("does NOT emit SPORE-TYPE-005 when calling flow('ok') where flow expects String", () => {
+  it("does NOT emit FUNGI-TYPE-005 when calling flow('ok') where flow expects String", () => {
     const result = parseAndCheck(`
 flow greet(name: String) -> Void {
   return
@@ -50,12 +50,12 @@ flow test() -> Void {
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-TYPE-005"),
-      `Unexpected SPORE-TYPE-005 for greet("hello") where greet expects String`,
+      !hasDiag(result, "FUNGI-TYPE-005"),
+      `Unexpected FUNGI-TYPE-005 for greet("hello") where greet expects String`,
     );
   });
 
-  it("SPORE-TYPE-005 message mentions the expected and received types", () => {
+  it("FUNGI-TYPE-005 message mentions the expected and received types", () => {
     const result = parseAndCheck(`
 flow process(count: Int) -> Void {
   return
@@ -66,15 +66,15 @@ flow test() -> Void {
   return
 }
 `);
-    const diags = diagsWithCode(result, "SPORE-TYPE-005");
-    assert.ok(diags.length > 0, "Expected SPORE-TYPE-005");
+    const diags = diagsWithCode(result, "FUNGI-TYPE-005");
+    assert.ok(diags.length > 0, "Expected FUNGI-TYPE-005");
     assert.ok(
       diags.some((d) => d.message.includes("Int") && d.message.includes("String")),
       `Expected message to mention 'Int' and 'String', got: ${diags.map((d) => d.message).join("; ")}`,
     );
   });
 
-  it("does NOT emit SPORE-TYPE-005 when argument count is wrong (that is TYPE-007)", () => {
+  it("does NOT emit FUNGI-TYPE-005 when argument count is wrong (that is TYPE-007)", () => {
     const result = parseAndCheck(`
 flow greet(name: String) -> Void {
   return
@@ -87,16 +87,16 @@ flow test() -> Void {
 `);
     // Wrong count → TYPE-007, not TYPE-005
     assert.ok(
-      !hasDiag(result, "SPORE-TYPE-005"),
-      `SPORE-TYPE-005 must not fire when argument count is wrong`,
+      !hasDiag(result, "FUNGI-TYPE-005"),
+      `FUNGI-TYPE-005 must not fire when argument count is wrong`,
     );
     assert.ok(
-      hasDiag(result, "SPORE-TYPE-007"),
-      `Expected SPORE-TYPE-007 for wrong argument count`,
+      hasDiag(result, "FUNGI-TYPE-007"),
+      `Expected FUNGI-TYPE-007 for wrong argument count`,
     );
   });
 
-  it("does NOT emit SPORE-TYPE-005 when argument type is unknown (undefined)", () => {
+  it("does NOT emit FUNGI-TYPE-005 when argument type is unknown (undefined)", () => {
     // Identifier 'x' is an unknown binding — inferType returns undefined — no TYPE-005
     const result = parseAndCheck(`
 flow greet(name: String) -> Void {
@@ -109,16 +109,16 @@ flow test(x: String) -> Void {
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-TYPE-005"),
-      `SPORE-TYPE-005 must not fire when arg type is String (compatible with String param)`,
+      !hasDiag(result, "FUNGI-TYPE-005"),
+      `FUNGI-TYPE-005 must not fire when arg type is String (compatible with String param)`,
     );
   });
 });
 
-// ── Task 2: SPORE-TYPE-014 — MissingRequiredEffect ─────────────────────────────
+// ── Task 2: FUNGI-TYPE-014 — MissingRequiredEffect ─────────────────────────────
 
-describe("Type checker — SPORE-TYPE-014 MissingRequiredEffect", () => {
-  it("emits SPORE-TYPE-014 when calling a flow with network.outbound from a pure flow", () => {
+describe("Type checker — FUNGI-TYPE-014 MissingRequiredEffect", () => {
+  it("emits FUNGI-TYPE-014 when calling a flow with network.outbound from a pure flow", () => {
     const result = parseAndCheck(`
 flow fetchRate(url: String) -> String
   contract { effects { network.outbound } }
@@ -132,12 +132,12 @@ pure flow computeRate() -> String {
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-TYPE-014"),
-      `Expected SPORE-TYPE-014 when pure flow calls effectful flow, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-TYPE-014"),
+      `Expected FUNGI-TYPE-014 when pure flow calls effectful flow, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("SPORE-TYPE-014 message mentions the missing effect and the called flow", () => {
+  it("FUNGI-TYPE-014 message mentions the missing effect and the called flow", () => {
     const result = parseAndCheck(`
 flow fetchData(url: String) -> String
   contract { effects { network.outbound } }
@@ -149,15 +149,15 @@ flow pureProcessor() -> String {
   return fetchData("http://example.com")
 }
 `);
-    const diags = diagsWithCode(result, "SPORE-TYPE-014");
-    assert.ok(diags.length > 0, "Expected SPORE-TYPE-014");
+    const diags = diagsWithCode(result, "FUNGI-TYPE-014");
+    assert.ok(diags.length > 0, "Expected FUNGI-TYPE-014");
     assert.ok(
       diags.some((d) => d.message.includes("network.outbound") && d.message.includes("fetchData")),
       `Expected message to mention 'network.outbound' and 'fetchData', got: ${diags.map((d) => d.message).join("; ")}`,
     );
   });
 
-  it("does NOT emit SPORE-TYPE-014 when caller declares the required effect", () => {
+  it("does NOT emit FUNGI-TYPE-014 when caller declares the required effect", () => {
     const result = parseAndCheck(`
 flow fetchRate(url: String) -> String
   contract { effects { network.outbound } }
@@ -172,12 +172,12 @@ flow getRates() -> String
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-TYPE-014"),
-      `Unexpected SPORE-TYPE-014 when caller declares the required effect`,
+      !hasDiag(result, "FUNGI-TYPE-014"),
+      `Unexpected FUNGI-TYPE-014 when caller declares the required effect`,
     );
   });
 
-  it("does NOT emit SPORE-TYPE-014 for flows with no declared effects", () => {
+  it("does NOT emit FUNGI-TYPE-014 for flows with no declared effects", () => {
     const result = parseAndCheck(`
 flow pureHelper(x: String) -> String {
   return x
@@ -188,8 +188,8 @@ flow caller() -> String {
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-TYPE-014"),
-      `Unexpected SPORE-TYPE-014 for flow with no declared effects`,
+      !hasDiag(result, "FUNGI-TYPE-014"),
+      `Unexpected FUNGI-TYPE-014 for flow with no declared effects`,
     );
   });
 });
@@ -210,8 +210,8 @@ flow test(x: Result<String, String>) -> Int {
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-TYPE-002"),
-      `Unexpected SPORE-TYPE-002 when match infers Int and binding is Int, got: ${result.diagnostics.map((d) => d.code + ": " + d.message).join("; ")}`,
+      !hasDiag(result, "FUNGI-TYPE-002"),
+      `Unexpected FUNGI-TYPE-002 when match infers Int and binding is Int, got: ${result.diagnostics.map((d) => d.code + ": " + d.message).join("; ")}`,
     );
   });
 
@@ -226,15 +226,15 @@ flow classify(x: Result<String, String>) -> Int {
 `);
     // No TYPE-002 or return type mismatch expected
     assert.ok(
-      !hasDiag(result, "SPORE-TYPE-002"),
-      `Unexpected SPORE-TYPE-002 for match with all-Int arms`,
+      !hasDiag(result, "FUNGI-TYPE-002"),
+      `Unexpected FUNGI-TYPE-002 for match with all-Int arms`,
     );
   });
 });
 
-// ── Task 4: SPORE-TYPE-002 — protected Email assigned to protected Email ────────
+// ── Task 4: FUNGI-TYPE-002 — protected Email assigned to protected Email ────────
 
-describe("Type checker — SPORE-TYPE-002 does not fire for protected-to-protected", () => {
+describe("Type checker — FUNGI-TYPE-002 does not fire for protected-to-protected", () => {
   it("does NOT emit TYPE-002 for protected Email assigned to protected Email binding", () => {
     const result = parseAndCheck(`
 flow test(raw: String) -> Void {
@@ -243,8 +243,8 @@ flow test(raw: String) -> Void {
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-TYPE-002"),
-      `Unexpected SPORE-TYPE-002 for protected Email binding assigned validate.email(), got: ${result.diagnostics.map((d) => d.code + ": " + d.message).join("; ")}`,
+      !hasDiag(result, "FUNGI-TYPE-002"),
+      `Unexpected FUNGI-TYPE-002 for protected Email binding assigned validate.email(), got: ${result.diagnostics.map((d) => d.code + ": " + d.message).join("; ")}`,
     );
   });
 
@@ -256,8 +256,8 @@ flow test() -> Void {
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-TYPE-002"),
-      `Unexpected SPORE-TYPE-002 for Auto binding`,
+      !hasDiag(result, "FUNGI-TYPE-002"),
+      `Unexpected FUNGI-TYPE-002 for Auto binding`,
     );
   });
 
@@ -269,8 +269,8 @@ flow test() -> Void {
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-TYPE-002"),
-      `Expected SPORE-TYPE-002 for let x: Int = "not a number", got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-TYPE-002"),
+      `Expected FUNGI-TYPE-002 for let x: Int = "not a number", got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
@@ -282,8 +282,8 @@ flow test() -> Void {
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-TYPE-002"),
-      `Expected SPORE-TYPE-002 for let x: String = true, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-TYPE-002"),
+      `Expected FUNGI-TYPE-002 for let x: String = true, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
@@ -295,8 +295,8 @@ flow test() -> Void {
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-TYPE-002"),
-      `Unexpected SPORE-TYPE-002 for let x: Int = 42`,
+      !hasDiag(result, "FUNGI-TYPE-002"),
+      `Unexpected FUNGI-TYPE-002 for let x: Int = 42`,
     );
   });
 });

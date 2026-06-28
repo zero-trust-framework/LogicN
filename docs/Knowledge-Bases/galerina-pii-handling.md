@@ -6,7 +6,7 @@
 Implemented — compiler-enforced
 Core qualifiers: protected, redacted, unsafe let
 Contract sections: privacy {}, response {}, audit {}
-Diagnostics: SPORE-VALUESTATE-003/006, SPORE-VALUESTATE-005, SPORE-GOV-003
+Diagnostics: FUNGI-VALUESTATE-003/006, FUNGI-VALUESTATE-005, FUNGI-GOV-003
 ```
 
 ## TL;DR
@@ -54,9 +54,9 @@ let auditEmail: redacted Email = redact(email)          // ← masked, safe for 
 ```
 
 **Key invariant:**
-- `protected X` cannot be assigned where plain `X` is required → SPORE-VALUESTATE-006
-- `unsafe` value cannot reach a governed sink without a gate → SPORE-VALUESTATE-003
-- Derived value from unsafe (e.g. `rawEmail.trim()`) still tainted → SPORE-VALUESTATE-005
+- `protected X` cannot be assigned where plain `X` is required → FUNGI-VALUESTATE-006
+- `unsafe` value cannot reach a governed sink without a gate → FUNGI-VALUESTATE-003
+- Derived value from unsafe (e.g. `rawEmail.trim()`) still tainted → FUNGI-VALUESTATE-005
 
 ---
 
@@ -100,12 +100,12 @@ contract {
 
 | Rule | Diagnostic | When it fires |
 |---|---|---|
-| `unsafe` value reaches database.write | SPORE-VALUESTATE-003 | `rawEmail` used at DB sink |
-| Derived unsafe value reaches sink | SPORE-VALUESTATE-005 | `rawEmail.trim()` at DB sink |
-| `protected X` used where plain `X` required | SPORE-VALUESTATE-006 | Type boundary crossing |
-| Field in `response.denies` returned in body | SPORE-GOV-003 | `email` in `Response.okJson({email: ...})` |
+| `unsafe` value reaches database.write | FUNGI-VALUESTATE-003 | `rawEmail` used at DB sink |
+| Derived unsafe value reaches sink | FUNGI-VALUESTATE-005 | `rawEmail.trim()` at DB sink |
+| `protected X` used where plain `X` required | FUNGI-VALUESTATE-006 | Type boundary crossing |
+| Field in `response.denies` returned in body | FUNGI-GOV-003 | `email` in `Response.okJson({email: ...})` |
 | `require redaction` violated | (audit phase) | `email` written unredacted to audit |
-| Governed sink without audit evidence | SPORE-GOV-002 | `database.write` without `audit.write` |
+| Governed sink without audit evidence | FUNGI-GOV-002 | `database.write` without `audit.write` |
 
 ---
 
@@ -161,4 +161,4 @@ Galerina makes PII protection **structural**:
 - `galerina-contract-privacy-observability.md` — privacy {} and observability {} contract sections
 - `galerina-contract-full-model.md` — canonical 16-section contract reference
 - `galerina-trust-sensitivity-type-rules.md` — trust and sensitivity as independent axes
-- `galerina-governance-verifier-spec.md` — SPORE-GOV-* diagnostics
+- `galerina-governance-verifier-spec.md` — FUNGI-GOV-* diagnostics

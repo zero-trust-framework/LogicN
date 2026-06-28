@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — Reachability queries
+// fungi-graph — Reachability queries
 // =============================================================================
 
 import { bfsReachable } from "./bfs.js";

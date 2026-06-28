@@ -7,14 +7,14 @@
 
 This example demonstrates a `secure flow` that verifies user credentials and
 issues a short-lived authentication token. It covers Phase 25A of the Galerina
-roadmap: the full pipeline from `.spore` source through WAT emission to a
+roadmap: the full pipeline from `.fungi` source through WAT emission to a
 `.wasm` binary executed inside Node.js via `WebAssembly.instantiate`.
 
 ## Files
 
 | File | Purpose |
 |------|---------|
-| `verifyPassword.spore` | Galerina source — the canonical auth flow |
+| `verifyPassword.fungi` | Galerina source — the canonical auth flow |
 
 ## What the example shows
 
@@ -48,9 +48,9 @@ contract {
 ### WAT / WASM pipeline (Phase 25)
 
 ```
-verifyPassword.spore
+verifyPassword.fungi
   → lexer / parser          (galerina-core-compiler)
-  → effect checker          (SPORE-STDLIB-001 / SPORE-EFFECT-*)
+  → effect checker          (FUNGI-STDLIB-001 / FUNGI-EFFECT-*)
   → GIR emitter             (Governed Intermediate Representation)
   → WAT emitter             (.wat text)
   → wat-assembler stub      (.wasm binary — Phase 25B: real assembly)
@@ -80,7 +80,7 @@ node --input-type=module <<'EOF'
 import { readFileSync } from "node:fs";
 import { lex, parseProgram, checkEffects } from "./dist/index.js";
 
-const src = readFileSync("../../examples/auth-service/verifyPassword.spore", "utf8");
+const src = readFileSync("../../examples/auth-service/verifyPassword.fungi", "utf8");
 const { tokens } = lex(src);
 const { ast, diagnostics, flows } = parseProgram(tokens, src);
 

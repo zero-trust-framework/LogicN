@@ -54,9 +54,9 @@ export function buildSOC2Report(auditGraph: AuditGraph): SOC2Evidence;
 export function validateEUAIAct(proofGraph: ProofGraph): ComplianceResult;
 export function validateHIPAA(proofGraph: ProofGraph): ComplianceResult;
 
-// diagnostics: regulation-specific SPORE-* codes
-export const SPORE_HIPAA_001: SporeDiagnostic;  // PHI without protected_boundary
-export const SPORE_EU_AI_001: SporeDiagnostic;  // High-risk AI without event logging
+// diagnostics: regulation-specific FUNGI-* codes
+export const FUNGI_HIPAA_001: SporeDiagnostic;  // PHI without protected_boundary
+export const FUNGI_EU_AI_001: SporeDiagnostic;  // High-risk AI without event logging
 ```
 
 ---

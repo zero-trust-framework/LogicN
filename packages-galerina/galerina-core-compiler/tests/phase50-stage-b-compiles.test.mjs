@@ -1,15 +1,15 @@
 // =============================================================================
 // Phase 50: Stage B Compiles First Complete Flow
 //
-// Milestone: Galerina code (lexer.spore + parser.spore) compiles Galerina code to a
+// Milestone: Galerina code (lexer.fungi + parser.fungi) compiles Galerina code to a
 // parsed AST that the Stage A executor can run. The result must match Stage A.
 //
 // This is the first time "Galerina compiles Galerina" produces something executable.
 // Not a complete compiler — a bootstrap milestone.
 //
 // Pipeline:
-//   1. Stage B lexer (lexer.spore) tokenises the source
-//   2. Stage B parser (parser.spore) produces ParseResult (FlowDecl records)
+//   1. Stage B lexer (lexer.fungi) tokenises the source
+//   2. Stage B parser (parser.fungi) produces ParseResult (FlowDecl records)
 //   3. Stage A parseProgram() validates the same source
 //   4. Stage B output == Stage A output for the simple test cases
 // =============================================================================
@@ -29,11 +29,11 @@ const SB_DIR  = join(__dir, "../src/self-hosted");
 // Load Stage B pipeline
 // ---------------------------------------------------------------------------
 
-const lexerSrc  = readFileSync(join(SB_DIR, "lexer.spore"),  "utf8");
-const parserSrc = readFileSync(join(SB_DIR, "parser.spore"), "utf8");
+const lexerSrc  = readFileSync(join(SB_DIR, "lexer.fungi"),  "utf8");
+const parserSrc = readFileSync(join(SB_DIR, "parser.fungi"), "utf8");
 
-const lexerProg  = parseProgram(lexerSrc,  "lexer.spore");
-const parserProg = parseProgram(parserSrc, "parser.spore");
+const lexerProg  = parseProgram(lexerSrc,  "lexer.fungi");
+const parserProg = parseProgram(parserSrc, "parser.fungi");
 
 const lexErrors  = lexerProg.diagnostics.filter(d => d.severity === "error");
 const parseErrors = parserProg.diagnostics.filter(d => d.severity === "error");
@@ -75,13 +75,13 @@ function flowsList(parseResult) {
 // Phase 50 milestone tests
 // ---------------------------------------------------------------------------
 
-describe("Phase 50: Stage B pipeline (lexer.spore → parser.spore)", () => {
+describe("Phase 50: Stage B pipeline (lexer.fungi → parser.fungi)", () => {
 
-  it("lexer.spore and parser.spore parse with zero Stage A errors", () => {
+  it("lexer.fungi and parser.fungi parse with zero Stage A errors", () => {
     assert.equal(lexErrors.length, 0,
-      `lexer.spore Stage A errors: ${lexErrors.map(e=>e.message.slice(0,60)).join(", ")}`);
+      `lexer.fungi Stage A errors: ${lexErrors.map(e=>e.message.slice(0,60)).join(", ")}`);
     assert.equal(parseErrors.length, 0,
-      `parser.spore Stage A errors: ${parseErrors.map(e=>e.message.slice(0,60)).join(", ")}`);
+      `parser.fungi Stage A errors: ${parseErrors.map(e=>e.message.slice(0,60)).join(", ")}`);
   });
 
   it("Stage B tokenizes a simple flow", async () => {
@@ -110,7 +110,7 @@ describe("Phase 50: Stage B pipeline (lexer.spore → parser.spore)", () => {
     const src = "pure flow multiply(x: Int, y: Int) -> Int { return x }";
 
     // Stage A
-    const stageA = parseProgram(src, "test.spore");
+    const stageA = parseProgram(src, "test.fungi");
     const stageAFlow = stageA.flows[0];
     assert.ok(stageAFlow !== undefined, "Stage A should find the flow");
 
@@ -154,7 +154,7 @@ describe("Phase 50: Stage B pipeline (lexer.spore → parser.spore)", () => {
     assert.ok(sbFlow !== undefined, "Stage B found the flow");
 
     // Stage A parses the same source and executes it
-    const stageA = parseProgram(src, "test.spore");
+    const stageA = parseProgram(src, "test.fungi");
     const execResult = await executeFlow(
       "double",
       new Map([["n", { __tag: "int", value: 7 }]]),

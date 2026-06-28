@@ -6,11 +6,11 @@
 
 `docs/COVERAGE.md` currently records unresolved photonic documentation conflicts.
 This package remains the owner for photonic runtime target semantics, photonic
-execution plan semantics and eventual `SPORE-PHOTONIC-*` diagnostic meanings, but
+execution plan semantics and eventual `FUNGI-PHOTONIC-*` diagnostic meanings, but
 the following are not implementation-ready yet:
 
 - one canonical `OpticalTransportMode` enum
-- one canonical `SPORE-PHOTONIC-001` through `SPORE-PHOTONIC-006` diagnostic table
+- one canonical `FUNGI-PHOTONIC-001` through `FUNGI-PHOTONIC-006` diagnostic table
 - final boundary between `galerina-core-photonic`, `galerina-core-vector`,
   `galerina-core-compute` and `galerina-target-photonic`
 
@@ -110,16 +110,16 @@ export interface PhotonicExecutionPlan {
 
 Functions: `estimateOpticalSuitability()`, `buildPhotonicPlan()`, `resolveFallback()`.
 
-### Diagnostic Codes (SPORE-PHOTONIC series)
+### Diagnostic Codes (FUNGI-PHOTONIC series)
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-PHOTONIC-001` | optical runtime unavailable |
-| `SPORE-PHOTONIC-002` | optical transport denied by policy |
-| `SPORE-PHOTONIC-003` | distributed optical scheduler unavailable |
-| `SPORE-PHOTONIC-004` | photonic fallback occurred |
-| `SPORE-PHOTONIC-005` | unsupported optical target |
-| `SPORE-PHOTONIC-006` | invalid distributed transport graph |
+| `FUNGI-PHOTONIC-001` | optical runtime unavailable |
+| `FUNGI-PHOTONIC-002` | optical transport denied by policy |
+| `FUNGI-PHOTONIC-003` | distributed optical scheduler unavailable |
+| `FUNGI-PHOTONIC-004` | photonic fallback occurred |
+| `FUNGI-PHOTONIC-005` | unsupported optical target |
+| `FUNGI-PHOTONIC-006` | invalid distributed transport graph |
 
 Internal structure: `photonic-runtime.ts`, `photonic-planner.ts`,
 `photonic-routing.ts`, `photonic-fallback.ts`, `photonic-audit.ts`,
@@ -270,12 +270,12 @@ enum PhotonicCapability {
 
 | Code | Meaning |
 | --------------- | ---------------------------------- |
-| `SPORE-PHOTONIC-001` | Isolation guarantee missing |
-| `SPORE-PHOTONIC-002` | Propagation depth exceeded |
-| `SPORE-PHOTONIC-003` | Experimental runtime prohibited |
-| `SPORE-PHOTONIC-004` | Invalid optical topology |
-| `SPORE-PHOTONIC-005` | Non-deterministic runtime detected |
-| `SPORE-PHOTONIC-006` | Unsafe hybrid transition |
+| `FUNGI-PHOTONIC-001` | Isolation guarantee missing |
+| `FUNGI-PHOTONIC-002` | Propagation depth exceeded |
+| `FUNGI-PHOTONIC-003` | Experimental runtime prohibited |
+| `FUNGI-PHOTONIC-004` | Invalid optical topology |
+| `FUNGI-PHOTONIC-005` | Non-deterministic runtime detected |
+| `FUNGI-PHOTONIC-006` | Unsafe hybrid transition |
 
 Note: These meanings differ from the prior KB. See `galerina-core-photonic-v02.md`
 for full details on the v0.2 code meanings vs prior KB codes.
@@ -302,7 +302,7 @@ galerina-core-photonic/
 
   diagnostics/
     PhotonicDiagnostic.ts
-    codes.ts                (SPORE-PHOTONIC-001–006)
+    codes.ts                (FUNGI-PHOTONIC-001–006)
 
   targets/
     runtimeTargets.ts       (PhotonicRuntimeTarget)

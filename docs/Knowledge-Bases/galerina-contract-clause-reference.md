@@ -54,7 +54,7 @@ access { ... }                                    // 3. capability negotiation (
 
 `contract {}` is **never inside the body**. `access {}` is **never inside `contract {}`**. Both are standalone blocks at the same structural level, between the signature and the body.
 
-> **v2.1 rename:** The block between `contract {}` and `{ body }` is now called `access {}`. The old inline `policy {}` form is a deprecated alias — it still compiles but emits `SPORE-SYNTAX-LEGACY-003`. The `policy` keyword is **reserved** for the future State Mutation Governance feature (see §`access {}` below).
+> **v2.1 rename:** The block between `contract {}` and `{ body }` is now called `access {}`. The old inline `policy {}` form is a deprecated alias — it still compiles but emits `FUNGI-SYNTAX-LEGACY-003`. The `policy` keyword is **reserved** for the future State Mutation Governance feature (see §`access {}` below).
 
 ---
 
@@ -66,7 +66,7 @@ access { ... }                                    // 3. capability negotiation (
 
 **Status:** ENFORCED (Stage A)  
 **Auto?** No  
-**SPORE diagnostic on violation:** None specific — type errors are standard parse/type-check failures.
+**FUNGI diagnostic on violation:** None specific — type errors are standard parse/type-check failures.
 
 #### What it accepts
 
@@ -116,7 +116,7 @@ contract {
 
 **Status:** ENFORCED (Stage A governance verifier for `secure`/`guarded` flows)  
 **Auto?** No  
-**SPORE diagnostic on violation:** `SPORE-GOV-010` — missing `intent` on a secure/governed flow, OR logic in the intent string.
+**FUNGI diagnostic on violation:** `FUNGI-GOV-010` — missing `intent` on a secure/governed flow, OR logic in the intent string.
 
 #### What it accepts
 
@@ -149,8 +149,8 @@ contract {
 
 #### Common mistakes
 
-- Adding conditional logic: `intent { "Transfer if amount > 0 and call https://..." }` → **SPORE-GOV-010** (prompt-injection guard rejects logic primitives and URLs).
-- Omitting on a `secure` flow → **SPORE-GOV-010**.
+- Adding conditional logic: `intent { "Transfer if amount > 0 and call https://..." }` → **FUNGI-GOV-010** (prompt-injection guard rejects logic primitives and URLs).
+- Omitting on a `secure` flow → **FUNGI-GOV-010**.
 - Writing `intent` as multi-sentence documentation prose with embedded variable names — keep it strictly declarative.
 
 ---
@@ -159,7 +159,7 @@ contract {
 
 **Status:** ENFORCED (Stage A governance verifier)  
 **Auto?** No  
-**SPORE diagnostic on violation:** `SPORE-GOV-003` — `request {}` on a non-API flow.
+**FUNGI diagnostic on violation:** `FUNGI-GOV-003` — `request {}` on a non-API flow.
 
 #### What it accepts
 
@@ -175,7 +175,7 @@ request {
 #### Required vs optional
 
 - **Required** for flows that handle external ingress: HTTP routes, webhook handlers, event consumers.
-- **Must be omitted** for internal/pure/helper flows. Placing `request {}` on a non-API flow is a compile error (`SPORE-GOV-003`).
+- **Must be omitted** for internal/pure/helper flows. Placing `request {}` on a non-API flow is a compile error (`FUNGI-GOV-003`).
 
 #### Minimal working example
 
@@ -216,7 +216,7 @@ contract {
 
 **Status:** ENFORCED (Stage A governance verifier)  
 **Auto?** No  
-**SPORE diagnostic on violation:** `SPORE-GOV-003` — `response {}` on a non-API flow.
+**FUNGI diagnostic on violation:** `FUNGI-GOV-003` — `response {}` on a non-API flow.
 
 #### What it accepts
 
@@ -241,7 +241,7 @@ See the `parseInput` example under `request {}` above — `request` and `respons
 #### Common mistakes
 
 - Declaring `response {}` without `request {}` (or vice versa) on a flow — they are paired.
-- Adding `response {}` to an internal mutation flow that is not an HTTP route — `SPORE-GOV-003`.
+- Adding `response {}` to an internal mutation flow that is not an HTTP route — `FUNGI-GOV-003`.
 
 ---
 
@@ -249,10 +249,10 @@ See the `parseInput` example under `request {}` above — `request` and `respons
 
 **Status:** ENFORCED (Stage A effect checker)  
 **Auto?** No (deny-by-default: omitting = pure)  
-**SPORE diagnostics on violation:**
-- `SPORE-EFFECT-001` — body performs an effect not declared in `effects {}`
-- `SPORE-EFFECT-002` — declared effects do not match the body's actual effects
-- `SPORE-EFFECT-003` — any effect in a `pure` flow (always a hard error, no warning)
+**FUNGI diagnostics on violation:**
+- `FUNGI-EFFECT-001` — body performs an effect not declared in `effects {}`
+- `FUNGI-EFFECT-002` — declared effects do not match the body's actual effects
+- `FUNGI-EFFECT-003` — any effect in a `pure` flow (always a hard error, no warning)
 
 #### What it accepts
 
@@ -279,7 +279,7 @@ effects { audit.write, ledger.mutate, network.outbound }
 
 #### Required vs optional
 
-- **Required** if the body performs any side effect. Omitting `effects {}` is a declaration that the flow is strictly pure — any effect in the body becomes `SPORE-EFFECT-001`.
+- **Required** if the body performs any side effect. Omitting `effects {}` is a declaration that the flow is strictly pure — any effect in the body becomes `FUNGI-EFFECT-001`.
 - Effects are **additive**: if the body does both `audit.write` and `ledger.mutate`, both must be declared (rule E-002).
 
 #### Minimal working example
@@ -298,9 +298,9 @@ contract {
 
 #### Common mistakes
 
-- Declaring a subset of effects — e.g., only `ledger.mutate` when the body also calls `AuditLog.write` → **SPORE-EFFECT-002**.
-- Putting any effect in a `pure` flow → **SPORE-EFFECT-003** (hard error, no override).
-- **AI safety critical:** an AI tool must never silently add new effect entries to an existing `effects {}` block. All widening must go through the `propose → verify → approve` pipeline (rule C-005, rule A-002). Write the proposed change to a `*.galerina.proposal` artifact; do not touch the production `.spore` file.
+- Declaring a subset of effects — e.g., only `ledger.mutate` when the body also calls `AuditLog.write` → **FUNGI-EFFECT-002**.
+- Putting any effect in a `pure` flow → **FUNGI-EFFECT-003** (hard error, no override).
+- **AI safety critical:** an AI tool must never silently add new effect entries to an existing `effects {}` block. All widening must go through the `propose → verify → approve` pipeline (rule C-005, rule A-002). Write the proposed change to a `*.galerina.proposal` artifact; do not touch the production `.fungi` file.
 
 ---
 
@@ -308,7 +308,7 @@ contract {
 
 **Status:** Stable form (string) ENFORCED today; typed `SystemCapability` form PLANNED (DRCM Phase 4)  
 **Auto?** No  
-**SPORE diagnostic on violation:** `SPORE-CAP-001` — raw string capability / wildcard `*` in NetworkTarget (Phase 4+).
+**FUNGI diagnostic on violation:** `FUNGI-CAP-001` — raw string capability / wildcard `*` in NetworkTarget (Phase 4+).
 
 #### What it accepts
 
@@ -331,13 +331,13 @@ authority {
 }
 ```
 
-Raw string declarations (`allow_call: "module::function"`) will be banned at Phase 4 (`SPORE-CAP-001`) — they are a parsing-exploit risk.
+Raw string declarations (`allow_call: "module::function"`) will be banned at Phase 4 (`FUNGI-CAP-001`) — they are a parsing-exploit risk.
 
 #### Required vs optional
 
 - Optional by default; **required when policy mandates** explicit capability declaration (e.g., high-trust billing, defense-grade flows).
 - Must match or **restrict** ambient runtime settings — never silently widen.
-- `UnrestrictedInternet` as a network target requires an explicit policy authorization (`SPORE-CAP-002`).
+- `UnrestrictedInternet` as a network target requires an explicit policy authorization (`FUNGI-CAP-002`).
 
 #### Minimal working example
 
@@ -356,8 +356,8 @@ contract {
 
 #### Common mistakes
 
-- Using wildcard `"*"` in a network target → **SPORE-CAP-001** (Phase 4).
-- Widening `authority {}` beyond what the ambient runtime configuration permits → **SPORE-MONO-002**.
+- Using wildcard `"*"` in a network target → **FUNGI-CAP-001** (Phase 4).
+- Widening `authority {}` beyond what the ambient runtime configuration permits → **FUNGI-MONO-002**.
 - AI generating `authority {}` blocks without the propose → verify → approve gate → **privilege escalation** (rule A-002).
 
 ---
@@ -366,10 +366,10 @@ contract {
 
 **Status:** ENFORCED (Stage A value-state checker)  
 **Auto?** No  
-**SPORE diagnostics on violation:**
-- `SPORE-SECRET-001` — secret/PII flows to a log/audit sink without redaction
-- `SPORE-SECRET-002` — secret/PII flows to network/egress without redaction
-- `SPORE-SECRET-003` — secret/PII flows to serialize/record without redaction
+**FUNGI diagnostics on violation:**
+- `FUNGI-SECRET-001` — secret/PII flows to a log/audit sink without redaction
+- `FUNGI-SECRET-002` — secret/PII flows to network/egress without redaction
+- `FUNGI-SECRET-003` — secret/PII flows to serialize/record without redaction
 
 #### What it accepts
 
@@ -416,10 +416,10 @@ contract {
 
 **Status:** ENFORCED (auto-by-default, rule C-002)  
 **Auto?** **Yes** — omitting is the normal case  
-**SPORE diagnostics on violation:**
-- `SPORE-SECRET-001` — secret value flows to log/audit output
-- `SPORE-SECRET-002` — secret value flows to network/egress
-- `SPORE-SECRET-003` — secret value flows to serialized record
+**FUNGI diagnostics on violation:**
+- `FUNGI-SECRET-001` — secret value flows to log/audit output
+- `FUNGI-SECRET-002` — secret value flows to network/egress
+- `FUNGI-SECRET-003` — secret value flows to serialized record
 
 #### What it accepts
 
@@ -472,7 +472,7 @@ contract {
 
 - Adding `secrets {}` to every `secure` flow "just in case" — this is unnecessary and makes the contract harder to audit. Omit it; the runtime handles secrets automatically.
 - Declaring `secrets {}` without also declaring `secret.access` in `effects {}` — if the body accesses a secret, the effect must be declared.
-- Any `SecureString` (a value derived from `secret.get()`, `vault.read()`, `kms.decrypt()`, or `secrets.*`) flowing into a log, network call, or serialized record → **SPORE-SECRET-001/002/003**. Use `redact()` as the safe escape.
+- Any `SecureString` (a value derived from `secret.get()`, `vault.read()`, `kms.decrypt()`, or `secrets.*`) flowing into a log, network call, or serialized record → **FUNGI-SECRET-001/002/003**. Use `redact()` as the safe escape.
 
 ---
 
@@ -480,7 +480,7 @@ contract {
 
 **Status:** ENFORCED (governance verifier for policy-mandated flows); optional for standard web APIs  
 **Auto?** No  
-**SPORE diagnostic on violation:** `SPORE-SECRET-003` — secret in audit record (value-state checker applies regardless of audit level).
+**FUNGI diagnostic on violation:** `FUNGI-SECRET-003` — secret in audit record (value-state checker applies regardless of audit level).
 
 #### What it accepts
 
@@ -523,7 +523,7 @@ contract {
 #### Common mistakes
 
 - Omitting `audit {}` on healthcare or banking flows where domain policy mandates it.
-- Putting a `SecureString` or `TaintedString` value into an audit record → **SPORE-SECRET-003** (always enforced, regardless of audit level).
+- Putting a `SecureString` or `TaintedString` value into an audit record → **FUNGI-SECRET-003** (always enforced, regardless of audit level).
 - Declaring `audit {}` on a `pure` flow that has no `effects { audit.write }` — the effect must be declared.
 
 ---
@@ -532,7 +532,7 @@ contract {
 
 **Status:** Basic form ENFORCED (Stage A); DWI-enforcement form PLANNED (DRCM Phase 5)  
 **Auto?** No (inherits global defaults when omitted)  
-**SPORE diagnostic on violation:** `SPORE-EC-001` (static cost overflow, Phase 5); `SPORE-RESOURCE-001` (fuel exhaustion in DWI, Phase 5).
+**FUNGI diagnostic on violation:** `FUNGI-EC-001` (static cost overflow, Phase 5); `FUNGI-RESOURCE-001` (fuel exhaustion in DWI, Phase 5).
 
 #### What it accepts
 
@@ -572,7 +572,7 @@ contract {
 #### Common mistakes
 
 - Declaring `limits {}` values wider than the global policy ceiling (not currently enforced but will be at Phase 5).
-- Using the DWI-enforcement form (`max_memory`, `max_instructions`) without an `@experimental_profile` wrapper in `--release` builds → **SPORE-DRCM-UNSUPPORTED**.
+- Using the DWI-enforcement form (`max_memory`, `max_instructions`) without an `@experimental_profile` wrapper in `--release` builds → **FUNGI-DRCM-UNSUPPORTED**.
 
 ---
 
@@ -580,9 +580,9 @@ contract {
 
 **Status:** ENFORCED (auto-by-default); explicit override is ENFORCED (Stage A parser + economics-inference.ts)  
 **Auto?** **Yes** — omitting is the normal case  
-**SPORE diagnostics on violation:**
-- `SPORE-EC-001` — static cost overflow: estimated loop cost exceeds `max_aggregate_flow_budget` (Phase 5)
-- `SPORE-EC-002` — `charge_failure_tolerance_ratio` breached → DPM quarantine triggered (Phase 5)
+**FUNGI diagnostics on violation:**
+- `FUNGI-EC-001` — static cost overflow: estimated loop cost exceeds `max_aggregate_flow_budget` (Phase 5)
+- `FUNGI-EC-002` — `charge_failure_tolerance_ratio` breached → DPM quarantine triggered (Phase 5)
 
 #### What it accepts
 
@@ -653,7 +653,7 @@ contract {
 
 **Status:** AUTO-by-default (rule C-002); full Epilogue Receipt signing PLANNED (DRCM Phase 6)  
 **Auto?** **Yes** — omitting is the normal case  
-**SPORE diagnostic on violation:** `SPORE-AU-001` — `epilogue { strategy: none }` declared on a high-trust flow (`max_risk_liability: high`).
+**FUNGI diagnostic on violation:** `FUNGI-AU-001` — `epilogue { strategy: none }` declared on a high-trust flow (`max_risk_liability: high`).
 
 #### What it accepts
 
@@ -677,7 +677,7 @@ R_E = Sign_DSS_ML-DSA-65( H( inputs ‖ outputs ‖ V_DPM_final ‖ timestamp ) 
 - A regulatory mandate requires a specific proof strategy to be attested in the ProofGraph
 - You must **prevent** the auto-tier from selecting a lower-cost proof tier than your policy requires
 
-Do not declare `epilogue { strategy: none }` on a flow where `audit { level: cryptographic_state_hash }` is set → **SPORE-AU-001**.
+Do not declare `epilogue { strategy: none }` on a flow where `audit { level: cryptographic_state_hash }` is set → **FUNGI-AU-001**.
 
 #### Minimal working example
 
@@ -697,7 +697,7 @@ contract {
 
 #### Common mistakes
 
-- Declaring `epilogue { strategy: none }` on a flow with `max_risk_liability: high` → **SPORE-AU-001**.
+- Declaring `epilogue { strategy: none }` on a flow with `max_risk_liability: high` → **FUNGI-AU-001**.
 - Treating `epilogue {}` as a required documentation clause — it is not. Auto-selection from the ValueGraph is the design intent; declaration is an explicit override.
 
 ---
@@ -706,7 +706,7 @@ contract {
 
 **Status:** ENFORCED (Stage A)  
 **Auto?** No  
-**SPORE diagnostic on violation:** None directly. `SPORE-GOV-005` fires if `targets {}` is used to claim authority on a mismatched flow qualifier.
+**FUNGI diagnostic on violation:** None directly. `FUNGI-GOV-005` fires if `targets {}` is used to claim authority on a mismatched flow qualifier.
 
 #### What it accepts
 
@@ -758,13 +758,13 @@ contract {
 
 **Status:** ENFORCED (Stage A — auto-inferred; explicit override parsed)  
 **Auto?** Yes — inferred from effects profile  
-**SPORE diagnostics:** `SPORE-RES-001` (retry + mutation without `idempotent: true`)
+**FUNGI diagnostics:** `FUNGI-RES-001` (retry + mutation without `idempotent: true`)
 
 #### What it accepts
 
 Declares retry strategy, fallback behaviour, and quarantine policy for transient faults.
 
-```spore
+```fungi
 contract {
   resilience {
     retry    3 times  with_backoff exponential  max_delay 5s
@@ -789,7 +789,7 @@ contract {
 
 **Optional — omit for most flows.** Declare only to override auto-inferred behaviour.
 
-**⚠️ Critical rule:** `retry N times` on a flow with `database.write` or `gateway.charge` requires `idempotent: true` — otherwise `SPORE-RES-001` fires. Retrying mutations without idempotency risks duplicate writes.
+**⚠️ Critical rule:** `retry N times` on a flow with `database.write` or `gateway.charge` requires `idempotent: true` — otherwise `FUNGI-RES-001` fires. Retrying mutations without idempotency risks duplicate writes.
 
 #### `fallback` variants
 
@@ -802,7 +802,7 @@ contract {
 
 #### Common mistakes
 
-- Using `retry` on `database.write` without `idempotent: true` → `SPORE-RES-001`
+- Using `retry` on `database.write` without `idempotent: true` → `FUNGI-RES-001`
 - Putting `resilience {}` inside `policy {}` — it belongs in `contract {}`
 - Confusing `resilience.quarantine_after` with DRCM Phase 4 emergency overlays — they work at different layers
 
@@ -812,13 +812,13 @@ contract {
 
 **Status:** ENFORCED (Stage A — auto-inferred; explicit override parsed)  
 **Auto?** Yes — inferred from flow qualifier + audit level  
-**SPORE diagnostics:** `SPORE-OBS-001` (explicit block on a `pure` flow)
+**FUNGI diagnostics:** `FUNGI-OBS-001` (explicit block on a `pure` flow)
 
 #### What it accepts
 
 Declares operational telemetry configuration. **Distinct from `audit {}`** — observability is best-effort, sampled, and has rolling retention. Audit is evidentiary, signed, and permanent.
 
-```spore
+```fungi
 contract {
   observability {
     trace    sample_rate 0.25         // float 0.0–1.0 (IEEE 754)
@@ -842,7 +842,7 @@ contract {
 
 **Optional — omit for most flows.** Declare only to override auto-inferred behaviour.
 
-**⚠️ Do NOT declare on `pure` flows** — pure flows have no side effects; traces and error rates are meaningless. Triggers `SPORE-OBS-001` warning.
+**⚠️ Do NOT declare on `pure` flows** — pure flows have no side effects; traces and error rates are meaningless. Triggers `FUNGI-OBS-001` warning.
 
 #### `alert_on` is platform-agnostic
 
@@ -850,7 +850,7 @@ contract {
 
 #### Common mistakes
 
-- Adding `observability {}` to a `pure` flow → `SPORE-OBS-001`
+- Adding `observability {}` to a `pure` flow → `FUNGI-OBS-001`
 - Confusing `observability {}` with `audit {}` — they serve different purposes with different trust/retention models
 - Setting `log_level debug` in production — high verbosity under load can bloat operational logs
 
@@ -860,10 +860,10 @@ contract {
 
 **Status:** PLANNED (DRCM Phase 2, target 2026-07) — parser, governance verifier, and WAT gate injection scheduled for Phase 2  
 **Auto?** No  
-**SPORE diagnostics on violation:**
-- `SPORE-INV-001` — pre-condition `ensure` fails before body executes (aborts before body runs)
-- `SPORE-INV-002` — post-condition `ensure` fails after body returns (aborts before result is returned)
-- `SPORE-INV-003` — `invariant {}` misplaced outside `contract {}` (parse error)
+**FUNGI diagnostics on violation:**
+- `FUNGI-INV-001` — pre-condition `ensure` fails before body executes (aborts before body runs)
+- `FUNGI-INV-002` — post-condition `ensure` fails after body returns (aborts before result is returned)
+- `FUNGI-INV-003` — `invariant {}` misplaced outside `contract {}` (parse error)
 
 #### What it accepts
 
@@ -914,14 +914,14 @@ contract {
 // ❌ WRONG — invariant as a standalone block outside contract {}
 secure flow processTransaction(walletId: String, amount: Int) -> Result<Void, Fault>
 contract { intent { "Transfer funds." }  effects { ledger.mutate } }
-invariant { ensure amount > 0; }   // SPORE-INV-003: parse error — not a valid top-level block
+invariant { ensure amount > 0; }   // FUNGI-INV-003: parse error — not a valid top-level block
 { ... }
 
 // ❌ WRONG — invariant inside body
 secure flow processTransaction(walletId: String, amount: Int) -> Result<Void, Fault>
 contract { intent { "Transfer funds." }  effects { ledger.mutate } }
 {
-  invariant { ensure amount > 0; }   // SPORE-INV-003: invariant is not a body statement
+  invariant { ensure amount > 0; }   // FUNGI-INV-003: invariant is not a body statement
   ...
 }
 ```
@@ -932,7 +932,7 @@ contract { intent { "Transfer funds." }  effects { ledger.mutate } }
 
 **Status:** PLANNED (DRCM / task #56)  
 **Auto?** No  
-**SPORE diagnostics on violation:** `SPORE-GOV-004`, `SPORE-LIMIT-001`, `SPORE-GOV-019` — see `galerina-domain-guard-policies.md` for full definitions.
+**FUNGI diagnostics on violation:** `FUNGI-GOV-004`, `FUNGI-LIMIT-001`, `FUNGI-GOV-019` — see `galerina-domain-guard-policies.md` for full definitions.
 
 #### What it accepts
 
@@ -956,7 +956,7 @@ The binding is a **decorator on the `contract` block header** — not a sub-bloc
 #### Minimal working example
 
 ```galerina
-// External file: governance/policies/invoicing_guard.spore
+// External file: governance/policies/invoicing_guard.fungi
 // Use `guard Name {}` for top-level domain ceilings (v2.1 — replaces `policy Name {}`)
 guard InvoicingDomainGuard {
   permitted_effects { gateway.charge, audit.write }
@@ -975,14 +975,14 @@ contract [conforms_to: InvoicingDomainGuard] {
 }
 ```
 
-> **v2.1 rename:** Top-level domain ceiling declarations use `guard Name {}` instead of `policy Name {}`. The `policy` keyword is reserved for State Mutation Governance (see below). Existing `policy Name {}` files emit `SPORE-SYNTAX-LEGACY-003` advisory.
+> **v2.1 rename:** Top-level domain ceiling declarations use `guard Name {}` instead of `policy Name {}`. The `policy` keyword is reserved for State Mutation Governance (see below). Existing `policy Name {}` files emit `FUNGI-SYNTAX-LEGACY-003` advisory.
 
 #### Common mistakes
 
 - Placing `conforms_to` as a sub-block inside `contract {}` — it is a decorator on the header, not a clause.
 - Referencing a guard policy that does not exist in `governance/policies/` — compile error at the guard-resolution step.
 - Declaring effects in the contract that exceed the guard's `permitted_effects {}` ceiling — the Differential Proof will reject.
-- Using `policy Name {}` for domain ceilings instead of `guard Name {}` in new code — `SPORE-SYNTAX-LEGACY-003`.
+- Using `policy Name {}` for domain ceilings instead of `guard Name {}` in new code — `FUNGI-SYNTAX-LEGACY-003`.
 
 > Full reference: `galerina-domain-guard-policies.md`
 
@@ -992,8 +992,8 @@ contract [conforms_to: InvoicingDomainGuard] {
 
 **Status:** v2.1 primary syntax — replaces deprecated inline `policy {}`  
 **Auto?** No — most flows omit this block  
-**SPORE diagnostics:**
-- `SPORE-SYNTAX-LEGACY-003` — inline `policy {}` used instead of `access {}` (advisory)
+**FUNGI diagnostics:**
+- `FUNGI-SYNTAX-LEGACY-003` — inline `policy {}` used instead of `access {}` (advisory)
 
 ### `access {}` — Capability Negotiation Block
 
@@ -1016,7 +1016,7 @@ which declares static governance properties.
 `access {}` operates under **Default Deny**: if a capability is not listed with `grant`,
 it is automatically denied. You never need to list what is denied.
 
-```spore
+```fungi
 // Old syntax (explicit allow + deny):
 policy {
   allow Payment to "process"
@@ -1031,7 +1031,7 @@ access {
 ```
 
 **Example:**
-```spore
+```fungi
 flow processPayment(req: PaymentRequest) -> Result<Receipt, Error>
 contract {
   intent { "Process a payment with full audit trail." }
@@ -1077,7 +1077,7 @@ access {                               // 2. capability negotiation (v2.1 — SE
 
 ### Common mistakes
 
-- Using the deprecated `policy {}` form instead of `access {}` → `SPORE-SYNTAX-LEGACY-003`
+- Using the deprecated `policy {}` form instead of `access {}` → `FUNGI-SYNTAX-LEGACY-003`
 - Placing `access {}` inside `contract {}` — it is a separate block at the same structural level
 - Confusing `access {}` (per-flow capability negotiation) with `policy DomainName {}` (external domain guard in `governance/policies/`)
 
@@ -1087,11 +1087,11 @@ access {                               // 2. capability negotiation (v2.1 — SE
 
 **Status:** PLANNED (DRCM Phase 4)  
 **Auto?** No — most flows never declare this  
-**SPORE diagnostics:**
-- `SPORE-GOV-020` — `policy {}` placed inside `contract {}` (parse error)
-- `SPORE-MONO-001` — capability expansion attempted through overlay (monotonic violation)
-- `SPORE-MONO-003` — emergency overlay attempted de-escalation (monotonic violation)
-- `SPORE-SYNTAX-LEGACY-003` — inline `policy {}` used as capability negotiation block; use `access {}` instead (advisory)
+**FUNGI diagnostics:**
+- `FUNGI-GOV-020` — `policy {}` placed inside `contract {}` (parse error)
+- `FUNGI-MONO-001` — capability expansion attempted through overlay (monotonic violation)
+- `FUNGI-MONO-003` — emergency overlay attempted de-escalation (monotonic violation)
+- `FUNGI-SYNTAX-LEGACY-003` — inline `policy {}` used as capability negotiation block; use `access {}` instead (advisory)
 
 > **v2.1 note:** In v2.1, the inline `policy {}` block (for capability negotiation) is renamed to `access {}`. The `policy` keyword is **reserved** for the future State Mutation Governance feature (see below). The emergency overlay form (`policy { emergency {} }`) remains valid syntax but is also subject to rename in a future version.
 
@@ -1101,7 +1101,7 @@ The inline `policy {}` block (emergency form) is a **per-flow, runtime monotonic
 
 - **Separate from `contract {}`** — it sits between `contract {}` and the body `{ }`
 - **Not a domain guard** — it is local, per-flow, and not stored in `governance/policies/`
-- **Not a contract sub-block** — placing it inside `contract {}` is `SPORE-GOV-020`
+- **Not a contract sub-block** — placing it inside `contract {}` is `FUNGI-GOV-020`
 
 ### Three-block structure reminder (v2.0 form — use `access {}` in v2.1)
 
@@ -1131,8 +1131,8 @@ policy {                               // 2. runtime monotonic overlay (SEPARATE
 ### Monotonic rules
 
 - Emergency overlays are **one-way**: once an overlay fires, the resulting capability restriction is **permanent for the current session** (rule M-003).
-- Overlays can escalate (Tier 1 → Tier 2 → Tier 3) but **cannot de-escalate** → `SPORE-MONO-003`.
-- `deny` only — you cannot `allow` a previously-denied capability through an overlay → `SPORE-MONO-001`.
+- Overlays can escalate (Tier 1 → Tier 2 → Tier 3) but **cannot de-escalate** → `FUNGI-MONO-003`.
+- `deny` only — you cannot `allow` a previously-denied capability through an overlay → `FUNGI-MONO-001`.
 
 ### Required vs optional
 
@@ -1146,7 +1146,7 @@ secure flow assessRisk(input: RiskRequest) -> Result<RiskResult, Fault>
 contract {
   intent { "Assess risk." }
   effects { db.read }
-  policy {                          // SPORE-GOV-020: parse error
+  policy {                          // FUNGI-GOV-020: parse error
     emergency { on anomaly { deny network.outbound } }
   }
 }
@@ -1176,7 +1176,7 @@ These are **top-level declaration keywords** (not contract sub-blocks). They app
 
 ### `static` — Compile-Time Constant
 
-```spore
+```fungi
 static NAME = VALUE
 ```
 
@@ -1185,11 +1185,11 @@ Defines a compile-time constant. The compiler substitutes VALUE everywhere NAME 
 **Compile-time folding:** The WAT emitter replaces every reference to a `static` constant with an inline literal. For example, `static FLOOR_PROOF = 3` causes every use of `FLOOR_PROOF` in WAT output to emit `(i32.const 3)` — no memory load, no indirection.
 
 **Governance rules:**
-- `SPORE-STATIC-001` — value is not a compile-time constant (contains runtime expressions)
-- `SPORE-STATIC-002` — name declared more than once in the same scope
+- `FUNGI-STATIC-001` — value is not a compile-time constant (contains runtime expressions)
+- `FUNGI-STATIC-002` — name declared more than once in the same scope
 
 **Example:**
-```spore
+```fungi
 static FLOOR_PROOF = 3
 static MAX_RETRY = 3
 
@@ -1201,7 +1201,7 @@ static MAX_RETRY = 3
 
 ### `bitfield` — Type-Safe Governance Register
 
-```spore
+```fungi
 bitfield NAME {
   field_name: BIT_POSITION
   ...
@@ -1219,11 +1219,11 @@ So for `bitfield V_DPM { network_outbound: 0 }`:
 - `V_DPM.BIT_network_outbound` evaluates to `0`
 
 **Governance rules:**
-- `SPORE-BF-001` — duplicate bit positions in the same `bitfield`
-- `SPORE-BF-002` — bit position > 31 (V_DPM is a 32-bit register)
+- `FUNGI-BF-001` — duplicate bit positions in the same `bitfield`
+- `FUNGI-BF-002` — bit position > 31 (V_DPM is a 32-bit register)
 
 **Example:**
-```spore
+```fungi
 bitfield V_DPM {
   network_outbound: 0
   storage_write: 1
@@ -1250,15 +1250,15 @@ bitfield V_DPM {
 
 `guard Name {}` defines an immutable compile-time ceiling on what any `contract [conforms_to: Name]` flow may declare. It is verified via Differential Proof at compile time.
 
-```spore
-// governance/policies/payment_guard.spore
+```fungi
+// governance/policies/payment_guard.fungi
 guard PaymentDomainGuard {
   permitted_effects { gateway.charge, audit.write, db.read }
   enforced_limits   { max_memory_ceiling: 8MB }
 }
 ```
 
-> **v2.1 rename:** `policy Name {}` for domain ceilings is deprecated. Use `guard Name {}` in all new code. Existing `policy Name {}` files continue to compile but emit `SPORE-SYNTAX-LEGACY-003`.
+> **v2.1 rename:** `policy Name {}` for domain ceilings is deprecated. Use `guard Name {}` in all new code. Existing `policy Name {}` files continue to compile but emit `FUNGI-SYNTAX-LEGACY-003`.
 
 ---
 
@@ -1271,7 +1271,7 @@ guard PaymentDomainGuard {
 
 Maps to V_DPM bit 8 (`dag_edge_valid`) — the topology check fires before capability checks.
 
-```spore
+```fungi
 gate(admin_only) {
   secure flow deleteRecord(id: String) -> Result<Void, Fault>
   contract {
@@ -1284,7 +1284,7 @@ gate(admin_only) {
 }
 ```
 
-**Governance rules:** `SPORE-GATE-001` (unknown condition), `SPORE-GATE-002` (wraps pure flow — redundant).  
+**Governance rules:** `FUNGI-GATE-001` (unknown condition), `FUNGI-GATE-002` (wraps pure flow — redundant).  
 `gateConstraints[]` in the `.lmanifest` tracks all `gate {}` admission guards.
 
 ---
@@ -1292,13 +1292,13 @@ gate(admin_only) {
 ## Top-Level Declaration: `import` — DAG Merge
 
 **Status:** PLANNED (v2.1 compiler)  
-**Diagnostics:** SPORE-IMPORT-001 through SPORE-IMPORT-004
+**Diagnostics:** FUNGI-IMPORT-001 through FUNGI-IMPORT-004
 
 Two forms:
 
-```spore
+```fungi
 // Form 1 — plain file import (DAG merge)
-import "./path.spore"
+import "./path.fungi"
 
 // Form 2 — bridged plugin (safe: sandboxed; assimilate: Hot-Code Residency)
 import plugin safe "./path" as X {
@@ -1312,7 +1312,7 @@ import plugin assimilate "./path" as X {
 
 - **Plain import:** Merges the target file's symbols into the current DAG scope. Symbols are live — the file is compiled as part of the same DAG.
 - **`plugin safe`:** Sandboxed bridge. The plugin runs in an isolated module; calls are mediated by the `access {}` boundary.
-- **`plugin assimilate`:** Hot-Code Residency. The plugin is loaded into the DSS bootstrap memory at startup. Must be declared in `boot.spore`. Requires `assimilation_memory_budget` in `governance {}`. The `.lmanifest` tracks assimilated plugins in `assimilatedPlugins[]`.
+- **`plugin assimilate`:** Hot-Code Residency. The plugin is loaded into the DSS bootstrap memory at startup. Must be declared in `boot.fungi`. Requires `assimilation_memory_budget` in `governance {}`. The `.lmanifest` tracks assimilated plugins in `assimilatedPlugins[]`.
 
 ---
 
@@ -1334,8 +1334,8 @@ import plugin assimilate "./path" as X {
 
 | Clause | Why | Diagnostic |
 |---|---|---|
-| `liability {}` | Auto-calculated by governance verifier from breach-risk matrix; stored in ProofGraph. Manual declaration is always wrong. | `SPORE-GOV-018` |
-| `cyber_physical_hardening {}` | Auto-selected by runtime from ValueGraph. Only declare with Tier 1 ASIC hardware + regulatory attestation mandate + high `economics.max_risk_liability`. | `SPORE-GOV-017` |
+| `liability {}` | Auto-calculated by governance verifier from breach-risk matrix; stored in ProofGraph. Manual declaration is always wrong. | `FUNGI-GOV-018` |
+| `cyber_physical_hardening {}` | Auto-selected by runtime from ValueGraph. Only declare with Tier 1 ASIC hardware + regulatory attestation mandate + high `economics.max_risk_liability`. | `FUNGI-GOV-017` |
 
 ---
 
@@ -1344,9 +1344,9 @@ import plugin assimilate "./path" as X {
 These apply to all examples in this document:
 
 - **`->`** is the return type operator (not `:`).
-- **Module paths use `.` today** — `AuditLog.write(...)`, `String.length(...)`. The canonical form is `::` (`AuditLog::write`, `String::length`) but the `::` parser is not yet implemented (task #57, rule S-000). Use `.` in all `.spore` source files.
+- **Module paths use `.` today** — `AuditLog.write(...)`, `String.length(...)`. The canonical form is `::` (`AuditLog::write`, `String::length`) but the `::` parser is not yet implemented (task #57, rule S-000). Use `.` in all `.fungi` source files.
 - **Named type constructors in let-bindings fail:** `let x = TypeName { field: value }` → Stage A parse error (task #57). Use `return Ok(TypeName { field: value })` or pass constructors directly as call arguments instead.
-- **Forward-looking DRCM syntax** (`invariant {}`, `step`, `policy { emergency {} }`, `limits {}` with DWI semantics) must be wrapped in `@experimental_profile(name: "drcm_core_v1", status: "planned_phaseN")` in `--release` builds, or the compiler emits `SPORE-DRCM-UNSUPPORTED` (rule A-004).
+- **Forward-looking DRCM syntax** (`invariant {}`, `step`, `policy { emergency {} }`, `limits {}` with DWI semantics) must be wrapped in `@experimental_profile(name: "drcm_core_v1", status: "planned_phaseN")` in `--release` builds, or the compiler emits `FUNGI-DRCM-UNSUPPORTED` (rule A-004).
 
 ---
 
@@ -1355,7 +1355,7 @@ These apply to all examples in this document:
 | Topic | Document |
 |---|---|
 | Canonical contract authoring guide | `galerina-contract-authoring-guide.md` |
-| Full governance rules + SPORE diagnostic registry | `galerina-governance-rules.md` |
+| Full governance rules + FUNGI diagnostic registry | `galerina-governance-rules.md` |
 | Domain guard policies (`[conforms_to]`) | `galerina-domain-guard-policies.md` |
 | DRCM 7-module architecture (V_DPM, DWI, DSS) | `galerina-deterministic-runtime-containment.md` |
 | Architecture patterns (9 patterns, feature profiles) | `galerina-architecture-patterns.md` |

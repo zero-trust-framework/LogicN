@@ -61,11 +61,11 @@ Galerina build --mode release
 Current prototype command examples:
 
 ```bash
-node compiler/galerina.js run examples/hello.spore --generate --out .build-dev-run
-node compiler/galerina.js generate examples --exclude source-map-error.spore --out .build-dev
-node compiler/galerina.js dev examples/hello.spore --out .build-dev
-node compiler/galerina.js dev examples/hello.spore --watch --out .build-dev
-node compiler/galerina.js build examples --exclude source-map-error.spore --out build/examples
+node compiler/galerina.js run examples/hello.fungi --generate --out .build-dev-run
+node compiler/galerina.js generate examples --exclude source-map-error.fungi --out .build-dev
+node compiler/galerina.js dev examples/hello.fungi --out .build-dev
+node compiler/galerina.js dev examples/hello.fungi --watch --out .build-dev
+node compiler/galerina.js build examples --exclude source-map-error.fungi --out build/examples
 ```
 
 Command behaviour:
@@ -170,7 +170,7 @@ Production artefacts require a compile.
 
 Status: documented in `docs/run-and-compile-modes.md`; prototype support exists
 for one checked `Galerina dev` cycle and `Galerina dev --watch` can re-run that cycle when
-`.spore` files change.
+`.fungi` files change.
 
 Galerina should have a single command for development.
 
@@ -201,7 +201,7 @@ Galerina dev --watch
 Suggested `Galerina dev` flow:
 
 ```text
-read boot.spore
+read boot.fungi
 parse source files
 type-check source
 security-check source
@@ -231,7 +231,7 @@ Galerina must validate the project before main() runs.
 Startup order:
 
 ```text
-1. Read boot.spore
+1. Read boot.fungi
 2. Validate project config
 3. Validate imports and packages
 4. Validate globals, env vars and secrets
@@ -939,7 +939,7 @@ Correct:
 
 ```text
 compiler/galerina.js
-examples/hello.spore
+examples/hello.fungi
 schemas/ai-context.schema.json
 docs/type-system.md
 ```
@@ -948,7 +948,7 @@ Incorrect inside this repository:
 
 ```text
 packages-galerina/galerina-core/compiler/galerina.js
-packages-galerina/galerina-core/examples/hello.spore
+packages-galerina/galerina-core/examples/hello.fungi
 packages-galerina/galerina-core/schemas/ai-context.schema.json
 ```
 
@@ -1011,7 +1011,7 @@ Core rule:
 ```text
 Import local files.
 Use approved packages.
-Register packages in boot.spore.
+Register packages in boot.fungi.
 Use packages explicitly in source files.
 Report package permissions, hashes, usage and loading behaviour.
 ```
@@ -1142,7 +1142,7 @@ add permission metadata reports
 add Pigeon-style typed API schema output or equivalent
 add flutter-ffi target planning
 add unsupported-platform diagnostics for Flutter FFI
-add source maps from generated Dart/native bindings back to .spore files
+add source maps from generated Dart/native bindings back to .fungi files
 defer Flutter UI component syntax until lower support levels are stable
 emit async, platform-channel, FFI and render backend reports
 ```

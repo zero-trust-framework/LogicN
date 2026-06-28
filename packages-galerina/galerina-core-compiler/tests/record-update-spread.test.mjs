@@ -14,7 +14,7 @@ import { run } from "../dist/index.js";
 
 const evalInt = async (body) => {
   const src = `pure flow main() -> Int contract { effects {} } { ${body} }`;
-  const r = await run(src, "spread.spore", "main", new Map(), {});
+  const r = await run(src, "spread.fungi", "main", new Map(), {});
   return r;
 };
 

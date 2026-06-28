@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 import { parseProgram, resolveSymbols, checkTypes, checkValueStates, checkEffects, effectResultsToDiagnostics, verifyGovernance, checkEvents } from "../dist/index.js";
 
-const SUPPRESS = new Set(["SPORE-TYPE-001","SPORE-TYPE-009","SPORE-NAME-001","SPORE-GOV-002","SPORE-SYNTAX-003","SPORE-SYNTAX-006","SPORE-SYNTAX-007","SPORE-SYNTAX-008"]);
+const SUPPRESS = new Set(["FUNGI-TYPE-001","FUNGI-TYPE-009","FUNGI-NAME-001","FUNGI-GOV-002","FUNGI-SYNTAX-003","FUNGI-SYNTAX-006","FUNGI-SYNTAX-007","FUNGI-SYNTAX-008"]);
 
-const src = readFileSync("C:/laragon/www/LO/docs/Examples/Level-9-Enterprise/468-full-contract-model/example.spore", "utf8");
-const p = parseProgram(src, "test.spore");
+const src = readFileSync("C:/laragon/www/LO/docs/Examples/Level-9-Enterprise/468-full-contract-model/example.fungi", "utf8");
+const p = parseProgram(src, "test.fungi");
 const sr = resolveSymbols(p.ast);
 const tr = checkTypes(p.ast);
 const vr = checkValueStates(p.ast);

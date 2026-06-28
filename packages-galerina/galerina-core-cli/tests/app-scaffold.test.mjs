@@ -3,7 +3,7 @@
 // `galerina new app` copies the canonical golden template
 // (packages-galerina/galerina-framework-example-app) with the app name substituted and
 // build outputs excluded. This locks that contract: the runnable layout
-// (src/App.spore + src/flows/ + App.manifest + config/ + host/ + packages/greeting/ +
+// (src/App.fungi + src/flows/ + App.manifest + config/ + host/ + packages/greeting/ +
 // tests/ + package.json/tsconfig.json), its zero-trust defaults (deny-by-default,
 // fail-closed), and refuse-to-overwrite. Structural/content assertions only (no
 // compile) so the test stays fast and toolchain-independent; the build + run path is
@@ -42,14 +42,14 @@ test("galerina new app — emits the full runnable golden layout (name-substitut
     assert.equal(r.status, 0, `scaffold should succeed:\n${r.stderr}`);
 
     for (const rel of [
-      "src/App.spore",
-      "src/flows/greeting.spore",
+      "src/App.fungi",
+      "src/flows/greeting.fungi",
       "App.manifest",
       "config/app.config.json",
       "host/server.ts",
       "host/config.ts",
-      "packages/greeting/package.spore.json",
-      "packages/greeting/src/index.spore",
+      "packages/greeting/package.fungi.json",
+      "packages/greeting/src/index.fungi",
       "tests/e2e.test.mjs",
       "package.json",
       "tsconfig.json",
@@ -79,9 +79,9 @@ test("galerina new app — App.manifest is deny-by-default (no caps, kind=app, n
     const manifest = JSON.parse(readFileSync(join(target, "App.manifest"), "utf8"));
     assert.equal(manifest.kind, "app");
     // A freshly-scaffolded app is unsigned, so galerina-new.mjs rewrites the golden (root-signed,
-    // preserved) App.manifest's `spore.app.v1` -> the current `spore.app.v1`.
-    assert.equal(manifest.schemaVersion, "spore.app.v1");
-    assert.equal(manifest.entry, "src/App.spore");
+    // preserved) App.manifest's `fungi.app.v1` -> the current `fungi.app.v1`.
+    assert.equal(manifest.schemaVersion, "fungi.app.v1");
+    assert.equal(manifest.entry, "src/App.fungi");
     // The example app's identity string is replaced with the new app's name.
     assert.equal(manifest.name, "secure-app");
     // Deny-by-default: the app grants NO capabilities.
@@ -91,7 +91,7 @@ test("galerina new app — App.manifest is deny-by-default (no caps, kind=app, n
     assert.equal(manifest.build.manifest, "build/App.lmanifest");
 
     // The app's own compute package is pure + grants nothing.
-    const pkg = JSON.parse(readFileSync(join(target, "packages/greeting/package.spore.json"), "utf8"));
+    const pkg = JSON.parse(readFileSync(join(target, "packages/greeting/package.fungi.json"), "utf8"));
     assert.equal(pkg.name, "greeting", "the compute package keeps its own name (not the app name)");
     assert.deepEqual(pkg.capabilities, [], "greeting grants no capabilities");
 
@@ -101,13 +101,13 @@ test("galerina new app — App.manifest is deny-by-default (no caps, kind=app, n
   });
 });
 
-test("galerina new app — App.spore is pure (no effects) and fail-closed (mandatory wildcard)", () => {
+test("galerina new app — App.fungi is pure (no effects) and fail-closed (mandatory wildcard)", () => {
   withTempDir((base) => {
     const target = join(base, "fc-app");
     const r = runScaffold(["app", target]);
     assert.equal(r.status, 0, r.stderr);
 
-    const app = readFileSync(join(target, "src", "App.spore"), "utf8");
+    const app = readFileSync(join(target, "src", "App.fungi"), "utf8");
     assert.match(app, /pure flow main\(\)\s*->\s*Int/, "entry must be a pure flow");
     // Check CODE only — the doc comment legitimately mentions `effects {}`.
     const code = app
@@ -118,10 +118,10 @@ test("galerina new app — App.spore is pure (no effects) and fail-closed (manda
     assert.match(code, /_\s*=>/, "match must keep its mandatory fail-closed wildcard");
     // Capability binding lives in the signed manifest, never in a .tmf — the
     // scaffold teaches that explicitly.
-    assert.match(app, /\.lmanifest/, "App.spore should point at the signed .lmanifest");
+    assert.match(app, /\.lmanifest/, "App.fungi should point at the signed .lmanifest");
 
     // The greeting compute is likewise pure and fail-closed.
-    const greeting = readFileSync(join(target, "packages/greeting/src/index.spore"), "utf8");
+    const greeting = readFileSync(join(target, "packages/greeting/src/index.fungi"), "utf8");
     assert.match(greeting, /pure flow main\(\)\s*->\s*Int/, "greeting compute must be a pure flow");
     assert.match(greeting, /_\s*=>/, "greeting match must keep its fail-closed wildcard");
   });
@@ -143,9 +143,9 @@ test("galerina new — package mode still works (backward compatible)", () => {
     const target = join(base, "pkg");
     const r = runScaffold([target]); // no mode token → package mode
     assert.equal(r.status, 0, r.stderr);
-    assert.ok(existsSync(join(target, "package.spore.json")), "package descriptor");
-    assert.ok(existsSync(join(target, "src", "index.spore")), "package entry");
-    assert.ok(!existsSync(join(target, "src", "App.spore")), "package mode must NOT emit the app entry src/App.spore");
+    assert.ok(existsSync(join(target, "package.fungi.json")), "package descriptor");
+    assert.ok(existsSync(join(target, "src", "index.fungi")), "package entry");
+    assert.ok(!existsSync(join(target, "src", "App.fungi")), "package mode must NOT emit the app entry src/App.fungi");
   });
 });
 

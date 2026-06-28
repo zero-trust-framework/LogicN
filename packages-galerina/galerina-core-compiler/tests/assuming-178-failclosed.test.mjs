@@ -7,12 +7,12 @@ import { describe, it } from "node:test";
 import { parseProgram, checkEffects, verifyGovernance } from "../dist/index.js";
 
 function gov(source, profile) {
-  const p = parseProgram(source, "test.spore");
+  const p = parseProgram(source, "test.fungi");
   const fx = checkEffects(p.flows, p.ast);
   return verifyGovernance(p.ast, p.flows, fx, profile);
 }
 
-// `externalValidator` is NOT declared in this unit → cross-module proof borrow → SPORE-ASSUME-004.
+// `externalValidator` is NOT declared in this unit → cross-module proof borrow → FUNGI-ASSUME-004.
 const src = `flow useExternal(x: Int) -> Int
 contract {
   intent { "Borrow a proof from an external validator flow." }
@@ -22,12 +22,12 @@ contract {
   return x
 }`;
 
-const find = (g) => g.diagnostics.find((d) => d.code === "SPORE-ASSUME-004");
+const find = (g) => g.diagnostics.find((d) => d.code === "FUNGI-ASSUME-004");
 
 describe("#178: cross-module assuming() is fail-closed in production", () => {
   it("ERROR in production (unverified cross-module proof borrow is fail-open → rejected)", () => {
     const d = find(gov(src, "production"));
-    assert.ok(d, "SPORE-ASSUME-004 emitted");
+    assert.ok(d, "FUNGI-ASSUME-004 emitted");
     assert.equal(d.severity, "error");
   });
 

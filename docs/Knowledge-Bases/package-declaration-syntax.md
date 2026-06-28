@@ -39,7 +39,7 @@ galerina-data             — data access
 
 ## Dependency Declaration
 
-Declared in the project manifest (`.spore` or separate manifest file):
+Declared in the project manifest (`.fungi` or separate manifest file):
 
 ```galerina
 package my_app {

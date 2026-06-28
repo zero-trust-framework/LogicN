@@ -4973,7 +4973,7 @@
           "analysis_path": "data\\processed\\generic\\CVE-1999-0101-209decb3.generic.analysis.json",
           "external_id": "CVE-1999-0101",
           "references": [
-            "http://ciac.sporel.gov/ciac/bulletins/h-13.shtml",
+            "http://ciac.fungil.gov/ciac/bulletins/h-13.shtml",
             "https://nvd.nist.gov/vuln/detail/CVE-1999-0101"
           ],
           "source_hash": "06ad000d20ceafa19a0c1f1e2c08e6c7baebb77674fd62c2ffa2cf0bdaf83eb4",
@@ -4986,7 +4986,7 @@
           "analysis_path": "data\\processed\\generic\\CVE-1999-0101-cb334bac.generic.analysis.json",
           "external_id": "CVE-1999-0101",
           "references": [
-            "http://ciac.sporel.gov/ciac/bulletins/h-13.shtml",
+            "http://ciac.fungil.gov/ciac/bulletins/h-13.shtml",
             "https://nvd.nist.gov/vuln/detail/CVE-1999-0101"
           ],
           "source_hash": "9bddde2b8652c8d5905d9b4493a7830b137ff3491ad26fb0f197f66eebdc389f",
@@ -11177,7 +11177,7 @@
           "analysis_path": "data\\processed\\generic\\CVE-1999-0415-996da094.generic.analysis.json",
           "external_id": "CVE-1999-0415",
           "references": [
-            "http://ciac.sporel.gov/ciac/bulletins/j-034.shtml",
+            "http://ciac.fungil.gov/ciac/bulletins/j-034.shtml",
             "http://www.cisco.com/warp/public/770/7xxconn-pub.shtml",
             "https://nvd.nist.gov/vuln/detail/CVE-1999-0415"
           ],
@@ -11191,7 +11191,7 @@
           "analysis_path": "data\\processed\\generic\\CVE-1999-0415-e82a522b.generic.analysis.json",
           "external_id": "CVE-1999-0415",
           "references": [
-            "http://ciac.sporel.gov/ciac/bulletins/j-034.shtml",
+            "http://ciac.fungil.gov/ciac/bulletins/j-034.shtml",
             "http://www.cisco.com/warp/public/770/7xxconn-pub.shtml",
             "https://nvd.nist.gov/vuln/detail/CVE-1999-0415"
           ],
@@ -11205,7 +11205,7 @@
           "analysis_path": "data\\processed\\generic\\CVE-1999-0416-490dc00c.generic.analysis.json",
           "external_id": "CVE-1999-0416",
           "references": [
-            "http://ciac.sporel.gov/ciac/bulletins/j-034.shtml",
+            "http://ciac.fungil.gov/ciac/bulletins/j-034.shtml",
             "http://www.cisco.com/warp/public/770/7xxconn-pub.shtml",
             "https://nvd.nist.gov/vuln/detail/CVE-1999-0416"
           ],
@@ -11219,7 +11219,7 @@
           "analysis_path": "data\\processed\\generic\\CVE-1999-0416-7670bc63.generic.analysis.json",
           "external_id": "CVE-1999-0416",
           "references": [
-            "http://ciac.sporel.gov/ciac/bulletins/j-034.shtml",
+            "http://ciac.fungil.gov/ciac/bulletins/j-034.shtml",
             "http://www.cisco.com/warp/public/770/7xxconn-pub.shtml",
             "https://nvd.nist.gov/vuln/detail/CVE-1999-0416"
           ],

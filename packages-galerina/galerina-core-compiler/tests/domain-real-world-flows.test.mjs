@@ -26,7 +26,7 @@ import { parseProgram, checkTypes, resolveSymbols, executeFlow } from "../dist/i
 // ---------------------------------------------------------------------------
 
 async function parseAndRun(source, flowName, args = new Map()) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   resolveSymbols(parsed.ast);
   checkTypes(parsed.ast);
   return await executeFlow(flowName, args, parsed.ast);
@@ -84,9 +84,9 @@ contract { effects { database.write, audit.write } }
     assert.ok(result.effectsObserved.includes("audit.write"));
   });
 
-  it("audit schema version is spore.runtime.audit.v1", async () => {
+  it("audit schema version is fungi.runtime.audit.v1", async () => {
     const result = await parseAndRun(SOURCE, "createPatient");
-    assert.equal(result.audit.schemaVersion, "spore.runtime.audit.v1");
+    assert.equal(result.audit.schemaVersion, "fungi.runtime.audit.v1");
   });
 });
 

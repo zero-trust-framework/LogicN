@@ -112,7 +112,7 @@ export class PhotonicEmulatorBridge implements InferenceBridge, PhotonicBackend 
     });
     if (!report.allConformant) {
       throw new Error(
-        `SPORE-SUBSTRATE: photonic lane is NOT bifurcation-conformant (${report.conformant}/${report.total} conformant, ${report.decisionDivergences} decision divergences) — refusing to calibrate/attest a divergent lane`,
+        `FUNGI-SUBSTRATE: photonic lane is NOT bifurcation-conformant (${report.conformant}/${report.total} conformant, ${report.decisionDivergences} decision divergences) — refusing to calibrate/attest a divergent lane`,
       );
     }
     // Bind the MEASURED band; the declared `tolerance` must still be ≥ epsilonMeasured (validateManifestShape).

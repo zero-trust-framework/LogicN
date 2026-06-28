@@ -11,7 +11,7 @@
 //  7.  Nested while in for
 //  8.  while with mut inside loop body
 //  9.  Loop with break-via-condition (count guard)
-//  10. Infinite loop guard: SPORE-RUNTIME-005 at 100k iterations
+//  10. Infinite loop guard: FUNGI-RUNTIME-005 at 100k iterations
 //  11. Assignment expression: mut x = x + 1
 //  12. Multiple mut reassignments in one flow
 //  13. mut in while loop body
@@ -32,14 +32,14 @@ import { parseProgram, resolveSymbols, checkTypes, executeFlow, run } from "../d
 // ---------------------------------------------------------------------------
 
 async function parseAndRun(source, flowName, args = new Map()) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   resolveSymbols(parsed.ast);
   checkTypes(parsed.ast);
   return await executeFlow(flowName, args, parsed.ast);
 }
 
 async function runFull(source, flowName, args = new Map()) {
-  return await run(source, "test.spore", flowName, args);
+  return await run(source, "test.fungi", flowName, args);
 }
 
 // ---------------------------------------------------------------------------
@@ -556,11 +556,11 @@ guarded flow max10Guard() -> Int {
 });
 
 // ---------------------------------------------------------------------------
-// Section 10: Infinite loop guard — SPORE-RUNTIME-005 at 100k iterations
+// Section 10: Infinite loop guard — FUNGI-RUNTIME-005 at 100k iterations
 // ---------------------------------------------------------------------------
 
-describe("Phase 12A — infinite loop guard (SPORE-RUNTIME-005)", () => {
-  it("while true emits SPORE-RUNTIME-005 diagnostic", async () => {
+describe("Phase 12A — infinite loop guard (FUNGI-RUNTIME-005)", () => {
+  it("while true emits FUNGI-RUNTIME-005 diagnostic", async () => {
     const result = await parseAndRun(`
 guarded flow infiniteTrue() -> Int {
   mut i = 0
@@ -573,8 +573,8 @@ guarded flow infiniteTrue() -> Int {
     // FAIL-CLOSED (2026-06-18, hazard fix): an infinite loop now TRAPS — it does not truncate-and-succeed.
     assert.equal(result.value.__tag, "runtimeError", "infinite while true must fail closed (runtimeError)");
     assert.ok(
-      /Loop exceeded/.test(result.value.message ?? "") || result.diagnostics.some((d) => d.code === "SPORE-RUNTIME-003"),
-      "fail-closed loop trap should surface 'Loop exceeded' / SPORE-RUNTIME-003",
+      /Loop exceeded/.test(result.value.message ?? "") || result.diagnostics.some((d) => d.code === "FUNGI-RUNTIME-003"),
+      "fail-closed loop trap should surface 'Loop exceeded' / FUNGI-RUNTIME-003",
     );
   });
 
@@ -606,12 +606,12 @@ guarded flow infiniteLoop() -> Int {
     // FAIL-CLOSED (2026-06-18, hazard fix): the run() pipeline also TRAPS, not emits-005-and-succeeds.
     assert.equal(result.value.__tag, "runtimeError", "run() pipeline infinite loop must fail closed");
     assert.ok(
-      /Loop exceeded/.test(result.value.message ?? "") || result.diagnostics.some((d) => d.code === "SPORE-RUNTIME-003"),
+      /Loop exceeded/.test(result.value.message ?? "") || result.diagnostics.some((d) => d.code === "FUNGI-RUNTIME-003"),
       "fail-closed loop trap via run()",
     );
   });
 
-  it("non-infinite loop with 99999 iterations does NOT emit SPORE-RUNTIME-005", async () => {
+  it("non-infinite loop with 99999 iterations does NOT emit FUNGI-RUNTIME-005", async () => {
     const result = await parseAndRun(`
 guarded flow nearLimit() -> Int {
   mut i = 0
@@ -621,8 +621,8 @@ guarded flow nearLimit() -> Int {
   return i
 }
 `, "nearLimit");
-    const has005 = result.diagnostics.some((d) => d.code === "SPORE-RUNTIME-005");
-    assert.ok(!has005, "Well-bounded loop should not emit SPORE-RUNTIME-005");
+    const has005 = result.diagnostics.some((d) => d.code === "FUNGI-RUNTIME-005");
+    assert.ok(!has005, "Well-bounded loop should not emit FUNGI-RUNTIME-005");
     assert.equal(result.value.value, 1000);
   });
 });

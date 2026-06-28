@@ -17,7 +17,7 @@ The repository includes:
 ```text
 documented language rules and design notes
 draft grammar and JSON schemas
-runnable .spore examples
+runnable .fungi examples
 a Node.js prototype CLI in compiler/galerina.js
 lexer, parser, formatter and smoke-test commands
 prototype type, target, security, memory and strict-comment diagnostics
@@ -53,7 +53,7 @@ No npm install step is required for the current prototype because
 Run the checked hello example:
 
 ```bash
-node compiler/galerina.js run examples/hello.spore
+node compiler/galerina.js run examples/hello.fungi
 ```
 
 Expected output:
@@ -110,23 +110,23 @@ Direct CLI commands:
 
 ```bash
 node compiler/galerina.js init my-galerina-app
-node compiler/galerina.js run examples/hello.spore
-node compiler/galerina.js run examples/hello.spore --generate --out .build-dev-run
-node compiler/galerina.js generate examples --exclude source-map-error.spore --out .build-dev
-node compiler/galerina.js dev examples/hello.spore --out .build-dev
-node compiler/galerina.js dev examples/hello.spore --watch --out .build-dev
+node compiler/galerina.js run examples/hello.fungi
+node compiler/galerina.js run examples/hello.fungi --generate --out .build-dev-run
+node compiler/galerina.js generate examples --exclude source-map-error.fungi --out .build-dev
+node compiler/galerina.js dev examples/hello.fungi --out .build-dev
+node compiler/galerina.js dev examples/hello.fungi --watch --out .build-dev
 node compiler/galerina.js serve examples --dev
-node compiler/galerina.js check examples --exclude source-map-error.spore
-node compiler/galerina.js tokens examples/hello.spore
+node compiler/galerina.js check examples --exclude source-map-error.fungi
+node compiler/galerina.js tokens examples/hello.fungi
 node compiler/galerina.js fmt examples --check
 node compiler/galerina.js test examples
-node compiler/galerina.js schema examples/api-orders.spore --type CreateOrderRequest
-node compiler/galerina.js openapi examples/api-orders.spore
-node compiler/galerina.js build examples --exclude source-map-error.spore --out build/examples
+node compiler/galerina.js schema examples/api-orders.fungi --type CreateOrderRequest
+node compiler/galerina.js openapi examples/api-orders.fungi
+node compiler/galerina.js build examples --exclude source-map-error.fungi --out build/examples
 node compiler/galerina.js verify build/examples
 node compiler/galerina.js targets examples
 node compiler/galerina.js ai-context examples --out build/examples
-node compiler/galerina.js explain examples/source-map-error.spore --for-ai
+node compiler/galerina.js explain examples/source-map-error.fungi --for-ai
 ```
 
 `dev --watch` is accepted by the prototype, but it currently performs one
@@ -148,9 +148,9 @@ Generated structure:
 
 ```text
 my-galerina-app/
-|-- boot.spore
+|-- boot.fungi
 `-- src/
-    `-- main.spore
+    `-- main.fungi
 ```
 
 Run it from this repository root:
@@ -159,7 +159,7 @@ Run it from this repository root:
 node compiler/galerina.js run my-galerina-app
 ```
 
-The generated `boot.spore` includes target declarations, global registry entries,
+The generated `boot.fungi` includes target declarations, global registry entries,
 runtime memory/spill policy, documentation settings, AI guide settings,
 manifest settings and required build outputs.
 
@@ -170,7 +170,7 @@ manifest settings and required build outputs.
 Compile Mode writes placeholder target artefacts plus JSON/Markdown reports.
 
 ```bash
-node compiler/galerina.js build examples --exclude source-map-error.spore --out build/examples
+node compiler/galerina.js build examples --exclude source-map-error.fungi --out build/examples
 ```
 
 Typical production build output:
@@ -233,7 +233,7 @@ Development generation writes reports and docs without production binaries or
 the production build manifest:
 
 ```bash
-node compiler/galerina.js generate examples --exclude source-map-error.spore --out .build-dev
+node compiler/galerina.js generate examples --exclude source-map-error.fungi --out .build-dev
 ```
 
 This is useful when you want generated docs, source maps, AI context and safety
@@ -243,12 +243,12 @@ reports while still keeping Compile Mode as the production path.
 
 ## Explain Diagnostics
 
-`source-map-error.spore` intentionally contains invalid compute-block I/O so the
+`source-map-error.fungi` intentionally contains invalid compute-block I/O so the
 prototype can demonstrate source-mapped diagnostics.
 
 ```bash
-node compiler/galerina.js explain examples/source-map-error.spore
-node compiler/galerina.js explain examples/source-map-error.spore --for-ai
+node compiler/galerina.js explain examples/source-map-error.fungi
+node compiler/galerina.js explain examples/source-map-error.fungi --for-ai
 ```
 
 The AI-friendly explanation includes structured fields such as error type,
@@ -296,8 +296,8 @@ AI-readable compiler reports
 multi-target build outputs
 ```
 
-Source files use the `.spore` extension. The recommended project entry file is
-`boot.spore`; simple scripts can expose `secure flow main()`.
+Source files use the `.fungi` extension. The recommended project entry file is
+`boot.fungi`; simple scripts can expose `secure flow main()`.
 
 ---
 
@@ -367,8 +367,8 @@ api OrdersApi {
 Generate API contract drafts:
 
 ```bash
-node compiler/galerina.js schema examples/api-orders.spore --type CreateOrderRequest
-node compiler/galerina.js openapi examples/api-orders.spore
+node compiler/galerina.js schema examples/api-orders.fungi --type CreateOrderRequest
+node compiler/galerina.js openapi examples/api-orders.fungi
 ```
 
 ---

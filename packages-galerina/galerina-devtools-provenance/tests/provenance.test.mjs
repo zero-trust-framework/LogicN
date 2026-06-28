@@ -28,11 +28,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const AUTH_SERVICE_DIR = resolve(__dirname, "../../../examples/auth-service");
 
 // Load the canonical verifyPassword example
-const VERIFY_PASSWORD_PATH = resolve(AUTH_SERVICE_DIR, "verifyPassword.spore");
+const VERIFY_PASSWORD_PATH = resolve(AUTH_SERVICE_DIR, "verifyPassword.fungi");
 const VERIFY_PASSWORD_SRC = readFileSync(VERIFY_PASSWORD_PATH, "utf8");
 
 // Load the verifyPasswordService example (Password.verify facade)
-const VERIFY_PASSWORD_SVC_PATH = resolve(AUTH_SERVICE_DIR, "verifyPasswordService.spore");
+const VERIFY_PASSWORD_SVC_PATH = resolve(AUTH_SERVICE_DIR, "verifyPasswordService.fungi");
 const VERIFY_PASSWORD_SVC_SRC = readFileSync(VERIFY_PASSWORD_SVC_PATH, "utf8");
 
 // A synthetic ungated flow: unsafe input goes directly to a DB write (high-risk)
@@ -70,8 +70,8 @@ secure flow safeDbWrite(readonly request: Request): Response
 // 1. Trace builds a graph with source/transform/sink nodes
 // ---------------------------------------------------------------------------
 
-describe("analyzeFile: verifyPassword.spore — node kinds", () => {
-  it("produces source, transform, and sink nodes for verifyPassword.spore", () => {
+describe("analyzeFile: verifyPassword.fungi — node kinds", () => {
+  it("produces source, transform, and sink nodes for verifyPassword.fungi", () => {
     const result = analyzeFile(VERIFY_PASSWORD_SRC, VERIFY_PASSWORD_PATH);
 
     const sources    = result.nodes.filter(n => n.kind === "source");
@@ -93,14 +93,14 @@ describe("analyzeFile: verifyPassword.spore — node kinds", () => {
 
 describe("analyzeFile: gated flow — no high-risk", () => {
   it("gated flow (unsafe→validate→DB) has zero ungated sinks", () => {
-    const result = analyzeFile(GATED_FLOW_SRC, "safeDbWrite.spore");
+    const result = analyzeFile(GATED_FLOW_SRC, "safeDbWrite.fungi");
     // ungatedSinkReached is false for a properly gated flow
     assert.equal(result.ungatedSinkReached, false,
       "A gated flow must NOT be flagged as ungated-sink-reached");
   });
 
   it("gated flow has at least one source and one transform", () => {
-    const result = analyzeFile(GATED_FLOW_SRC, "safeDbWrite.spore");
+    const result = analyzeFile(GATED_FLOW_SRC, "safeDbWrite.fungi");
     assert.ok(result.nodes.some(n => n.kind === "source"),  "Expected a source node");
     assert.ok(result.nodes.some(n => n.kind === "transform"), "Expected a transform node");
   });
@@ -112,13 +112,13 @@ describe("analyzeFile: gated flow — no high-risk", () => {
 
 describe("analyzeFile: ungated flow — high-risk flagged", () => {
   it("ungated flow triggers ungatedSinkReached", () => {
-    const result = analyzeFile(UNGATED_FLOW_SRC, "ungatedFlow.spore");
+    const result = analyzeFile(UNGATED_FLOW_SRC, "ungatedFlow.fungi");
     assert.equal(result.ungatedSinkReached, true,
       "An ungated flow must be flagged as ungatedSinkReached");
   });
 
   it("ungated flow has a source node with isTrusted=false", () => {
-    const result = analyzeFile(UNGATED_FLOW_SRC, "ungatedFlow.spore");
+    const result = analyzeFile(UNGATED_FLOW_SRC, "ungatedFlow.fungi");
     const untrustedSources = result.nodes.filter(n => n.kind === "source" && !n.isTrusted);
     assert.ok(untrustedSources.length >= 1, "Expected at least one untrusted source node");
   });
@@ -131,7 +131,7 @@ describe("analyzeFile: ungated flow — high-risk flagged", () => {
 describe("buildProvenanceGraph: summary counts", () => {
   it("counts flows and files correctly for the auth-service corpus", () => {
     const files = collectSporeFiles(AUTH_SERVICE_DIR);
-    assert.ok(files.length > 0, "Should find .spore files in auth-service directory");
+    assert.ok(files.length > 0, "Should find .fungi files in auth-service directory");
 
     const graph = buildProvenanceGraph(files);
 
@@ -145,10 +145,10 @@ describe("buildProvenanceGraph: summary counts", () => {
       "flowsWithUngatedSinks must be non-negative");
   });
 
-  it("verifyPassword.spore alone has zero ungated sinks (canonical clean example)", () => {
+  it("verifyPassword.fungi alone has zero ungated sinks (canonical clean example)", () => {
     const graph = buildProvenanceGraph([VERIFY_PASSWORD_PATH]);
     assert.equal(graph.summary.flowsWithUngatedSinks, 0,
-      "verifyPassword.spore is the canonical clean example — should have 0 ungated sinks");
+      "verifyPassword.fungi is the canonical clean example — should have 0 ungated sinks");
   });
 });
 
@@ -158,7 +158,7 @@ describe("buildProvenanceGraph: summary counts", () => {
 
 describe("analyzeFile: --flow filter", () => {
   it("filters to only the named flow", () => {
-    // verifyPasswordService.spore has 2 flows: fixtureHash and verifyPassword
+    // verifyPasswordService.fungi has 2 flows: fixtureHash and verifyPassword
     const result = analyzeFile(VERIFY_PASSWORD_SVC_SRC, VERIFY_PASSWORD_SVC_PATH, {
       flowFilter: "verifyPassword",
     });
@@ -192,14 +192,14 @@ describe("buildProvenanceGraph + renderTextReport: corpus report", () => {
     assert.ok(report.includes("Files:"), "Report should include file count");
   });
 
-  it("verifyPassword.spore produces exit code 0 (zero ungated sinks — canonical clean)", () => {
+  it("verifyPassword.fungi produces exit code 0 (zero ungated sinks — canonical clean)", () => {
     // The canonical verifyPassword example is the reference clean flow.
     // Uses: unsafe let → validate.email → AuditLog.write(redact(email)) → response
     // The provenance tool should report 0 ungated sinks for this file.
     const graph = buildProvenanceGraph([VERIFY_PASSWORD_PATH]);
 
     assert.equal(graph.summary.flowsWithUngatedSinks, 0,
-      "verifyPassword.spore should have 0 ungated-sink flows (canonical clean example)");
+      "verifyPassword.fungi should have 0 ungated-sink flows (canonical clean example)");
     // The CLI would exit with code 0 for this file
   });
 });
@@ -209,7 +209,7 @@ describe("buildProvenanceGraph + renderTextReport: corpus report", () => {
 // ---------------------------------------------------------------------------
 
 describe("renderJsonReport: valid JSON", () => {
-  it("produces valid JSON for verifyPassword.spore", () => {
+  it("produces valid JSON for verifyPassword.fungi", () => {
     const result = analyzeFile(VERIFY_PASSWORD_SRC, VERIFY_PASSWORD_PATH);
     const graph = {
       nodes: result.nodes,
@@ -243,7 +243,7 @@ describe("renderJsonReport: valid JSON", () => {
       riskFlows: [],
     };
     const parsed = JSON.parse(renderJsonReport(graph, 1));
-    assert.equal(parsed.schemaVersion, "spore.provenance.v1");
+    assert.equal(parsed.schemaVersion, "fungi.provenance.v1");
   });
 });
 
@@ -277,11 +277,11 @@ describe("renderProvReport: W3C PROV-JSON format", () => {
     assert.ok("entity" in parsed, "PROV-JSON must have 'entity' key");
     assert.ok("activity" in parsed, "PROV-JSON must have 'activity' key");
 
-    // Must have the spore prefix
+    // Must have the fungi prefix
     assert.ok("prefix" in parsed, "PROV-JSON must have 'prefix' key");
     assert.ok(
-      parsed.prefix?.spore !== undefined,
-      "PROV-JSON prefix must include 'spore' namespace",
+      parsed.prefix?.fungi !== undefined,
+      "PROV-JSON prefix must include 'fungi' namespace",
     );
 
     console.log(`  PROV-JSON: ${Object.keys(parsed.entity).length} entities, ${Object.keys(parsed.activity).length} activities`);
@@ -313,8 +313,8 @@ describe("renderProvReport: W3C PROV-JSON format", () => {
     }
   });
 
-  it("source nodes with isTrusted=false appear as entities with spore:tainted=true", () => {
-    const result = analyzeFile(UNGATED_FLOW_SRC, "ungatedFlow.spore");
+  it("source nodes with isTrusted=false appear as entities with fungi:tainted=true", () => {
+    const result = analyzeFile(UNGATED_FLOW_SRC, "ungatedFlow.fungi");
     const graph = {
       nodes: result.nodes,
       edges: result.edges,
@@ -330,14 +330,14 @@ describe("renderProvReport: W3C PROV-JSON format", () => {
     const parsed = JSON.parse(renderProvReport(graph, { format: "prov-json" }));
     const entityValues = Object.values(parsed.entity);
 
-    // At least one entity should have spore:tainted = true (the unsafe source)
-    const hasTaintedEntity = entityValues.some(e => e["spore:tainted"] === true);
-    assert.ok(hasTaintedEntity, "Expected at least one entity with spore:tainted=true for an ungated flow");
+    // At least one entity should have fungi:tainted = true (the unsafe source)
+    const hasTaintedEntity = entityValues.some(e => e["fungi:tainted"] === true);
+    assert.ok(hasTaintedEntity, "Expected at least one entity with fungi:tainted=true for an ungated flow");
   });
 
   it("transform nodes appear as activities in PROV-JSON", () => {
     // gated flow has a validate.input transform → should appear as activity
-    const result = analyzeFile(GATED_FLOW_SRC, "safeDbWrite.spore");
+    const result = analyzeFile(GATED_FLOW_SRC, "safeDbWrite.fungi");
     const graph = {
       nodes: result.nodes,
       edges: result.edges,
@@ -365,12 +365,12 @@ describe("renderProvReport: W3C PROV-JSON format", () => {
 // ---------------------------------------------------------------------------
 
 describe("riskFlows: provenance graph properties", () => {
-  it("riskFlows is empty for verifyPassword.spore (canonical clean example)", () => {
-    // The canonical verifyPassword.spore uses validate.email + redact — should be clean
+  it("riskFlows is empty for verifyPassword.fungi (canonical clean example)", () => {
+    // The canonical verifyPassword.fungi uses validate.email + redact — should be clean
     const graph = buildProvenanceGraph([VERIFY_PASSWORD_PATH]);
 
     assert.equal(graph.riskFlows.length, 0,
-      `verifyPassword.spore should have 0 risk flows, got ${graph.riskFlows.length}`);
+      `verifyPassword.fungi should have 0 risk flows, got ${graph.riskFlows.length}`);
   });
 
   it("riskFlows is a non-empty array for the auth-service corpus (genuine ungated flows detected)", () => {

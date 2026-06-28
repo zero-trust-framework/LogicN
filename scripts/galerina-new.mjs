@@ -20,7 +20,7 @@
  *   - Deny-by-default: the scaffold declares NO capabilities and NO deps beyond the
  *     app's own pure compute. The entry is a `pure flow` with no `effects {}`.
  *   - Fail-closed: every generated `match` keeps its mandatory `_ =>` wildcard
- *     (SPORE-TYPE-023); an unrecognised state exits non-zero, never falls through.
+ *     (FUNGI-TYPE-023); an unrecognised state exits non-zero, never falls through.
  *   - VERIFY BEFORE BUILD: the entry compiles as-is (`galerina build`).
  *   - Capability binding lives in the SIGNED `.lmanifest` fuse{} block produced by
  *     the build — NEVER in a `.tmf` (which is integrity/confidentiality only).
@@ -135,7 +135,7 @@ function packageDescriptor(name) {
       version: "0.1.0",
       kind: "pure-transform",
       provides: name,
-      entry: "src/index.spore",
+      entry: "src/index.fungi",
       seam: "compute.pure",
       capabilities: [],
     },
@@ -150,8 +150,8 @@ function indexSpore(name) {
 // Deny-by-default, fail-closed, least-capability:
 //   - \`pure flow\` declares NO effects — it cannot touch network, storage,
 //     secrets, the database, or run inference. Add an \`effects {}\` block AND
-//     the matching capability in package.spore.json only when you truly need it.
-//   - Every \`match\` MUST end with a mandatory \`_ =>\` wildcard (SPORE-TYPE-023):
+//     the matching capability in package.fungi.json only when you truly need it.
+//   - Every \`match\` MUST end with a mandatory \`_ =>\` wildcard (FUNGI-TYPE-023):
 //     undeclared inputs fail closed to a safe default, never fall through.
 //
 // Build:  node galerina.mjs build --package <this-dir>  →  dist/${name}.wasm
@@ -187,22 +187,22 @@ node galerina.mjs build --package .
 
 This package is **secure by default**:
 
-- **Deny-by-default capabilities.** \`package.spore.json\` declares an empty
+- **Deny-by-default capabilities.** \`package.fungi.json\` declares an empty
   \`"capabilities": []\` list. The entry flow is \`pure\` with no \`effects {}\`
   block, so it cannot reach the network, storage, secrets, the database, or
   inference. Grant a capability only by adding it to both the \`effects {}\`
   block of a flow and the descriptor's \`capabilities\` array.
 - **Fail-closed control flow.** Every \`match\` ends with a mandatory \`_ =>\`
-  wildcard (SPORE-TYPE-023): an unrecognised input lands on a safe default
+  wildcard (FUNGI-TYPE-023): an unrecognised input lands on a safe default
   instead of falling through.
 - **Least capability.** Add only what the package provably needs, nothing more.
 
 ## Layout
 
 \`\`\`
-package.spore.json   descriptor: name / kind / provides / entry / seam / capabilities
-src/index.spore      governed \`pure flow main() -> Int\` entry
-tests/             your .spore tests
+package.fungi.json   descriptor: name / kind / provides / entry / seam / capabilities
+src/index.fungi      governed \`pure flow main() -> Int\` entry
+tests/             your .fungi tests
 README.md          this file
 \`\`\`
 `;
@@ -223,8 +223,8 @@ function scaffoldPackage(absTarget, name, targetDir) {
   mkdirSync(join(absTarget, "tests"), { recursive: true });
 
   console.log(`galerina-new — scaffolding secure package "${name}" into ${absTarget}`);
-  writeFileStrict(join(absTarget, "package.spore.json"), packageDescriptor(name), "package.spore.json");
-  writeFileStrict(join(absTarget, "src", "index.spore"), indexSpore(name), "src/index.spore");
+  writeFileStrict(join(absTarget, "package.fungi.json"), packageDescriptor(name), "package.fungi.json");
+  writeFileStrict(join(absTarget, "src", "index.fungi"), indexSpore(name), "src/index.fungi");
   writeFileStrict(join(absTarget, "README.md"), readme(name), "README.md");
   writeFileStrict(join(absTarget, "tests", ".gitkeep"), "", "tests/.gitkeep");
 
@@ -243,14 +243,14 @@ Next:
 function substituteName(text, name) {
   return text.split(TEMPLATE_SCOPED_NAME).join(name).split(TEMPLATE_PKG_NAME).join(name)
     // The golden App.manifest is root-SIGNED, so its content is PRESERVED at pre-rebrand values
-    // (name `galerina-framework-example-app`, schemaVersion `spore.app.v1`, entry `src/App.spore`) — it
+    // (name `galerina-framework-example-app`, schemaVersion `fungi.app.v1`, entry `src/App.fungi`) — it
     // can't change without the offline re-sign ceremony, even though the example app's actual entry
-    // file is now `src/App.spore`. A freshly-scaffolded app is UNSIGNED, so rewrite those stale refs
+    // file is now `src/App.fungi`. A freshly-scaffolded app is UNSIGNED, so rewrite those stale refs
     // to current Galerina values so the new manifest + entry + name are consistent.
     .split("@galerina/framework-example-app").join(name)
     .split("galerina-framework-example-app").join(name)
-    .split("spore.app.v1").join("spore.app.v1")
-    .split("src/App.spore").join("src/App.spore");
+    .split("fungi.app.v1").join("fungi.app.v1")
+    .split("src/App.fungi").join("src/App.fungi");
 }
 
 // Recursively copy `srcDir` → `dstDir`, skipping build-output dirs, substituting the

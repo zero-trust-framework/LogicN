@@ -39,7 +39,7 @@ docs. SoT for the live rule set = the `feedback-*` memory files (this is the rea
 ## 6 · Hard NEVER-adopt list (most-secure default)
 Never endorse: stripping runtime checks · `O(1)`/"beats silicon"/"one clock cycle" complexity claims ·
 obfuscation-as-security · **photonic/analog as a crypto or auth authority** (the compute-only fence,
-`SPORE-SUBSTRATE-001`) · replacing real crypto/PKI (TLS/mTLS/X.509/ML-DSA) with a dot-product or a wave ·
+`FUNGI-SUBSTRATE-001`) · replacing real crypto/PKI (TLS/mTLS/X.509/ML-DSA) with a dot-product or a wave ·
 source-routing the public internet. Crypto/verdicts stay **digital/Binary**.
 
 ## 7 · Paper-worthiness (assess per item)

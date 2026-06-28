@@ -29,8 +29,8 @@ by `contract.test.mjs`). 9/9 contract tests green.
 `tolerance < epsilonMeasured` → DENY. This is what turns `redundancy:N`/`tolerance:ε` from author-asserted
 constants into verifiable claims.
 
-Candidate diagnostics (when wired into the compiler/Tower admission path): **SPORE-PRECISION-ATTEST** (declared
-≠ observed precision), **SPORE-PRECISION-FIDELITY** (below floor), **SPORE-PRECISION-WITNESS** (claim tighter
+Candidate diagnostics (when wired into the compiler/Tower admission path): **FUNGI-PRECISION-ATTEST** (declared
+≠ observed precision), **FUNGI-PRECISION-FIDELITY** (below floor), **FUNGI-PRECISION-WITNESS** (claim tighter
 than measured).
 
 ## Enforcement (VERIFIED 2026-06-16 — already wired, not a gap)
@@ -64,7 +64,7 @@ was a grep-truncation false negative).
    the witness is **ATTESTED** (the signed `toleranceWitness` already on the BridgeManifest) and the flow's
    `substrate{}` lane is connected to that attested bridge — a real cross-surface design decision (flow-contract
    ↔ signed-manifest), **not a clean additive build.** Idea #4's "typed reducer" likewise needs **edge-level
-   dataflow analysis** (the current B3/`SPORE-SUBSTRATE-004` checks the flow's `redundancy` *declaration*, not
+   dataflow analysis** (the current B3/`FUNGI-SUBSTRATE-004` checks the flow's `redundancy` *declaration*, not
    dataflow edges). Both gated on the owner's call: *do we let an attested witness refine the conservative
    floor, and how is the witness trust-bound to the flow?* The `NoiseModel` descriptor (#8) rides on the same decision.
 4. **#2 — comparability enforcement:** promote `comparabilityHash` from "validated if present" to a required

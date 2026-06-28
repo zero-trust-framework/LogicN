@@ -3,7 +3,7 @@
 //
 // Provides a static map of known @galerina/* package names to the type names
 // they export. Used by the symbol resolver and type checker to suppress
-// SPORE-TYPE-001 for types imported from known packages.
+// FUNGI-TYPE-001 for types imported from known packages.
 //
 // This registry is the source of truth for cross-module type injection.
 // When an `import X from "@galerina/foo"` statement is encountered, all types
@@ -32,7 +32,7 @@ export const KNOWN_PACKAGE_TYPES: ReadonlyMap<string, readonly string[]> = new M
 // Commonly used domain type names that are valid even without an explicit
 // import declaration. Level 5+ CEC examples often use these types directly
 // without a full package import. Any type in this set will not trigger
-// SPORE-TYPE-001 even when it is absent from BUILT_IN_TYPES and no import
+// FUNGI-TYPE-001 even when it is absent from BUILT_IN_TYPES and no import
 // statement was present.
 // ---------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ export const KNOWN_DOMAIN_TYPES: ReadonlySet<string> = new Set([
  *
  * If the package is not in KNOWN_PACKAGE_TYPES, an empty array is returned.
  * These type names should be seeded into the type checker and symbol resolver
- * so that importing them does not produce SPORE-TYPE-001 diagnostics.
+ * so that importing them does not produce FUNGI-TYPE-001 diagnostics.
  */
 export function resolveImportedTypes(packageName: string): readonly string[] {
   return KNOWN_PACKAGE_TYPES.get(packageName) ?? [];

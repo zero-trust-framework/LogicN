@@ -5,17 +5,17 @@ Status: Draft.
 Galerina, short for **Galerina**, is a strict, memory-safe, security-first
 programming language and compiler/toolchain.
 
-Galerina source files use the `.spore` extension.
+Galerina source files use the `.fungi` extension.
 
 Example files:
 
 ```text
-boot.spore
-main.spore
-routes.spore
-models.spore
-text-provider-example.spore
-text-policy.spore
+boot.fungi
+main.fungi
+routes.fungi
+models.fungi
+text-provider-example.fungi
+text-policy.fungi
 ```
 
 ---
@@ -957,7 +957,7 @@ Text package target report:
   "textPackageTargetReport": {
     "package": "EmbeddingPackage",
     "flow": "createEmbedding",
-    "source": "src/text/embed.spore:4",
+    "source": "src/text/embed.fungi:4",
     "computeMode": "auto",
     "model": "EmbeddingModel",
     "selectedTarget": "gpu",
@@ -1006,7 +1006,7 @@ Security report:
 {
   "textSecurityReport": {
     "flow": "handleUserMessage",
-    "source": "src/chat/handler.spore:8",
+    "source": "src/chat/handler.fungi:8",
     "promptSafetyEnabled": true,
     "piiRedactionEnabled": true,
     "secretRedactionEnabled": true,

@@ -7,10 +7,10 @@
 // Covers:
 //   - staticDecl AST node shape (kind, value, children)
 //   - bitfieldDecl AST node shape (kind, value, children with "field:pos" format)
-//   - SPORE-STATIC-001: non-constant initializer (function call in static)
-//   - SPORE-STATIC-002: duplicate static name redeclaration
-//   - SPORE-BF-001: duplicate bit position within a bitfield
-//   - SPORE-BF-002: bit position out of range (0-31)
+//   - FUNGI-STATIC-001: non-constant initializer (function call in static)
+//   - FUNGI-STATIC-002: duplicate static name redeclaration
+//   - FUNGI-BF-001: duplicate bit position within a bitfield
+//   - FUNGI-BF-002: bit position out of range (0-31)
 //   - Runtime: static constant folding in interpreter
 //   - Runtime: bitfield bitmask generation (V_DPM.field = 1 << bitPos)
 // =============================================================================
@@ -30,7 +30,7 @@ import {
 // ---------------------------------------------------------------------------
 
 function parse(source) {
-  return parseProgram(source, "test.spore");
+  return parseProgram(source, "test.fungi");
 }
 
 function parseAndVerify(source) {
@@ -170,46 +170,46 @@ bitfield FLAGS {
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-STATIC-002: duplicate static name
+// FUNGI-STATIC-002: duplicate static name
 // ---------------------------------------------------------------------------
 
-describe("SPORE-STATIC-002: duplicate static name redeclaration", () => {
-  it("static X = 1 then static X = 2 emits SPORE-STATIC-002", () => {
+describe("FUNGI-STATIC-002: duplicate static name redeclaration", () => {
+  it("static X = 1 then static X = 2 emits FUNGI-STATIC-002", () => {
     const source = `
 static X = 1
 static X = 2
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      hasDiag(result, "SPORE-STATIC-002"),
-      `Expected SPORE-STATIC-002 for duplicate static name X, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-STATIC-002"),
+      `Expected FUNGI-STATIC-002 for duplicate static name X, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-STATIC-002");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-STATIC-002");
     assert.ok(
       diag?.message.includes("X"),
-      `SPORE-STATIC-002 message must mention the name 'X', got: ${diag?.message}`,
+      `FUNGI-STATIC-002 message must mention the name 'X', got: ${diag?.message}`,
     );
   });
 
-  it("two static declarations with distinct names — no SPORE-STATIC-002", () => {
+  it("two static declarations with distinct names — no FUNGI-STATIC-002", () => {
     const source = `
 static A = 10
 static B = 20
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      !hasDiag(result, "SPORE-STATIC-002"),
-      `Expected no SPORE-STATIC-002 for distinct names A and B`,
+      !hasDiag(result, "FUNGI-STATIC-002"),
+      `Expected no FUNGI-STATIC-002 for distinct names A and B`,
     );
   });
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-BF-001: duplicate bit position in bitfield
+// FUNGI-BF-001: duplicate bit position in bitfield
 // ---------------------------------------------------------------------------
 
-describe("SPORE-BF-001: duplicate bit position in bitfield", () => {
-  it("bitfield with two fields mapping to bit 0 emits SPORE-BF-001", () => {
+describe("FUNGI-BF-001: duplicate bit position in bitfield", () => {
+  it("bitfield with two fields mapping to bit 0 emits FUNGI-BF-001", () => {
     const source = `
 bitfield X {
   a: 0,
@@ -218,17 +218,17 @@ bitfield X {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      hasDiag(result, "SPORE-BF-001"),
-      `Expected SPORE-BF-001 for duplicate bit position 0, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-BF-001"),
+      `Expected FUNGI-BF-001 for duplicate bit position 0, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-BF-001");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-BF-001");
     assert.ok(
       diag?.message.includes("0") || diag?.message.includes("X"),
-      `SPORE-BF-001 message should mention the duplicate bit or register, got: ${diag?.message}`,
+      `FUNGI-BF-001 message should mention the duplicate bit or register, got: ${diag?.message}`,
     );
   });
 
-  it("bitfield with all unique bit positions — no SPORE-BF-001", () => {
+  it("bitfield with all unique bit positions — no FUNGI-BF-001", () => {
     const source = `
 bitfield Y {
   first: 0,
@@ -238,18 +238,18 @@ bitfield Y {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      !hasDiag(result, "SPORE-BF-001"),
-      `Expected no SPORE-BF-001 for unique bit positions`,
+      !hasDiag(result, "FUNGI-BF-001"),
+      `Expected no FUNGI-BF-001 for unique bit positions`,
     );
   });
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-BF-002: bit position out of range (0-31)
+// FUNGI-BF-002: bit position out of range (0-31)
 // ---------------------------------------------------------------------------
 
-describe("SPORE-BF-002: bit position out of range (0-31)", () => {
-  it("bitfield with field at bit 32 emits SPORE-BF-002", () => {
+describe("FUNGI-BF-002: bit position out of range (0-31)", () => {
+  it("bitfield with field at bit 32 emits FUNGI-BF-002", () => {
     const source = `
 bitfield Z {
   overflow: 32
@@ -257,17 +257,17 @@ bitfield Z {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      hasDiag(result, "SPORE-BF-002"),
-      `Expected SPORE-BF-002 for bit position 32, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-BF-002"),
+      `Expected FUNGI-BF-002 for bit position 32, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-BF-002");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-BF-002");
     assert.ok(
       diag?.message.includes("32") || diag?.message.includes("range"),
-      `SPORE-BF-002 message should mention position 32 or range, got: ${diag?.message}`,
+      `FUNGI-BF-002 message should mention position 32 or range, got: ${diag?.message}`,
     );
   });
 
-  it("bitfield with fields at positions 0 and 31 — no SPORE-BF-002", () => {
+  it("bitfield with fields at positions 0 and 31 — no FUNGI-BF-002", () => {
     const source = `
 bitfield FULL {
   lowest: 0,
@@ -276,8 +276,8 @@ bitfield FULL {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      !hasDiag(result, "SPORE-BF-002"),
-      `Expected no SPORE-BF-002 for positions 0 and 31 (valid range)`,
+      !hasDiag(result, "FUNGI-BF-002"),
+      `Expected no FUNGI-BF-002 for positions 0 and 31 (valid range)`,
     );
   });
 });

@@ -5,7 +5,7 @@
 
 **Status:** ✅ PASS
 
-**Scanned scope:** roots [`src`] · extensions [`.ts`, `.spore`]
+**Scanned scope:** roots [`src`] · extensions [`.ts`, `.fungi`]
 
 ## Summary
 
@@ -46,14 +46,14 @@ No boundary violations. All external imports are within the allowlist.
 ## Orphaned Files
 - `src/governance-mode.ts`
 - `src/plugin-schema.ts`
-- `src/self-hosted/compiler.capabilities.spore`
-- `src/self-hosted/effect-checker.spore`
-- `src/self-hosted/gir-emitter.spore`
-- `src/self-hosted/governance-verifier.spore`
-- `src/self-hosted/lexer.spore`
-- `src/self-hosted/parser.spore`
-- `src/self-hosted/runtime.spore`
-- `src/self-hosted/type-checker.spore`
+- `src/self-hosted/compiler.capabilities.fungi`
+- `src/self-hosted/effect-checker.fungi`
+- `src/self-hosted/gir-emitter.fungi`
+- `src/self-hosted/governance-verifier.fungi`
+- `src/self-hosted/lexer.fungi`
+- `src/self-hosted/parser.fungi`
+- `src/self-hosted/runtime.fungi`
+- `src/self-hosted/type-checker.fungi`
 
 ## Entry Points
 - `src/cli.ts`

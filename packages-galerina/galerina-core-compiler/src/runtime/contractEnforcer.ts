@@ -110,7 +110,7 @@ export function createContractEnforcer(
       if (violation !== null) {
         cell.record = recordLimitViolation(cell.record, violation);
         throw new RangeError(
-          `[SPORE-LIMIT] request size ${bytes} bytes exceeds contract limit ${violation.limit} bytes`,
+          `[FUNGI-LIMIT] request size ${bytes} bytes exceeds contract limit ${violation.limit} bytes`,
         );
       }
     },
@@ -120,7 +120,7 @@ export function createContractEnforcer(
       if (violation !== null) {
         cell.record = recordLimitViolation(cell.record, violation);
         throw new RangeError(
-          `[SPORE-LIMIT] batch size ${count} exceeds contract limit ${violation.limit}`,
+          `[FUNGI-LIMIT] batch size ${count} exceeds contract limit ${violation.limit}`,
         );
       }
     },
@@ -129,7 +129,7 @@ export function createContractEnforcer(
       const result = checkDeadline(context, effectiveTimeoutConfig);
       if (result === "exceeded" && effectiveTimeoutConfig.cancelOnDeadline) {
         throw new Error(
-          `[SPORE-TIMEOUT] flow "${flowName}" exceeded deadline`,
+          `[FUNGI-TIMEOUT] flow "${flowName}" exceeded deadline`,
         );
       }
     },

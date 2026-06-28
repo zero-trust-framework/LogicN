@@ -4,9 +4,9 @@
 // Resolves names after parsing and before type checking.
 //
 // Implemented diagnostics:
-//   SPORE-NAME-001  UndeclaredName
-//   SPORE-NAME-002  DuplicateName
-//   SPORE-NAME-003  CrossModuleShadow  — local binding shadows a built-in domain type
+//   FUNGI-NAME-001  UndeclaredName
+//   FUNGI-NAME-002  DuplicateName
+//   FUNGI-NAME-003  CrossModuleShadow  — local binding shadows a built-in domain type
 // =============================================================================
 
 import { type AstNode, type SourceLocation } from "./parser.js";
@@ -164,7 +164,7 @@ const STANDARD_PRELUDE = new Set([
 ]);
 
 // ---------------------------------------------------------------------------
-// Task 2 — Built-in domain types for cross-module shadow detection (SPORE-NAME-003)
+// Task 2 — Built-in domain types for cross-module shadow detection (FUNGI-NAME-003)
 //
 // Mirrors a subset of BUILT_IN_TYPES from type-checker.ts that are domain-specific
 // named types (not primitives/generics). A local binding sharing one of these
@@ -327,7 +327,7 @@ class SymbolResolver {
     const current = this.currentScope();
     if (current.has(name)) {
       this.diagnostics.push({
-        code: "SPORE-NAME-002",
+        code: "FUNGI-NAME-002",
         name: "DuplicateName",
         severity: "error",
         message: `'${name}' is already declared in this scope.`,
@@ -341,7 +341,7 @@ class SymbolResolver {
   }
 
   // ---------------------------------------------------------------------------
-  // Task 2 — SPORE-NAME-003: CrossModuleShadow
+  // Task 2 — FUNGI-NAME-003: CrossModuleShadow
   //
   // Emit a warning when a letDecl/mutDecl in flow scope has the same name as a
   // built-in domain type. Param shadowing is expected and NOT warned.
@@ -352,7 +352,7 @@ class SymbolResolver {
     if (!BUILT_IN_DOMAIN_TYPES.has(name)) return;
 
     this.diagnostics.push({
-      code: "SPORE-NAME-003",
+      code: "FUNGI-NAME-003",
       name: "CrossModuleShadow",
       severity: "warning",
       message: `Binding '${name}' shadows the built-in domain type '${name}'. Consider renaming to avoid confusion.`,
@@ -374,7 +374,7 @@ class SymbolResolver {
     //
     // Narrowed: suppress ONLY known stdlib module prefixes from STDLIB_MODULE_KINDS
     // and type names from the type registry. Unknown capitalised names fall through
-    // to the existing type-checker diagnostic (SPORE-TYPE-001) rather than being
+    // to the existing type-checker diagnostic (FUNGI-TYPE-001) rather than being
     // silently ignored here.
     //
     // Note: this may increase noise slightly during development. That is acceptable
@@ -401,7 +401,7 @@ class SymbolResolver {
     if (this.lookup(name) !== undefined) return;
 
     this.diagnostics.push({
-      code: "SPORE-NAME-001",
+      code: "FUNGI-NAME-001",
       name: "UndeclaredName",
       severity: "error",
       message: `'${name}' is not declared in the current scope.`,
@@ -489,7 +489,7 @@ class SymbolResolver {
         // 0040/#70: inside an `invariant { ensure … }` clause the magic `result` symbol (the
         // flow's output value) is in scope — an output post-condition. Scope it to JUST the
         // ensure expression (a nested scope) so parameters still resolve via the parent flow
-        // scope, the body is unaffected, and genuine typos are still flagged SPORE-NAME-001.
+        // scope, the body is unaffected, and genuine typos are still flagged FUNGI-NAME-001.
         this.pushScope();
         this.declareInCurrentScope("result", node);
         this.walkChildren(node, "normal");
@@ -554,7 +554,7 @@ class SymbolResolver {
     if (isReceiverCall(node)) return;
 
     this.diagnostics.push({
-      code: "SPORE-NAME-001",
+      code: "FUNGI-NAME-001",
       name: "UndeclaredName",
       severity: "error",
       message: `'${name}' is not declared in the current scope.`,

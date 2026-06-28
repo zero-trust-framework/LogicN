@@ -20,7 +20,7 @@ import {
 describe("0084-pci-unknown: unmodelled families reported as not-attested", () => {
   it("a clean source lists families 1,2,5,9,11 in notAttested", () => {
     const source = "pure flow f() -> Int contract { effects {} } { return 1 }";
-    const report = runPciAudit(source, "clean.spore");
+    const report = runPciAudit(source, "clean.fungi");
 
     assert.deepEqual(
       [...report.notAttested].sort(),
@@ -41,15 +41,15 @@ describe("0084-pci-unknown: unmodelled families reported as not-attested", () =>
 // ---------------------------------------------------------------------------
 describe("0084-pci-unknown: blind audit is indeterminate, not pass", () => {
   it("an unparseable source is verdict=indeterminate and passed=false", () => {
-    const report = runPciAudit("@@@ this is not valid galerina %%% {{{", "broken.spore");
+    const report = runPciAudit("@@@ this is not valid galerina %%% {{{", "broken.fungi");
     assert.equal(report.passed, false, "blind audit must not pass");
     assert.ok(
       report.verdict === "indeterminate" || report.verdict === "fail",
       `blind audit must be indeterminate/fail, got '${report.verdict}'`,
     );
     assert.ok(
-      report.findings.some(f => f.code === "SPORE-PCI-000"),
-      "a SPORE-PCI-000 ParseFailure finding must be present",
+      report.findings.some(f => f.code === "FUNGI-PCI-000"),
+      "a FUNGI-PCI-000 ParseFailure finding must be present",
     );
   });
 });
@@ -61,7 +61,7 @@ describe("0084-pci-unknown: blind audit is indeterminate, not pass", () => {
 describe("0084-pci-unknown: requireFullAttestation denies on incomplete attestation", () => {
   it("clean source + requireFullAttestation => indeterminate, passed=false", () => {
     const source = "pure flow f() -> Int contract { effects {} } { return 1 }";
-    const report = runPciAudit(source, { fileName: "clean.spore", requireFullAttestation: true });
+    const report = runPciAudit(source, { fileName: "clean.fungi", requireFullAttestation: true });
     assert.equal(report.verdict, "indeterminate",
       "full-attestation mode must report indeterminate when infra families are unmodelled");
     assert.equal(report.passed, false, "full-attestation mode must not pass an unattestable source");
@@ -91,7 +91,7 @@ describe("0084-pci-unknown: clean modelled input still passes (no regression)", 
       "}",
     ].join("\n");
 
-    const report = runPciAudit(source, "compliant-payment.spore");
+    const report = runPciAudit(source, "compliant-payment.fungi");
     const severe = report.findings.filter(f => f.severity === "critical" || f.severity === "high");
     assert.equal(severe.length, 0, `expected 0 severe findings, got: [${severe.map(f => f.code).join(", ")}]`);
     assert.equal(report.verdict, "pass", "fully-compliant flow must have verdict=pass");
@@ -99,7 +99,7 @@ describe("0084-pci-unknown: clean modelled input still passes (no regression)", 
   });
 
   it("bare-string second arg (back-compat) still works", () => {
-    const report = runPciAudit("pure flow g() -> Int contract { effects {} } { return 2 }", "compat.spore");
+    const report = runPciAudit("pure flow g() -> Int contract { effects {} } { return 2 }", "compat.fungi");
     assert.equal(report.passed, true, "clean source passes with legacy string fileName arg");
     assert.equal(report.verdict, "pass");
   });

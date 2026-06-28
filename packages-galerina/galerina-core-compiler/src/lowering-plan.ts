@@ -25,7 +25,7 @@ export interface TypedArrayLoweringEntry {
 
 /** Complete lowering plan for all tensor bindings in a GIR flow. */
 export interface TypedArrayLoweringPlan {
-  readonly schemaVersion: "spore.lowering.v1";
+  readonly schemaVersion: "fungi.lowering.v1";
   readonly flowName: string;
   readonly entries: readonly TypedArrayLoweringEntry[];
 }
@@ -74,7 +74,7 @@ export function buildTypedArrayLoweringPlan(
   }
 
   return {
-    schemaVersion: "spore.lowering.v1",
+    schemaVersion: "fungi.lowering.v1",
     flowName: "unknown", // Phase 21A: flowName not available at tensor level; caller sets
     entries,
   };
@@ -132,7 +132,7 @@ export interface MonomorphisationCandidate {
 
 /** Complete monomorphisation plan for a program. */
 export interface MonomorphisationPlan {
-  readonly schemaVersion: "spore.mono.v1";
+  readonly schemaVersion: "fungi.mono.v1";
   readonly candidates: readonly MonomorphisationCandidate[];
 }
 
@@ -161,7 +161,7 @@ export function buildMonomorphisationPlan(
   }
 
   return {
-    schemaVersion: "spore.mono.v1",
+    schemaVersion: "fungi.mono.v1",
     candidates,
   };
 }
@@ -183,7 +183,7 @@ export interface KernelFusionGroup {
 
 /** Complete kernel fusion plan for a GIR flow. */
 export interface KernelFusionPlan {
-  readonly schemaVersion: "spore.fusion.v1";
+  readonly schemaVersion: "fungi.fusion.v1";
   readonly flowName: string;
   readonly groups: readonly KernelFusionGroup[];
 }
@@ -251,7 +251,7 @@ export function buildKernelFusionPlan(
   }
 
   return {
-    schemaVersion: "spore.fusion.v1",
+    schemaVersion: "fungi.fusion.v1",
     flowName,
     groups,
   };

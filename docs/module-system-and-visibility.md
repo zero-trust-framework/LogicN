@@ -311,7 +311,7 @@ module app/payments/service
 Compiler diagnostic:
 
 ```text
-SPORE-MODULE-001: module declaration does not match source location
+FUNGI-MODULE-001: module declaration does not match source location
 file: app/src/users/service.ln
 found: app/payments/service
 expected: app/users/service
@@ -388,7 +388,7 @@ import { UserRecord } from "app/users/repository"
 Compiler diagnostic:
 
 ```text
-SPORE-VIS-001: cannot import private symbol
+FUNGI-VIS-001: cannot import private symbol
 symbol: UserRecord
 module: app/users/repository
 ```
@@ -653,7 +653,7 @@ import { to_profile } from "app/users/service"
 Compiler error:
 
 ```text
-SPORE-VIS-001: cannot import private symbol
+FUNGI-VIS-001: cannot import private symbol
 symbol: to_profile
 module: app/users/service
 ```
@@ -669,7 +669,7 @@ import { UserRecord } from "app/users/types"
 Compiler error:
 
 ```text
-SPORE-VIS-002: cannot import package-visible symbol from outside owning package
+FUNGI-VIS-002: cannot import package-visible symbol from outside owning package
 symbol: UserRecord
 from package: app/users
 current package: app/admin
@@ -684,7 +684,7 @@ import { read_secret } from "../../.env"
 Compiler error:
 
 ```text
-SPORE-MODULE-002: import path is outside package boundary
+FUNGI-MODULE-002: import path is outside package boundary
 import: ../../.env
 ```
 
@@ -747,7 +747,7 @@ pub fn get_token() -> SecretToken {
 Compiler error:
 
 ```text
-SPORE-VIS-003: public function exposes private return type
+FUNGI-VIS-003: public function exposes private return type
 function: get_token
 private type: SecretToken
 ```
@@ -838,7 +838,7 @@ app/users/routes  -> app/users/service
 Compiler error:
 
 ```text
-SPORE-MODULE-003: circular import detected
+FUNGI-MODULE-003: circular import detected
 cycle:
 app/users/service -> app/users/routes -> app/users/service
 ```
@@ -898,19 +898,19 @@ The formatter may group and sort imports automatically.
 
 | Code | Meaning |
 |---|---|
-| `SPORE-MODULE-001` | Module declaration does not match source location |
-| `SPORE-MODULE-002` | Import path escapes package boundary |
-| `SPORE-MODULE-003` | Circular import detected |
-| `SPORE-MODULE-004` | Imported module not found |
-| `SPORE-MODULE-005` | Import is not listed in package policy |
-| `SPORE-MODULE-006` | Wildcard symbol import is not allowed |
-| `SPORE-VIS-001` | Cannot import private symbol |
-| `SPORE-VIS-002` | Cannot import package-visible symbol from outside package |
-| `SPORE-VIS-003` | Public symbol exposes private type |
-| `SPORE-VIS-004` | Public module exports non-public dependency type |
-| `SPORE-VIS-005` | Runtime-only symbol used by normal code |
-| `SPORE-CAP-001` | Imported function requires ungranted capability |
-| `SPORE-CAP-002` | Imported module declares denied effect |
+| `FUNGI-MODULE-001` | Module declaration does not match source location |
+| `FUNGI-MODULE-002` | Import path escapes package boundary |
+| `FUNGI-MODULE-003` | Circular import detected |
+| `FUNGI-MODULE-004` | Imported module not found |
+| `FUNGI-MODULE-005` | Import is not listed in package policy |
+| `FUNGI-MODULE-006` | Wildcard symbol import is not allowed |
+| `FUNGI-VIS-001` | Cannot import private symbol |
+| `FUNGI-VIS-002` | Cannot import package-visible symbol from outside package |
+| `FUNGI-VIS-003` | Public symbol exposes private type |
+| `FUNGI-VIS-004` | Public module exports non-public dependency type |
+| `FUNGI-VIS-005` | Runtime-only symbol used by normal code |
+| `FUNGI-CAP-001` | Imported function requires ungranted capability |
+| `FUNGI-CAP-002` | Imported module declares denied effect |
 
 ---
 

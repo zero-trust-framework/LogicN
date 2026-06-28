@@ -9,7 +9,7 @@
 //   - Sequential memory layout → CPU prefetcher keeps it in L1 cache
 //   - Binding slots (Int16Array indices) replace Map<string,GalerinaValue> lookups
 //   - Cache key = flowName + ":" + sourceHash
-//   - Persisted to build/.spore-cache/<hash>.egraph.json (disk-fallback)
+//   - Persisted to build/.fungi-cache/<hash>.egraph.json (disk-fallback)
 // =============================================================================
 
 import { mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
@@ -58,7 +58,7 @@ export interface ExecutionGraph {
 const MEMORY_CACHE = new Map<string, ExecutionGraph>();
 
 // ── Disk cache ────────────────────────────────────────────────────────────────
-const DISK_CACHE_DIR = "build/.spore-cache";
+const DISK_CACHE_DIR = "build/.fungi-cache";
 
 function diskCachePath(key: string): string {
   const safe = key.replace(/[^a-z0-9_-]/gi, "_").slice(0, 80);

@@ -68,12 +68,12 @@ export function makeLmanifestHybridVerifier(): (input: LmanifestHybridVerifierIn
     if (mlPath === undefined) {
       // NO PQ DOWNGRADE: a v2 hybrid manifest with a missing ML-DSA public key must be a HARD deny, never
       // silently weakened to Ed25519-only / unsigned. Throw ⇒ the loader fails closed.
-      throw new Error(`SPORE-FUSE-HYBRID-PQ-KEY-MISSING: hybrid manifest for keyId '${keyId}' but 'signing-key-${keyId}.mldsa.pub.b64' is absent — refusing (no PQ downgrade)`);
+      throw new Error(`FUNGI-FUSE-HYBRID-PQ-KEY-MISSING: hybrid manifest for keyId '${keyId}' but 'signing-key-${keyId}.mldsa.pub.b64' is absent — refusing (no PQ downgrade)`);
     }
 
     const mlRaw = new Uint8Array(Buffer.from(readFileSync(mlPath, "utf8").trim(), "base64"));
     if (mlRaw.length !== ML_DSA_65_PUBKEY_BYTES) {
-      throw new Error(`SPORE-FUSE-HYBRID-PQ-KEY-MALFORMED: ML-DSA public key for keyId '${keyId}' is ${mlRaw.length} bytes, expected ${ML_DSA_65_PUBKEY_BYTES}`);
+      throw new Error(`FUNGI-FUSE-HYBRID-PQ-KEY-MALFORMED: ML-DSA public key for keyId '${keyId}' is ${mlRaw.length} bytes, expected ${ML_DSA_65_PUBKEY_BYTES}`);
     }
     const edDer = new Uint8Array(
       createPublicKey(readFileSync(edPath, "utf8")).export({ type: "spki", format: "der" }) as unknown as Uint8Array,
@@ -85,7 +85,7 @@ export function makeLmanifestHybridVerifier(): (input: LmanifestHybridVerifierIn
     const base: ProofGraph = makeManifestEnvelope(bodyHash, "1970-01-01T00:00:00.000Z");
     const envelope: ProofGraph = {
       ...base,
-      governanceSignature: { algorithm: "spore.gov.sig.v2", signerKeyId: keyId, signature, signedAt: "" },
+      governanceSignature: { algorithm: "fungi.gov.sig.v2", signerKeyId: keyId, signature, signedAt: "" },
     };
     const ok = await verifyGovernanceSignatureHybrid(envelope, edDer, mlRaw);
     return ok ? "verified" : "invalid";

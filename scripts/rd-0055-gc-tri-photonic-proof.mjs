@@ -41,12 +41,12 @@ const approx = (a, b, rel = 1e-4) => Math.abs(a - b) <= rel * Math.max(1, Math.a
 // SRC: grep the live emitter so the proof tracks the real compiled tier.
 // ---------------------------------------------------------------------------
 const src = fs.existsSync(EMITTER) ? fs.readFileSync(EMITTER, "utf8") : "";
-const heapDecls = (src.match(/\(global \$__spore_heap \(mut i32\)/g) || []).length;
-const heapIncrements = (src.match(/global\.set \$__spore_heap \(i32\.add/g) || []).length;
-const heapResets = (src.match(/global\.set \$__spore_heap \(i32\.const/g) || []).length; // B2a: per-flow reset-to-base, expect >=1 (an arena rebase, NOT GC machinery)
+const heapDecls = (src.match(/\(global \$__fungi_heap \(mut i32\)/g) || []).length;
+const heapIncrements = (src.match(/global\.set \$__fungi_heap \(i32\.add/g) || []).length;
+const heapResets = (src.match(/global\.set \$__fungi_heap \(i32\.const/g) || []).length; // B2a: per-flow reset-to-base, expect >=1 (an arena rebase, NOT GC machinery)
 // Match only EMITTED allocator-management instructions (the WAT paren/call forms), not prose mentions of
 // "memory.grow" in comments — the grep is over the TS source, so it must not count documentation.
-const allocMgmtOps = (src.match(/\(memory\.grow|\(call \$__spore_free|\(call \$__spore_collect|\bgc_collect\(/g) || []).length;
+const allocMgmtOps = (src.match(/\(memory\.grow|\(call \$__fungi_free|\(call \$__fungi_collect|\bgc_collect\(/g) || []).length;
 const recFieldSize = (() => {
   const m = src.match(/WAT_REC_FIELD_SIZE\s*=\s*(\d+)/);
   return m ? Number(m[1]) : NaN;
@@ -262,9 +262,9 @@ const defaultMaxPages = (() => {
   const hamming = r1.reduce((acc, a, i) => acc + (a === r2[i] ? 0 : 1), 0);
   // (3) B2a SHIPPED the per-flow reset (was the "fiction" objection — now CONFIRMED present in the emitter).
   const resetExists = heapResets > 0;
-  // (4) B2b SHIPPED the secret-zeroing loop — assert it from the emitter source (the $__spore_zl loop label),
+  // (4) B2b SHIPPED the secret-zeroing loop — assert it from the emitter source (the $__fungi_zl loop label),
   //     a live-grep guard (the dedicated wat-arena-secret-zero-b2b test proves the runtime A/B behaviour).
-  const secretZeroingShipped = src.includes("$__spore_zl");
+  const secretZeroingShipped = src.includes("$__fungi_zl");
 
   log(overlap === 0,
     "P7.spatial-safe", `bump intervals overlap=${overlap} => CONFIRMED no-GC safe WITHIN a run (region model fits)`);
@@ -273,7 +273,7 @@ const defaultMaxPages = (() => {
   log(resetExists,
     "P7.reset-SHIPPED", `emitted heap-resets=${heapResets} => B2a per-flow arena reset CONFIRMED (the monotone-bump leak is fixed)`);
   log(secretZeroingShipped,
-    "P7.secret-zeroing-SHIPPED", `emitter contains the $__spore_zl zeroing loop => B2b secret-zeroing CONFIRMED for privacy/secrets modules`);
+    "P7.secret-zeroing-SHIPPED", `emitter contains the $__fungi_zl zeroing loop => B2b secret-zeroing CONFIRMED for privacy/secrets modules`);
 }
 
 // =====================================================================

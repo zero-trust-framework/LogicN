@@ -16,7 +16,7 @@ requests." This was **replaced with Behavioral Fingerprinting** because:
   and cryptographically auditable
 
 eBPF LSM / dedicated MMU segments were **not adopted** because they conflict with the
-Wasmtime-only TCB constraint (`PRINCIPLE: No Rust in the project; everything is .spore → WASM`).
+Wasmtime-only TCB constraint (`PRINCIPLE: No Rust in the project; everything is .fungi → WASM`).
 
 ---
 
@@ -184,7 +184,7 @@ The `gate(condition)` syntax maps directly to V_DPM bit 8 (`dag_edge_valid`) in 
 At the architectural level:
 1. Compiler records `gate(condition)` → `dag_check_required: true` in flow manifest
 2. DSS.wasm checks bit 8 before dispatching to any flow inside a gate block
-3. If bit 8 is 0 (DAG transition not authorized) → `unreachable` trap → SPORE-INV-000 AuditEvent
+3. If bit 8 is 0 (DAG transition not authorized) → `unreachable` trap → FUNGI-INV-000 AuditEvent
 
 The `condition` in `gate(condition)` maps to a Domain Guard Policy name. At Phase 5, the
 pre-compiled decision tree from the PolicyResolutionDAG (CBOR Tag 416) is used for the O(1) lookup:
@@ -202,7 +202,7 @@ DSS.wasm: before dispatch → V_DPM & 0x100 (bit 8) → if 0 → unreachable
 **Stage A (now):** gate condition recorded in manifest; bit 8 check deferred to Phase 5.  
 **Phase 5 (DSS.wasm):** real `(if (i32.eqz (i32.and (global.get $vdpm) (i32.const 256))) (then unreachable))` emitted.
 
-**Governance rules:** `SPORE-GATE-001` (unknown condition), `SPORE-GATE-002` (gate on pure flow)
+**Governance rules:** `FUNGI-GATE-001` (unknown condition), `FUNGI-GATE-002` (gate on pure flow)
 
 ---
 
@@ -220,7 +220,7 @@ DSS.wasm: before dispatch → V_DPM & 0x100 (bit 8) → if 0 → unreachable
 | 407 | ObservabilitySpan | Telemetry metadata |
 | 408 | EconomicsLease | Compute/credit budget balance |
 | 409 | (Reserved) | — |
-| 410 | AuditEvent | SPORE-INV-000 runtime governance violation |
+| 410 | AuditEvent | FUNGI-INV-000 runtime governance violation |
 | **414** | **ExecutionDAG** | **Authorized state transitions (Topology)** |
 | **415** | **CapabilityPointer** | **MMCP typed memory view** |
 | **416** | **PolicyResolutionDAG** | **Pre-resolved policy conflict matrix** |

@@ -60,7 +60,7 @@ function checkPkg(S, pkgPath) {
 
 /** The gate must FIRE on (A) an unlisted external and (B) a missing policy. Else it is neutered. */
 function selfTest(S) {
-  const base = mkdtempSync(join(tmpdir(), "spore-border-selftest-"));
+  const base = mkdtempSync(join(tmpdir(), "fungi-border-selftest-"));
   try {
     // (A) source imports an unlisted external; policy allows nothing → must FAIL with that specifier.
     const a = join(base, "pkgA");

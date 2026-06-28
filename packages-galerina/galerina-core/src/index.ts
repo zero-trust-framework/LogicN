@@ -31,7 +31,7 @@ export interface SourceLocation {
  * extend BaseDiagnostic via imports from @galerina/core.
  */
 export interface BaseDiagnostic {
-  /** Structured diagnostic code in SPORE-SERIES-NNN format. */
+  /** Structured diagnostic code in FUNGI-SERIES-NNN format. */
   readonly code: string;
   /** Screaming-snake-case name. Example: "DUPLICATE_STATE". */
   readonly name: string;
@@ -147,7 +147,7 @@ export interface TypedContentBlockExpression {
  * readonly — immutable binding with a read-only view over the value;
  *            safe to share; mutation through this reference is rejected.
  *
- * `var` and `const` are NOT valid Galerina keywords (SPORE-SYNTAX-001/002).
+ * `var` and `const` are NOT valid Galerina keywords (FUNGI-SYNTAX-001/002).
  */
 export type BindingKind = "let" | "mut" | "readonly";
 
@@ -366,7 +366,7 @@ export type AstNodeKind =
   | "permissionsBlock"
   | "jsonPolicyBlock"
   // ── Memory config block (manifest/project-level) ──
-  //    Use configMemoryBlock for project manifest memory settings (boot.spore).
+  //    Use configMemoryBlock for project manifest memory settings (boot.fungi).
   //    Use borrowScopeBlock for code-level ownership/borrow scope (Phase 4+).
   //    "memoryBlock" is retained as a legacy alias — prefer the specific names.
   | "memoryBlock"
@@ -431,7 +431,7 @@ export interface BuildManifest {
 // ---------------------------------------------------------------------------
 
 /**
- * Construct a CompilerDiagnostic with the canonical SPORE-* code format.
+ * Construct a CompilerDiagnostic with the canonical FUNGI-* code format.
  */
 export function createCompilerDiagnostic(
   code: string,

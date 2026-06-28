@@ -204,10 +204,10 @@ This includes files such as:
 
 ```text
 DEMO_hello_WORLD.md
-examples/hello.spore
-examples/api-demo.spore
-examples/webhook-demo.spore
-examples/fraud-check.spore
+examples/hello.fungi
+examples/api-demo.fungi
+examples/webhook-demo.fungi
+examples/fraud-check.fungi
 ```
 
 Users should be able to copy and adapt example code freely.
@@ -222,7 +222,7 @@ For example, if a developer writes:
 
 ```text
 my-app/
-├── boot.spore
+├── boot.fungi
 ├── src/
 └── build/app.bin
 ```

@@ -55,7 +55,7 @@ export interface SecurityFinding {
 }
 
 export interface SecurityAuditReport {
-  readonly schemaVersion: "spore.security-audit.v1";
+  readonly schemaVersion: "fungi.security-audit.v1";
   readonly source:        string;
   readonly profiles:      readonly RuntimeProfile[];
   readonly findings:      readonly SecurityFinding[];
@@ -83,7 +83,7 @@ export interface SecurityAuditOptions {
   /**
    * Deployment mode for the governance verifier. Default: "dev".
    * Non-production modes ("dev", "check-only") grade advisory findings such as
-   * SPORE-GOV-010 (secure flow missing intent) as info, so they do not fail the
+   * FUNGI-GOV-010 (secure flow missing intent) as info, so they do not fail the
    * audit; "production"/"deterministic" promote them to errors.
    */
   readonly governanceProfile?: "dev" | "production" | "deterministic" | "check-only";
@@ -99,45 +99,45 @@ export interface SecurityAuditOptions {
 
 const SEVERITY_MAP: ReadonlyMap<string, SecuritySeverity> = new Map([
   // Taint
-  ["SPORE-TAINT-001", "critical"],
-  ["SPORE-TAINT-003", "high"],
-  ["SPORE-TAINT-004", "medium"],
-  ["SPORE-TAINT-005", "high"],
-  ["SPORE-TAINT-006", "high"],
+  ["FUNGI-TAINT-001", "critical"],
+  ["FUNGI-TAINT-003", "high"],
+  ["FUNGI-TAINT-004", "medium"],
+  ["FUNGI-TAINT-005", "high"],
+  ["FUNGI-TAINT-006", "high"],
   // Profile
-  ["SPORE-PROFILE-001", "high"],
-  ["SPORE-PROFILE-002", "high"],
-  ["SPORE-PROFILE-005B", "high"],
-  ["SPORE-PROFILE-006", "medium"],
-  ["SPORE-PROFILE-007", "high"],
+  ["FUNGI-PROFILE-001", "high"],
+  ["FUNGI-PROFILE-002", "high"],
+  ["FUNGI-PROFILE-005B", "high"],
+  ["FUNGI-PROFILE-006", "medium"],
+  ["FUNGI-PROFILE-007", "high"],
   // Value/Safety
-  ["SPORE-VAL-001", "critical"],
-  ["SPORE-VAL-002", "critical"],
-  ["SPORE-VAL-003", "high"],
+  ["FUNGI-VAL-001", "critical"],
+  ["FUNGI-VAL-002", "critical"],
+  ["FUNGI-VAL-003", "high"],
   // Hardware
-  ["SPORE-HW-001", "high"],
-  ["SPORE-HW-002", "medium"],
-  ["SPORE-HW-003", "medium"],
+  ["FUNGI-HW-001", "high"],
+  ["FUNGI-HW-002", "medium"],
+  ["FUNGI-HW-003", "medium"],
   // Value-state / taint-sink (unsafe bindings reaching governed sinks)
-  ["SPORE-VALUESTATE-001", "high"],
-  ["SPORE-VALUESTATE-002", "medium"],
-  ["SPORE-VALUESTATE-003", "high"],    // unsafe value reached governed sink — unredacted PII/data
-  ["SPORE-VALUESTATE-004", "medium"],
-  ["SPORE-VALUESTATE-005", "high"],    // derived-unsafe reached sink
-  ["SPORE-VALUESTATE-006", "medium"],
-  ["SPORE-VALUESTATE-007", "medium"],
+  ["FUNGI-VALUESTATE-001", "high"],
+  ["FUNGI-VALUESTATE-002", "medium"],
+  ["FUNGI-VALUESTATE-003", "high"],    // unsafe value reached governed sink — unredacted PII/data
+  ["FUNGI-VALUESTATE-004", "medium"],
+  ["FUNGI-VALUESTATE-005", "high"],    // derived-unsafe reached sink
+  ["FUNGI-VALUESTATE-006", "medium"],
+  ["FUNGI-VALUESTATE-007", "medium"],
   // Gate violations
-  ["SPORE-GATE-001", "high"],
+  ["FUNGI-GATE-001", "high"],
   // Secret sink violations
-  ["SPORE-SECRET-001", "critical"],   // secret logged
-  ["SPORE-SECRET-002", "critical"],   // secret sent to network
-  ["SPORE-SECRET-003", "critical"],   // secret serialized
+  ["FUNGI-SECRET-001", "critical"],   // secret logged
+  ["FUNGI-SECRET-002", "critical"],   // secret sent to network
+  ["FUNGI-SECRET-003", "critical"],   // secret serialized
   // Governance
-  ["SPORE-GOV-002", "high"],
-  ["SPORE-GOV-009", "high"],
-  ["SPORE-SOURCE-ESCAPE-001", "critical"],
-  ["SPORE-SEC-020", "critical"],
-  ["SPORE-SEC-021", "critical"],
+  ["FUNGI-GOV-002", "high"],
+  ["FUNGI-GOV-009", "high"],
+  ["FUNGI-SOURCE-ESCAPE-001", "critical"],
+  ["FUNGI-SEC-020", "critical"],
+  ["FUNGI-SEC-021", "critical"],
 ]);
 
 function classifySeverity(code: string, defaultSeverity?: "error" | "warning" | "info"): SecuritySeverity {
@@ -151,12 +151,12 @@ function classifySeverity(code: string, defaultSeverity?: "error" | "warning" | 
 function mapCheckerType(
   code: string,
 ): SecurityFinding["checker"] {
-  if (code.startsWith("SPORE-TAINT")) return "taint";
-  if (code.startsWith("SPORE-PROFILE")) return "profile";
-  if (code.startsWith("SPORE-VAL")) return "value-safety";
-  if (code.startsWith("SPORE-HW")) return "hardware";
+  if (code.startsWith("FUNGI-TAINT")) return "taint";
+  if (code.startsWith("FUNGI-PROFILE")) return "profile";
+  if (code.startsWith("FUNGI-VAL")) return "value-safety";
+  if (code.startsWith("FUNGI-HW")) return "hardware";
   // GOV-017 covers cyber_physical_hardening validation — a hardware-domain concern.
-  if (code === "SPORE-GOV-017") return "hardware";
+  if (code === "FUNGI-GOV-017") return "hardware";
   return "governance";
 }
 
@@ -170,7 +170,7 @@ function mapCheckerType(
  * Orchestrates: value-state checker → taint checker → profile checker → governance verifier.
  * Returns a structured SecurityAuditReport usable in CI.
  *
- * @param source  - Galerina source code (.spore content)
+ * @param source  - Galerina source code (.fungi content)
  * @param options - Audit configuration
  */
 export async function runSecurityAudit(
@@ -180,7 +180,7 @@ export async function runSecurityAudit(
   const {
     profiles = ["strict"],
     governanceProfile = "dev",
-    fileName = "source.spore",
+    fileName = "source.fungi",
     strict = false,
   } = options;
 
@@ -198,7 +198,7 @@ export async function runSecurityAudit(
   const parseErrors = (parsed.diagnostics ?? []).filter(d => d.severity === "error");
   for (const e of parseErrors) {
     findings.push({
-      code: e.code ?? "SPORE-PARSE",
+      code: e.code ?? "FUNGI-PARSE",
       name: "ParseError",
       severity: "high",
       message: e.message,
@@ -212,9 +212,9 @@ export async function runSecurityAudit(
     return buildReport(source, profiles, findings, checkedAt, strict, ran);
   }
 
-  // Value-state / taint-sink check (SPORE-VALUESTATE, SPORE-GATE, SPORE-SECRET codes)
+  // Value-state / taint-sink check (FUNGI-VALUESTATE, FUNGI-GATE, FUNGI-SECRET codes)
   // Tracks unsafe bindings flowing to governed sinks (AuditLog.write, DB, network).
-  // Distinct from checkTaint (SPORE-TAINT capability flags) — both are needed.
+  // Distinct from checkTaint (FUNGI-TAINT capability flags) — both are needed.
   // Each checker is wrapped so a THROW counts as "did not attest" (INDETERMINATE),
   // never as a silent clean. A checker is added to `ran` only after it returns.
   const vsResult = checkValueStates(parsed.ast);
@@ -229,7 +229,7 @@ export async function runSecurityAudit(
   }
   ran.add("value-safety");
 
-  // Capability-flag taint check (SPORE-TAINT codes)
+  // Capability-flag taint check (FUNGI-TAINT codes)
   const taintDiags: TaintDiagnostic[] = checkTaint(parsed.ast, parsed.flows);
   for (const d of taintDiags) {
     findings.push({ code: d.code, name: d.name, severity: classifySeverity(d.code, d.severity === "error" ? "error" : "warning"), message: d.message, checker: "taint" as const, ...(d.flowName !== undefined ? { flowName: d.flowName } : {}) });
@@ -243,7 +243,7 @@ export async function runSecurityAudit(
   }
   ran.add("profile");
 
-  // Governance check (SPORE-VAL, SPORE-HW, SPORE-GOV, etc.)
+  // Governance check (FUNGI-VAL, FUNGI-HW, FUNGI-GOV, etc.)
   const fx = checkEffects(parsed.flows, parsed.ast);
   const gov = verifyGovernance(parsed.ast, parsed.flows, fx, governanceProfile);
   for (const d of gov.diagnostics as readonly GovernanceDiagnostic[]) {
@@ -284,7 +284,7 @@ function buildReport(
   // K3 fold (deny-by-default). A TOTALLY blind audit (no checker ran — e.g. a parse
   // failure that yields zero flows) is INDETERMINATE *first*: the oracle could analyze
   // nothing, so even the parse-error findings do not make it a definitive "fail" — it
-  // is "I could not audit this" (SPORE-GOV-3VL-001). Otherwise: any DENY => fail; any
+  // is "I could not audit this" (FUNGI-GOV-3VL-001). Otherwise: any DENY => fail; any
   // not-attested checker (partial blindness) => indeterminate; ALLOW only when every
   // expected checker actually ran clean.
   const verdict: SecurityVerdict =
@@ -299,13 +299,13 @@ function buildReport(
   const total  = findings.length;
   const status = verdict === "pass" ? "PASS" : verdict === "fail" ? "FAIL" : "INDETERMINATE";
   const summary = verdict === "indeterminate"
-    ? `INDETERMINATE (SPORE-GOV-3VL-001) — not attested: ${indeterminate.join(", ")}`
+    ? `INDETERMINATE (FUNGI-GOV-3VL-001) — not attested: ${indeterminate.join(", ")}`
     : total === 0
       ? `${status} — no security findings`
       : `${status} — ${critical.length} critical, ${high.length} high, ${medium.length} medium, ${low.length} low`;
 
   return {
-    schemaVersion: "spore.security-audit.v1",
+    schemaVersion: "fungi.security-audit.v1",
     source: source.slice(0, 200) + (source.length > 200 ? "..." : ""),
     profiles,
     findings,

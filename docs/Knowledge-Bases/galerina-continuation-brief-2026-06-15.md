@@ -15,7 +15,7 @@ ALL LOCAL** (push blocked — no GitHub creds; then needs `--force` over the re-
 rotation** — the leaked `.env.galerina-signing` must be rotated; scrub ≠ rotation).
 
 **Shipped this session** (detail: ledger §5/§6/§7):
-- **#200/P10 integrity close-out** — doc reconciliation; **#177 graph fix** (`.spore` packages now index);
+- **#200/P10 integrity close-out** — doc reconciliation; **#177 graph fix** (`.fungi` packages now index);
   full-repo 14-cluster audit (48 findings); idea-mining (8 repos → 12 ranked). Docs: `galerina-200-closeout-2026-06-15.md`, `galerina-external-idea-mining-2026-06-15.md`.
 - **#201 calibration-as-attestation (contract portion)** — measured `BridgeManifest` fields (`comparabilityHash`/
   fidelity-floor/`toleranceWitness` + "can't claim tighter than measured") + `QuantizationMethod`; an adversarial
@@ -25,12 +25,12 @@ rotation** — the leaked `.env.galerina-signing` must be rotated; scrub ≠ rot
   scaffold READMEs (data-query/registry/ai/ai-neural); manifest-generator/gate-cache/egress-tamper/LEXER_PARITY/app-kernel-TODO.
 - **Audit fixes** — border-check tests; sentinel `instanceof` fix; graph-dup (vendored `project-graph` NOT mergeable → hardened `canReach`).
 - **R&D ingestion (.tmf + tri-encryption)** — `galerina-rd-adoption-2026-06-16.md` (memory `[[galerina-tmf-tri-encryption-rd]]`).
-  **U1 LANDED** = `tests/patterns/pattern-10-verify-before-decrypt-gate.spore` (runs on WASM, fail-closed). U3/U4 done.
+  **U1 LANDED** = `tests/patterns/pattern-10-verify-before-decrypt-gate.fungi` (runs on WASM, fail-closed). U3/U4 done.
   All **3 dogfooding findings FIXED** (#1 reserved-keyword diagnostic; #2 secure-flow-not-in-WASM-surface diagnostic; #3 CLI bool args were silently mis-marshalling → now loud).
 
 **Next — ALL need a decision (no clean autonomous items left):**
 1. **#201 #3/#4 substrate witness** — DESIGN: let an *attested* `toleranceWitness` refine the conservative anti-gaming `LANE_PROFILE` floor? (precision-attestation.md §"Next increments #3").
-2. **U2/#204** — "no cleartext semantic embedding across a trust boundary" — needs a Galerina model (type? egress governance? new `SPORE-PRIVACY-*`).
+2. **U2/#204** — "no cleartext semantic embedding across a trust boundary" — needs a Galerina model (type? egress governance? new `FUNGI-PRIVACY-*`).
 3. **B — storage/compute precision split** (`int4`/`int8` + Tower Records + manifest fields) — forward-looking, no current user; wants a nod.
 4. **User-gated:** cert-profile-in-signed-pre-image (HIGH) · #149 key rotation · fusion-B2 ABI · `policy{}` deferred (R&D).
 5. **Cleanup (flagged):** root `test-output.txt` 409KB · 5 scratch `test_*.mjs` · 24 `.pdb` ~32MB.
@@ -54,11 +54,11 @@ rotation** — the leaked `.env.galerina-signing` must be rotated; scrub ≠ rot
 
 **▶▶ MOST RECENT STATE — read this first (2026-06-15 late · suite 48/48 · 4,360 · 0 fail):**
 - **R&D photonic/tri — ALL 3 DIRECTIONS SHIPPED** (A 3-valued governance, C noise model, B `substrate{}`
-  contracts + `SPORE-SUBSTRATE-001..004`) + new `@galerina/substrate-math` pkg. Record:
+  contracts + `FUNGI-SUBSTRATE-001..004`) + new `@galerina/substrate-math` pkg. Record:
   `C:\wwwprojects\Galerina-R-AND-D\photonic-tri-governance\00-OVERVIEW.md`. **Crypto UNCHANGED by design.**
 - **Quantum-resistance posture RECORDED → DECISION: KEEP SHA-256** (already quantum-OK; Grover→128-bit).
   The PQ work is the SIGNATURE: finish ML-DSA-65 over the SHA-256 digest (#34), hybrid w/ Ed25519.
-  Doc: `galerina-quantum-resistance-posture.md`; candidate enforcement `SPORE-CRYPTO-PQ-001`.
+  Doc: `galerina-quantum-resistance-posture.md`; candidate enforcement `FUNGI-CRYPTO-PQ-001`.
 - **ffsim quantum bridge — Phase 0 + Phase 1 SHIPPED** (`packages-galerina/galerina-ext-bridge-quantum`, 12 tests):
   Phase 0 = shared-manifest tolerance-certified extension (fail-closed pins, hash-preserving); Phase 1 =
   pure-TS governance core (`subspace.ts` governor, `limits.ts` gate, `quantum-contract.ts`, `manifest.ts`,
@@ -78,12 +78,12 @@ rotation** — the leaked `.env.galerina-signing` must be rotated; scrub ≠ rot
 
 **DONE since (suite now 46/46 · 4,282 · 0 fail):**
 - ✅ **R&D Directions A + C + B — ALL SHIPPED** (forked session; record at `C:\wwwprojects\Galerina-R-AND-D\photonic-tri-governance\00-OVERVIEW.md`):
-  - **A** three-valued governance (`ALLOW/DENY/INDETERMINATE`), proved fail-closed, `SPORE-GOV-3VL-001`,
+  - **A** three-valued governance (`ALLOW/DENY/INDETERMINATE`), proved fail-closed, `FUNGI-GOV-3VL-001`,
     `tower-citizen/src/three-valued-governance.ts`, spec `galerina-three-valued-governance.md`.
   - **C** substrate failure-mode noise model (`tower-citizen/src/substrate-model.ts`, seeded NMR;
     *noise costs availability, never safety* — `effectiveVerdict = vAnd`), spec `galerina-substrate-failure-model.md`.
   - **B** `contract { substrate { lane; tolerance; redundancy } }` block + compiler pass
-    (`core-compiler/src/substrate-inference.ts`), `SPORE-SUBSTRATE-001..004`. **B1 = crypto-on-noisy-lane**
+    (`core-compiler/src/substrate-inference.ts`), `FUNGI-SUBSTRATE-001..004`. **B1 = crypto-on-noisy-lane**
     (the durable TMX-thread insight, now enforced). Spec `galerina-substrate-contracts.md`.
   - **New package** `galerina-substrate-math` (shared NMR, single source of truth, dedupe).
   - **Real fail-open bug found+fixed** by adversarial review: the lexer had no scientific-notation, so
@@ -153,7 +153,7 @@ Build/test/run cheatsheet is §3. Guardrails below still apply.
 - **Zero Trust Framework** bar on everything: deny-by-default, no ambient authority, least
   capability, fail-closed, actor-aware audit, explicit data exposure, OS/HW-as-compromised
   posture (#195), AI-proposes / compiler-verifies / runtime-authorizes / human-approves.
-- Every `match` MUST end with a mandatory `_ =>` (or `else =>`) wildcard — **SPORE-TYPE-023** (#174).
+- Every `match` MUST end with a mandatory `_ =>` (or `else =>`) wildcard — **FUNGI-TYPE-023** (#174).
 
 ## 1. Verified state (2026-06-15)
 - **Full suite: 45/45 packages → 46 with `galerina-api-protocol-rest` · 4,245 tests · 0 fail**
@@ -169,23 +169,23 @@ Build/test/run cheatsheet is §3. Guardrails below still apply.
 | **App Kernel P1** (real TS, was spec-only) | `galerina-framework-app-kernel/src/{types,route-defaults,kernel,fuse-loader,index}.ts`, `tests/*`, `tsconfig.json`, `package.json` | #172 |
 | **Fuse B1** (package `/src`→`.wasm`) | `galerina.mjs` (`build --package`, signed `fuse` block in `.lmanifest`), `examples/fuse-demo/my-custom-api-rest/` | #175 |
 | **Fuse B2** (governed loader) | `galerina-framework-app-kernel/src/fuse-loader.ts` (wasm-hash + sig verify, deny-by-default host imports) | #175 |
-| **Fuse B3** (reference adapter) | `galerina-api-protocol-rest/` (package.spore.json, src/index.spore, tests/e2e-fuse.test.mjs, package.json, dist/) | #175 |
+| **Fuse B3** (reference adapter) | `galerina-api-protocol-rest/` (package.fungi.json, src/index.fungi, tests/e2e-fuse.test.mjs, package.json, dist/) | #175 |
 | **#195 posture** | `galerina-core-config/src/posture.ts`, `tests/posture.test.mjs` | #168 |
 | **#194 GateCache** | `galerina-tower-citizen/src/gate-cache.ts`, `tests/gate-cache.test.mjs`, `index.ts` export; `hybrid-engine.ts` (wired→**reverted**, see §4) | #167 |
 | **#196 ternary gates** | `galerina-tower-citizen/src/tpl-simulator.ts` (sumTrit/xorTrit/carry/min/max/consensus/neg), `tests/ternary-ops.test.mjs` | #173 |
-| **#174 `_=>` rule** | `galerina-core-compiler/src/type-checker.ts` (SPORE-TYPE-023, retired SPORE-TYPE-021) + sweep of 191 matches across 26 `.spore` | #174 |
-| **#153 hardening** | compiler `value-state-checker.ts` (taint unknown-origin→tainted), `effect-checker.ts` (SPORE-STDLIB-002 unknown-effectful→denied), `index.ts` (triToBool) + tests | #153 |
+| **#174 `_=>` rule** | `galerina-core-compiler/src/type-checker.ts` (FUNGI-TYPE-023, retired FUNGI-TYPE-021) + sweep of 191 matches across 26 `.fungi` | #174 |
+| **#153 hardening** | compiler `value-state-checker.ts` (taint unknown-origin→tainted), `effect-checker.ts` (FUNGI-STDLIB-002 unknown-effectful→denied), `index.ts` (triToBool) + tests | #153 |
 | **#146 ledger** | `galerina-devtools-pci/src/compliance-ledger.ts` (+ index, tsconfig, tests) | #146 |
 | **#176 scaffolder** | `scripts/galerina-new.mjs` | #176 |
 | **#150 counts** | `scripts/run-all-tests.cjs` (`--emit-counts` → version.json + SOT line) | #150 |
 | **Dev hook** | `scripts/rebuild-fusable-packages.mjs` + `.claude/settings.json` (first Stop hook, before phase-close) | — |
-| **Docs** | `galerina-framework-layer-design.md` (L0–L3, §10 secure defaults, §11 fuse, P1/B2/B3 done, REST+SOAP example), `compiler-diagnostics.md`/`formal-type-system-spec.md` (SPORE-TYPE-023), `galerina-build-roadmap.md` (flagged externals), 3 framework READMEs (template banners) | #154 + |
+| **Docs** | `galerina-framework-layer-design.md` (L0–L3, §10 secure defaults, §11 fuse, P1/B2/B3 done, REST+SOAP example), `compiler-diagnostics.md`/`formal-type-system-spec.md` (FUNGI-TYPE-023), `galerina-build-roadmap.md` (flagged externals), 3 framework READMEs (template banners) | #154 + |
 
 ## 3. Build / test / run cheatsheet
 - **TS packages whose own `tsc` isn't on PATH** (app-kernel, core-config, devtools-pci, tower-citizen):
   `cd <pkg> && node /c/wwwprojects/Galerina/packages-galerina/galerina-core-compiler/node_modules/typescript/bin/tsc -p tsconfig.json && node --test tests/*.test.mjs`. (Fix properly via **#155** npm workspaces.)
 - **Full suite:** `node scripts/run-all-tests.cjs` (`--core` fast, `--emit-counts` writes counts, `--list`).
-- **Fusable packages** (have `package.spore.json`): `node galerina.mjs build --package <dir>` → `<dir>/dist/`.
+- **Fusable packages** (have `package.fungi.json`): `node galerina.mjs build --package <dir>` → `<dir>/dist/`.
 - **Benchmarks:** `npm --prefix packages-galerina/galerina-devtools-benchmarks run run` (or `run:quick`, then `compare`). GateCache micro-bench: `node packages-galerina/galerina-devtools-benchmarks/benchmarks/gate-cache/bench.mjs`.
 - **Graph:** `node packages-galerina/galerina-core-cli/dist/index.js graph --out build/graph`; KB graph: `node galerina.mjs kb-graph`.
 
@@ -200,7 +200,7 @@ lever is **WASM execution**: governed `⟨interp⟩` 269K× vs WASM 60× slower-
 metric, dead/redundant code, missing integrations.**
 
 ## 5. Open items
-- **#177** graph: index pure-`.spore` fusable packages (`api-protocol-rest`, `fuse-demo` are absent as graph nodes).
+- **#177** graph: index pure-`.fungi` fusable packages (`api-protocol-rest`, `fuse-demo` are absent as graph nodes).
 - **#149** signing-key git-history scrub — **DESTRUCTIVE; needs explicit user go-ahead** (documented, NOT run).
 - External infra (flagged, not in-repo completable): **#102/#103/#104/#106** (real wasmtime component model + fuel), **#110** (KMS key rotation).
 - Other completable: #147, #148, #155, #156, #157, #158, #69.

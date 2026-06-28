@@ -201,15 +201,15 @@ CI can then:
 
 | Code | Meaning |
 |---|---|
-| `SPORE-DIFF-001` | Governance diff generated |
-| `SPORE-DIFF-002` | Authority widened |
-| `SPORE-DIFF-003` | Resource budget increased |
-| `SPORE-DIFF-004` | Package governance manifest changed |
-| `SPORE-DIFF-005` | Security boundary changed |
-| `SPORE-DIFF-006` | Unsafe/native authority introduced |
-| `SPORE-DIFF-007` | Production gate changed |
-| `SPORE-DIFF-008` | Review required by policy |
-| `SPORE-DIFF-009` | Governance diff unavailable because base report is missing |
+| `FUNGI-DIFF-001` | Governance diff generated |
+| `FUNGI-DIFF-002` | Authority widened |
+| `FUNGI-DIFF-003` | Resource budget increased |
+| `FUNGI-DIFF-004` | Package governance manifest changed |
+| `FUNGI-DIFF-005` | Security boundary changed |
+| `FUNGI-DIFF-006` | Unsafe/native authority introduced |
+| `FUNGI-DIFF-007` | Production gate changed |
+| `FUNGI-DIFF-008` | Review required by policy |
+| `FUNGI-DIFF-009` | Governance diff unavailable because base report is missing |
 
 ---
 

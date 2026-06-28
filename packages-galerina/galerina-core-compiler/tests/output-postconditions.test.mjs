@@ -4,12 +4,12 @@
 // A flow may declare an OUTPUT post-condition over its return value using the magic
 // `result` symbol inside `invariant {}`. It is enforced FAIL-CLOSED at the single flow
 // exit by the governed interpreter: a return value violating the post-condition becomes a
-// runtimeError (SPORE-INV-002) and never escapes — the same fail-closed posture as the i32
+// runtimeError (FUNGI-INV-002) and never escapes — the same fail-closed posture as the i32
 // trap (Fork-A) / 0038. `result`-referencing flows decline to the interpreter on the WASM
 // tier until single-exit lowering lands; this file pins the interpreter enforcement.
 //
 // Pre-build state (verified): `ensure result …` was hard-REJECTED at compile time
-// (SPORE-NAME-001 symbol resolver + SPORE-INV-004 governance verifier) — a fail-SAFE capability
+// (FUNGI-NAME-001 symbol resolver + FUNGI-INV-004 governance verifier) — a fail-SAFE capability
 // gap, not a leak. This adds the capability + enforces it fail-closed.
 // =============================================================================
 
@@ -22,7 +22,7 @@ import {
 
 const I = (value) => ({ __tag: "int", value });
 const errCodes = (r) => r.diagnostics.filter((d) => d.severity === "error").map((d) => d.code);
-const hasInv002 = (r) => (r.execution?.diagnostics ?? []).some((d) => d.code === "SPORE-INV-002");
+const hasInv002 = (r) => (r.execution?.diagnostics ?? []).some((d) => d.code === "FUNGI-INV-002");
 
 const CLAMP = `
 pure flow clamp(a: Int) -> Int
@@ -38,24 +38,24 @@ contract {
 
 describe("0040 output post-conditions — fail-closed enforcement at flow exit", () => {
   it("a return value violating `ensure result <= 100` FAILS CLOSED (does not leak)", async () => {
-    const r = await run(CLAMP, "t.spore", "clamp", new Map([["a", I(200)]]));
+    const r = await run(CLAMP, "t.fungi", "clamp", new Map([["a", I(200)]]));
     assert.equal(r.ok, false, "violation must fail closed");
     assert.equal(r.value?.__tag, "runtimeError", "violating result must NOT be returned as a value");
     assert.match(r.value?.message ?? "", /output post-condition/, "message names the violated post-condition");
     assert.match(r.value?.message ?? "", /result <= 100/, "message names the specific ensure");
-    assert.ok(hasInv002(r), "SPORE-INV-002 diagnostic emitted");
+    assert.ok(hasInv002(r), "FUNGI-INV-002 diagnostic emitted");
     assert.equal(r.execution?.audit?.result, "error", "audit records error (fail-closed)");
   });
 
   it("a return value violating `ensure result >= 0` FAILS CLOSED", async () => {
-    const r = await run(CLAMP, "t.spore", "clamp", new Map([["a", I(-5)]]));
+    const r = await run(CLAMP, "t.fungi", "clamp", new Map([["a", I(-5)]]));
     assert.equal(r.ok, false);
     assert.equal(r.value?.__tag, "runtimeError");
     assert.match(r.value?.message ?? "", /result >= 0/);
   });
 
   it("a satisfying return value passes every post-condition and returns normally", async () => {
-    const r = await run(CLAMP, "t.spore", "clamp", new Map([["a", I(50)]]));
+    const r = await run(CLAMP, "t.fungi", "clamp", new Map([["a", I(50)]]));
     assert.equal(r.ok, true, "satisfying result returns ok");
     assert.equal(r.value?.__tag, "int");
     assert.equal(r.value?.value, 50);
@@ -63,8 +63,8 @@ describe("0040 output post-conditions — fail-closed enforcement at flow exit",
   });
 
   it("the boundary value (== the bound) satisfies a <= / >= post-condition", async () => {
-    const hi = await run(CLAMP, "t.spore", "clamp", new Map([["a", I(100)]]));
-    const lo = await run(CLAMP, "t.spore", "clamp", new Map([["a", I(0)]]));
+    const hi = await run(CLAMP, "t.fungi", "clamp", new Map([["a", I(100)]]));
+    const lo = await run(CLAMP, "t.fungi", "clamp", new Map([["a", I(0)]]));
     assert.equal(hi.ok, true, "result == upper bound holds");
     assert.equal(lo.ok, true, "result == lower bound holds");
   });
@@ -74,7 +74,7 @@ describe("0040 output post-conditions — fail-closed enforcement at flow exit",
     // A flow ending in `{ 5 }` produces void; the post-condition then can't be checked. The old message
     // falsely blamed the predicate ("violated ensure result > 0"); now it points to the missing return.
     const src = `pure flow tail() -> Int\ncontract { effects {} invariant { ensure result > 0 } }\n{ 5 }`;
-    const r = await run(src, "t.spore", "tail", new Map());
+    const r = await run(src, "t.fungi", "tail", new Map());
     assert.equal(r.value?.__tag, "runtimeError", "void result fails closed");
     assert.match(r.value?.message ?? "", /produced NO return value/, "the message points to the missing return");
     assert.doesNotMatch(r.value?.message ?? "", /violated output post-condition/, "must NOT misleadingly blame the predicate");
@@ -89,8 +89,8 @@ contract {
 }
 { return a }
 `;
-    const below = await run(src, "t.spore", "atLeast", new Map([["a", I(3)], ["floor", I(5)]]));
-    const ok = await run(src, "t.spore", "atLeast", new Map([["a", I(10)], ["floor", I(5)]]));
+    const below = await run(src, "t.fungi", "atLeast", new Map([["a", I(3)], ["floor", I(5)]]));
+    const ok = await run(src, "t.fungi", "atLeast", new Map([["a", I(10)], ["floor", I(5)]]));
     assert.equal(below.ok, false, "result below the floor fails closed");
     assert.equal(below.value?.__tag, "runtimeError");
     assert.equal(ok.ok, true, "result at/above the floor passes");
@@ -99,21 +99,21 @@ contract {
 });
 
 describe("0040 output post-conditions — compile-time acceptance / rejection", () => {
-  it("`ensure result …` is ACCEPTED (no SPORE-NAME-001 / SPORE-INV-004) — the capability exists", async () => {
-    const r = await run(CLAMP, "t.spore", "clamp", new Map([["a", I(50)]]));
-    assert.ok(!errCodes(r).includes("SPORE-NAME-001"), "`result` is in scope inside invariant ensure");
-    assert.ok(!errCodes(r).includes("SPORE-INV-004"), "`result` is not an unresolved symbol");
+  it("`ensure result …` is ACCEPTED (no FUNGI-NAME-001 / FUNGI-INV-004) — the capability exists", async () => {
+    const r = await run(CLAMP, "t.fungi", "clamp", new Map([["a", I(50)]]));
+    assert.ok(!errCodes(r).includes("FUNGI-NAME-001"), "`result` is in scope inside invariant ensure");
+    assert.ok(!errCodes(r).includes("FUNGI-INV-004"), "`result` is not an unresolved symbol");
   });
 
-  it("a genuine typo in an ensure is STILL rejected (SPORE-NAME-001) — fail-safe preserved", async () => {
+  it("a genuine typo in an ensure is STILL rejected (FUNGI-NAME-001) — fail-safe preserved", async () => {
     const src = `
 pure flow clamp(a: Int) -> Int
 contract { intent { "x" } invariant { ensure bogus <= 100; } }
 { return a }
 `;
-    const r = await run(src, "t.spore", "clamp", new Map([["a", I(50)]]));
+    const r = await run(src, "t.fungi", "clamp", new Map([["a", I(50)]]));
     assert.equal(r.ok, false);
-    assert.ok(errCodes(r).includes("SPORE-NAME-001"), "unknown symbol in ensure is still an error");
+    assert.ok(errCodes(r).includes("FUNGI-NAME-001"), "unknown symbol in ensure is still an error");
   });
 
   it("a parameter-only invariant is unaffected (no `result` → existing pre-condition behaviour)", async () => {
@@ -122,7 +122,7 @@ pure flow pos(a: Int) -> Int
 contract { intent { "x" } invariant { ensure a > 0; } }
 { return a }
 `;
-    const r = await run(src, "t.spore", "pos", new Map([["a", I(7)]]));
+    const r = await run(src, "t.fungi", "pos", new Map([["a", I(7)]]));
     assert.equal(r.ok, true, "param pre-condition flow runs unchanged");
     assert.equal(r.value?.value, 7);
   });
@@ -144,7 +144,7 @@ describe("0040 output post-conditions — three-tier fidelity (no fast-path fail
   it("a post-condition flow run with pureFastPath declines the bytecode tier → governed exit", async () => {
     clearBytecodeCache?.();
     clearPureFlowCache?.();
-    const p = parseProgram(POST_SRC, "fast.spore");
+    const p = parseProgram(POST_SRC, "fast.fungi");
 
     // pureFastPath + integer args → this flow is bytecode-eligible; the post-condition guard must
     // route it to the governed tree-walker exit gate instead, where the violation fails closed.
@@ -175,14 +175,14 @@ describe("0040 output post-conditions — three-tier fidelity (no fast-path fail
   });
 
   it("the exported sync entry (executeFlowSync) DECLINES a post-condition flow (no unchecked bypass)", () => {
-    const p = parseProgram(POST_SRC, "sync.spore");
+    const p = parseProgram(POST_SRC, "sync.fungi");
     // A post-condition flow must NOT run on the gate-less sync fast-path — it declines (null) so
     // the caller falls back to the governed async executeFlow, which enforces fail-closed.
     const declined = executeFlowSync("clampInt", new Map([["a", I(200)]]), p.ast, p.flows);
     assert.equal(declined, null, "post-condition flow declines the exported sync fast-path");
 
     // a plain pure flow (no post-condition) still runs on the sync path — not regressed.
-    const plain = parseProgram(`pure flow idn(a: Int) -> Int contract { effects {} } { return a }`, "idn.spore");
+    const plain = parseProgram(`pure flow idn(a: Int) -> Int contract { effects {} } { return a }`, "idn.fungi");
     const okv = executeFlowSync("idn", new Map([["a", I(7)]]), plain.ast, plain.flows);
     assert.equal(okv?.__tag, "int");
     assert.equal(okv?.value, 7);

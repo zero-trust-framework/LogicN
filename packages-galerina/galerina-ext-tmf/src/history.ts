@@ -1,6 +1,6 @@
 // history.ts — .tmf append-only history chain (`+1`), v0 (slice 5, G4). Spec (frozen):
 // spec/tmf-history-chain-v0.md. Byte-precise, deterministic SHAKE256 — crypto-on-core
-// (SPORE-SUBSTRATE-001): no photonic crypto, bit-exact digital.
+// (FUNGI-SUBSTRATE-001): no photonic crypto, bit-exact digital.
 //
 // SCOPE (what this file builds, exactly per the spec's separation of concerns):
 //   • §1 chain header (24 B header_core: epoch u32 ‖ flags u32 ‖ reserved/chain_id 16 B) + the LINK

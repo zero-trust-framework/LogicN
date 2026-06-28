@@ -3,7 +3,7 @@
     "mode": "checked",
     "projectRoot": ".",
     "environment": "test",
-    "entryFile": "examples/hello.spore",
+    "entryFile": "examples/hello.fungi",
     "timeoutMs": 30000
   },
   "effects": [

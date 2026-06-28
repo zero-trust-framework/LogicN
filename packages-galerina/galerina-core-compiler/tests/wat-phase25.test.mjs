@@ -5,9 +5,9 @@
 //   25A. getWATImportsForEffects populates imports from STDLIB_CAPABILITY_MAP
 //   25A. buildWATModule: effectful flows produce correct host:* WAT imports
 //   25A. database.read + audit.write effects → host:db.* + host:audit.write imports
-//   25B. verifyPassword.spore: parses with 0 errors
-//   25B. verifyPassword.spore: emitGIR produces correct declared effects
-//   25B. verifyPassword.spore: buildWATModule produces WAT with host:* imports
+//   25B. verifyPassword.fungi: parses with 0 errors
+//   25B. verifyPassword.fungi: emitGIR produces correct declared effects
+//   25B. verifyPassword.fungi: buildWATModule produces WAT with host:* imports
 //   25B. crypto.verify effect added to STDLIB_CAPABILITY_MAP (host:crypto.verify)
 // =============================================================================
 
@@ -28,7 +28,7 @@ import {
 } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const VERIFY_PASSWORD_PATH = join(__dir, "../../../examples/auth-service/verifyPassword.spore");
+const VERIFY_PASSWORD_PATH = join(__dir, "../../../examples/auth-service/verifyPassword.fungi");
 
 // ---------------------------------------------------------------------------
 // 25A — getWATImportsForEffects: STDLIB_CAPABILITY_MAP wiring
@@ -135,7 +135,7 @@ describe("Phase 25A: buildWATModule emits correct host:* imports for effectful f
       "{ return Response.ok({}) }",
     ].join("\n");
 
-    const p = parseProgram(src, "t.spore");
+    const p = parseProgram(src, "t.fungi");
     const eff = checkEffects(p.flows, p.ast);
     const gir = emitGIR(p.ast, p.flows, eff);
     const mod = buildWATModule(gir.gir, STDLIB_CAPABILITY_MAP);
@@ -161,7 +161,7 @@ describe("Phase 25A: buildWATModule emits correct host:* imports for effectful f
 
   it("pure flow with no effects → WAT has no import lines", () => {
     const src = "pure flow add(a: Int, b: Int) -> Int { return a }";
-    const p = parseProgram(src, "t.spore");
+    const p = parseProgram(src, "t.fungi");
     const eff = checkEffects(p.flows, p.ast);
     const gir = emitGIR(p.ast, p.flows, eff);
     const mod = buildWATModule(gir.gir, STDLIB_CAPABILITY_MAP);
@@ -177,10 +177,10 @@ describe("Phase 25A: buildWATModule emits correct host:* imports for effectful f
 });
 
 // ---------------------------------------------------------------------------
-// 25B — verifyPassword.spore: parse + GIR effects + WAT imports
+// 25B — verifyPassword.fungi: parse + GIR effects + WAT imports
 // ---------------------------------------------------------------------------
 
-describe("Phase 25B: verifyPassword.spore parses and emits correct GIR + WAT", () => {
+describe("Phase 25B: verifyPassword.fungi parses and emits correct GIR + WAT", () => {
   let vpSource;
   try {
     vpSource = readFileSync(VERIFY_PASSWORD_PATH, "utf8");
@@ -190,27 +190,27 @@ describe("Phase 25B: verifyPassword.spore parses and emits correct GIR + WAT", (
     vpSource = null;
   }
 
-  it("verifyPassword.spore file exists and is readable", () => {
+  it("verifyPassword.fungi file exists and is readable", () => {
     assert.ok(
       vpSource !== null,
-      `verifyPassword.spore not found at: ${VERIFY_PASSWORD_PATH}`,
+      `verifyPassword.fungi not found at: ${VERIFY_PASSWORD_PATH}`,
     );
   });
 
-  it("verifyPassword.spore parses with 0 errors", () => {
+  it("verifyPassword.fungi parses with 0 errors", () => {
     if (!vpSource) return assert.ok(true, "skipped — file missing");
-    const parsed = parseProgram(vpSource, "verifyPassword.spore");
+    const parsed = parseProgram(vpSource, "verifyPassword.fungi");
     const errors = parsed.diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       errors.length,
       0,
-      `verifyPassword.spore parse errors (${errors.length}):\n${errors.map((e) => e.message).join("\n")}`,
+      `verifyPassword.fungi parse errors (${errors.length}):\n${errors.map((e) => e.message).join("\n")}`,
     );
   });
 
-  it("verifyPassword.spore emitGIR: declares database.read effect", () => {
+  it("verifyPassword.fungi emitGIR: declares database.read effect", () => {
     if (!vpSource) return assert.ok(true, "skipped — file missing");
-    const parsed = parseProgram(vpSource, "verifyPassword.spore");
+    const parsed = parseProgram(vpSource, "verifyPassword.fungi");
     const eff = checkEffects(parsed.flows, parsed.ast);
     const gir = emitGIR(parsed.ast, parsed.flows, eff);
     const flow = gir.gir.flows.find((f) => f.name === "verifyPassword");
@@ -222,9 +222,9 @@ describe("Phase 25B: verifyPassword.spore parses and emits correct GIR + WAT", (
     );
   });
 
-  it("verifyPassword.spore emitGIR: declares crypto.verify effect", () => {
+  it("verifyPassword.fungi emitGIR: declares crypto.verify effect", () => {
     if (!vpSource) return assert.ok(true, "skipped — file missing");
-    const parsed = parseProgram(vpSource, "verifyPassword.spore");
+    const parsed = parseProgram(vpSource, "verifyPassword.fungi");
     const eff = checkEffects(parsed.flows, parsed.ast);
     const gir = emitGIR(parsed.ast, parsed.flows, eff);
     const flow = gir.gir.flows.find((f) => f.name === "verifyPassword");
@@ -236,9 +236,9 @@ describe("Phase 25B: verifyPassword.spore parses and emits correct GIR + WAT", (
     );
   });
 
-  it("verifyPassword.spore emitGIR: declares audit.write effect", () => {
+  it("verifyPassword.fungi emitGIR: declares audit.write effect", () => {
     if (!vpSource) return assert.ok(true, "skipped — file missing");
-    const parsed = parseProgram(vpSource, "verifyPassword.spore");
+    const parsed = parseProgram(vpSource, "verifyPassword.fungi");
     const eff = checkEffects(parsed.flows, parsed.ast);
     const gir = emitGIR(parsed.ast, parsed.flows, eff);
     const flow = gir.gir.flows.find((f) => f.name === "verifyPassword");
@@ -250,9 +250,9 @@ describe("Phase 25B: verifyPassword.spore parses and emits correct GIR + WAT", (
     );
   });
 
-  it("verifyPassword.spore buildWATModule: WAT contains host:* imports", () => {
+  it("verifyPassword.fungi buildWATModule: WAT contains host:* imports", () => {
     if (!vpSource) return assert.ok(true, "skipped — file missing");
-    const parsed = parseProgram(vpSource, "verifyPassword.spore");
+    const parsed = parseProgram(vpSource, "verifyPassword.fungi");
     const eff = checkEffects(parsed.flows, parsed.ast);
     const gir = emitGIR(parsed.ast, parsed.flows, eff);
     const mod = buildWATModule(gir.gir, STDLIB_CAPABILITY_MAP);
@@ -268,9 +268,9 @@ describe("Phase 25B: verifyPassword.spore parses and emits correct GIR + WAT", (
     }
   });
 
-  it("verifyPassword.spore buildWATModule: WAT includes host:audit.write import", () => {
+  it("verifyPassword.fungi buildWATModule: WAT includes host:audit.write import", () => {
     if (!vpSource) return assert.ok(true, "skipped — file missing");
-    const parsed = parseProgram(vpSource, "verifyPassword.spore");
+    const parsed = parseProgram(vpSource, "verifyPassword.fungi");
     const eff = checkEffects(parsed.flows, parsed.ast);
     const gir = emitGIR(parsed.ast, parsed.flows, eff);
     const mod = buildWATModule(gir.gir, STDLIB_CAPABILITY_MAP);
@@ -282,9 +282,9 @@ describe("Phase 25B: verifyPassword.spore parses and emits correct GIR + WAT", (
     );
   });
 
-  it("verifyPassword.spore buildWATModule: WAT includes host:db.* import", () => {
+  it("verifyPassword.fungi buildWATModule: WAT includes host:db.* import", () => {
     if (!vpSource) return assert.ok(true, "skipped — file missing");
-    const parsed = parseProgram(vpSource, "verifyPassword.spore");
+    const parsed = parseProgram(vpSource, "verifyPassword.fungi");
     const eff = checkEffects(parsed.flows, parsed.ast);
     const gir = emitGIR(parsed.ast, parsed.flows, eff);
     const mod = buildWATModule(gir.gir, STDLIB_CAPABILITY_MAP);
@@ -297,9 +297,9 @@ describe("Phase 25B: verifyPassword.spore parses and emits correct GIR + WAT", (
     );
   });
 
-  it("verifyPassword.spore buildWATModule: WAT includes host:crypto.verify import", () => {
+  it("verifyPassword.fungi buildWATModule: WAT includes host:crypto.verify import", () => {
     if (!vpSource) return assert.ok(true, "skipped — file missing");
-    const parsed = parseProgram(vpSource, "verifyPassword.spore");
+    const parsed = parseProgram(vpSource, "verifyPassword.fungi");
     const eff = checkEffects(parsed.flows, parsed.ast);
     const gir = emitGIR(parsed.ast, parsed.flows, eff);
     const mod = buildWATModule(gir.gir, STDLIB_CAPABILITY_MAP);

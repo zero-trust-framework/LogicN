@@ -29,10 +29,10 @@ This is formally clean, directly implementable, and has no analogues in existing
 | DRCM concept | Already in Galerina | Gap |
 |---|---|---|
 | Derive taint constraints from `privacy {}` | ✅ `checkValueStates`, `source_from` annotation | Constraints not yet exported to `.lmanifest` |
-| Compile-time proof that secrets don't reach sinks | ✅ SPORE-SECRET-001/002/003 | Inter-flow taint (partial) |
+| Compile-time proof that secrets don't reach sinks | ✅ FUNGI-SECRET-001/002/003 | Inter-flow taint (partial) |
 | Monotonic deny-by-default for effects | ✅ effects are deny-by-default; omitted = pure | Emergency *overlay* tightening not wired |
 | Cryptographic build evidence | ✅ GovernanceSignature (Ed25519 + ML-DSA-65), ProofGraph | Not yet exported as a standalone `.lmanifest` artifact |
-| Termination proof | ✅ `decreases` annotation + SPORE-TERM-001 | Full pre/post arithmetic invariants not checked |
+| Termination proof | ✅ `decreases` annotation + FUNGI-TERM-001 | Full pre/post arithmetic invariants not checked |
 | Per-flow audit trail | ✅ `RunResult.auditLog`, `AuditLog.write` | Not yet structured for QSA consumption |
 
 ---
@@ -74,7 +74,7 @@ graph TB
 
 ```mermaid
 flowchart TD
-    A([".spore source"]) --> B["parseProgram"]
+    A([".fungi source"]) --> B["parseProgram"]
     B --> C["checkTypes\ncheckValueStates\ncheckEffects"]
     C --> D["verifyGovernance\n→ ProofGraph\n→ Derive T2 constraints"]
     D --> E["emit .lmanifest\n(signed: Ed25519 + ML-DSA-65)"]
@@ -84,11 +84,11 @@ flowchart TD
 
     G --> H["① Pre-invariant check\ncontract.invariant.ensure()"]
     H -->|"PASS"| I["Execute flow body"]
-    H -->|"FAIL"| J["❌ Abort: SPORE-INV-001\nInvariantViolated"]
+    H -->|"FAIL"| J["❌ Abort: FUNGI-INV-001\nInvariantViolated"]
 
     I --> K["② Post-invariant check\ncontract.invariant.ensure() after"]
     K -->|"PASS"| L["Return result\nAppend to auditLog"]
-    K -->|"FAIL"| M["❌ Abort: SPORE-INV-002\nPostconditionViolated"]
+    K -->|"FAIL"| M["❌ Abort: FUNGI-INV-002\nPostconditionViolated"]
 
     subgraph WASI["WASI Host Monitor (parallel)"]
         N["readIntegrityVector()\nBit 0: mesh tamper\nBit 1: clock anomaly\nBit 2: voltage fault\nBit 3: lockstep fail"]
@@ -111,13 +111,13 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph COMPILE["Compile time"]
-        A["Source .spore"] --> B["ProofGraph\n(per-flow obligations)"]
+        A["Source .fungi"] --> B["ProofGraph\n(per-flow obligations)"]
         B --> C["Derived T2 constraints\n(from privacy/taint)"]
         C --> D["GovernanceSignature\n(Ed25519 + ML-DSA-65)"]
     end
 
     subgraph MANIFEST[".lmanifest artifact"]
-        E["schemaVersion: spore.manifest.v1"]
+        E["schemaVersion: fungi.manifest.v1"]
         F["sourceHash: sha256:..."]
         G["derivedConstraints: [\n  'CardholderData never_touches TelemetryLog',\n  'PAN requires redact() before AuditLog'\n]"]
         H["proofObligations: [...]"]
@@ -211,7 +211,7 @@ graph TD
     end
 
     subgraph STAGE_B["Stage B — self-hosted (100% complete)"]
-        SBL["lexer.spore\nparser.spore\ntype-checker.spore\neffect-checker.spore\ngovernance-verifier.spore\ngir-emitter.spore\nruntime.spore"]
+        SBL["lexer.fungi\nparser.fungi\ntype-checker.fungi\neffect-checker.fungi\ngovernance-verifier.fungi\ngir-emitter.fungi\nruntime.fungi"]
     end
 
     GV -->|"T2 constraints"| MAN
@@ -244,7 +244,7 @@ gantt
     section Phase 2 — Runtime invariants (Medium effort)
     contract { invariant {} } grammar  :      2026-08, 2026-09
     RuntimeInvariantChecker (pre/post) :      2026-08, 2026-10
-    SPORE-INV-001/002 diagnostics        :      2026-09, 2026-10
+    FUNGI-INV-001/002 diagnostics        :      2026-09, 2026-10
 
     section Phase 3 — Emergency overlays (Medium effort)
     policy { emergency {} } grammar    :      2026-10, 2026-11
@@ -318,7 +318,7 @@ The research confirms the most important design constraint for runtime invariant
 > *"GNATprove statically analyses preconditions and postconditions... The compiler generates checks in the executable code corresponding to each runtime error — these runtime checks are costly, both in terms of program size and execution time."*  
 > — AdaCore SPARK documentation [[source](https://learn.adacore.com/courses/intro-to-spark/chapters/03_Proof_Of_Program_Integrity.html)]
 
-SPARK statically proves 5 error categories at zero runtime cost: buffer overflows, range violations, arithmetic overflows, division by zero, natural-type constraints. **Galerina's `decreases` annotation (SPORE-TERM-001) is directly analogous** — it statically proves termination, eliminating runtime halting risk.
+SPARK statically proves 5 error categories at zero runtime cost: buffer overflows, range violations, arithmetic overflows, division by zero, natural-type constraints. **Galerina's `decreases` annotation (FUNGI-TERM-001) is directly analogous** — it statically proves termination, eliminating runtime halting risk.
 
 ### On CHERI — hardware monotonic capabilities (Tier 3 analogue)
 > *"Architectural capabilities replace conventional integer pointers with memory addresses bound to permissions... checked by the processor on every memory access."*  
@@ -378,10 +378,10 @@ Under a WASM-backed DRCM model, this is reduced to a **single-cycle hardware bit
 
 ### 3. Stability: Fault Isolation and Localized Rollbacks
 
-In typical monolithic or microservice architectures, an unhandled exception, a memory panic, or an invariant failure (`SPORE-INV-001`) often crashes the entire OS process, ruining system availability. WASM introduces **Shared-Nothing Isolate Sandboxing**, which changes how stability is managed under a DRCM.
+In typical monolithic or microservice architectures, an unhandled exception, a memory panic, or an invariant failure (`FUNGI-INV-001`) often crashes the entire OS process, ruining system availability. WASM introduces **Shared-Nothing Isolate Sandboxing**, which changes how stability is managed under a DRCM.
 
 * **The Epilogue Receipt Guard:** As established in our refined specification, if an anomaly occurs mid-execution, the Tier 3 engine triggers a **Monotonic State Regression**. It instantly restricts the capability envelope.
-* **Localized Containment:** Because the WASM module operates inside its own isolated linear memory sandbox, the runtime doesn't need to kill the host server. The host supervisor traps the execution failure (`SPORE-INV-003`), flushes that specific module’s ephemeral linear memory scratchpad back to zero, and rejects the transaction cleanly.
+* **Localized Containment:** Because the WASM module operates inside its own isolated linear memory sandbox, the runtime doesn't need to kill the host server. The host supervisor traps the execution failure (`FUNGI-INV-003`), flushes that specific module’s ephemeral linear memory scratchpad back to zero, and rejects the transaction cleanly.
 * **Zero Cascade Failures:** Neighboring WASM components executing unrelated flows continue processing at full speed without interruption. You achieve absolute system availability and blast-radius containment without the multi-millisecond overhead of operating system process forks or container restarts.
 
 ---
@@ -478,7 +478,7 @@ Wasmtime Host Engine Context
 
 **Answer:** **Inside `contract {}`**, alongside `intent` and `effects`. This keeps all security logic together in a single declarative scope directly attached to the flow signature.
 
-```spore
+```fungi
 ;; ✅ CORRECT — invariant inside contract block
 secure flow processTransaction(walletId: String, amount: U64) -> Result<Void, Fault>
 contract {
@@ -495,14 +495,14 @@ contract {
 ```
 
 **Compiler behaviour:**
-- `ensure` expressions are evaluated as **pre-conditions** before the body executes → `SPORE-INV-001` if violated
-- A symmetric post-condition check fires after the body returns → `SPORE-INV-002` if the post-state is invalid
+- `ensure` expressions are evaluated as **pre-conditions** before the body executes → `FUNGI-INV-001` if violated
+- A symmetric post-condition check fires after the body returns → `FUNGI-INV-002` if the post-state is invalid
 - Static proofs (arithmetic equality, ledger balance) are Phase 4 (SMT solver); runtime pre/post checks are Phase 2
 - Lightweight runtime evaluation of simple expressions is acceptable; do NOT run a theorem prover inline
 
 **Diagnostic codes:**
-- `SPORE-INV-001` — pre-condition violated (invariant check failed before body)
-- `SPORE-INV-002` — post-condition violated (invariant check failed after body)
+- `FUNGI-INV-001` — pre-condition violated (invariant check failed before body)
+- `FUNGI-INV-002` — post-condition violated (invariant check failed after body)
 
 ---
 
@@ -517,7 +517,7 @@ contract {
 
 Plain flow calls are for **pure internal logic** within the same isolate.
 
-```spore
+```fungi
 ;; ✅ CORRECT — step for trust-boundary crossing
 secure flow processOrder(orderId: String) -> Result<Void, Fault>
 contract {
@@ -567,7 +567,7 @@ gantt
     Parser: invariant inside contract block          :p2a, 2026-07, 1w
     Governance verifier: static proof pass           :p2b, 2026-07, 2w
     WAT emitter: dynamic assertion gate injection    :p2c, 2026-07, 2w
-    SPORE-INV-001/002 diagnostics                     :p2d, 2026-07, 1w
+    FUNGI-INV-001/002 diagnostics                     :p2d, 2026-07, 1w
     Tests: static bypass and runtime trip            :p2e, 2026-08, 1w
 
     section Phase 3 — lmanifest Module 1
@@ -579,9 +579,9 @@ gantt
 
     section Phase 4 — Structured Capabilities Modules 3 and 4
     Replace string grants with SystemCapabilityType  :p4a, 2026-09, 2w
-    Path canonicalization pipeline in spore            :p4b, 2026-09, 1w
+    Path canonicalization pipeline in fungi            :p4b, 2026-09, 1w
     CAS monotonic state transition atomic            :p4c, 2026-09, 1w
-    SPORE-MONO-001/002 diagnostics                    :p4d, 2026-09, 1w
+    FUNGI-MONO-001/002 diagnostics                    :p4d, 2026-09, 1w
     policy block grammar and monotonicity verifier   :p4e, 2026-09, 2w
     Tests: path traversal and privilege escalation   :p4f, 2026-10, 1w
 
@@ -616,7 +616,7 @@ gantt
 Before any Phase 2+ compiler work, these two tests must pass against the Wasmtime staging environment:
 
 **Test 1 — WASI Ambient Authority Isolation:**
-Run a compiled `.spore` module that calls `wasi:filesystem/preopens.get_directories` without explicit directory args mapped during engine invocation. The result must be an empty list or an instantiation trap. Proves the guest cannot traverse host filesystems.
+Run a compiled `.fungi` module that calls `wasi:filesystem/preopens.get_directories` without explicit directory args mapped during engine invocation. The result must be an empty list or an instantiation trap. Proves the guest cannot traverse host filesystems.
 
 **Test 2 — Secret Sink Breach Interception:**
-Register a canary secret (`"supersecuretoken123"`) in the runtime. Execute a script that deliberately formats this credential into an error stack string routed to stdout. The stream must trigger `SPORE-SECRET-BREACH` and halt execution before any data exits the sandbox boundary.
+Register a canary secret (`"supersecuretoken123"`) in the runtime. Execute a script that deliberately formats this credential into an error stack string routed to stdout. The stream must trigger `FUNGI-SECRET-BREACH` and halt execution before any data exits the sandbox boundary.

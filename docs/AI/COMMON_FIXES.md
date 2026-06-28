@@ -22,7 +22,7 @@ secure flow getUser(readonly request: Request) -> GetUserResult {
 }
 ```
 
-**Diagnostic if wrong:** None — will work, but violates naming convention (SPORE-NAME-003 may fire in future).
+**Diagnostic if wrong:** None — will work, but violates naming convention (FUNGI-NAME-003 may fire in future).
 
 ---
 
@@ -94,7 +94,7 @@ flow createOrder(...) -> OrderResult {
 }
 ```
 
-**Diagnostic:** SPORE-EVENT-001 (EventNotDeclared)
+**Diagnostic:** FUNGI-EVENT-001 (EventNotDeclared)
 
 ---
 
@@ -121,7 +121,7 @@ return Ok(Response.okJson({
 }))
 ```
 
-**Diagnostic:** SPORE-GOV-003 (ProtectedDataInResponse)
+**Diagnostic:** FUNGI-GOV-003 (ProtectedDataInResponse)
 
 ---
 
@@ -140,7 +140,7 @@ let email: protected Email = validate.email(rawEmail)?
 UsersDB.insert({ email: email })
 ```
 
-**Diagnostic:** SPORE-VALUESTATE-003 (UnsafeValueReachedGovernedSink)
+**Diagnostic:** FUNGI-VALUESTATE-003 (UnsafeValueReachedGovernedSink)
 
 ---
 
@@ -162,7 +162,7 @@ AuditLog.write({
 })
 ```
 
-**Diagnostic:** SPORE-VALUESTATE-003 or SPORE-VALUESTATE-006
+**Diagnostic:** FUNGI-VALUESTATE-003 or FUNGI-VALUESTATE-006
 
 ---
 
@@ -221,7 +221,7 @@ secure flow callApi(readonly request: Request) -> ApiResult {
 }
 ```
 
-**Diagnostic:** SPORE-SYNTAX-006 (LET_AT_TOP_LEVEL)
+**Diagnostic:** FUNGI-SYNTAX-006 (LET_AT_TOP_LEVEL)
 
 ---
 

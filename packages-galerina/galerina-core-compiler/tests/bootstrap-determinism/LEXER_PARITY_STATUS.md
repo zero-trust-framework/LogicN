@@ -29,7 +29,7 @@ No regression. Parity status unchanged from R7A final:
 - The lexer-parity test suite (`lexer-parity.test.mjs`) runs in the standard `npm test` pass.
 - **No new token types tested in Phase 25** — Phase 25 focus was WASM auth scaffold (25A/25B).
 
-Remaining gaps (Gaps 2–5, tracked below) are deferred to Phase 26 (parser.spore parity work).
+Remaining gaps (Gaps 2–5, tracked below) are deferred to Phase 26 (parser.fungi parity work).
 
 ---
 
@@ -37,7 +37,7 @@ Remaining gaps (Gaps 2–5, tracked below) are deferred to Phase 26 (parser.spor
 
 ## 1. TypeScript Lexer Output
 
-Running `lex(source, "parity.spore")` on the source above produces **18 significant tokens**
+Running `lex(source, "parity.fungi")` on the source above produces **18 significant tokens**
 (excluding the trailing `eof`), **19 total**:
 
 | idx | kind       | value    |
@@ -73,7 +73,7 @@ Key observations:
 
 ---
 
-## 2. lexer.spore Current Output
+## 2. lexer.fungi Current Output
 
 Running `tokenize(source)` via the interpreter on the same source produces
 **18 significant tokens** (excluding the trailing `Eof`), **19 total**:
@@ -103,8 +103,8 @@ Running `tokenize(source)` via the interpreter on the same source produces
 Total: **19 tokens** (18 significant + 1 Eof).
 
 Status:
-- lexer.spore **parses with zero errors**.
-- lexer.spore **executes without runtime errors**.
+- lexer.fungi **parses with zero errors**.
+- lexer.fungi **executes without runtime errors**.
 - Output is an `Ok(Array<Token>)` as specified.
 - **All 19 positions match the TypeScript lexer.**
 
@@ -113,7 +113,7 @@ Status:
 ## 3. Side-by-Side Comparison (from test run, Phase R7A final)
 
 ```
-idx | TS lexer              | lexer.spore             | match?
+idx | TS lexer              | lexer.fungi             | match?
 ----+----------------------+----------------------+-------
   0 | keyword:"pure"        | Keyword:"pure"        | OK
   1 | keyword:"flow"        | Keyword:"flow"        | OK
@@ -150,7 +150,7 @@ become `Symbol("-") + Symbol(">")`, shifting all subsequent positions by one
 and producing 8 apparent mismatches from a single missing token.
 
 **Fix:** Added `scanOperator(source, pos, srcLen) -> Array<String>` helper flow
-to `lexer.spore`.  It peeks at the current and next character, checks against the
+to `lexer.fungi`.  It peeks at the current and next character, checks against the
 known two-char operator set (`->`, `=>`, `==`, `!=`, `<=`, `>=`, `&&`, `||`,
 `..`, `::`, `//`, `/*`), and returns `[opString, endPos, isMultiChar]`.
 
@@ -169,16 +169,16 @@ to later phases:
 **Severity:** None for parity — the test normalises TS kinds to PascalCase.
 
 The TS lexer uses lowercase kind names (`keyword`, `identifier`, `symbol`,
-`operator`, `number`, `string`, `char`, `newline`, `eof`), while `lexer.spore`
+`operator`, `number`, `string`, `char`, `newline`, `eof`), while `lexer.fungi`
 uses PascalCase (`Keyword`, `Identifier`, `Symbol`, `Operator`, `NumberLiteral`,
 `StringLiteral`, `CharLiteral`, `Newline`, `Eof`).
 
-The PascalCase convention in `lexer.spore` is acceptable as the self-hosted
+The PascalCase convention in `lexer.fungi` is acceptable as the self-hosted
 compiler defines its own IR.
 
 ### Gap 2 — String literals (NOT YET TESTED with this input)
 
-**Severity:** Medium — `lexer.spore` has no string-scanning branch.
+**Severity:** Medium — `lexer.fungi` has no string-scanning branch.
 
 The `else` catch-all in `tokenize` would emit `Symbol('"')` for the opening
 quote rather than scanning a full `StringLiteral`.  A `scanString()` helper
@@ -195,7 +195,7 @@ The single-quote character `'` would fall through to `Symbol("'")`.  A
 
 **Severity:** Low for basic parity, medium for full bootstrap.
 
-The TS lexer strips `//` line comments and `/* */` block comments.  `lexer.spore`
+The TS lexer strips `//` line comments and `/* */` block comments.  `lexer.fungi`
 would now emit `Operator("//")` and `Operator("/*")` for comment delimiters
 rather than skipping the content.
 
@@ -203,7 +203,7 @@ rather than skipping the content.
 
 **Severity:** Low.
 
-The TS lexer allows `_` in identifiers (e.g. `my_var`).  `lexer.spore`'s
+The TS lexer allows `_` in identifiers (e.g. `my_var`).  `lexer.fungi`'s
 `scanWord` only advances on `isLetter() or isDigit()`, so an underscore would
 terminate an identifier early.
 
@@ -211,7 +211,7 @@ terminate an identifier early.
 
 ## 6. What Works (Phase R7A complete)
 
-- `lexer.spore` successfully parses and executes end-to-end.
+- `lexer.fungi` successfully parses and executes end-to-end.
 - Keywords are correctly classified (`pure`, `flow`, `return` all detected).
 - Identifiers are correctly scanned (`add`, `a`, `b`, `Int`).
 - Number literals are correctly scanned with `scanDigits()`.

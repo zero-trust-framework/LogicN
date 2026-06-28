@@ -2,7 +2,7 @@
 //
 // Proves: ALLOW iff >= M DISTINCT signers approve; clean shortfall (well-formed, < M) is an ordinary
 // DENY (no diagnostic); de-duplication by signer (anti-Sybil — a repeated signer counts once); a signer
-// equivocation and any malformed input collapse to INDETERMINATE carrying + sinking SPORE-GOV-3VL-001;
+// equivocation and any malformed input collapse to INDETERMINATE carrying + sinking FUNGI-GOV-3VL-001;
 // DENY/INDETERMINATE votes never count as approvals; purity/determinism; and the soundness invariant
 // that no non-ALLOW path authorizes.
 
@@ -45,7 +45,7 @@ test("clean shortfall (well-formed, < M approvals) → DENY, NOT a diagnostic", 
   assert.equal(d.decision, "deny");
   assert.equal(d.authorized, false);
   assert.equal(d.reason, "insufficient_quorum");
-  assert.equal(d.diagnostic, null, "a clean shortfall is an ordinary DENY, not SPORE-GOV-3VL-001");
+  assert.equal(d.diagnostic, null, "a clean shortfall is an ordinary DENY, not FUNGI-GOV-3VL-001");
   assert.equal(d.distinctApprovals, 1);
   assert.equal(meetsQuorum([vote("a")], 2), false);
 });
@@ -65,7 +65,7 @@ test("DENY / INDETERMINATE votes never count as approvals", () => {
   assert.equal(d.authorized, false);
 });
 
-test("equivocation (one signer, conflicting verdicts) → INDETERMINATE + SPORE-GOV-3VL-001", () => {
+test("equivocation (one signer, conflicting verdicts) → INDETERMINATE + FUNGI-GOV-3VL-001", () => {
   let sunk = null;
   const d = checkQuorum([vote("a", ALLOW), vote("a", DENY), vote("b", ALLOW)], 1, (x) => { sunk = x; });
   assert.equal(d.verdict, INDETERMINATE);

@@ -15,7 +15,7 @@ The adapter is a minimal but real REST dispatcher. It maps an `(HTTP method, pat
 request — encoded as two small `Int`s on the WASM ABI — to an HTTP route/status
 code. It is **deny-by-default**: any verb or path that matches no declared route
 falls through to `405`/`404`. Every `match` ends with the mandatory `_ =>` wildcard
-(SPORE-TYPE-023). All `Int`/simple types, so the whole flow lowers cleanly to WASM.
+(FUNGI-TYPE-023). All `Int`/simple types, so the whole flow lowers cleanly to WASM.
 
 ### Wire ABI
 

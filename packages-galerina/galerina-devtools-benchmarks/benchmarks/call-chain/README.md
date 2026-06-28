@@ -32,4 +32,4 @@ Galerina: 50,000 outer chains; runner normalises throughput to ops/second.
 |------|---------|
 | `node.mjs` | Node.js |
 | `python.py` | Python 3 |
-| `benchmark.spore` | Galerina governed/manifest/passive |
+| `benchmark.fungi` | Galerina governed/manifest/passive |

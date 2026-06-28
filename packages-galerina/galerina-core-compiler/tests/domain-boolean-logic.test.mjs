@@ -16,7 +16,7 @@ import { parseProgram, checkTypes } from "../dist/index.js";
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function parse(src) {
-  return parseProgram(src, "test.spore");
+  return parseProgram(src, "test.fungi");
 }
 
 function check(src) {

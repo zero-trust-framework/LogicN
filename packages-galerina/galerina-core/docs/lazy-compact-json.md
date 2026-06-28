@@ -708,7 +708,7 @@ If copy pressure is too high, Galerina converts to compact representation.
 ```json
 {
   "jsonCopyPressure": {
-    "source": "src/webhooks/payment-webhook.spore:18",
+    "source": "src/webhooks/payment-webhook.fungi:18",
     "payloadSize": "500kb",
     "nodeCount": 8200,
     "cloneCount": 2,
@@ -732,7 +732,7 @@ Galerina should report when repeated node shape optimisation is used.
   "jsonCompact": {
     "mode": "lazy",
     "trigger": "repeated_node_shapes",
-    "source": "src/imports/customer-import.spore:18",
+    "source": "src/imports/customer-import.fungi:18",
     "payloadSize": "500kb",
     "nodeCount": 8200,
     "repeatedShapes": [
@@ -759,7 +759,7 @@ Galerina should report when compact conversion happens.
   "jsonCompact": {
     "enabled": true,
     "mode": "lazy",
-    "source": "src/webhooks/payment-webhook.spore:18",
+    "source": "src/webhooks/payment-webhook.fungi:18",
     "trigger": "copy_pressure",
     "originalSize": "500kb",
     "estimatedParsedSize": "840kb",
@@ -908,7 +908,7 @@ JSON compact conversion warning:
 Payload converted to compact representation due to repeated node shapes.
 
 Original source:
-  src/imports/customer-import.spore:18:21
+  src/imports/customer-import.fungi:18:21
 ```
 
 ---
@@ -967,7 +967,7 @@ warnings
   "memoryOptimisations": {
     "lazyCompactJson": [
       {
-        "source": "src/webhooks/payment-webhook.spore:18",
+        "source": "src/webhooks/payment-webhook.fungi:18",
         "mode": "lazy",
         "trigger": "repeated_node_shapes",
         "payloadBytes": 512000,

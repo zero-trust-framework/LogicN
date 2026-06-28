@@ -75,10 +75,10 @@ console.log("══ Galerina phase-close cadence ══");
 // ── 1. Core tests (SOT four) ──
 run("tests:core", "node", ["scripts/run-all-tests.cjs", "--core"]);
 
-// ── 1b. Architecture pattern examples — galerina check on all tests/patterns/*.spore ──
+// ── 1b. Architecture pattern examples — galerina check on all tests/patterns/*.fungi ──
 const patternsDir = join(ROOT, "tests", "patterns");
 if (existsSync(patternsDir)) {
-  const patternFiles = readdirSync(patternsDir).filter(f => f.endsWith(".spore"));
+  const patternFiles = readdirSync(patternsDir).filter(f => f.endsWith(".fungi"));
   // Use galerina.mjs (Stage A compiler) — not the legacy galerina-core-cli
   const galerinaMjs = join(ROOT, "galerina.mjs");
   let patternOk = true;
@@ -120,12 +120,12 @@ for (const p of ["galerina-ext-secrets-vault", "galerina-ext-proof-snarkjs"]) {
 // ── 3 + 4. In-process security + naming audit sweep over auth-service ──
 const corpus = join(ROOT, "examples", "auth-service");
 if (existsSync(corpus)) {
-  const sporeFiles = readdirSync(corpus).filter((f) => f.endsWith(".spore"));
+  const fungiFiles = readdirSync(corpus).filter((f) => f.endsWith(".fungi"));
   try {
     const sec = await import(pathToFileURL(join(ROOT, "packages-galerina/galerina-devtools-security/dist/index.js")).href);
     const nam = await import(pathToFileURL(join(ROOT, "packages-galerina/galerina-devtools-naming/dist/index.js")).href);
     let secFindings = 0, secErrors = 0, namFindings = 0;
-    for (const f of sporeFiles) {
+    for (const f of fungiFiles) {
       const src = readFileSync(join(corpus, f), "utf8");
       try {
         const sr = await sec.runSecurityAudit(src, f);
@@ -141,9 +141,9 @@ if (existsSync(corpus)) {
     // Security audit PASS = no critical/taint/profile/governance findings; VALUESTATE = tracked separately.
     const vsFindings = secFindings; // now includes VALUESTATE since checkValueStates wired in
     results.push({ name: "audit:security", ok: secErrors === 0, ms: 0,
-      detail: `${sporeFiles.length} files, ${vsFindings} findings (incl. VALUESTATE), ${secErrors} errors` });
+      detail: `${fungiFiles.length} files, ${vsFindings} findings (incl. VALUESTATE), ${secErrors} errors` });
     results.push({ name: "audit:naming", ok: true, ms: 0,
-      detail: `${sporeFiles.length} files, ${namFindings} naming findings` });
+      detail: `${fungiFiles.length} files, ${namFindings} naming findings` });
   } catch (e) {
     results.push({ name: "audit:devtools", ok: false, ms: 0, detail: `import failed: ${e.message}` });
   }
@@ -235,12 +235,12 @@ try {
       { cwd: ROOT, encoding: "utf8", shell: isWin, timeout: 30000 });
     const diffOut = diffResult.stdout || "";
     let changeClass = "neutral";
-    let diffSummary = "no .spore changes";
+    let diffSummary = "no .fungi changes";
     try {
       const diffData = JSON.parse(diffOut);
       changeClass = diffData.changeClass ?? "neutral";
-      diffSummary = diffData.summary ?? "no .spore changes";
-    } catch { /* parse failure = no .spore changes */ }
+      diffSummary = diffData.summary ?? "no .fungi changes";
+    } catch { /* parse failure = no .fungi changes */ }
     // In local dev cadence: expansion = warning (GitHub Action handles hard blocking)
     const govOk = changeClass !== "experimental"; // experimental = requires arch review
     results.push({

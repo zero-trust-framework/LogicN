@@ -37,9 +37,9 @@ State as of this writing:
 - **Confidentiality (KEM-DEM)** — now a **byte-precise, oracle-backed spec** (`tmf-encryption-v0.md`), promoted
   this session from a design sketch; real KEM/AEAD bytes await a vetted lib.
 - **Availability (Reed-Solomon erasure)** — designed + benched; outside the trust gate, re-verified.
-- **Governance (K3 tri-logic gate)** — proven fail-closed; cloned in real `.spore`, runs on WASM.
+- **Governance (K3 tri-logic gate)** — proven fail-closed; cloned in real `.fungi`, runs on WASM.
 
-Two independent derivations (a byte-precise spec track and a measured-benchmark + runnable-`.spore` track) reached
+Two independent derivations (a byte-precise spec track and a measured-benchmark + runnable-`.fungi` track) reached
 the **same** security core — the strongest validation available here.
 
 ---
@@ -60,7 +60,7 @@ keeping what is real and standards-grounded, and explicitly rejecting what is no
 | Track | Folder | Emphasis | State |
 |---|---|---|---|
 | **`.tmf` spec track** | `tmf\` | Byte-precise **format** + **integrity/authenticity** + reference vectors | spec-complete (real signing Blocked on a vetted lib) |
-| **tri-encryption track** | `tri-encription\` | **Confidentiality** design + **measured benchmark** + **runnable `.spore`** + threat literature | done; 11/11 tests + `galerina check` clean |
+| **tri-encryption track** | `tri-encription\` | **Confidentiality** design + **measured benchmark** + **runnable `.fungi`** + threat literature | done; 11/11 tests + `galerina check` clean |
 
 Both started from the same notes and corrected them the same way. They are **complementary, not contradictory**:
 the spec track produced the byte-exact container + signature/custody that the confidentiality track *refers to*;
@@ -70,11 +70,11 @@ and as of this session the confidentiality design has been **promoted into the s
 spec (`tmf/spec/tmf-encryption-v0.md`), so both tracks now share one oracle-backed format.
 
 Adjacent R&D (referenced, not merged): `FFSM\` (governed `ffsim` quantum-sim bridge, task #199) and
-`photonic-tri-governance\` (the three-valued K3 governance the `.spore` clone exercises).
+`photonic-tri-governance\` (the three-valued K3 governance the `.fungi` clone exercises).
 
 ---
 
-## 3. The one principle everything rests on: crypto-on-core (`SPORE-SUBSTRATE-001`)
+## 3. The one principle everything rests on: crypto-on-core (`FUNGI-SUBSTRATE-001`)
 
 **Cryptography and integrity must run bit-exact on a deterministic digital core.** Analog photonics is
 ~≤10-bit and error-tolerant; hashing/keying/signing need zero-error bit-exactness, so the avalanche/precision
@@ -204,7 +204,7 @@ signed root **without shipping the whole file** (selective disclosure / streamin
 proofs reconstruct the published root; tamper / wrong-leaf fail closed.
 
 ### 5.5 Confidentiality — `tmf-encryption-v0.md` (NEW this session; the v1 layer)
-Promoted from the `SPORE-AMD-024` blueprint into the byte-precise, oracle-backed spec track. **Layered *under* the
+Promoted from the `FUNGI-AMD-024` blueprint into the byte-precise, oracle-backed spec track. **Layered *under* the
 integrity+authenticity gate** — the integrity root is recomputed from the **ciphertext** leaves, the signature
 is verified over it, the K3 verdict must be `ALLOW(+1)`, and only **then** does any key decapsulate. Key design
 decisions, all matched byte-for-byte to the verified `@noble` bench:
@@ -241,10 +241,10 @@ decisions, all matched byte-for-byte to the verified `@noble` bench:
   `bench/oracle-check.mjs` proves the JS (`@noble`) and Python (stdlib) DEM key schedules are **byte-identical**
   (`K_aead 9b4fdce2…`, `key_commit bc8eee3b…`) — the oracle is airtight across both implementations.
 
-### 5.6 Governance — the K3 gate (`tri-encription/spore/k3-gate.spore`)
-The verify-before-decrypt **decision** layer cloned in real `.spore`: `galerina check` → 0 errors/0 warnings, and it
+### 5.6 Governance — the K3 gate (`tri-encription/fungi/k3-gate.fungi`)
+The verify-before-decrypt **decision** layer cloned in real `.fungi`: `galerina check` → 0 errors/0 warnings, and it
 **executes on the compile→WASM path** (`collapse(0)=-1`; `keyRelease(1,1,1)=1`; `(1,1,0)/(0,1,1)/(1,0,1)=-1`
-fail-closed; Kleene min/max/neg; TMR median). **Crypto math is honestly Blocked in `.spore`** — `galerina check`
+fail-closed; Kleene min/max/neg; TMR median). **Crypto math is honestly Blocked in `.fungi`** — `galerina check`
 rejects even bitwise `^` — so the cipher math stays the engine layer. *Galerina governs whether it runs; the host
 lib computes the exact bytes.*
 
@@ -313,29 +313,29 @@ Every one of these from the source notes was triaged out:
 
 ## 9. The 3 Galerina dogfooding gaps — IN FULL
 
-These were found while building and running the `.spore` governance clone (`k3-gate.spore`) against
+These were found while building and running the `.fungi` governance clone (`k3-gate.fungi`) against
 `C:\wwwprojects\Galerina\galerina.mjs` (Phase 27 WASM), reproduced 2026-06-15/16. Source of record:
-[`tri-encription/spore/galerina-gaps-candidate-issues.md`](tri-encription/spore/galerina-gaps-candidate-issues.md).
+[`tri-encription/fungi/galerina-gaps-candidate-issues.md`](tri-encription/fungi/galerina-gaps-candidate-issues.md).
 
 > **Status (re-verified 2026-06-16): GAP-1 ✅ FIXED · GAP-3 ✅ FIXED · GAP-2 ⚠️ PARTIAL · GAP-4 🆕 NEW (major).**
 > GAP-1/GAP-3 fixed in Galerina and re-confirmed against `galerina.mjs`. GAP-2's diagnostic is now clear (documents
 > the invokable surface) but executing an effectful `main` via the CLI is still missing. **GAP-4 (new):** while
-> expanding the `.spore` clone (`spore/k3-policy.spore` — `allOf`/`anyOf` + the `authorizeRead`/`egressRedact` egress
+> expanding the `.fungi` clone (`fungi/k3-policy.fungi` — `allOf`/`anyOf` + the `authorizeRead`/`egressRedact` egress
 > seam, all `--invoke`-verified), a `for … in` fold was found to **type-check clean but silently not compile to
 > WASM** (`(i32.const 0) ;; unhandled stmt: forEachStmt`), returning the first arg verbatim — a silent
 > correctness gap. To file: GAP-2 (functional half) + GAP-4. Full repros: `galerina-gaps-candidate-issues.md`.
 
 ### GAP-1 — `governance` reserved word, no hint — ✅ FIXED (2026-06-16)
-- **Was:** a `pure flow` with a parameter named `governance` → `❌ SPORE-PARSE-001: Expected parameter name, got
+- **Was:** a `pure flow` with a parameter named `governance` → `❌ FUNGI-PARSE-001: Expected parameter name, got
   "governance".` — the diagnostic never said it was reserved, so the cause was opaque.
 - **Fix (verified):** the diagnostic now names the cause — *"…"governance" is a reserved Galerina keyword and
   cannot be used as an identifier. Rename the parameter (e.g. "governance_")."* The opaqueness (the real defect)
   is resolved. `governance` stays reserved **by design** (the chosen fix was the clear diagnostic). Minor
   cosmetic residual: a few follow-on parse errors still print after the primary one (parser error-recovery;
-  not the gap). Re-checked with `probe-gap1-governance.spore`.
+  not the gap). Re-checked with `probe-gap1-governance.fungi`.
 
 ### GAP-2 — `secure flow main` (returning `Result<Void,Error>`, using `console.log`) is absent from the WASM `--invoke` surface
-- **Repro:** `galerina run k3-gate.spore --invoke main` → `Flow 'main' not found. Available: <pure numeric flows>`.
+- **Repro:** `galerina run k3-gate.fungi --invoke main` → `Flow 'main' not found. Available: <pure numeric flows>`.
 - **Impact:** a `console.log`-driven demo/entry `main` cannot be executed via `run --invoke`; only pure,
   numerically-typed flows are invokable. Real results had to come from invoking those pure flows directly.
 - **Fix / clarify:** document the invokable surface, **or** expose `secure` / `console`-effecting flows to `--invoke`.
@@ -344,15 +344,15 @@ These were found while building and running the `.spore` governance clone (`k3-g
 ### GAP-3 — CLI `Bool` args silently mis-marshal (`true`/`false` → `false`) — ✅ FIXED (2026-06-16)
 - **Was:** `--invoke keyRelease true true 1` → `-1` (wrong) because the string `"true"` decoded as `false` — a
   plausible argument **silently produced a fail-closed (wrong) answer** instead of an error.
-- **Fix (verified):** `true`/`false` now marshal correctly to `Bool`. Re-run on the unchanged `k3-gate.spore`:
+- **Fix (verified):** `true`/`false` now marshal correctly to `Bool`. Re-run on the unchanged `k3-gate.fungi`:
   `keyRelease true true 1` → **`1`** (was `-1`); `keyRelease false true 1` → **`-1`** (correct fail-closed);
   `keyRelease 1 1 1` → `1`. No more silent mis-marshal.
 
-### Corroborating (not a new gap): no bitwise operators — the "crypto is Blocked in `.spore`" evidence
-- **Repro:** `spore/probe-no-bitwise.spore` (`return a ^ b`) → `❌ SPORE-PARSE-001: Unexpected character: '^' (U+005E)`.
+### Corroborating (not a new gap): no bitwise operators — the "crypto is Blocked in `.fungi`" evidence
+- **Repro:** `fungi/probe-no-bitwise.fungi` (`return a ^ b`) → `❌ FUNGI-PARSE-001: Unexpected character: '^' (U+005E)`.
 - Galerina's lexer doesn't recognize `^`, so the bit-twiddling that SHA/AES/Reed-Solomon/Keccak are built from
-  **cannot be expressed** in `.spore`. This is **expected/known** (corroborates `galerina-issues/0002` and the
-  "crypto math stays the engine layer; `.spore` governs" split) — listed for completeness, not as a defect.
+  **cannot be expressed** in `.fungi`. This is **expected/known** (corroborates `galerina-issues/0002` and the
+  "crypto math stays the engine layer; `.fungi` governs" split) — listed for completeness, not as a defect.
 
 ---
 
@@ -378,21 +378,21 @@ The owner asked for two paths; mapped honestly onto crypto-on-core:
 ## 11. Roadmap
 
 **Done & verified:** TMX-256 + container + NVFP4 codec + sig/custody (TASK 2 frozen) + inclusion proof (Phase
-1c) + the confidentiality spec (Phase 1d); confidentiality design + bench (11/11) + runnable K3 `.spore`; AEAD
+1c) + the confidentiality spec (Phase 1d); confidentiality design + bench (11/11) + runnable K3 `.fungi`; AEAD
 crypto-profile registry, committing AEAD, SHAKE256 KDF, metadata-routing kill — all ratified and propagated;
 **bench KDF reconciled to SHAKE256 (1e) with JS↔Python byte-identical key schedules** (`bench/oracle-check.mjs`).
 **Phase 3 (Assurance & profiles) DONE:** level-5 tier — `kem_profile` 0x03/0x04 (ML-KEM-1024 / hybrid+P-384)
 + signature {ML-DSA-87, SLH-DSA-256s}, sizes measured (`profile-l5-sizes.mjs`); section round-trip measured
-(`section-roundtrip.mjs`); `.spore` clone expanded (`k3-policy.spore`). **Phase 4 (Storage & query) DESIGN DONE:**
+(`section-roundtrip.mjs`); `.fungi` clone expanded (`k3-policy.fungi`). **Phase 4 (Storage & query) DESIGN DONE:**
 `storage-and-query-v0.md` — mesh-coordinate index + HNSW (measured recall, `hnsw-recall.mjs`) + MeshQL.
 **Phase 5 (rich media/data) DONE:** `tmf-modalities-v0.md` codec registry (image/audio/video/math/chemistry/
 JSON/XML), codec-agnostic integrity proven. **`+1` history chain DONE:** `tmf-history-chain-v0.md` — hash-linked
 signed segments + key-erasure ratchet + crypto-erasure; rollback explicitly needs verifier monotone-epoch state
 (adversarially reviewed: 2 blockers + 3 majors fixed pre-commit). Full suite green: **8 generators**, npm test
-11/11, oracle byte-identical, both `.spore` 0/0.
+11/11, oracle byte-identical, both `.fungi` 0/0.
 
 **Next (R&D folder, no owner go needed):**
-- A fully key-committing (CMT-1) AEAD profile sketch; expand the `.spore` governance clone (`allOf`/`anyOf`,
+- A fully key-committing (CMT-1) AEAD profile sketch; expand the `.fungi` governance clone (`allOf`/`anyOf`,
   `authorizeRead`/egress-redaction seam); end-to-end `.tmf` section round-trip *composition* measurement.
 
 **Gated on owner go (production repo, currently R&D-only):** engine build. Note the language directive has
@@ -447,10 +447,10 @@ behind a reproducible benchmark); digital-ternary NTRU/ML-KEM backend (optimizat
 **tri-encryption track — `C:\wwwprojects\Galerina-R-AND-D\tri-encription\`:**
 - `FINDINGS-AND-ROADMAP.md` (checkpoint)
 - `research\` — `quantum-resilient-tri-encryption.md` · `photonic-sha256-integrity.md` ·
-  `metadata-confidentiality.md` · `SPORE-AMD-024-tmf-confidentiality.md` (the blueprint, now promoted)
+  `metadata-confidentiality.md` · `FUNGI-AMD-024-tmf-confidentiality.md` (the blueprint, now promoted)
 - `bench\` — `bench.mjs`, `tmf-crypto.test.mjs`, `aes-native-vs-purejs.mjs`, `lib\{k3,kemdem,rs,stream,tmx}.mjs`,
   `README.md` (`npm install && npm test && npm run bench`)
-- `spore\` — `k3-gate.spore` · `README.md` · `probe-no-bitwise.spore` · **`galerina-gaps-candidate-issues.md`** (the 3 gaps)
+- `fungi\` — `k3-gate.fungi` · `README.md` · `probe-no-bitwise.fungi` · **`galerina-gaps-candidate-issues.md`** (the 3 gaps)
 
 **Adjacent (not merged):** `FFSM\` (task #199) · `photonic-tri-governance\`.
 
@@ -473,8 +473,8 @@ npm install && npm test && npm run bench
 node oracle-check.mjs        # proves the JS SHAKE256 DEM key schedule == the Python golden vector (byte-identical)
 
 # Governance gate on the real Galerina compile->WASM path:
-#   galerina check  C:\wwwprojects\Galerina-R-AND-D\tri-encription\spore\k3-gate.spore      -> 0 errors / 0 warnings
-#   galerina run    ...\k3-gate.spore --invoke keyRelease 1 1 1                          -> 1   (and (1,1,0)->-1, etc.)
+#   galerina check  C:\wwwprojects\Galerina-R-AND-D\tri-encription\fungi\k3-gate.fungi      -> 0 errors / 0 warnings
+#   galerina run    ...\k3-gate.fungi --invoke keyRelease 1 1 1                          -> 1   (and (1,1,0)->-1, etc.)
 ```
 
 **The single most valuable output** is the frozen TASK 2 spec (`tmf/spec/signature-custody-v0.md`): it makes

@@ -6,7 +6,7 @@ import { parseProgram, checkTypes } from "../dist/index.js";
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function parseAndCheck(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   return checkTypes(parsed.ast);
 }
 
@@ -49,7 +49,7 @@ pure flow test() -> Int {
   return 7 + 5
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for 7 + 5");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for 7 + 5");
   });
 });
 
@@ -72,7 +72,7 @@ pure flow test() -> Int {
   return 100 - 42
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for 100 - 42");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for 100 - 42");
   });
 });
 
@@ -95,7 +95,7 @@ pure flow test() -> Int {
   return 6 * 7
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for 6 * 7");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for 6 * 7");
   });
 });
 
@@ -118,7 +118,7 @@ pure flow test() -> Int {
   return 99 / 3
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for 99 / 3");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for 99 / 3");
   });
 });
 
@@ -141,7 +141,7 @@ pure flow test() -> Int {
   return 13 % 4
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for 13 % 4");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for 13 % 4");
   });
 });
 
@@ -240,7 +240,7 @@ pure flow test() -> Decimal {
     assert.ok(noErrors(result), `Unexpected errors: ${result.diagnostics.map((d) => d.code + ": " + d.message).join("; ")}`);
   });
 
-  it("Decimal '/' REDIRECTS to the method form (SPORE-NUMERIC-OP-001), and the method type-checks clean", () => {
+  it("Decimal '/' REDIRECTS to the method form (FUNGI-NUMERIC-OP-001), and the method type-checks clean", () => {
     // The bare operator was previously type-OK but TRAPPED at runtime (decimal '/' has no dispatch) — the
     // "compiler promises what the runtime can't deliver" class. It is now a compile-reject that redirects to
     // the obligation-carrying method form (explicit rounding + scale; #53/#54).
@@ -252,7 +252,7 @@ pure flow test() -> Decimal {
   return perShare
 }
 `);
-    assert.ok(bad.diagnostics.some((d) => d.code === "SPORE-NUMERIC-OP-001"),
+    assert.ok(bad.diagnostics.some((d) => d.code === "FUNGI-NUMERIC-OP-001"),
       `expected the Decimal '/' redirect, got: ${bad.diagnostics.map((d) => d.code).join(",")}`);
 
     const good = parseAndCheck(`
@@ -279,7 +279,7 @@ pure flow test() -> Float {
   return count
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-002"), "Int should widen to Float without SPORE-TYPE-002");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-002"), "Int should widen to Float without FUNGI-TYPE-002");
   });
 
   it("Int widens to Decimal when assigned to Decimal binding", () => {
@@ -289,7 +289,7 @@ pure flow test() -> Decimal {
   return quantity
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-002"), "Int should widen to Decimal without SPORE-TYPE-002");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-002"), "Int should widen to Decimal without FUNGI-TYPE-002");
   });
 
   it("Int and Float in same arithmetic expression produce no error", () => {
@@ -301,7 +301,7 @@ pure flow test() -> Float {
   return result
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for Int + Float");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for Int + Float");
   });
 
   it("Decimal binding inferred from Decimal literal", () => {
@@ -321,7 +321,7 @@ pure flow test() -> Int {
   return count
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-002"), "Expected SPORE-TYPE-002: Bool is not assignable to Int");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-002"), "Expected FUNGI-TYPE-002: Bool is not assignable to Int");
   });
 
   it("String is not assignable to Float", () => {
@@ -331,7 +331,7 @@ pure flow test() -> Float {
   return rate
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-002"), "Expected SPORE-TYPE-002: String is not assignable to Float");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-002"), "Expected FUNGI-TYPE-002: String is not assignable to Float");
   });
 });
 
@@ -349,10 +349,10 @@ pure flow test() -> String {
   return "ok"
 }
 `);
-    const moneyErrors = diagsWithCode(result, "SPORE-TYPE-004").filter(
+    const moneyErrors = diagsWithCode(result, "FUNGI-TYPE-004").filter(
       (d) => d.message.includes("currency") || d.message.includes("Money"),
     );
-    assert.equal(moneyErrors.length, 0, "Same-currency addition must not produce SPORE-TYPE-004");
+    assert.equal(moneyErrors.length, 0, "Same-currency addition must not produce FUNGI-TYPE-004");
   });
 
   it("Money<GBP> - Money<GBP> produces no type errors", () => {
@@ -364,10 +364,10 @@ pure flow test() -> String {
   return "ok"
 }
 `);
-    const moneyErrors = diagsWithCode(result, "SPORE-TYPE-004").filter(
+    const moneyErrors = diagsWithCode(result, "FUNGI-TYPE-004").filter(
       (d) => d.message.includes("currency") || d.message.includes("Money"),
     );
-    assert.equal(moneyErrors.length, 0, "Same-currency subtraction must not produce SPORE-TYPE-004");
+    assert.equal(moneyErrors.length, 0, "Same-currency subtraction must not produce FUNGI-TYPE-004");
   });
 
   it("Money<USD> + Money<USD> produces no type errors", () => {
@@ -379,15 +379,15 @@ pure flow test() -> String {
   return "ok"
 }
 `);
-    const moneyErrors = diagsWithCode(result, "SPORE-TYPE-004").filter(
+    const moneyErrors = diagsWithCode(result, "FUNGI-TYPE-004").filter(
       (d) => d.message.includes("currency") || d.message.includes("Money"),
     );
-    assert.equal(moneyErrors.length, 0, "USD + USD must not produce SPORE-TYPE-004");
+    assert.equal(moneyErrors.length, 0, "USD + USD must not produce FUNGI-TYPE-004");
   });
 });
 
-describe("Arithmetic — Money cross-currency: SPORE-TYPE-004 rejection", () => {
-  it("Money<GBP> + Money<USD> emits SPORE-TYPE-004", () => {
+describe("Arithmetic — Money cross-currency: FUNGI-TYPE-004 rejection", () => {
+  it("Money<GBP> + Money<USD> emits FUNGI-TYPE-004", () => {
     const result = parseAndCheck(`
 pure flow test() -> String {
   let gbp: Money<GBP> = Money.gbp("100.00")
@@ -396,7 +396,7 @@ pure flow test() -> String {
   return "ok"
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-004"), "Expected SPORE-TYPE-004 for Money<GBP> + Money<USD>");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-004"), "Expected FUNGI-TYPE-004 for Money<GBP> + Money<USD>");
   });
 
   it("Money<GBP> + Money<USD> error message mentions 'currency'", () => {
@@ -408,11 +408,11 @@ pure flow test() -> String {
   return "ok"
 }
 `);
-    const diag = diagsWithCode(result, "SPORE-TYPE-004").find((d) => d.message.includes("currency"));
+    const diag = diagsWithCode(result, "FUNGI-TYPE-004").find((d) => d.message.includes("currency"));
     assert.ok(diag !== undefined, "Expected a currency-related error message");
   });
 
-  it("Money<GBP> - Money<USD> emits SPORE-TYPE-004", () => {
+  it("Money<GBP> - Money<USD> emits FUNGI-TYPE-004", () => {
     const result = parseAndCheck(`
 pure flow test() -> String {
   let gbp: Money<GBP> = Money.gbp("500.00")
@@ -421,10 +421,10 @@ pure flow test() -> String {
   return "ok"
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-004"), "Expected SPORE-TYPE-004 for Money<GBP> - Money<USD>");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-004"), "Expected FUNGI-TYPE-004 for Money<GBP> - Money<USD>");
   });
 
-  it("Money<EUR> + Money<GBP> emits SPORE-TYPE-004", () => {
+  it("Money<EUR> + Money<GBP> emits FUNGI-TYPE-004", () => {
     const result = parseAndCheck(`
 pure flow test() -> String {
   let eur: Money<EUR> = Money.eur("200.00")
@@ -433,10 +433,10 @@ pure flow test() -> String {
   return "ok"
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-004"), "Expected SPORE-TYPE-004 for Money<EUR> + Money<GBP>");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-004"), "Expected FUNGI-TYPE-004 for Money<EUR> + Money<GBP>");
   });
 
-  it("Money<GBP> * Money<GBP> emits SPORE-TYPE-004 (dimensionally invalid)", () => {
+  it("Money<GBP> * Money<GBP> emits FUNGI-TYPE-004 (dimensionally invalid)", () => {
     const result = parseAndCheck(`
 pure flow test() -> String {
   let price: Money<GBP> = Money.gbp("100.00")
@@ -445,10 +445,10 @@ pure flow test() -> String {
   return "ok"
 }
 `);
-    const moneyMulDiag = diagsWithCode(result, "SPORE-TYPE-004").find(
+    const moneyMulDiag = diagsWithCode(result, "FUNGI-TYPE-004").find(
       (d) => d.message.includes("Money") && d.message.includes("*"),
     );
-    assert.ok(moneyMulDiag !== undefined, "Expected SPORE-TYPE-004 for Money * Money");
+    assert.ok(moneyMulDiag !== undefined, "Expected FUNGI-TYPE-004 for Money * Money");
   });
 
   it("Money * Decimal is valid (scaling by rate)", () => {
@@ -460,7 +460,7 @@ pure flow test() -> String {
   return "ok"
 }
 `);
-    const moneyMulError = diagsWithCode(result, "SPORE-TYPE-004").find(
+    const moneyMulError = diagsWithCode(result, "FUNGI-TYPE-004").find(
       (d) => d.message.includes("Money") && d.message.includes("Decimal"),
     );
     assert.equal(moneyMulError, undefined, "Money * Decimal should be valid");
@@ -478,7 +478,7 @@ pure flow negate(x: Int) -> Int {
   return -x
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for -Int");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for -Int");
   });
 
   it("Unary minus on Float literal produces no type errors", () => {
@@ -498,7 +498,7 @@ pure flow test() -> Int {
   return floor
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for -1");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for -1");
   });
 });
 
@@ -513,7 +513,7 @@ pure flow test(a: Int, b: Int) -> Bool {
   return a > b
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for Int > Int");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for Int > Int");
   });
 
   it("Int < Int produces no type errors", () => {
@@ -522,7 +522,7 @@ pure flow test(a: Int, b: Int) -> Bool {
   return a < b
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for Int < Int");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for Int < Int");
   });
 
   it("Int >= Int produces no type errors", () => {
@@ -531,7 +531,7 @@ pure flow test(a: Int, b: Int) -> Bool {
   return a >= b
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for Int >= Int");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for Int >= Int");
   });
 
   it("Int <= Int produces no type errors", () => {
@@ -540,7 +540,7 @@ pure flow test(a: Int, b: Int) -> Bool {
   return a <= b
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for Int <= Int");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for Int <= Int");
   });
 
   it("Int == Int produces no type errors", () => {
@@ -549,7 +549,7 @@ pure flow test(a: Int, b: Int) -> Bool {
   return a == b
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for Int == Int");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for Int == Int");
   });
 
   it("Int != Int produces no type errors", () => {
@@ -558,7 +558,7 @@ pure flow test(a: Int, b: Int) -> Bool {
   return a != b
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for Int != Int");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for Int != Int");
   });
 
   it("Float > Float produces no type errors", () => {
@@ -567,25 +567,25 @@ pure flow test(x: Float, y: Float) -> Bool {
   return x > y
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for Float > Float");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for Float > Float");
   });
 
-  it("Int compared with String emits SPORE-TYPE-004", () => {
+  it("Int compared with String emits FUNGI-TYPE-004", () => {
     const result = parseAndCheck(`
 pure flow test(n: Int) -> Bool {
   return n > "10"
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-004"), "Expected SPORE-TYPE-004 for Int > String");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-004"), "Expected FUNGI-TYPE-004 for Int > String");
   });
 
-  it("Bool + Int emits SPORE-TYPE-004", () => {
+  it("Bool + Int emits FUNGI-TYPE-004", () => {
     const result = parseAndCheck(`
 pure flow test() -> Int {
   return true + 1
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-004"), "Expected SPORE-TYPE-004 for Bool + Int");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-004"), "Expected FUNGI-TYPE-004 for Bool + Int");
   });
 });
 
@@ -697,13 +697,13 @@ pure flow remainder(outstanding: Int, installments: Int) -> Int {
 // 9. Overflow safety: Int bounds (precision narrowing warnings)
 // =============================================================================
 
-// Decision: SPORE-TYPE-017 is QuantizedPrecisionMismatch per formal spec —
+// Decision: FUNGI-TYPE-017 is QuantizedPrecisionMismatch per formal spec —
 // fires when quantized (Int8) tensors mix with Float32 without dequantize().
-// General numeric narrowing (Int → Int8, Float → Float16) is SPORE-TYPE-002
+// General numeric narrowing (Int → Int8, Float → Float16) is FUNGI-TYPE-002
 // territory and does NOT emit TYPE-017. See galerina-phase-11-decisions.md.
 
-describe("Arithmetic — sized Int types: narrowing is handled by SPORE-TYPE-002", () => {
-  it("Int8 = 42 does not emit SPORE-TYPE-017 (narrowing is TYPE-002, not TYPE-017)", () => {
+describe("Arithmetic — sized Int types: narrowing is handled by FUNGI-TYPE-002", () => {
+  it("Int8 = 42 does not emit FUNGI-TYPE-017 (narrowing is TYPE-002, not TYPE-017)", () => {
     const result = parseAndCheck(`
 pure flow test() -> Void {
   let x: Int8 = 42
@@ -711,46 +711,46 @@ pure flow test() -> Void {
 }
 `);
     // TYPE-017 is QuantizedPrecisionMismatch (tensor context only) — not fired for Int narrowing
-    assert.ok(!hasDiag(result, "SPORE-TYPE-017"), "SPORE-TYPE-017 must not fire for plain Int narrowing");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-017"), "FUNGI-TYPE-017 must not fire for plain Int narrowing");
   });
 
-  it("SPORE-TYPE-017 constant has correct spec name QuantizedPrecisionMismatch", async () => {
-    const { SPORE_TYPE_017 } = await import("../dist/index.js");
-    assert.equal(SPORE_TYPE_017.name, "QuantizedPrecisionMismatch");
-    assert.equal(SPORE_TYPE_017.severity, "warning");
+  it("FUNGI-TYPE-017 constant has correct spec name QuantizedPrecisionMismatch", async () => {
+    const { FUNGI_TYPE_017 } = await import("../dist/index.js");
+    assert.equal(FUNGI_TYPE_017.name, "QuantizedPrecisionMismatch");
+    assert.equal(FUNGI_TYPE_017.severity, "warning");
   });
 
-  it("Int16 = 1000 does not emit SPORE-TYPE-017", () => {
+  it("Int16 = 1000 does not emit FUNGI-TYPE-017", () => {
     const result = parseAndCheck(`
 pure flow test() -> Void {
   let x: Int16 = 1000
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-017"), "SPORE-TYPE-017 must not fire for Int16 narrowing");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-017"), "FUNGI-TYPE-017 must not fire for Int16 narrowing");
   });
 
-  it("Int64 = 999 does not emit SPORE-TYPE-017 (Int is smaller, widening to larger is safe)", () => {
+  it("Int64 = 999 does not emit FUNGI-TYPE-017 (Int is smaller, widening to larger is safe)", () => {
     const result = parseAndCheck(`
 pure flow test() -> Void {
   let x: Int64 = 999
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-017"), "Unexpected SPORE-TYPE-017 for Int → Int64 (widening is safe)");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-017"), "Unexpected FUNGI-TYPE-017 for Int → Int64 (widening is safe)");
   });
 
-  it("Int = 42 does not emit SPORE-TYPE-017", () => {
+  it("Int = 42 does not emit FUNGI-TYPE-017", () => {
     const result = parseAndCheck(`
 pure flow test() -> Void {
   let x: Int = 42
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-017"), "Unexpected SPORE-TYPE-017 for Int = 42 (same precision)");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-017"), "Unexpected FUNGI-TYPE-017 for Int = 42 (same precision)");
   });
 
-  it("Float16 = 3.14 does not emit SPORE-TYPE-017 (float narrowing is TYPE-002, not TYPE-017)", () => {
+  it("Float16 = 3.14 does not emit FUNGI-TYPE-017 (float narrowing is TYPE-002, not TYPE-017)", () => {
     const result = parseAndCheck(`
 pure flow test() -> Void {
   let x: Float16 = 3.14
@@ -758,17 +758,17 @@ pure flow test() -> Void {
 }
 `);
     // TYPE-017 is for quantized/float tensor mixing only — not general float narrowing
-    assert.ok(!hasDiag(result, "SPORE-TYPE-017"), "SPORE-TYPE-017 must not fire for Float → Float16 narrowing");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-017"), "FUNGI-TYPE-017 must not fire for Float → Float16 narrowing");
   });
 
-  it("Float64 = 3.14 does not emit SPORE-TYPE-017 (widening is safe)", () => {
+  it("Float64 = 3.14 does not emit FUNGI-TYPE-017 (widening is safe)", () => {
     const result = parseAndCheck(`
 pure flow test() -> Void {
   let x: Float64 = 3.14
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-017"), "Unexpected SPORE-TYPE-017 for Float64 = 3.14");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-017"), "Unexpected FUNGI-TYPE-017 for Float64 = 3.14");
   });
 });
 
@@ -863,40 +863,40 @@ pure flow isZeroRate(rate: Float) -> Bool {
 // =============================================================================
 
 describe("Arithmetic — numeric type mismatch guards", () => {
-  it("String - Int emits SPORE-TYPE-004", () => {
+  it("String - Int emits FUNGI-TYPE-004", () => {
     const result = parseAndCheck(`
 pure flow test() -> Int {
   return "100" - 20
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-004"), "Expected SPORE-TYPE-004 for String - Int");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-004"), "Expected FUNGI-TYPE-004 for String - Int");
   });
 
-  it("String * String emits SPORE-TYPE-004", () => {
+  it("String * String emits FUNGI-TYPE-004", () => {
     const result = parseAndCheck(`
 pure flow test() -> String {
   return "2" * "3"
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-004"), "Expected SPORE-TYPE-004 for String * String");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-004"), "Expected FUNGI-TYPE-004 for String * String");
   });
 
-  it("Bool % Int emits SPORE-TYPE-004", () => {
+  it("Bool % Int emits FUNGI-TYPE-004", () => {
     const result = parseAndCheck(`
 pure flow test() -> Int {
   return false % 2
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-004"), "Expected SPORE-TYPE-004 for Bool % Int");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-004"), "Expected FUNGI-TYPE-004 for Bool % Int");
   });
 
-  it("String > Int emits SPORE-TYPE-004 (cross-type comparison)", () => {
+  it("String > Int emits FUNGI-TYPE-004 (cross-type comparison)", () => {
     const result = parseAndCheck(`
 pure flow test() -> Bool {
   return "100" > 50
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-004"), "Expected SPORE-TYPE-004 for String > Int");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-004"), "Expected FUNGI-TYPE-004 for String > Int");
   });
 
   it("Int + Int + Int chained arithmetic has no type errors", () => {
@@ -907,7 +907,7 @@ pure flow test(a: Int, b: Int, c: Int) -> Int {
   return abc
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-004"), "Unexpected SPORE-TYPE-004 for chained Int arithmetic");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-004"), "Unexpected FUNGI-TYPE-004 for chained Int arithmetic");
   });
 
   it("Decimal arithmetic chained: (a + b) * rate has no type errors", () => {

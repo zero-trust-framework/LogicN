@@ -1,19 +1,19 @@
 # Galerina — Diagnostic Code Taxonomy Audit (2026-06-22)
 
-The `SPORE-EFFECT-002` overload was a **symptom of a systemic disease**, not an isolated bug. This is the full
-audit (task **#213**), commissioned after that finding, of **all 336 `SPORE-*` diagnostic codes across ~90
+The `FUNGI-EFFECT-002` overload was a **symptom of a systemic disease**, not an isolated bug. This is the full
+audit (task **#213**), commissioned after that finding, of **all 336 `FUNGI-*` diagnostic codes across ~90
 families** (7 parallel auditors), with **every flag adversarially re-verified against live source**. A
-companion audit of the **non-`SPORE-*` namespaces** (`ERR_*`, bare `*_VIOLATION`/`*_DENIED`, CBOR tags;
+companion audit of the **non-`FUNGI-*` namespaces** (`ERR_*`, bare `*_VIOLATION`/`*_DENIED`, CBOR tags;
 `wdjnqlw27`) is appended in §6.
 
-**Bottom line (all namespaces audited):** ~30 `SPORE-*` diagnostics + the `ERR_*` runtime family (2 security
+**Bottom line (all namespaces audited):** ~30 `FUNGI-*` diagnostics + the `ERR_*` runtime family (2 security
 HIGHs) are diseased via the same five structural root causes. **The standard/structured namespaces are CLEAN —
 CBOR tags (400-417) and HTTP `KernelErrorCode` — precisely because they each have a single-source-of-truth
 helper.** That contrast IS the prescription: the durable fix is a **registry-conformance CI lint** (proposed
 #215) that gives the diagnostic families the discipline the clean namespaces already have. Without it, every
 future code is a coin-flip.
 
-> Build status: the #201 work is **paused** (uncommitted) pending this audit. The `SPORE-EFFECT-006` split I did
+> Build status: the #201 work is **paused** (uncommitted) pending this audit. The `FUNGI-EFFECT-006` split I did
 > for #201 is **correct and aligns with the policy below** — but it surfaced that `devtools-project-graph`
 > still carries the OLD inverted `EFFECT-002` (finding H2). Remediation is gated on owner direction.
 
@@ -23,13 +23,13 @@ future code is a coin-flip.
 
 | # | Root cause | Why it's dangerous | Worst example |
 |---|---|---|---|
-| **R1** | **One code, multiple distinct/opposite failure modes** (+ mixed severity) | A consumer filtering by code can't tell a typo from a privilege breach; can't triage by severity | `SPORE-SECRET-002` = 3 modes (timing side-channel · network exfiltration · cross-flow), 2 unregistered |
-| **R2** | **One failure mode split across multiple codes** | The rule can't be filtered/gated reliably; the two copies drift | SSRF under both `SPORE-NET-001` and `SPORE-NET-002` |
+| **R1** | **One code, multiple distinct/opposite failure modes** (+ mixed severity) | A consumer filtering by code can't tell a typo from a privilege breach; can't triage by severity | `FUNGI-SECRET-002` = 3 modes (timing side-channel · network exfiltration · cross-flow), 2 unregistered |
+| **R2** | **One failure mode split across multiple codes** | The rule can't be filtered/gated reliably; the two copies drift | SSRF under both `FUNGI-NET-001` and `FUNGI-NET-002` |
 | **R3** | **Duplicate, divergent definitions across packages** | A package redefines another's code with a *different/inverted* meaning while claiming to be canonical | `devtools-project-graph/effect-graph.ts` redefines EFFECT-002/003/004 inverted, header falsely says "canonical to galerina-core-compiler" |
-| **R4** | **Inline emits with no single metadata constant** | name/severity/message live only at the call site → drift; audits can't enumerate; raw `throw new Error("SPORE-…")` | `SPORE-MANIFEST-*` (raw throws), `SPORE-PARSE-*`, `SPORE-RUNTIME-002/003` |
-| **R5** | **Dead / unregistered codes** — defined-never-emitted OR emitted-never-registered | The published code set ≠ what the compiler can produce; **worse: dead codes wired as production-BLOCKING gates = false enforcement** | `SPORE-MEMORY-001..007` are dead **and** listed as production blockers in `production-check.ts` |
+| **R4** | **Inline emits with no single metadata constant** | name/severity/message live only at the call site → drift; audits can't enumerate; raw `throw new Error("FUNGI-…")` | `FUNGI-MANIFEST-*` (raw throws), `FUNGI-PARSE-*`, `FUNGI-RUNTIME-002/003` |
+| **R5** | **Dead / unregistered codes** — defined-never-emitted OR emitted-never-registered | The published code set ≠ what the compiler can produce; **worse: dead codes wired as production-BLOCKING gates = false enforcement** | `FUNGI-MEMORY-001..007` are dead **and** listed as production blockers in `production-check.ts` |
 
-**The single most alarming finding (R5, security):** `production-check.ts` lists `SPORE-MEMORY-001/002/003/007`
+**The single most alarming finding (R5, security):** `production-check.ts` lists `FUNGI-MEMORY-001/002/003/007`
 as **production-blocking gates**, but those codes have **no emitter anywhere** (the borrow/move/bounds checker
 is unimplemented). The gate advertises memory-safety enforcement it does not provide.
 
@@ -43,52 +43,52 @@ importing the canonical constant. This is *why* EFFECT-002 drifted even after th
 
 | Code(s) | Issue | What's wrong | Fix |
 |---|---|---|---|
-| **SPORE-SECRET-002** | R1 (worst) | 3 modes under one code: `SecretComparisonDenied` (timing, error, the only *registered* one) · `SecretSentToNetwork` (egress, error, **unregistered**) · `SecretCrossesFlowBoundary` (cross-flow, warning, **unregistered**) — `value-state-checker.ts:1480/1526/1873` | Split → SECRET-002 (compare) + SECRET-004 (egress) + SECRET-005 (cross-flow); register all in the invariants matrix |
-| **SPORE-PRIVACY-002** | R1 | `EmbeddingEgressDenied` (egress, error) + `EmbeddingCrossesFlowBoundary` (cross-flow, warning) under one code; **not in the matrix at all** — `value-state-checker.ts:1497/1564/1581` | Split → PRIVACY-002 (egress) + PRIVACY-003 (cross-flow); register both |
-| **SPORE-GOV-004** | R1 | 3 modes: `DENIED_TARGET_SELECTED` · `DOMAIN_GUARD_NOT_FOUND` (typo) · `DOMAIN_GUARD_POLICY_VIOLATION` (privilege breach) — `governance-verifier.ts:1406/2559/2592`. A typo and a privilege breach are indistinguishable | Split → GOV-004 + GOV-021 + GOV-022 |
-| **SPORE-MONO-001** | R1 | `EMERGENCY_EXPANDS_CAPABILITY` (error, "critical security violation") + `EMERGENCY_UNKNOWN_ACTION` (warning, typo) — `governance-verifier.ts:2922/2936`. *(The code #201's parse-pin work routes through.)* | Split the typo case → MONO-003 (warning); MONO-001 = expansion only |
-| **SPORE-INV-002** | R1 | "post-condition could not be evaluated" (fail-closed) vs "post-condition proven false" — `interpreter.ts:1097/1103`; no exported constant | Register SPORE_INV_002; split "unevaluable" from "violated" |
-| **SPORE-ASSIMILATE-002** | R1+R4 | 3 modes (budget-not-declared advisory [spec'd, never emitted] · plugin-exceeds-budget · tower-at-capacity), both live ones are raw `throw new Error` — `tower-runtime.ts:70/75` | Split → ASSIMILATE-002/004/005; convert to structured diagnostics |
-| **SPORE-EFFECT-002** | R2+R3 | over-declaration fires as EFFECT-006 (compiler) **and** EFFECT-002 (devtools), while EFFECT-002 means the *opposite* (under-declaration) in the compiler — `effect-graph.ts:56/190` falsely "canonical" | Re-sync `devtools-project-graph/effect-graph.ts` to import the compiler constants |
-| **SPORE-NET-001/002** | R2 | SSRF/private-range block emitted under NET-002 (canonical) **and** NET-001 (`stdlib.ts:1205`); NET-001's real meaning is allowlist-denial | Retag `stdlib.ts:1205` → NET-002 |
-| **SPORE-INTENT-001 / GOV-001** | R2+R5 | identical `name` INTENT_BEHAVIOR_MISMATCH under two codes, **opposite severity** (INTENT-001 error/dead, GOV-001 warning/live) | Retire dead INTENT-001; GOV-001 canonical (or vice-versa); resolve severity |
-| **SPORE-MATCH-001 / SAFETY-006** | R2 | non-exhaustive match split: MATCH-001 (warning, enum) vs SAFETY-006 (error, Tri) | Unify under one MATCH family w/ sub-codes, or document the deliberate split + cross-ref |
-| **SPORE-MANIFEST-\*** | R4+R5 | two disjoint schemes: numbered 001-005 (docs-only, never emitted) vs suffix `DEPTH`/`LENGTH-OVERFLOW`/`DUPLICATE-KEY` (raw throws, unregistered) — `manifest-generator.ts:350-404` | Pick ONE scheme; register; replace raw throws with structured diagnostics |
-| **SPORE-MEMORY-001..007** | R5 (security) | 7 codes defined, **none emitted**; **001/002/003/007 wired as production-BLOCKING gates that can never fire** (`production-check.ts:39-42`) | Implement the checker, OR remove from the production-blocking set + mark RESERVED |
-| **SPORE-GRAPH-002..005** | R3 | defined twice — `flowgraph/diagnostics.ts` (security: DeadFlow/AuthorityEscalation/PiiLeakagePath/MissingAuditCoverage) vs `project-graph/core/types.ts` (generic: NODE_NOT_FOUND/…) | Re-namespace project-graph → `SPORE-PGRAPH-*` |
+| **FUNGI-SECRET-002** | R1 (worst) | 3 modes under one code: `SecretComparisonDenied` (timing, error, the only *registered* one) · `SecretSentToNetwork` (egress, error, **unregistered**) · `SecretCrossesFlowBoundary` (cross-flow, warning, **unregistered**) — `value-state-checker.ts:1480/1526/1873` | Split → SECRET-002 (compare) + SECRET-004 (egress) + SECRET-005 (cross-flow); register all in the invariants matrix |
+| **FUNGI-PRIVACY-002** | R1 | `EmbeddingEgressDenied` (egress, error) + `EmbeddingCrossesFlowBoundary` (cross-flow, warning) under one code; **not in the matrix at all** — `value-state-checker.ts:1497/1564/1581` | Split → PRIVACY-002 (egress) + PRIVACY-003 (cross-flow); register both |
+| **FUNGI-GOV-004** | R1 | 3 modes: `DENIED_TARGET_SELECTED` · `DOMAIN_GUARD_NOT_FOUND` (typo) · `DOMAIN_GUARD_POLICY_VIOLATION` (privilege breach) — `governance-verifier.ts:1406/2559/2592`. A typo and a privilege breach are indistinguishable | Split → GOV-004 + GOV-021 + GOV-022 |
+| **FUNGI-MONO-001** | R1 | `EMERGENCY_EXPANDS_CAPABILITY` (error, "critical security violation") + `EMERGENCY_UNKNOWN_ACTION` (warning, typo) — `governance-verifier.ts:2922/2936`. *(The code #201's parse-pin work routes through.)* | Split the typo case → MONO-003 (warning); MONO-001 = expansion only |
+| **FUNGI-INV-002** | R1 | "post-condition could not be evaluated" (fail-closed) vs "post-condition proven false" — `interpreter.ts:1097/1103`; no exported constant | Register FUNGI_INV_002; split "unevaluable" from "violated" |
+| **FUNGI-ASSIMILATE-002** | R1+R4 | 3 modes (budget-not-declared advisory [spec'd, never emitted] · plugin-exceeds-budget · tower-at-capacity), both live ones are raw `throw new Error` — `tower-runtime.ts:70/75` | Split → ASSIMILATE-002/004/005; convert to structured diagnostics |
+| **FUNGI-EFFECT-002** | R2+R3 | over-declaration fires as EFFECT-006 (compiler) **and** EFFECT-002 (devtools), while EFFECT-002 means the *opposite* (under-declaration) in the compiler — `effect-graph.ts:56/190` falsely "canonical" | Re-sync `devtools-project-graph/effect-graph.ts` to import the compiler constants |
+| **FUNGI-NET-001/002** | R2 | SSRF/private-range block emitted under NET-002 (canonical) **and** NET-001 (`stdlib.ts:1205`); NET-001's real meaning is allowlist-denial | Retag `stdlib.ts:1205` → NET-002 |
+| **FUNGI-INTENT-001 / GOV-001** | R2+R5 | identical `name` INTENT_BEHAVIOR_MISMATCH under two codes, **opposite severity** (INTENT-001 error/dead, GOV-001 warning/live) | Retire dead INTENT-001; GOV-001 canonical (or vice-versa); resolve severity |
+| **FUNGI-MATCH-001 / SAFETY-006** | R2 | non-exhaustive match split: MATCH-001 (warning, enum) vs SAFETY-006 (error, Tri) | Unify under one MATCH family w/ sub-codes, or document the deliberate split + cross-ref |
+| **FUNGI-MANIFEST-\*** | R4+R5 | two disjoint schemes: numbered 001-005 (docs-only, never emitted) vs suffix `DEPTH`/`LENGTH-OVERFLOW`/`DUPLICATE-KEY` (raw throws, unregistered) — `manifest-generator.ts:350-404` | Pick ONE scheme; register; replace raw throws with structured diagnostics |
+| **FUNGI-MEMORY-001..007** | R5 (security) | 7 codes defined, **none emitted**; **001/002/003/007 wired as production-BLOCKING gates that can never fire** (`production-check.ts:39-42`) | Implement the checker, OR remove from the production-blocking set + mark RESERVED |
+| **FUNGI-GRAPH-002..005** | R3 | defined twice — `flowgraph/diagnostics.ts` (security: DeadFlow/AuthorityEscalation/PiiLeakagePath/MissingAuditCoverage) vs `project-graph/core/types.ts` (generic: NODE_NOT_FOUND/…) | Re-namespace project-graph → `FUNGI-PGRAPH-*` |
 
 ---
 
 ## 3. Confirmed MEDIUM findings (correctness/clarity)
 
-`SPORE-EFFECT-001` (error under-declare + warning plain-flow-privileged, mislabeled) → split EFFECT-007 ·
-`SPORE-EFFECT-003` (EFFECT_BOUNDARY_VIOLATION vs devtools UNSAFE_EFFECT_IN_SAFE_FLOW) → import canonical ·
-`SPORE-EFFECT-004` (NON_CANONICAL/UNKNOWN + spec mislabel + devtools TRANSITIVE — 3 meanings) → reconcile ·
-`SPORE-VALUESTATE-006` (ProtectedBoundaryViolation + ProtectedValueAtAuditLog) → split VALUESTATE-008 ·
-`SPORE-GOV-017` (invalid-value error + low-risk-flow warning) → split GOV-023 ·
-`SPORE-ASSUME-002` (no-contract error + claim-not-found warning) → split ASSUME-005 ·
-`SPORE-BINDING-001/002/005` (immutable-reassign split across a dead stub + the live 005) → retire 001/002, keep 005 ·
-`SPORE-RUNTIME-002` (FlowNotFound + UnresolvedCall) · `SPORE-RUNTIME-003` (executePlan-fail + generic-exception) ·
-`SPORE-RUNTIME-006` (fail-closed limit deny + after-the-fact request_time *advisory* — contradicts its own "aborted" message) → split RUNTIME-009 ·
-`SPORE-RUNTIME-EFFECT-GATE` (non-numbered, unregistered) → renumber ·
-`SPORE-CONFIG-GOV-001/002/003` (collides numerically with CONFIG-003; GOV-001/002 are text-embedded, not structured) ·
-`SPORE-IMPORT-004` (local-vs-import + import-vs-import shadowing) ·
-`SPORE-PROFILE-003/004/005/007` (defined, enforcement dead) ·
-`SPORE-COMPUTE-001` (defined, never emitted; README advertises 001-007) ·
-`SPORE-PARSE-001/002/003` (emitted, no metadata constants; PARSE-001 also carries 4 meanings incl. the bitwise-op design-rejection — split → PARSE-010) ·
-`SPORE-INTENT-001..005` (all defined, none emitted) · `SPORE-STRING-001..004 / BLOCK-003/004 / CHAR-001/002/004` (defined, dead) ·
-`SPORE-SYNTAX-003/005` (emitted, unregistered; 004 missing) · `SPORE-TAINT-005` (header-injection code dead; folded into TAINT-001) ·
-`SPORE-MUTATION-001/002` (Stage-B `.spore`-only; no name/severity; `verifyMutationPolicy` defined but never called) ·
-`SEC/EC/ID/AU/OBS-002` (naming/const-export gaps) · `SPORE-FAULT-001/003` (no constants; FAULT-002 gap).
+`FUNGI-EFFECT-001` (error under-declare + warning plain-flow-privileged, mislabeled) → split EFFECT-007 ·
+`FUNGI-EFFECT-003` (EFFECT_BOUNDARY_VIOLATION vs devtools UNSAFE_EFFECT_IN_SAFE_FLOW) → import canonical ·
+`FUNGI-EFFECT-004` (NON_CANONICAL/UNKNOWN + spec mislabel + devtools TRANSITIVE — 3 meanings) → reconcile ·
+`FUNGI-VALUESTATE-006` (ProtectedBoundaryViolation + ProtectedValueAtAuditLog) → split VALUESTATE-008 ·
+`FUNGI-GOV-017` (invalid-value error + low-risk-flow warning) → split GOV-023 ·
+`FUNGI-ASSUME-002` (no-contract error + claim-not-found warning) → split ASSUME-005 ·
+`FUNGI-BINDING-001/002/005` (immutable-reassign split across a dead stub + the live 005) → retire 001/002, keep 005 ·
+`FUNGI-RUNTIME-002` (FlowNotFound + UnresolvedCall) · `FUNGI-RUNTIME-003` (executePlan-fail + generic-exception) ·
+`FUNGI-RUNTIME-006` (fail-closed limit deny + after-the-fact request_time *advisory* — contradicts its own "aborted" message) → split RUNTIME-009 ·
+`FUNGI-RUNTIME-EFFECT-GATE` (non-numbered, unregistered) → renumber ·
+`FUNGI-CONFIG-GOV-001/002/003` (collides numerically with CONFIG-003; GOV-001/002 are text-embedded, not structured) ·
+`FUNGI-IMPORT-004` (local-vs-import + import-vs-import shadowing) ·
+`FUNGI-PROFILE-003/004/005/007` (defined, enforcement dead) ·
+`FUNGI-COMPUTE-001` (defined, never emitted; README advertises 001-007) ·
+`FUNGI-PARSE-001/002/003` (emitted, no metadata constants; PARSE-001 also carries 4 meanings incl. the bitwise-op design-rejection — split → PARSE-010) ·
+`FUNGI-INTENT-001..005` (all defined, none emitted) · `FUNGI-STRING-001..004 / BLOCK-003/004 / CHAR-001/002/004` (defined, dead) ·
+`FUNGI-SYNTAX-003/005` (emitted, unregistered; 004 missing) · `FUNGI-TAINT-005` (header-injection code dead; folded into TAINT-001) ·
+`FUNGI-MUTATION-001/002` (Stage-B `.fungi`-only; no name/severity; `verifyMutationPolicy` defined but never called) ·
+`SEC/EC/ID/AU/OBS-002` (naming/const-export gaps) · `FUNGI-FAULT-001/003` (no constants; FAULT-002 gap).
 
 ## 4. Confirmed LOW findings (hygiene)
 
-`SPORE-ASSUME-001` (two names, one mode) · `SPORE-CAP-001` (NETWORK_WILDCARD_BANNED fires on all wildcards incl. `database.*`) ·
-`SPORE-GOV-008` (registered, empty-stub emit) · `SPORE-SYNTAX-006` (LET_AT_TOP_LEVEL also used for `readonly`) ·
-`SPORE-LEX-004` (FileTooLarge also used for token-count overflow) · `SPORE-RES-001` (defined in 2 places, hand-copied name) ·
-`SPORE-BORDER-004` (VALUE_BELOW_MIN/ABOVE_MAX two names) + BORDER uses bespoke `SECURITY_ALERT` severity vocab ·
-`SPORE-BORDER-005` (spec'd, never emitted) · `SPORE-BACKEND-001` (IO-error now + JS-emitter ambient-authority reserved — latent overload) ·
-`SPORE-WASM-*/WAT-*` (phantom — docs only) · `SPORE-TAINT-002/006` (registered/defined, dead) · `SPORE-BINDING-006` (defined, dead) · `SPORE-IMPORT-000/001` (info unregistered; two I/O modes).
+`FUNGI-ASSUME-001` (two names, one mode) · `FUNGI-CAP-001` (NETWORK_WILDCARD_BANNED fires on all wildcards incl. `database.*`) ·
+`FUNGI-GOV-008` (registered, empty-stub emit) · `FUNGI-SYNTAX-006` (LET_AT_TOP_LEVEL also used for `readonly`) ·
+`FUNGI-LEX-004` (FileTooLarge also used for token-count overflow) · `FUNGI-RES-001` (defined in 2 places, hand-copied name) ·
+`FUNGI-BORDER-004` (VALUE_BELOW_MIN/ABOVE_MAX two names) + BORDER uses bespoke `SECURITY_ALERT` severity vocab ·
+`FUNGI-BORDER-005` (spec'd, never emitted) · `FUNGI-BACKEND-001` (IO-error now + JS-emitter ambient-authority reserved — latent overload) ·
+`FUNGI-WASM-*/WAT-*` (phantom — docs only) · `FUNGI-TAINT-002/006` (registered/defined, dead) · `FUNGI-BINDING-006` (defined, dead) · `FUNGI-IMPORT-000/001` (info unregistered; two I/O modes).
 
 ---
 
@@ -102,7 +102,7 @@ add-a-new-code checklist); the summary:
 1. **One code = one failure mode = one `name` = one severity-policy.** (A dev→prod severity toggle of the
    *same* problem is allowed; two different problems are not.)
 2. **One code = one exported metadata constant** (the single source of truth), **referenced at every emit
-   site.** No inline `code:"SPORE-…"` literals; no raw `throw new Error("SPORE-…")`. Severity/name/message live in
+   site.** No inline `code:"FUNGI-…"` literals; no raw `throw new Error("FUNGI-…")`. Severity/name/message live in
    the constant only.
 3. **No package redefines another package's code.** Consumers `import` the canonical constant from
    `galerina-core-compiler`. (Kills R3.)
@@ -120,7 +120,7 @@ the 30 fixes below will re-rot.
 
 ---
 
-## 6. Non-`SPORE-*` namespaces
+## 6. Non-`FUNGI-*` namespaces
 
 ### 6a. `ERR_*` / `*_VIOLATION` / CBOR tags (companion audit `wdjnqlw27`) — DONE 2026-06-22
 
@@ -141,7 +141,7 @@ the 30 fixes below will re-rot.
   un-coded reason). → promote to structured codes; unify the PQ-key meaning.
 - **`ERR_LIMIT`** (LOW, dead) — unreachable `?? "ERR_LIMIT"` fallback (`ffsim-backend.ts:55`).
 - **`ERR_CAPABILITY_DENIED`** (cross-namespace) — "capability not held" spread across `ERR_CAPABILITY_DENIED`
-  (runtime) / `SPORE-CAPABILITY-001` (devtools) / the confusingly near-named `SPORE-CAP-001` (a *different*
+  (runtime) / `FUNGI-CAPABILITY-001` (devtools) / the confusingly near-named `FUNGI-CAP-001` (a *different*
   network-wildcard concern). → cross-reference runtime+static halves; resolve CAP vs CAPABILITY.
 - **Family-level:** the runtime `ERR_*` set is undocumented vs the only error-code registry
   (`galerina-core/docs/error-codes.md`), which itself defines a **3rd, unused naming scheme**
@@ -149,7 +149,7 @@ the 30 fixes below will re-rot.
 
 **Bare `*_VIOLATION` trap codes — mostly CLEAN ✅.** `CRITICAL_SECURITY_VIOLATION`, `GOVERNANCE_DENIED`,
 `RUNTIME_VIOLATION`, `TPL_INTEGRITY_FAULT`, `INPUT_SIZE_EXCEEDED`, `VAULT_MUTATION_DENIED` each carry one
-meaning. Two minor: `EFFECT_BOUNDARY_VIOLATION` lives as BOTH an `SPORE-EFFECT-003` `name:` AND a bare trap code
+meaning. Two minor: `EFFECT_BOUNDARY_VIOLATION` lives as BOTH an `FUNGI-EFFECT-003` `name:` AND a bare trap code
 (cross-namespace dual-life → prefix the trap form, e.g. `TRAP_…`); `CITIZEN_STANDARD_VIOLATION` is
 string-duplicated in two files (→ shared const).
 
@@ -157,15 +157,15 @@ string-duplicated in two files (→ shared const).
 
 > **Why the split (the lesson):** the **clean** namespaces (CBOR tags, HTTP/`KernelErrorCode`) each have a
 > **single source of truth** — a tag-constant set / the `errorResponse()` helper. The **diseased** namespaces
-> (`SPORE-*`, `ERR_*`) emit inline with per-site names/severities and cross-package redefinitions. The
+> (`FUNGI-*`, `ERR_*`) emit inline with per-site names/severities and cross-package redefinitions. The
 > remediation policy (§5) + the #215 lint simply give the diagnostic families the discipline the clean
 > namespaces already have.
 
 ### 6b. HTTP status codes / `KernelErrorCode` — AUDITED 2026-06-22: HEALTHY ✅ (the exemplar)
-The framework's HTTP-status layer is the **opposite of the disease** — and the shape the `SPORE-*` families
+The framework's HTTP-status layer is the **opposite of the disease** — and the shape the `FUNGI-*` families
 should adopt. `galerina-framework-app-kernel/src/kernel.ts` maps each `KernelErrorCode` (a typed union, :186-195)
 **1:1 to a status through a single `errorResponse(status, code, message)` helper** (:202) — the single source
-of truth the `SPORE-*` families lack. Mapping (fail-closed, standard): 404 `route_not_found` · 405
+of truth the `FUNGI-*` families lack. Mapping (fail-closed, standard): 404 `route_not_found` · 405
 `method_not_allowed` · 413 `payload_too_large` · 415 `unsupported_media_type` · 401 `unauthorized` · 422
 `unprocessable_entity` · 409 `conflict` · 429 `too_many_requests` · 500 `internal_error`. No overload (500
 covering internal faults is correct/standard; 422 for both bad-UTF-8 and bad-JSON is one mode).
@@ -184,7 +184,7 @@ valid text and compiles clean (app-kernel 60/60) — it's a grep artifact (the `
 separators in the section comments), not a real corruption.
 
 **Net:** the HTTP namespace has NONE of the EFFECT-002 disease — it is well-factored (one helper = one source
-of truth). It is the **target shape** for the `SPORE-*` remediation, not a problem to fix.
+of truth). It is the **target shape** for the `FUNGI-*` remediation, not a problem to fix.
 
 ---
 
@@ -224,10 +224,10 @@ Beyond §1-6, a sweep found every other "code-like" namespace. Verdicts:
   diagnostics; out of scope, no action.
 - **CBOR tags** — confirmed COMPLETE: only 403/410/414/415/416/417 exist (all in the audited 400-417 range).
 
-**Coverage statement:** every code/identifier namespace in the repo is now accounted for — `SPORE-*` diagnostics,
+**Coverage statement:** every code/identifier namespace in the repo is now accounted for — `FUNGI-*` diagnostics,
 `ERR_*` runtime errors, trap/`*_VIOLATION` codes, CBOR tags, HTTP/`KernelErrorCode`, diagnostic `name:` labels,
 the severity vocabulary, Prometheus metrics, and report fields. **The disease is confined to the two
-inline-emitted diagnostic families (`SPORE-*`, `ERR_*`) plus the severity-vocab inconsistency; every
+inline-emitted diagnostic families (`FUNGI-*`, `ERR_*`) plus the severity-vocab inconsistency; every
 single-source-of-truth namespace (CBOR, HTTP, metrics) is clean** — which is the whole argument for #215.
 
 ## 8. Stage 1 (#215) — machine baseline + regression guard (BUILT 2026-06-22)
@@ -264,8 +264,8 @@ is missing. Token-staged at owner's "next"; each stage re-runs the scanner so th
 | **A** | V1-V4 + R4/R5 quantified | #215 scanner + code-index + conventions doc | ✅ done |
 | **B** | COMPLETE THE GUARD — name-case (§3), R4 inline-no-const (268), R5 dead/doc-only (462+3), MEMORY-* dead-prod-gate, free-text `ERR_` | scanner **+V5 name-case** (revealed **130** PascalCase names); joint guard = scanner V1-V5 + code-index R4/R5. Residual detections (small, tracked into B): free-text `ERR_` overloads + MEMORY-* gate cross-ref | ✅ done 2026-06-22 |
 | **C** | V3 severity-vocab → **0** | ✅ BORDER `SECURITY_ALERT`→`error` (plugin-schema.ts; core-compiler 3684/0); scanner V3 now **diagnostic-axis-only**; audit-event severity (tower UPPERCASE) + risk-rating recognized as SEPARATE axes (conventions §4) — audit-event lowercase = versioning-sensitive, deferred to Stage I | ✅ done 2026-06-22 |
-| **D** | R3 cross-package dup — `galerina-devtools-project-graph` squatting on namespaces it doesn't own | ✅ project-graph now owns exactly ONE family `SPORE-PGRAPH-*`: EFFECT-001..004→PGRAPH-010..013, GRAPH-001..005→PGRAPH-001..005, **+ BOUNDARY-001..004→PGRAPH-020..023 & CAPABILITY-001→PGRAPH-030** (the latter two caught by the post-edit completeness check — core README/TODO owns the `SPORE-BOUNDARY` series & `capability` is a core concept). One colliding name `UNDECLARED_EFFECT`→`UNDECLARED_EFFECT_IN_GRAPH`. All false "canonical to core" comments fixed. Committed in the **nested** project-graph repo (`576585b`). Scanner **V1 23→17**; tsc+90/90; no external consumers. | ✅ done 2026-06-22 |
-| **D2** | `CONFIG-GOV` sub-scheme (split out of D — it is NOT cross-package R3) | `SPORE-CONFIG-GOV-003` (core-config) collides with parent `SPORE-CONFIG-003` (§2 sub-scheme) and `SPORE-CONFIG-GOV-001/002` (core-compiler `governance-mode.ts`) are emitted **inside message template strings** (R4 inline, no structured code). Fix WITH Stage F (R4): give them structured codes in a clean family (e.g. `GOVMODE-*` or next-free `CONFIG-*`), update the core README/registry. | 🔲 (folds into F) |
+| **D** | R3 cross-package dup — `galerina-devtools-project-graph` squatting on namespaces it doesn't own | ✅ project-graph now owns exactly ONE family `FUNGI-PGRAPH-*`: EFFECT-001..004→PGRAPH-010..013, GRAPH-001..005→PGRAPH-001..005, **+ BOUNDARY-001..004→PGRAPH-020..023 & CAPABILITY-001→PGRAPH-030** (the latter two caught by the post-edit completeness check — core README/TODO owns the `FUNGI-BOUNDARY` series & `capability` is a core concept). One colliding name `UNDECLARED_EFFECT`→`UNDECLARED_EFFECT_IN_GRAPH`. All false "canonical to core" comments fixed. Committed in the **nested** project-graph repo (`576585b`). Scanner **V1 23→17**; tsc+90/90; no external consumers. | ✅ done 2026-06-22 |
+| **D2** | `CONFIG-GOV` sub-scheme (split out of D — it is NOT cross-package R3) | `FUNGI-CONFIG-GOV-003` (core-config) collides with parent `FUNGI-CONFIG-003` (§2 sub-scheme) and `FUNGI-CONFIG-GOV-001/002` (core-compiler `governance-mode.ts`) are emitted **inside message template strings** (R4 inline, no structured code). Fix WITH Stage F (R4): give them structured codes in a clean family (e.g. `GOVMODE-*` or next-free `CONFIG-*`), update the core README/registry. | 🔲 (folds into F) |
 | **E** | P0 security overloads (V1): SECRET-002, PRIVACY-002, GOV-004, MONO-001, GOV-017, INV-002, VALUESTATE-006, ASSIMILATE-002; ERR_BRIDGE_UNATTESTED/DISPATCH_FAULT (structure first, then split) | split each → one-code-one-fault; register constants; tests | 🔲 |
 | **F** | R4 single-source migration (268 inline emits → exported constants) | per family; the biggest mechanical item | 🔲 (sub-staged) |
 | **G** | R5 dead/doc-only (462 phantom + 3 dead) + the MEMORY-* dead production-gate | mark RESERVED / remove; reconcile README ranges; fix the false gate | 🔲 |
@@ -278,13 +278,13 @@ detect→B fix→G · ERR_* overloads→E/I · cross-namespace→I · name-case 
 detect→B fix→G · HTTP-minor→I. Every category from §2-7 + the code-index has a detect-stage AND a fix-stage.
 
 **Detector lesson from Stage D (2026-06-22):** the code-index R3 query (codes with `code:` defs/emits in
->1 package) found EFFECT + GRAPH but **missed** project-graph's `SPORE-BOUNDARY-*`/`SPORE-CAPABILITY-*` squat —
-because the rightful owner (core-compiler) declares the `SPORE-BOUNDARY` series only in its **README/TODO**, not
+>1 package) found EFFECT + GRAPH but **missed** project-graph's `FUNGI-BOUNDARY-*`/`FUNGI-CAPABILITY-*` squat —
+because the rightful owner (core-compiler) declares the `FUNGI-BOUNDARY` series only in its **README/TODO**, not
 yet as `code:` literals in `src`. A grep for the `"canonical to galerina-core-compiler"` comment caught it.
 → **Cross-package ownership must also be checked against README/registry/TODO claims, not just `src` literals.**
 Future scanner hardening (§6 check): flag any code whose family is *documented* as owned by another package.
 
-**#201 WIP parked (2026-06-22):** the paused #201 `effect-checker.ts` change (SPORE-EFFECT-006 strict + the
+**#201 WIP parked (2026-06-22):** the paused #201 `effect-checker.ts` change (FUNGI-EFFECT-006 strict + the
 AI/payment inference-regex) is held in `git stash@{0}` (tagged) so the suite stays green through the taxonomy
 stages. Its design is fully recorded (this doc + ledger #201). **Resume at Stage J** on the clean EFFECT
 family — `git stash pop` (or re-derive from the docs).
@@ -292,4 +292,4 @@ family — `git stash pop` (or re-derive from the docs).
 ## See also
 [galerina-task-ledger.md](galerina-task-ledger.md) §9 (#213) · [galerina-security-invariants-matrix.md](galerina-security-invariants-matrix.md)
 (the registry several findings reference) · [galerina-diagnostics-spec.md](galerina-diagnostics-spec.md) ·
-[galerina-rd-0059-0064-triage-2026-06-22.md](galerina-rd-0059-0064-triage-2026-06-22.md) (#201 / SPORE-EFFECT-006 origin).
+[galerina-rd-0059-0064-triage-2026-06-22.md](galerina-rd-0059-0064-triage-2026-06-22.md) (#201 / FUNGI-EFFECT-006 origin).

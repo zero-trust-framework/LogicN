@@ -41,7 +41,7 @@ import type { GovernanceVerifyResult } from "./governance-verifier.js";
 import type { FlowMeta } from "./parser.js";
 import { resolveCompositeBitmask } from "./capability-types.js";
 
-export const MANIFEST_SCHEMA_VERSION = "spore.manifest.v1";
+export const MANIFEST_SCHEMA_VERSION = "fungi.manifest.v1";
 
 export interface PolicyResolutionDag {
   readonly allowedEffects:  number;  // uint32 bitmask — effects permitted across all flows
@@ -343,11 +343,11 @@ function concatBytes(arrays: Uint8Array[]): Uint8Array {
 const CBOR_MAX_FIELD_SIZE = 4 * 1024 * 1024;
 
 export function decodeCBOR(bytes: Uint8Array, offset = 0, depth = 0): { value: unknown; nextOffset: number } {
-  // ── SPORE-MANIFEST-DEPTH: Billion Laughs protection ─────────────────────────
+  // ── FUNGI-MANIFEST-DEPTH: Billion Laughs protection ─────────────────────────
   // Maximum nesting depth is 8 levels. A depth-9 call fires this guard.
   // Prevents exponential decode expansion via nested arrays/maps.
   if (depth > 8) {
-    throw new Error(`SPORE-MANIFEST-DEPTH: CBOR nesting exceeds 8 levels at depth ${depth} — possible Billion Laughs attack`);
+    throw new Error(`FUNGI-MANIFEST-DEPTH: CBOR nesting exceeds 8 levels at depth ${depth} — possible Billion Laughs attack`);
   }
 
   if (offset >= bytes.length) throw new Error("CBOR: unexpected end of input");
@@ -363,23 +363,23 @@ export function decodeCBOR(bytes: Uint8Array, offset = 0, depth = 0): { value: u
     case 0: return { value: head, nextOffset: offset };                          // unsigned int
     case 1: return { value: -1 - head, nextOffset: offset };                     // negative int
     case 2: {                                                                      // byte string
-      // ── SPORE-MANIFEST-LENGTH-OVERFLOW ──────────────────────────────────────
+      // ── FUNGI-MANIFEST-LENGTH-OVERFLOW ──────────────────────────────────────
       if (head > CBOR_MAX_FIELD_SIZE) {
-        throw new Error(`SPORE-MANIFEST-LENGTH-OVERFLOW: CBOR byte string claims ${head} bytes — exceeds 4MB DWI ceiling`);
+        throw new Error(`FUNGI-MANIFEST-LENGTH-OVERFLOW: CBOR byte string claims ${head} bytes — exceeds 4MB DWI ceiling`);
       }
       const slice = bytes.slice(offset, offset + head);
       return { value: slice, nextOffset: offset + head };
     }
     case 3: {                                                                      // text string
       if (head > CBOR_MAX_FIELD_SIZE) {
-        throw new Error(`SPORE-MANIFEST-LENGTH-OVERFLOW: CBOR text string claims ${head} bytes — exceeds 4MB DWI ceiling`);
+        throw new Error(`FUNGI-MANIFEST-LENGTH-OVERFLOW: CBOR text string claims ${head} bytes — exceeds 4MB DWI ceiling`);
       }
       const slice = bytes.slice(offset, offset + head);
       return { value: new TextDecoder().decode(slice), nextOffset: offset + head };
     }
     case 4: {                                                                      // array
       if (head > CBOR_MAX_FIELD_SIZE) {
-        throw new Error(`SPORE-MANIFEST-LENGTH-OVERFLOW: CBOR array claims ${head} entries — exceeds 4MB DWI ceiling`);
+        throw new Error(`FUNGI-MANIFEST-LENGTH-OVERFLOW: CBOR array claims ${head} entries — exceeds 4MB DWI ceiling`);
       }
       const arr: unknown[] = [];
       for (let i = 0; i < head; i++) {
@@ -390,18 +390,18 @@ export function decodeCBOR(bytes: Uint8Array, offset = 0, depth = 0): { value: u
     }
     case 5: {                                                                      // map
       if (head > CBOR_MAX_FIELD_SIZE) {
-        throw new Error(`SPORE-MANIFEST-LENGTH-OVERFLOW: CBOR map claims ${head} entries — exceeds 4MB DWI ceiling`);
+        throw new Error(`FUNGI-MANIFEST-LENGTH-OVERFLOW: CBOR map claims ${head} entries — exceeds 4MB DWI ceiling`);
       }
       const obj: Record<string, unknown> = {};
       const seenKeys = new Set<string>();
       for (let i = 0; i < head; i++) {
         const { value: k, nextOffset: afterKey } = decodeCBOR(bytes, offset, depth + 1);
         const key = String(k); offset = afterKey;
-        // ── SPORE-MANIFEST-DUPLICATE-KEY ──────────────────────────────────────
+        // ── FUNGI-MANIFEST-DUPLICATE-KEY ──────────────────────────────────────
         // Duplicate keys allow shadow-field attacks: first-key semantics in
         // auditors vs last-key semantics in parsers → hidden permissions.
         if (seenKeys.has(key)) {
-          throw new Error(`SPORE-MANIFEST-DUPLICATE-KEY: CBOR map contains duplicate key '${key}' — possible shadow-field attack`);
+          throw new Error(`FUNGI-MANIFEST-DUPLICATE-KEY: CBOR map contains duplicate key '${key}' — possible shadow-field attack`);
         }
         seenKeys.add(key);
         const { value: v, nextOffset: afterVal } = decodeCBOR(bytes, offset, depth + 1);

@@ -4,21 +4,21 @@
 
 ```
 Phase 7 prerequisite — resolved before 7A implementation begins
-Decision recorded: Phase 6 shipped; formal-type-system-spec.md numbering is canonical for SPORE-TYPE-*
+Decision recorded: Phase 6 shipped; formal-type-system-spec.md numbering is canonical for FUNGI-TYPE-*
 ```
 
 ---
 
 ## The Problem
 
-Two Galerina KB documents historically defined `SPORE-TYPE-*` numbering independently:
+Two Galerina KB documents historically defined `FUNGI-TYPE-*` numbering independently:
 
 | Code | `formal-type-system-spec.md` | `compiler-diagnostics.md` (old) |
 |---|---|---|
-| `SPORE-TYPE-001` | UnknownType | TYPE_MISMATCH |
-| `SPORE-TYPE-002` | TypeMismatch | UNKNOWN_TYPE |
-| `SPORE-TYPE-003` | InvalidNominalConversion | ARITY_MISMATCH |
-| `SPORE-TYPE-009` | InvalidGenericInstantiation | *(not listed)* |
+| `FUNGI-TYPE-001` | UnknownType | TYPE_MISMATCH |
+| `FUNGI-TYPE-002` | TypeMismatch | UNKNOWN_TYPE |
+| `FUNGI-TYPE-003` | InvalidNominalConversion | ARITY_MISMATCH |
+| `FUNGI-TYPE-009` | InvalidGenericInstantiation | *(not listed)* |
 
 This created a conflict with real consequences: the compiler, test fixtures, IDE integrations,
 AI tooling, and governance reports all depend on stable diagnostic identities.
@@ -41,12 +41,12 @@ That cost has no architectural benefit.
 
 | Concern | Canonical owner |
 |---|---|
-| `SPORE-TYPE-*` numeric definitions and semantics | `formal-type-system-spec.md` |
+| `FUNGI-TYPE-*` numeric definitions and semantics | `formal-type-system-spec.md` |
 | Operational summary / compiler presentation | `compiler-diagnostics.md` (defers) |
 | Implementation mapping | compiler source |
 | Test fixtures | implementation-defined |
 
-`compiler-diagnostics.md` must **not** redefine `SPORE-TYPE-*` numbering.
+`compiler-diagnostics.md` must **not** redefine `FUNGI-TYPE-*` numbering.
 It may summarize and reference codes, but the formal type-system spec is the authority.
 
 ---
@@ -67,9 +67,9 @@ Phase 6 is already shipped. Keeping those identifiers avoids unnecessary churn.
 Once external tooling depends on:
 
 ```
-SPORE-TYPE-001
-SPORE-TYPE-004
-SPORE-TYPE-009
+FUNGI-TYPE-001
+FUNGI-TYPE-004
+FUNGI-TYPE-009
 ```
 
 those identifiers are effectively public ABI. Keeping the already-shipped numbering
@@ -123,12 +123,12 @@ This works cleanly only when numbering is centralized in one source.
 Each new series must declare its canonical owner at creation time:
 
 ```
-SPORE-EFFECT-*    → effect-checker-and-boundary-checker.md
-SPORE-MATCH-*     → formal-type-system-spec.md (Section 13)
-SPORE-NAME-*      → formal-type-system-spec.md (Section 13)
-SPORE-VALUESTATE-* → value-state-annotations.md
-SPORE-SECRET-*    → value-state-annotations.md
-SPORE-GRAPH-*     → spore-graph library (separate repo)
+FUNGI-EFFECT-*    → effect-checker-and-boundary-checker.md
+FUNGI-MATCH-*     → formal-type-system-spec.md (Section 13)
+FUNGI-NAME-*      → formal-type-system-spec.md (Section 13)
+FUNGI-VALUESTATE-* → value-state-annotations.md
+FUNGI-SECRET-*    → value-state-annotations.md
+FUNGI-GRAPH-*     → fungi-graph library (separate repo)
 ```
 
 `compiler-diagnostics.md` lists all series with a pointer to each canonical owner.
@@ -138,7 +138,7 @@ It is an index, not a definition source.
 
 ## See Also
 
-- `docs/Knowledge-Bases/formal-type-system-spec.md` — canonical SPORE-TYPE-* definitions
+- `docs/Knowledge-Bases/formal-type-system-spec.md` — canonical FUNGI-TYPE-* definitions
 - `docs/Knowledge-Bases/compiler-diagnostics.md` — operational index of all diagnostic series
-- `docs/Knowledge-Bases/value-state-annotations.md` — SPORE-VALUESTATE-* and SPORE-SECRET-*
-- `docs/Knowledge-Bases/effect-checker-and-boundary-checker.md` — SPORE-EFFECT-*
+- `docs/Knowledge-Bases/value-state-annotations.md` — FUNGI-VALUESTATE-* and FUNGI-SECRET-*
+- `docs/Knowledge-Bases/effect-checker-and-boundary-checker.md` — FUNGI-EFFECT-*

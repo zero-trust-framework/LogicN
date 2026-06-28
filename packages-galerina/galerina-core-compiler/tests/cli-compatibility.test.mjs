@@ -23,8 +23,8 @@ import { tmpdir } from "node:os";
 const __dir = dirname(fileURLToPath(import.meta.url));
 const ROOT   = join(__dir, "../../.."); // monorepo root
 const GALERINA = join(ROOT, "galerina.mjs");
-const BENCH  = join(ROOT, "packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.spore");
-const CLEAN  = join(ROOT, "examples/auth-service/verifyPassword.spore");
+const BENCH  = join(ROOT, "packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.fungi");
+const CLEAN  = join(ROOT, "examples/auth-service/verifyPassword.fungi");
 
 const isWin = process.platform === "win32";
 
@@ -82,7 +82,7 @@ describe("CLI compatibility — --help", () => {
 
 // ── galerina run ────────────────────────────────────────────────────────────────
 describe("CLI compatibility — galerina run", () => {
-  it("galerina run <spore> --invoke main returns correct result (5050)", () => {
+  it("galerina run <fungi> --invoke main returns correct result (5050)", () => {
     const { stdout, code } = galerina("run", BENCH, "--invoke", "main");
     assert.equal(code, 0, `expected exit 0, got ${code}`);
     assert.ok(stdout.trim() === "5050", `expected '5050', got '${stdout.trim()}'`);
@@ -95,7 +95,7 @@ describe("CLI compatibility — galerina run", () => {
   });
 
   it("galerina run on a nonexistent file exits non-zero", () => {
-    const { code } = galerina("run", "nonexistent-file.spore");
+    const { code } = galerina("run", "nonexistent-file.fungi");
     assert.notEqual(code, 0, "should fail on missing file");
   });
 
@@ -124,7 +124,7 @@ describe("CLI compatibility — galerina run", () => {
     // PRODUCTION: the present manifest is unsigned (placeholder) → fail-closed before executing.
     const prod = galerinaEnv({ GALERINA_PROFILE: "production" }, "run", BENCH, "--invoke", "main");
     assert.notEqual(prod.code, 0, "production run must reject an unsigned (placeholder) manifest");
-    assert.ok(prod.stderr.includes("SPORE-MANIFEST-UNSIGNED"), `expected SPORE-MANIFEST-UNSIGNED, got: ${prod.stderr}`);
+    assert.ok(prod.stderr.includes("FUNGI-MANIFEST-UNSIGNED"), `expected FUNGI-MANIFEST-UNSIGNED, got: ${prod.stderr}`);
   });
 
   // #67 happy path: a properly jcs-signed build self-verifies from the AUTHORITATIVE CBOR (no .json read)
@@ -160,8 +160,8 @@ describe("CLI compatibility — galerina run", () => {
     // Typo'd profile → fail-secure to production → the unsigned CBOR is rejected (and a warning is printed).
     const typo = galerinaEnv({ GALERINA_PROFILE: "prod" }, "run", BENCH, "--invoke", "main");
     assert.notEqual(typo.code, 0, "a typo'd profile must fail-secure to production (deny the unsigned run)");
-    assert.ok(typo.stderr.includes("SPORE-MANIFEST-UNSIGNED"), `expected SPORE-MANIFEST-UNSIGNED, got: ${typo.stderr}`);
-    assert.ok(typo.stderr.includes("SPORE-PROFILE-UNRECOGNIZED"), "the unrecognized profile must be surfaced, not silent");
+    assert.ok(typo.stderr.includes("FUNGI-MANIFEST-UNSIGNED"), `expected FUNGI-MANIFEST-UNSIGNED, got: ${typo.stderr}`);
+    assert.ok(typo.stderr.includes("FUNGI-PROFILE-UNRECOGNIZED"), "the unrecognized profile must be surfaced, not silent");
 
     // Explicit recognized dev token → relaxed → the gate is sourceHash-only → run succeeds.
     const dev = galerinaEnv({ GALERINA_PROFILE: "dev" }, "run", BENCH, "--invoke", "main");
@@ -234,7 +234,7 @@ describe("CLI compatibility — galerina deploy", () => {
   // enforces the signature + revocation (closing the fail-open where deploy inherited the ambient dev
   // profile and shipped unsigned). --dev opts into a non-production deploy. Heavy — generous timeout.
   // NB deploy's path guard rejects ':' so the target must be a RELATIVE path.
-  const BENCH_REL = "packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.spore";
+  const BENCH_REL = "packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.fungi";
   function deploy(...args) {
     const r = spawnSync(process.execPath, [GALERINA, "deploy", ...args], { cwd: ROOT, encoding: "utf8", timeout: 120000 });
     return { stdout: r.stdout ?? "", stderr: r.stderr ?? "", code: r.status };
@@ -289,7 +289,7 @@ describe("CLI compatibility — verify signature-required policy", () => {
     // PRODUCTION: an unsigned/placeholder manifest must fail-closed.
     const prod = galerinaEnv({ GALERINA_PROFILE: "production" }, "verify", BENCH);
     assert.notEqual(prod.code, 0, "production verify must reject an unsigned (placeholder) manifest");
-    assert.ok(prod.stderr.includes("SPORE-MANIFEST-UNSIGNED"), `expected SPORE-MANIFEST-UNSIGNED, got: ${prod.stderr}`);
+    assert.ok(prod.stderr.includes("FUNGI-MANIFEST-UNSIGNED"), `expected FUNGI-MANIFEST-UNSIGNED, got: ${prod.stderr}`);
   });
 });
 

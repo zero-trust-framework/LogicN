@@ -15,7 +15,7 @@ Every comparison of cryptographic material was reviewed. There is **no non-const
 | Ed25519 / ML-DSA signature verification (`attestation.ts`, signing path) | signatures | **constant-time** — done inside the vetted crypto lib's `verify`, never a manual byte compare |
 | `attestation.ts:186/296` | `signature === undefined`, `algorithm !== "Ed25519+ML-DSA-65"` | non-secret (null/algorithm checks) |
 | `egress-guard.ts:284` | `username/password !== ""` | non-secret (credentials **presence** check to deny URL-embedded creds) |
-| `cli.ts:633` `hash1 !== hash2` | two GIR hashes of the **same local source** | non-secret (build-determinism self-check, SPORE-BUILD-001) |
+| `cli.ts:633` `hash1 !== hash2` | two GIR hashes of the **same local source** | non-secret (build-determinism self-check, FUNGI-BUILD-001) |
 | `proof-chain.ts:155` | recomputed vs stored proof hashes | non-secret (integrity check over public hashes — the function **returns both values** in its mismatch list anyway) |
 | `proof-graph.ts:648` `signatureHash ===` | two ProofGraph shape hashes | non-secret (dedup/caching optimization, not an auth gate) |
 

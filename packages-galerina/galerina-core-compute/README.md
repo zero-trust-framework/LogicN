@@ -533,22 +533,22 @@ Compatibility must remain explainable.
 
 # Diagnostic Codes
 
-## SPORE-COMPUTE
+## FUNGI-COMPUTE
 
 ```text
-SPORE-COMPUTE-001 through SPORE-COMPUTE-005
+FUNGI-COMPUTE-001 through FUNGI-COMPUTE-005
 ```
 
-## SPORE-WASM
+## FUNGI-WASM
 
 ```text
-SPORE-WASM-001 through SPORE-WASM-005
+FUNGI-WASM-001 through FUNGI-WASM-005
 ```
 
-## SPORE-COMPAT
+## FUNGI-COMPAT
 
 ```text
-SPORE-COMPAT-001 through SPORE-COMPAT-005
+FUNGI-COMPAT-001 through FUNGI-COMPAT-005
 ```
 
 ---

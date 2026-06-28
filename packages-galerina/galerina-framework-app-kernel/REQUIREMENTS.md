@@ -84,7 +84,7 @@ Galerina language
 
 ## Test Requirements
 
-The package should keep a hello-world `.spore` fixture that runs through Galerina core
+The package should keep a hello-world `.fungi` fixture that runs through Galerina core
 Run Mode without compiling:
 
 ```bash

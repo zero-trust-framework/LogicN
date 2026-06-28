@@ -5,7 +5,7 @@
 ```
 Phase:     11A.2 — Implemented
 Scope:     mut reassignment enforcement in flow bodies
-Diagnostic: SPORE-BINDING-005 (IMMUTABLE_BINDING_REASSIGNED)
+Diagnostic: FUNGI-BINDING-005 (IMMUTABLE_BINDING_REASSIGNED)
 Checker:   packages-galerina/galerina-core-compiler/src/type-checker.ts
 See also:  galerina-phase-11-decisions.md (Decision 2), value-state-annotations.md,
            galerina-naming-conventions.md (let vs mut guidance),
@@ -24,21 +24,21 @@ See also:  galerina-phase-11-decisions.md (Decision 2), value-state-annotations.
 
 ```galerina
 let count: Int = 0
-count = 5              // SPORE-BINDING-005: Cannot reassign immutable let binding
+count = 5              // FUNGI-BINDING-005: Cannot reassign immutable let binding
 
 mut total: Int = 0
 total = total + 1      // OK — mut allows reassignment
 
 readonly request: Request
-request = otherRequest // SPORE-BINDING-005: Cannot reassign readonly binding
+request = otherRequest // FUNGI-BINDING-005: Cannot reassign readonly binding
 ```
 
 ---
 
-## Diagnostic: SPORE-BINDING-005
+## Diagnostic: FUNGI-BINDING-005
 
 ```text
-Code:     SPORE-BINDING-005
+Code:     FUNGI-BINDING-005
 Name:     IMMUTABLE_BINDING_REASSIGNED
 Severity: error
 
@@ -55,11 +55,11 @@ Change the declaration to: `mut bindingName: Type = initialValue`
 
 | Code | Name | Description |
 |---|---|---|
-| SPORE-BINDING-001 | BindingReassignment | let/readonly reassigned (validateCoreSyntaxSafety) |
-| SPORE-BINDING-002 | ReadonlyMutation | readonly reassigned |
-| SPORE-BINDING-003 | ReadonlyPropertyMutation | property mutation via readonly ref |
-| SPORE-BINDING-004 | MutInPureContext | mut binding in pure flow |
-| **SPORE-BINDING-005** | **ImmutableBindingReassigned** | **let/readonly = value in flow body** |
+| FUNGI-BINDING-001 | BindingReassignment | let/readonly reassigned (validateCoreSyntaxSafety) |
+| FUNGI-BINDING-002 | ReadonlyMutation | readonly reassigned |
+| FUNGI-BINDING-003 | ReadonlyPropertyMutation | property mutation via readonly ref |
+| FUNGI-BINDING-004 | MutInPureContext | mut binding in pure flow |
+| **FUNGI-BINDING-005** | **ImmutableBindingReassigned** | **let/readonly = value in flow body** |
 
 ---
 
@@ -67,7 +67,7 @@ Change the declaration to: `mut bindingName: Type = initialValue`
 
 ```galerina
 mut count: Int = 0
-count = "five"         // SPORE-TYPE-002: cannot change Int to String (Phase 11A.3)
+count = "five"         // FUNGI-TYPE-002: cannot change Int to String (Phase 11A.3)
 ```
 
 `mut` allows value changes, not type changes. The binding type is fixed at declaration.

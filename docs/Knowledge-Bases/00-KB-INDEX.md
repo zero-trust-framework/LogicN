@@ -30,7 +30,7 @@ Non-`.md` files (YAML, EBNF) are listed separately at the end.
 - galerina-flow-entry-points.md — flow entry points and access control (Phase 11)
 - galerina-grammar.ebnf — EBNF grammar (machine-readable)
 - galerina-language-lessons.md — design decisions informed by other languages
-- galerina-lexer-spore.md — self-hosted lexer in Galerina (Phase 16)
+- galerina-lexer-fungi.md — self-hosted lexer in Galerina (Phase 16)
 - galerina-missing-syntax-keywords.md — parser/AST gaps: critical primitives not yet implemented
 - galerina-naming-conventions.md — flow parameters, bindings, type aliases
 - galerina-no-variables-outside-flows.md — no ordinary variables outside flows (Phase 9B)
@@ -46,7 +46,7 @@ Non-`.md` files (YAML, EBNF) are listed separately at the end.
 - no-exceptions-result-model.md — Result<T,E> invariant; no throw/catch
 - numeric-and-compute-types.md — numeric types, Matrix/Vector/Tensor
 - operator-precedence.md — operator precedence table (Phase 5)
-- operator-type-rules.md — operator type rules: SPORE-TYPE-004, SPORE-TYPE-005
+- operator-type-rules.md — operator type rules: FUNGI-TYPE-004, FUNGI-TYPE-005
 - pattern-matching.md — match value { ... } reference
 - postfix-type-state-syntax.md — postfix governance state syntax
 - release-keyword.md — release: explicit early cleanup of runtime values
@@ -78,7 +78,7 @@ Non-`.md` files (YAML, EBNF) are listed separately at the end.
 - galerina-gir-schema.md — Governed Intermediate Representation schema
 - galerina-gradual-capability-inference.md — gradual capability and effect inference (Phase 13 proposal)
 - galerina-intent-guided-optimisation.md — Intent-Guided Optimisation (IGO), Phase 8+
-- galerina-javascript-escape-hatch.md — SPORE-BACKEND-001: ambient authority in generated JS (Phase 13)
+- galerina-javascript-escape-hatch.md — FUNGI-BACKEND-001: ambient authority in generated JS (Phase 13)
 - galerina-logical-planning-target-emission.md — separate logical planning from target emission (Phase 13)
 - galerina-metadata-erasure.md — metadata erasure (Phase 13)
 - galerina-passive-execution-plans.md — passive execution plans (Phase 13 proposal)
@@ -160,7 +160,7 @@ Non-`.md` files (YAML, EBNF) are listed separately at the end.
 - galerina-compliance-governance.md — compliance governance for regulated industries
 - galerina-concept-audit-proof.md — audit proof concept in the governance pipeline
 - galerina-signed-attestation.md — Ed25519 / post-quantum signed attestation (Phase 10A)
-- galerina-supply-chain-package-governance.md — supply chain attestation, SPORE-SUPPLY-001
+- galerina-supply-chain-package-governance.md — supply chain attestation, FUNGI-SUPPLY-001
 - security-invariants-and-policy-proof.md — security invariants over isolated fixes
 
 ### Governance
@@ -270,7 +270,7 @@ Non-`.md` files (YAML, EBNF) are listed separately at the end.
 - trust-conversion-and-data-safety.md — memory-safe vs trust-safe distinction
 - trust-conversion-model.md — unsafe -> safe: three approved trust operations
 - type-manifest.md — app.type-manifest.json: compiler-generated type contracts
-- unified-syntax-architecture.md — one .spore syntax for all language concerns
+- unified-syntax-architecture.md — one .fungi syntax for all language concerns
 - untrusted-file-asset-processing.md — images/PDFs/archives as untrusted executable-adjacent
 - what-galerina-refuses-to-become.md — explicit anti-goals for the language
 - hello-world-api-pattern.md — canonical beginner example: data/flow/permission/route/report
@@ -295,23 +295,23 @@ Non-`.md` files (YAML, EBNF) are listed separately at the end.
 ### Architecture Specifications (Phase 18–Hybrid WASM, current canonical)
 
 - galerina-architecture-high-roi-ideas.md — 16 high-ROI ideas, status by phase
-- galerina-effect-checker-architecture.md — effect checker arch: EffectCheckerFlags, SPORE-STDLIB-001, bitsets
+- galerina-effect-checker-architecture.md — effect checker arch: EffectCheckerFlags, FUNGI-STDLIB-001, bitsets
 - galerina-explicitness-principles.md — "nothing important hidden" — the core Galerina design principle
 - galerina-gir-emitter-architecture.md — GIR emitter: tensor metadata, WAT emitter, WASM lowering plan
 - galerina-governance-verifier-architecture.md — governance verifier: GovernanceFlags, RuntimeManifest
 - galerina-lexer-optimizations.md — lexer optimisation roadmap (slice scanning, TokenKindId, arena plan)
-- galerina-package-resolver-architecture.md — package resolver: hash/signature/targets/compute/SPORE-PKG-*
+- galerina-package-resolver-architecture.md — package resolver: hash/signature/targets/compute/FUNGI-PKG-*
 - galerina-runtime-interpreter-roadmap.md — runtime improvement roadmap: Lua VM, WASM, JIT, register VM
 - galerina-stdlib-architecture.md — stdlib: STDLIB_CAPABILITY_MAP, pure/effectful split, TRI_STDLIB_OPS
 - galerina-type-checker-architecture.md — type checker: TypeId, EffectFlags, tensor shape checking
-- galerina-value-state-checker-architecture.md — value-state: ValueStateFlags, SINK_REQUIREMENTS, SPORE-GATE-001
+- galerina-value-state-checker-architecture.md — value-state: ValueStateFlags, SINK_REQUIREMENTS, FUNGI-GATE-001
 - galerina-cli-current.md — current CLI spec: all modes including --target wasm-standalone/hybrid
 - galerina-hybrid-wasm-native-architecture-v1.md — **v1.0 canonical** hybrid WASM-native architecture (Snapdragon/NPU vision + governance model, 2026-05-31)
 - galerina-governance-hierarchy.md — **Foundational** Governance First, Economics Second, Performance Third — the inviolable stack, the test for every future proposal
 - galerina-governance-scope.md — **Foundational** Governance for High Consequence Systems (not just PII) — aerospace, defence, space, AI, critical infrastructure
 - galerina-execution-graph-kernel-architecture.md — 8 architectural suggestions: ProofGraph, ControlNode/DataNode, Capability Routing, Execution Signatures, Graph Fingerprints, Governance Fabric
 - galerina-hybrid-wasm-architecture.md — detailed EDA model, WAT assembler decision, crash recovery, 8 native governance rules
-- galerina-security-anti-abuse.md — anti-botnet architecture: process.spawn/worker.spawn/event.schedule effects (✅ Phase R4), network destination policy, SPORE-NET-001/002, rate limit enforcement, DNS rebinding defence, getAntiAbuseReport() devtools (✅ Phase R4)
+- galerina-security-anti-abuse.md — anti-botnet architecture: process.spawn/worker.spawn/event.schedule effects (✅ Phase R4), network destination policy, FUNGI-NET-001/002, rate limit enforcement, DNS rebinding defence, getAntiAbuseReport() devtools (✅ Phase R4)
 
 ---
 

@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — EventDAG
+// fungi-graph — EventDAG
 //
 // Causality DAG built from LogicN RuntimeAuditEvents.
 // Edges connect events via traceId / spanId / parentSpanId relationships.
@@ -40,7 +40,7 @@ export type RuntimeAuditStatus =
  * Structurally compatible with the full RuntimeAuditEvent in galerina-core-reports.
  */
 export interface RuntimeAuditEvent {
-  readonly schemaVersion: "spore.runtime.audit.v1";
+  readonly schemaVersion: "fungi.runtime.audit.v1";
   readonly eventId: string;
   readonly timestamp: string;
   readonly category: RuntimeAuditCategory;

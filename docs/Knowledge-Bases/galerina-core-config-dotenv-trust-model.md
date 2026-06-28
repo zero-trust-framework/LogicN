@@ -181,7 +181,7 @@ for production deployments.
 ### Warning — .env in production (default)
 
 ```text
-SPORE-CONFIG-WARN-001
+FUNGI-CONFIG-WARN-001
 Production environment is using .env as a secret source.
 Managed secret store recommended.
 Use: from vault "..." for production secrets.
@@ -190,7 +190,7 @@ Use: from vault "..." for production secrets.
 ### Error — .env in production (strict mode)
 
 ```text
-SPORE-CONFIG-WARN-002
+FUNGI-CONFIG-WARN-002
 .env secrets are forbidden in this environment.
 EnvironmentPolicy.allowDotEnvFiles is false.
 Move all secrets to a managed vault or KMS provider.
@@ -199,7 +199,7 @@ Move all secrets to a managed vault or KMS provider.
 ### Warning — development_only secret in production scope
 
 ```text
-SPORE-SECRET-003
+FUNGI-SECRET-003
 Secret STRIPE_API_KEY is declared trust development_only
 but is referenced in a production execution path.
 ```

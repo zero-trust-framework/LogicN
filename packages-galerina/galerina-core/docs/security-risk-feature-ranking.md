@@ -110,7 +110,7 @@ AI-readable guide output
 
 | Feature                         | Risk | Main risk                              | Galerina default                              | Required checks / failsafes                         |
 | ------------------------------- | ---: | -------------------------------------- | --------------------------------------- | --------------------------------------------------- |
-| Readable `.spore` syntax           | 0    | Ambiguous syntax can hide intent       | Core                                    | Stable grammar, formatter, parser diagnostics       |
+| Readable `.fungi` syntax           | 0    | Ambiguous syntax can hide intent       | Core                                    | Stable grammar, formatter, parser diagnostics       |
 | AI-readable structure           | 0    | AI may misunderstand implicit behaviour | Core                                    | Explicit effects, source maps, generated summaries  |
 | Strict static types             | 0    | Type confusion                         | Core                                    | No implicit narrowing or unsafe coercion            |
 | `Bool`                          | 1    | Incorrect branch condition             | Core                                    | Only `Bool` controls normal `if`                    |
@@ -183,7 +183,7 @@ Resource:
   uploadStream
 
 Source:
-  src/uploads/process.spore:18:5
+  src/uploads/process.fungi:18:5
 
 Suggested fix:
   keep the stream inside a resource scope or return Bytes/Result instead.
@@ -343,7 +343,7 @@ Example report fields:
   "feature": "native_bindings",
   "risk": 4,
   "status": "denied_by_default",
-  "source": "boot.spore:22",
+  "source": "boot.fungi:22",
   "reason": "Native bindings can bypass Galerina memory safety.",
   "required_policy": "trusted package, ownership report, platform report"
 }

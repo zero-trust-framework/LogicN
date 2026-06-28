@@ -4,7 +4,7 @@
  * R&D verdict 0031 isolated the one genuine gap: a bare flow param (e.g. a real HTTP payload) is
  * trusted-by-default, so `flow verifyPassword(data: RequestPayload)` using `data.password` at a
  * governed sink gets ZERO taint diagnostics (Phase-34 Finding 6). 34A adds an opt-in `tainted`
- * qualifier that marks the param `unsafe`, reusing the shipped SPORE-VALUESTATE-003/004/005 sink
+ * qualifier that marks the param `unsafe`, reusing the shipped FUNGI-VALUESTATE-003/004/005 sink
  * guards (no new diagnostic codes). Bare params are unchanged (non-breaking); the breaking
  * route-handler auto-taint (34B) is a separate, strict-profile-gated follow-up.
  *
@@ -15,20 +15,20 @@ import assert from "node:assert/strict";
 import { parseProgram, checkValueStates } from "../dist/index.js";
 
 function vsCodes(src) {
-  const pr = parseProgram(src, "t.spore");
+  const pr = parseProgram(src, "t.fungi");
   const parseErrs = pr.diagnostics.filter((d) => d.severity === "error");
   assert.equal(parseErrs.length, 0, "unexpected parse errors: " + parseErrs.map((d) => `${d.code} ${d.message}`).join("; "));
   const res = checkValueStates(pr.ast);
   return [...new Set((res.diagnostics ?? []).map((d) => d.code))].sort();
 }
 
-const isRefusal = (codes) => codes.some((c) => /SPORE-VALUESTATE-00[345]/.test(c));
+const isRefusal = (codes) => codes.some((c) => /FUNGI-VALUESTATE-00[345]/.test(c));
 
 describe("34A: `tainted` param qualifier closes the param-trusted-by-default fail-OPEN (0031)", () => {
   const BARE = `flow verifyPassword(data: RequestPayload) -> Bool {\n  let pw = data.password\n  database.write(pw)\n}`;
   const TAINTED = `flow verifyPassword(tainted data: RequestPayload) -> Bool {\n  let pw = data.password\n  database.write(pw)\n}`;
 
-  it("a `tainted` param reaching a governed sink is REFUSED at build time (SPORE-VALUESTATE-003/004/005)", () => {
+  it("a `tainted` param reaching a governed sink is REFUSED at build time (FUNGI-VALUESTATE-003/004/005)", () => {
     const codes = vsCodes(TAINTED);
     assert.ok(isRefusal(codes), `expected a value-state refusal for the tainted param, got [${codes}]`);
   });
@@ -47,8 +47,8 @@ describe("34A: `tainted` param qualifier closes the param-trusted-by-default fai
     assert.ok(isRefusal(codes), `readonly+tainted must still taint the param, got [${codes}]`);
   });
 
-  it("a tainted arg crossing into another flow is refused (SPORE-VALUESTATE-004 — inter-flow handoff)", () => {
+  it("a tainted arg crossing into another flow is refused (FUNGI-VALUESTATE-004 — inter-flow handoff)", () => {
     const codes = vsCodes(`flow sink(x: String) -> Bool {\n  database.write(x)\n}\nflow ingest(tainted req: String) -> Bool {\n  sink(req)\n}`);
-    assert.ok(codes.includes("SPORE-VALUESTATE-004") || isRefusal(codes), `tainted param crossing a flow boundary must be refused, got [${codes}]`);
+    assert.ok(codes.includes("FUNGI-VALUESTATE-004") || isRefusal(codes), `tainted param crossing a flow boundary must be refused, got [${codes}]`);
   });
 });

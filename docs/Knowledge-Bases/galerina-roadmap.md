@@ -8,7 +8,7 @@ This is the single forward-looking view. Where it disagrees with older roadmap t
 
 ## 0. Honest status line (lead with this)
 - **Production-hardened:** the Stage A compiler/runtime, governance pipeline, CBOR manifests, Ed25519+ML-DSA signing, the Governed Inference Tower (CF-3/CF-7 attestation, P9 certified mode, V_DPM capability gate, numeric policy table), 6 Sentinels, and the #105 WASM admission gate.
-- **P9 byte-parity ACHIEVED (#143, 2026-06-06):** the self-hosted **`lexer.spore` `tokenize` produces a byte-for-byte identical token stream in the Stage-A interpreter AND in real WASM** through the #105 admission gate (12-input corpus; `tests/wat-p9-tokenize-parity.test.mjs`). 3,295/3,295 compiler tests green. Remaining for full self-hosting: parser/type-checker/governance-verifier WASM parity (they execute in Stage-A today).
+- **P9 byte-parity ACHIEVED (#143, 2026-06-06):** the self-hosted **`lexer.fungi` `tokenize` produces a byte-for-byte identical token stream in the Stage-A interpreter AND in real WASM** through the #105 admission gate (12-input corpus; `tests/wat-p9-tokenize-parity.test.mjs`). 3,295/3,295 compiler tests green. Remaining for full self-hosting: parser/type-checker/governance-verifier WASM parity (they execute in Stage-A today).
 - **Templates, NOT implemented:** the framework/app/api-server/app-kernel packages. Present Galerina as a hardened **compiler/runtime engine**, not a finished app platform.
 - **Open critical:** the committed signing key remains in git *history* until scrubbed (#149).
 
@@ -47,7 +47,7 @@ Full register: `docs/Knowledge-Bases/galerina-residual-risks.md`.
 ## 3. POST-P9 — real DSS.wasm (DRCM Phase 4 completion)
 | Task | What |
 |---|---|
-| #102 | `dss/index.spore` → `build/dss.wasm` via Stage B |
+| #102 | `dss/index.fungi` → `build/dss.wasm` via Stage B |
 | #103 | Wasmtime component supervises DWI guests |
 | #104 | real per-DWI fuel injection |
 | #105* | `galerina run` on the real DSS component (the harness core exists) |

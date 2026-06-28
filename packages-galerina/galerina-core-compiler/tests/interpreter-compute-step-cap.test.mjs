@@ -27,7 +27,7 @@ const NESTED = `pure flow nested(n: Int) -> Int contract { effects {} } {
 }`;
 
 const run = (maxSteps, n = 20) => {
-  const p = parseProgram(NESTED, "nested.spore");
+  const p = parseProgram(NESTED, "nested.fungi");
   return executeFlow("nested", new Map([["n", { __tag: "int", value: n }]]), p.ast, p.flows,
     undefined, undefined, { maxSteps }, undefined, undefined);
 };
@@ -63,7 +63,7 @@ describe("interpreter global compute-step cap: SHARED across the call tree + cle
   return 1 + rec(n - 1)
 }`;
   const runRec = (maxSteps, n = 50) => {
-    const p = parseProgram(REC, "rec.spore");
+    const p = parseProgram(REC, "rec.fungi");
     return executeFlow("rec", new Map([["n", { __tag: "int", value: n }]]), p.ast, p.flows,
       undefined, undefined, { maxSteps }, undefined, undefined);
   };

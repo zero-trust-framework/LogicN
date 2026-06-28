@@ -2,7 +2,7 @@
  * Phases 42-51 — Service Integration Tests
  *
  * Tests all governed services from Phase 42 (capability host) through
- * Phase 51 (manifest verification / v1.0 RC). Each service is a .spore file
+ * Phase 51 (manifest verification / v1.0 RC). Each service is a .fungi file
  * that executes as a live HTTP endpoint.
  */
 
@@ -23,10 +23,10 @@ function loadService(filename) {
 
 // ── Phase 42: Capability Host ───────────────────────────────────────────────
 
-describe("Phase 42: capabilityHostService.spore", () => {
+describe("Phase 42: capabilityHostService.fungi", () => {
   let server;
   const PORT = 3930;
-  before(async () => { server = await startServer(loadService("capabilityHostService.spore").ast, loadService("capabilityHostService.spore").flows, { port: PORT }); });
+  before(async () => { server = await startServer(loadService("capabilityHostService.fungi").ast, loadService("capabilityHostService.fungi").flows, { port: PORT }); });
   after(async () => server?.close());
   const post = async (body) => { const r = await fetch(`http://127.0.0.1:${PORT}/capability/check`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}); return {status:r.status,json:JSON.parse(await r.text())}; };
 
@@ -54,10 +54,10 @@ describe("Phase 42: capabilityHostService.spore", () => {
 
 // ── Phase 47: Routing Policy ─────────────────────────────────────────────────
 
-describe("Phase 47: routingPolicyService.spore", () => {
+describe("Phase 47: routingPolicyService.fungi", () => {
   let server;
   const PORT = 3931;
-  const prog = loadService("routingPolicyService.spore");
+  const prog = loadService("routingPolicyService.fungi");
   before(async () => { server = await startServer(prog.ast, prog.flows, { port: PORT }); });
   after(async () => server?.close());
   const post = async (body) => { const r = await fetch(`http://127.0.0.1:${PORT}/routing/resolve`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}); return JSON.parse(await r.text()); };
@@ -83,10 +83,10 @@ describe("Phase 47: routingPolicyService.spore", () => {
 
 // ── Phase 48: Economics ───────────────────────────────────────────────────────
 
-describe("Phase 48: economicsService.spore", () => {
+describe("Phase 48: economicsService.fungi", () => {
   let server;
   const PORT = 3932;
-  const prog = loadService("economicsService.spore");
+  const prog = loadService("economicsService.fungi");
   before(async () => { server = await startServer(prog.ast, prog.flows, { port: PORT }); });
   after(async () => server?.close());
   const post = async (body) => { const r = await fetch(`http://127.0.0.1:${PORT}/economics/estimate`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}); return JSON.parse(await r.text()); };
@@ -107,10 +107,10 @@ describe("Phase 48: economicsService.spore", () => {
 
 // ── Phase 49: Value Classification ───────────────────────────────────────────
 
-describe("Phase 49: valueClassificationService.spore", () => {
+describe("Phase 49: valueClassificationService.fungi", () => {
   let server;
   const PORT = 3933;
-  const prog = loadService("valueClassificationService.spore");
+  const prog = loadService("valueClassificationService.fungi");
   before(async () => { server = await startServer(prog.ast, prog.flows, { port: PORT }); });
   after(async () => server?.close());
   const post = async (body) => { const r = await fetch(`http://127.0.0.1:${PORT}/value/classify`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}); return JSON.parse(await r.text()); };
@@ -131,10 +131,10 @@ describe("Phase 49: valueClassificationService.spore", () => {
 
 // ── Phase 50: Runtime Profile ─────────────────────────────────────────────────
 
-describe("Phase 50: runtimeProfileService.spore", () => {
+describe("Phase 50: runtimeProfileService.fungi", () => {
   let server;
   const PORT = 3934;
-  const prog = loadService("runtimeProfileService.spore");
+  const prog = loadService("runtimeProfileService.fungi");
   before(async () => { server = await startServer(prog.ast, prog.flows, { port: PORT }); });
   after(async () => server?.close());
   const post = async (body) => { const r = await fetch(`http://127.0.0.1:${PORT}/profile/check`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}); return JSON.parse(await r.text()); };
@@ -162,16 +162,16 @@ describe("Phase 50: runtimeProfileService.spore", () => {
 
 // ── Phase 51: Manifest Verification (v1.0 RC) ────────────────────────────────
 
-describe("Phase 51: manifestVerificationService.spore", () => {
+describe("Phase 51: manifestVerificationService.fungi", () => {
   let server;
   const PORT = 3935;
-  const prog = loadService("manifestVerificationService.spore");
+  const prog = loadService("manifestVerificationService.fungi");
   before(async () => { server = await startServer(prog.ast, prog.flows, { port: PORT }); });
   after(async () => server?.close());
   const post = async (body) => { const r = await fetch(`http://127.0.0.1:${PORT}/manifest/verify`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}); return JSON.parse(await r.text()); };
 
   it("valid signed manifest with flags → accepted, trustLevel=4", async () => {
-    const r = await post({ schemaVersion: "spore.runtime.v1", verified: true, hasSignature: true, governanceFlagsMask: 7 });
+    const r = await post({ schemaVersion: "fungi.runtime.v1", verified: true, hasSignature: true, governanceFlagsMask: 7 });
     assert.equal(r.versionValid, true);
     assert.equal(r.flagsValid, true);
     assert.equal(r.trustLevel, 4);
@@ -179,25 +179,25 @@ describe("Phase 51: manifestVerificationService.spore", () => {
   });
 
   it("valid unsigned manifest → trustLevel=3, accepted", async () => {
-    const r = await post({ schemaVersion: "spore.runtime.v1", verified: true, hasSignature: false, governanceFlagsMask: 3 });
+    const r = await post({ schemaVersion: "fungi.runtime.v1", verified: true, hasSignature: false, governanceFlagsMask: 3 });
     assert.equal(r.trustLevel, 3);
     assert.equal(r.accepted, true);
   });
 
   it("unverified manifest → trustLevel=0, rejected", async () => {
-    const r = await post({ schemaVersion: "spore.runtime.v1", verified: false, hasSignature: false, governanceFlagsMask: 0 });
+    const r = await post({ schemaVersion: "fungi.runtime.v1", verified: false, hasSignature: false, governanceFlagsMask: 0 });
     assert.equal(r.trustLevel, 0);
     assert.equal(r.accepted, false);
   });
 
-  it("all .spore service files from Phase 42-51 parse with zero errors", () => {
+  it("all .fungi service files from Phase 42-51 parse with zero errors", () => {
     const services = [
-      "capabilityHostService.spore",
-      "routingPolicyService.spore",
-      "economicsService.spore",
-      "valueClassificationService.spore",
-      "runtimeProfileService.spore",
-      "manifestVerificationService.spore",
+      "capabilityHostService.fungi",
+      "routingPolicyService.fungi",
+      "economicsService.fungi",
+      "valueClassificationService.fungi",
+      "runtimeProfileService.fungi",
+      "manifestVerificationService.fungi",
     ];
     for (const svc of services) {
       const p = loadService(svc);

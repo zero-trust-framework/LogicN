@@ -119,12 +119,12 @@ Zero-trust: the OS/host is treated as potentially compromised.
 |---|---|---|---|
 | 1 | Is the logic treated as a **border** (inbound AND outbound)? | outbound ✅ / inbound ❌ | Both directions hardened; the listener is a governed boundary, not a bare server. |
 | 2 | Are there **declared** details of what info IS / ISN'T provided? | ❌ (allowlist is TS code) | A **declared egress schema / data-dictionary** in a `contract`, not hand-coded TS. |
-| 3 | Is the API written in **`.spore`** (governed), not TS? | ❌ (TS) | `.spore` governed flow. **CORRECTION 2026-06-20: NOT blocked on #145** — type-aware String semantics (`+`→`__str_concat`, `Char.toString`) is SHIPPED (verified: `wat-p9-tokenize-parity` 21/21, `wat-emitter.ts:881`). So Prometheus string-building compiles to WASM today. The real open question is **HTTP-I/O as a governed flow** (host socket via the `network.inbound` capability — the fuse demo already uses it), not strings. |
+| 3 | Is the API written in **`.fungi`** (governed), not TS? | ❌ (TS) | `.fungi` governed flow. **CORRECTION 2026-06-20: NOT blocked on #145** — type-aware String semantics (`+`→`__str_concat`, `Char.toString`) is SHIPPED (verified: `wat-p9-tokenize-parity` 21/21, `wat-emitter.ts:881`). So Prometheus string-building compiles to WASM today. The real open question is **HTTP-I/O as a governed flow** (host socket via the `network.inbound` capability — the fuse demo already uses it), not strings. |
 | 4 | `/src` + build → a **fusable signed `.wasm`** so apps can require it? | ❌ (TS `/src`, JS `/dist`, no wasm) | `galerina build --package` → signed `.wasm` + `.lmanifest`, **fusable via the 0052 multi-module system** (`network.inbound` cap, deny-by-default). |
 | 5 | `secure flow` border? | ❌ | Request handler = a `secure flow`. |
 | 6 | `contract {}`? | ❌ | Declared `effects` (`network.inbound`), `intent`, `limits {}`, egress schema (#2). |
-| 7 | Appropriate **comments**? | TS only ❌ | Galerina three-tier: `//` human · `//spore:` generated · `;;` govComment. |
-| 8 | **`unsafe`** for the border variable? | ❌ | Inbound `url`/`method`/headers = untrusted boundary data → `unsafe`, flow-owned (`SPORE-SYNTAX-008`). |
+| 7 | Appropriate **comments**? | TS only ❌ | Galerina three-tier: `//` human · `//fungi:` generated · `;;` govComment. |
+| 8 | **`unsafe`** for the border variable? | ❌ | Inbound `url`/`method`/headers = untrusted boundary data → `unsafe`, flow-owned (`FUNGI-SYNTAX-008`). |
 | 9 | **Timeout, rate-limit, sanitise incoming** (best practice)? | only 405/404/500 ❌ | Request timeout, rate-limit, request/header **size caps**, slowloris guard, inbound sanitisation. |
 | 10 | Run **under the App Kernel**? | ❌ (bare `node:http`) | Host it on the kernel's fixed fail-closed gate pipeline + `route-defaults` `limits{}` (`timeoutMs`/`rate`/`maxConcurrent`/`memoryBytes`) so it inherits them. |
 | 11 | **Auth / mTLS** on `/metrics`? | ❌ | **OWNER DECISION needed** — mTLS/bearer on the metrics port, or rely on K8s network-policy isolation. |
@@ -132,13 +132,13 @@ Zero-trust: the OS/host is treated as potentially compromised.
 
 **Why Slice 1 skipped these (honest):** R&D 0050 scoped it sidecar-first/TS; the egress fence was the priority. The
 inbound-hardening omission (9/10) has **no** excuse and is the do-now fix. **Buildable now:** items 1/9/10/12 (inbound
-hardening + run-under-kernel + posture). **The `.spore` rewrite (3/4/5/6) is NOT blocked on #145** (strings are shipped —
+hardening + run-under-kernel + posture). **The `.fungi` rewrite (3/4/5/6) is NOT blocked on #145** (strings are shipped —
 correction above); its real open piece is expressing the **HTTP-I/O border as a governed `secure flow`** with a
 `network.inbound` capability (conceptually unblocked — the fuse demo uses `network.inbound` — but non-trivial: the host
 must provide the socket + scrape-request bridge). Item 11 is an owner decision.
 
 ## Forward line
-The structure-not-data egress rule IS the crypto-on-core fence (`SPORE-SUBSTRATE-001`) projected onto the wire; the
+The structure-not-data egress rule IS the crypto-on-core fence (`FUNGI-SUBSTRATE-001`) projected onto the wire; the
 K3-INDETERMINATE counter is governance-as-T-MAC made observable — the blind seam a future photonic T-MAC offload would be
 observed through. Pairs with [[feedback-owner-gated-means-ask]], [[galerina-social-ecosystem-cloud-native]],
 [[galerina-wasm-compilation-granularity]], [[galerina-rd-corpus-closure-2026-06-18]].

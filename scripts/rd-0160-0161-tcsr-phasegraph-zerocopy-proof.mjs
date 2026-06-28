@@ -6,7 +6,7 @@
 //
 //   RD-0160 "Next-gen graph"  = T-CSR memory bound + hyperbolic embedding + 64-bit phase hashing.
 //   RD-0161 "Symbiotic vs Pure-Phase / 100PB / NVMe-DMA / decoupled" = the stress-table arithmetic,
-//           the streaming reality, the zero-copy copy-tax, and the headless .spore defence posture.
+//           the streaming reality, the zero-copy copy-tax, and the headless .fungi defence posture.
 //
 // Owner R&D rules (feedback-rd-prove-own-maths): every load-bearing claim is COMPUTED here vs ground
 // truth and re-runnable. Established verdicts honoured: streaming an N-byte matrix is O(N) bandwidth-
@@ -306,19 +306,19 @@ console.log("\nV8  NVMe-DMA zero-copy copy-tax (ADOPT — real engineering win):
      "4x NVMe RAID0 ~56 GB/s scales bandwidth linearly (time / 4) — a bandwidth story, still O(S)");
 }
 
-// ── V9 — Decoupled / headless DB + .spore-stream-back = sound defence-in-depth (HIGH ZT). Model the trust
-//   boundary: a compromised web app holds ONLY the sealed outbound .spore (no DB RAM, no keys, no plaintext);
+// ── V9 — Decoupled / headless DB + .fungi-stream-back = sound defence-in-depth (HIGH ZT). Model the trust
+//   boundary: a compromised web app holds ONLY the sealed outbound .fungi (no DB RAM, no keys, no plaintext);
 //   the DB admits a request ONLY on a verified passport (+1). We assert: (a) app-side compromise yields no
 //   plaintext; (b) admission is deny-by-default (a 0/INDETERMINATE or -1 passport never executes).
-console.log("\nV9  Decoupled headless DB + .spore stream-back = sound defence-in-depth (high ZT):");
+console.log("\nV9  Decoupled headless DB + .fungi stream-back = sound defence-in-depth (high ZT):");
 {
   // K3 admission: only +1 (ALLOW) executes; 0 (INDETERMINATE) and -1 (DENY) are refused (deny-by-default).
   const ALLOW = 1, INDETERMINATE = 0, DENY = -1;
   const admit = (passportVerdict) => passportVerdict === ALLOW;
   ok(admit(ALLOW) && !admit(INDETERMINATE) && !admit(DENY),
-     "DB executes ONLY on a verified +1 passport; 0 and -1 are refused (deny-by-default at the .spore border)");
+     "DB executes ONLY on a verified +1 passport; 0 and -1 are refused (deny-by-default at the .fungi border)");
 
-  // a sealed outbound .spore: the web app can hold it but cannot open it without the key it does NOT have.
+  // a sealed outbound .fungi: the web app can hold it but cannot open it without the key it does NOT have.
   const key = crypto.randomBytes(32), iv = crypto.randomBytes(12);
   const seal = (plaintext) => {
     const c = crypto.createCipheriv("aes-256-gcm", key, iv);
@@ -337,13 +337,13 @@ console.log("\nV9  Decoupled headless DB + .spore stream-back = sound defence-in
     if (out.toString("utf8").includes("balance")) leaked = true;
   } catch { /* expected: auth failure, nothing recovered */ }
   ok(!leaked && !env.ct.toString("latin1").includes("balance"),
-     "compromised web app holds only the sealed .spore (no key) -> recovers NO plaintext (AES-GCM auth-fails)");
+     "compromised web app holds only the sealed .fungi (no key) -> recovers NO plaintext (AES-GCM auth-fails)");
 
   // the legit holder CAN open it (round-trip), proving it's a real seal not a black hole.
   const d2 = crypto.createDecipheriv("aes-256-gcm", key, iv);
   d2.setAuthTag(env.tag);
   const round = Buffer.concat([d2.update(env.ct), d2.final()]).toString("utf8");
-  ok(round === secret, "the key-holding app decrypts the .spore correctly (sealed, not destroyed) — sound DiD, not security-by-obscurity");
+  ok(round === secret, "the key-holding app decrypts the .fungi correctly (sealed, not destroyed) — sound DiD, not security-by-obscurity");
 }
 
 // =============================================================================
@@ -360,8 +360,8 @@ const EXCLUDED = [
         "Bandwidth scales ~linearly with stripe count (V8) — genuine — but it is still an O(S) streaming story, and real SPDK/io_uring setups keep a thin trusted path (IOMMU, page-pinning, the NVMe driver). 'Bypass the OS entirely' overstates it; the win is removing the double-copy + context-switch tax, not removing the kernel from trust. Engineering-gated."],
   ["X5", "Hyperbolic embedding QUALITY at billion-node scale / on arbitrary (non-tree) graphs.",
         "V3 proves the tree case (where hyperbolic provably wins). General graphs with cycles/high treewidth do NOT embed in 2-D hyperbolic with low distortion; you need higher dimension and a real optimiser (Sarkar/Lorentz training). Net-new ML work, out of the governance core (ext-bridge/photonic-emulator territory) — design, not benched here."],
-  ["X6", "Network transport choice (WebSocket vs gRPC) for the .spore stream (open question at note end).",
-        "Transport selection — settled under the HTTP-transport B8 line (feedback-http-transport-owner-locked: build-first K3 cert-gate, revocation-unknown -> DENY). The .spore SEAL + deny-by-default admission (V9) is transport-agnostic; the cert-gate is the load-bearing control regardless of WS/gRPC."],
+  ["X6", "Network transport choice (WebSocket vs gRPC) for the .fungi stream (open question at note end).",
+        "Transport selection — settled under the HTTP-transport B8 line (feedback-http-transport-owner-locked: build-first K3 cert-gate, revocation-unknown -> DENY). The .fungi SEAL + deny-by-default admission (V9) is transport-agnostic; the cert-gate is the load-bearing control regardless of WS/gRPC."],
 ];
 console.log("\nEXCLUDED (named, not benched here):");
 for (const [id, claim, why] of EXCLUDED) console.log(`  ${id}  ${claim}\n        -> ${why}`);
@@ -372,6 +372,6 @@ console.log(`${pass}/${pass + fail} passed`);
 const green = fail === 0;
 console.log(green
   ? "RESULT: GREEN — T-CSR O(E)+lossless, hyperbolic-tree win, phase-hash honest-tradeoff, 100PB table exact, "
-    + "NONE-fit-but-STREAM correction, O(1) REFUTED, NVMe-DMA zero-copy ADOPTED, decoupled .spore = sound DiD\n"
+    + "NONE-fit-but-STREAM correction, O(1) REFUTED, NVMe-DMA zero-copy ADOPTED, decoupled .fungi = sound DiD\n"
   : "RESULT: RED — a load-bearing V-claim did not hold\n");
 process.exit(green ? 0 : 1);

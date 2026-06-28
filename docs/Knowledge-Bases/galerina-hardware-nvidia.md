@@ -134,7 +134,7 @@ ValueGraph.riskLevel(classification) → LOW
     → ExecutionGraph permits FP4 compression
 ```
 
-The compiler enforces: `safety_critical` and `medical` classifications CANNOT use FP4/FP8 — the governance verifier emits `SPORE-HW-004` if `allow precision_fp4` appears on a high-risk flow.
+The compiler enforces: `safety_critical` and `medical` classifications CANNOT use FP4/FP8 — the governance verifier emits `FUNGI-HW-004` if `allow precision_fp4` appears on a high-risk flow.
 
 ---
 

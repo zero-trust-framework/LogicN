@@ -225,6 +225,6 @@ which packages/platform bindings provide device features
 which unsafe native calls exist
 which Stream<T> and Buffer<T> values cross boundaries
 which compute targets and fallbacks are used
-which generated locations map back to .spore source
+which generated locations map back to .fungi source
 ```
 

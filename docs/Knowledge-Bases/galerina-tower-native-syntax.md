@@ -20,7 +20,7 @@ each one causes the compiler to emit Tower-specific metadata, proof obligations,
 ## 1. `trap` — Hard Governance Invariant
 
 ### Syntax
-```spore
+```fungi
 trap CONDITION : ERROR_CODE
 ```
 
@@ -41,7 +41,7 @@ Both produce identical WAT. `trap` is preferred when:
 ### Compiler output
 ```wat
 (if (i32.gt_s (local.get $amount) (local.get $balance))
-  (then unreachable) ;; SPORE-INV-000 trapKind=ERR_AMOUNT_EXCEEDS_LIMIT
+  (then unreachable) ;; FUNGI-INV-000 trapKind=ERR_AMOUNT_EXCEEDS_LIMIT
 )
 ```
 
@@ -52,11 +52,11 @@ Each `trap` is recorded as a `ProofObligation` (CBOR Tag 403):
 ```
 
 ### Governance rules
-- `SPORE-TRAP-001` — error code must be a valid SCREAMING_SNAKE_CASE identifier
-- `SPORE-TRAP-002` — all symbols in condition must be in the flow's parameter scope
+- `FUNGI-TRAP-001` — error code must be a valid SCREAMING_SNAKE_CASE identifier
+- `FUNGI-TRAP-002` — all symbols in condition must be in the flow's parameter scope
 
 ### Example
-```spore
+```fungi
 flow processWithdrawal(amount: Int, balance: Int) -> Result<Bool, Error>
 contract {
   intent "Process a withdrawal — balance must cover amount"
@@ -75,7 +75,7 @@ contract {
 ## 2. `governed` — Tower Floor Qualifier
 
 ### Syntax
-```spore
+```fungi
 governed floor_N flow name(params) -> ReturnType
 contract { ... }
 { body }
@@ -96,14 +96,14 @@ Declares which Tower floor this flow is authorized to execute in. The compiler:
 
 ### Stage A vs Phase 5 behavior
 - **Stage A (now):** Floor constraint recorded in manifest; no runtime enforcement yet
-- **Phase 5 (DSS.wasm):** Bit 8 check emitted as real WAT gate; unauthorized floor access → SPORE-INV-000
+- **Phase 5 (DSS.wasm):** Bit 8 check emitted as real WAT gate; unauthorized floor access → FUNGI-INV-000
 
 ### Governance rules
-- `SPORE-DAG-001` — governed flow declares an unknown floor name
-- `SPORE-DAG-002` — floor is inconsistent with effects profile (floor_1 cannot access secret.access)
+- `FUNGI-DAG-001` — governed flow declares an unknown floor name
+- `FUNGI-DAG-002` — floor is inconsistent with effects profile (floor_1 cannot access secret.access)
 
 ### Example
-```spore
+```fungi
 governed floor_3 flow verifyTransactionHash(tx: Transaction) -> Hash
 contract {
   intent "Verify transaction hash in the Proof Zone — Floor 3 only"
@@ -128,7 +128,7 @@ contract {
 ## 3. `view(cap)` — MMCP Capability-Masked Pointer Type
 
 ### Syntax
-```spore
+```fungi
 let varName: view(capability1 | capability2) = expr
 ```
 
@@ -164,7 +164,7 @@ Each `view(...)` declaration produces an MMCP record:
 ```
 
 ### Example
-```spore
+```fungi
 pure flow readSensitiveData(ptr: view(read | secret)) -> String
 contract {
   intent "Read secret data via capability-restricted pointer"
@@ -185,15 +185,15 @@ time, not just at runtime. This turns a runtime permission check into a compile-
 
 ---
 
-## 4. Match Exhaustiveness (SPORE-MATCH-001)
+## 4. Match Exhaustiveness (FUNGI-MATCH-001)
 
 ### Rule
 When a `match` expression targets an enum-like expression (a V_DPM signal, a capability enum)
 and has **no `_` wildcard arm** and fewer than 6 branches, the governance verifier emits
-`SPORE-MATCH-001` as a warning.
+`FUNGI-MATCH-001` as a warning.
 
 ### Why it matters
-```spore
+```fungi
 // ❌ Governance hole — what happens on "fuel_exhausted"?
 match signal {
   "invariant_failure" => { deny network.outbound }
@@ -220,7 +220,7 @@ creating a silent governance gap.
 | Path security | `ensure isFloor3` (runtime) | `governed floor_3 flow` (compile-time) |
 | Memory security | `read(ptr)` (no capability record) | `let x: view(read \| secret)` (MMCP) |
 | Invariant failure | `ensure amount > 0` (positive form) | `trap amount <= 0 : ERR_NEG` (failure form) |
-| Governance coverage | Match may silently miss arms | SPORE-MATCH-001 warns on gaps |
+| Governance coverage | Match may silently miss arms | FUNGI-MATCH-001 warns on gaps |
 
 ---
 
@@ -253,13 +253,13 @@ The code is not just *running* — it is *self-describing its security requireme
 | `trap` parse + WAT gate | ✅ Stage A | #81 |
 | `governed` qualifier + manifest | ✅ Stage A | #82 |
 | `view()` type + MMCP stub | ✅ Stage A | #83 |
-| Match exhaustiveness SPORE-MATCH-001 | ✅ Stage A | #84 |
+| Match exhaustiveness FUNGI-MATCH-001 | ✅ Stage A | #84 |
 | `static` compile-time constants | ✅ Stage A | #86 |
 | `bitfield` governance register + V_DPM rewrite | ✅ Stage A | #87 |
 | `gate {}` admission guard (verifier) | ✅ Stage A | #88 |
 | `access {}` Default Deny + `grant` enforcement | ✅ Stage A | #89 |
 | `guard Name {}` domain ceiling syntax | ✅ Stage A | #92 |
-| `import "./path.spore"` DAG merge | ✅ Stage A | #93 |
+| `import "./path.fungi"` DAG merge | ✅ Stage A | #93 |
 | `import plugin safe/assimilate` syntax | ✅ Stage A | #94 |
 | `assuming(flowRef, "claim") {}` proof-tracing | ✅ Stage A | #73/#74 |
 | `governed` real DAG_CHECK WAT | ⬜ Phase 5 | #77 |
@@ -267,14 +267,14 @@ The code is not just *running* — it is *self-describing its security requireme
 | AuditEvent on trap | ⬜ Phase 5 | #75 |
 | `gate {}` Phase 5 WAT bit-8 enforcement | ⬜ Phase 5 | #88 |
 | `policy {}` State Mutation Governance | ⬜ Phase 5 | #90 |
-| Migrate `vdpm.spore` to `bitfield V_DPM {}` | ⬜ After #87 | #91 |
+| Migrate `vdpm.fungi` to `bitfield V_DPM {}` | ⬜ After #87 | #91 |
 
 ---
 
 ## 5. `static` — Compile-Time Constants
 
 ### Syntax
-```spore
+```fungi
 static NAME = VALUE
 ```
 
@@ -292,7 +292,7 @@ heap allocation, no memory load, no indirection. This is the zero-overhead guara
 - Any value known at compile time that should never change at runtime
 
 ### WAT output example
-```spore
+```fungi
 static MAX_RETRY = 3
 
 // A flow using MAX_RETRY emits:
@@ -300,15 +300,15 @@ static MAX_RETRY = 3
 ```
 
 ### Governance rules
-- `SPORE-STATIC-001` — value is not a compile-time constant (contains runtime expressions)
-- `SPORE-STATIC-002` — name declared more than once in the same scope
+- `FUNGI-STATIC-001` — value is not a compile-time constant (contains runtime expressions)
+- `FUNGI-STATIC-002` — name declared more than once in the same scope
 
 ---
 
 ## 6. `bitfield` — Type-Safe Governance Registers
 
 ### Syntax
-```spore
+```fungi
 bitfield NAME {
   field_name: BIT_POSITION
   ...
@@ -327,7 +327,7 @@ So `bitfield V_DPM { network_outbound: 0 }` produces:
 - `V_DPM.BIT_network_outbound` = `0`  (raw bit index)
 
 **Primary use case: V_DPM register definition**
-```spore
+```fungi
 // Before (verbose):
 pure flow VDPM_BIT_NETWORK_OUTBOUND() -> Int { return 1 }
 pure flow VDPM_BIT_STORAGE_WRITE() -> Int { return 2 }
@@ -347,7 +347,7 @@ bitfield V_DPM {
 ```
 
 **Usage in flow bodies:**
-```spore
+```fungi
 // Check if network capability is active (bitmask AND):
 let has_network = (current_vdpm & V_DPM.network_outbound) != 0
 
@@ -356,15 +356,15 @@ let bit_pos = V_DPM.BIT_network_outbound   // = 0
 ```
 
 ### Governance rules
-- `SPORE-BF-001` — duplicate bit positions in same bitfield
-- `SPORE-BF-002` — bit position > 31 (V_DPM is 32-bit)
+- `FUNGI-BF-001` — duplicate bit positions in same bitfield
+- `FUNGI-BF-002` — bit position > 31 (V_DPM is 32-bit)
 
 ---
 
 ## 7. `gate {}` — Admission Guard Block
 
 ### Syntax
-```spore
+```fungi
 gate(condition) {
   flow name(params) -> ReturnType
   contract { ... }
@@ -388,15 +388,15 @@ Caller → dispatch → gate check (bit 8) → if authorized → capability chec
 - **Phase 5:** DSS.wasm emits real bit 8 check before every gated flow dispatch
 
 ### Governance rules
-- `SPORE-GATE-001` — condition not in knownDomainGuards (warning — full enforcement Phase 5)
-- `SPORE-GATE-002` — gate wrapping a `pure flow` (redundant — pure flows have no effects)
+- `FUNGI-GATE-001` — condition not in knownDomainGuards (warning — full enforcement Phase 5)
+- `FUNGI-GATE-002` — gate wrapping a `pure flow` (redundant — pure flows have no effects)
 
 ---
 
 ## 8. `access {}` — Capability Negotiation Block
 
 ### Syntax
-```spore
+```fungi
 flow name(params) -> ReturnType
 contract { ... }
 access {
@@ -424,7 +424,7 @@ what data types are authorized to cross the call boundary.
 
 The `policy` keyword is reserved for a future v2.1 feature: **State Mutation Governance**.
 
-```spore
+```fungi
 // FUTURE (not yet built):
 contract {
   invariant { ensure balance > 0 }   // safety bounds — what must always be true
@@ -444,7 +444,7 @@ contract {
 `access {}` operates under **Default Deny** semantics. Only capabilities explicitly listed with
 `grant` are permitted. Everything else is automatically denied — no need to list denials.
 
-```spore
+```fungi
 access {
   grant network.outbound   // permitted
   grant audit.write        // permitted
@@ -458,7 +458,7 @@ Governance annotations (`;;`) placed inside or near `access {}` blocks are colle
 `governanceAnnotations[]` in the `.lmanifest`. They appear in the manifest narrative alongside
 `ProofObligations` and are scanned by the governance verifier at verify time.
 
-```spore
+```fungi
 access {
   ;; This flow may only reach the payments gateway — all other network is denied by default
   grant network.outbound
@@ -467,21 +467,21 @@ access {
 ```
 
 ### Governance rules
-- `SPORE-SYNTAX-LEGACY-003` — deprecated inline `policy {}` used instead of `access {}`
-- `SPORE-ACCESS-001` — `grant` references unknown capability name
-- `SPORE-ACCESS-002` — `grant` capability not declared in flow's `effects {}`
+- `FUNGI-SYNTAX-LEGACY-003` — deprecated inline `policy {}` used instead of `access {}`
+- `FUNGI-ACCESS-001` — `grant` references unknown capability name
+- `FUNGI-ACCESS-002` — `grant` capability not declared in flow's `effects {}`
 
 ---
 
 ## 9. `import` — DAG Merge File Import
 
 ### Syntax
-```spore
-import "./path.spore"
+```fungi
+import "./path.fungi"
 ```
 
 ### Semantics
-Merges the target `.spore` file into the current compilation DAG. All top-level symbols defined in the
+Merges the target `.fungi` file into the current compilation DAG. All top-level symbols defined in the
 imported file become available in the importing scope. File resolution is relative to the importing file.
 
 **Import chain rules:**
@@ -496,14 +496,14 @@ of each imported file, enabling the admission gate to verify the full dependency
 ### Diagnostic codes
 | Code | Severity | Condition |
 |---|---|---|
-| `SPORE-IMPORT-001` | error | Target file not found |
-| `SPORE-IMPORT-002` | error | Imported file has parse errors |
-| `SPORE-IMPORT-003` | error | Circular import detected |
-| `SPORE-IMPORT-004` | warning | Imported symbol name collides with local definition |
+| `FUNGI-IMPORT-001` | error | Target file not found |
+| `FUNGI-IMPORT-002` | error | Imported file has parse errors |
+| `FUNGI-IMPORT-003` | error | Circular import detected |
+| `FUNGI-IMPORT-004` | warning | Imported symbol name collides with local definition |
 
 ### Example
-```spore
-import "./shared_types.spore"    // symbols from shared_types.spore are now in scope
+```fungi
+import "./shared_types.fungi"    // symbols from shared_types.fungi are now in scope
 
 flow processOrder(id: OrderId) -> Result<Void, Fault>
 contract {
@@ -522,7 +522,7 @@ contract {
 ### Syntax
 Two forms — choose based on isolation model:
 
-```spore
+```fungi
 // Form A — Safe (sandboxed bridge)
 import plugin safe "./path" as X {
   contract {
@@ -543,7 +543,7 @@ import plugin assimilate "./path" as X {
 | | `safe` | `assimilate` |
 |---|---|---|
 | **Isolation** | Sandboxed — runs as a separate WASM module | Hot-Code Residency — loaded into DSS bootstrap memory |
-| **Location** | Any `.spore` file | **`boot.spore` only** (`SPORE-ASSIMILATE-001` if elsewhere) |
+| **Location** | Any `.fungi` file | **`boot.fungi` only** (`FUNGI-ASSIMILATE-001` if elsewhere) |
 | **Memory budget** | Per-call DWI allocation | `assimilation_memory_budget` required in `governance {}` |
 | **Performance** | Standard cross-module overhead | Near-zero — resident at boot time |
 | **Use case** | Untrusted or third-party plugins | Trusted, performance-critical core extensions |
@@ -552,16 +552,16 @@ import plugin assimilate "./path" as X {
 
 The `access { grant }` block inside the plugin import declaration controls which capabilities
 the plugin is permitted. Default Deny applies — an assimilated plugin with **no** `access {}` block
-is rejected with `SPORE-ASSIMILATE-003`.
+is rejected with `FUNGI-ASSIMILATE-003`.
 
 ### Manifest recording
 - `assimilatedPlugins[]` in the `.lmanifest` tracks all Hot-Code Residency plugins loaded at boot
 - Each entry records the plugin path, source hash, and granted capabilities
 
 ### Example
-```spore
-// boot.spore — assimilate a trusted crypto library at boot time
-import plugin assimilate "./crypto/fast_hash.spore" as FastHash {
+```fungi
+// boot.fungi — assimilate a trusted crypto library at boot time
+import plugin assimilate "./crypto/fast_hash.fungi" as FastHash {
   contract {
     access {
       ;; FastHash only needs secret access — all other capabilities denied by default
@@ -571,7 +571,7 @@ import plugin assimilate "./crypto/fast_hash.spore" as FastHash {
 }
 
 // Any file — safe plugin for an untrusted data transformer
-import plugin safe "./transforms/sanitize.spore" as Sanitize {
+import plugin safe "./transforms/sanitize.fungi" as Sanitize {
   contract {
     access { grant storage.read }
   }
@@ -581,9 +581,9 @@ import plugin safe "./transforms/sanitize.spore" as Sanitize {
 ### Governance rules
 | Code | Severity | Condition |
 |---|---|---|
-| `SPORE-ASSIMILATE-001` | warning | `assimilate` declared outside `boot.spore` |
-| `SPORE-ASSIMILATE-002` | warning | `assimilation_memory_budget` not declared in `governance {}` |
-| `SPORE-ASSIMILATE-003` | error | Assimilated plugin has no `access { grant }` block |
+| `FUNGI-ASSIMILATE-001` | warning | `assimilate` declared outside `boot.fungi` |
+| `FUNGI-ASSIMILATE-002` | warning | `assimilation_memory_budget` not declared in `governance {}` |
+| `FUNGI-ASSIMILATE-003` | error | Assimilated plugin has no `access { grant }` block |
 
 ---
 
@@ -596,5 +596,5 @@ import plugin safe "./transforms/sanitize.spore" as Sanitize {
 | ExecutionDAG (Tag 414) | `galerina-topological-graph-engine.md` |
 | `gate {}` topology integration | `galerina-topological-graph-engine.md` §gate-admission-guard-integration |
 | Invariant bridge (`ensure`) | `galerina-governed-tower-specification.md` §3A |
-| DSS.spore foundation | `packages-galerina/galerina-core-security/src/dss/vdpm.spore` |
+| DSS.fungi foundation | `packages-galerina/galerina-core-security/src/dss/vdpm.fungi` |
 | Build roadmap | `galerina-build-roadmap.md` |

@@ -9,13 +9,13 @@
  * `LOAD → TRAP → ERASE` event, exactly as for i32.
  *
  * Operands and results are `bigint` — a JS `number` cannot represent the i64 range exactly above 2^53,
- * which is the precise fail-open (silent precision loss) that gating scalar Int64 behind SPORE-NUMERIC-001
+ * which is the precise fail-open (silent precision loss) that gating scalar Int64 behind FUNGI-NUMERIC-001
  * guarded against. BigInt is exact across the whole range. `/` and `%` truncate toward zero in JS BigInt,
  * which is byte-identical to WASM `i64.div_s` / `i64.rem_s` (sign-of-dividend remainder) — so every
  * execution tier that funnels through this ONE definition stays differential-identical (the 0014 gate).
  *
  * Inputs MUST already be in i64 range (callers hold i64 operands). Unsigned 64-bit (UInt64) is NOT
- * handled here — it has distinct div/compare semantics and stays fail-closed under SPORE-NUMERIC-001
+ * handled here — it has distinct div/compare semantics and stays fail-closed under FUNGI-NUMERIC-001
  * until its own layer lands.
  */
 

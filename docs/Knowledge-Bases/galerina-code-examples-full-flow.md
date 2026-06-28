@@ -542,7 +542,7 @@ effects [secret.read, audit.write] {
 ## 7. Negative Guarantee — Filesystem Write Blocked by Intent
 
 A report-view flow whose intent explicitly denies `filesystem.write`. Any
-attempt to write a file is rejected at compile time with `SPORE-INTENT-001`.
+attempt to write a file is rejected at compile time with `FUNGI-INTENT-001`.
 
 ```galerina
 intent ViewReportOnly {
@@ -589,7 +589,7 @@ effects [database.read] {
 
   // REJECTED at compile time:
   //   FileSystem.write("/tmp/report.csv", report.csv)
-  //   → SPORE-INTENT-001: filesystem.write denied by ViewReportOnly
+  //   → FUNGI-INTENT-001: filesystem.write denied by ViewReportOnly
 
   return Ok(ReportView(report))
 }
@@ -1003,5 +1003,5 @@ let user: DesktopUser safe validated = validate.desktopUser(rawUser)?
 | [galerina-concept-governed-execution-plan.md](galerina-concept-governed-execution-plan.md) | Governed execution plan specification |
 | [galerina-concept-audit-proof.md](galerina-concept-audit-proof.md) | Audit proof specification |
 | [galerina-governance-architecture.md](galerina-governance-architecture.md) | Full 23-stage governance pipeline |
-| [compiler-diagnostics.md](compiler-diagnostics.md) | `SPORE-INTENT-*`, `SPORE-SAFETY-*` diagnostic codes |
+| [compiler-diagnostics.md](compiler-diagnostics.md) | `FUNGI-INTENT-*`, `FUNGI-SAFETY-*` diagnostic codes |
 | [v1-reserved-keywords.md](v1-reserved-keywords.md) | V1 keyword table and lexer rules |

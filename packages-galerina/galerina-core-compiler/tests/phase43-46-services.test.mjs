@@ -4,10 +4,10 @@
  * Tests four new governed HTTP services that form the runtime-in-Galerina
  * introspection and audit layer:
  *
- *   Phase 43 — governanceService.spore      POST /governance/verify  (port 3920)
- *   Phase 44 — auditChainService.spore      POST /audit/chain        (port 3921)
- *   Phase 45 — proofVerifierService.spore   POST /proof/verify       (port 3922)
- *   Phase 46 — typeRegistryService.spore    POST /types/resolve      (port 3923)
+ *   Phase 43 — governanceService.fungi      POST /governance/verify  (port 3920)
+ *   Phase 44 — auditChainService.fungi      POST /audit/chain        (port 3921)
+ *   Phase 45 — proofVerifierService.fungi   POST /proof/verify       (port 3922)
+ *   Phase 46 — typeRegistryService.fungi    POST /types/resolve      (port 3923)
  */
 
 import { describe, it, before, after } from "node:test";
@@ -25,15 +25,15 @@ function loadService(filename) {
   return parseProgram(src, filename);
 }
 
-// ── Phase 43: governanceService.spore ──────────────────────────────────────────
+// ── Phase 43: governanceService.fungi ──────────────────────────────────────────
 
-describe("Phase 43: governanceService.spore", () => {
+describe("Phase 43: governanceService.fungi", () => {
   let server;
   const PORT = 3920;
   const url = `http://127.0.0.1:${PORT}/governance/verify`;
 
   before(async () => {
-    const prog = loadService("governanceService.spore");
+    const prog = loadService("governanceService.fungi");
     server = await startServer(prog.ast, prog.flows, { port: PORT });
   });
 
@@ -48,8 +48,8 @@ describe("Phase 43: governanceService.spore", () => {
     return { status: r.status, json: JSON.parse(await r.text()) };
   }
 
-  it("governanceService.spore parses with zero errors", () => {
-    const prog = loadService("governanceService.spore");
+  it("governanceService.fungi parses with zero errors", () => {
+    const prog = loadService("governanceService.fungi");
     const errs = (prog.diagnostics ?? []).filter(d => d.severity === "error");
     assert.equal(errs.length, 0, errs.map(e => e.message).join(", "));
   });
@@ -105,15 +105,15 @@ describe("Phase 43: governanceService.spore", () => {
   });
 });
 
-// ── Phase 44: auditChainService.spore ──────────────────────────────────────────
+// ── Phase 44: auditChainService.fungi ──────────────────────────────────────────
 
-describe("Phase 44: auditChainService.spore", () => {
+describe("Phase 44: auditChainService.fungi", () => {
   let server;
   const PORT = 3921;
   const url = `http://127.0.0.1:${PORT}/audit/chain`;
 
   before(async () => {
-    const prog = loadService("auditChainService.spore");
+    const prog = loadService("auditChainService.fungi");
     server = await startServer(prog.ast, prog.flows, { port: PORT });
   });
 
@@ -128,8 +128,8 @@ describe("Phase 44: auditChainService.spore", () => {
     return { status: r.status, json: JSON.parse(await r.text()) };
   }
 
-  it("auditChainService.spore parses with zero errors", () => {
-    const prog = loadService("auditChainService.spore");
+  it("auditChainService.fungi parses with zero errors", () => {
+    const prog = loadService("auditChainService.fungi");
     const errs = (prog.diagnostics ?? []).filter(d => d.severity === "error");
     assert.equal(errs.length, 0, errs.map(e => e.message).join(", "));
   });
@@ -143,7 +143,7 @@ describe("Phase 44: auditChainService.spore", () => {
   it("returns chained: true and correct schemaVersion", async () => {
     const r = await post({ flowName: "checkCapability", status: "Denied", timestamp: "2026-06-01T12:00:00Z" });
     assert.equal(r.json.chained, true);
-    assert.equal(r.json.schemaVersion, "spore.runtime.audit.v1");
+    assert.equal(r.json.schemaVersion, "fungi.runtime.audit.v1");
   });
 
   it("status 'Success' → statusValid: true", async () => {
@@ -172,15 +172,15 @@ describe("Phase 44: auditChainService.spore", () => {
   });
 });
 
-// ── Phase 45: proofVerifierService.spore ───────────────────────────────────────
+// ── Phase 45: proofVerifierService.fungi ───────────────────────────────────────
 
-describe("Phase 45: proofVerifierService.spore", () => {
+describe("Phase 45: proofVerifierService.fungi", () => {
   let server;
   const PORT = 3922;
   const url = `http://127.0.0.1:${PORT}/proof/verify`;
 
   before(async () => {
-    const prog = loadService("proofVerifierService.spore");
+    const prog = loadService("proofVerifierService.fungi");
     server = await startServer(prog.ast, prog.flows, { port: PORT });
   });
 
@@ -195,14 +195,14 @@ describe("Phase 45: proofVerifierService.spore", () => {
     return { status: r.status, json: JSON.parse(await r.text()) };
   }
 
-  it("proofVerifierService.spore parses with zero errors", () => {
-    const prog = loadService("proofVerifierService.spore");
+  it("proofVerifierService.fungi parses with zero errors", () => {
+    const prog = loadService("proofVerifierService.fungi");
     const errs = (prog.diagnostics ?? []).filter(d => d.severity === "error");
     assert.equal(errs.length, 0, errs.map(e => e.message).join(", "));
   });
 
-  it("algorithm 'spore.gov.sig.v1' → valid: true, strength: 3", async () => {
-    const r = await post({ algorithm: "spore.gov.sig.v1", signaturePresent: true });
+  it("algorithm 'fungi.gov.sig.v1' → valid: true, strength: 3", async () => {
+    const r = await post({ algorithm: "fungi.gov.sig.v1", signaturePresent: true });
     assert.equal(r.status, 200);
     assert.equal(r.json.valid, true);
     assert.equal(r.json.strength, 3);
@@ -221,7 +221,7 @@ describe("Phase 45: proofVerifierService.spore", () => {
   });
 
   it("phase39Ready matches valid field", async () => {
-    const r = await post({ algorithm: "spore.gov.sig.v1", signaturePresent: true });
+    const r = await post({ algorithm: "fungi.gov.sig.v1", signaturePresent: true });
     assert.equal(r.json.phase39Ready, r.json.valid);
   });
 
@@ -231,15 +231,15 @@ describe("Phase 45: proofVerifierService.spore", () => {
   });
 });
 
-// ── Phase 46: typeRegistryService.spore ────────────────────────────────────────
+// ── Phase 46: typeRegistryService.fungi ────────────────────────────────────────
 
-describe("Phase 46: typeRegistryService.spore", () => {
+describe("Phase 46: typeRegistryService.fungi", () => {
   let server;
   const PORT = 3923;
   const url = `http://127.0.0.1:${PORT}/types/resolve`;
 
   before(async () => {
-    const prog = loadService("typeRegistryService.spore");
+    const prog = loadService("typeRegistryService.fungi");
     server = await startServer(prog.ast, prog.flows, { port: PORT });
   });
 
@@ -254,8 +254,8 @@ describe("Phase 46: typeRegistryService.spore", () => {
     return { status: r.status, json: JSON.parse(await r.text()) };
   }
 
-  it("typeRegistryService.spore parses with zero errors", () => {
-    const prog = loadService("typeRegistryService.spore");
+  it("typeRegistryService.fungi parses with zero errors", () => {
+    const prog = loadService("typeRegistryService.fungi");
     const errs = (prog.diagnostics ?? []).filter(d => d.severity === "error");
     assert.equal(errs.length, 0, errs.map(e => e.message).join(", "));
   });

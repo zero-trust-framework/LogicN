@@ -1,11 +1,11 @@
-# Galerina — No Cleartext Semantic Embedding Across a Trust Boundary (U2/#204, SPORE-PRIVACY-002)
+# Galerina — No Cleartext Semantic Embedding Across a Trust Boundary (U2/#204, FUNGI-PRIVACY-002)
 
 **Status:** ENFORCED (Stage-A compile-time, `value-state-checker.ts`). Date: 2026-06-16.
 **Origin:** tri-encryption R&D verdict 5 (`galerina-rd-adoption-2026-06-16.md`, U2/#204). Design
 selected + adversarially hardened via a verify-before-build workflow (12-agent map/design/judge +
 2 adversarial skeptics). KB cross-refs: [[galerina-contract-privacy-observability]] (the declarative
-`privacy {}` block, SPORE-PRIVACY-001), `pattern-10-verify-before-decrypt-gate.spore`, `galerina-substrate-contracts`
-(SPORE-SUBSTRATE-001 crypto-on-core).
+`privacy {}` block, FUNGI-PRIVACY-001), `pattern-10-verify-before-decrypt-gate.fungi`, `galerina-substrate-contracts`
+(FUNGI-SUBSTRATE-001 crypto-on-core).
 
 ## The invariant
 
@@ -20,7 +20,7 @@ Three candidate mechanisms were scored (type-qualifier / declarative egress-rule
 **Taint-propagation won** (architecture-fit 9, security 9) because it is the only one that holds the line
 against laundering: a vector sliced/normalized/concatenated/reshaped is *still* inversion-bearing, so a
 one-hop or type-only check fails open. It rides the **live `checkValueStates` pass** (wired at
-`cli.ts`/`runtime.ts`), reusing the exact propagation that already powers SPORE-VALUESTATE-005 and the
+`cli.ts`/`runtime.ts`), reusing the exact propagation that already powers FUNGI-VALUESTATE-005 and the
 (now-fixed) secret-egress guard.
 
 - **Sensitivity flag.** `BindingInfo.embeddingDerived` (mirrors `tainted`). A binding is stamped when it
@@ -34,7 +34,7 @@ one-hop or type-only check fails open. It rides the **live `checkValueStates` pa
 - **Discharge:** `seal()` / `encrypt()` ONLY. Unlike the generic taint chain, validate/parse/decode do
   NOT declassify an embedding (a decoded vector is still invertible). Crypto stays engine-side
   (govern-don't-absorb): the compiler recognizes the state transition, not the cipher.
-- **Sink rule** (`checkArgForEmbeddingNetwork`, **SPORE-PRIVACY-002**): a still-cleartext embedding reaching
+- **Sink rule** (`checkArgForEmbeddingNetwork`, **FUNGI-PRIVACY-002**): a still-cleartext embedding reaching
   a network sink (`isNetworkSink`: http/https/net/socket/ws + fetch + email) is an error. Composes with
   pattern-10: SealTaint answers "may this leave cleartext?" (no, unless sealed); `keyRelease` answers "may
   it be decrypted here?" (only at a verified, key-holding endpoint).
@@ -43,7 +43,7 @@ one-hop or type-only check fails open. It rides the **live `checkValueStates` pa
 secure flow route(req: Request) -> Int
 contract { effects { ai.inference  network.outbound } } {
   let v = EmbeddingModel.run(req)        // v : embeddingDerived
-  let r = http.post(remoteRouter, v)     // ✗ SPORE-PRIVACY-002 — cleartext embedding egress
+  let r = http.post(remoteRouter, v)     // ✗ FUNGI-PRIVACY-002 — cleartext embedding egress
   let s = seal(v)                        // s : discharged
   let ok = http.post(remoteRouter, s)    // ✓ sealed vector may cross
   return 0
@@ -52,8 +52,8 @@ contract { effects { ai.inference  network.outbound } } {
 
 ## Adversarial corrections applied (vs the raw design)
 
-1. **Code collision avoided** — `SPORE-PRIVACY-001` is reserved for the `privacy {}` block's declarative
-   `deny protected X to Y` clause; this dataflow rule took **SPORE-PRIVACY-002**.
+1. **Code collision avoided** — `FUNGI-PRIVACY-001` is reserved for the `privacy {}` block's declarative
+   `deny protected X to Y` clause; this dataflow rule took **FUNGI-PRIVACY-002**.
 2. **Propagating flag, NOT typeName** — keyed on a propagating `embeddingDerived` flag set on derived
    bindings, so slice/concat/record do not launder (the typeName-one-hop trap that the secret guard fell
    into — fixed in the same session, see below).
@@ -63,7 +63,7 @@ contract { effects { ai.inference  network.outbound } } {
 
 ## Sibling fix (same session)
 
-The fail-open auditor empirically proved **SPORE-SECRET-002 itself** leaked on derived secrets
+The fail-open auditor empirically proved **FUNGI-SECRET-002 itself** leaked on derived secrets
 (`key.slice(0,5)` → `http.post` produced no diagnostic). Fixed first (`derivesFromSecret`, redact-discharge)
 so secrets are not weaker than embeddings; SealTaint then mirrors that proven pattern with seal-discharge.
 
@@ -84,7 +84,7 @@ verified by reproduction and **CLOSED** (regression-tested in `tests/value-state
   to `isNetworkSink`.
 - **A6 — embedding recognizer** now matches any receiver whose name contains `embed` (case-insensitive), so a
   constructed instance var `embeddingModel.run(...)` is caught, not only the exact-case `EmbeddingModel`.
-- **A4 — cross-flow propagation** now surfaces a **warning** (`SPORE-SECRET-002`/`SPORE-PRIVACY-002`,
+- **A4 — cross-flow propagation** now surfaces a **warning** (`FUNGI-SECRET-002`/`FUNGI-PRIVACY-002`,
   `severity:"warning"`) when a secret/embedding is passed to a user flow — fail-loud without breaking
   legitimate secret-helper patterns (the checker is intra-procedural; it cannot prove the callee seals).
 
@@ -103,7 +103,7 @@ verified by reproduction and **CLOSED** (regression-tested in `tests/value-state
 - **Runtime backstop** — the DRCM monitor scans only `__tag==='secure'` values; compile-time is the sole
   enforcement for this rule today.
 - **`CRYPTO_EFFECT` — DONE 2026-06-16:** `substrate-inference.ts` now covers
-  `crypto.hash|sign|verify|encrypt|decrypt|seal`, so seal()/encrypt() compose with SPORE-SUBSTRATE-001
+  `crypto.hash|sign|verify|encrypt|decrypt|seal`, so seal()/encrypt() compose with FUNGI-SUBSTRATE-001
   (a KEM-DEM/AEAD op on a noisy lane is rejected). `crypto.encrypt/decrypt/seal` are canonical effects.
 - **Tensor<Float32,[N]>** intentionally NOT treated as an embedding (too generic); recognition is precise to
   `Embedding`/`EmbeddingResult`/`EmbeddingModel`/`*embed*` receivers.

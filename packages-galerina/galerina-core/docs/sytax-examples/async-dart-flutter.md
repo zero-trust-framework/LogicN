@@ -318,5 +318,5 @@ which Flutter drawing APIs are used
 which rendering backend assumptions exist
 which platform-channel APIs and permissions exist
 which FFI bindings and platforms are generated
-which generated Dart/native locations map back to .spore source
+which generated Dart/native locations map back to .fungi source
 ```

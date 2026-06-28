@@ -296,7 +296,7 @@ export const BUILTIN_CAPABILITY_NAMES: readonly string[] = Object.freeze(
   Object.keys(BUILTIN_CAPABILITY_REGISTRY),
 );
 
-/** Throw a fail-closed fusion error with a stable `SPORE-FUSE-*` code prefix. */
+/** Throw a fail-closed fusion error with a stable `FUNGI-FUSE-*` code prefix. */
 function fuseError(code: string, message: string): never {
   throw new Error(`${code}: ${message}`);
 }
@@ -320,23 +320,23 @@ function readJson(fs: NodeFs, filePath: string, code: string): unknown {
 function extractFuse(manifest: Record<string, unknown>, source: string): FuseDescriptor {
   const fuse = manifest["fuse"];
   if (fuse === undefined || fuse === null || typeof fuse !== "object") {
-    return fuseError("SPORE-FUSE-NO-DESCRIPTOR", `signed manifest ${source} has no embedded 'fuse' block`);
+    return fuseError("FUNGI-FUSE-NO-DESCRIPTOR", `signed manifest ${source} has no embedded 'fuse' block`);
   }
   const f = fuse as Record<string, unknown>;
   const name = f["name"];
   const wasmSha256 = f["wasmSha256"];
   if (typeof name !== "string" || typeof wasmSha256 !== "string") {
-    return fuseError("SPORE-FUSE-BAD-DESCRIPTOR", `embedded fuse block in ${source} is missing name/wasmSha256`);
+    return fuseError("FUNGI-FUSE-BAD-DESCRIPTOR", `embedded fuse block in ${source} is missing name/wasmSha256`);
   }
   if (!SHA256_RE.test(wasmSha256)) {
-    return fuseError("SPORE-FUSE-BAD-DESCRIPTOR", `embedded fuse.wasmSha256 is not 'sha256:<64 hex>': ${wasmSha256}`);
+    return fuseError("FUNGI-FUSE-BAD-DESCRIPTOR", `embedded fuse.wasmSha256 is not 'sha256:<64 hex>': ${wasmSha256}`);
   }
   const caps = f["capabilities"];
   const capabilities: string[] = Array.isArray(caps) ? caps.filter((c): c is string => typeof c === "string") : [];
   const provides = typeof f["provides"] === "string" ? (f["provides"] as string) : null;
   const seam = typeof f["seam"] === "string" ? (f["seam"] as string) : null;
   return {
-    schemaVersion: typeof f["schemaVersion"] === "string" ? (f["schemaVersion"] as string) : "spore.fuse.v1",
+    schemaVersion: typeof f["schemaVersion"] === "string" ? (f["schemaVersion"] as string) : "fungi.fuse.v1",
     name,
     version: typeof f["version"] === "string" ? (f["version"] as string) : "0.0.0",
     kind: typeof f["kind"] === "string" ? (f["kind"] as string) : "capability",
@@ -412,24 +412,24 @@ async function verifyManifestSignature(
         try {
           verdict = await hybridVerifier({ keyId, algorithm: String(algorithm), signingInput, signature, governanceDir, packageDir });
         } catch (e) {
-          return fuseError("SPORE-FUSE-HYBRID-ERROR", `injected hybrid verifier errored for keyId '${keyId}': ${(e as Error).message}`);
+          return fuseError("FUNGI-FUSE-HYBRID-ERROR", `injected hybrid verifier errored for keyId '${keyId}': ${(e as Error).message}`);
         }
         if (verdict === "verified") return "verified";
         if (verdict === "invalid") {
-          return fuseError("SPORE-FUSE-HYBRID-INVALID", `HYBRID manifest signature FAILED to verify (keyId '${keyId}') — manifest may be tampered`);
+          return fuseError("FUNGI-FUSE-HYBRID-INVALID", `HYBRID manifest signature FAILED to verify (keyId '${keyId}') — manifest may be tampered`);
         }
         // "unverifiable" → fall through to the warn + "unsigned" path below (no key / undecidable).
       }
       warn(hybridVerifier !== undefined
-        ? `SPORE-FUSE-HYBRID-UNVERIFIED: the injected verifier could not decide the HYBRID PQ signature (algorithm '${String(algorithm)}', keyId '${String(keyId)}') — e.g. no resolvable public key — treating as UNVERIFIED (REFUSED under requireSignature; admitted only where unsigned packages are already permitted).`
-        : `SPORE-FUSE-HYBRID-UNVERIFIED: manifest carries a HYBRID PQ signature (algorithm '${String(algorithm)}') that this loader cannot verify without an injected hybrid verifier — treating as UNVERIFIED (REFUSED under requireSignature; admitted only where unsigned packages are already permitted). Inject FusePackageOptions.hybridVerifier to verify it at load (#49).`);
+        ? `FUNGI-FUSE-HYBRID-UNVERIFIED: the injected verifier could not decide the HYBRID PQ signature (algorithm '${String(algorithm)}', keyId '${String(keyId)}') — e.g. no resolvable public key — treating as UNVERIFIED (REFUSED under requireSignature; admitted only where unsigned packages are already permitted).`
+        : `FUNGI-FUSE-HYBRID-UNVERIFIED: manifest carries a HYBRID PQ signature (algorithm '${String(algorithm)}') that this loader cannot verify without an injected hybrid verifier — treating as UNVERIFIED (REFUSED under requireSignature; admitted only where unsigned packages are already permitted). Inject FusePackageOptions.hybridVerifier to verify it at load (#49).`);
     }
     return "unsigned";
   }
 
   const pubKeyPath = resolvePublicKey(fs, path, keyId as string, governanceDir, packageDir);
   if (pubKeyPath === undefined) {
-    warn(`SPORE-FUSE-NO-PUBKEY: public key for keyId '${keyId}' not found — cannot verify signature; treating manifest as unsigned`);
+    warn(`FUNGI-FUSE-NO-PUBKEY: public key for keyId '${keyId}' not found — cannot verify signature; treating manifest as unsigned`);
     return "unsigned";
   }
 
@@ -445,10 +445,10 @@ async function verifyManifestSignature(
     // Ed25519 is deterministic — pass null as the hash algorithm (RFC 8032).
     valid = crypto.verify(null, bytesForVerification, publicKey, base64ToBytes(signature as string));
   } catch (e) {
-    return fuseError("SPORE-FUSE-SIG-ERROR", `signature verification errored for keyId '${keyId}': ${(e as Error).message}`);
+    return fuseError("FUNGI-FUSE-SIG-ERROR", `signature verification errored for keyId '${keyId}': ${(e as Error).message}`);
   }
   if (!valid) {
-    return fuseError("SPORE-FUSE-SIG-INVALID", `manifest signature FAILED to verify (keyId '${keyId}') — manifest may be tampered`);
+    return fuseError("FUNGI-FUSE-SIG-INVALID", `manifest signature FAILED to verify (keyId '${keyId}') — manifest may be tampered`);
   }
   return "verified";
 }
@@ -519,7 +519,7 @@ export function buildCapabilityImports(
     const factory = registry[cap];
     if (factory === undefined) {
       return fuseError(
-        "SPORE-FUSE-UNKNOWN-CAP",
+        "FUNGI-FUSE-UNKNOWN-CAP",
         `package declares capability '${cap}' with no host-import factory — refusing to fuse (deny-by-default)`,
       );
     }
@@ -555,15 +555,15 @@ async function loadAndVerifyPackage(
   warn: (m: string) => void,
 ): Promise<AdmittedPackage> {
   const { crypto, fs, path } = node;
-  const pkgDescPath = path.join(dir, "package.spore.json");
-  const pkgDesc = readJson(fs, pkgDescPath, "SPORE-FUSE-NO-PACKAGE") as Record<string, unknown>;
+  const pkgDescPath = path.join(dir, "package.fungi.json");
+  const pkgDesc = readJson(fs, pkgDescPath, "FUNGI-FUSE-NO-PACKAGE") as Record<string, unknown>;
   const name = typeof pkgDesc["name"] === "string" ? (pkgDesc["name"] as string) : path.basename(dir);
 
   const distDir = path.join(dir, "dist");
   const manifestJsonPath = path.join(distDir, `${name}.lmanifest.json`);
   const wasmPath = path.join(distDir, `${name}.wasm`);
 
-  const manifestObj = readJson(fs, manifestJsonPath, "SPORE-FUSE-NO-MANIFEST") as Record<string, unknown>;
+  const manifestObj = readJson(fs, manifestJsonPath, "FUNGI-FUSE-NO-MANIFEST") as Record<string, unknown>;
   const descriptor = extractFuse(manifestObj, manifestJsonPath);
 
   // ── Gate 1: .wasm sha256 MUST match the (signed) descriptor — fail-closed ────
@@ -571,12 +571,12 @@ async function loadAndVerifyPackage(
   try {
     wasmBytes = new Uint8Array(fs.readFileSync(wasmPath));
   } catch {
-    return fuseError("SPORE-FUSE-NO-WASM", `missing .wasm artifact: ${wasmPath}`);
+    return fuseError("FUNGI-FUSE-NO-WASM", `missing .wasm artifact: ${wasmPath}`);
   }
   const actualSha = "sha256:" + crypto.createHash("sha256").update(wasmBytes).digest("hex");
   if (actualSha !== descriptor.wasmSha256) {
     return fuseError(
-      "SPORE-FUSE-HASH-MISMATCH",
+      "FUNGI-FUSE-HASH-MISMATCH",
       `.wasm sha256 ${actualSha} does not match signed descriptor ${descriptor.wasmSha256} — refusing to fuse (tamper)`,
     );
   }
@@ -584,10 +584,10 @@ async function loadAndVerifyPackage(
   // ── Cross-check the convenience .fuse.json against the signed descriptor ─────
   const fuseJsonPath = path.join(distDir, `${name}.fuse.json`);
   if (fs.existsSync(fuseJsonPath)) {
-    const sidecar = readJson(fs, fuseJsonPath, "SPORE-FUSE-BAD-SIDECAR") as Record<string, unknown>;
+    const sidecar = readJson(fs, fuseJsonPath, "FUNGI-FUSE-BAD-SIDECAR") as Record<string, unknown>;
     if (typeof sidecar["wasmSha256"] === "string" && sidecar["wasmSha256"] !== descriptor.wasmSha256) {
       return fuseError(
-        "SPORE-FUSE-SIDECAR-DRIFT",
+        "FUNGI-FUSE-SIDECAR-DRIFT",
         `${name}.fuse.json wasmSha256 disagrees with the SIGNED manifest — refusing to fuse`,
       );
     }
@@ -611,10 +611,10 @@ async function loadAndVerifyPackage(
     try {
       revoked = opts.revocationCheck(keyId) === true;
     } catch (e) {
-      return fuseError("SPORE-FUSE-REVOCATION-UNVERIFIABLE", `revocation status for keyId '${keyId}' could not be determined (${(e as Error).message}) — refusing to fuse (fail-closed)`);
+      return fuseError("FUNGI-FUSE-REVOCATION-UNVERIFIABLE", `revocation status for keyId '${keyId}' could not be determined (${(e as Error).message}) — refusing to fuse (fail-closed)`);
     }
     if (revoked) {
-      return fuseError("SPORE-FUSE-KEY-REVOKED", `keyId '${keyId}' is REVOKED — refusing to fuse (the signature is cryptographically valid but the signing key is revoked)`);
+      return fuseError("FUNGI-FUSE-KEY-REVOKED", `keyId '${keyId}' is REVOKED — refusing to fuse (the signature is cryptographically valid but the signing key is revoked)`);
     }
   }
 
@@ -638,7 +638,7 @@ async function instantiateComponent(
     invoke(exportName: string, ...args: number[]): number {
       const fn = exportsObj[exportName];
       if (typeof fn !== "function") {
-        return fuseError("SPORE-FUSE-NO-EXPORT", `fused component '${name}' has no exported function '${exportName}'`);
+        return fuseError("FUNGI-FUSE-NO-EXPORT", `fused component '${name}' has no exported function '${exportName}'`);
       }
       const ret = (fn as (...a: number[]) => number | void)(...args);
       return typeof ret === "number" ? ret : 0;
@@ -673,19 +673,19 @@ export async function fusePackage(dir: string, opts: FusePackageOptions = {}): P
     if (!allowUnsigned) {
       if (opts.requireSignature === true) {
         return fuseError(
-          "SPORE-FUSE-UNSIGNED",
+          "FUNGI-FUSE-UNSIGNED",
           `manifest for '${admitted.name}' is unsigned but the security posture requires a signature — refusing (posture-derived import profile)`,
         );
       }
       const keysExist = governanceKeysPresent(fs, path, opts.governanceDir, dir);
       return fuseError(
-        "SPORE-FUSE-UNSIGNED",
+        "FUNGI-FUSE-UNSIGNED",
         keysExist
           ? `manifest is unsigned but governance signing keys exist — refusing to fuse (pass allowUnsigned to override)`
           : `manifest is unsigned — refusing to fuse (pass allowUnsigned to override)`,
       );
     }
-    warn(`SPORE-FUSE-UNSIGNED-ALLOWED: fusing '${admitted.name}' from an UNSIGNED manifest because allowUnsigned was set`);
+    warn(`FUNGI-FUSE-UNSIGNED-ALLOWED: fusing '${admitted.name}' from an UNSIGNED manifest because allowUnsigned was set`);
   }
 
   // ── Gate 2c (B5a): CENTRAL signed-registry admission — fail-closed ───────────
@@ -700,7 +700,7 @@ export async function fusePackage(dir: string, opts: FusePackageOptions = {}): P
     });
     if (!verdict.ok) {
       return fuseError(
-        verdict.code ?? "SPORE-FUSE-REGISTRY-DENIED",
+        verdict.code ?? "FUNGI-FUSE-REGISTRY-DENIED",
         `central registry refused '${admitted.name}@${admitted.descriptor.version}': ${verdict.reason ?? "not admissible"}`,
       );
     }
@@ -758,14 +758,14 @@ export interface CompositionPlan {
  *
  * Invariants (all fail-closed):
  *  - SET-SIGNED — every member must be "verified" unless `allowUnsigned`; one unsigned member
- *    refuses the whole set (SPORE-FUSE-SET-UNSIGNED).
+ *    refuses the whole set (FUNGI-FUSE-SET-UNSIGNED).
  *  - PROVIDER SHAPE — a `provides` capability must have a registered host-import shape, else the
- *    host cannot wire its import surface (SPORE-FUSE-PROVIDES-UNKNOWN).
- *  - UNAMBIGUOUS — two members providing the same capability is refused (SPORE-FUSE-SET-AMBIGUOUS).
+ *    host cannot wire its import surface (FUNGI-FUSE-PROVIDES-UNKNOWN).
+ *  - UNAMBIGUOUS — two members providing the same capability is refused (FUNGI-FUSE-SET-AMBIGUOUS).
  *  - DENY-BY-DEFAULT — each declared capability resolves to a peer provider (preferred) or a
- *    built-in host shim; anything unsatisfied refuses the set (SPORE-FUSE-UNKNOWN-CAP). A package
- *    that both provides and declares the same capability is refused (SPORE-FUSE-SET-SELF).
- *  - ACYCLIC — consumer→provider edges must form a DAG (SPORE-FUSE-SET-CYCLE).
+ *    built-in host shim; anything unsatisfied refuses the set (FUNGI-FUSE-UNKNOWN-CAP). A package
+ *    that both provides and declares the same capability is refused (FUNGI-FUSE-SET-SELF).
+ *  - ACYCLIC — consumer→provider edges must form a DAG (FUNGI-FUSE-SET-CYCLE).
  *
  * @param knownCapabilities capabilities with a registered host-import shape (builtins + overrides).
  */
@@ -779,7 +779,7 @@ export function planComposition(
     const unsigned = members.filter((m) => m.signature !== "verified").map((m) => m.name);
     if (unsigned.length > 0) {
       fuseError(
-        "SPORE-FUSE-SET-UNSIGNED",
+        "FUNGI-FUSE-SET-UNSIGNED",
         `refusing to compose: unsigned member(s) [${unsigned.join(", ")}] — a multi-module admission is signed only if EVERY module verified (pass allowUnsigned to override)`,
       );
     }
@@ -803,13 +803,13 @@ export function planComposition(
     // A provided+consumed capability must have a registered host-import SHAPE to be wireable.
     if (!knownCapabilities.has(cap)) {
       fuseError(
-        "SPORE-FUSE-PROVIDES-UNKNOWN",
+        "FUNGI-FUSE-PROVIDES-UNKNOWN",
         `capability '${cap}' is provided by [${provs.join(", ")}] and consumed by a peer, but has no registered host-import shape — cannot wire an unknown import surface`,
       );
     }
     if (provs.length > 1) {
       fuseError(
-        "SPORE-FUSE-SET-AMBIGUOUS",
+        "FUNGI-FUSE-SET-AMBIGUOUS",
         `capability '${cap}' is provided by multiple packages [${provs.join(", ")}] — refusing (ambiguous provider)`,
       );
     }
@@ -826,7 +826,7 @@ export function planComposition(
       const provider = providerOf.get(cap);
       if (provider === m.name) {
         fuseError(
-          "SPORE-FUSE-SET-SELF",
+          "FUNGI-FUSE-SET-SELF",
           `package '${m.name}' both provides and declares '${cap}' — refusing (self-provision)`,
         );
       } else if (provider !== undefined) {
@@ -836,7 +836,7 @@ export function planComposition(
         capMap.set(cap, { kind: "builtin" });
       } else {
         fuseError(
-          "SPORE-FUSE-UNKNOWN-CAP",
+          "FUNGI-FUSE-UNKNOWN-CAP",
           `package '${m.name}' declares capability '${cap}' satisfied by neither a host shim nor a peer provider — refusing (deny-by-default)`,
         );
       }
@@ -877,7 +877,7 @@ function topoOrder(names: readonly string[], dependsOn: ReadonlyMap<string, Read
   if (out.length !== names.length) {
     const stuck = names.filter((n) => !out.includes(n));
     return fuseError(
-      "SPORE-FUSE-SET-CYCLE",
+      "FUNGI-FUSE-SET-CYCLE",
       `multi-module composition has a provider cycle among [${stuck.join(", ")}] — refusing`,
     );
   }
@@ -899,7 +899,7 @@ export function makeProviderFactory(
   if (shapeFactory === undefined) {
     // Unreachable when called via planComposition (a provider cap is always known-shape),
     // but fail-closed if used directly.
-    return fuseError("SPORE-FUSE-PROVIDES-UNKNOWN", `cannot back capability '${cap}': no registered host-import shape`);
+    return fuseError("FUNGI-FUSE-PROVIDES-UNKNOWN", `cannot back capability '${cap}': no registered host-import shape`);
   }
   const shape = shapeFactory();
   return () => {
@@ -920,7 +920,7 @@ export function makeProviderFactory(
  * provider-backed capability through {@link makeProviderFactory}.
  *
  * FIRST-PARTY / TRUSTED packages only (shared process memory; isolation is Phase B). Returns a
- * Map keyed by package name. Fail-closed throughout (SPORE-FUSE-* codes).
+ * Map keyed by package name. Fail-closed throughout (FUNGI-FUSE-* codes).
  */
 export async function fusePackages(
   dirs: readonly string[],
@@ -941,7 +941,7 @@ export async function fusePackages(
   // Refuse a duplicate package name in the set (names key the plan + provider routing).
   const seen = new Set<string>();
   for (const a of admitted) {
-    if (seen.has(a.name)) fuseError("SPORE-FUSE-SET-DUPLICATE", `package '${a.name}' appears twice in the composition set — refusing`);
+    if (seen.has(a.name)) fuseError("FUNGI-FUSE-SET-DUPLICATE", `package '${a.name}' appears twice in the composition set — refusing`);
     seen.add(a.name);
   }
 
@@ -955,7 +955,7 @@ export async function fusePackages(
       });
       if (!verdict.ok) {
         return fuseError(
-          verdict.code ?? "SPORE-FUSE-REGISTRY-DENIED",
+          verdict.code ?? "FUNGI-FUSE-REGISTRY-DENIED",
           `central registry refused composition member '${a.name}@${a.descriptor.version}': ${verdict.reason ?? "not admissible"} — refusing the whole set`,
         );
       }
@@ -974,7 +974,7 @@ export async function fusePackages(
   const plan = planComposition(members, known, { allowUnsigned });
   if (allowUnsigned) {
     for (const a of admitted) {
-      if (a.signature === "unsigned") warn(`SPORE-FUSE-UNSIGNED-ALLOWED: composing '${a.name}' from an UNSIGNED manifest because allowUnsigned was set`);
+      if (a.signature === "unsigned") warn(`FUNGI-FUSE-UNSIGNED-ALLOWED: composing '${a.name}' from an UNSIGNED manifest because allowUnsigned was set`);
     }
   }
 
@@ -1013,14 +1013,14 @@ export interface ImportClosureModule {
  * inventory of what was admitted (keyId + wasmSha256 per module). `trusted` is ALWAYS false.
  */
 export interface ImportClosure {
-  readonly schemaVersion: "spore.import-closure.v1";
+  readonly schemaVersion: "fungi.import-closure.v1";
   readonly trusted: false;
   readonly modules: readonly ImportClosureModule[];
 }
 
 /**
  * Build the import-closure report over a set of package dirs. Each is run through Gates 1+2
- * (hash + signature) — a tampered module throws (SPORE-FUSE-HASH-MISMATCH), so the report only ever
+ * (hash + signature) — a tampered module throws (FUNGI-FUSE-HASH-MISMATCH), so the report only ever
  * describes modules whose bytes match their descriptor. This is a REPORT, not an admission decision.
  */
 export async function buildImportClosure(
@@ -1039,5 +1039,5 @@ export async function buildImportClosure(
       signature: a.signature,
     });
   }
-  return { schemaVersion: "spore.import-closure.v1", trusted: false, modules };
+  return { schemaVersion: "fungi.import-closure.v1", trusted: false, modules };
 }

@@ -23,12 +23,12 @@ import {
 
 function makePureFlowAst(flowName = "add") {
   const source = `pure flow ${flowName}(a: Int, b: Int) -> Int { return a }`;
-  return parseProgram(source, "test.spore").ast;
+  return parseProgram(source, "test.fungi").ast;
 }
 
 function makeManifest(overrides = {}) {
   return {
-    schemaVersion: "spore.runtime.manifest.v1",
+    schemaVersion: "fungi.runtime.manifest.v1",
     flow: "add",
     qualifier: "pure",
     requiresAudit: false,
@@ -127,37 +127,37 @@ describe("R7B: Stage B report", () => {
     const report = generateStageBReport([]);
     assert.equal(report.milestones.length, 4, "Should list all 4 Stage B milestones");
     const files = report.milestones.map((m) => m.file);
-    assert.ok(files.includes("lexer.spore"), "Should include lexer.spore");
-    assert.ok(files.includes("parser.spore"), "Should include parser.spore");
-    assert.ok(files.includes("type-checker.spore"), "Should include type-checker.spore");
-    assert.ok(files.includes("compiler.capabilities.spore"), "Should include compiler.capabilities.spore");
+    assert.ok(files.includes("lexer.fungi"), "Should include lexer.fungi");
+    assert.ok(files.includes("parser.fungi"), "Should include parser.fungi");
+    assert.ok(files.includes("type-checker.fungi"), "Should include type-checker.fungi");
+    assert.ok(files.includes("compiler.capabilities.fungi"), "Should include compiler.capabilities.fungi");
   });
 
   it("generateStageBReport: milestone with 0 errors has parityStatus 'complete'", () => {
     const report = generateStageBReport([
-      { name: "lexer", file: "lexer.spore", errors: 0 },
+      { name: "lexer", file: "lexer.fungi", errors: 0 },
     ]);
-    const lexer = report.milestones.find((m) => m.file === "lexer.spore");
-    assert.ok(lexer !== undefined, "lexer.spore milestone should exist");
+    const lexer = report.milestones.find((m) => m.file === "lexer.fungi");
+    assert.ok(lexer !== undefined, "lexer.fungi milestone should exist");
     assert.equal(lexer.parityStatus, "complete", "0 errors → parityStatus 'complete'");
     assert.equal(lexer.parseErrors, 0, "parseErrors should be 0");
   });
 
   it("generateStageBReport: milestone with errors has parityStatus 'pending' or 'partial'", () => {
     const report = generateStageBReport([
-      { name: "parser", file: "parser.spore", errors: 10 },
+      { name: "parser", file: "parser.fungi", errors: 10 },
     ]);
-    const parser = report.milestones.find((m) => m.file === "parser.spore");
-    assert.ok(parser !== undefined, "parser.spore milestone should exist");
+    const parser = report.milestones.find((m) => m.file === "parser.fungi");
+    assert.ok(parser !== undefined, "parser.fungi milestone should exist");
     assert.equal(parser.parityStatus, "pending", "10 errors → parityStatus 'pending'");
   });
 
   it("generateStageBReport: overallStatus 'complete' when all milestones have 0 errors", () => {
     const report = generateStageBReport([
-      { name: "lexer",                file: "lexer.spore",                  errors: 0 },
-      { name: "parser",               file: "parser.spore",                 errors: 0 },
-      { name: "type-checker",         file: "type-checker.spore",           errors: 0 },
-      { name: "compiler.capabilities",file: "compiler.capabilities.spore",  errors: 0 },
+      { name: "lexer",                file: "lexer.fungi",                  errors: 0 },
+      { name: "parser",               file: "parser.fungi",                 errors: 0 },
+      { name: "type-checker",         file: "type-checker.fungi",           errors: 0 },
+      { name: "compiler.capabilities",file: "compiler.capabilities.fungi",  errors: 0 },
     ]);
     assert.equal(report.overallStatus, "complete", "All 0 errors → overallStatus 'complete'");
   });

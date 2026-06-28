@@ -23,36 +23,36 @@ interface DiagnosticLike {
 /** Diagnostic codes that unconditionally block production deployment. */
 const PRODUCTION_BLOCKERS: ReadonlySet<string> = new Set([
   // Security policy violations
-  "SPORE-SEC-020",
-  "SPORE-SEC-021",
+  "FUNGI-SEC-020",
+  "FUNGI-SEC-021",
   // Safety violations
-  "SPORE-SAFETY-001",
-  "SPORE-SAFETY-002",
-  "SPORE-SAFETY-003",
-  "SPORE-SAFETY-004",
-  "SPORE-SAFETY-005",
+  "FUNGI-SAFETY-001",
+  "FUNGI-SAFETY-002",
+  "FUNGI-SAFETY-003",
+  "FUNGI-SAFETY-004",
+  "FUNGI-SAFETY-005",
   // Governed-value access
-  "SPORE-RUNTIME-005",
+  "FUNGI-RUNTIME-005",
   // Audit violations
-  "SPORE-RUNTIME-007",
-  // Memory safety — only SPORE-MEMORY-008 (unsafe-block-missing-reason) has a WIRED emitter today
-  // (detectUnsafeBlockWithoutReason). SPORE-MEMORY-001/002/003/007 (use-after-move / borrow-after-move /
+  "FUNGI-RUNTIME-007",
+  // Memory safety — only FUNGI-MEMORY-008 (unsafe-block-missing-reason) has a WIRED emitter today
+  // (detectUnsafeBlockWithoutReason). FUNGI-MEMORY-001/002/003/007 (use-after-move / borrow-after-move /
   // borrow-escapes-scope / unchecked-access) are RESERVED: NO compiler pass emits them, so listing them
   // here advertised a production memory-safety block the gate cannot actually detect — a false capability
   // claim (RD-0124 audit, single-most-important finding). Re-add each ONLY when its move/borrow detector
   // is wired and emitting; a non-emittable PRODUCTION_BLOCKER misleads any operator who trusts ready=true.
   // (Real move/borrow checking is a separate, larger build — a LATER roadmap item.)
-  "SPORE-MEMORY-008",
+  "FUNGI-MEMORY-008",
   // Raw pointer outside unsafe
-  "SPORE-RAWPTR-001",
+  "FUNGI-RAWPTR-001",
   // Install script denied (supply chain)
-  "SPORE-PKG-004",
+  "FUNGI-PKG-004",
   // Unsafe dynamic code
-  "SPORE-SOURCE-ESCAPE-001",
+  "FUNGI-SOURCE-ESCAPE-001",
   // Non-deterministic build
-  "SPORE-BUILD-001",
+  "FUNGI-BUILD-001",
   // Effects not declared (production mode)
-  "SPORE-STDLIB-001",
+  "FUNGI-STDLIB-001",
 ]);
 
 /**

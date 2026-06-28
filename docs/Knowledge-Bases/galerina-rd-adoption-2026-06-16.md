@@ -22,18 +22,18 @@ A **govern-don't-absorb** review of the two R&D tracks. Separates *achievements*
   Grover-safe); (3) **tri-logic belongs in the governance/key-release gate, not the cipher**; (4) self-heal =
   Reed-Solomon *outside* the gate + re-verify the signed root; (5) **cleartext-semantic-routing KILLED**
   (vec2text ~92% recovery → "sharing embeddings ≈ sharing the documents").
-- **Crypto-on-core (`SPORE-SUBSTRATE-001`) INDEPENDENTLY RE-DERIVED** from both the photonic-hashing *and* the
+- **Crypto-on-core (`FUNGI-SUBSTRATE-001`) INDEPENDENTLY RE-DERIVED** from both the photonic-hashing *and* the
   lattice/encryption literature.
-- **Measured `@noble` benchmark (10/10 green)** + a **runnable `.spore` K3 governance gate** (`galerina check` clean,
+- **Measured `@noble` benchmark (10/10 green)** + a **runnable `.fungi` K3 governance gate** (`galerina check` clean,
   executes on the compile→WASM path).
 
 ## 2. USABLE in Galerina NOW (govern-don't-absorb — no crypto, no engine)
 
 | # | What | Concrete Galerina action | Value |
 |---|---|---|---|
-| **U1** ✅ **LANDED** | **Verify-before-decrypt key-release PATTERN.** The K3 `keyRelease(integrityOk, authenticityOk, govVerdict)` gate: release **only if** integrity AND authenticity pass AND the governance verdict collapses to Allow — any failure → Deny (fail-closed). Proven runnable `.spore`, built on the **already-shipped** 3-valued governance (`SPORE-GOV-3VL-001`). | ✅ Landed 2026-06-16 as **`tests/patterns/pattern-10-verify-before-decrypt-gate.spore`** — `galerina check` clean + runs on WASM (#203). Galerina governs the confidentiality pipeline; the crypto stays engine-side. | **HIGH** — the "Galerina governs the engine" story, runnable, zero new crypto |
-| **U2** | **"No cleartext semantic embedding across a trust boundary"** (verdict 5) — a real, enforceable governance principle. | Candidate **data-exposure diagnostic** (`SPORE-PRIVACY-*`): an unencrypted embedding/attribute vector crossing an egress/wire boundary is a violation → encrypt-in-payload, filter at trusted endpoints. | **MED** — a genuine new governance rule |
-| **U3** | **Crypto-on-core EVIDENCE** (analog optics ≤~10-bit breaks avalanche; SHA-256 Grover-safe). | ✅ Already fixed the `future-substrates` "Encryption → Photonic" contradiction. Strengthen the `SPORE-SUBSTRATE-001` substrate KB with the evidence; extend the rule wording to **"encryption/hashing/signatures,"** not just Hash/Sign effects. | LOW-MED — hardens an existing rule |
+| **U1** ✅ **LANDED** | **Verify-before-decrypt key-release PATTERN.** The K3 `keyRelease(integrityOk, authenticityOk, govVerdict)` gate: release **only if** integrity AND authenticity pass AND the governance verdict collapses to Allow — any failure → Deny (fail-closed). Proven runnable `.fungi`, built on the **already-shipped** 3-valued governance (`FUNGI-GOV-3VL-001`). | ✅ Landed 2026-06-16 as **`tests/patterns/pattern-10-verify-before-decrypt-gate.fungi`** — `galerina check` clean + runs on WASM (#203). Galerina governs the confidentiality pipeline; the crypto stays engine-side. | **HIGH** — the "Galerina governs the engine" story, runnable, zero new crypto |
+| **U2** | **"No cleartext semantic embedding across a trust boundary"** (verdict 5) — a real, enforceable governance principle. | Candidate **data-exposure diagnostic** (`FUNGI-PRIVACY-*`): an unencrypted embedding/attribute vector crossing an egress/wire boundary is a violation → encrypt-in-payload, filter at trusted endpoints. | **MED** — a genuine new governance rule |
+| **U3** | **Crypto-on-core EVIDENCE** (analog optics ≤~10-bit breaks avalanche; SHA-256 Grover-safe). | ✅ Already fixed the `future-substrates` "Encryption → Photonic" contradiction. Strengthen the `FUNGI-SUBSTRATE-001` substrate KB with the evidence; extend the rule wording to **"encryption/hashing/signatures,"** not just Hash/Sign effects. | LOW-MED — hardens an existing rule |
 | **U4** | **NVFP4 verified byte facts** (16×E2M1 4-bit + 1-byte E4M3 scale = 9 bytes/block; lossy; *not* ternary, *not* crypto). | Ground the `fp4_block` `PrecisionTechnique` / `TECHNIQUE_BITS` comments (the #201 lane). | LOW — doc accuracy |
 
 ## 3. R&D-ONLY / GATED (NOT usable now — do NOT pull into Galerina)

@@ -38,7 +38,7 @@ computation and returns a value. It **cannot** declare effects, capabilities,
 authority, or contracts — those belong in `flow`. It is always synchronous.
 
 A `fn` may only appear inside a `flow` body. Top-level `fn` is a compiler
-error (`SPORE-SYNTAX-005`). A `fn` that declares effects emits `SPORE-SEC-014`.
+error (`FUNGI-SYNTAX-005`). A `fn` that declares effects emits `FUNGI-SEC-014`.
 
 If a `fn` uses an operation that observes an effect (e.g. a network call), that
 effect is attributed to the containing `flow` — the `fn` itself still cannot
@@ -58,9 +58,9 @@ pure flow calculateTotal(price: Money<GBP>) : Money<GBP> {
   return price + calculateVat(price)
 }
 
-// WRONG — fn cannot declare effects (SPORE-SEC-014):
+// WRONG — fn cannot declare effects (FUNGI-SEC-014):
 // fn fetchUser(id: UserId) -> Result<UserProfile, NetworkError>
-//   with effects [network.outbound]   // <-- SPORE-SYNTAX-LEGACY-001 hard error too
+//   with effects [network.outbound]   // <-- FUNGI-SYNTAX-LEGACY-001 hard error too
 // { ... }
 // Use a flow instead:
 pure flow fetchUser(id: UserId) : Result<UserProfile, NetworkError> {
@@ -168,7 +168,7 @@ match score {
 ```
 
 Use `when` guard arms instead of `else if` chains — `else if` is a hard error
-(`SPORE-SYNTAX-010`).
+(`FUNGI-SYNTAX-010`).
 
 **See also:** `galerina-grammar.ebnf` §when_guard_arm, `galerina-syntax-if-match-optional.md`
 
@@ -190,7 +190,7 @@ Supported arm forms (Phase 41+):
 | `Ok(x)` / `Err(e)` | Result arm |
 | Wildcard | `_ => ...` |
 
-Use `match` in place of `else if` chains (which are a hard error: `SPORE-SYNTAX-010`).
+Use `match` in place of `else if` chains (which are a hard error: `FUNGI-SYNTAX-010`).
 
 **See also:** `galerina-grammar.ebnf` §match_expr, `galerina-syntax-if-match-optional.md`
 
@@ -233,11 +233,11 @@ contract {
 **Aliases:** with effects clause, effects list, effect annotation
 
 `with effects [...]` was a pre-v1 syntax for declaring effects on a flow.
-It is now a **hard error** (`SPORE-SYNTAX-LEGACY-001`). The v1 parser rejects
+It is now a **hard error** (`FUNGI-SYNTAX-LEGACY-001`). The v1 parser rejects
 this form immediately.
 
 ```galerina
-// WRONG — SPORE-SYNTAX-LEGACY-001 hard error:
+// WRONG — FUNGI-SYNTAX-LEGACY-001 hard error:
 // flow foo(x: Int) -> String
 //   with effects [database.read]
 // { ... }
@@ -249,7 +249,7 @@ flow foo(x: Int) : String {
 }
 ```
 
-**See also:** `galerina-grammar.ebnf` §effects_clause (REMOVED note), `SPORE-SYNTAX-LEGACY-001`
+**See also:** `galerina-grammar.ebnf` §effects_clause (REMOVED note), `FUNGI-SYNTAX-LEGACY-001`
 
 ---
 
@@ -259,7 +259,7 @@ flow foo(x: Int) : String {
 
 A declared runtime authority that a `flow` (or `guarded flow` / `secure flow`)
 requires. Effects are explicit and propagate upward through the call graph.
-Only `flow` variants declare effects — `fn` cannot declare effects (`SPORE-SEC-014`).
+Only `flow` variants declare effects — `fn` cannot declare effects (`FUNGI-SEC-014`).
 No declared effects on a flow = pure/local for that flow.
 
 ```galerina
@@ -293,7 +293,7 @@ match decision {
   Unknown => review()
 }
 
-// Wrong — SPORE-SAFETY-001
+// Wrong — FUNGI-SAFETY-001
 if decision { ... }
 ```
 
@@ -315,7 +315,7 @@ in `if`/`while`. Distinct from `Tri`.
 **Aliases:** auto, type inference, inferred type, auto type
 
 Not a type — a compile-time keyword telling the compiler to resolve the concrete
-type from the initializer. Does **not** emit `SPORE-TYPE-001`. Deferred to the
+type from the initializer. Does **not** emit `FUNGI-TYPE-001`. Deferred to the
 inference pass.
 
 ```galerina
@@ -363,8 +363,8 @@ A string type for sensitive values (API keys, tokens, passwords). Restricted:
 let apiKey: SecureString = env.secret("API_KEY")
 log.info(redact(apiKey))                          // OK
 let valid = constantTimeEquals(apiKey, provided)  // OK
-log.info(apiKey)                                  // SPORE-SECRET-001
-if apiKey == provided { ... }                     // SPORE-SECRET-002
+log.info(apiKey)                                  // FUNGI-SECRET-001
+if apiKey == provided { ... }                     // FUNGI-SECRET-002
 ```
 
 ---
@@ -392,12 +392,12 @@ Replaces exceptions. Arity 2. Every `match` on `Result<T, E>` must handle both
 **Aliases:** tensor, Tensor, bare Tensor, typed tensor, neural tensor
 
 Generic type with **arity 2**: element type and shape. Bare `Tensor` without
-parameters is invalid (`SPORE-TYPE-009`).
+parameters is invalid (`FUNGI-TYPE-009`).
 
 ```galerina
 Tensor<Float32, [Batch, 768]>  // valid
 Tensor<Int8, DynamicShape>     // valid — shape is dynamic but element type known
-Tensor                         // SPORE-TYPE-009 — arity mismatch
+Tensor                         // FUNGI-TYPE-009 — arity mismatch
 AnyTensor                      // use this for fully erased form
 ```
 
@@ -419,7 +419,7 @@ Prefer `Tensor<T, Shape>` wherever possible.
 **Aliases:** monetary type, currency type, financial amount
 
 Parameterised by currency tag (`GBP`, `USD`, `EUR`, `JPY`). Arithmetic only
-between same-currency values — cross-currency is `SPORE-TYPE-004`.
+between same-currency values — cross-currency is `FUNGI-TYPE-004`.
 
 ---
 
@@ -508,7 +508,7 @@ declassify the original. Required before passing `SecureString` to log functions
 **Aliases:** constant time comparison, timing-safe equals, secure equals, secret equals
 
 Required instead of `==` for `SecureString` comparisons. Direct `==` on
-`SecureString` emits `SPORE-SECRET-002`.
+`SecureString` emits `FUNGI-SECRET-002`.
 
 ---
 
@@ -516,18 +516,18 @@ Required instead of `==` for `SecureString` comparisons. Direct `==` on
 
 | Canonical code | Aliases | Meaning |
 |---|---|---|
-| `SPORE-TYPE-001` | UnknownType, type not found, undefined type | Referenced type not in scope |
-| `SPORE-TYPE-004` | InvalidBinaryOperation, invalid operator, bad operand types | Operator not valid for these types |
-| `SPORE-TYPE-009` | InvalidGenericInstantiation, arity mismatch, wrong type arguments | Wrong number of generic parameters |
-| `SPORE-VALUESTATE-001` | UnsafeToSafeTransitionDenied, missing gate | safe mut without a gate |
-| `SPORE-VALUESTATE-003` | UnsafeValueReachedGovernedSink, unsafe at sink | unsafe binding at governed sink |
-| `SPORE-SECRET-001` | SecretValueLogged, secret in log | SecureString passed to log function |
-| `SPORE-SECRET-002` | SecretComparisonDenied, secret equality | SecureString compared with == |
-| `SPORE-MATCH-001` | NonExhaustiveMatch, missing match arm | match missing one or more variants |
-| `SPORE-NAME-001` | UNDECLARED_NAME, name not found, undefined name | Identifier not declared in scope |
+| `FUNGI-TYPE-001` | UnknownType, type not found, undefined type | Referenced type not in scope |
+| `FUNGI-TYPE-004` | InvalidBinaryOperation, invalid operator, bad operand types | Operator not valid for these types |
+| `FUNGI-TYPE-009` | InvalidGenericInstantiation, arity mismatch, wrong type arguments | Wrong number of generic parameters |
+| `FUNGI-VALUESTATE-001` | UnsafeToSafeTransitionDenied, missing gate | safe mut without a gate |
+| `FUNGI-VALUESTATE-003` | UnsafeValueReachedGovernedSink, unsafe at sink | unsafe binding at governed sink |
+| `FUNGI-SECRET-001` | SecretValueLogged, secret in log | SecureString passed to log function |
+| `FUNGI-SECRET-002` | SecretComparisonDenied, secret equality | SecureString compared with == |
+| `FUNGI-MATCH-001` | NonExhaustiveMatch, missing match arm | match missing one or more variants |
+| `FUNGI-NAME-001` | UNDECLARED_NAME, name not found, undefined name | Identifier not declared in scope |
 
-Full diagnostic definitions: `formal-type-system-spec.md` (SPORE-TYPE-*),
-`value-state-annotations.md` (SPORE-VALUESTATE-*, SPORE-SECRET-*)
+Full diagnostic definitions: `formal-type-system-spec.md` (FUNGI-TYPE-*),
+`value-state-annotations.md` (FUNGI-VALUESTATE-*, FUNGI-SECRET-*)
 
 ---
 

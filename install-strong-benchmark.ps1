@@ -11,7 +11,7 @@ $Files = @(
   "packages-galerina\galerina-core\examples\compute-mix-throughput-benchmark.node.js",
   "packages-galerina\galerina-core\examples\compute-mix-throughput-benchmark.py",
   "packages-galerina\galerina-core\examples\benchmark-runner.node.js",
-  "packages-galerina\galerina-core\examples\compute-mix-throughput-benchmark.spore",
+  "packages-galerina\galerina-core\examples\compute-mix-throughput-benchmark.fungi",
   "packages-galerina\galerina-core\examples\BENCHMARK-V2-README.md"
 )
 

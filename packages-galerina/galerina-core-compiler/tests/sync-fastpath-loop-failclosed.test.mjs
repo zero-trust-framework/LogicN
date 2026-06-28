@@ -16,7 +16,7 @@ import assert from "node:assert/strict";
 import { parseProgram, tryPureFlowSync, executeFlow, clearBytecodeCache, clearPureFlowCache } from "../dist/index.js";
 
 function parse(src) {
-  const p = parseProgram(src, "inline.spore");
+  const p = parseProgram(src, "inline.fungi");
   const errs = p.diagnostics.filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, `parse errors: ${errs.map((e) => e.message).join("; ")}`);
   return p;

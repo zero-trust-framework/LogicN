@@ -1,4 +1,4 @@
-SPORE-EFFECT-001
+FUNGI-EFFECT-001
 // The flow uses a phi.read-gated operation but declares no effects at all,
-// which causes SPORE-EFFECT-001 (EffectUsedButNotDeclared) in the current pipeline.
-// SPORE-PHI-001 is the intended future target once the PHI effect checker is implemented.
+// which causes FUNGI-EFFECT-001 (EffectUsedButNotDeclared) in the current pipeline.
+// FUNGI-PHI-001 is the intended future target once the PHI effect checker is implemented.

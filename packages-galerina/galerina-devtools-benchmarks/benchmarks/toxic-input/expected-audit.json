@@ -9,7 +9,7 @@
       "expectTrap": true,
       "expectedTrapKind": "ERR_NEGATIVE_AMOUNT",
       "expectedRollbackStatus": "clean",
-      "auditEventCode": "SPORE-INV-000"
+      "auditEventCode": "FUNGI-INV-000"
     },
     "zero-amount (toxic)": {
       "flow": "processPayment",
@@ -17,7 +17,7 @@
       "expectTrap": true,
       "expectedTrapKind": "ERR_NEGATIVE_AMOUNT",
       "expectedRollbackStatus": "clean",
-      "auditEventCode": "SPORE-INV-000"
+      "auditEventCode": "FUNGI-INV-000"
     },
     "over-limit (toxic)": {
       "flow": "processPayment",
@@ -25,7 +25,7 @@
       "expectTrap": true,
       "expectedTrapKind": "ERR_AMOUNT_EXCEEDS_LIMIT",
       "expectedRollbackStatus": "clean",
-      "auditEventCode": "SPORE-INV-000"
+      "auditEventCode": "FUNGI-INV-000"
     },
     "empty-currency (toxic)": {
       "flow": "processPayment",
@@ -33,7 +33,7 @@
       "expectTrap": true,
       "expectedTrapKind": "ERR_EMPTY_CURRENCY",
       "expectedRollbackStatus": "clean",
-      "auditEventCode": "SPORE-INV-000"
+      "auditEventCode": "FUNGI-INV-000"
     },
     "valid input (baseline)": {
       "flow": "processPaymentValid",

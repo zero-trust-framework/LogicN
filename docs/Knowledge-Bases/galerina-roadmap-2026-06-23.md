@@ -11,7 +11,7 @@
 > **Also landed late-session:** the telemetry→K3 admission feedback loop · the fail-open class taxonomy + the
 > `component-health.mjs` spec · the `.tmf` defensive-publication paper (quantum-resilient universal format) · the
 > README full refresh · the full benchmark + audit sweep (SEC-002 all-killed). **Approved build queue:** canCommit
-> Option A · value-state 34B-hole `SPORE-VALUESTATE-008` · flow-kind `SPORE-TIER-001` floor · the fail-open detectors.
+> Option A · value-state 34B-hole `FUNGI-VALUESTATE-008` · flow-kind `FUNGI-TIER-001` floor · the fail-open detectors.
 > All of the above is **pushed to `origin/main`** (`955a556`).
 
 Owner directive: **fix security issues first.** Missing/stub packages are *consider-not-always* (framework breadth,
@@ -80,7 +80,7 @@ token-saving dev tools** (status/rd-absorb/stray-docs, wired into the Stop caden
    all `[test]`-killed; **catalog now 15/15**. (add/sub use a single-line `(a op b) | 0` pre-wrap anchor —
    CRLF-agnostic, since `i32-arith.ts` has mixed line endings.) **secret-egress DONE 2026-06-23 — #5 COMPLETE,
    catalog now 17/17:** 2 mutants corrupt the `SINK_REQUIREMENTS` registry key (response.body / ai.remoteInference)
-   so the sink lookup misses → an unsafe value escapes with no `SPORE-VALUESTATE-003`; `domain-security.test` kills
+   so the sink lookup misses → an unsafe value escapes with no `FUNGI-VALUESTATE-003`; `domain-security.test` kills
    both `[test]`. *Finding:* the first two targets I tried SURVIVED, which was informative — the egress gate is
    **multi-layered defense-in-depth** (sentinel-egress never-drop has TWO mechanisms + an unreachable re-push;
    `isNetworkSink` is redundant with the registry), so mutation testing must target the **authoritative layer**
@@ -113,15 +113,15 @@ token-saving dev tools** (status/rd-absorb/stray-docs, wired into the Stop caden
   offline key custody · #102-106 DSS.wasm = Wasmtime infra · #110 secrets rotation = ext vault.)*
 - **Finish the api-server transport** (building now) + a **real runnable example-app** → the
   scaffold→fuse→kernel→**serve** path end-to-end (the framework's biggest breadth gap; pairs with security #1).
-- **§2 Governance Dead-Code Elimination** (design-complete, `SPORE-GDCE-001`) — the compiler-intelligence net-new.
-- **`contract.permissions{}` device clause** (design-complete, `SPORE-PERM-001..006`).
+- **§2 Governance Dead-Code Elimination** (design-complete, `FUNGI-GDCE-001`) — the compiler-intelligence net-new.
+- **`contract.permissions{}` device clause** (design-complete, `FUNGI-PERM-001..006`).
 - **#201 EFFECT-006** pii/phi brand→family map: complete + `git stash pop` (unblocks #202).
 - **Graph auto-discover `packages-galerina/*`** (kill the manifest drift fixed by hand this session) + wire **#150 CI
   auto-count** + apply the remaining stale-doc fixes (ledger DONE rows, build-roadmap third count).
 - **H5 fusion-B2 ABI mismatch** + one real end-to-end fused-app test · **Stage E diagnostic P0-security overloads**.
 
 ## MID
-- **Self-hosted Stage-B past lexer** (`parser.spore → type-checker.spore → governance-verifier.spore` to WASM byte-parity,
+- **Self-hosted Stage-B past lexer** (`parser.fungi → type-checker.fungi → governance-verifier.fungi` to WASM byte-parity,
   #105) — moves Axis-B 80%→100% (`tokenize` is the only flow at byte-parity today).
 - **Close the 4 WASM codegen gaps** (#200 nested-member · #171 None sentinel · #172 `__int_to_str` · run-host string).
 - **0014 governance-fidelity differential harness** (walker ≡ bytecode ≡ WASM) — the lean→WASM trust gate.

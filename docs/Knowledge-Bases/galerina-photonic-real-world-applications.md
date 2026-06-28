@@ -40,7 +40,7 @@ verification cheaper than the work itself.
   (#102-106 gated).
 - **Realized speedup is modest** (~1.91× batched, not the ideal 9.4×) — the cheap-verify is exactly what makes
   offload *safe even at modest speedup*. There is no O(1)/instant/free-lunch win (latency ≠ work).
-- **Crypto + bit-exact determinism never go on the lane** (SPORE-SUBSTRATE-001) — only value-carrying maths.
+- **Crypto + bit-exact determinism never go on the lane** (FUNGI-SUBSTRATE-001) — only value-carrying maths.
 
 *Companion docs: [galerina-photonic-maths-quality-self-check.md](galerina-photonic-maths-quality-self-check.md) (how the
 result is verified) · [galerina-substrate-worked-example.md](galerina-substrate-worked-example.md) (the `substrate {}`

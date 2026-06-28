@@ -179,7 +179,7 @@ contract {
     const wrapped = `pure flow f() -> Void
 ${src}
 { return }`;
-    const result = parseProgram(wrapped, "test.spore");
+    const result = parseProgram(wrapped, "test.fungi");
     // Should have zero parse errors
     const errors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, `Unexpected errors: ${errors.map((e) => e.message).join(", ")}`);
@@ -195,7 +195,7 @@ contract {
   }
 }
 { return }`;
-    const result = parseProgram(src, "test.spore");
+    const result = parseProgram(src, "test.fungi");
     const errors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, `Unexpected errors: ${errors.map((e) => e.message).join(", ")}`);
   });
@@ -209,7 +209,7 @@ contract {
   }
 }
 { return }`;
-    const result = parseProgram(src, "test.spore");
+    const result = parseProgram(src, "test.fungi");
     const errors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, `Unexpected errors: ${errors.map((e) => e.message).join(", ")}`);
   });
@@ -222,7 +222,7 @@ contract {
   }
 }
 { return }`;
-    const result = parseProgram(src, "test.spore");
+    const result = parseProgram(src, "test.fungi");
     const errors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, `Unexpected errors: ${errors.map((e) => e.message).join(", ")}`);
   });
@@ -236,7 +236,7 @@ contract {
   }
 }
 { return }`;
-    const result = parseProgram(src, "test.spore");
+    const result = parseProgram(src, "test.fungi");
     const errors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, `Unexpected errors: ${errors.map((e) => e.message).join(", ")}`);
   });
@@ -249,7 +249,7 @@ contract {
   }
 }
 { return }`;
-    const result = parseProgram(src, "test.spore");
+    const result = parseProgram(src, "test.fungi");
     // Find contractDecl node
     const program = result.ast;
     const flowNode = program.children?.find((n) => n.kind === "pureFlowDecl");

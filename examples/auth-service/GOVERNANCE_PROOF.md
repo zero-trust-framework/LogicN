@@ -9,7 +9,7 @@ re-running the toolchain.
 
 ## Flow: verifyPassword
 
-**Source:** `verifyPassword.spore`
+**Source:** `verifyPassword.fungi`
 **Qualifier:** `secure`
 
 ### Declared Effects
@@ -55,7 +55,7 @@ pep_sha256: PLACEHOLDER-verifyPassword-v0
 
 ## Flow: createSession
 
-**Source:** `createSession.spore`
+**Source:** `createSession.fungi`
 **Qualifier:** `secure`
 
 ### Declared Effects
@@ -97,7 +97,7 @@ pep_sha256: PLACEHOLDER-createSession-v0
 
 ## Flow: verifyToken
 
-**Source:** `verifyToken.spore`
+**Source:** `verifyToken.fungi`
 **Qualifier:** `pure`
 
 ### Declared Effects
@@ -112,7 +112,7 @@ contains only a function definition; no `(import ...)` stanzas are emitted.
 ### Audit Trail Contents
 
 _None._ `pure` flows cannot call `AuditLog.write` because `audit.write` is
-not in scope. This is enforced statically by the effect checker (SPORE-EFFECT-*
+not in scope. This is enforced statically by the effect checker (FUNGI-EFFECT-*
 diagnostics).
 
 ### PassiveExecutionPlan Hash

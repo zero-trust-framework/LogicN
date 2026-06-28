@@ -9,7 +9,7 @@ See: galerina-adaptive-runtime-profiles.md for runtime behaviour
 
 ## TL;DR
 - Tensor shape inference belongs in the GIR, not the source language
-- `ai.inference` effects automatically suggest NPU/GPU preference (SPORE-HINT-COMPUTE-001)
+- `ai.inference` effects automatically suggest NPU/GPU preference (FUNGI-HINT-COMPUTE-001)
 - Photonic compatibility is a GIR planning flag, never a source-level type annotation
 
 ---
@@ -76,7 +76,7 @@ in the photonic target bridge (`galerina-target-photonic`), not in Galerina sour
 
 ---
 
-## 2. Effect → Target Affinity — Implemented (SPORE-HINT-COMPUTE-001)
+## 2. Effect → Target Affinity — Implemented (FUNGI-HINT-COMPUTE-001)
 
 When a flow declares `ai.inference` but has no `compute target` block, the
 governance verifier emits an info-level planning hint.
@@ -84,7 +84,7 @@ governance verifier emits an info-level planning hint.
 ### Example hint
 
 ```text
-SPORE-HINT-COMPUTE-001 COMPUTE_TARGET_MISSING_FOR_AI_INFERENCE [info]
+FUNGI-HINT-COMPUTE-001 COMPUTE_TARGET_MISSING_FOR_AI_INFERENCE [info]
 
 Flow 'classifyMessage' uses ai.inference but has no compute target preference.
 NPU or GPU acceleration would improve performance.
@@ -196,7 +196,7 @@ Both are optional additions to `GIRFlow` — absent when not applicable.
 | Feature | Phase | Status |
 |---|---|---|
 | GIR tensor metadata (type, shape, photonic_compatible) | 8A | ✅ Implemented |
-| SPORE-HINT-COMPUTE-001 (ai.inference without compute target) | 8A | ✅ Implemented |
+| FUNGI-HINT-COMPUTE-001 (ai.inference without compute target) | 8A | ✅ Implemented |
 | GIR target_affinity hint from effects | 8A | ✅ Implemented |
 | Tensor shape compatibility checking (matmul dimension alignment) | 8B | Planned |
 | Quantized type checking (Int8 in photonic context) | 8B | Planned |

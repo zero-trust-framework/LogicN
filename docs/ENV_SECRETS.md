@@ -14,7 +14,7 @@ undeclared hosts unless Galerina has an explicit safe rule for that use.
 
 ## Central Declaration
 
-Secrets should be declared centrally, usually in `boot.spore` or the app security
+Secrets should be declared centrally, usually in `boot.fungi` or the app security
 policy, instead of being read ad hoc throughout the application.
 
 ```Galerina
@@ -85,7 +85,7 @@ Compiler error:
 GALERINA-SECRET-001
 Cannot log Secret<ApiKey>.
 
-File: payments.spore
+File: payments.fungi
 Line: 12
 
 Use a non-sensitive reference such as Secret.name(key) or Secret.fingerprint(key).
@@ -506,10 +506,10 @@ Compiler warning or error:
 GALERINA-SECRET-HARDCODED-001
 Possible hard-coded secret detected.
 
-File: payments.spore
+File: payments.fungi
 Line: 8
 
-Move this value to .env and declare it in boot.spore.
+Move this value to .env and declare it in boot.fungi.
 ```
 
 ## Syntax Pattern

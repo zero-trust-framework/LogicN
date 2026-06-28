@@ -10,7 +10,7 @@ AI assistants should use this file to understand the project goals, rules, namin
 
 ## Project Summary
 
-Galerina / Galerina is a programming language concept designed to compile one `.spore` source project into multiple outputs.
+Galerina / Galerina is a programming language concept designed to compile one `.fungi` source project into multiple outputs.
 
 Target outputs may include:
 
@@ -141,17 +141,17 @@ permission required before planning or implementation
 Galerina source files use:
 
 ```text
-.spore
+.fungi
 ```
 
 Use:
 
 ```text
-boot.spore
-main.spore
-order-service.spore
-payment-webhook.spore
-fraud-check.spore
+boot.fungi
+main.fungi
+order-service.fungi
+payment-webhook.fungi
+fraud-check.fungi
 ```
 
 ## Entry File Rule
@@ -159,16 +159,16 @@ fraud-check.spore
 For full projects, prefer:
 
 ```text
-boot.spore
+boot.fungi
 ```
 
-For small examples or scripts, `main.spore` is acceptable.
+For small examples or scripts, `main.fungi` is acceptable.
 
 Recommended:
 
 ```text
-boot.spore = project entry and configuration
-src/main.spore = application entry flow
+boot.fungi = project entry and configuration
+src/main.fungi = application entry flow
 ```
 
 ---
@@ -182,7 +182,7 @@ Preferred:
 ```text
 Galerina
 Galerina
-boot.spore
+boot.fungi
 Galerina.config
 Galerina.lock
 packages/
@@ -207,13 +207,13 @@ Use this structure for examples unless a smaller script is more appropriate:
 
 ```text
 my-galerina-app/
-├── boot.spore
+├── boot.fungi
 ├── Galerina.config
 ├── Galerina.lock
 ├── .env.example
 ├── src/
-│   ├── main.spore
-│   ├── routes.spore
+│   ├── main.fungi
+│   ├── routes.fungi
 │   └── services/
 ├── app/
 │   ├── controllers/
@@ -234,7 +234,7 @@ my-galerina-app/
 For short scripts:
 
 ```text
-hello.spore
+hello.fungi
 ```
 
 ---
@@ -731,7 +731,7 @@ Source maps are essential.
 
 Never remove them from the Galerina concept.
 
-Errors should map back to original `.spore` files.
+Errors should map back to original `.fungi` files.
 
 Example:
 
@@ -739,7 +739,7 @@ Example:
 Runtime error: PaymentStatus.Unknown was not handled.
 
 Original source:
-  app/services/order-service.spore:42:7
+  app/services/order-service.fungi:42:7
 
 Suggestion:
   Add a match branch for Unknown.
@@ -806,7 +806,7 @@ Example:
 {
   "errorType": "TargetCompatibilityError",
   "target": "photonic",
-  "file": "src/fraud-check.spore",
+  "file": "src/fraud-check.fungi",
   "line": 18,
   "column": 12,
   "problem": "readFile cannot run inside a photonic compute block.",

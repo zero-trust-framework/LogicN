@@ -61,7 +61,7 @@ The boundary collapse (`three-valued-governance.ts:90-97,135`):
 ```
 authorize(v)  ⇔  v = +1
 collapse(v) = allow   if v = +1
-            = deny     if v ∈ {0, -1}      // INDETERMINATE collapses to DENY, audited SPORE-GOV-3VL-001
+            = deny     if v ∈ {0, -1}      // INDETERMINATE collapses to DENY, audited FUNGI-GOV-3VL-001
 ```
 
 This is **NOT** the FSM. K3's `0` is terminal-at-the-boundary (collapses to deny); it is **not** a state the
@@ -212,7 +212,7 @@ Same start, but the peer never produces a fresh `+1` within `τ`.
 |---|---|---|---|---|---|---|---|
 | 0 | (steady) | — | `+1` | — | Established | held | permitted |
 | 1 | `fault` (FEC budget exhausted) | — | — | `δ(Established, fault)` | Recovering | held | **DENIED** |
-| 2 | `reverify` — revocation status unreachable | `pin_match=+1, chain_valid=+1, not_expired=+1, revocation_fresh=`**`unknown→0`** → `vAnd(+1,+1,+1,0)=0` | `0` (`SPORE-GOV-3VL-001`, `authorized=false`) | `δ(Recovering, reverify(0))` | **Recovering** (stay; `0 ≠ +1`) | held | DENIED |
+| 2 | `reverify` — revocation status unreachable | `pin_match=+1, chain_valid=+1, not_expired=+1, revocation_fresh=`**`unknown→0`** → `vAnd(+1,+1,+1,0)=0` | `0` (`FUNGI-GOV-3VL-001`, `authorized=false`) | `δ(Recovering, reverify(0))` | **Recovering** (stay; `0 ≠ +1`) | held | DENIED |
 | 3 | `tick(2000 ms)` | — | — | Δt=2000 < τ | Recovering | held | DENIED |
 | 4 | `reverify` — still unknown | `vAnd(+1,+1,+1,0)=0` | `0` | `δ(Recovering, reverify(0))` | Recovering | held | DENIED |
 | 5 | `tick(3500 ms)` | — | — | **Δt=5500 ≥ τ** | `δ(Recovering, tick)` | **Closed** | **∅ (ERASE)** (INV-3) | DENIED permanently |
@@ -266,7 +266,7 @@ park" — S4 is a directed/adopted survivor, so it is GO. Build S1 (the K3 cert-
    `cert_verdict = vAnd(pin_match, chain_valid, not_expired, revocation_fresh)` —
    `0065 done §2-S1:48-50`). **Inputs:** the sub-verdicts (`Verdict[]`) + the current `FsmContext` + the event.
    **Outputs:** the next `FsmContext` (with possibly-erased keys) + the `BoundaryDecision` (so the
-   `SPORE-GOV-3VL-001` diagnostic is propagated to audit, never dropped).
+   `FUNGI-GOV-3VL-001` diagnostic is propagated to audit, never dropped).
 
 4. **Implement `step(ctx, event): { next: FsmContext; decision: BoundaryDecision | null }`** as a pure function
    over the §2.2 relation. The function must:
@@ -300,7 +300,7 @@ park" — S4 is a directed/adopted survivor, so it is GO. Build S1 (the K3 cert-
 
 - `step(Established, fault) → Recovering`, keys held.
 - `step(Recovering, reverify([+1,+1,+1,+1])) → Established` (the ONLY resume; assert `decision.authorized`).
-- `step(Recovering, reverify([+1,+1,+1,0])) → Recovering` (stays; assert NO resume; assert `SPORE-GOV-3VL-001`
+- `step(Recovering, reverify([+1,+1,+1,0])) → Recovering` (stays; assert NO resume; assert `FUNGI-GOV-3VL-001`
   diagnostic emitted, not dropped) — the Example B `0`-does-not-resume guard.
 - `step(Recovering, reverify([+1,+1,+1,-1])) → Closed`, **keys == ∅** — Example C.
 - `step(Recovering, tick)` with `Δt ≥ τ` `→ Closed`, **keys == ∅** — Example B timeout (INV-3).
@@ -332,7 +332,7 @@ park" — S4 is a directed/adopted survivor, so it is GO. Build S1 (the K3 cert-
 - **(DETERMINISM) Time must be injected, not read from the wall clock inside `step`.** Pass `nowMs` in `tick(nowMs)`
   so the FSM is a pure, reproducible function (matches the substrate-model determinism discipline,
   `substrate-model.ts:20-22`). A wall-clock read inside `step` makes the FSM non-deterministic and untestable.
-- **(AUDIT) Never drop the `SPORE-GOV-3VL-001` diagnostic.** `decideAtBoundary` returns it in the result on a `0`
+- **(AUDIT) Never drop the `FUNGI-GOV-3VL-001` diagnostic.** `decideAtBoundary` returns it in the result on a `0`
   (`three-valued-governance.ts:145-151`); forward it to the AuditLogger sink. A `0` that silently keeps the channel
   in `Recovering` without an audit record is an observability hole.
 - **(SCOPE) Do NOT re-implement K3, `vAnd`, or the boundary collapse.** They ship and are pinned by

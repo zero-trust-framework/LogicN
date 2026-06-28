@@ -78,19 +78,19 @@ A typical Galerina application should look like this:
 ```text
 my-galerina-app/
 ├── README.md
-├── boot.spore
+├── boot.fungi
 ├── Galerina.config
 ├── Galerina.lock
 ├── .env.example
 ├── .gitignore
 │
 ├── src/
-│   ├── main.spore
-│   ├── routes.spore
+│   ├── main.fungi
+│   ├── routes.fungi
 │   └── services/
-│       ├── order-service.spore
-│       ├── payment-service.spore
-│       └── fraud-service.spore
+│       ├── order-service.fungi
+│       ├── payment-service.fungi
+│       └── fraud-service.fungi
 │
 ├── app/
 │   ├── controllers/
@@ -117,16 +117,16 @@ Commit these files:
 
 ```text
 README.md
-boot.spore
+boot.fungi
 Galerina.config
 Galerina.lock
 .env.example
 .gitignore
-src/**/*.spore
-app/**/*.spore
-components/**/*.spore
-config/**/*.spore
-tests/**/*.spore
+src/**/*.fungi
+app/**/*.fungi
+components/**/*.fungi
+config/**/*.fungi
+tests/**/*.fungi
 public assets where relevant
 documentation
 safe example files
@@ -272,7 +272,7 @@ Git should track the source of truth.
 The source of truth should be:
 
 ```text
-.spore source files
+.fungi source files
 configuration templates
 lockfiles
 tests
@@ -320,7 +320,7 @@ Do not commit production artefacts as fixtures.
 
 Galerina source maps are important for debugging.
 
-Source maps connect compiled output back to original `.spore` source files.
+Source maps connect compiled output back to original `.fungi` source files.
 
 Example:
 
@@ -659,7 +659,7 @@ chore
 Before merging a Galerina application change:
 
 ```text
-[ ] Source files use `.spore`
+[ ] Source files use `.fungi`
 [ ] No `.env` file committed
 [ ] No real secrets committed
 [ ] No compiled build output committed unintentionally
@@ -913,7 +913,7 @@ Bad public error:
 
 ```json
 {
-  "error": "src/services/payment-service.spore line 42 database password failed"
+  "error": "src/services/payment-service.fungi line 42 database password failed"
 }
 ```
 
@@ -1216,7 +1216,7 @@ Galerina lint
 Galerina check
 Galerina test
 git status
-git add src/ boot.spore Galerina.config tests/
+git add src/ boot.fungi Galerina.config tests/
 git commit -m "api: add order route"
 ```
 

@@ -31,9 +31,9 @@ procedure decrement_vdpm(new_posture: U32):
     ; CAS failed (another DWI changed V_DPM concurrently) — retry
 ```
 
-**Implementation target:** `DSS.spore` (DRCM Phase 5) using Wasmtime's `memory.atomic.wait` / `memory.atomic.notify` WASM atomic instructions.
+**Implementation target:** `DSS.fungi` (DRCM Phase 5) using Wasmtime's `memory.atomic.wait` / `memory.atomic.notify` WASM atomic instructions.
 
-**Diagnostic code:** `SPORE-MONO-001` — monotonic state transition attempted without CAS → rejected at DSS admission gate.
+**Diagnostic code:** `FUNGI-MONO-001` — monotonic state transition attempted without CAS → rejected at DSS admission gate.
 
 ---
 
@@ -73,10 +73,10 @@ Public key:  exported via WASI export function → stored in .lmanifest
 - DSS admission gate rejects any receipt signed by a revoked key
 
 **Diagnostic codes:**
-- `SPORE-ID-002` — V_DPM register transition signed by revoked key
-- `SPORE-ID-003` — receipt signature verification failed (tamper detection)
+- `FUNGI-ID-002` — V_DPM register transition signed by revoked key
+- `FUNGI-ID-003` — receipt signature verification failed (tamper detection)
 
-**Implementation target:** `dss.spore` (DRCM Phase 5+) using ML-DSA-65 from `galerina-ext-proof-snarkjs` or a dedicated `galerina-ext-crypto-pqc` package.
+**Implementation target:** `dss.fungi` (DRCM Phase 5+) using ML-DSA-65 from `galerina-ext-proof-snarkjs` or a dedicated `galerina-ext-crypto-pqc` package.
 
 ---
 
@@ -121,7 +121,7 @@ receipt = [field]* + hmac_tag(32 bytes, ML-DSA-65 signature)
 - Field length of 0 is valid (empty field)
 - Maximum field length: 65,535 bytes (uint16_be) or 4,294,967,295 bytes (uint32_be)
 
-**Diagnostic code:** `SPORE-AU-002` — receipt with separator-based encoding detected → reject at DSS admission gate (DRCM Phase 6).
+**Diagnostic code:** `FUNGI-AU-002` — receipt with separator-based encoding detected → reject at DSS admission gate (DRCM Phase 6).
 
 **Implementation target:** `galerina-core-compiler/src/epilogue-receipt.ts` (DRCM Phase 6, task #42).
 
@@ -133,8 +133,8 @@ All three specifications (#32, #34, #35) are gated on DRCM Phase 5 (tasks #40-#4
 
 | Task | Spec status | Implementation gate |
 |---|---|---|
-| #32 CAS atomic | ✅ Spec complete | DRCM Phase 5 — DSS.spore atomic ops |
-| #34 Key custody | ✅ Spec complete | DRCM Phase 5/6 — DSS.spore key generation |
+| #32 CAS atomic | ✅ Spec complete | DRCM Phase 5 — DSS.fungi atomic ops |
+| #34 Key custody | ✅ Spec complete | DRCM Phase 5/6 — DSS.fungi key generation |
 | #35 Length-prefix | ✅ Spec complete | DRCM Phase 6 — epilogue-receipt.ts |
 
 ---

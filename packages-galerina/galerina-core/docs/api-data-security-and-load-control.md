@@ -3,18 +3,18 @@
 Status: Draft.
 
 Galerina, short for **Galerina**, is a programming language and
-compiler/toolchain. Galerina source files use the `.spore` extension.
+compiler/toolchain. Galerina source files use the `.fungi` extension.
 
 Example files:
 
 ```text
-boot.spore
-main.spore
-api.spore
-routes.spore
-security.spore
-data-policy.spore
-load-policy.spore
+boot.fungi
+main.fungi
+api.fungi
+routes.fungi
+security.fungi
+data-policy.fungi
+load-policy.fungi
 ```
 
 This document builds on:
@@ -355,7 +355,7 @@ Route:
   POST /orders
 
 Source:
-  src/api/orders.spore:4
+  src/api/orders.fungi:4
 ```
 
 ---
@@ -1200,7 +1200,7 @@ Example:
       {
         "method": "POST",
         "path": "/orders",
-        "source": "src/api/orders.spore:4",
+        "source": "src/api/orders.fungi:4",
         "requestType": "CreateOrderRequest",
         "contentType": "application/json",
         "maxBodySize": "256kb",
@@ -1329,7 +1329,7 @@ Use streaming and queue handoff for heavy work.
   "apiDataBoundaries": [
     {
       "route": "POST /orders",
-      "source": "src/api/orders.spore:4",
+      "source": "src/api/orders.fungi:4",
       "requestType": "CreateOrderRequest",
       "bodyPolicy": {
         "contentType": "application/json",

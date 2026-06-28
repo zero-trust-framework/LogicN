@@ -7,7 +7,7 @@ import { describe, it } from "node:test";
 import { parseProgram, checkEffects, emitGIR, renderWAT, buildWATModuleFromGIR, assembleWAT } from "../dist/index.js";
 
 async function compileToWat(src) {
-  const p = parseProgram(src, "t.spore");
+  const p = parseProgram(src, "t.fungi");
   const errs = (p.diagnostics ?? []).filter((d) => d.severity === "error");
   if (errs.length) throw new Error("parse: " + errs.map((d) => d.message).join("; "));
   const fx = checkEffects(p.flows, p.ast);
@@ -19,7 +19,7 @@ describe("#165: float WAT lowering → native f64", () => {
   it("float addition emits f64.add (not the i32 checked helper) and assembles VALID", async () => {
     const wat = await compileToWat("pure flow f() -> Float contract { effects {} } { return 3.0 + 1.5 }");
     assert.match(wat, /f64\.add/, "float + lowers to f64.add");
-    assert.doesNotMatch(wat, /spore_checked_add_i32 \(f64/, "must not wrap f64 operands in the i32 checked helper");
+    assert.doesNotMatch(wat, /fungi_checked_add_i32 \(f64/, "must not wrap f64 operands in the i32 checked helper");
     const asm = await assembleWAT(wat);
     assert.equal(asm.valid, true, "module is valid: " + JSON.stringify(asm.diagnostics));
   });

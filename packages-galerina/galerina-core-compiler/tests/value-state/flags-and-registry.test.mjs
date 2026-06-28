@@ -5,7 +5,7 @@
 //   - ValueStateFlags bitset (constant shape, distinct powers-of-2, combinable)
 //   - SINK_REQUIREMENTS structured registry (correct entries, SinkRequirement shape)
 //   - getSinkRequirement() (exact + pattern matching)
-//   - SPORE_GATE_001 constant shape
+//   - FUNGI_GATE_001 constant shape
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -15,7 +15,7 @@ import {
   ValueStateFlags,
   SINK_REQUIREMENTS,
   getSinkRequirement,
-  SPORE_GATE_001,
+  FUNGI_GATE_001,
 } from "../../dist/index.js";
 
 // ---------------------------------------------------------------------------
@@ -193,23 +193,23 @@ describe("getSinkRequirement: pattern matching", () => {
 });
 
 // ---------------------------------------------------------------------------
-// SPORE_GATE_001 constant
+// FUNGI_GATE_001 constant
 // ---------------------------------------------------------------------------
 
-describe("SPORE_GATE_001: constant shape", () => {
+describe("FUNGI_GATE_001: constant shape", () => {
   it("has correct code and name", () => {
-    assert.equal(SPORE_GATE_001.code, "SPORE-GATE-001");
-    assert.equal(SPORE_GATE_001.name, "GateAnnotationRequired");
-    assert.equal(SPORE_GATE_001.severity, "error");
+    assert.equal(FUNGI_GATE_001.code, "FUNGI-GATE-001");
+    assert.equal(FUNGI_GATE_001.name, "GateAnnotationRequired");
+    assert.equal(FUNGI_GATE_001.severity, "error");
   });
 
   it("has why and suggestedFix", () => {
-    assert.ok(typeof SPORE_GATE_001.why === "string");
-    assert.ok(typeof SPORE_GATE_001.suggestedFix === "string");
-    assert.ok(SPORE_GATE_001.suggestedFix.includes("?"), "suggestedFix must include ? operator");
+    assert.ok(typeof FUNGI_GATE_001.why === "string");
+    assert.ok(typeof FUNGI_GATE_001.suggestedFix === "string");
+    assert.ok(FUNGI_GATE_001.suggestedFix.includes("?"), "suggestedFix must include ? operator");
   });
 
   it("suggestedFix uses canonical 'safe mut' form", () => {
-    assert.ok(SPORE_GATE_001.suggestedFix.includes("safe mut"), "Must use 'safe mut' form");
+    assert.ok(FUNGI_GATE_001.suggestedFix.includes("safe mut"), "Must use 'safe mut' form");
   });
 });

@@ -1,9 +1,9 @@
-# R&D 0118 — SPORE-RETAIN-001 Hardware Protection Directive (adversarially hardened)
+# R&D 0118 — FUNGI-RETAIN-001 Hardware Protection Directive (adversarially hardened)
 
 **Date:** 2026-06-24 · **Workflow:** `wrarw1hgi` (3 adversarial lenses + synthesis) · **Status:** directive design + **decision core BUILT** (`admitSubstrateWrite`, 12/12)
-**Posture:** fail-closed (unknown→DENY), deny-by-default, crypto-on-core (SPORE-SUBSTRATE-001), K3 Kleene, No-Coercion. Brand: "trust the math".
+**Posture:** fail-closed (unknown→DENY), deny-by-default, crypto-on-core (FUNGI-SUBSTRATE-001), K3 Kleene, No-Coercion. Brand: "trust the math".
 **Builds on:** `RD-0116-O4` (the finding) · guardrail `RD-0114-G3` · the shipped `admitPhotonicConfig` 4-gate rail.
-**Companion docs:** [`galerina-rd-0116-holographic-storage-2026-06-24.md`](galerina-rd-0116-holographic-storage-2026-06-24.md) · [`galerina-governance-rules.md`](galerina-governance-rules.md) (SPORE-RETAIN-001) · [`galerina-rd-reference-index.md`](galerina-rd-reference-index.md)
+**Companion docs:** [`galerina-rd-0116-holographic-storage-2026-06-24.md`](galerina-rd-0116-holographic-storage-2026-06-24.md) · [`galerina-governance-rules.md`](galerina-governance-rules.md) (FUNGI-RETAIN-001) · [`galerina-rd-reference-index.md`](galerina-rd-reference-index.md)
 
 > Owner question: "should there be a hardware protection directive in Galerina as a result of RD-0116 — and how should the Substrate Dispatch Gateway discover a drive's eraseModel: hardware auto-reports on boot, or admins manually whitelist every drive?"
 
@@ -11,7 +11,7 @@
 
 ## 1) VERDICT  `[RD-0118-O1]`
 
-**YES — adopt SPORE-RETAIN-001 as a normative, compiler-enforced invariant, not a documentation warning.** The overwrite-based erasure in `wat-emitter.ts` B2/B2b is *provably unsound* on any write-once/fixed medium (a `memset` cannot erase a thermally-fixed hologram or WORM glass), so without the directive a secret that reaches such a substrate is unrecoverable-by-deletion **and the violation is silent** — exactly the failure class zero-trust must foreclose. You cannot claim Absolute Zero-Trust if plugging in a new type of glass/optical drive silently breaks your deletion guarantee. Record-now / build-on-path is correct: the obligation + every digital piece are buildable today; only the physical write seam + a hardware root-of-trust are HW-gated.
+**YES — adopt FUNGI-RETAIN-001 as a normative, compiler-enforced invariant, not a documentation warning.** The overwrite-based erasure in `wat-emitter.ts` B2/B2b is *provably unsound* on any write-once/fixed medium (a `memset` cannot erase a thermally-fixed hologram or WORM glass), so without the directive a secret that reaches such a substrate is unrecoverable-by-deletion **and the violation is silent** — exactly the failure class zero-trust must foreclose. You cannot claim Absolute Zero-Trust if plugging in a new type of glass/optical drive silently breaks your deletion guarantee. Record-now / build-on-path is correct: the obligation + every digital piece are buildable today; only the physical write seam + a hardware root-of-trust are HW-gated.
 
 ## 2) THE DISCOVERY ANSWER (the owner's question)  `[RD-0118-O2]`
 
@@ -32,7 +32,7 @@ So **`crypto-only` is the free default; `overwrite` is an EARNED, SIGNED, REVOCA
 
 ## 3) THE HARDENED 3-STAGE ENFORCEMENT  `[RD-0118-O3]`
 
-**Stage 1 — COMPILER TRAP (pre-flight, buildable now).** Add a crypto-only storage **sink class** to the existing SealTaint taint lattice (SPORE-PRIVACY-002 / SPORE-SECRET-002, value-state-checker). A cleartext-secret-tainted AST value reaching a crypto-only sink yields **K3 DENY → build fails**, forcing KEM-DEM insertion. *Closes the "no compiler storage sink" hole* — today a `vault.read → write` compiles clean because storage writes are not a registered tainted sink. Pure wiring on an existing lattice; testable on declared substrates with zero physical media.
+**Stage 1 — COMPILER TRAP (pre-flight, buildable now).** Add a crypto-only storage **sink class** to the existing SealTaint taint lattice (FUNGI-PRIVACY-002 / FUNGI-SECRET-002, value-state-checker). A cleartext-secret-tainted AST value reaching a crypto-only sink yields **K3 DENY → build fails**, forcing KEM-DEM insertion. *Closes the "no compiler storage sink" hole* — today a `vault.read → write` compiles clean because storage writes are not a registered tainted sink. Pure wiring on an existing lattice; testable on declared substrates with zero physical media.
 
 **Stage 2 — SUBSTRATE DISPATCH GATEWAY (runtime; decision core BUILT).** At hardware dispatch, if the destination's *attested* eraseModel is `crypto-only` (or unknown) and the payload is not KEM-DEM-wrapped, **refuse to route (fail-closed K3).** The gateway must be the **sole chokepoint** for the physical write seam (not an advisory boolean a caller can skip) and must take eraseModel **only from the signed admission record**, never the boot self-report or a caller-supplied `{isOverwrite:true}`. The decision core — `admitSubstrateWrite` / `effectiveEraseModel` — is **built + tested** (`galerina-tower-citizen/src/substrate-erasure.ts`, 12/12; commit `746e161`); the workflow's independently-derived truth table (§4) matches it exactly.
 
@@ -50,7 +50,7 @@ So **`crypto-only` is the free default; `overwrite` is an EARNED, SIGNED, REVOCA
 | true | **true** (ciphertext) | — | any | **ALLOW** (key-destruction erases it) |
 | true | false | true | `overwrite` (signed) | **ALLOW** (the one earned exception) |
 | true | false | true | `crypto-only` (signed) | **DENY** (permanent remanence) |
-| true | false | **false / unknown** | → `crypto-only` (default) | **INDETERMINATE → DENY** (SPORE-GOV-3VL-001) |
+| true | false | **false / unknown** | → `crypto-only` (default) | **INDETERMINATE → DENY** (FUNGI-GOV-3VL-001) |
 | true | false | sig/revocation fail | → `crypto-only` | **DENY** |
 
 (A malformed/absent payload is treated as a secret — fail-closed.)
@@ -81,6 +81,6 @@ Canonical pre-image (sorted-keys JSON, the same `canonical()` as `photonic-admis
 
 ## 7) HONESTY NOTE
 
-What is real today is the **governance scaffolding**, not the physical enforcement: the 4-gate signed-admission rail, the K3 fail-closed collapse, the KEM-DEM seal, the anti-rollback history chain with the `ERASED` flag under a signed Merkle root, the SealTaint taint lattice, a digital append-only sink, and the built decision core — all bit-exact silicon, all extendable into SPORE-RETAIN-001 by descriptor-widening + wiring, **no new crypto and no new science** (0-patents / defensive-pub). What is **not** real today and must not be overclaimed: there is no physical write path to WORM/holographic media, no hardware root-of-trust to bind an attestation to a *live medium* (so the physical-swap TOCTOU is genuinely open until #102-106), no hardware sanitize-attestation for the bottom-turtle silicon (the in-RAM zeroize is *best-effort on a GC VM* — confirmed in `kemdem.ts`), and no per-epoch key-erasure ratchet (`history.ts` §2 DEFERRED). The directive's value today: it makes the SPORE-RETAIN-001 obligation **unviolatable-by-silence** and ships every digital piece; the medium-binding hardware lands when a real storage-admission substrate exists. Default-on-unknown stays `crypto-only` precisely because that hardware is absent.
+What is real today is the **governance scaffolding**, not the physical enforcement: the 4-gate signed-admission rail, the K3 fail-closed collapse, the KEM-DEM seal, the anti-rollback history chain with the `ERASED` flag under a signed Merkle root, the SealTaint taint lattice, a digital append-only sink, and the built decision core — all bit-exact silicon, all extendable into FUNGI-RETAIN-001 by descriptor-widening + wiring, **no new crypto and no new science** (0-patents / defensive-pub). What is **not** real today and must not be overclaimed: there is no physical write path to WORM/holographic media, no hardware root-of-trust to bind an attestation to a *live medium* (so the physical-swap TOCTOU is genuinely open until #102-106), no hardware sanitize-attestation for the bottom-turtle silicon (the in-RAM zeroize is *best-effort on a GC VM* — confirmed in `kemdem.ts`), and no per-epoch key-erasure ratchet (`history.ts` §2 DEFERRED). The directive's value today: it makes the FUNGI-RETAIN-001 obligation **unviolatable-by-silence** and ships every digital piece; the medium-binding hardware lands when a real storage-admission substrate exists. Default-on-unknown stays `crypto-only` precisely because that hardware is absent.
 
 **Ordered next builds (all CPU-now):** ① `eraseModel` field + `storage.admit` capability split — **✅ DONE** (`admitStorageSubstrate`, commit `1642f3e`) → ② wire `admitSubstrateWrite`'s `attested` input to that signed gate — **✅ DONE** (the rail returns a `SubstrateDescriptor` that feeds the write gate; lying-drive attack closed end-to-end, 20/20) → ③ Stage-1 compiler trap (SealTaint storage sink) — owner-gated → ④ Stage-3 crypto-erase witness struct + verifier (golden-fixable) — owner-gated. The physical Stage-2 seam + TOCTOU medium-binding stay HW-gated (#102-106).

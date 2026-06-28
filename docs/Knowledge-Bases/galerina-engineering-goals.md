@@ -25,7 +25,7 @@ Each claim has testable prerequisites below.
 **Target:** Code compiles and runs without runtime performance penalties or active out-of-band monitoring loops.
 
 ```
-Galerina Source (.spore)
+Galerina Source (.fungi)
        │
        ▼
 Compiler Pipeline
@@ -52,7 +52,7 @@ Native CPU Hardware
 
 ### Acceptance Test (T-006)
 
-Run a Wasmtime benchmark of a compiled `.spore` flow against an equivalent hand-written WAT module with no governance overhead. The performance delta must be ≤ 5% for flows where all invariants are statically proved. This validates that the static proof pass eliminates — not just amortises — runtime overhead.
+Run a Wasmtime benchmark of a compiled `.fungi` flow against an equivalent hand-written WAT module with no governance overhead. The performance delta must be ≤ 5% for flows where all invariants are statically proved. This validates that the static proof pass eliminates — not just amortises — runtime overhead.
 
 ---
 
@@ -116,8 +116,8 @@ Run three DWI instances concurrently:
 - Instance C: path traversal attempt (capability violation test)
 
 Verify:
-- Instance B exhausts fuel and is terminated → SPORE-RESOURCE-001
-- Instance C is trapped → SPORE-CAP-003
+- Instance B exhausts fuel and is terminated → FUNGI-RESOURCE-001
+- Instance C is trapped → FUNGI-CAP-003
 - Instance A completes successfully
 - The DSS supervisor process remains running throughout
 - V_DPM is updated for the Instance C violation (network/storage bit cleared)
@@ -132,7 +132,7 @@ architecture-charter.md          Layer 0 — Invariant Principles
        │ Enforces
        ▼
 galerina-governance-rules.md       Layer 1 — Numbered Rules
-                                  (SPORE codes, compiler diagnostics)
+                                  (FUNGI codes, compiler diagnostics)
        │ Governs
   ┌────┴────┐
   ▼         ▼
@@ -194,7 +194,7 @@ gantt
 
 The canonical example showing all 12 mediation categories together. Stable clauses compile today; `@experimental_profile(drcm_core_v1)` wraps Phase 2–5 syntax.
 
-```spore
+```fungi
 secure flow processCorporateInvoicing(merchantId: String, invoiceBatch: List<Invoice>)
   -> Result<Void, Fault>
 contract {
@@ -255,8 +255,8 @@ contract {
 
 Until `step` ships (DRCM Phase 5), all cross-boundary calls use the `security::interim::BoundaryProxy`:
 
-```spore
-;; Source: packages-galerina/galerina-core-security/src/interim.spore
+```fungi
+;; Source: packages-galerina/galerina-core-security/src/interim.fungi
 secure flow processOrderOutbound(orderId: String) -> Result<Void, Fault>
 contract {
   intent { "Transmit order data via an interim validated boundary channel." }
@@ -287,7 +287,7 @@ contract {
 
 When DRCM Phase 5 ships, this becomes:
 
-```spore
+```fungi
 @experimental_profile(name: "drcm_core_v1", status: "planned_phase_5") {
   let result = step network_client::transmitOrder(sanitizedId)
 }
@@ -303,7 +303,7 @@ Before any Phase 2+ compiler work begins, both acceptance tests must pass:
 Compile a module that calls `wasi:filesystem/preopens.get_directories` without explicit dir args. Must return empty list or instantiation trap. Proves ambient filesystem authority is not available.
 
 **Test 2 — Cleartext Secret Sink Interception:**  
-Register canary prefix `"supersec"` in SecretSinkCache. Run a module that prints an error trace containing `"supersecretkey123"`. Must trigger SPORE-SECRET-BREACH and halt before any data exits the sandbox.
+Register canary prefix `"supersec"` in SecretSinkCache. Run a module that prints an error trace containing `"supersecretkey123"`. Must trigger FUNGI-SECRET-BREACH and halt before any data exits the sandbox.
 
 Both tests PASS only when the system REJECTS or TRAPS. Silent success is a bug.
 
@@ -315,8 +315,8 @@ Both tests PASS only when the system REJECTS or TRAPS. Silent success is a bug.
 |---|---|
 | `KNOWLEDGE-BASE-INDEX.md` | Master navigation guide |
 | `architecture-charter.md` | Principles (Layer 0) |
-| `galerina-governance-rules.md` | Hard rules — all SPORE codes |
+| `galerina-governance-rules.md` | Hard rules — all FUNGI codes |
 | `galerina-architecture-patterns.md` | 9 patterns + feature profiles |
 | `galerina-contract-authoring-guide.md` | contract {} syntax reference |
 | `galerina-deterministic-runtime-containment.md` | DRCM 7-module architecture |
-| `packages-galerina/galerina-core-security/src/interim.spore` | BoundaryProxy implementation |
+| `packages-galerina/galerina-core-security/src/interim.fungi` | BoundaryProxy implementation |

@@ -1,5 +1,5 @@
 // Mandelbrot escape-time (Computer Language Benchmarks Game) — Rust native, scaled-integer.
-// Mirrors benchmark.spore, node.mjs and python.py EXACTLY. The only negative division
+// Mirrors benchmark.fungi, node.mjs and python.py EXACTLY. The only negative division
 // numerator (2*zr*zi) is split into sign+magnitude so every numerator is non-negative,
 // making Rust `/` (trunc toward zero) agree with Python //, JS Math.trunc and Galerina /.
 // All intermediates stay < 2^31; we use i64 for headroom. Checksum is byte-identical.

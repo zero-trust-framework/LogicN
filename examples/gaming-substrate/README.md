@@ -20,16 +20,16 @@ must stay `digital`. So `lane: gaming` is a category error. A domain is modelled
 right lane per flow** (and, for richer cases, by a domain profile/policy — see notes/62 theme-5),
 never by inventing a lane keyword.
 
-As of 2026-06-25 the compiler **rejects an unknown lane** (`lane: gaming` → `SPORE-SUBSTRATE-002`)
+As of 2026-06-25 the compiler **rejects an unknown lane** (`lane: gaming` → `FUNGI-SUBSTRATE-002`)
 rather than silently ignoring it — see the fail-open note below.
 
 ## The files (each verified with `node galerina.mjs check`)
 
 | file | lane | result | teaches |
 |---|---|---|---|
-| `01-physics-step.spore` | `photonic` + `tolerance` + `redundancy: tmr` | ✅ clean | approximate gameplay physics is a legitimate photonic-lane workload **when voted** |
-| `02-anticheat-sign-digital.spore` | `digital`, `crypto.sign.hybrid` | ✅ clean | authoritative/anti-cheat crypto stays bit-exact on the digital lane |
-| `03-anticheat-sign-photonic-WRONG.spore` | `photonic`, `crypto.sign.hybrid` | ❌ `SPORE-SUBSTRATE-001` | crypto integrity is **never** tolerance-bounded — denied on any noisy lane, at every profile |
+| `01-physics-step.fungi` | `photonic` + `tolerance` + `redundancy: tmr` | ✅ clean | approximate gameplay physics is a legitimate photonic-lane workload **when voted** |
+| `02-anticheat-sign-digital.fungi` | `digital`, `crypto.sign.hybrid` | ✅ clean | authoritative/anti-cheat crypto stays bit-exact on the digital lane |
+| `03-anticheat-sign-photonic-WRONG.fungi` | `photonic`, `crypto.sign.hybrid` | ❌ `FUNGI-SUBSTRATE-001` | crypto integrity is **never** tolerance-bounded — denied on any noisy lane, at every profile |
 
 The contrast between 02 and 03 is the whole point: same game, same crypto, different lane — one
 admitted, one denied. That is `lane` behaving as a hardware axis. Player PII in a leaderboard or
@@ -43,12 +43,12 @@ noisy lane undetected. See `docs/Knowledge-Bases/galerina-substrate-lane-fail-op
 
 1. **PQ-suffixed crypto escaped the gate.** The crypto-on-core matcher was `$`-anchored, so
    `crypto.sign.hybrid` (the form a *certified* profile **mandates**) didn't match and slipped
-   past `SPORE-SUBSTRATE-001` — a fail-open in exactly the highest-assurance posture. Fixed to match
+   past `FUNGI-SUBSTRATE-001` — a fail-open in exactly the highest-assurance posture. Fixed to match
    the whole `crypto.<head>.*` family.
 2. **Malformed lane was silently inert.** An unrecognised lane keyword (or a value polluted by a
    trailing `//` comment) failed closed to `value:"digital"`, but the `lane === "digital"`
    early-return ran *before* the malformed check, so it masqueraded as an author-chosen inert lane
-   and dropped the crypto gate. Fixed: malformed is checked first → `SPORE-SUBSTRATE-002`.
+   and dropped the crypto gate. Fixed: malformed is checked first → `FUNGI-SUBSTRATE-002`.
 
 > Tip the examples encode: keep `//` comments on their **own line** inside a `substrate {}` block.
 > A trailing comment on a field line is not stripped and now fails the build closed.

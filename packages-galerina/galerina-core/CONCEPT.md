@@ -214,7 +214,7 @@ Example:
 {
   "errorType": "TargetCompatibilityError",
   "target": "photonic",
-  "file": "src/fraud-check.spore",
+  "file": "src/fraud-check.fungi",
   "line": 18,
   "column": 12,
   "problem": "readFile cannot run inside a photonic compute block.",

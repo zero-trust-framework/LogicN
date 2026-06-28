@@ -121,7 +121,7 @@ pinnedEnvHash = SHA-256( canonical_concat_sorted_by_path(
 **Hard honesty rules for the wrapper (do not overstate):**
 - **Do NOT advertise bit-level thread-determinism.** No source asserts it, and `jordan_wigner_qiskit` provably violates it (`jordan_wigner.rs:104-118`; its `tol` cutoff can even flip near-threshold terms). Same-seed+same-threads ⇒ bit-identical is **UNVERIFIED / not guaranteed by the code**.
 - Pin **both** `seed` and `RAYON_NUM_THREADS`, and the BLAS thread env too (`OPENBLAS_NUM_THREADS`/`MKL_NUM_THREADS` — which BLAS ships is UNVERIFIED).
-- **Consequence for the design:** `determinismMode` must be `"tolerance"`, never `"exact"` — exactly as ratified. For **B2 / `SPORE-SUBSTRATE-002/003`** (is the declared `tolerance` provable at the declared `N`?), the substrate model needs a **float64/BLAS+Rayon lane noise profile** — it currently has photonic-oriented profiles only. This is the **§13.8 open item** in the design doc. B1 (crypto-on-core) and B3 (unvoted→deterministic) apply unchanged regardless.
+- **Consequence for the design:** `determinismMode` must be `"tolerance"`, never `"exact"` — exactly as ratified. For **B2 / `FUNGI-SUBSTRATE-002/003`** (is the declared `tolerance` provable at the declared `N`?), the substrate model needs a **float64/BLAS+Rayon lane noise profile** — it currently has photonic-oriented profiles only. This is the **§13.8 open item** in the design doc. B1 (crypto-on-core) and B3 (unvoted→deterministic) apply unchanged regardless.
 
 ## 6. The Rust-accelerated core = the opaque out-of-process compute (`src/lib.rs:21-64`)
 

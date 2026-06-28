@@ -15,7 +15,7 @@ below are anchored to a full suite run + phase-close executed this session.
 ## % audit — two-axis model (the honest framing)
 | Axis | % | Basis |
 |---|---|---|
-| **A — governed decision logic in `.spore`** | **~56%** | 14 of 25 `examples/auth-service` services covered by executing tests (unchanged this session) |
+| **A — governed decision logic in `.fungi`** | **~56%** | 14 of 25 `examples/auth-service` services covered by executing tests (unchanged this session) |
 | **B — engine self-hosting (THE goal)** | **≈80%** | R6 corpus Stage-A == Stage-B on all 5 flows; `tokenize` byte-parity through the #105 admission gate; parser/type-checker/effect/govern/emit/execute are partial (run in Stage A) |
 
 Against the goal (Axis B at 100% + real DSS.wasm), current position is **≈80%**.
@@ -26,9 +26,9 @@ Against the goal (Axis B at 100% + real DSS.wasm), current position is **≈80%*
 | **Stage A compiler/runtime** | **100%** | full implemented feature set exercised by the suite |
 | **Stage B WASM codegen (production path)** | **~88%** | shipped: f64 (all forms), strings (+ literal seeding), records (1-level), recursion, `match`, `for`/`where`, const-fold (respects overflow trap), DbC post-conditions. Gaps: **#200** nested-member access, **#171** in-band None sentinel, **#172** `__int_to_str` i32 truncation, run-host string unification |
 | **DRCM containment** | **~98% (Stage A)** | Phases 1–7 + OCI complete; **real DSS.wasm = 0%** (gated on Wasmtime component model #102-106 = Phase 5) |
-| **App-framework layer (L2–L3)** | **~75%** | **corrects the stale "templates" claim.** Admission/fusion border **100%** (fuse-loader 3 gates + `planComposition` + revocation, 60 tests); scaffolder **100%** (B1 `galerina new app`); unified admission vocabulary **100%** (B2); governed resolver shipped (hash + sig + registry + install-deny + SPORE-PKG-006 revocation). **Missing:** signed central registry index (B5a), richer worked example (B6); `framework-example-app`/`-api-server` remain template/reference |
+| **App-framework layer (L2–L3)** | **~75%** | **corrects the stale "templates" claim.** Admission/fusion border **100%** (fuse-loader 3 gates + `planComposition` + revocation, 60 tests); scaffolder **100%** (B1 `galerina new app`); unified admission vocabulary **100%** (B2); governed resolver shipped (hash + sig + registry + install-deny + FUNGI-PKG-006 revocation). **Missing:** signed central registry index (B5a), richer worked example (B6); `framework-example-app`/`-api-server` remain template/reference |
 | **Tri-Pipe** | Binary **100%** | Binary = the production + crypto/governance/admission path. Hybrid = functional (ExecutionRouter + Freivalds verify + emulator, perf **projected**). Photonic = emulator-only (perf **projected/aspirational**, only measured datapoint = Lane-A 0.87× wash) |
-| **Governance rules** | mature | 35+ SPORE codes registered + enforced (incl. new **SPORE-PKG-006** this session); namespace-ownership drift-guarded |
+| **Governance rules** | mature | 35+ FUNGI codes registered + enforced (incl. new **FUNGI-PKG-006** this session); namespace-ownership drift-guarded |
 | **Crypto / signing** | shipped | Ed25519 sign/verify; **revocation enforced at fuse + resolver + bridge-attest** (this session); ML-DSA-65 hybrid partial (#34); SHA-256 kept (quantum-OK) |
 | **Test / verification** | **100% green** | 53/53 · 4,980 · 0 fail |
 

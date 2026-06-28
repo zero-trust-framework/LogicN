@@ -128,12 +128,12 @@ contract {
 
 | Rule | Diagnostic |
 |---|---|
-| `create` / `update` / `delete` without `database.write` | SPORE-EFFECT-001 |
-| `read` without `database.read` | SPORE-EFFECT-001 |
-| `protected Email` in response without `response.denies` | SPORE-GOV-003 |
-| Unsafe input directly to `User.create()` | SPORE-VALUESTATE-003 |
-| Delete without explicit policy | SPORE-GOV-XXX (future) |
-| `require audit` in resource policy, audit.write not declared | SPORE-GOV-012 or SPORE-EFFECT-001 |
+| `create` / `update` / `delete` without `database.write` | FUNGI-EFFECT-001 |
+| `read` without `database.read` | FUNGI-EFFECT-001 |
+| `protected Email` in response without `response.denies` | FUNGI-GOV-003 |
+| Unsafe input directly to `User.create()` | FUNGI-VALUESTATE-003 |
+| Delete without explicit policy | FUNGI-GOV-XXX (future) |
+| `require audit` in resource policy, audit.write not declared | FUNGI-GOV-012 or FUNGI-EFFECT-001 |
 
 ---
 

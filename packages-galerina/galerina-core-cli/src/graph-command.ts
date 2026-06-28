@@ -320,7 +320,7 @@ function classifyGraphFile(path: string): ProjectGraphWorkspaceFile["kind"] {
     return "json";
   }
 
-  if (lowerPath.endsWith(".spore")) {
+  if (lowerPath.endsWith(".fungi")) {
     return "galerina-source";
   }
 

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { redactCliOutput, redactCliOutputChecked, SPORE_CLI_REDACT_001 } from "../dist/security.js";
+import { redactCliOutput, redactCliOutputChecked, FUNGI_CLI_REDACT_001 } from "../dist/security.js";
 import { formatCliResult } from "../dist/output.js";
 
 test("assignment forms are scrubbed and the prefix is preserved", () => {
@@ -55,14 +55,14 @@ test("benign output does not trip the wire and is unchanged", () => {
   assert.equal(r.text, "compiled 3 flows, 0 diagnostics; wrote graph.json");
 });
 
-test("formatCliResult surfaces SPORE-CLI-REDACT-001 when a bare token is caught", () => {
+test("formatCliResult surfaces FUNGI-CLI-REDACT-001 when a bare token is caught", () => {
   const out = formatCliResult({ message: "ran job", details: ["used AKIAIOSFODNN7EXAMPLE"], code: 0 });
-  assert.match(out, new RegExp(SPORE_CLI_REDACT_001));
+  assert.match(out, new RegExp(FUNGI_CLI_REDACT_001));
   assert.doesNotMatch(out, /AKIAIOSFODNN7EXAMPLE/);
 });
 
 test("formatCliResult stays quiet (no tripwire banner) for clean output", () => {
   const out = formatCliResult({ message: "ok", details: ["2 routes"], code: 0 });
-  assert.doesNotMatch(out, new RegExp(SPORE_CLI_REDACT_001));
+  assert.doesNotMatch(out, new RegExp(FUNGI_CLI_REDACT_001));
   assert.match(out, /ok/);
 });

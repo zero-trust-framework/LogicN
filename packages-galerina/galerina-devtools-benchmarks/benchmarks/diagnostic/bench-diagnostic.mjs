@@ -31,14 +31,14 @@ import { fileURLToPath } from "node:url";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dir, "../../../..");
-const BENCH_SPORE = join(__dir, "benchmark.spore");
-const BENCH_SPORE_REL = "packages-galerina/galerina-devtools-benchmarks/benchmarks/diagnostic/benchmark.spore";
+const BENCH_FUNGI = join(__dir, "benchmark.fungi");
+const BENCH_FUNGI_REL = "packages-galerina/galerina-devtools-benchmarks/benchmarks/diagnostic/benchmark.fungi";
 
 // Run governance check on the diagnostic benchmark file
 function runGovernanceCheck() {
   const result = spawnSync(
     "node",
-    [join(ROOT, "galerina.mjs"), "check", BENCH_SPORE_REL],
+    [join(ROOT, "galerina.mjs"), "check", BENCH_FUNGI_REL],
     { cwd: ROOT, encoding: "utf-8", timeout: 10_000 }
   );
   return {
@@ -84,7 +84,7 @@ function timedGovernanceCheck(iterations) {
 }
 
 export async function runDiagnosticBenchmarks() {
-  const src = readFileSync(BENCH_SPORE, "utf-8");
+  const src = readFileSync(BENCH_FUNGI, "utf-8");
   const ITERATIONS = 50;
 
   const results = {

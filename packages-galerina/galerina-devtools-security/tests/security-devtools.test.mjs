@@ -151,39 +151,39 @@ describe("SecurityAuditRunner: full pipeline", () => {
     assert.ok(report.passed, `Expected pass, got: ${report.summary}`);
   });
 
-  it("catches SQL injection (SPORE-TAINT-001)", async () => {
+  it("catches SQL injection (FUNGI-TAINT-001)", async () => {
     const report = await runSecurityAudit([
       "secure flow q(req: Request) -> Response contract { effects { database.read } }",
       "{ let r: String = Database.query(req.body)  return r }",
     ].join("\n"), { profiles: ["strict"] });
-    assert.ok(report.findings.some(f => f.code === "SPORE-TAINT-001"), `Expected SPORE-TAINT-001, got: ${report.summary}`);
+    assert.ok(report.findings.some(f => f.code === "FUNGI-TAINT-001"), `Expected FUNGI-TAINT-001, got: ${report.summary}`);
     assert.ok(!report.passed, "should fail when injection is detected");
   });
 
-  it("catches recursion in strict profile (SPORE-PROFILE-001)", async () => {
+  it("catches recursion in strict profile (FUNGI-PROFILE-001)", async () => {
     const report = await runSecurityAudit(
       "pure flow fib(n: Int) -> Int contract { effects {} } { if n <= 1 { return n } return fib(n-1) + fib(n-2) }",
       { profiles: ["strict"] }
     );
-    assert.ok(report.findings.some(f => f.code === "SPORE-PROFILE-001"));
+    assert.ok(report.findings.some(f => f.code === "FUNGI-PROFILE-001"));
     assert.ok(!report.passed);
   });
 
-  it("catches dynamic regex in strict profile (SPORE-PROFILE-005B)", async () => {
+  it("catches dynamic regex in strict profile (FUNGI-PROFILE-005B)", async () => {
     const report = await runSecurityAudit(
       "pure flow f(p: String, s: String) -> Bool contract { effects {} } { return s.matchesPattern(p) }",
       { profiles: ["strict"] }
     );
-    assert.ok(report.findings.some(f => f.code === "SPORE-PROFILE-005B"));
+    assert.ok(report.findings.some(f => f.code === "FUNGI-PROFILE-005B"));
   });
 
-  it("schemaVersion is spore.security-audit.v1", async () => {
+  it("schemaVersion is fungi.security-audit.v1", async () => {
     const report = await runSecurityAudit("pure flow f() -> Int contract { effects {} } { return 1 }", {});
-    assert.equal(report.schemaVersion, "spore.security-audit.v1");
+    assert.equal(report.schemaVersion, "fungi.security-audit.v1");
   });
 
-  it("invalid cyber_physical_hardening value → SPORE-GOV-017 (hardware checker)", async () => {
-    // enclosure_shielding with an unrecognised tier should fire SPORE-GOV-017 as an error.
+  it("invalid cyber_physical_hardening value → FUNGI-GOV-017 (hardware checker)", async () => {
+    // enclosure_shielding with an unrecognised tier should fire FUNGI-GOV-017 as an error.
     const src = [
       `secure flow hardenedFlow(x: Int) -> Int`,
       `contract {`,
@@ -195,13 +195,13 @@ describe("SecurityAuditRunner: full pipeline", () => {
       `{ return x }`,
     ].join("\n");
     const report = await runSecurityAudit(src, { governanceProfile: "production" });
-    const gov017 = report.findings.find(f => f.code === "SPORE-GOV-017");
-    assert.ok(gov017 !== undefined, `Expected SPORE-GOV-017 in findings. Got: ${report.findings.map(f => f.code).join(", ")}`);
+    const gov017 = report.findings.find(f => f.code === "FUNGI-GOV-017");
+    assert.ok(gov017 !== undefined, `Expected FUNGI-GOV-017 in findings. Got: ${report.findings.map(f => f.code).join(", ")}`);
     assert.equal(gov017.checker, "hardware", `GOV-017 checker should be 'hardware', got '${gov017.checker}'`);
   });
 
-  it("manual liability {} block → SPORE-GOV-018 (governance checker)", async () => {
-    // Manually declaring liability {} should trigger SPORE-GOV-018 as a warning.
+  it("manual liability {} block → FUNGI-GOV-018 (governance checker)", async () => {
+    // Manually declaring liability {} should trigger FUNGI-GOV-018 as a warning.
     const src = [
       `secure flow liableFlow(x: Int) -> Int`,
       `contract {`,
@@ -212,8 +212,8 @@ describe("SecurityAuditRunner: full pipeline", () => {
       `{ return x }`,
     ].join("\n");
     const report = await runSecurityAudit(src, { governanceProfile: "production" });
-    const gov018 = report.findings.find(f => f.code === "SPORE-GOV-018");
-    assert.ok(gov018 !== undefined, `Expected SPORE-GOV-018 in findings. Got: ${report.findings.map(f => f.code).join(", ")}`);
+    const gov018 = report.findings.find(f => f.code === "FUNGI-GOV-018");
+    assert.ok(gov018 !== undefined, `Expected FUNGI-GOV-018 in findings. Got: ${report.findings.map(f => f.code).join(", ")}`);
     assert.equal(gov018.checker, "governance", `GOV-018 checker should be 'governance', got '${gov018.checker}'`);
     assert.equal(gov018.severity, "medium", `GOV-018 is a warning → medium severity, got '${gov018.severity}'`);
   });
@@ -230,7 +230,7 @@ describe("SecurityTestHelper: fluent API", () => {
     const result = await h.assertBlocked(
       ["secure flow q(req: Request) -> Response contract { effects { database.read } }",
        "{ let r: String = Database.query(req.body)  return r }"].join("\n"),
-      "SPORE-TAINT-001"
+      "FUNGI-TAINT-001"
     );
     assert.ok(result.passed, result.message);
   });

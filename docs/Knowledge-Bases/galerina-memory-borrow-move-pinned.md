@@ -1,13 +1,13 @@
 # Galerina — Borrow, Move and Pinned Memory Semantics
 
 > **⚠️ NON-GOAL / DESIGN-ONLY (0034 verdict, 2026-06-18).** The full Rust-style borrow checker described
-> below is **not** Galerina's memory-safety model and is **not enforced**: `SPORE-MEMORY-001..008` are declared
+> below is **not** Galerina's memory-safety model and is **not enforced**: `FUNGI-MEMORY-001..008` are declared
 > but never emitted, and the `borrow`/`borrow mut` examples here parse/compile clean but are unenforced (corrected #65). Galerina's actual, shipped
 > safety spine is **"Governed Capability + Ternary-Tagged Memory"** — value-state/taint + effect/capability
 > passes, plus the runtime ternary tombstoning + per-allocation **generation tags** (use-after-free guard,
 > shipped `692e62d`). See **`galerina-memory-safety-model.md`** for the canonical model. This document is kept
 > for reference on the *heterogeneous-domain transfer* problem (GPU VRAM / WASM linear memory / edge), which
-> the capability model addresses differently. ~~The one live sliver worth building is `move` + `USE_AFTER_MOVE` linearity~~ — **superseded by #65:** `USE_AFTER_MOVE` (SPORE-MEMORY-001) is honest-retired as RESERVED (value-semantics → non-class); the consume-once guarantee already ships as `SPORE-AFFINE-001`. Everything here is non-goal.
+> the capability model addresses differently. ~~The one live sliver worth building is `move` + `USE_AFTER_MOVE` linearity~~ — **superseded by #65:** `USE_AFTER_MOVE` (FUNGI-MEMORY-001) is honest-retired as RESERVED (value-semantics → non-class); the consume-once guarantee already ships as `FUNGI-AFFINE-001`. Everything here is non-goal.
 
 ## Overview
 
@@ -124,7 +124,7 @@ tensor.read()     // COMPILE ERROR: tensor was moved
 ```
 
 ```text
-ERROR: SPORE-OWN-001: moved value used after move
+ERROR: FUNGI-OWN-001: moved value used after move
   `tensor` moved here: move tensor -> gpu
   `tensor` used again here: tensor.read()
 ```
@@ -177,7 +177,7 @@ Phase 4 parses into this vocabulary; Phase 5 uses it for lifetime analysis.
 | `moveExpr` | `move x` | Explicit ownership transfer; source invalidated |
 | `pinnedDecl` | `pinned x` | Memory locked for DMA / accelerator transfer |
 | `ownershipTransfer` | `x -> y` | Ownership transfer to a named target |
-| `configMemoryBlock` | `memory { ... }` (manifest) | Project/runtime memory config (boot.spore) |
+| `configMemoryBlock` | `memory { ... }` (manifest) | Project/runtime memory config (boot.fungi) |
 | `borrowScopeBlock` | `memory { ... }` (code) | Code-level ownership/borrow scope block |
 
 > **Phase boundary:** `borrowExpr`, `borrowMutExpr`, `moveExpr`, `pinnedDecl`,
@@ -231,24 +231,24 @@ remote borrow tensor from node "worker-2"
 
 ## Diagnostics
 
-The canonical memory-checker diagnostic series is `SPORE-MEMORY-*`, defined in
-`galerina-core-compiler/src/index.ts`. The former `SPORE-OWN-*` codes are retired;
+The canonical memory-checker diagnostic series is `FUNGI-MEMORY-*`, defined in
+`galerina-core-compiler/src/index.ts`. The former `FUNGI-OWN-*` codes are retired;
 the mapping below shows their equivalents.
 
 | Code | Name | Meaning | Former alias |
 |---|---|---|---|
-| `SPORE-MEMORY-001` | `USE_AFTER_MOVE` | Moved value used after ownership transferred | `SPORE-OWN-001` |
-| `SPORE-MEMORY-002` | `BORROW_AFTER_MOVE` | Cannot borrow a value after ownership has moved | `SPORE-OWN-002` |
-| `SPORE-MEMORY-003` | `BORROW_ESCAPES_SCOPE` | Borrowed reference cannot outlive its owner | `SPORE-OWN-003` |
-| `SPORE-MEMORY-004` | `READONLY_MUTATION` | Cannot mutate a value through a readonly reference | — |
-| `SPORE-MEMORY-005` | `MUTABLE_ALIAS` | A mutable borrow cannot coexist with another active borrow | — |
-| `SPORE-MEMORY-006` | `BOUNDS_VIOLATION` | Index may be outside collection bounds | — |
-| `SPORE-MEMORY-007` | `UNCHECKED_ACCESS_OUTSIDE_UNSAFE` | Unchecked access must be inside an approved unsafe block | `SPORE-OWN-004` |
-| `SPORE-MEMORY-008` | `UNSAFE_MEMORY_REQUIRES_FALLBACK` | Unsafe memory operation must declare a safe fallback | — |
+| `FUNGI-MEMORY-001` | `USE_AFTER_MOVE` | Moved value used after ownership transferred | `FUNGI-OWN-001` |
+| `FUNGI-MEMORY-002` | `BORROW_AFTER_MOVE` | Cannot borrow a value after ownership has moved | `FUNGI-OWN-002` |
+| `FUNGI-MEMORY-003` | `BORROW_ESCAPES_SCOPE` | Borrowed reference cannot outlive its owner | `FUNGI-OWN-003` |
+| `FUNGI-MEMORY-004` | `READONLY_MUTATION` | Cannot mutate a value through a readonly reference | — |
+| `FUNGI-MEMORY-005` | `MUTABLE_ALIAS` | A mutable borrow cannot coexist with another active borrow | — |
+| `FUNGI-MEMORY-006` | `BOUNDS_VIOLATION` | Index may be outside collection bounds | — |
+| `FUNGI-MEMORY-007` | `UNCHECKED_ACCESS_OUTSIDE_UNSAFE` | Unchecked access must be inside an approved unsafe block | `FUNGI-OWN-004` |
+| `FUNGI-MEMORY-008` | `UNSAFE_MEMORY_REQUIRES_FALLBACK` | Unsafe memory operation must declare a safe fallback | — |
 
-> **Note:** `SPORE-OWN-005` (shared value synchronization) and `SPORE-OWN-006`
+> **Note:** `FUNGI-OWN-005` (shared value synchronization) and `FUNGI-OWN-006`
 > (transfer requires ownership) are post-v1 diagnostics covering `shared` and
-> `transfer` keywords. They will be added to the `SPORE-MEMORY-*` series when
+> `transfer` keywords. They will be added to the `FUNGI-MEMORY-*` series when
 > those keywords are activated.
 
 ---

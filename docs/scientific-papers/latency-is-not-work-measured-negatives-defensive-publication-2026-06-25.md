@@ -34,7 +34,7 @@ Realizing an N-mode unitary `y = T·x` needs a Reck/Clements mesh of **N²/2** M
 
 ## 4. Result C — "holographic O(1)-read petabyte storage" is neither petabyte nor O(1)
 
-Demonstrated volumetric density is **≈ 9.6 GB/cm³** (lab, ~1% of the 1/λ³ limit) — not petabyte. Random page access is a **Bragg-condition search** over the multiplexing dimension, i.e. Θ(search), **not O(1)**. And **overwrite-erasure is unsound on write-once media**: you cannot prove a secret is gone by overwriting it, so erasure must fall back to a signed crypto-shred attestation (the positive `SPORE-RETAIN-001` gate — never trust a medium's self-reported erase).
+Demonstrated volumetric density is **≈ 9.6 GB/cm³** (lab, ~1% of the 1/λ³ limit) — not petabyte. Random page access is a **Bragg-condition search** over the multiplexing dimension, i.e. Θ(search), **not O(1)**. And **overwrite-erasure is unsound on write-once media**: you cannot prove a secret is gone by overwriting it, so erasure must fall back to a signed crypto-shred attestation (the positive `FUNGI-RETAIN-001` gate — never trust a medium's self-reported erase).
 
 ## 5. Result D — the same trade on a CPU: "compile the AST into a tensor" loses on both axes
 

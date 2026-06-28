@@ -7,7 +7,7 @@
 
 ## What "Runtime in Galerina 100%" Means
 
-Current: The runtime is TypeScript serving as an interpreter for `.spore` files.
+Current: The runtime is TypeScript serving as an interpreter for `.fungi` files.
 Target: The runtime is Galerina serving as a governed HTTP platform that governs itself.
 
 Milestones:
@@ -42,9 +42,9 @@ Expected: arithmetic-threshold tree-walker 257K/s → ~5M/s
 **Impact: aerospace/safety governance complete; Tainted<T> prevents injection at compile time**
 
 Three additions:
-1. `profile strict` / `profile high_integrity` → real compiler errors (SPORE-PROFILE-001..007)
+1. `profile strict` / `profile high_integrity` → real compiler errors (FUNGI-PROFILE-001..007)
 2. `Tainted<T>` — input from untrusted sources cannot reach a `database.query` or `html.render` sink without explicit sanitiser
-3. Constant-time comparison — `ProtectedSecret<T> ==` is SPORE-SECURITY-001 (use `.constantTimeEquals()`)
+3. Constant-time comparison — `ProtectedSecret<T> ==` is FUNGI-SECURITY-001 (use `.constantTimeEquals()`)
 
 These are required before the runtime can accept external HTTP requests securely.
 
@@ -129,13 +129,13 @@ contract {
 route POST "/auth/verify" { verifyPassword }
 ```
 
-This is the first `.spore` file that IS the runtime service.
+This is the first `.fungi` file that IS the runtime service.
 
 ### Phase 35 — wasmtime CLI
 **Impact: Galerina service runs outside Node.js — standalone WASM binary**
 
 ```bash
-galerina build --target wasm-wasi --output auth-service.wasm auth/verifyPassword.spore
+galerina build --target wasm-wasi --output auth-service.wasm auth/verifyPassword.fungi
 wasmtime run auth-service.wasm
 ```
 
@@ -174,8 +174,8 @@ secure flow processPatient(...) contract { ... }
 **Impact: every ProofGraph gets an unforgeable quantum-resistant certificate**
 
 ```bash
-galerina-verify proof.json --key spore-gov-2026-01
-# ✓ GovernanceSignature: spore-gov-2026-01 (valid, ML-DSA FIPS 204)
+galerina-verify proof.json --key fungi-gov-2026-01
+# ✓ GovernanceSignature: fungi-gov-2026-01 (valid, ML-DSA FIPS 204)
 # RESULT: COMPLIANT
 ```
 
@@ -223,7 +223,7 @@ The pure-flow evaluator (the hot path) is expressed as Galerina flows compiled t
 ### Phase 43 — HTTP/2 Governed Service
 **Impact: production-grade HTTP serving in Galerina**
 
-HTTP/2 + TLS. Every connection carries `connection_id` in audit. The `serve()` function becomes a `.spore` file:
+HTTP/2 + TLS. Every connection carries `connection_id` in audit. The `serve()` function becomes a `.fungi` file:
 
 ```galerina
 secure flow startServer(readonly config: ServerConfig) -> ServerHandle
@@ -309,8 +309,8 @@ ProofGraph exports to Lean4 proof format. DO-178C compliance certificate generat
 | HTTP serving | 34 | **25%** | `verifyPassword` endpoint live |
 | Governed pipeline | 36 | **35%** | Deno Deploy, audit in production |
 | Self-hosting | 41 | **50%** | Stage B compiles Stage A |
-| Capability in Galerina | 44 | **75%** | Capability host expressed in .spore |
-| Audit in Galerina | 48 | **90%** | Audit writer expressed in .spore |
+| Capability in Galerina | 44 | **75%** | Capability host expressed in .fungi |
+| Audit in Galerina | 48 | **90%** | Audit writer expressed in .fungi |
 | v1.0 RC | 50 | **100%** | Full runtime in Galerina, deployed |
 
 ---

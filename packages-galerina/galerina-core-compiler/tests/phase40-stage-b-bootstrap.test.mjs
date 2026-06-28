@@ -1,7 +1,7 @@
 /**
  * Phase 40 â€” Stage B Self-Hosting Bootstrap
  *
- * Proves that the Stage B .spore files are not just parse-clean but actually
+ * Proves that the Stage B .fungi files are not just parse-clean but actually
  * EXECUTABLE through the governed interpreter. This is the foundation for
  * Phase 41 (Stage B compiles Stage A â†’ Runtime 50%).
  *
@@ -24,10 +24,10 @@ function loadSrc(filename) {
   return readFileSync(join(SELF_HOSTED, filename), "utf8");
 }
 
-// â”€â”€ compiler.capabilities.spore â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€ compiler.capabilities.fungi â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-describe("Phase 40: compiler.capabilities.spore executes", () => {
-  const prog = parseProgram(loadSrc("compiler.capabilities.spore"), "compiler.capabilities.spore");
+describe("Phase 40: compiler.capabilities.fungi executes", () => {
+  const prog = parseProgram(loadSrc("compiler.capabilities.fungi"), "compiler.capabilities.fungi");
 
   it("parses with zero errors", () => {
     const errs = (prog.diagnostics ?? []).filter(d => d.severity === "error");
@@ -82,10 +82,10 @@ describe("Phase 40: compiler.capabilities.spore executes", () => {
   });
 });
 
-// â”€â”€ lexer.spore â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€ lexer.fungi â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-describe("Phase 40: lexer.spore executes (Stage B tokenizer)", () => {
-  const prog = parseProgram(loadSrc("lexer.spore"), "lexer.spore");
+describe("Phase 40: lexer.fungi executes (Stage B tokenizer)", () => {
+  const prog = parseProgram(loadSrc("lexer.fungi"), "lexer.fungi");
 
   it("parses with zero errors", () => {
     const errs = (prog.diagnostics ?? []).filter(d => d.severity === "error");
@@ -143,7 +143,7 @@ describe("Phase 40: lexer.spore executes (Stage B tokenizer)", () => {
 // â”€â”€ All 4 Stage B files parse cleanly â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 describe("Phase 40: all Stage B files parse with zero errors", () => {
-  for (const filename of ["compiler.capabilities.spore", "lexer.spore", "parser.spore", "type-checker.spore"]) {
+  for (const filename of ["compiler.capabilities.fungi", "lexer.fungi", "parser.fungi", "type-checker.fungi"]) {
     it(`${filename} â€” zero parse errors`, () => {
       const p = parseProgram(loadSrc(filename), filename);
       const errs = (p.diagnostics ?? []).filter(d => d.severity === "error");

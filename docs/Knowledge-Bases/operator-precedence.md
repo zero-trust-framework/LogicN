@@ -231,7 +231,7 @@ These operators are NOT in the Phase 5 table. They are reserved for later phases
 | `->` | Flow return type arrow (declaration-level) |
 | `=>` | Match arm arrow (match expression-level) |
 | `..` | Range operator (future) |
-| `&` `\|` `^` `~` `<<` `>>` | **Bitwise — permanently excluded from `.spore` (NOT "future").** Bit-level math lives in the engine/extension layer (the crypto-on-core boundary); the lexer rejects `^`/`~` with a descriptive hint (`lexer.ts:790`). See `galerina-issues/0002` reframed as a design boundary, not a pending feature. |
+| `&` `\|` `^` `~` `<<` `>>` | **Bitwise — permanently excluded from `.fungi` (NOT "future").** Bit-level math lives in the engine/extension layer (the crypto-on-core boundary); the lexer rejects `^`/`~` with a descriptive hint (`lexer.ts:790`). See `galerina-issues/0002` reframed as a design boundary, not a pending feature. |
 | `%` | Present in table but not in Phase 4 lexer ONE_CHAR_OPERATORS — add when needed |
 
 ---
@@ -283,17 +283,17 @@ changes.
 
 ---
 
-## Expression Diagnostics (SPORE-EXPR-* series)
+## Expression Diagnostics (FUNGI-EXPR-* series)
 
 | Code | Name | Description |
 |---|---|---|
-| `SPORE-EXPR-001` | `OperatorNotDefined` | Operator `op` is not defined for operand type(s) |
-| `SPORE-EXPR-002` | `InvalidPrefixOperand` | Prefix operator `op` cannot be applied to this operand type |
-| `SPORE-EXPR-003` | `SecretEqualityDenied` | `==` cannot be used on `secret protected` values; use `constantTimeEquals()` |
-| `SPORE-EXPR-004` | `UnsafeStatePropagation` | Result of expression is `unsafe` because operand `x` is `unsafe unvalidated` |
-| `SPORE-EXPR-005` | `PipelineTypeMismatch` | Pipeline stage output type does not match next stage input type |
-| `SPORE-EXPR-006` | `AssignmentInCondition` | Assignment `=` is not allowed inside `if`/`while` conditions; use `==` |
-| `SPORE-EXPR-007` | `EffectfulExpressionInPureFlow` | Effectful call inside a `pure flow` expression |
+| `FUNGI-EXPR-001` | `OperatorNotDefined` | Operator `op` is not defined for operand type(s) |
+| `FUNGI-EXPR-002` | `InvalidPrefixOperand` | Prefix operator `op` cannot be applied to this operand type |
+| `FUNGI-EXPR-003` | `SecretEqualityDenied` | `==` cannot be used on `secret protected` values; use `constantTimeEquals()` |
+| `FUNGI-EXPR-004` | `UnsafeStatePropagation` | Result of expression is `unsafe` because operand `x` is `unsafe unvalidated` |
+| `FUNGI-EXPR-005` | `PipelineTypeMismatch` | Pipeline stage output type does not match next stage input type |
+| `FUNGI-EXPR-006` | `AssignmentInCondition` | Assignment `=` is not allowed inside `if`/`while` conditions; use `==` |
+| `FUNGI-EXPR-007` | `EffectfulExpressionInPureFlow` | Effectful call inside a `pure flow` expression |
 
 ---
 
@@ -310,7 +310,7 @@ inherits the unsafe state:
 ```galerina
 let sql = "SELECT " + rawInput   // rawInput: String unsafe unvalidated
 // sql is now: String unsafe tainted
-// → SPORE-EXPR-004 emitted, cannot reach database.write
+// → FUNGI-EXPR-004 emitted, cannot reach database.write
 ```
 
 ### Short-circuit semantics
@@ -328,7 +328,7 @@ The audit system records which branch was taken.
 ### No assignment in conditionals
 
 ```galerina
-if x = y { ... }   // SPORE-EXPR-006 — did you mean ==?
+if x = y { ... }   // FUNGI-EXPR-006 — did you mean ==?
 ```
 
 Requires the explicit equality operator. This prevents accidental assignment

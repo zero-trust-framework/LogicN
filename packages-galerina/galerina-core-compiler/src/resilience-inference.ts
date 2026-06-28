@@ -9,7 +9,7 @@
 //
 // Key rules:
 //   - retry is FORBIDDEN on database.write / gateway.charge without idempotent: true
-//     → SPORE-RES-001
+//     → FUNGI-RES-001
 //   - pure flows default to 0 retries (pure = side-effect-free, safe to retry but
 //     only with explicit declaration)
 //   - secure flows with network.outbound default to 1 retry
@@ -284,11 +284,11 @@ export function inferFlowResilience(
 }
 
 // ---------------------------------------------------------------------------
-// Governance check (SPORE-RES-001)
+// Governance check (FUNGI-RES-001)
 // ---------------------------------------------------------------------------
 
 export interface ResilienceViolation {
-  readonly code: "SPORE-RES-001" | "SPORE-RES-CB-PENDING";
+  readonly code: "FUNGI-RES-001" | "FUNGI-RES-CB-PENDING";
   readonly severity: "error" | "warning";
   readonly subcode: string;
   readonly message: string;
@@ -297,8 +297,8 @@ export interface ResilienceViolation {
 
 /**
  * Resilience governance checks:
- *  - SPORE-RES-001 (error): retry on a mutation effect without idempotent: true.
- *  - SPORE-RES-CB-PENDING (warning, R&D 0120): `fallback circuit_breaker` is parsed + stored but its
+ *  - FUNGI-RES-001 (error): retry on a mutation effect without idempotent: true.
+ *  - FUNGI-RES-CB-PENDING (warning, R&D 0120): `fallback circuit_breaker` is parsed + stored but its
  *    posture-trip is a NO-OP today (DRCM Phase 5). A declared-but-inert safety control must never read
  *    as enforced — fail LOUD so the author does not rely on graceful degradation that does not happen.
  */
@@ -313,7 +313,7 @@ export function checkResilienceViolations(
     const mutationEffects = flow.declaredEffects.filter(e => MUTATION_EFFECTS.has(e));
     if (mutationEffects.length > 0) {
       violations.push({
-        code: "SPORE-RES-001",
+        code: "FUNGI-RES-001",
         severity: "error",
         subcode: "RESILIENCE_RETRY_ON_MUTATION",
         message:
@@ -326,10 +326,10 @@ export function checkResilienceViolations(
     }
   }
 
-  // SPORE-RES-CB-PENDING: a declared circuit_breaker that does not yet trip must not read as enforced.
+  // FUNGI-RES-CB-PENDING: a declared circuit_breaker that does not yet trip must not read as enforced.
   if (inferred.fallback === "circuit_breaker") {
     violations.push({
-      code: "SPORE-RES-CB-PENDING",
+      code: "FUNGI-RES-CB-PENDING",
       severity: "warning",
       subcode: "CIRCUIT_BREAKER_NOT_ENFORCED",
       message:
@@ -345,20 +345,20 @@ export function checkResilienceViolations(
 }
 
 // ---------------------------------------------------------------------------
-// Fault-handler governance checks (0017): SPORE-FAULT-001 / SPORE-FAULT-003
+// Fault-handler governance checks (0017): FUNGI-FAULT-001 / FUNGI-FAULT-003
 // ---------------------------------------------------------------------------
 
 export interface FaultHandlerViolation {
-  readonly code: "SPORE-FAULT-001" | "SPORE-FAULT-003";
+  readonly code: "FUNGI-FAULT-001" | "FUNGI-FAULT-003";
   readonly message: string;
 }
 
 /**
  * Validate DECLARED fault handlers (the secure default never violates by construction):
- *  - **SPORE-FAULT-003** (fail-open guard): a handler resolving to `log` outside the on_rotation_fault
+ *  - **FUNGI-FAULT-003** (fail-open guard): a handler resolving to `log` outside the on_rotation_fault
  *    back-compat opt-in is fail-OPEN (it keeps serving past the fault) — rejected. Use halt/quarantine.
- *  - **SPORE-FAULT-001** (monotonicity): `on_denial_fault retry` is rejected — retrying a capability denial
- *    attempts a re-grant, colliding with deny-only monotonicity (SPORE-MONO-001). Use halt/quarantine/fallback.
+ *  - **FUNGI-FAULT-001** (monotonicity): `on_denial_fault retry` is rejected — retrying a capability denial
+ *    attempts a re-grant, colliding with deny-only monotonicity (FUNGI-MONO-001). Use halt/quarantine/fallback.
  * The matrix itself already coerces these to `halt` (fail-closed); this surfaces the author error instead of
  * silently overriding it.
  */
@@ -367,7 +367,7 @@ export function checkFaultHandlerViolations(flowNode: AstNode): FaultHandlerViol
   for (const [signal, d] of extractDeclaredFaultHandlers(flowNode)) {
     if (d.action === "log" && signal !== "on_rotation_fault") {
       violations.push({
-        code: "SPORE-FAULT-003",
+        code: "FUNGI-FAULT-003",
         message:
           `Fault handler '${signal} log' is fail-OPEN: 'log' keeps serving past the fault and is permitted ` +
           `only on on_rotation_fault. Use 'halt' (fail-closed) or 'quarantine'.`,
@@ -375,10 +375,10 @@ export function checkFaultHandlerViolations(flowNode: AstNode): FaultHandlerViol
     }
     if (d.action === "retry" && signal === "on_denial_fault") {
       violations.push({
-        code: "SPORE-FAULT-001",
+        code: "FUNGI-FAULT-001",
         message:
           `Fault handler 'on_denial_fault retry' is rejected: retrying a capability denial attempts a ` +
-          `re-grant, colliding with deny-only monotonicity (SPORE-MONO-001). Use 'halt', 'quarantine', or 'fallback <flow>'.`,
+          `re-grant, colliding with deny-only monotonicity (FUNGI-MONO-001). Use 'halt', 'quarantine', or 'fallback <flow>'.`,
       });
     }
   }

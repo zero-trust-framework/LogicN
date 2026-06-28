@@ -10,7 +10,7 @@ folds in the **honest cross-language benchmark** (Galerina does NOT win on raw s
 - **Faithful Int64 WASM lowering — a fused Int64 module now VALIDATES under wabt + runs exact** (Step 0 +
   Step 1 interpreter + Step 2b emitter: i64 helpers, routing, return/local valtype, literal `i64.const`
   origination, foldToInt-R2 guard). Worker cross-verified walker≡WASM≡exact-BigInt (rd-0113b 12/12). The
-  `SPORE-NUMERIC-001` gate still **stays closed** (lift is owner-gated after the full differential).
+  `FUNGI-NUMERIC-001` gate still **stays closed** (lift is owner-gated after the full differential).
 - **Untrusted Governed Lane** documented + diagrammed ([untrusted-governed-lane.md] +
   `docs/diagrams/galerina-untrusted-governed-lane.svg`).
 - **R&D 0100–0113 paper-ranked: 0 papers** (6 defensive-pub, 8 no) — the posture holds
@@ -53,7 +53,7 @@ accepted cost of the governance-first design.
 | Governance + value-state | 90% | 68% | K3 unknown→DENY; taint/secret/embedding/protected + affine passport; tier-floor; fuse-loader admission |
 | Crypto + TMF + secrets | 90% | 72% | binary crypto (SHA-256 + hybrid Ed25519+ML-DSA-65); TMX-256 + inclusion proofs; env.tmf; secrets{} obligation |
 | Web + ext + substrate | 88% | 42% | web-* = enforced contract + stub-guard only; photonic/substrate honestly emulated (`executedNatively=false`) |
-| Benchmarks + CI + devtools | 90% | 68% | honest harness (anti-inflation truth-audit); 8 enforcing CI lints + mutation audit; **spore-astshape** dev tool |
+| Benchmarks + CI + devtools | 90% | 68% | honest harness (anti-inflation truth-audit); 8 enforcing CI lints + mutation audit; **fungi-astshape** dev tool |
 
 ## Roadmap
 
@@ -61,7 +61,7 @@ accepted cost of the governance-first design.
 - **Finish the Int64 gate-lift chain** (the active big-rock): worker folds the literal slice into rd-0113b →
   complete 0014 Int64 differential passes non-vacuously; Step-2 type-checker tightening (mixed
   Int+Int64→Int64 contagion @type-checker:883; fail-closed Int-bodied-Int64-init reject @:414); the rare
-  bare-`return <literal>` threading. **Then owner-gated lift of `SPORE-NUMERIC-001` for Int64** (UInt64 stays gated).
+  bare-`return <literal>` threading. **Then owner-gated lift of `FUNGI-NUMERIC-001` for Int64** (UInt64 stays gated).
 - **Wire the SEC-002 mutation audit + the full suite into `conventions.yml` CI** (still local-only).
 - **#34: real ML-DSA-65 default `.lmanifest` signature**; resolve the 2 Hardened-Border drifts.
 

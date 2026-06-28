@@ -50,7 +50,7 @@ type FinancialRecord = PCI<CardData>    // PCI-DSS cardholder data
 `PII<T>`, `PHI<T>`, `PCI<T>` are sealed types that:
 
 ```text
-cannot be logged (SPORE-PII-001: PII value reached logger)
+cannot be logged (FUNGI-PII-001: PII value reached logger)
 cannot be stored without encryption declaration
 cannot cross a boundary without a retention/transfer declaration
 require explicit redaction for display
@@ -146,7 +146,7 @@ The compiler verifies that the declared capability set is sufficient for the eff
 | A03: Injection | `Tainted<T>` propagation — tainted values cannot reach SQL/HTML/shell sinks without sanitizers |
 | A04: Insecure Design | Effect graph — all authority is declared; intent graph is a reviewable artefact |
 | A05: Security Misconfiguration | Production profile gates — compiler blocks weak crypto, missing auth, debug modes |
-| A06: Vulnerable Components | Supply-chain attestation — hash-pinned lockfile, `SPORE-SUPPLY-001` on drift |
+| A06: Vulnerable Components | Supply-chain attestation — hash-pinned lockfile, `FUNGI-SUPPLY-001` on drift |
 | A07: Auth & Session Failures | `SecureString` / `ProtectedSecret<T>` — session tokens are opaque governed types |
 | A08: Software Integrity Failures | Governance manifests — package effects declared before install |
 | A09: Logging/Monitoring Failures | `audit.write` effect — logging is declared and verifiable; `PII<T>` cannot reach log |
@@ -217,7 +217,7 @@ capabilities [phi.access] {
 ```galerina
 // Invalid — PHI<T> cannot escape to external logging
 flow badLog(record: PHI<PatientData>) {
-  console.log(record)  // SPORE-PHI-001: PHI value cannot reach unapproved sink
+  console.log(record)  // FUNGI-PHI-001: PHI value cannot reach unapproved sink
 }
 ```
 
@@ -375,17 +375,17 @@ Right to erasure: supported via /users/:id/erasure endpoint.
 
 | Code | Meaning |
 |---|---|
-| `SPORE-PII-001` | PII value reached unapproved sink |
-| `SPORE-PII-002` | PII stored without encryption declaration |
-| `SPORE-PII-003` | PII transmitted without consent check |
-| `SPORE-PHI-001` | PHI value reached unapproved sink (HIPAA) |
-| `SPORE-PHI-002` | PHI access lacks declared purpose |
-| `SPORE-PCI-001` | PCI cardholder data reached non-PCI context |
-| `SPORE-PCI-002` | Raw PAN cannot be stored after authorization |
-| `SPORE-AUDIT-001` | Regulated write lacks audit effect |
-| `SPORE-AUDIT-002` | Immutable audit log cannot be deleted |
-| `SPORE-CONSENT-001` | Personal data processed without consent check |
-| `SPORE-RETENTION-001` | Retention schedule required for this data type |
+| `FUNGI-PII-001` | PII value reached unapproved sink |
+| `FUNGI-PII-002` | PII stored without encryption declaration |
+| `FUNGI-PII-003` | PII transmitted without consent check |
+| `FUNGI-PHI-001` | PHI value reached unapproved sink (HIPAA) |
+| `FUNGI-PHI-002` | PHI access lacks declared purpose |
+| `FUNGI-PCI-001` | PCI cardholder data reached non-PCI context |
+| `FUNGI-PCI-002` | Raw PAN cannot be stored after authorization |
+| `FUNGI-AUDIT-001` | Regulated write lacks audit effect |
+| `FUNGI-AUDIT-002` | Immutable audit log cannot be deleted |
+| `FUNGI-CONSENT-001` | Personal data processed without consent check |
+| `FUNGI-RETENTION-001` | Retention schedule required for this data type |
 
 ---
 

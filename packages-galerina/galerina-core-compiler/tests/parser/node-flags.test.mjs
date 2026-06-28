@@ -20,7 +20,7 @@ import { describe, it } from "node:test";
 import {
   parseProgram,
   NodeFlags,
-  SPORE_COMPUTE_001,
+  FUNGI_COMPUTE_001,
 } from "../../dist/index.js";
 
 // ---------------------------------------------------------------------------
@@ -96,7 +96,7 @@ contract {
   return data
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "save");
     assert.ok(node !== undefined, "Flow 'save' must be found");
     assert.ok(hasFlag(node, NodeFlags.HasContract), "HasContract must be set");
@@ -104,7 +104,7 @@ contract {
 
   it("flow without contract { } does NOT set HasContract", () => {
     const source = `pure flow add(a: Int, b: Int) -> Int { return a }`;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "add");
     assert.ok(node !== undefined, "Flow 'add' must be found");
     assert.ok(!hasFlag(node, NodeFlags.HasContract), "HasContract must NOT be set for contractless flow");
@@ -127,7 +127,7 @@ contract {
   return
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "writeLog");
     assert.ok(node !== undefined, "Flow 'writeLog' must be found");
     assert.ok(hasFlag(node, NodeFlags.HasEffects), "HasEffects must be set");
@@ -135,7 +135,7 @@ contract {
 
   it("pure flow with no effects does NOT set HasEffects", () => {
     const source = `pure flow double(x: Int) -> Int { return x }`;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "double");
     assert.ok(node !== undefined, "Flow 'double' must be found");
     assert.ok(!hasFlag(node, NodeFlags.HasEffects), "HasEffects must NOT be set for effect-free pure flow");
@@ -156,7 +156,7 @@ compute {
   return input
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "runModel");
     assert.ok(node !== undefined, "Flow 'runModel' must be found");
     assert.ok(hasFlag(node, NodeFlags.HasCompute), "HasCompute must be set");
@@ -164,7 +164,7 @@ compute {
 
   it("flow without compute { } does NOT set HasCompute", () => {
     const source = `pure flow greet(name: String) -> String { return name }`;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "greet");
     assert.ok(node !== undefined, "Flow 'greet' must be found");
     assert.ok(!hasFlag(node, NodeFlags.HasCompute), "HasCompute must NOT be set");
@@ -181,7 +181,7 @@ describe("NodeFlags: TensorCandidate", () => {
   return text
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "embed");
     assert.ok(node !== undefined, "Flow 'embed' must be found");
     assert.ok(hasFlag(node, NodeFlags.TensorCandidate), "TensorCandidate must be set for Tensor return type");
@@ -192,7 +192,7 @@ describe("NodeFlags: TensorCandidate", () => {
   return factor
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "scale");
     assert.ok(node !== undefined, "Flow 'scale' must be found");
     assert.ok(hasFlag(node, NodeFlags.TensorCandidate), "TensorCandidate must be set for Tensor param");
@@ -200,7 +200,7 @@ describe("NodeFlags: TensorCandidate", () => {
 
   it("flow with no Tensor<> does NOT set TensorCandidate", () => {
     const source = `pure flow sum(a: Int, b: Int) -> Int { return a }`;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "sum");
     assert.ok(node !== undefined, "Flow 'sum' must be found");
     assert.ok(!hasFlag(node, NodeFlags.TensorCandidate), "TensorCandidate must NOT be set for non-tensor flow");
@@ -217,7 +217,7 @@ describe("NodeFlags: ReadonlyInputs", () => {
   return request
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "handle");
     assert.ok(node !== undefined, "Flow 'handle' must be found");
     assert.ok(hasFlag(node, NodeFlags.ReadonlyInputs), "ReadonlyInputs must be set when all params are readonly");
@@ -225,7 +225,7 @@ describe("NodeFlags: ReadonlyInputs", () => {
 
   it("flow with non-readonly params does NOT set ReadonlyInputs", () => {
     const source = `flow mutating(data: String, count: Int) -> String { return data }`;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "mutating");
     assert.ok(node !== undefined, "Flow 'mutating' must be found");
     assert.ok(!hasFlag(node, NodeFlags.ReadonlyInputs), "ReadonlyInputs must NOT be set when params are not readonly");
@@ -233,7 +233,7 @@ describe("NodeFlags: ReadonlyInputs", () => {
 
   it("flow with zero params does NOT set ReadonlyInputs (no params = not all-readonly)", () => {
     const source = `pure flow noParams() -> Int { return 1 }`;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "noParams");
     assert.ok(node !== undefined, "Flow 'noParams' must be found");
     assert.ok(!hasFlag(node, NodeFlags.ReadonlyInputs), "ReadonlyInputs must NOT be set for zero-param flow");
@@ -258,7 +258,7 @@ contract {
   return request
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "createOrder");
     assert.ok(node !== undefined, "Flow 'createOrder' must be found");
     assert.ok(hasFlag(node, NodeFlags.HasContract),    "HasContract must be set");
@@ -277,7 +277,7 @@ compute {
   return input
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "infer");
     assert.ok(node !== undefined, "Flow 'infer' must be found");
     assert.ok(hasFlag(node, NodeFlags.HasCompute),      "HasCompute must be set");
@@ -293,7 +293,7 @@ compute {
 describe("NodeFlags: IsPure and IsSecure", () => {
   it("pure flow sets IsPure", () => {
     const source = `pure flow square(x: Int) -> Int { return x }`;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "square");
     assert.ok(node !== undefined, "Flow 'square' must be found");
     assert.ok(hasFlag(node, NodeFlags.IsPure), "IsPure must be set for pure flow");
@@ -305,7 +305,7 @@ describe("NodeFlags: IsPure and IsSecure", () => {
   return request
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "handleWebhook");
     assert.ok(node !== undefined, "Flow 'handleWebhook' must be found");
     assert.ok(hasFlag(node, NodeFlags.IsSecure), "IsSecure must be set for secure flow");
@@ -314,7 +314,7 @@ describe("NodeFlags: IsPure and IsSecure", () => {
 
   it("plain flow sets neither IsPure nor IsSecure", () => {
     const source = `flow plain(x: Int) -> Int { return x }`;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "plain");
     assert.ok(node !== undefined, "Flow 'plain' must be found");
     assert.ok(!hasFlag(node, NodeFlags.IsPure), "IsPure must NOT be set for plain flow");
@@ -343,7 +343,7 @@ contract {
   return request
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "getPatient");
     assert.ok(node !== undefined, "Flow 'getPatient' must be found");
     assert.ok(hasFlag(node, NodeFlags.HasPrivacy), "HasPrivacy must be set when contract.privacy is declared");
@@ -359,7 +359,7 @@ contract {
   return data
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "save");
     assert.ok(node !== undefined, "Flow 'save' must be found");
     assert.ok(!hasFlag(node, NodeFlags.HasPrivacy), "HasPrivacy must NOT be set without privacy block");
@@ -378,7 +378,7 @@ prefer [npu]
   return input
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "runInference");
     assert.ok(node !== undefined, "Flow 'runInference' must be found");
     assert.ok(hasFlag(node, NodeFlags.HasCompute), "HasCompute must be set for prefer [npu] flow");
@@ -392,7 +392,7 @@ prefer [gpu, npu, cpu]
   return text
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "embed");
     assert.ok(node !== undefined, "Flow 'embed' must be found");
     assert.ok(hasFlag(node, NodeFlags.HasCompute), "HasCompute must be set");
@@ -405,7 +405,7 @@ prefer [gpu, npu, cpu]
 
   it("flow without prefer or compute does NOT set HasCompute", () => {
     const source = `pure flow add(a: Int, b: Int) -> Int { return a }`;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "add");
     assert.ok(node !== undefined, "Flow 'add' must be found");
     assert.ok(!hasFlag(node, NodeFlags.HasCompute), "HasCompute must NOT be set for plain flow");
@@ -419,7 +419,7 @@ prefer [gpu, npu, cpu]
 describe("NodeFlags: None for simple flow", () => {
   it("simple pure flow with no contract/effects/compute has flags === 0 OR IsPure only", () => {
     const source = `pure flow identity(x: Int) -> Int { return x }`;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const node = findFlowNode(ast, "identity");
     assert.ok(node !== undefined, "Flow 'identity' must be found");
     // Only IsPure should be set — no contract, no effects, no compute
@@ -432,16 +432,16 @@ describe("NodeFlags: None for simple flow", () => {
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-COMPUTE-001 constant shape (detection is compiler/SemanticGraph job)
+// FUNGI-COMPUTE-001 constant shape (detection is compiler/SemanticGraph job)
 // ---------------------------------------------------------------------------
 
-describe("SPORE_COMPUTE_001: constant shape", () => {
-  it("SPORE_COMPUTE_001 has correct code and severity", () => {
-    assert.equal(SPORE_COMPUTE_001.code, "SPORE-COMPUTE-001");
-    assert.equal(SPORE_COMPUTE_001.name, "ComputeTargetIncompatiblePattern");
-    assert.equal(SPORE_COMPUTE_001.severity, "warning");
-    assert.ok(typeof SPORE_COMPUTE_001.message === "string");
-    assert.ok(typeof SPORE_COMPUTE_001.why === "string");
-    assert.ok(typeof SPORE_COMPUTE_001.suggestedFix === "string");
+describe("FUNGI_COMPUTE_001: constant shape", () => {
+  it("FUNGI_COMPUTE_001 has correct code and severity", () => {
+    assert.equal(FUNGI_COMPUTE_001.code, "FUNGI-COMPUTE-001");
+    assert.equal(FUNGI_COMPUTE_001.name, "ComputeTargetIncompatiblePattern");
+    assert.equal(FUNGI_COMPUTE_001.severity, "warning");
+    assert.ok(typeof FUNGI_COMPUTE_001.message === "string");
+    assert.ok(typeof FUNGI_COMPUTE_001.why === "string");
+    assert.ok(typeof FUNGI_COMPUTE_001.suggestedFix === "string");
   });
 });

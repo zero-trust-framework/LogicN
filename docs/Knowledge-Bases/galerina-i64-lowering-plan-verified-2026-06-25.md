@@ -77,7 +77,7 @@ vacuously on small values).
   `f(a:Int64,b:Int64)`.
 - **3c.** `inferExprType` Int64 contagion (:973-990) — mirror the `FLOAT_WAT_TYPES` contagion at :989; seed
   from annotated bindings/params (3b).
-- **3d.** `watStackType` i64-call rule (:783-792) — `if (/^\(call \$spore_checked_(add|sub|mul)_i64/...) return 'i64'`
+- **3d.** `watStackType` i64-call rule (:783-792) — `if (/^\(call \$fungi_checked_(add|sub|mul)_i64/...) return 'i64'`
   before the generic match (the existing regex needs a `.`, so `(call $…` defaults to i32).
 - **3e.** return valtype (:2996) — `declaredReturn !== undefined ? galerinaTypeToWAT(declaredReturn) : 'i32'`
   (galerinaTypeToWAT:212 maps Int64→i64). WASM rejects i64-over-i32-result (fail-closed) but must land
@@ -94,14 +94,14 @@ vacuously on small values).
   `(i64.extend_i32_s …)` when local is i64 and `watStackType(init)==='i32'`.
 
 ### Step 4 — emitter arithmetic / op routing (2b arithmetic)
-- **4a.** `INT64_CHECKED_HELPERS` + `$spore_checked_{add,sub,mul}_i64` (new). add/sub = i64 sign-bit overflow
+- **4a.** `INT64_CHECKED_HELPERS` + `$fungi_checked_{add,sub,mul}_i64` (new). add/sub = i64 sign-bit overflow
   predicate. **`mul` must NOT end with `i32.wrap_i64`** (that's the i32 helper's narrow-back at :826) and must
   NOT use native wrapping `i64.mul` — use the divide-back predicate: `i64.mul` then `if a!=0 && i64.div_s(r,a)!=b
   → unreachable` (`div_s(INT64_MIN,-1)` traps natively, `a==0` short-circuits). (R15)
 - **4b. helper injection — extend BOTH loops (R14)** (:509 and :513) to iterate `INT64_CHECKED_HELPERS` (or
-  merge into one `ALL_CHECKED_HELPERS`). Else a body referencing `$spore_checked_add_i64` → undefined func →
+  merge into one `ALL_CHECKED_HELPERS`). Else a body referencing `$fungi_checked_add_i64` → undefined func →
   wat2wasm declines → **permanent silent walker fallback masked by green tests.**
-- **4c.** binaryExpr Int64 branch after the float block (:1158) — +,-,* → `$spore_checked_*_i64`; `/`→`i64.div_s`;
+- **4c.** binaryExpr Int64 branch after the float block (:1158) — +,-,* → `$fungi_checked_*_i64`; `/`→`i64.div_s`;
   `%`→`i64.rem_s`; comparisons → `i64.{lt,gt,le,ge}_s`+`eq/ne`; mixed int operand widened via `extend_i32_s`.
   **Guard mixed Int64+Float → `(unreachable)`** (else an i64 reaches `f64.convert_i32_s` at :1149).
 - **4d. `foldToInt` Int64-awareness (CRITICAL, R2)** (:1118-1119 + foldToInt :2687-2726) — it short-circuits
@@ -109,8 +109,8 @@ vacuously on small values).
   traps or emits a wrapped `(i32.const)`. Fix: when `inferExprType(node)==='Int64'` (or any operand exceeds
   i32), fold with BigInt + i64-range checked ops → `(i64.const ${bigint})`, or return null and let the runtime
   i64 path handle it. **Never let `parseInt` touch an Int64 literal.**
-- **4e.** unaryExpr Int64 negation (:1168) — current hardcoded `$spore_checked_sub_i32` over an i64 operand is
-  invalid/truncating. Add `inferExprType(operand)==='Int64'` → `$spore_checked_sub_i64 (i64.const 0) operand` so
+- **4e.** unaryExpr Int64 negation (:1168) — current hardcoded `$fungi_checked_sub_i32` over an i64 operand is
+  invalid/truncating. Add `inferExprType(operand)==='Int64'` → `$fungi_checked_sub_i64 (i64.const 0) operand` so
   `-INT64_MIN` traps. (R4)
 - **4f.** return-type plumbing — thread the declared return type through
   `emitWATFromFlowAST → emitBlockStatements → returnStmt` (:1652, no access today). Assert
@@ -131,7 +131,7 @@ A validation-decline is fail-SAFE; a truncation that VALIDATES is fail-OPEN and 
 | R1 | bytecode-vm.ts :133-158 + interpreter.ts:2958 | **CRIT** | bytecode tier runs FIRST, silently lowers internal Int64→i32 for non-param flows | 1j |
 | R2 | wat-emitter.ts:1118-1119 `foldToInt` | **CRIT** | const-folds Int64 in 32-bit via `parseInt`+i32 ops, emits `(i32.const)` — validates | 4d |
 | R3 | wat-emitter.ts:2996 return valtype | **CRIT** | hardcoded i32 result → routing inert or truncation | 3e |
-| R4 | wat-emitter.ts:1168 unary neg | **CRIT** | `$spore_checked_sub_i32` over i64 → invalid/truncating; `-INT64_MIN` unrepresentable | 4e |
+| R4 | wat-emitter.ts:1168 unary neg | **CRIT** | `$fungi_checked_sub_i32` over i64 → invalid/truncating; `-INT64_MIN` unrepresentable | 4e |
 | R5 | wat-emitter.ts:2898-2903 param registration | **CRIT** | Int64 params never in recordVarTypes → routing DEAD for `f(a:Int64,b:Int64)` | 3b |
 | R6 | `numericBaseType` non-exported (vsc:2074) | **HIGH** | 5 emitter edits don't compile; naive `==='Int64'` misses `protected Int64` | 0a |
 | R7 | inferExprType:973-990 no Int64 contagion | **HIGH** | mid-expr Int64 → 'Int' → i32 local → 64→32 truncation that validates | 3c |
@@ -142,7 +142,7 @@ A validation-decline is fail-SAFE; a truncation that VALIDATES is fail-OPEN and 
 | R12 | type-checker.ts:883 mixed Int+Int64→'Int' | **HIGH** | checker/walker/WASM disagree on mixed-expr type | 2a |
 | R13 | type-checker.ts:414 Int-bodied init for Int64 binding | **HIGH** | `let total:Int64=a+b` green → i64 local stores i32 | 2b |
 | R14 | wat-emitter.ts:509/513 helper injection loops | **HIGH** | new i64 helpers not injected → undefined func → silent walker fallback | 4b |
-| R15 | `$spore_checked_mul_i64` overflow check | **HIGH** | i32 trick / native wrapping mul → fail-OPEN | 4a |
+| R15 | `$fungi_checked_mul_i64` overflow check | **HIGH** | i32 trick / native wrapping mul → fail-OPEN | 4a |
 | R16 | return plumbing channel :1652+:2996 | MED | resultVal i64 but body returns `(i32.const)`: small literal validates & truncates siblings | 4f/3e |
 | R17 | wat-emitter.ts:2170 `$galerina_result` i32 | MED | Int64+postcondition captures i64 tail into i32 local | 3f |
 | R18 | interpreter return coercion block-tail vs EarlyReturn | MED | inconsistent coercion | 1d |
@@ -176,9 +176,9 @@ base-type stripping and the I64_MIN/I64_MAX literal edges.
 - **Emitter:** params registered + inferExprType Int64-contagious (R5, R7); return valtype + `$galerina_result` +
   return plumbing land atomically with `resultVal===watStackType` assert (R3, R16, R17); all FIVE local-set
   sites widen via `localValtypes` (R8); literal `expectedType` threaded everywhere, `>2^31` w/o hint →
-  `(unreachable)` (R21); `foldToInt` Int64-aware/skips (R2); unary neg → `$spore_checked_sub_i64` (R4);
+  `(unreachable)` (R21); `foldToInt` Int64-aware/skips (R2); unary neg → `$fungi_checked_sub_i64` (R4);
   Int64+Float → `(unreachable)` (R20); UInt64 sign-extend guarded by per-type `signedWiden` (R28).
-- **Checked helpers:** `$spore_checked_{add,sub,mul}_i64` exist + trap; mul uses divide-back, NOT `i32.wrap_i64`,
+- **Checked helpers:** `$fungi_checked_{add,sub,mul}_i64` exist + trap; mul uses divide-back, NOT `i32.wrap_i64`,
   NOT native wrap (R15); BOTH injection loops iterate them (R14).
 - **Integration proof (the decisive gate):** a fused Int64 module actually **VALIDATES** under wat2wasm (a green
   walker masks a permanently-declining WASM tier); it **RUNS** correctly for the full §5 corpus; the **0014
@@ -235,22 +235,22 @@ Ready-to-paste i64 checked helpers (mirror the i32 set at :803; add/sub use the 
 uses divide-back since no type is wider than i64**, with the div guarded in a NESTED `if a!=0` so it is never
 reached at a==0 — `i32.and` would still evaluate both args = div-by-zero):
 ```wat
-(func $spore_checked_add_i64 (param $a i64) (param $b i64) (result i64)
+(func $fungi_checked_add_i64 (param $a i64) (param $b i64) (result i64)
   (local $r i64) (local.set $r (i64.add (local.get $a) (local.get $b)))
   (if (i64.lt_s (i64.and (i64.xor (local.get $a) (local.get $r)) (i64.xor (local.get $b) (local.get $r))) (i64.const 0)) (then unreachable))
   (local.get $r))
-(func $spore_checked_sub_i64 (param $a i64) (param $b i64) (result i64)
+(func $fungi_checked_sub_i64 (param $a i64) (param $b i64) (result i64)
   (local $r i64) (local.set $r (i64.sub (local.get $a) (local.get $b)))
   (if (i64.lt_s (i64.and (i64.xor (local.get $a) (local.get $b)) (i64.xor (local.get $a) (local.get $r))) (i64.const 0)) (then unreachable))
   (local.get $r))
-(func $spore_checked_mul_i64 (param $a i64) (param $b i64) (result i64)
+(func $fungi_checked_mul_i64 (param $a i64) (param $b i64) (result i64)
   (local $r i64) (local.set $r (i64.mul (local.get $a) (local.get $b)))
   ;; divide-back overflow check; div_s(INT64_MIN,-1) traps natively → that one edge traps correctly.
   (if (i64.ne (local.get $a) (i64.const 0))
     (then (if (i64.ne (i64.div_s (local.get $r) (local.get $a)) (local.get $b)) (then unreachable))))
   (local.get $r))
 ```
-`INT64_ARITH_WAT = {+: "call $spore_checked_add_i64", -: "…sub…", *: "…mul…", /: "i64.div_s", %: "i64.rem_s"}`;
+`INT64_ARITH_WAT = {+: "call $fungi_checked_add_i64", -: "…sub…", *: "…mul…", /: "i64.div_s", %: "i64.rem_s"}`;
 `INT64_CMP_WAT = {==: i64.eq, !=: i64.ne, <: i64.lt_s, >: i64.gt_s, <=: i64.le_s, >=: i64.ge_s}`. After the
 milestone validates: run the §5 corpus through the 0014 walker≡WASM differential (the worker's rd-0113 corpus
 is the Int64 slice) — only then, owner-gated, lift `Int64` from the gate. UInt64 stays gated.

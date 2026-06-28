@@ -36,29 +36,29 @@ bytecode for a future native VM.
 | Tests | 1993 | 2286 | +293 |
 | TypeScript source files | ~42 | ~52 | +10 new |
 | KB documents | ~302 | ~312 | +10 arch docs |
-| New diagnostic codes | — | 15 | SPORE-STDLIB-001, SPORE-EFFECT-005, SPORE-GOV-013, SPORE-PKG-001..005, SPORE-GATE-001, SPORE-TYPE-030/031, SPORE-COMPUTE-001, SPORE-SYNTAX-LEGACY-001, SPORE-WAT-STUB |
+| New diagnostic codes | — | 15 | FUNGI-STDLIB-001, FUNGI-EFFECT-005, FUNGI-GOV-013, FUNGI-PKG-001..005, FUNGI-GATE-001, FUNGI-TYPE-030/031, FUNGI-COMPUTE-001, FUNGI-SYNTAX-LEGACY-001, FUNGI-WAT-STUB |
 | Test subdirectories added | 0 | 9 | bootstrap-determinism, governance-conformance, parser, package-resolver, value-state, type-registry, effect-checker, governance, stdlib |
 
 ### New Diagnostic Codes
 
 | Code | Meaning | Phase |
 |---|---|---|
-| SPORE-STDLIB-001 | Effectful stdlib call missing declared effect | 18H / 19A |
-| SPORE-EFFECT-005 | BroadAliasUsed — broad effect alias now a warning not error | 18E |
-| SPORE-GOV-013 | BoundaryViolation — cross-boundary context contract violation | 20A |
-| SPORE-PKG-001 | Package name does not match naming policy | 18B |
-| SPORE-PKG-002 | Package missing required signature field | 18B |
-| SPORE-PKG-003 | Package declares hidden capabilities not in manifest | 18B |
-| SPORE-PKG-004 | Package install script present (not permitted) | 18B |
-| SPORE-PKG-005 | Package targets unknown compute target | 18B |
-| SPORE-GATE-001 | Value reaching governed sink without passing required gate | 18C |
-| SPORE-TYPE-030 | Tensor type arity mismatch | 18D |
-| SPORE-TYPE-031 | Tensor element type not numeric | 18D |
-| SPORE-COMPUTE-001 | Compute preference references unknown target | 22A |
-| SPORE-SYNTAX-LEGACY-001 | Legacy `req` keyword used instead of `request` | 18 (parser) |
-| SPORE-SEC-020 | Monkey-patch detected: prototype modification | 17C / 18 |
-| SPORE-SEC-021 | Monkey-patch detected: global object mutation | 17C / 18 |
-| SPORE-WAT-STUB | WAT body is a stub (unreachable) — not yet executable | 19B |
+| FUNGI-STDLIB-001 | Effectful stdlib call missing declared effect | 18H / 19A |
+| FUNGI-EFFECT-005 | BroadAliasUsed — broad effect alias now a warning not error | 18E |
+| FUNGI-GOV-013 | BoundaryViolation — cross-boundary context contract violation | 20A |
+| FUNGI-PKG-001 | Package name does not match naming policy | 18B |
+| FUNGI-PKG-002 | Package missing required signature field | 18B |
+| FUNGI-PKG-003 | Package declares hidden capabilities not in manifest | 18B |
+| FUNGI-PKG-004 | Package install script present (not permitted) | 18B |
+| FUNGI-PKG-005 | Package targets unknown compute target | 18B |
+| FUNGI-GATE-001 | Value reaching governed sink without passing required gate | 18C |
+| FUNGI-TYPE-030 | Tensor type arity mismatch | 18D |
+| FUNGI-TYPE-031 | Tensor element type not numeric | 18D |
+| FUNGI-COMPUTE-001 | Compute preference references unknown target | 22A |
+| FUNGI-SYNTAX-LEGACY-001 | Legacy `req` keyword used instead of `request` | 18 (parser) |
+| FUNGI-SEC-020 | Monkey-patch detected: prototype modification | 17C / 18 |
+| FUNGI-SEC-021 | Monkey-patch detected: global object mutation | 17C / 18 |
+| FUNGI-WAT-STUB | WAT body is a stub (unreachable) — not yet executable | 19B |
 
 ---
 
@@ -68,7 +68,7 @@ All files reside in `packages-galerina/galerina-core-compiler/src/`.
 
 | File | What it provides | Phase |
 |---|---|---|
-| `monkey-patch-checker.ts` | SPORE-SEC-020/021 source-level detection of prototype and global mutation | 17C/18 |
+| `monkey-patch-checker.ts` | FUNGI-SEC-020/021 source-level detection of prototype and global mutation | 17C/18 |
 | `stdlib-registry.ts` | `STDLIB_CAPABILITY_MAP` (35+ functions), `STDLIB_MODULE_KIND`, `TENSOR_STDLIB_OPS`, `TRI_STDLIB_OPS`, `getStdlibWasmImport()` | 18H |
 | `wat-emitter.ts` | WebAssembly Text Format emitter skeleton, WAT type system, `renderWAT()` with stub bodies | 19B/C |
 | `type-registry.ts` | `TypeId` (56 IDs), `EffectFlags` (14 flags), `GovernanceFlags` (8 flags), `EffectCheckerFlags` (6 flags), `ComputeCompatibilityFlags` (7 flags) | 18D/E/F |
@@ -93,7 +93,7 @@ tests/value-state/              — value-state flag and sink requirement tests
 tests/type-registry/            — TypeId, EffectFlags, ComputeCompatibilityFlags tests
 tests/effect-checker/           — EffectCheckerFlags, FlowEffectSummary, mode tests
 tests/governance/               — GovernanceFlags, RuntimeManifest, boundary tests
-tests/stdlib/                   — STDLIB_CAPABILITY_MAP, SPORE-STDLIB-001 enforcement tests
+tests/stdlib/                   — STDLIB_CAPABILITY_MAP, FUNGI-STDLIB-001 enforcement tests
 ```
 
 ---
@@ -173,7 +173,7 @@ The compiler derives `Arena` from this declaration and embeds it in the lowering
 
 ### Phase 18A — Lexer Hardening
 
-Added `SPORE-LEX-004` (file >10 MB), `SPORE-LEX-005` (line >10k chars), `SPORE-LEX-006` (>100
+Added `FUNGI-LEX-004` (file >10 MB), `FUNGI-LEX-005` (line >10k chars), `FUNGI-LEX-006` (>100
 diagnostics). Introduced `TokenKindId` as a numeric enum replacing string-based token
 identification — `kindId` field added to every Token. Added `V1_DEPRECATED_RESERVED` reserved
 word registry for future language versioning safety. Slice-based identifier scanning and
@@ -182,7 +182,7 @@ direct char-pair operator lookahead added for performance.
 ### Phase 18B — Package Resolver: Security Fields
 
 Expanded the package manifest resolver to validate hash, signature, compute targets, and
-install scripts. Introduced `SPORE-PKG-001` through `SPORE-PKG-005` covering name policy, missing
+install scripts. Introduced `FUNGI-PKG-001` through `FUNGI-PKG-005` covering name policy, missing
 signatures, hidden capabilities, forbidden install scripts, and unknown compute targets.
 Added `checkPackageCapabilityExpansion()`, `checkInstallScript()`, `checkPackageProvenance()`,
 and `getResolverReport()` to the package resolver API.
@@ -192,7 +192,7 @@ and `getResolverReport()` to the package resolver API.
 Added `ValueStateFlags` (8-bit bitset: Unsafe, Safe, Validated, Tainted, Protected, Redacted,
 Secret, ReadOnly). Introduced `SINK_REQUIREMENTS` as a structured registry mapping each governed
 sink to its required state, policy note, and WASM import path. Added `getSinkRequirement()`
-with exact and pattern matching. Introduced `SPORE-GATE-001`: values reaching a governed sink
+with exact and pattern matching. Introduced `FUNGI-GATE-001`: values reaching a governed sink
 without passing a required gate are now a compile error.
 
 ### Phase 18D — Type Registry: TypeId, EffectFlags, ComputeCompatibilityFlags
@@ -200,7 +200,7 @@ without passing a required gate are now a compile error.
 Introduced `TypeId` — a 56-entry numeric enum covering all built-in Galerina types, tensor shapes,
 and compute-compatible types. Added `EffectFlags` (14-bit bitset) with `effectsToFlags()` and
 `effectsSubset()`. Added `ComputeCompatibilityFlags` (7-bit bitset). Implemented
-`parseTensorType()` with `SPORE-TYPE-030` (tensor arity mismatch) and `SPORE-TYPE-031` (non-numeric
+`parseTensorType()` with `FUNGI-TYPE-030` (tensor arity mismatch) and `FUNGI-TYPE-031` (non-numeric
 tensor element type).
 
 ### Phase 18E — Effect Checker: Flags and Mode
@@ -208,7 +208,7 @@ tensor element type).
 Added `EffectCheckerFlags` (6-bit bitset: PureComputeCandidate, ParallelSafe,
 KernelFusionCandidate, EffectFree, ReadyForAPU, ReadyForNPU). Introduced `FlowEffectSummary`
 bitset fields: `declaredEffectsMask`, `inferredEffectsMask`, `missingEffectsMask`, `checkerFlags`.
-Added `EffectCheckerMode` enum (`development` | `production`). Changed `SPORE-EFFECT-005`
+Added `EffectCheckerMode` enum (`development` | `production`). Changed `FUNGI-EFFECT-005`
 (BroadAliasUsed) from error to warning — broad effect aliases permitted in development mode.
 
 ### Phase 18F — Governance Verifier: GovernanceFlags and RuntimeManifest
@@ -233,12 +233,12 @@ type blocks are captured correctly.
 Added `stdlib-registry.ts` with `STDLIB_CAPABILITY_MAP` covering 35+ stdlib functions mapped
 to their required effects and WASM import paths. Added `STDLIB_MODULE_KIND` (pure vs effectful
 classification), `TENSOR_STDLIB_OPS`, `TRI_STDLIB_OPS`, `getStdlibRequiredEffects()`,
-`getStdlibModuleKind()`, and `getStdlibWasmImport()`. Introduced the `SPORE-STDLIB-001` constant;
+`getStdlibModuleKind()`, and `getStdlibWasmImport()`. Introduced the `FUNGI-STDLIB-001` constant;
 enforcement wired in Phase 19A.
 
-### Phase 19A — SPORE-STDLIB-001 Enforcement
+### Phase 19A — FUNGI-STDLIB-001 Enforcement
 
-Wired `SPORE-STDLIB-001` into the effect checker as a compile error. The effect checker now
+Wired `FUNGI-STDLIB-001` into the effect checker as a compile error. The effect checker now
 walks all call expressions, looks them up in `STDLIB_CAPABILITY_MAP`, and compares required
 effects against declared effects. `File.readText` without `filesystem.read` in the contract
 now produces a hard error. `Http.post` without `network.outbound` fails the build. Pure stdlib
@@ -250,13 +250,13 @@ Added `wat-emitter.ts` with WAT type system and `renderWAT()`. `buildWATModule()
 a `WATModule` from GIR data. Stub bodies use `unreachable` — valid WAT syntax, but not
 yet executable. Tracked `LEGACY_EFFECT_CALL_PATTERNS_COUNT = 31` for migration reporting.
 Added `--target=wasm-standalone`, `--target=wasm-hybrid`, `--emit-wat`, and `--deterministic`
-CLI modes. Introduced `SPORE-WAT-STUB` diagnostic to flag flows with stub bodies.
+CLI modes. Introduced `FUNGI-WAT-STUB` diagnostic to flag flows with stub bodies.
 
 ### Phase 20A/B — Boundary Graph and Context Governance
 
 Derived `RuntimeManifest.requiredContext` from `contract.context { require actor }` declarations.
 Set `GovernanceFlags.RequiresActor` automatically when actor context is required. Introduced
-`SPORE-GOV-013` (BoundaryViolation): flows crossing a boundary without satisfying the context
+`FUNGI-GOV-013` (BoundaryViolation): flows crossing a boundary without satisfying the context
 contract now produce a compile error. Added `BoundaryGraph` type structures in `boundary-graph.ts`
 (`BoundaryNode`, `BoundaryEdge`, `buildBoundaryGraph()` stub) to model cross-boundary
 dependency relationships.
@@ -274,7 +274,7 @@ build mode.
 ### Phase 22A–C — GPU, NPU, WASM-SIMD, Arena from Contract
 
 Added `gpu-plan.ts`. Phase 22A added `WASMSIMDCapability` and `WATSIMDInstruction` types with
-`SPORE-COMPUTE-001`. Phase 22B added `WebGPUComputePlan` (with WGSL skeleton) and `NPUKernelPlan`
+`FUNGI-COMPUTE-001`. Phase 22B added `WebGPUComputePlan` (with WGSL skeleton) and `NPUKernelPlan`
 (with ONNX path structure). Phase 22C derived `Arena` from `contract.memory { arena Nmb }`
 declarations — the compiler reads the developer's declared memory bound and embeds it in the
 lowering plan as the first step toward WASM linear memory sizing. Sets
@@ -317,7 +317,7 @@ instruction emission driven by `PassiveExecutionPlan` steps.
 24B  Capability imports for effectful stdlib
        — host:* WASM imports declared from STDLIB_CAPABILITY_MAP
        — import section generated from approved_capabilities list
-       — SPORE-STDLIB-001 cross-checked against declared imports
+       — FUNGI-STDLIB-001 cross-checked against declared imports
 
 24C  First deployable WASM service
        — examples/wasm-hello-world/ working end-to-end

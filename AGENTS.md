@@ -9,7 +9,7 @@ This file gives guidance to AI coding tools working on this repository.
 This is the Galerina governance-first programming language — implementation,
 specification, and documentation.
 
-Galerina source files use the `.spore` extension. The Node.js prototype implements
+Galerina source files use the `.fungi` extension. The Node.js prototype implements
 the compiler pipeline in TypeScript. Each stage is covered by `node:test` tests.
 
 Governance model:
@@ -87,17 +87,17 @@ pure flow calculateVat(amount: Money<GBP>) -> Money<GBP> { ... }
 
 ## Diagnostic Code Format
 
-All Phase 4+ diagnostics use `SPORE-CATEGORY-NNN` format. Key series:
+All Phase 4+ diagnostics use `FUNGI-CATEGORY-NNN` format. Key series:
 
 ```text
-SPORE-PARSE-*     parser errors (001–014 defined)
-SPORE-TYPE-*      type checker (001–008 defined)
-SPORE-NAME-*      name resolution (001–005 defined)
-SPORE-MATCH-*     exhaustive match (001–004 defined)
-SPORE-EFFECT-*    effect checker (001–004 defined)
-SPORE-SAFETY-*    safety rules (001–008 defined)
-SPORE-BINDING-*   binding mutability (001–004 defined)
-SPORE-MEMORY-*    memory model (001–008 defined)
+FUNGI-PARSE-*     parser errors (001–014 defined)
+FUNGI-TYPE-*      type checker (001–008 defined)
+FUNGI-NAME-*      name resolution (001–005 defined)
+FUNGI-MATCH-*     exhaustive match (001–004 defined)
+FUNGI-EFFECT-*    effect checker (001–004 defined)
+FUNGI-SAFETY-*    safety rules (001–008 defined)
+FUNGI-BINDING-*   binding mutability (001–004 defined)
+FUNGI-MEMORY-*    memory model (001–008 defined)
 ```
 
 See `docs/Knowledge-Bases/compiler-diagnostics.md` for the spec catalog, and `build/code-registry/REGISTRY.md`
@@ -108,9 +108,9 @@ one-code-one-fault, one owner per code, emit via an exported constant. Enforced 
 
 ## Important Rules
 
-- Do not use `safe flow`, `unsafe flow`, or `guard flow` in `.spore` examples.
+- Do not use `safe flow`, `unsafe flow`, or `guard flow` in `.fungi` examples.
 - `mut name: Type = value` — not `let mut`.
-- Use `SPORE-CATEGORY-NNN` for all new diagnostic codes; do not extend `Galerina_COMPILER_*`.
+- Use `FUNGI-CATEGORY-NNN` for all new diagnostic codes; do not extend `Galerina_COMPILER_*`.
 - Do not place app-specific documentation inside `packages-galerina/galerina-core/`.
 - Do not place Galerina language documentation inside `docs/`.
 - Finance, electrical and OT package planning is archived under

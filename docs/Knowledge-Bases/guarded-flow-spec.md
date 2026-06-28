@@ -59,7 +59,7 @@ first established.
   guarded flow.
 - A guarded flow may call another effectful flow only when it declares the
   callee's transitive effects.
-- Missing direct or transitive effects are reported with `SPORE-EFFECT-*`.
+- Missing direct or transitive effects are reported with `FUNGI-EFFECT-*`.
 - `guarded flow` is not a synonym for `secure flow`; it does not by itself mark
   an external trust boundary.
 

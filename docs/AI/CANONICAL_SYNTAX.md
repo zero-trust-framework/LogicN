@@ -364,7 +364,7 @@ database.write(validated)
 
 // AVOID — unsafe value reaches database directly
 unsafe let rawRequest = request
-database.write(rawRequest)   // diagnostic: SPORE-GOV-003 unsafe escape
+database.write(rawRequest)   // diagnostic: FUNGI-GOV-003 unsafe escape
 ```
 
 ---

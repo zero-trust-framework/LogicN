@@ -35,11 +35,11 @@ const FALLBACK_NUMERIC_TAGS = new Set(["int", "float"]);
 // missing decision). Each MUST record the working form the developer uses instead (the redirect target).
 // This is the deny-by-default allowlist — anything NOT here that is missing is a real, flagged gap.
 const INTENTIONAL_PARTIAL = {
-  // SHIPPED (a43a638 + Part 2): the bare operator is a compile-reject (SPORE-NUMERIC-OP-001) that REDIRECTS to
+  // SHIPPED (a43a638 + Part 2): the bare operator is a compile-reject (FUNGI-NUMERIC-OP-001) that REDIRECTS to
   // the obligation-carrying method form, which is implemented (decDiv/decRem). The runtime keeps no dispatch
   // key for `/`/`%` (the redirect catches them at compile time; a stray call still fails closed).
-  "decimal:/": 'exact decimal division is non-terminating — use a.divide(b, scale, mode) e.g. total.divide(qty, 2, "halfEven") (SPORE-NUMERIC-OP-001 / #53/#54)',
-  "decimal:%": "exact decimal modulo — use a.remainder(b) (SPORE-NUMERIC-OP-001 / #53/#54)",
+  "decimal:/": 'exact decimal division is non-terminating — use a.divide(b, scale, mode) e.g. total.divide(qty, 2, "halfEven") (FUNGI-NUMERIC-OP-001 / #53/#54)',
+  "decimal:%": "exact decimal modulo — use a.remainder(b) (FUNGI-NUMERIC-OP-001 / #53/#54)",
 };
 
 /** Parse the homogeneous (tag op tag) dispatch coverage from interpreter source text. Pure → self-testable. */

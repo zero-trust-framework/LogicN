@@ -190,7 +190,7 @@ Diagnostics should be safe to show:
 
 ```json
 {
-  "code": "SPORE-INHERIT-001",
+  "code": "FUNGI-INHERIT-001",
   "severity": "error",
   "message": "Inheritance is not supported in normal Galerina source. Use composition, contracts or adapters.",
   "safeToShow": true
@@ -201,7 +201,7 @@ Galerina should also reject inherited authority:
 
 ```json
 {
-  "code": "SPORE-AUTH-003",
+  "code": "FUNGI-AUTH-003",
   "severity": "error",
   "message": "Permissions and effects must be declared on the effective flow or adapter. Inherited authority is not allowed.",
   "safeToShow": true

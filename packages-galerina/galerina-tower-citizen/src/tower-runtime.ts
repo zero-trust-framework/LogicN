@@ -17,7 +17,7 @@ export type { TowerAuditEvent } from "./audit-logger.js";
 export type { PluginMetadata, ExecutionResult } from "./plugin-sandbox.js";
 
 export interface TowerConfig {
-  readonly assimilationMemoryBudgetMB: number;  // from boot.spore governance {}
+  readonly assimilationMemoryBudgetMB: number;  // from boot.fungi governance {}
   readonly auditDepth: "minimal" | "standard" | "full";
   readonly maxPlugins: number;
   /** In-memory audit ledger (no disk writes). For ephemeral / benchmark contexts. */
@@ -67,12 +67,12 @@ export class TowerRuntime {
         requestedMB: metadata.maxMemoryMB,
         budgetMB: this.config.assimilationMemoryBudgetMB,
       });
-      throw new Error(`SPORE-ASSIMILATE-002: Plugin exceeds assimilation_memory_budget (${metadata.maxMemoryMB}MB > ${this.config.assimilationMemoryBudgetMB}MB). AuditEvent: ${ev.eventId}`);
+      throw new Error(`FUNGI-ASSIMILATE-002: Plugin exceeds assimilation_memory_budget (${metadata.maxMemoryMB}MB > ${this.config.assimilationMemoryBudgetMB}MB). AuditEvent: ${ev.eventId}`);
     }
 
     // Check plugin capacity
     if (this.sandboxes.size >= this.config.maxPlugins) {
-      throw new Error(`SPORE-ASSIMILATE-002: Tower at capacity (${this.config.maxPlugins} plugins). Evict a plugin first.`);
+      throw new Error(`FUNGI-ASSIMILATE-002: Tower at capacity (${this.config.maxPlugins} plugins). Evict a plugin first.`);
     }
 
     const sandbox = new PluginSandbox(metadata);

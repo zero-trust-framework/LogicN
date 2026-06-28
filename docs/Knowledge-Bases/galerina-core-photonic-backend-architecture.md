@@ -1,7 +1,7 @@
 # Galerina Core Photonic: Backend Architecture and Governance Model
 
 Update status: this is a legacy/backend architecture note. It contains older
-three-value `OpticalTransportMode` and older `SPORE-PHOTONIC-*` meanings. Use it as
+three-value `OpticalTransportMode` and older `FUNGI-PHOTONIC-*` meanings. Use it as
 historical context only until `galerina-core-photonic` reconciles the current
 coverage conflicts.
 
@@ -576,16 +576,16 @@ expose unsafe memory access
 
 ---
 
-## Diagnostic Codes (SPORE-PHOTONIC series)
+## Diagnostic Codes (FUNGI-PHOTONIC series)
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-PHOTONIC-001` | optical runtime unavailable |
-| `SPORE-PHOTONIC-002` | optical transport denied by policy |
-| `SPORE-PHOTONIC-003` | distributed optical scheduler unavailable |
-| `SPORE-PHOTONIC-004` | photonic fallback occurred |
-| `SPORE-PHOTONIC-005` | unsupported optical target |
-| `SPORE-PHOTONIC-006` | invalid distributed transport graph |
+| `FUNGI-PHOTONIC-001` | optical runtime unavailable |
+| `FUNGI-PHOTONIC-002` | optical transport denied by policy |
+| `FUNGI-PHOTONIC-003` | distributed optical scheduler unavailable |
+| `FUNGI-PHOTONIC-004` | photonic fallback occurred |
+| `FUNGI-PHOTONIC-005` | unsupported optical target |
+| `FUNGI-PHOTONIC-006` | invalid distributed transport graph |
 
 ---
 

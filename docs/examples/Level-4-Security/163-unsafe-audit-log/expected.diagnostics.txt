@@ -1,4 +1,4 @@
-SPORE-VALUESTATE-003 (UnsafeValueReachedGovernedSink)
+FUNGI-VALUESTATE-003 (UnsafeValueReachedGovernedSink)
 
 Unsafe value passed to governed audit sink.
 Validate rawEmail before writing to AuditLog:

@@ -56,7 +56,7 @@ Galerina aims to make these concerns part of the language and compiler design fr
 
 The main idea behind Galerina is:
 
-> Write one safe, strict `.spore` source project and compile it into several useful outputs.
+> Write one safe, strict `.fungi` source project and compile it into several useful outputs.
 
 Example target outputs:
 
@@ -271,7 +271,7 @@ This would make Galerina useful for real backend development, not only theoretic
 
 Compiled languages can make debugging harder if the runtime error only points to generated output.
 
-Galerina should always be able to map errors back to the original `.spore` file.
+Galerina should always be able to map errors back to the original `.fungi` file.
 
 Example error:
 
@@ -279,7 +279,7 @@ Example error:
 Runtime error: PaymentStatus.Unknown was not handled.
 
 Original source:
-  app/services/order-service.spore:42:7
+  app/services/order-service.fungi:42:7
 
 Suggestion:
   Add a match branch for Unknown.

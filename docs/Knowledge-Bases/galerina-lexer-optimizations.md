@@ -6,7 +6,7 @@
 Phase 18 — Implementation plan
 Current lexer: hand-written, cursor-based, deterministic — already good for Stage A
 Improvements: allocation reduction, span completion, safety limits, keyword enum
-Self-hosting goal: lexer.spore must produce identical token stream
+Self-hosting goal: lexer.fungi must produce identical token stream
 ```
 
 ## What the Current Lexer Does Well
@@ -36,7 +36,7 @@ function hasDurationSuffix(value: string): boolean {
 }
 ```
 
-Less allocation, no regex engine overhead, easier to self-host in lexer.spore.
+Less allocation, no regex engine overhead, easier to self-host in lexer.fungi.
 
 ### 2. Replace String-Building with Slice
 
@@ -69,14 +69,14 @@ Avoids repeated array iteration on every token.
 Already have `endLine` and `endColumn` from Phase 16A lexer improvements ✅.
 Add `endOffset` (byte position after last character) to complete the span.
 
-### 5. Lexer Safety Limits (SPORE-LEX-*)
+### 5. Lexer Safety Limits (FUNGI-LEX-*)
 
-Already implemented: SPORE-LEX-001 (nesting), SPORE-LEX-002 (token length), SPORE-LEX-003 (unicode escape) ✅.
+Already implemented: FUNGI-LEX-001 (nesting), FUNGI-LEX-002 (token length), FUNGI-LEX-003 (unicode escape) ✅.
 
 Add remaining limits:
-- Max file size (e.g. 10MB) → SPORE-LEX-004
-- Max line length (e.g. 10,000 chars) → SPORE-LEX-005
-- Max total token count (e.g. 1,000,000) → SPORE-LEX-006
+- Max file size (e.g. 10MB) → FUNGI-LEX-004
+- Max line length (e.g. 10,000 chars) → FUNGI-LEX-005
+- Max total token count (e.g. 1,000,000) → FUNGI-LEX-006
 
 ### 6. TokenKind Numeric Enum (Internal)
 
@@ -141,7 +141,7 @@ Review candidates for `DEPRECATED_RESERVED`:
 ## Legacy Cleanup
 
 - `req` compatibility → keep `request`/`req` dual-key in route-dispatcher.ts for compatibility, but all docs/examples use `request: Request` only
-- `with effects [...]` → **hard error** (SPORE-SYNTAX-LEGACY-001); the parser rejects this form. Canonical form is `contract { effects {} }`. No source file may use `with effects [...]`.
+- `with effects [...]` → **hard error** (FUNGI-SYNTAX-LEGACY-001); the parser rejects this form. Canonical form is `contract { effects {} }`. No source file may use `with effects [...]`.
 
 ## Implementation Order
 
@@ -151,7 +151,7 @@ Phase 18A:
   2. Replace consumeWhile() string building with slice
   3. Replace multi-char operator .find() with lookahead
   4. Add endOffset to Token interface
-  5. Add SPORE-LEX-004/005/006 (file size, line length, token count limits)
+  5. Add FUNGI-LEX-004/005/006 (file size, line length, token count limits)
   6. Add TokenKindId internal enum
 
 Phase 19:
@@ -159,8 +159,8 @@ Phase 19:
   8. Keyword enum interning
 
 Stage B (ongoing):
-  9. lexer.spore produces identical token stream to TypeScript lexer
-  10. lexer.spore handles all 9 token kinds correctly
+  9. lexer.fungi produces identical token stream to TypeScript lexer
+  10. lexer.fungi handles all 9 token kinds correctly
 ```
 
 ## Final Principle
@@ -175,8 +175,8 @@ self-hosting without weakening Galerina's governance model.
 
 ## See Also
 
-- `galerina-lexer-spore.md` — self-hosted lexer specification
-- `src/self-hosted/lexer.spore` — Stage B Milestone 1 (executing)
+- `galerina-lexer-fungi.md` — self-hosted lexer specification
+- `src/self-hosted/lexer.fungi` — Stage B Milestone 1 (executing)
 - `galerina-performance-roadmap.md` — broader performance roadmap
 </content>
 </invoke>

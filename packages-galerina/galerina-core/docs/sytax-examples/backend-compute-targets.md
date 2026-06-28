@@ -238,6 +238,6 @@ which plugin or deployment profile mapped a vendor target
 which precision was used
 which memory transfers were estimated
 which security constraints blocked targets
-which generated report locations map back to .spore source
+which generated report locations map back to .fungi source
 ```
 

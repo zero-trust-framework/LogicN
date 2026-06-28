@@ -158,12 +158,12 @@ Example:
     "detected": true,
     "warnings": [
       {
-        "file": "physics.spore",
+        "file": "physics.fungi",
         "line": 42,
         "message": "Large object copied inside hot loop."
       },
       {
-        "file": "entities.spore",
+        "file": "entities.fungi",
         "line": 88,
         "message": "Pointer-heavy entity layout may reduce cache locality."
       }

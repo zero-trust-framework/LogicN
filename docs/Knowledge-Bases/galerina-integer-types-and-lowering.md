@@ -97,7 +97,7 @@ share a sign and `r` differs — i.e. `(a ^ r) & (b ^ r) < 0`. For subtraction `
 `(a ^ b) & (a ^ r) < 0`. Emitted (i64 shown):
 
 ```wat
-(func $spore_checked_add_i64 (param $a i64) (param $b i64) (result i64)
+(func $fungi_checked_add_i64 (param $a i64) (param $b i64) (result i64)
   (local $r i64) (local.set $r (i64.add (local.get $a) (local.get $b)))
   (if (i64.lt_s (i64.and (i64.xor a r) (i64.xor b r)) (i64.const 0)) (then unreachable))
   (local.get $r))
@@ -117,7 +117,7 @@ In an Int64 binary op, an operand is **already i64** (used as-is) iff it is Int6
 *literal* in an i64 context (it emits `i64.const`). A genuine **i32 variable** in an i64 context is
 **sign-extended** with `i64.extend_i32_s` — never reinterpreted. (This is the exact bug fixed in `14d9c19`:
 `wantI64` must promote a *literal* but extend a *variable*.) So `let total: Int64 = a + b` with `Int`
-operands emits `(call $spore_checked_add_i64 (i64.extend_i32_s a) (i64.extend_i32_s b))` and stays exact past
+operands emits `(call $fungi_checked_add_i64 (i64.extend_i32_s a) (i64.extend_i32_s b))` and stays exact past
 i32 range.
 
 ### Result / local value types
@@ -147,13 +147,13 @@ emitter all consult.
 
 ---
 
-## 6. The fail-closed gate (`SPORE-NUMERIC-001`) and the lift criteria
+## 6. The fail-closed gate (`FUNGI-NUMERIC-001`) and the lift criteria
 
 Until a width lowers **faithfully end-to-end**, declaring it must **fail closed** rather than emit a
 truncating module. `BACKEND_UNLOWERABLE_SCALAR = {Int64, UInt64}` —
 **`packages-galerina/galerina-core-compiler/src/numeric-lowering.ts:26`** — drives `scanUnlowerableNumerics` in
 **`packages-galerina/galerina-core-compiler/src/value-state-checker.ts`** (~`:2096`), which emits
-`SPORE-NUMERIC-001` (error) on a scalar `Int64`/`UInt64` in return / param / local position. It is
+`FUNGI-NUMERIC-001` (error) on a scalar `Int64`/`UInt64` in return / param / local position. It is
 **unconditional** (not mode-gated) — silent truncation is always wrong, and the governed runtime runs
 `checkValueStates` in default development mode.
 

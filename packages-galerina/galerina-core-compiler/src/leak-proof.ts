@@ -4,7 +4,7 @@
  * leak the compiler proved — closing the loop from "the LLM wrote code that violates a boundary" to "the LLM
  * fixes it" without a human in the middle.
  *
- * It is a NORMALIZED projection of the compiler's governance diagnostics (the SPORE-TENANT/SECRET/VALUESTATE/
+ * It is a NORMALIZED projection of the compiler's governance diagnostics (the FUNGI-TENANT/SECRET/VALUESTATE/
  * PRIVACY/EFFECT/STDLIB/SUBSTRATE families) into one schema with: the capability that crossed the boundary,
  * the violation site + the source/context anchors, the rule (why) + the consequence (risk), and a
  * machine-applicable fix (kind + suggestedCode). Fail-closed / deny-by-default: ANY error-severity leak makes
@@ -17,11 +17,11 @@ import type { ContractTestSuite } from "./test-generator.js";
 import { sha256Hex } from "./manifest-generator.js";
 
 export type LeakCategory =
-  | "tenant-isolation"   // SPORE-TENANT-*    — cross-tenant / IDOR (a capability reaching another tenant's scope)
-  | "secret-egress"      // SPORE-SECRET-*, SPORE-VALUESTATE-* — a secret/unsafe value reaching a governed sink
-  | "privacy-egress"     // SPORE-PRIVACY-*   — PII / cleartext embedding leaving the trust boundary
-  | "undeclared-effect"  // SPORE-EFFECT-*, SPORE-STDLIB-* — a capability used but not declared in effects {}
-  | "substrate-misuse"   // SPORE-SUBSTRATE-* — crypto/external-reach on a noisy/photonic (untrusted) lane
+  | "tenant-isolation"   // FUNGI-TENANT-*    — cross-tenant / IDOR (a capability reaching another tenant's scope)
+  | "secret-egress"      // FUNGI-SECRET-*, FUNGI-VALUESTATE-* — a secret/unsafe value reaching a governed sink
+  | "privacy-egress"     // FUNGI-PRIVACY-*   — PII / cleartext embedding leaving the trust boundary
+  | "undeclared-effect"  // FUNGI-EFFECT-*, FUNGI-STDLIB-* — a capability used but not declared in effects {}
+  | "substrate-misuse"   // FUNGI-SUBSTRATE-* — crypto/external-reach on a noisy/photonic (untrusted) lane
   | "other";
 
 export interface CodeAnchor {
@@ -46,7 +46,7 @@ export interface LeakFix {
 }
 
 export interface LeakFinding {
-  readonly code: string;                 // the originating SPORE-* governance code
+  readonly code: string;                 // the originating FUNGI-* governance code
   readonly category: LeakCategory;
   readonly severity: "deny" | "warn";    // error → deny, warning → warn
   /** The capability/effect involved (e.g. "network.outbound", "secret.read"), best-effort extracted. */
@@ -59,7 +59,7 @@ export interface LeakFinding {
 }
 
 export interface CapabilityLeakProof {
-  readonly schema: "spore.leakproof.v1";
+  readonly schema: "fungi.leakproof.v1";
   /** Whole-module verdict: `leak` if ANY error-severity finding (deny-by-default), else `clean`. */
   readonly verdict: "clean" | "leak";
   readonly leaks: readonly LeakFinding[];
@@ -68,13 +68,13 @@ export interface CapabilityLeakProof {
 
 // Code-prefix → category (only these families are leaks; type/syntax/import codes are NOT capability leaks).
 const PREFIX_CATEGORY: ReadonlyArray<readonly [string, LeakCategory]> = [
-  ["SPORE-TENANT-", "tenant-isolation"],
-  ["SPORE-SECRET-", "secret-egress"],
-  ["SPORE-VALUESTATE-", "secret-egress"],
-  ["SPORE-PRIVACY-", "privacy-egress"],
-  ["SPORE-EFFECT-", "undeclared-effect"],
-  ["SPORE-STDLIB-", "undeclared-effect"],
-  ["SPORE-SUBSTRATE-", "substrate-misuse"],
+  ["FUNGI-TENANT-", "tenant-isolation"],
+  ["FUNGI-SECRET-", "secret-egress"],
+  ["FUNGI-VALUESTATE-", "secret-egress"],
+  ["FUNGI-PRIVACY-", "privacy-egress"],
+  ["FUNGI-EFFECT-", "undeclared-effect"],
+  ["FUNGI-STDLIB-", "undeclared-effect"],
+  ["FUNGI-SUBSTRATE-", "substrate-misuse"],
 ];
 
 const CATEGORY_FIX_KIND: Readonly<Record<LeakCategory, LeakFix["kind"]>> = {
@@ -137,7 +137,7 @@ export function buildLeakProof(diagnostics: readonly EffectDiagnostic[]): Capabi
   const byCategory: Record<string, number> = {};
   for (const l of leaks) byCategory[l.category] = (byCategory[l.category] ?? 0) + 1;
   return {
-    schema: "spore.leakproof.v1",
+    schema: "fungi.leakproof.v1",
     verdict: denies > 0 ? "leak" : "clean", // deny-by-default: any error-severity leak fails the module
     leaks,
     summary: { total: leaks.length, denies, byCategory },
@@ -173,7 +173,7 @@ export function canonicalLeakProof(p: CapabilityLeakProof): string {
 // ─────────────────────────────────────────────────────────────────────────────────────────────────
 
 export interface TestWitness {
-  readonly schema: "spore.testwitness.v1";
+  readonly schema: "fungi.testwitness.v1";
   /** The exact wasm artifact this witness vouches for — binds the receipt to one binary (sha256 hex). */
   readonly wasmSha256: string;
   /** The governance leak proof. Deny-by-default: a `leak` verdict means the witness records a KNOWN-leaking module — a verifier MUST refuse it (see witnessVouchesClean). */
@@ -201,7 +201,7 @@ export function testSuiteDigest(suite: ContractTestSuite): string {
 
 /** Assemble a TestWitness for a wasm artifact. Records the leak proof FAITHFULLY (a `leak` verdict is preserved, never laundered to `clean`). */
 export function buildTestWitness(wasmSha256: string, leakProof: CapabilityLeakProof, suite: ContractTestSuite): TestWitness {
-  return { schema: "spore.testwitness.v1", wasmSha256, leakProof, suiteDigest: testSuiteDigest(suite) };
+  return { schema: "fungi.testwitness.v1", wasmSha256, leakProof, suiteDigest: testSuiteDigest(suite) };
 }
 
 /**
@@ -237,13 +237,13 @@ export function testWitnessDigest(w: TestWitness): string {
  * signature over `canonicalTestWitness(w)` has verified — never as a sole admission gate.
  */
 export function witnessVouchesClean(w: TestWitness, expectedWasmSha256: string): boolean {
-  if (!w || w.schema !== "spore.testwitness.v1") return false;
+  if (!w || w.schema !== "fungi.testwitness.v1") return false;
   if (typeof w.wasmSha256 !== "string" || w.wasmSha256.length === 0) return false;
   if (typeof expectedWasmSha256 !== "string" || expectedWasmSha256.length === 0) return false;
   if (w.wasmSha256 !== expectedWasmSha256) return false;               // receipt must bind to THIS artifact
   if (typeof w.suiteDigest !== "string" || w.suiteDigest.length === 0) return false;
   const p = w.leakProof;
-  if (!p || p.schema !== "spore.leakproof.v1") return false;
+  if (!p || p.schema !== "fungi.leakproof.v1") return false;
   if (p.verdict !== "clean") return false;                            // a known-leaking module never vouches
   if (!p.summary || p.summary.denies !== 0) return false;             // verdict/summary inconsistency = tamper
   if (!Array.isArray(p.leaks)) return false;

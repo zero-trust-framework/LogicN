@@ -70,21 +70,21 @@ describe("nmrFailureProbability (von Neumann NMR closed form)", () => {
 
 describe("acceptance #1: tolerance unachievable under noise is flagged", () => {
   const g = { resultId: "r", epsilonDeclared: 0.01, redundancyN: 1, mustCommit: true };
-  it("met=false and exactly one SPORE-SUBSTRATE-002, payload epsilonModeled > epsilonDeclared", () => {
+  it("met=false and exactly one FUNGI-SUBSTRATE-002, payload epsilonModeled > epsilonDeclared", () => {
     const check = checkGuarantee(NOISY, g);
     assert.equal(check.met, false);
     assert.ok(check.epsilonModeled > g.epsilonDeclared, `${check.epsilonModeled} > ${g.epsilonDeclared}`);
     const prod = verifyToleranceUnderNoise(NOISY, g, { hasCryptoEffect: false, laneIsNoisy: true, sinkRequiresDeterminism: false }, "production");
     assert.equal(prod.verdict, Verdict.DENY);
     assert.equal(prod.diagnostic.code, SUBSTRATE_DIAGNOSTICS.TOLERANCE_UNACHIEVABLE_UNDER_NOISE);
-    assert.equal(prod.diagnostic.code, "SPORE-SUBSTRATE-002");
+    assert.equal(prod.diagnostic.code, "FUNGI-SUBSTRATE-002");
     assert.equal(prod.diagnostic.severity, "error");
   });
-  it("dev profile downgrades SPORE-SUBSTRATE-002 to warning but changes ONLY severity (verdict/code/check invariant)", () => {
+  it("dev profile downgrades FUNGI-SUBSTRATE-002 to warning but changes ONLY severity (verdict/code/check invariant)", () => {
     const ctx = { hasCryptoEffect: false, laneIsNoisy: true, sinkRequiresDeterminism: false };
     const prod = verifyToleranceUnderNoise(NOISY, g, ctx, "production");
     const dev = verifyToleranceUnderNoise(NOISY, g, ctx, "dev");
-    assert.equal(dev.diagnostic.code, "SPORE-SUBSTRATE-002");
+    assert.equal(dev.diagnostic.code, "FUNGI-SUBSTRATE-002");
     assert.equal(dev.diagnostic.severity, "warning");
     // the profile must affect severity ONLY — never the core decision
     assert.equal(dev.verdict, Verdict.DENY);
@@ -110,7 +110,7 @@ describe("acceptance #2: raising redundancy clears the diagnostic, monotonically
     assert.equal(metAt(5), true, "stays cleared at N=5");
     assert.equal(metAt(7), true, "stays cleared at N=7");
   });
-  it("pBad≥0.5: redundancyHelps=false, the trace NEVER clears (non-decreasing), and SPORE-SUBSTRATE-003 fires", () => {
+  it("pBad≥0.5: redundancyHelps=false, the trace NEVER clears (non-decreasing), and FUNGI-SUBSTRATE-003 fires", () => {
     const eps = 1e-3;
     const check = checkGuarantee(SEVERE, { resultId: "r", epsilonDeclared: eps, redundancyN: 7, mustCommit: true });
     assert.equal(check.redundancyHelps, false);
@@ -122,7 +122,7 @@ describe("acceptance #2: raising redundancy clears the diagnostic, monotonically
     assert.ok(check.trace.every((t) => t.epsilon > eps), "no redundancy level clears the tolerance");
     const d = verifyToleranceUnderNoise(SEVERE, { resultId: "r", epsilonDeclared: eps, redundancyN: 3, mustCommit: true },
       { hasCryptoEffect: false, laneIsNoisy: true, sinkRequiresDeterminism: false }, "production");
-    assert.equal(d.diagnostic.code, "SPORE-SUBSTRATE-003");
+    assert.equal(d.diagnostic.code, "FUNGI-SUBSTRATE-003");
     assert.equal(d.diagnostic.severity, "error");
   });
 });
@@ -206,7 +206,7 @@ describe("no-regression: a noiseless substrate is a perfect pass-through", () =>
     assert.equal(d.verdict, Verdict.ALLOW);
     assert.equal(d.diagnostic, undefined);
   });
-  it("crypto on a CLEAN lane does NOT trip SPORE-SUBSTRATE-001 (only noisy lanes do)", () => {
+  it("crypto on a CLEAN lane does NOT trip FUNGI-SUBSTRATE-001 (only noisy lanes do)", () => {
     const g = { resultId: "r", epsilonDeclared: 0, redundancyN: 1, mustCommit: true };
     const d = verifyToleranceUnderNoise(CLEAN, g, { hasCryptoEffect: true, laneIsNoisy: false, sinkRequiresDeterminism: false }, "production");
     assert.equal(d.verdict, Verdict.ALLOW);
@@ -215,16 +215,16 @@ describe("no-regression: a noiseless substrate is a perfect pass-through", () =>
 
 describe("crypto-on-noisy and unvoted-into-deterministic are fail-closed", () => {
   const easy = { resultId: "r", epsilonDeclared: 0.99, redundancyN: 1, mustCommit: true }; // tolerance trivially met
-  it("SPORE-SUBSTRATE-001: crypto effect on a noisy lane is forbidden regardless of tolerance", () => {
+  it("FUNGI-SUBSTRATE-001: crypto effect on a noisy lane is forbidden regardless of tolerance", () => {
     const d = verifyToleranceUnderNoise(NOISY, easy, { hasCryptoEffect: true, laneIsNoisy: true, sinkRequiresDeterminism: false }, "production");
     assert.equal(d.verdict, Verdict.DENY);
-    assert.equal(d.diagnostic.code, "SPORE-SUBSTRATE-001");
+    assert.equal(d.diagnostic.code, "FUNGI-SUBSTRATE-001");
     assert.equal(d.diagnostic.severity, "error");
   });
-  it("SPORE-SUBSTRATE-004: un-voted (N=1) noisy result into a deterministic sink is denied", () => {
+  it("FUNGI-SUBSTRATE-004: un-voted (N=1) noisy result into a deterministic sink is denied", () => {
     const d = verifyToleranceUnderNoise(NOISY, easy, { hasCryptoEffect: false, laneIsNoisy: true, sinkRequiresDeterminism: true }, "production");
     assert.equal(d.verdict, Verdict.DENY);
-    assert.equal(d.diagnostic.code, "SPORE-SUBSTRATE-004");
+    assert.equal(d.diagnostic.code, "FUNGI-SUBSTRATE-004");
   });
   it("voting (N=3) admits a result into a deterministic sink (004 does not fire)", () => {
     const voted = { resultId: "r", epsilonDeclared: 0.99, redundancyN: 3, mustCommit: true };

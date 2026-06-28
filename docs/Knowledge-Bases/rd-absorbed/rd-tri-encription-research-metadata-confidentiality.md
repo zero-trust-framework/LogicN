@@ -15,7 +15,7 @@
 > in-network semantic-routing feature without the leak?
 > **Posture:** commodity/grounded; every claim cited; the four core verdict claims were stress-tested by
 > independent agents tasked to *falsify* them — **all four held**.
-> **Resolves:** Open Question #2 of [`SPORE-AMD-024`](SPORE-AMD-024-tmf-confidentiality.md) (the item I flagged
+> **Resolves:** Open Question #2 of [`FUNGI-AMD-024`](FUNGI-AMD-024-tmf-confidentiality.md) (the item I flagged
 > as the sharpest unresolved security question). Companion: [`quantum-resilient-tri-encryption.md`](quantum-resilient-tri-encryption.md).
 
 ---
@@ -50,7 +50,7 @@ ANN/similarity layer *outside* the trust gate on decrypted-and-verified plaintex
 
 The notes sell a headline feature: routers/firewalls scan the semantic attribute layer to filter/route
 *"without ever unpacking or decrypting the main file payload."* The implicit security claim is that this is
-safe because the payload is KEM-DEM-encrypted (SPORE-AMD-024) and the attribute layer is "just metadata." This
+safe because the payload is KEM-DEM-encrypted (FUNGI-AMD-024) and the attribute layer is "just metadata." This
 note tests that claim. It is false: the attribute layer is **content-bearing**, and there is no practical
 mechanism that preserves in-network semantic routing without leaking it.
 
@@ -179,7 +179,7 @@ The realistic options, scored against zero-trust:
 | **(c) Coarse keyed/salted non-invertible routing tag** *(only with explicit owner sign-off)* | few-bit, low-cardinality, k-anonymous, per-epoch-keyed bucket | tier (ii) + bucket membership + linkage; **measured, not zero** | Coarse only | Least-bad *if* a real routing need is documented and the loss is accepted |
 | **(d) Searchable/functional/distance-preserving encryption** | encrypted vector | explicit, bounded distance/order leakage; **not line-rate** | Not at line rate today | Reject for the fast path (offline/endpoint only) |
 
-**Concrete amendment to SPORE-AMD-024:** the `.tmf` header must **not** carry a full cleartext semantic
+**Concrete amendment to FUNGI-AMD-024:** the `.tmf` header must **not** carry a full cleartext semantic
 embedding. The attribute vector moves *inside* the AEAD-sealed payload (bound by the existing AAD =
 `TVCID ‖ modality ‖ crypto_profile ‖ epoch`). Routing/filtering on meaning happens at trusted, post-verify
 endpoints. Two further hardening notes:
@@ -255,6 +255,6 @@ counterexamples *confirmed* the verdict:
 - [[EFFFLoC]] EFF, *Google's FLoC Is a Terrible Idea*, 2021 — <https://www.eff.org/deeplinks/2021/03/googles-floc-terrible-idea>
 - BlindBox: Sherry et al., *Deep Packet Inspection over Encrypted Traffic*, SIGCOMM 2015 — <http://iot.stanford.edu/pubs/sherry-blindbox-sigcomm15.pdf>
 
-**Internal cross-refs:** `SPORE-AMD-024-tmf-confidentiality.md` (this resolves its Open Question #2) ·
+**Internal cross-refs:** `FUNGI-AMD-024-tmf-confidentiality.md` (this resolves its Open Question #2) ·
 `quantum-resilient-tri-encryption.md` (§11 metadata-confidentiality open question) ·
 `Galerina-TritMesh/.../research/encryption-on-photonic-substrates.md` §5.2/§7 (ANN stays outside the trust gate).

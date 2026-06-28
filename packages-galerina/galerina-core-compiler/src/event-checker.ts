@@ -1,13 +1,13 @@
 // =============================================================================
 // Galerina Phase 9B — Event Checker
 //
-// Checks that events are declared before use (SPORE-EVENT-001) and that
-// declared events are emitted at least once (SPORE-EVENT-002).
+// Checks that events are declared before use (FUNGI-EVENT-001) and that
+// declared events are emitted at least once (FUNGI-EVENT-002).
 //
 // Phase 9B+ additions:
-//   SPORE-EVENT-003: contract.events lists "emits X" but no global "event X" exists
-//   SPORE-EVENT-004: same event emitted more than once in a single flow body
-//   SPORE-EVENT-005: emit X in flow body but X not listed in contract.events
+//   FUNGI-EVENT-003: contract.events lists "emits X" but no global "event X" exists
+//   FUNGI-EVENT-004: same event emitted more than once in a single flow body
+//   FUNGI-EVENT-005: emit X in flow body but X not listed in contract.events
 //
 // Entry point: checkEvents(ast)
 // =============================================================================
@@ -35,36 +35,36 @@ export interface EventCheckResult {
 // Diagnostic constants
 // ---------------------------------------------------------------------------
 
-export const SPORE_EVENT_001 = {
-  code: "SPORE-EVENT-001",
+export const FUNGI_EVENT_001 = {
+  code: "FUNGI-EVENT-001",
   name: "EventNotDeclared",
   severity: "error" as const,
   message: "Event emitted but not declared at program scope. Add a top-level 'event EventName' declaration.",
 };
 
-export const SPORE_EVENT_002 = {
-  code: "SPORE-EVENT-002",
+export const FUNGI_EVENT_002 = {
+  code: "FUNGI-EVENT-002",
   name: "EventNeverEmitted",
   severity: "warning" as const,
   message: "Event declared but never emitted anywhere in the program.",
 };
 
-export const SPORE_EVENT_003 = {
-  code: "SPORE-EVENT-003",
+export const FUNGI_EVENT_003 = {
+  code: "FUNGI-EVENT-003",
   name: "ContractEmitsUndeclaredEvent",
   severity: "error" as const,
   message: "Contract declares 'emits X' but no global 'event X' declaration exists. Declare the event at program scope.",
 };
 
-export const SPORE_EVENT_004 = {
-  code: "SPORE-EVENT-004",
+export const FUNGI_EVENT_004 = {
+  code: "FUNGI-EVENT-004",
   name: "DuplicateEventEmission",
   severity: "warning" as const,
   message: "Event is emitted more than once in this flow. Consider whether this is intentional.",
 };
 
-export const SPORE_EVENT_005 = {
-  code: "SPORE-EVENT-005",
+export const FUNGI_EVENT_005 = {
+  code: "FUNGI-EVENT-005",
   name: "EventEmittedNotInContract",
   severity: "warning" as const,
   message: "Event is emitted but not declared in contract.events. Add the event to the contract.events block.",
@@ -151,11 +151,11 @@ function collectBodyEmits(
  * Walks the AST to collect declared events and emitted events, then checks
  * for mismatches.
  *
- * - SPORE-EVENT-001: `emit X` in a flow body with no top-level `event X` declaration
- * - SPORE-EVENT-002: `event X` declared globally but never emitted anywhere
- * - SPORE-EVENT-003: contract.events lists "emits X" but no global "event X" exists
- * - SPORE-EVENT-004: same event emitted twice in a single flow without a match arm
- * - SPORE-EVENT-005: emit X in a flow body but X not listed in contract.events
+ * - FUNGI-EVENT-001: `emit X` in a flow body with no top-level `event X` declaration
+ * - FUNGI-EVENT-002: `event X` declared globally but never emitted anywhere
+ * - FUNGI-EVENT-003: contract.events lists "emits X" but no global "event X" exists
+ * - FUNGI-EVENT-004: same event emitted twice in a single flow without a match arm
+ * - FUNGI-EVENT-005: emit X in a flow body but X not listed in contract.events
  */
 export function checkEvents(ast: AstNode): EventCheckResult {
   const diagnostics: EventDiagnostic[] = [];
@@ -170,7 +170,7 @@ export function checkEvents(ast: AstNode): EventCheckResult {
   }
 
   // ── Step 2: Walk the entire AST to collect all emitted events ────────────
-  // (used for SPORE-EVENT-001 and SPORE-EVENT-002)
+  // (used for FUNGI-EVENT-001 and FUNGI-EVENT-002)
   const allEmittedEvents: Array<{ name: string; location: SourceLocation | undefined }> = [];
 
   function walk(node: AstNode): void {
@@ -186,13 +186,13 @@ export function checkEvents(ast: AstNode): EventCheckResult {
   }
   walk(ast);
 
-  // ── Step 3: SPORE-EVENT-001 — emitted name not globally declared ───────────
+  // ── Step 3: FUNGI-EVENT-001 — emitted name not globally declared ───────────
   for (const { name, location } of allEmittedEvents) {
     if (!declaredEvents.has(name)) {
       diagnostics.push({
-        code: SPORE_EVENT_001.code,
-        name: SPORE_EVENT_001.name,
-        severity: SPORE_EVENT_001.severity,
+        code: FUNGI_EVENT_001.code,
+        name: FUNGI_EVENT_001.name,
+        severity: FUNGI_EVENT_001.severity,
         message: `Event '${name}' is emitted but not declared. Add: event ${name}`,
         ...(location !== undefined ? { location } : {}),
         suggestedFix: `Add at program scope: event ${name}`,
@@ -200,21 +200,21 @@ export function checkEvents(ast: AstNode): EventCheckResult {
     }
   }
 
-  // ── Step 4: SPORE-EVENT-002 — globally declared name never emitted ─────────
+  // ── Step 4: FUNGI-EVENT-002 — globally declared name never emitted ─────────
   const allEmittedNames = new Set(allEmittedEvents.map((e) => e.name));
   for (const name of declaredEvents) {
     if (!allEmittedNames.has(name)) {
       diagnostics.push({
-        code: SPORE_EVENT_002.code,
-        name: SPORE_EVENT_002.name,
-        severity: SPORE_EVENT_002.severity,
+        code: FUNGI_EVENT_002.code,
+        name: FUNGI_EVENT_002.name,
+        severity: FUNGI_EVENT_002.severity,
         message: `Event '${name}' is declared but never emitted.`,
         suggestedFix: `Emit the event in a flow: emit ${name}`,
       });
     }
   }
 
-  // ── Step 5: Per-flow checks (SPORE-EVENT-003, 004, 005) ────────────────────
+  // ── Step 5: Per-flow checks (FUNGI-EVENT-003, 004, 005) ────────────────────
   for (const topLevelNode of ast.children ?? []) {
     if (!FLOW_DECL_KINDS.has(topLevelNode.kind)) continue;
 
@@ -230,13 +230,13 @@ export function checkEvents(ast: AstNode): EventCheckResult {
       }
     }
 
-    // SPORE-EVENT-003: contract lists emits X but no global event X
+    // FUNGI-EVENT-003: contract lists emits X but no global event X
     for (const name of contractEmitNames) {
       if (!declaredEvents.has(name)) {
         diagnostics.push({
-          code: SPORE_EVENT_003.code,
-          name: SPORE_EVENT_003.name,
-          severity: SPORE_EVENT_003.severity,
+          code: FUNGI_EVENT_003.code,
+          name: FUNGI_EVENT_003.name,
+          severity: FUNGI_EVENT_003.severity,
           message: `Contract declares 'emits ${name}' but no global 'event ${name}' declaration exists. Declare the event at program scope.`,
           suggestedFix: `Add at program scope: event ${name}`,
         });
@@ -250,7 +250,7 @@ export function checkEvents(ast: AstNode): EventCheckResult {
     // Collect emits directly in this flow body (not nested flows)
     const bodyEmits = collectBodyEmits(bodyNode);
 
-    // SPORE-EVENT-004: same event emitted more than once in a single flow body
+    // FUNGI-EVENT-004: same event emitted more than once in a single flow body
     const seenInBody = new Map<string, number>();
     for (const { name } of bodyEmits) {
       seenInBody.set(name, (seenInBody.get(name) ?? 0) + 1);
@@ -258,16 +258,16 @@ export function checkEvents(ast: AstNode): EventCheckResult {
     for (const [name, count] of seenInBody) {
       if (count > 1) {
         diagnostics.push({
-          code: SPORE_EVENT_004.code,
-          name: SPORE_EVENT_004.name,
-          severity: SPORE_EVENT_004.severity,
+          code: FUNGI_EVENT_004.code,
+          name: FUNGI_EVENT_004.name,
+          severity: FUNGI_EVENT_004.severity,
           message: `Event '${name}' is emitted more than once in this flow. Consider whether this is intentional.`,
           suggestedFix: `Review the flow logic; if separate arms need to emit '${name}', use a match expression to separate the branches.`,
         });
       }
     }
 
-    // SPORE-EVENT-005: emit X in body but X not listed in contract.events
+    // FUNGI-EVENT-005: emit X in body but X not listed in contract.events
     // Only applies when the flow has a contract.events block at all.
     if (contractEmitNames.size > 0) {
       const reported005 = new Set<string>();
@@ -275,9 +275,9 @@ export function checkEvents(ast: AstNode): EventCheckResult {
         if (!contractEmitNames.has(name) && !reported005.has(name)) {
           reported005.add(name);
           diagnostics.push({
-            code: SPORE_EVENT_005.code,
-            name: SPORE_EVENT_005.name,
-            severity: SPORE_EVENT_005.severity,
+            code: FUNGI_EVENT_005.code,
+            name: FUNGI_EVENT_005.name,
+            severity: FUNGI_EVENT_005.severity,
             message: `Event '${name}' is emitted but not declared in contract.events. Add 'emits ${name}' to the contract.events block.`,
             ...(location !== undefined ? { location } : {}),
             suggestedFix: `Add to contract.events block: emits ${name}`,

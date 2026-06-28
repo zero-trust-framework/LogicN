@@ -1,4 +1,4 @@
-SPORE-SECRET-001 (SecretValueLogged)
+FUNGI-SECRET-001 (SecretValueLogged)
 
 SecureString value must not be passed to print or log functions.
 Use redact(apiKey) to produce a safe [REDACTED] placeholder.

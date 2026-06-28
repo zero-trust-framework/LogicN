@@ -10,11 +10,11 @@
 - `rules` block: pre-conditions such as `require actor before database.read`
 - `policy` block: `allow purpose` and `purpose mismatch` enforcement
 - `compute target` with `deny [remote.execution]` as a governance constraint
-- `SPORE-GOV-*` diagnostic family
+- `FUNGI-GOV-*` diagnostic family
 
 ## Canonical patterns
 
-```spore
+```fungi
 // contract set: reusable governance template
 contract set NhsPatientData {
   rules {
@@ -49,7 +49,7 @@ contract {
 }
 ```
 
-```spore
+```fungi
 // context requirement — actor must be present before database.read
 context { require actor }
 rules   { require actor before database.read }
@@ -67,11 +67,11 @@ rules   { require actor before database.read }
 
 | Code | Meaning |
 |------|---------|
-| `SPORE-GOV-001` | Intent declared but observed behaviour does not match |
-| `SPORE-GOV-002` | Required context field (`actor`, `trace_id`) missing at call site |
-| `SPORE-GOV-003` | Protected data sent externally without an `authority` block |
-| `SPORE-GOV-004` | `policy` purpose mismatch — declared purpose does not match allowed purpose |
-| `SPORE-GOV-005` | `audit.write` required by contract set but not declared in `effects` |
+| `FUNGI-GOV-001` | Intent declared but observed behaviour does not match |
+| `FUNGI-GOV-002` | Required context field (`actor`, `trace_id`) missing at call site |
+| `FUNGI-GOV-003` | Protected data sent externally without an `authority` block |
+| `FUNGI-GOV-004` | `policy` purpose mismatch — declared purpose does not match allowed purpose |
+| `FUNGI-GOV-005` | `audit.write` required by contract set but not declared in `effects` |
 
 ## Example IDs at this level
 

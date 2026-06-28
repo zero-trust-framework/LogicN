@@ -17,7 +17,7 @@
 <!-- GOVERNANCE BAR (compiled-in, spans the tier row) -->
 <rect x="40" y="134" width="640" height="40" rx="8" fill="#efe9fb" stroke="#7c5cd0" stroke-width="1.5"/>
 <text x="360" y="151" text-anchor="middle" font-size="12" font-weight="600" fill="#3f2d73">Governance is compiled in — applied at every tier, not wrapped around it</text>
-<text x="360" y="167" text-anchor="middle" font-size="10.5" fill="#54429a">K3 gate (allow +1 · deny −1 · unknown 0 → deny) · contract checks · audit tap · SPORE-GOV-001..020</text>
+<text x="360" y="167" text-anchor="middle" font-size="10.5" fill="#54429a">K3 gate (allow +1 · deny −1 · unknown 0 → deny) · contract checks · audit tap · FUNGI-GOV-001..020</text>
 <path d="M360 174 L360 192" fill="none" stroke="#7c5cd0" stroke-width="1.6" marker-end="url(#arrow)"/>
 
 <!-- TIER ROW LABEL -->

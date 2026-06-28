@@ -258,13 +258,13 @@ it is not risk-free by default.
 
 | Code | Meaning |
 |---|---|
-| `SPORE-RUNTIME-001` | Native runtime required for this profile |
-| `SPORE-RUNTIME-002` | Node-hosted runtime cannot enforce requested memory policy |
-| `SPORE-RUNTIME-003` | Native runtime ABI mismatch |
-| `SPORE-RUNTIME-004` | Unsafe native runtime feature denied |
-| `SPORE-RUNTIME-005` | Runtime capability enforcement failed closed |
-| `SPORE-RUNTIME-006` | JS prototype backend is not allowed in production profile |
-| `SPORE-RUNTIME-007` | Runtime evidence unavailable for selected backend |
+| `FUNGI-RUNTIME-001` | Native runtime required for this profile |
+| `FUNGI-RUNTIME-002` | Node-hosted runtime cannot enforce requested memory policy |
+| `FUNGI-RUNTIME-003` | Native runtime ABI mismatch |
+| `FUNGI-RUNTIME-004` | Unsafe native runtime feature denied |
+| `FUNGI-RUNTIME-005` | Runtime capability enforcement failed closed |
+| `FUNGI-RUNTIME-006` | JS prototype backend is not allowed in production profile |
+| `FUNGI-RUNTIME-007` | Runtime evidence unavailable for selected backend |
 
 ---
 

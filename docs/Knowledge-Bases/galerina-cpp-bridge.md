@@ -18,7 +18,7 @@ governance blocks.
 Galerina can express the same low-level semantics as C++ without sacrificing safety or governance.
 It does this in two directions:
 
-- **Inward (transpile C++ → Galerina):** parse C++ source and emit equivalent governed `.spore` flows,
+- **Inward (transpile C++ → Galerina):** parse C++ source and emit equivalent governed `.fungi` flows,
   injecting appropriate contracts automatically.
 - **Outward (verify equivalence):** run side-by-side benchmarks between clang -O3 output and Galerina
   WASM Phase 27 output to confirm that zero-cost-abstraction promises hold numerically.
@@ -37,7 +37,7 @@ galerina-ext-bridge-cpp/
   src/
     parser/         # C++ AST ingestion — Phase 2 requires Clang; Phase 1 is pattern-match only
     transformer/    # Maps C++ constructs to Galerina IR nodes
-    emitter/        # Serializes IR nodes to .spore source text
+    emitter/        # Serializes IR nodes to .fungi source text
     contracts/      # Auto-synthesis of contract {} blocks from detected C++ patterns
   tests/
     unit/           # Per-mapping unit tests (RAII → linear let, pointer → Array<Int32>, …)
@@ -101,7 +101,7 @@ buf[42] = 99;   // safe if 42 < 64; UB if not
 ```galerina
 // Galerina equivalent
 let buf: Array<Int32> = Array.allocate(64)
-buf[42] = 99    // compile-time or runtime bounds check; SPORE-BOUND-* error on violation
+buf[42] = 99    // compile-time or runtime bounds check; FUNGI-BOUND-* error on violation
 ```
 
 The transformer maps `T*` to `Array<T>` and rewrites `ptr + offset` dereferences to indexed
@@ -155,11 +155,11 @@ C++ programmers achieve manually via `std::vector<float> x, y, z`.
 
 ## 4. Contract Synthesis During Transpilation
 
-When the transformer emits a `.spore` file from C++ source, it **auto-injects a `contract {}`
+When the transformer emits a `.fungi` file from C++ source, it **auto-injects a `contract {}`
 block** derived from patterns detected in the C++ code. The developer is not expected to write
 this block manually — it is a transpilation artifact. The same auto-by-default principle that
 governs `economics {}` applies here: the synthesized contract is a conservative default that
-the developer may override by editing the emitted `.spore`.
+the developer may override by editing the emitted `.fungi`.
 
 A minimal synthesized contract for a C++ file with hardware access patterns:
 
@@ -196,8 +196,8 @@ The equivalence runner validates the zero-cost-abstraction claim (§3.3) empiric
 test case in `tests/equivalence/`, it:
 
 1. Compiles the C++ reference file with `clang -O3 -std=c++20 -o ref.wasm --target=wasm32`.
-2. Transpiles the same algorithm via the bridge transformer to a `.spore` file.
-3. Compiles the `.spore` file at WASM Phase 27.
+2. Transpiles the same algorithm via the bridge transformer to a `.fungi` file.
+3. Compiles the `.fungi` file at WASM Phase 27.
 4. Runs both WASM modules on an identical input vector and asserts:
    - **Numeric equivalence:** outputs match to within a configurable ULP tolerance.
    - **Performance parity:** Galerina execution time is within a configurable threshold (default:

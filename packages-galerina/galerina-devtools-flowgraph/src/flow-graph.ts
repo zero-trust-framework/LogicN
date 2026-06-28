@@ -95,7 +95,7 @@ export function buildFlowGraph(
 /** Serialize FlowGraph to JSON (for AI context / tooling). */
 export function flowGraphToJson(g: FlowGraph): string {
   return JSON.stringify({
-    schemaVersion: "spore.flowgraph.v1",
+    schemaVersion: "fungi.flowgraph.v1",
     nodes: [...g.nodes.values()],
     edges: g.edges,
     routes: Object.fromEntries(g.routes),

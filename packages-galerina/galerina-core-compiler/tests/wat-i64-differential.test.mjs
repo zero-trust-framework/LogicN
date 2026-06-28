@@ -10,7 +10,7 @@
  * It is NON-VACUOUS by construction — every value case lives in (2^53, 2^63), where a truncating i32/Number
  * lowering would diverge. Bare `return <literal>` (no binding) is intentionally absent (still walker-only);
  * the corpus uses the `let x = <lit>; return x` form, exactly as the lift criteria require. Gate-bypassing
- * (executeFlow + the raw emit path skip checkValueStates) — SPORE-NUMERIC-001 stays CLOSED for real run/build.
+ * (executeFlow + the raw emit path skip checkValueStates) — FUNGI-NUMERIC-001 stays CLOSED for real run/build.
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -64,7 +64,7 @@ pure flow negMin() -> Int64 contract { effects {} } { let a: Int64 = -9223372036
 pure flow divZero(d: Int64) -> Int64 contract { effects {} } { let a: Int64 = 5000000000  return a / d }`;
 
 test("0014 Int64 slice: walker ≡ WASM byte-exact over the (2^53,2^63) corpus (param + literal)", async () => {
-  const prog = parseProgram(SRC, "i64-diff.spore");
+  const prog = parseProgram(SRC, "i64-diff.fungi");
   const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, `parse error: ${errs.map((d) => d.message).join("; ")}`);
 

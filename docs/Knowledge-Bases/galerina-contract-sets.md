@@ -5,7 +5,7 @@
 ```
 Phase 9B — Implemented
 Parser: contract set Name { rules, events, audit } — fully parsed
-Validation: SPORE-GOV-011 (unknown set), SPORE-GOV-012 (audit requirement not met)
+Validation: FUNGI-GOV-011 (unknown set), FUNGI-GOV-012 (audit requirement not met)
 Require lines inside audit { require audit.write } parsed and stored in AST
 ```
 

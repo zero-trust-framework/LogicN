@@ -91,7 +91,7 @@ Galerina should deny broad file access by default.
 Recommended location:
 
 ```text
-boot.spore
+boot.fungi
 ```
 
 Example:
@@ -186,7 +186,7 @@ security {
 If code tries:
 
 ```Galerina
-file.write("./src/main.spore", data)
+file.write("./src/main.fungi", data)
 ```
 
 but `./src` is protected, Galerina should report:
@@ -196,16 +196,16 @@ Security policy error:
 Write denied to protected path.
 
 Path:
-  ./src/main.spore
+  ./src/main.fungi
 
 Flow:
   updateSourceFile
 
 Source:
-  src/admin/update-source.spore:18
+  src/admin/update-source.fungi:18
 
 Reason:
-  ./src is protected by boot.spore.
+  ./src is protected by boot.fungi.
 ```
 
 ---
@@ -278,7 +278,7 @@ Flow:
   bulkProcessDocuments
 
 Source:
-  src/jobs/document-worker.spore:44
+  src/jobs/document-worker.fungi:44
 
 Policy:
   max_files 100 per 10s
@@ -302,7 +302,7 @@ Flow:
   processUploads
 
 Source:
-  src/uploads/process.spore:29
+  src/uploads/process.fungi:29
 
 Action:
   operation blocked
@@ -362,7 +362,7 @@ Flow:
   exportCustomerData
 
 Source:
-  src/export/customer-export.spore:41
+  src/export/customer-export.fungi:41
 
 Suggestion:
   Write exports to an approved export folder, not the protected backup path.
@@ -423,10 +423,10 @@ Package:
   ImageTool
 
 Declared:
-  boot.spore:22
+  boot.fungi:22
 
 Used by:
-  src/images/process-image.spore:8
+  src/images/process-image.fungi:8
 
 Action:
   operation blocked
@@ -495,7 +495,7 @@ Shell access from packages is denied by default.
 
 ```text
 Security policy error:
-Shell execution is denied by boot.spore.
+Shell execution is denied by boot.fungi.
 
 Command:
   rm -rf ./storage
@@ -504,7 +504,7 @@ Flow:
   cleanStorage
 
 Source:
-  src/maintenance/clean.spore:12
+  src/maintenance/clean.fungi:12
 
 Action:
   command blocked
@@ -606,7 +606,7 @@ Flow:
   resetOrders
 
 Source:
-  src/admin/reset-orders.spore:19
+  src/admin/reset-orders.fungi:19
 
 Action:
   operation blocked
@@ -707,7 +707,7 @@ build/app.ransomware-risk-report.md
         "code": "galerina-RANSOM-001",
         "severity": "high",
         "title": "Backup path writable by application",
-        "source": "boot.spore:42",
+        "source": "boot.fungi:42",
         "recommendation": "Set backups.app_write to deny and use separate backup credentials."
       },
       {
@@ -715,7 +715,7 @@ build/app.ransomware-risk-report.md
         "severity": "medium",
         "title": "Package has file_write and network permissions",
         "package": "FileSync",
-        "source": "boot.spore:68",
+        "source": "boot.fungi:68",
         "recommendation": "Restrict package permissions or isolate package execution."
       }
     ]
@@ -736,7 +736,7 @@ Example:
   "ransomwareGuard": {
     "status": "blocked",
     "flow": "bulkProcessDocuments",
-    "source": "src/jobs/document-worker.spore:44",
+    "source": "src/jobs/document-worker.fungi:44",
     "trigger": "mass_write_limit",
     "filesTouched": 420,
     "window": "10s",
@@ -798,7 +798,7 @@ Backups:
 - Immutable required: yes
 
 AI note:
-Do not add recursive write/delete, shell execution, or backup write access without updating `boot.spore` and the security report.
+Do not add recursive write/delete, shell execution, or backup write access without updating `boot.fungi` and the security report.
 ```
 
 ---
@@ -815,14 +815,14 @@ Example:
     {
       "effect": "file.write",
       "flow": "processUploads",
-      "source": "src/uploads/process.spore:18",
+      "source": "src/uploads/process.fungi:18",
       "allowed": true,
-      "policy": "boot.spore:22"
+      "policy": "boot.fungi:22"
     },
     {
       "effect": "file.delete",
       "flow": "deleteOldTempFiles",
-      "source": "src/jobs/cleanup.spore:9",
+      "source": "src/jobs/cleanup.fungi:9",
       "allowed": true,
       "requiresApproval": true
     }
@@ -1030,7 +1030,7 @@ Flow:
   encryptDocuments
 
 Source:
-  src/jobs/encrypt-documents.spore:1
+  src/jobs/encrypt-documents.fungi:1
 
 Risk:
   Behaviour resembles ransomware-style mass file modification.

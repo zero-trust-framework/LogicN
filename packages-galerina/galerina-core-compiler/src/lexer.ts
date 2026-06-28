@@ -1,18 +1,18 @@
 // =============================================================================
 // Galerina Phase 4 — Lexer
 //
-// Tokenises Galerina .spore source text using the v1 keyword table.
+// Tokenises Galerina .fungi source text using the v1 keyword table.
 // Source of truth: docs/Knowledge-Bases/v1-reserved-keywords.md
 //
 // Types declared locally mirror @galerina/core — structurally compatible.
 // Replace with workspace imports once package links are in place.
 //
 // Diagnostics emitted by this module:
-//   SPORE-LEX-001  ExcessiveNesting      — generic type nesting depth > 8
-//   SPORE-LEX-002  OversizedToken        — string literal or identifier > 10,000 chars
-//   SPORE-LEX-003  InvalidUnicodeEscape  — invalid \u or \u{} in string literal
-//   SPORE-LEX-004  FileTooLarge          — source file exceeds 10 MB
-//   SPORE-LEX-005  LineTooLong           — a single line exceeds 10,000 characters
+//   FUNGI-LEX-001  ExcessiveNesting      — generic type nesting depth > 8
+//   FUNGI-LEX-002  OversizedToken        — string literal or identifier > 10,000 chars
+//   FUNGI-LEX-003  InvalidUnicodeEscape  — invalid \u or \u{} in string literal
+//   FUNGI-LEX-004  FileTooLarge          — source file exceeds 10 MB
+//   FUNGI-LEX-005  LineTooLong           — a single line exceeds 10,000 characters
 // =============================================================================
 
 // ---------------------------------------------------------------------------
@@ -31,7 +31,7 @@ export type TokenKind =
   | "comment"
   | "docComment"
   | "govComment"   // ;; governance/system annotation — scanned by verifier + included in manifest
-  | "genComment"   // //spore: CLI/compiler-GENERATED metadata (USES/USEDBY/COMPLEXITY/VOLATILITY/WARN) — tooling-owned, overwritable
+  | "genComment"   // //fungi: CLI/compiler-GENERATED metadata (USES/USEDBY/COMPLEXITY/VOLATILITY/WARN) — tooling-owned, overwritable
   | "newline"
   | "eof";
 
@@ -60,7 +60,7 @@ export const TokenKindId = {
   GovComment: 10,  // ;; system/governance annotation
   Newline:    11,
   Eof:        12,
-  GenComment: 13,  // //spore: CLI/compiler-generated metadata (appended to preserve Newline=11/Eof=12 IDs)
+  GenComment: 13,  // //fungi: CLI/compiler-generated metadata (appended to preserve Newline=11/Eof=12 IDs)
 } as const;
 export type TokenKindIdValue = typeof TokenKindId[keyof typeof TokenKindId];
 
@@ -186,7 +186,7 @@ export const V1_ACTIVE_KEYWORDS: ReadonlySet<string> = new Set([
   "assimilate",
 ]);
 
-/** Words reserved for post-v1 grammar — produce SPORE-SYNTAX-003 if used as identifiers. */
+/** Words reserved for post-v1 grammar — produce FUNGI-SYNTAX-003 if used as identifiers. */
 export const V1_FUTURE_RESERVED: ReadonlySet<string> = new Set([
   // Note: "remote" is intentionally NOT in this set — it is a valid compute-target
   // capability name used in: compute target best { deny [remote.execution] }
@@ -208,7 +208,7 @@ export const V1_FUTURE_RESERVED: ReadonlySet<string> = new Set([
  * This list exists as documentation for reviewers and AI tools:
  *   "Do not propose these as future keywords."
  *
- * hot_reload        — implies mutable runtime behaviour; conflicts with SPORE-SEC-020/021
+ * hot_reload        — implies mutable runtime behaviour; conflicts with FUNGI-SEC-020/021
  * global_mutation   — implies shared mutable state; forbidden in Galerina
  * spill             — implies hidden memory side-effect
  * checkpoint        — implies implicit execution state mutation
@@ -244,31 +244,31 @@ const SYMBOLS = new Set(["(", ")", "{", "}", "[", "]", ",", ":", ";", ".", "@"])
 /**
  * Tokenises a Galerina source string.
  *
- * @param source  Full source text of the .spore file.
+ * @param source  Full source text of the .fungi file.
  * @param file    File path used in diagnostic locations.
  * @returns       LexResult with tokens array (always ends with an `eof` token)
  *                and any diagnostics.
  */
 export function lex(source: string, file: string): LexResult {
   // Strip a leading UTF-8 BOM (U+FEFF / EF BB BF) before anything else. A BOM is common from Windows
-  // editors and re-saved files; without this it lexes as "Unexpected character U+FEFF" (SPORE-PARSE-001) at
+  // editors and re-saved files; without this it lexes as "Unexpected character U+FEFF" (FUNGI-PARSE-001) at
   // byte 0, aborting the file before any intended diagnostic. A BOM is only meaningful at the start, so an
   // interior U+FEFF is left untouched. Silent strip (standard behaviour) — a leading BOM is not an error.
   if (source.charCodeAt(0) === 0xFEFF) source = source.slice(1);
 
-  // ── SPORE-LEX-004 / SPORE-LEX-005 / SPORE-LEX-006 safety limits ─────────────────
-  const MAX_FILE_SIZE  = 10 * 1024 * 1024; // 10 MB (SPORE-LEX-004)
-  const MAX_LINE_LENGTH = 10_000;           // chars (SPORE-LEX-005)
+  // ── FUNGI-LEX-004 / FUNGI-LEX-005 / FUNGI-LEX-006 safety limits ─────────────────
+  const MAX_FILE_SIZE  = 10 * 1024 * 1024; // 10 MB (FUNGI-LEX-004)
+  const MAX_LINE_LENGTH = 10_000;           // chars (FUNGI-LEX-005)
   const MAX_TOKEN_COUNT = 1_000_000;        // tokens (internal guard)
-  const MAX_DIAGNOSTICS = 100;              // SPORE-LEX-006: stop emitting after this many errors
+  const MAX_DIAGNOSTICS = 100;              // FUNGI-LEX-006: stop emitting after this many errors
 
   const tokens: Token[] = [];
   const diagnostics: LexerDiagnostic[] = [];
 
-  // SPORE-LEX-004: Reject files that exceed the maximum size limit.
+  // FUNGI-LEX-004: Reject files that exceed the maximum size limit.
   if (source.length > MAX_FILE_SIZE) {
     const sizeError: LexerDiagnostic = {
-      code: "SPORE-LEX-004",
+      code: "FUNGI-LEX-004",
       name: "FileTooLarge",
       severity: "error",
       message: "File exceeds maximum size (10MB). Split into smaller files.",
@@ -285,7 +285,7 @@ export function lex(source: string, file: string): LexResult {
   /** Current < nesting depth for generic types. */
   let genericDepth = 0;
 
-  /** Tracks the byte offset where the current line started (for SPORE-LEX-005). */
+  /** Tracks the byte offset where the current line started (for FUNGI-LEX-005). */
   let lineStartPos = 0;
 
   // ── Helpers ────────────────────────────────────────────────────────────────
@@ -319,12 +319,12 @@ export function lex(source: string, file: string): LexResult {
     diagCol: number,
     suggestedFix?: string,
   ): void {
-    // SPORE-LEX-006: stop emitting diagnostics after MAX_DIAGNOSTICS to prevent
+    // FUNGI-LEX-006: stop emitting diagnostics after MAX_DIAGNOSTICS to prevent
     // denial-of-service via maliciously crafted source with thousands of errors.
     if (diagnostics.length >= MAX_DIAGNOSTICS) {
       if (diagnostics.length === MAX_DIAGNOSTICS) {
         diagnostics.push({
-          code: "SPORE-LEX-006",
+          code: "FUNGI-LEX-006",
           name: "TooManyDiagnostics",
           severity: "error",
           message: `Lexer emitted ${MAX_DIAGNOSTICS} diagnostics. Further errors suppressed. Fix the first errors and re-compile.`,
@@ -360,11 +360,11 @@ export function lex(source: string, file: string): LexResult {
 
     // ── Newline ────────────────────────────────────────────────────────────
     if (ch === "\n") {
-      // SPORE-LEX-005: Check if the line just completed exceeds MAX_LINE_LENGTH.
+      // FUNGI-LEX-005: Check if the line just completed exceeds MAX_LINE_LENGTH.
       const lineLength = startPos - lineStartPos;
       if (lineLength > MAX_LINE_LENGTH) {
         diagnostics.push({
-          code: "SPORE-LEX-005",
+          code: "FUNGI-LEX-005",
           name: "LineTooLong",
           severity: "warning",
           message: `Line ${startLine} exceeds maximum length (10,000 characters).`,
@@ -372,7 +372,7 @@ export function lex(source: string, file: string): LexResult {
         });
       }
       advance();
-      // SPORE-LEX-001: A generic type expression never spans a newline, but a
+      // FUNGI-LEX-001: A generic type expression never spans a newline, but a
       // comparison `<` (e.g. `while i < n`) does. Reset the generic-nesting
       // counter at every newline so unmatched `<` comparisons across separate
       // lines cannot accumulate into a spurious "nesting exceeds depth" error.
@@ -380,10 +380,10 @@ export function lex(source: string, file: string): LexResult {
       // trips the threshold, so detection is preserved.
       genericDepth = 0;
       tokens.push(tok("newline", "\n", startPos, startLine, startCol));
-      // SPORE-LEX-004: Guard against token count overflow.
+      // FUNGI-LEX-004: Guard against token count overflow.
       if (tokens.length > MAX_TOKEN_COUNT) {
         diagnostics.push({
-          code: "SPORE-LEX-004",
+          code: "FUNGI-LEX-004",
           name: "FileTooLarge",
           severity: "error",
           message: "Token count exceeds maximum limit (1,000,000). Split into smaller files.",
@@ -397,7 +397,7 @@ export function lex(source: string, file: string): LexResult {
     // ── Block comment /* ... */ ────────────────────────────────────────────
     // Multi-line. Tracks newlines inside so line/col counts stay accurate.
     // Not nested: the first */ closes the comment regardless of inner /**.
-    // SPORE comment style 3 of 3 — all three are accepted, // is canonical.
+    // FUNGI comment style 3 of 3 — all three are accepted, // is canonical.
     if (ch === "/" && peek(1) === "*") {
       const scanStart = pos;
       advance(); // consume /
@@ -433,12 +433,12 @@ export function lex(source: string, file: string): LexResult {
       continue;
     }
 
-    // ── Generated comment //spore: ─────────────────────────────────────────────
-    // CLI/compiler-GENERATED metadata (//spore: USES, //spore: USEDBY, //spore: COMPLEXITY, //spore: WARN, …).
-    // The `//spore:` marker mirrors the .spore file prefix. Checked BEFORE the plain `//` branch so a
-    // `//spore:` line can NEVER fall through to a human `comment` token (fail-closed tier separation).
+    // ── Generated comment //fungi: ─────────────────────────────────────────────
+    // CLI/compiler-GENERATED metadata (//fungi: USES, //fungi: USEDBY, //fungi: COMPLEXITY, //fungi: WARN, …).
+    // The `//fungi:` marker mirrors the .fungi file prefix. Checked BEFORE the plain `//` branch so a
+    // `//fungi:` line can NEVER fall through to a human `comment` token (fail-closed tier separation).
     // Tooling OWNS these lines and overwrites them on every run; humans keep `//`. Only the exact
-    // prefix `//spore:` is generated — `// spore` (with a space) or `//spore` (no colon) stays a human comment.
+    // prefix `//fungi:` is generated — `// fungi` (with a space) or `//fungi` (no colon) stays a human comment.
     if (ch === "/" && peek(1) === "/" && peek(2) === "s" && peek(3) === "p" && peek(4) === "o" && peek(5) === "r" && peek(6) === "e" && peek(7) === ":") {
       const scanStart = pos;
       while (pos < source.length && peek() !== "\n") {
@@ -473,7 +473,7 @@ export function lex(source: string, file: string): LexResult {
       if (peek() === "'") {
         if (value === "") {
           diag(
-            "SPORE-CHAR-003",
+            "FUNGI-CHAR-003",
             "MULTI_CHAR_LITERAL",
             "Char literal must contain exactly one character unit.",
             startLine,
@@ -484,7 +484,7 @@ export function lex(source: string, file: string): LexResult {
         advance(); // consume closing single quote
       } else {
         diag(
-          "SPORE-CHAR-003",
+          "FUNGI-CHAR-003",
           "MULTI_CHAR_LITERAL",
           "Char literal must contain exactly one character unit.",
           startLine,
@@ -520,7 +520,7 @@ export function lex(source: string, file: string): LexResult {
                 const codePoint = parseInt(hexStr, 16);
                 if (!isValidHex || codePoint > 0x10FFFF) {
                   diag(
-                    "SPORE-LEX-003",
+                    "FUNGI-LEX-003",
                     "InvalidUnicodeEscape",
                     "Invalid unicode escape sequence in string literal.",
                     startLine,
@@ -533,7 +533,7 @@ export function lex(source: string, file: string): LexResult {
                 }
               } else {
                 diag(
-                  "SPORE-LEX-003",
+                  "FUNGI-LEX-003",
                   "InvalidUnicodeEscape",
                   "Invalid unicode escape sequence in string literal.",
                   startLine,
@@ -557,7 +557,7 @@ export function lex(source: string, file: string): LexResult {
                 value += String.fromCodePoint(parseInt(hexStr, 16));
               } else {
                 diag(
-                  "SPORE-LEX-003",
+                  "FUNGI-LEX-003",
                   "InvalidUnicodeEscape",
                   "Invalid unicode escape sequence in string literal.",
                   startLine,
@@ -578,7 +578,7 @@ export function lex(source: string, file: string): LexResult {
         if (!oversized && value.length > 10_000) {
           oversized = true;
           diag(
-            "SPORE-LEX-002",
+            "FUNGI-LEX-002",
             "OversizedToken",
             "String literal or identifier exceeds maximum length (10,000 characters).",
             startLine,
@@ -591,7 +591,7 @@ export function lex(source: string, file: string): LexResult {
         value += advance(); // closing quote
       } else {
         diag(
-          "SPORE-PARSE-003",
+          "FUNGI-PARSE-003",
           "UNTERMINATED_STRING",
           "Unterminated string literal.",
           startLine,
@@ -703,7 +703,7 @@ export function lex(source: string, file: string): LexResult {
         genericDepth++;
         if (genericDepth > 8) {
           diag(
-            "SPORE-LEX-001",
+            "FUNGI-LEX-001",
             "ExcessiveNesting",
             "Generic type nesting exceeds maximum depth (8 levels). Simplify the type.",
             startLine,
@@ -744,7 +744,7 @@ export function lex(source: string, file: string): LexResult {
     // ── Punctuation / symbols ──────────────────────────────────────────────
     if (SYMBOLS.has(ch)) {
       advance();
-      // SPORE-LEX-001: A generic type expression never crosses a statement or
+      // FUNGI-LEX-001: A generic type expression never crosses a statement or
       // block boundary, so reset the generic-nesting counter at `{`, `}` and
       // `;`. Together with the newline reset above this bounds the counter to a
       // single line/statement, preventing comparison `<` operators spread
@@ -776,10 +776,10 @@ export function lex(source: string, file: string): LexResult {
       }
       const value = source.slice(identStart, pos);
 
-      // SPORE-LEX-002: Oversized identifier check.
+      // FUNGI-LEX-002: Oversized identifier check.
       if (value.length > 10_000) {
         diag(
-          "SPORE-LEX-002",
+          "FUNGI-LEX-002",
           "OversizedToken",
           "String literal or identifier exceeds maximum length (10,000 characters).",
           startLine,
@@ -792,7 +792,7 @@ export function lex(source: string, file: string): LexResult {
         tokens.push(tok("keyword", value, startPos, startLine, startCol));
       } else if (V1_FUTURE_RESERVED.has(value)) {
         diag(
-          "SPORE-SYNTAX-003",
+          "FUNGI-SYNTAX-003",
           "FUTURE_RESERVED_KEYWORD",
           `"${value}" is reserved for future use and cannot be used as an identifier.`,
           startLine,
@@ -809,17 +809,17 @@ export function lex(source: string, file: string): LexResult {
 
     // ── Bitwise operators are intentionally not Galerina operators ─────────────
     // Bit-level math (XOR/NOT/shift) lives in the engine/extension layer, not in
-    // .spore (the crypto-on-core boundary). Give a clear hint rather than a bare
+    // .fungi (the crypto-on-core boundary). Give a clear hint rather than a bare
     // "unexpected character" (dogfooding GAP-4). `&`/`|`/`<<`/`>>` are caught at the
     // parser; `^` and `~` reach here because the lexer never tokenizes them.
     if (ch === "^" || ch === "~") {
       diag(
-        "SPORE-PARSE-001",
+        "FUNGI-PARSE-001",
         "UNEXPECTED_TOKEN",
-        `Bitwise operator '${ch}' is not a Galerina operator — bit-level operations (XOR/shift/NOT) live in the engine/extension layer, not in .spore (the crypto-on-core boundary).`,
+        `Bitwise operator '${ch}' is not a Galerina operator — bit-level operations (XOR/shift/NOT) live in the engine/extension layer, not in .fungi (the crypto-on-core boundary).`,
         startLine,
         startCol,
-        ".spore has arithmetic (+ - * / %), comparison, and logical (and / or) operators only — move bit-twiddling into a governed engine extension.",
+        ".fungi has arithmetic (+ - * / %), comparison, and logical (and / or) operators only — move bit-twiddling into a governed engine extension.",
       );
       advance();
       continue;
@@ -827,7 +827,7 @@ export function lex(source: string, file: string): LexResult {
 
     // ── Unknown character ──────────────────────────────────────────────────
     diag(
-      "SPORE-PARSE-001",
+      "FUNGI-PARSE-001",
       "UNEXPECTED_TOKEN",
       `Unexpected character: '${ch}' (U+${ch.codePointAt(0)?.toString(16).toUpperCase().padStart(4, "0")}).`,
       startLine,

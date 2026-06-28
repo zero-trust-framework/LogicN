@@ -1,7 +1,7 @@
 import json, os, platform, sys, time, gc, tracemalloc
 
 # call-chain benchmark — Python reference
-# Mirrors benchmark.spore: controller -> service.method() -> util function,
+# Mirrors benchmark.fungi: controller -> service.method() -> util function,
 # 7 calls per outer iteration (1 service + 2 domain + 4 leaf), same salting.
 
 DEFAULT_ITERATIONS = 1_000_000  # ~1-2s in CPython

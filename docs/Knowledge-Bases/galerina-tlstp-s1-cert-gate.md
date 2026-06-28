@@ -77,7 +77,7 @@ The three-valued verdict stays three-valued through composition and collapses to
 
 ```
 collapse(+1) = allow                                   authorized ⟺ verdict = +1
-collapse( 0) = deny   + emit SPORE-GOV-3VL-001 diag      (three-valued-governance.ts:145, 90-92, 95-97)
+collapse( 0) = deny   + emit FUNGI-GOV-3VL-001 diag      (three-valued-governance.ts:145, 90-92, 95-97)
 collapse(−1) = deny   (ordinary policy denial, no diag)
 ```
 
@@ -138,7 +138,7 @@ vAnd(not_expired, revocation_fresh) = min(+1,  0) =  0     ← unknown enters
 vAnd(chain_valid, 0)                = min(+1,  0) =  0     ← cannot be lifted back to +1
 cert_verdict = vAnd(pin_match, 0)   = min(+1,  0) =  0
 ```
-Boundary: `decideAtBoundary(0)` → `{decision:"deny", authorized:false, diagnostic: SPORE-GOV-3VL-001}`. **Channel REFUSED, audited.** Note three "good" factors cannot rescue the one unknown — `+1` is the conjunctive identity and contributes nothing toward overriding a `0`. This is the soft-fail hole closed: a public browser would have *allowed* here.
+Boundary: `decideAtBoundary(0)` → `{decision:"deny", authorized:false, diagnostic: FUNGI-GOV-3VL-001}`. **Channel REFUSED, audited.** Note three "good" factors cannot rescue the one unknown — `+1` is the conjunctive identity and contributes nothing toward overriding a `0`. This is the soft-fail hole closed: a public browser would have *allowed* here.
 
 ### Example (c) — hash-pin mismatch → −1 → DENY
 
@@ -152,7 +152,7 @@ vAnd(not_expired, revocation_fresh) = min(+1, +1) = +1
 vAnd(chain_valid, +1)               = min(+1, +1) = +1
 cert_verdict = vAnd(pin_match, +1)  = min(−1, +1) = −1     ← single −1 dominates
 ```
-Boundary: `decideAtBoundary(−1)` → `{decision:"deny", authorized:false, diagnostic:null}` (ordinary policy denial, no SPORE-GOV-3VL-001 since it is a definite `−1`, not a collapsed `0`). **Channel REFUSED.** A library-valid chain is *not enough* — pinning is a hard `vAnd` factor, defeating MITM that presents a real-but-wrong cert.
+Boundary: `decideAtBoundary(−1)` → `{decision:"deny", authorized:false, diagnostic:null}` (ordinary policy denial, no FUNGI-GOV-3VL-001 since it is a definite `−1`, not a collapsed `0`). **Channel REFUSED.** A library-valid chain is *not enough* — pinning is a hard `vAnd` factor, defeating MITM that presents a real-but-wrong cert.
 
 ---
 
@@ -166,14 +166,14 @@ Boundary: `decideAtBoundary(−1)` → `{decision:"deny", authorized:false, diag
 
 2. **Fold with the shipped K3 reduce.** `import { vAnd, allOf, Verdict } from "@galerina/tower-citizen"` (or the published name for `three-valued-governance.ts`). Compute `cert_verdict = allOf([pin_match, chain_valid, not_expired, revocation_fresh])` — reuses `allOf` (`:73-76`), which is the `vAnd`-reduce with deny-by-default on the empty set. **Do NOT** hand-roll `min`; reuse the verified gate so the K3-conformance oracle (`tests/three-valued-governance.test.mjs`) keeps covering you.
 
-3. **Collapse at the boundary.** `const decision = decideAtBoundary(cert_verdict, onDiagnostic)` (`:141-153`). Forward `decision.diagnostic` (SPORE-GOV-3VL-001) to the AuditLogger egress. **Output:** `decision.authorized` gates whether the channel/flow proceeds.
+3. **Collapse at the boundary.** `const decision = decideAtBoundary(cert_verdict, onDiagnostic)` (`:141-153`). Forward `decision.diagnostic` (FUNGI-GOV-3VL-001) to the AuditLogger egress. **Output:** `decision.authorized` gates whether the channel/flow proceeds.
 
-4. **Wire pinning from the shipped trust-anchor model.** The pin set for step 1 comes from the same content-addressed pinning that `fuse-loader.ts` already uses: Gate-1 sha256 pin (`:492-503`), Gate-2 Ed25519-vs-pinned-keyId (`:519`, **no X.509 path-building**), Gate-2b revocation predicate (`:527-540`, including the `SPORE-FUSE-REVOCATION-UNVERIFIABLE` fail-closed-on-throw at `:537`). Reuse the host-injected `revocationCheck` predicate shape (`:179`) — a throwing check maps to `revocation_fresh = 0`, never `+1`.
+4. **Wire pinning from the shipped trust-anchor model.** The pin set for step 1 comes from the same content-addressed pinning that `fuse-loader.ts` already uses: Gate-1 sha256 pin (`:492-503`), Gate-2 Ed25519-vs-pinned-keyId (`:519`, **no X.509 path-building**), Gate-2b revocation predicate (`:527-540`, including the `FUNGI-FUSE-REVOCATION-UNVERIFIABLE` fail-closed-on-throw at `:537`). Reuse the host-injected `revocationCheck` predicate shape (`:179`) — a throwing check maps to `revocation_fresh = 0`, never `+1`.
 
 5. **Replace the kernel presence-stub.** At `kernel.ts:307` the auth step is pure header-presence. Replace it so that, for a connection, the admission decision is `decideAtBoundary(cert_verdict)` (bound to the live handshake identity), not `header(...) === undefined`. **Inputs:** the per-connection cert-gate result; **output:** `401`/refuse on non-`+1`, proceed on `+1`. (Adjacent to ledger #212.)
 
 **Tests to write** (`packages-galerina/galerina-core-network/tests/cert-gate.test.mjs`):
-- The three worked examples above as fixtures (a)→allow, (b)→deny+SPORE-GOV-3VL-001, (c)→deny no-diag.
+- The three worked examples above as fixtures (a)→allow, (b)→deny+FUNGI-GOV-3VL-001, (c)→deny no-diag.
 - **Exhaustive 3⁴ = 81-row truth table:** every combination of the four sub-verdicts; assert `authorized ⟺ all four +1`, and `verdict === min(...)`. (Cheap and total — do it.)
 - A **single-factor-unknown** sweep: for each factor set to `0` with the other three `+1`, assert `deny` + diagnostic.
 - A **revocation-throws** case: `revocationCheck` throws ⇒ `revocation_fresh = 0` ⇒ deny (mirrors `:537`).

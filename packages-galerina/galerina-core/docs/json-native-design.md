@@ -190,7 +190,7 @@ Expected customerId to be CustomerId/String.
 Received Number.
 
 Original source:
-  src/routes.spore:18:21
+  src/routes.fungi:18:21
 
 JSON path:
   $.customerId
@@ -218,7 +218,7 @@ JSON decode error:
 Missing required field `items`.
 
 Original source:
-  src/order-api.spore:22:35
+  src/order-api.fungi:22:35
 
 JSON path:
   $.items
@@ -936,7 +936,7 @@ Example:
 ```json
 {
   "errorType": "JsonDecodeError",
-  "file": "src/routes.spore",
+  "file": "src/routes.fungi",
   "line": 18,
   "column": 21,
   "jsonPath": "$.customerId",
@@ -1139,7 +1139,7 @@ Example:
 JSON decode error in compiled app.bin
 
 Original source:
-  src/routes.spore:18:21
+  src/routes.fungi:18:21
 
 JSON path:
   $.customerId

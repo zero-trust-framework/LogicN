@@ -40,10 +40,10 @@ const GALERINA_CLI = "galerina.mjs";
  * the harness at your own app's entry flows.
  */
 export const DEFAULT_E2E_EXAMPLES: readonly string[] = [
-  "examples/wasm-hello-world/greet.spore",
-  "examples/healthcare/getPatient.spore",
-  "examples/deployment/health-check.spore",
-  "examples/aerospace/updateFlightPath.spore",
+  "examples/wasm-hello-world/greet.fungi",
+  "examples/healthcare/getPatient.fungi",
+  "examples/deployment/health-check.fungi",
+  "examples/aerospace/updateFlightPath.fungi",
 ];
 
 // ── Result helpers ───────────────────────────────────────────────────────────

@@ -49,7 +49,7 @@ export class ImmutableGraph<N, E> implements Graph<N, E> {
 
   toJSON(): GraphJSON<N, E> {
     return {
-      schemaVersion: "spore.graph.v1",
+      schemaVersion: "fungi.graph.v1",
       nodes: [...this.nodeMap.values()].map(({ id, data }) => ({ id, data })),
       edges: this.edges().map(({ from, to, data }) => ({ from, to, data })),
     };

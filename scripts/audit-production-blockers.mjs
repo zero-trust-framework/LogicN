@@ -2,7 +2,7 @@
 // audit-production-blockers.mjs — every PRODUCTION_BLOCKER must have a real emitter (RD-0124 NOW-1 follow-up).
 //
 // The bug this exists to prevent: the production-readiness gate (production-check.ts PRODUCTION_BLOCKERS)
-// listed SPORE-MEMORY-001/002/003/007 as codes that block deployment, but NO compiler pass emits them —
+// listed FUNGI-MEMORY-001/002/003/007 as codes that block deployment, but NO compiler pass emits them —
 // so the gate advertised it blocks on use-after-move / borrow violations it CANNOT actually detect. An
 // operator trusting ready=true was told memory-safety is enforced when it is not. A PRODUCTION_BLOCKER
 // that no pass can produce is a FALSE CAPABILITY CLAIM. This lint makes that a hard, machine-checked error.
@@ -31,13 +31,13 @@ export function parseBlockers(gateText) {
   const open = gateText.indexOf("[", start);
   const close = gateText.indexOf("]", open);
   if (open < 0 || close < 0) return [];
-  return [...gateText.slice(open, close).matchAll(/"(SPORE-[A-Z0-9-]+|ERR_[A-Z0-9_]+)"/g)].map((m) => m[1]);
+  return [...gateText.slice(open, close).matchAll(/"(FUNGI-[A-Z0-9-]+|ERR_[A-Z0-9_]+)"/g)].map((m) => m[1]);
 }
 
-/** Map code -> diagnostic const name, from `export const SPORE_X = { code: "SPORE-...-NNN" ...`. */
+/** Map code -> diagnostic const name, from `export const FUNGI_X = { code: "FUNGI-...-NNN" ...`. */
 export function buildConstMap(files) {
   const map = {};
-  const re = /export const (SPORE_[A-Z0-9_]+)\s*=\s*\{\s*code:\s*"(SPORE-[A-Z0-9-]+)"/g;
+  const re = /export const (FUNGI_[A-Z0-9_]+)\s*=\s*\{\s*code:\s*"(FUNGI-[A-Z0-9-]+)"/g;
   for (const { lines } of files) {
     const t = lines.join("\n");
     let m;
@@ -60,7 +60,7 @@ export function findEmission(code, cn, files) {
       const s = raw.trim();
       const isComment = s.startsWith("//") || s.startsWith("*") || s.startsWith("/*");
       const isDefOpener = cn !== undefined && new RegExp(`^export const ${cn}\\b`).test(s);
-      const isDefCodeLine = /^code:\s*"SPORE-/.test(s) && /^export const SPORE_[A-Z0-9_]+\s*=\s*\{$/.test(prev) && s.includes(codeStr);
+      const isDefCodeLine = /^code:\s*"FUNGI-/.test(s) && /^export const FUNGI_[A-Z0-9_]+\s*=\s*\{$/.test(prev) && s.includes(codeStr);
       const isExportEntry = /^export\s*\{/.test(s) || (cn !== undefined && new RegExp(`^${cn},?$`).test(s));
       const matches = raw.includes(codeStr) || (cn !== undefined && new RegExp(`\\b${cn}\\b`).test(raw));
       if (matches && !isComment && !isDefOpener && !isDefCodeLine && !isExportEntry) {
@@ -90,18 +90,18 @@ function walkTs(dir, acc) {
 const isMain = process.argv[1] !== undefined && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain && process.argv.includes("--self-test")) {
   const defFile = { path: "index.ts", lines: [
-    'export const SPORE_X_001 = {', '  code: "SPORE-X-001",', '  name: "Foo",', '} as const;',
-    'export const SPORE_X_002 = {', '  code: "SPORE-X-002",', '} as const;',
-    "export { SPORE_X_001, SPORE_X_002 };",
+    'export const FUNGI_X_001 = {', '  code: "FUNGI-X-001",', '  name: "Foo",', '} as const;',
+    'export const FUNGI_X_002 = {', '  code: "FUNGI-X-002",', '} as const;',
+    "export { FUNGI_X_001, FUNGI_X_002 };",
   ] };
-  const emitFile = { path: "checker.ts", lines: ['  diagnostics.push(SPORE_X_001.code, "boom");'] }; // emits 001 via const
+  const emitFile = { path: "checker.ts", lines: ['  diagnostics.push(FUNGI_X_001.code, "boom");'] }; // emits 001 via const
   const cm = buildConstMap([defFile]);
-  const blockers = parseBlockers('const PRODUCTION_BLOCKERS = new Set([\n"SPORE-X-001",\n"SPORE-X-002",\n]);');
-  const e001 = findEmission("SPORE-X-001", cm["SPORE-X-001"], [defFile, emitFile]); // emittable
-  const e002 = findEmission("SPORE-X-002", cm["SPORE-X-002"], [defFile, emitFile]); // NOT emittable (def+export only)
-  const strEmit = findEmission("SPORE-Y-007", undefined, [{ path: "i.ts", lines: ['  diagnostics.push({ code: "SPORE-Y-007" });'] }]); // string emit, no const
-  const ok = blockers.length === 2 && cm["SPORE-X-001"] === "SPORE_X_001" && e001 !== null && e002 === null && strEmit !== null;
-  console.log(`[self-test] parse:${blockers.length === 2} constmap:${cm["SPORE-X-001"] === "SPORE_X_001"} const-emit:${e001 !== null} non-emit→null:${e002 === null} string-emit:${strEmit !== null}`);
+  const blockers = parseBlockers('const PRODUCTION_BLOCKERS = new Set([\n"FUNGI-X-001",\n"FUNGI-X-002",\n]);');
+  const e001 = findEmission("FUNGI-X-001", cm["FUNGI-X-001"], [defFile, emitFile]); // emittable
+  const e002 = findEmission("FUNGI-X-002", cm["FUNGI-X-002"], [defFile, emitFile]); // NOT emittable (def+export only)
+  const strEmit = findEmission("FUNGI-Y-007", undefined, [{ path: "i.ts", lines: ['  diagnostics.push({ code: "FUNGI-Y-007" });'] }]); // string emit, no const
+  const ok = blockers.length === 2 && cm["FUNGI-X-001"] === "FUNGI_X_001" && e001 !== null && e002 === null && strEmit !== null;
+  console.log(`[self-test] parse:${blockers.length === 2} constmap:${cm["FUNGI-X-001"] === "FUNGI_X_001"} const-emit:${e001 !== null} non-emit→null:${e002 === null} string-emit:${strEmit !== null}`);
   console.log(ok ? "[self-test] PASS — production-blocker emitter detector fires (catches a blocker with no emitter)" : "[self-test] FAIL");
   process.exit(ok ? 0 : 1);
 }

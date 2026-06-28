@@ -40,7 +40,7 @@ Every major Galerina feature should be labelled Implemented, Prototype, Draft, P
 | `Galerina build` | Prototype | Emits placeholder outputs and reports |
 | `Galerina generate` | Prototype | Generates development reports/docs |
 | `Galerina dev` | Prototype | Runs one checked generate/run cycle |
-| `Galerina dev --watch` | Prototype | Re-runs the checked generate/run cycle when `.spore` files change |
+| `Galerina dev --watch` | Prototype | Re-runs the checked generate/run cycle when `.fungi` files change |
 | Startup validation | Draft | Project validation before `main()` documented, full startup contract pending |
 | Source maps | Prototype | Emitted in reports and build outputs |
 | Security reports | Prototype | Basic project/security diagnostics exist |

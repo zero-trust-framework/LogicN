@@ -208,7 +208,7 @@ runtime boundaries  — effects that cross trust zones
 A `pure flow` calling an effectful helper is a compile error — the effect
 propagation analysis catches it. A secure flow that transitively acquires
 `network.external` through a chain of calls must declare it — otherwise the
-checker emits `SPORE-EFFECT-002`.
+checker emits `FUNGI-EFFECT-002`.
 
 Effect propagation makes the effect surface of the system queryable:
 
@@ -234,7 +234,7 @@ intent ReadOnlyAnalytics {
 If the implementation performs `database.insert(...)`:
 
 ```text
-SPORE-INTENT-001: Flow violates declared intent.
+FUNGI-INTENT-001: Flow violates declared intent.
   declared:  denies [database.write]
   actual:    database.write detected in analyticsFlow
 ```
@@ -374,7 +374,7 @@ denied:
 If any denied operation is attempted at runtime:
 
 ```text
-SPORE-RUNTIME-001: Execution violates governed execution plan.
+FUNGI-RUNTIME-001: Execution violates governed execution plan.
   denied: process.spawn
   status: rejected
 ```
@@ -822,14 +822,14 @@ The governance architecture is designed as a whole, but implemented in phases:
 | Stage | Status |
 |---|---|
 | Intent (declaration syntax, `intent` keyword) | ✅ v1 syntax defined |
-| Intent verification (`SPORE-INTENT-001..005`) | ✅ Phase 3 scanner-level |
+| Intent verification (`FUNGI-INTENT-001..005`) | ✅ Phase 3 scanner-level |
 | Authority tracking, capability propagation | ⬜ Phase 5 (type + effect checker) |
-| Effect propagation (`SPORE-EFFECT-*`) | ⬜ Phase 5 |
+| Effect propagation (`FUNGI-EFFECT-*`) | ⬜ Phase 5 |
 | Governance diffing | ⬜ Phase 6+ |
 | AI system comprehension, context compression | ⬜ Phase 6 (real graph output) |
 | Compliance generation | ⬜ Post-v1 |
 | Runtime governance | ⬜ Phase 6 (runtime) |
-| Unsafe boundary visibility | ✅ Phase 3 (`SPORE-RAWPTR-001`, `SPORE-MEMORY-008`) |
+| Unsafe boundary visibility | ✅ Phase 3 (`FUNGI-RAWPTR-001`, `FUNGI-MEMORY-008`) |
 | Resource flow tracking, secret mapping | ⬜ Phase 5+ |
 | Deployment + runtime target planning | ⬜ Post-v1 |
 | Package governance | ⬜ Post-v1 |

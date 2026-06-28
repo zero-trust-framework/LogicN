@@ -69,10 +69,10 @@ Doc: [`galerina-rd-0115-hybrid-photonic-binary-placement-2026-06-24.md`](galerin
 
 ### RD-0116 — Holographic "O(1)-read petabyte" storage: worth more R&D?
 Doc: [`galerina-rd-0116-holographic-storage-2026-06-24.md`](galerina-rd-0116-holographic-storage-2026-06-24.md) · Status: **REFUTE-AND-PARK the claim + BUILD one small artifact** (extends `RD-0111-C12`)
-- `RD-0116-O1` — verdict: refute-and-park the storage claim (no more SOTA R&D); build `SPORE-RETAIN-001`.
+- `RD-0116-O1` — verdict: refute-and-park the storage claim (no more SOTA R&D); build `FUNGI-RETAIN-001`.
 - `RD-0116-O2` — honest SOTA: ~9.6 GB/cm³ lab (not PB), page-parallel read but Bragg-search addressing (not O(1)), lab-only.
 - `RD-0116-O3` — "O(1)-read petabyte" both halves FALSE (all 3 adversarial verdicts `refuted:false, high`); survivors = "high parallel read bandwidth" + "high volumetric density".
-- `RD-0116-O4` — **net-new finding**: overwrite-erasure is silently false on write-once/fixed media → `SPORE-RETAIN-001` (crypto-erase obligation; = guardrail `RD-0114-G3`).
+- `RD-0116-O4` — **net-new finding**: overwrite-erasure is silently false on write-once/fixed media → `FUNGI-RETAIN-001` (crypto-erase obligation; = guardrail `RD-0114-G3`).
 
 ### RD-0117 — The 0115 join (formalize safe-floor + wire reuse-crossover + measure)
 Doc: [`galerina-rd-0117-hybrid-join-2026-06-24.md`](galerina-rd-0117-hybrid-join-2026-06-24.md) · Status: **JOINED; safe-floor proof SHIPPED (15/15)** — executes `RD-0115-E1/E2/E3`, joins `RD-0110-O2`
@@ -81,9 +81,9 @@ Doc: [`galerina-rd-0117-hybrid-join-2026-06-24.md`](galerina-rd-0117-hybrid-join
 - `RD-0117-O3` — reuse-crossover wiring spec (`reuse` + Θ(n²) weightLoad → 0110's gate exactly); reclaims only the band n∈[21,29], reuse=1 default keeps the floor.
 - `RD-0117-O4` — **measured-negative**: `decide()`/`route()` have no production call sites, p≈0, governance matrices small/sparse/reuse-1 → even a free optical core is Amdahl-capped ~1.0–1.1× → router correctly refuses photonic almost everywhere.
 
-### RD-0118 — SPORE-RETAIN-001 Hardware Protection Directive, hardened
+### RD-0118 — FUNGI-RETAIN-001 Hardware Protection Directive, hardened
 Doc: [`galerina-rd-0118-retain-hardware-directive-2026-06-24.md`](galerina-rd-0118-retain-hardware-directive-2026-06-24.md) · Status: **decision core BUILT (12/12); directive adversarially hardened** — formalizes `RD-0116-O4` / guardrail `RD-0114-G3`
-- `RD-0118-O1` — **verdict**: yes, SPORE-RETAIN-001 becomes a compiler-enforced hardware protection directive (3 stages: compiler trap · dispatch gateway · deletion witness).
+- `RD-0118-O1` — **verdict**: yes, FUNGI-RETAIN-001 becomes a compiler-enforced hardware protection directive (3 stages: compiler trap · dispatch gateway · deletion witness).
 - `RD-0118-O2` — **discovery answer**: an eraseModel is never taken from a drive's self-report; `overwrite` needs a verified signed Ed25519 `storage.admit` attestation, else fail-closed to the stricter `crypto-only`. BUILT: `admitSubstrateWrite`/`effectiveEraseModel` (`746e161`) + the signed rail `admitStorageSubstrate` (`1642f3e`) — lying-WORM-drive attack closed end-to-end, 20/20.
 - `RD-0118-O3` — the crypto-erase **witness** structure + invariants (no-copy / sole-custody, bottom-out at attested-overwrite silicon).
 
@@ -97,7 +97,7 @@ Workflow `wvc1efjl1` · **DONE** — 6 BUILD-NOW (governedFlowDecl fail-open FIX
 Workflow `ws0znezws` · **DONE** — all three adequate-with-gaps: graph CLI runs no validation/cycle-check (39 dep edges/91 pkgs); tests deep (mutation 17/17) but NOT CI-enforced + float/i64 untested + no coverage; lint runs --soft. See [`galerina-rd-0119-0121-findings-2026-06-24.md`](galerina-rd-0119-0121-findings-2026-06-24.md).
 
 ### Hardware protection summary
-[`galerina-hardware-protection-summary-2026-06-24.md`](galerina-hardware-protection-summary-2026-06-24.md) — consolidates what's BUILT (hardware-tier fail-closed attestation, SPORE-RETAIN-001 eraseModel rail, photonic-admission, substrate noise model, Safe-Floor Theorem, calibration-as-attestation, bridge attestation) vs R&D'd/designed (ASIC cyber-physical, DRCM, hardware-as-capabilities, cross-layer resilience, future substrates). Answers "did we protect hardware + R&D it" = yes to both.
+[`galerina-hardware-protection-summary-2026-06-24.md`](galerina-hardware-protection-summary-2026-06-24.md) — consolidates what's BUILT (hardware-tier fail-closed attestation, FUNGI-RETAIN-001 eraseModel rail, photonic-admission, substrate noise model, Safe-Floor Theorem, calibration-as-attestation, bridge attestation) vs R&D'd/designed (ASIC cyber-physical, DRCM, hardware-as-capabilities, cross-layer resilience, future substrates). Answers "did we protect hardware + R&D it" = yes to both.
 
 ### RD-0122 — The third logic-delivery paradigm (async:sync :: ?:third)
 Doc: [`galerina-third-logic-delivery-and-governed-quantum-substrate-2026-06-24.md`](galerina-third-logic-delivery-and-governed-quantum-substrate-2026-06-24.md) (consolidated, maths-complete) · Workflow `wma8bsgh1`

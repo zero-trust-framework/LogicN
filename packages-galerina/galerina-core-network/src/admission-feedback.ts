@@ -142,7 +142,7 @@ export function withTelemetryFeedback(base: Verdict, input: AdmissionTelemetry):
  * operand throttles the channel toward DENY — but, being `≤ +1`, it can never open a
  * channel the cert factors had already denied.
  *
- * `onDiagnostic` still receives SPORE-GOV-3VL-001 whenever an INDETERMINATE verdict is
+ * `onDiagnostic` still receives FUNGI-GOV-3VL-001 whenever an INDETERMINATE verdict is
  * collapsed to deny — including a deny caused by the telemetry throttle.
  */
 export function certGateWithTelemetry(

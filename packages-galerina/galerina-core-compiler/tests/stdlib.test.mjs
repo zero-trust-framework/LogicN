@@ -1,20 +1,20 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { SPORE_NONE, SPORE_VOID, callStdlib } from "../dist/index.js";
+import { FUNGI_NONE, FUNGI_VOID, callStdlib } from "../dist/index.js";
 
 function ctx() {
   return {
     recordEffect: () => {},
     resolveIdentifier: () => undefined,
-    callFlow: async () => SPORE_VOID,
+    callFlow: async () => FUNGI_VOID,
     applyFn: async (_fn, arg) => arg,
   };
 }
 
 describe("Stdlib - Option", () => {
   it("None.isSome() -> false", async () => {
-    const r = await callStdlib("isSome", SPORE_NONE, [], ctx());
+    const r = await callStdlib("isSome", FUNGI_NONE, [], ctx());
     assert.equal(r?.__tag, "bool");
     assert.equal(r?.value, false);
   });
@@ -24,7 +24,7 @@ describe("Stdlib - Option", () => {
     assert.equal(r?.value, true);
   });
   it("None.unwrapOr(default) -> default", async () => {
-    const r = await callStdlib("unwrapOr", SPORE_NONE, [{ __tag: "string", value: "default" }], ctx());
+    const r = await callStdlib("unwrapOr", FUNGI_NONE, [{ __tag: "string", value: "default" }], ctx());
     assert.equal(r?.__tag, "string");
     assert.equal(r?.value, "default");
   });
@@ -266,7 +266,7 @@ describe("Stdlib - Array.partition", () => {
     const mockCtx = {
       recordEffect: () => {},
       resolveIdentifier: () => undefined,
-      callFlow: async () => SPORE_VOID,
+      callFlow: async () => FUNGI_VOID,
       applyFn: async (_fn, arg) => ({ __tag: "bool", value: arg.value > 2 }),
     };
     const r = await callStdlib("partition", list, [predFn], mockCtx);
@@ -390,7 +390,7 @@ describe("Stdlib - Map.filter", () => {
     const mockCtx = {
       recordEffect: () => {},
       resolveIdentifier: () => undefined,
-      callFlow: async () => SPORE_VOID,
+      callFlow: async () => FUNGI_VOID,
       applyFn: async (_fn, entry) => {
         const v = entry.fields?.get("value");
         return { __tag: "bool", value: v?.value > 1 };
@@ -418,7 +418,7 @@ describe("Stdlib - Map.mapValues", () => {
     const mockCtx = {
       recordEffect: () => {},
       resolveIdentifier: () => undefined,
-      callFlow: async () => SPORE_VOID,
+      callFlow: async () => FUNGI_VOID,
       applyFn: async (_fn, v) => ({ __tag: "int", value: v.value * 2 }),
     };
     const transFn = { __tag: "function", name: "double" };

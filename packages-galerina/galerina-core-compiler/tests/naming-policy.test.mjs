@@ -2,23 +2,23 @@
 // Naming Policy Checker Tests — Phase 17A
 //
 // Covers:
-//   1. camelCase flow names pass (no SPORE-STYLE-001)
-//   2. PascalCase type names pass (no SPORE-STYLE-002)
-//   3. Get_User → SPORE-STYLE-001 with suggested fix "getUser"
-//   4. userId type → SPORE-STYLE-002 with suggested fix "UserId"
-//   5. Binding named "password" → SPORE-STYLE-SEC-001
+//   1. camelCase flow names pass (no FUNGI-STYLE-001)
+//   2. PascalCase type names pass (no FUNGI-STYLE-002)
+//   3. Get_User → FUNGI-STYLE-001 with suggested fix "getUser"
+//   4. userId type → FUNGI-STYLE-002 with suggested fix "UserId"
+//   5. Binding named "password" → FUNGI-STYLE-SEC-001
 //   6. Binding named "rawPassword" → no SEC warning (raw prefix acknowledges boundary)
 // =============================================================================
 
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { parseProgram, checkNamingPolicy, SPORE_STYLE_001, SPORE_STYLE_002, SPORE_STYLE_SEC_001 } from "../dist/index.js";
+import { parseProgram, checkNamingPolicy, FUNGI_STYLE_001, FUNGI_STYLE_002, FUNGI_STYLE_SEC_001 } from "../dist/index.js";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function parse(source) {
-  return parseProgram(source, "test.spore").ast;
+  return parseProgram(source, "test.fungi").ast;
 }
 
 function hasDiag(diags, code) {
@@ -32,26 +32,26 @@ function getDiag(diags, code) {
 // ── Exported constants ────────────────────────────────────────────────────────
 
 describe("Naming policy — exported constants", () => {
-  it("SPORE_STYLE_001 has correct code and severity", () => {
-    assert.equal(SPORE_STYLE_001.code, "SPORE-STYLE-001");
-    assert.equal(SPORE_STYLE_001.severity, "warning");
+  it("FUNGI_STYLE_001 has correct code and severity", () => {
+    assert.equal(FUNGI_STYLE_001.code, "FUNGI-STYLE-001");
+    assert.equal(FUNGI_STYLE_001.severity, "warning");
   });
 
-  it("SPORE_STYLE_002 has correct code and severity", () => {
-    assert.equal(SPORE_STYLE_002.code, "SPORE-STYLE-002");
-    assert.equal(SPORE_STYLE_002.severity, "warning");
+  it("FUNGI_STYLE_002 has correct code and severity", () => {
+    assert.equal(FUNGI_STYLE_002.code, "FUNGI-STYLE-002");
+    assert.equal(FUNGI_STYLE_002.severity, "warning");
   });
 
-  it("SPORE_STYLE_SEC_001 has correct code and severity", () => {
-    assert.equal(SPORE_STYLE_SEC_001.code, "SPORE-STYLE-SEC-001");
-    assert.equal(SPORE_STYLE_SEC_001.severity, "warning");
+  it("FUNGI_STYLE_SEC_001 has correct code and severity", () => {
+    assert.equal(FUNGI_STYLE_SEC_001.code, "FUNGI-STYLE-SEC-001");
+    assert.equal(FUNGI_STYLE_SEC_001.severity, "warning");
   });
 });
 
-// ── Flow naming (SPORE-STYLE-001) ────────────────────────────────────────────────
+// ── Flow naming (FUNGI-STYLE-001) ────────────────────────────────────────────────
 
-describe("SPORE-STYLE-001 — flow camelCase convention", () => {
-  it("camelCase flow name passes without SPORE-STYLE-001", () => {
+describe("FUNGI-STYLE-001 — flow camelCase convention", () => {
+  it("camelCase flow name passes without FUNGI-STYLE-001", () => {
     const ast = parse(`
 flow getUser(id: String) -> String {
   return id
@@ -59,7 +59,7 @@ flow getUser(id: String) -> String {
 `);
     const result = checkNamingPolicy(ast);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-STYLE-001"),
+      !hasDiag(result.diagnostics, "FUNGI-STYLE-001"),
       `getUser should pass camelCase check, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -75,7 +75,7 @@ flow validateEmail(email: String) -> Bool {
 }
 `);
     const result = checkNamingPolicy(ast);
-    const style001 = result.diagnostics.filter((d) => d.code === "SPORE-STYLE-001");
+    const style001 = result.diagnostics.filter((d) => d.code === "FUNGI-STYLE-001");
     assert.equal(
       style001.length,
       0,
@@ -83,7 +83,7 @@ flow validateEmail(email: String) -> Bool {
     );
   });
 
-  it("Get_User emits SPORE-STYLE-001 with suggested fix 'getUser'", () => {
+  it("Get_User emits FUNGI-STYLE-001 with suggested fix 'getUser'", () => {
     const ast = parse(`
 flow Get_User(id: String) -> String {
   return id
@@ -91,11 +91,11 @@ flow Get_User(id: String) -> String {
 `);
     const result = checkNamingPolicy(ast);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-001"),
-      `Get_User should emit SPORE-STYLE-001`,
+      hasDiag(result.diagnostics, "FUNGI-STYLE-001"),
+      `Get_User should emit FUNGI-STYLE-001`,
     );
-    const diag = getDiag(result.diagnostics, "SPORE-STYLE-001");
-    assert.ok(diag !== undefined, "Should have SPORE-STYLE-001 diagnostic");
+    const diag = getDiag(result.diagnostics, "FUNGI-STYLE-001");
+    assert.ok(diag !== undefined, "Should have FUNGI-STYLE-001 diagnostic");
     assert.ok(
       diag.message.includes("Get_User"),
       `Message should mention 'Get_User', got: ${diag.message}`,
@@ -107,7 +107,7 @@ flow Get_User(id: String) -> String {
     );
   });
 
-  it("GetUser (PascalCase) emits SPORE-STYLE-001", () => {
+  it("GetUser (PascalCase) emits FUNGI-STYLE-001", () => {
     const ast = parse(`
 flow GetUser(id: String) -> String {
   return id
@@ -115,13 +115,13 @@ flow GetUser(id: String) -> String {
 `);
     const result = checkNamingPolicy(ast);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-001"),
-      `GetUser (PascalCase) should emit SPORE-STYLE-001`,
+      hasDiag(result.diagnostics, "FUNGI-STYLE-001"),
+      `GetUser (PascalCase) should emit FUNGI-STYLE-001`,
     );
   });
 
-  it("snake_case flow name (get_user) emits SPORE-STYLE-001", () => {
-    // snake_case is not valid camelCase — should emit SPORE-STYLE-001
+  it("snake_case flow name (get_user) emits FUNGI-STYLE-001", () => {
+    // snake_case is not valid camelCase — should emit FUNGI-STYLE-001
     const fakeAst = {
       kind: "program",
       children: [
@@ -133,19 +133,19 @@ flow GetUser(id: String) -> String {
     };
     const result = checkNamingPolicy(fakeAst);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-001"),
-      `get_user (snake_case) should emit SPORE-STYLE-001`,
+      hasDiag(result.diagnostics, "FUNGI-STYLE-001"),
+      `get_user (snake_case) should emit FUNGI-STYLE-001`,
     );
   });
 
-  it("SPORE-STYLE-001 message contains 'camelCase'", () => {
+  it("FUNGI-STYLE-001 message contains 'camelCase'", () => {
     const ast = parse(`
 flow Get_User(id: String) -> String {
   return id
 }
 `);
     const result = checkNamingPolicy(ast);
-    const diag = getDiag(result.diagnostics, "SPORE-STYLE-001");
+    const diag = getDiag(result.diagnostics, "FUNGI-STYLE-001");
     assert.ok(diag !== undefined);
     assert.ok(
       diag.message.toLowerCase().includes("camelcase"),
@@ -153,7 +153,7 @@ flow Get_User(id: String) -> String {
     );
   });
 
-  it("fnDecl with PascalCase emits SPORE-STYLE-001", () => {
+  it("fnDecl with PascalCase emits FUNGI-STYLE-001", () => {
     const fakeAst = {
       kind: "program",
       children: [
@@ -165,22 +165,22 @@ flow Get_User(id: String) -> String {
     };
     const result = checkNamingPolicy(fakeAst);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-001"),
-      `ComputeScore fnDecl should emit SPORE-STYLE-001`,
+      hasDiag(result.diagnostics, "FUNGI-STYLE-001"),
+      `ComputeScore fnDecl should emit FUNGI-STYLE-001`,
     );
   });
 });
 
-// ── Type naming (SPORE-STYLE-002) ────────────────────────────────────────────────
+// ── Type naming (FUNGI-STYLE-002) ────────────────────────────────────────────────
 
-describe("SPORE-STYLE-002 — type PascalCase convention", () => {
-  it("PascalCase type name passes without SPORE-STYLE-002", () => {
+describe("FUNGI-STYLE-002 — type PascalCase convention", () => {
+  it("PascalCase type name passes without FUNGI-STYLE-002", () => {
     const ast = parse(`
 type UserId = String
 `);
     const result = checkNamingPolicy(ast);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-STYLE-002"),
+      !hasDiag(result.diagnostics, "FUNGI-STYLE-002"),
       `UserId should pass PascalCase check, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -191,7 +191,7 @@ type PatientRecord = String
 type OrderStatus = String
 `);
     const result = checkNamingPolicy(ast);
-    const style002 = result.diagnostics.filter((d) => d.code === "SPORE-STYLE-002");
+    const style002 = result.diagnostics.filter((d) => d.code === "FUNGI-STYLE-002");
     assert.equal(
       style002.length,
       0,
@@ -199,17 +199,17 @@ type OrderStatus = String
     );
   });
 
-  it("userId type emits SPORE-STYLE-002 with suggested fix 'UserId'", () => {
+  it("userId type emits FUNGI-STYLE-002 with suggested fix 'UserId'", () => {
     const ast = parse(`
 type userId = String
 `);
     const result = checkNamingPolicy(ast);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-002"),
-      `userId type should emit SPORE-STYLE-002`,
+      hasDiag(result.diagnostics, "FUNGI-STYLE-002"),
+      `userId type should emit FUNGI-STYLE-002`,
     );
-    const diag = getDiag(result.diagnostics, "SPORE-STYLE-002");
-    assert.ok(diag !== undefined, "Should have SPORE-STYLE-002 diagnostic");
+    const diag = getDiag(result.diagnostics, "FUNGI-STYLE-002");
+    assert.ok(diag !== undefined, "Should have FUNGI-STYLE-002 diagnostic");
     assert.ok(
       diag.message.includes("userId"),
       `Message should mention 'userId', got: ${diag.message}`,
@@ -221,7 +221,7 @@ type userId = String
     );
   });
 
-  it("user_id type emits SPORE-STYLE-002", () => {
+  it("user_id type emits FUNGI-STYLE-002", () => {
     const fakeAst = {
       kind: "program",
       children: [
@@ -233,12 +233,12 @@ type userId = String
     };
     const result = checkNamingPolicy(fakeAst);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-002"),
-      `user_id type should emit SPORE-STYLE-002`,
+      hasDiag(result.diagnostics, "FUNGI-STYLE-002"),
+      `user_id type should emit FUNGI-STYLE-002`,
     );
   });
 
-  it("USER_ID type emits SPORE-STYLE-002", () => {
+  it("USER_ID type emits FUNGI-STYLE-002", () => {
     const fakeAst = {
       kind: "program",
       children: [
@@ -250,12 +250,12 @@ type userId = String
     };
     const result = checkNamingPolicy(fakeAst);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-002"),
-      `USER_ID type should emit SPORE-STYLE-002`,
+      hasDiag(result.diagnostics, "FUNGI-STYLE-002"),
+      `USER_ID type should emit FUNGI-STYLE-002`,
     );
   });
 
-  it("recordDecl with lowercase name emits SPORE-STYLE-002", () => {
+  it("recordDecl with lowercase name emits FUNGI-STYLE-002", () => {
     const fakeAst = {
       kind: "program",
       children: [
@@ -267,17 +267,17 @@ type userId = String
     };
     const result = checkNamingPolicy(fakeAst);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-002"),
-      `patientRecord recordDecl should emit SPORE-STYLE-002`,
+      hasDiag(result.diagnostics, "FUNGI-STYLE-002"),
+      `patientRecord recordDecl should emit FUNGI-STYLE-002`,
     );
   });
 
-  it("SPORE-STYLE-002 message contains 'PascalCase'", () => {
+  it("FUNGI-STYLE-002 message contains 'PascalCase'", () => {
     const ast = parse(`
 type userId = String
 `);
     const result = checkNamingPolicy(ast);
-    const diag = getDiag(result.diagnostics, "SPORE-STYLE-002");
+    const diag = getDiag(result.diagnostics, "FUNGI-STYLE-002");
     assert.ok(diag !== undefined);
     assert.ok(
       diag.message.toLowerCase().includes("pascalcase"),
@@ -286,10 +286,10 @@ type userId = String
   });
 });
 
-// ── Sensitive binding (SPORE-STYLE-SEC-001) ─────────────────────────────────────
+// ── Sensitive binding (FUNGI-STYLE-SEC-001) ─────────────────────────────────────
 
-describe("SPORE-STYLE-SEC-001 — sensitive binding names", () => {
-  it("binding named 'password' emits SPORE-STYLE-SEC-001", () => {
+describe("FUNGI-STYLE-SEC-001 — sensitive binding names", () => {
+  it("binding named 'password' emits FUNGI-STYLE-SEC-001", () => {
     const fakeAst = {
       kind: "program",
       children: [
@@ -312,10 +312,10 @@ describe("SPORE-STYLE-SEC-001 — sensitive binding names", () => {
     };
     const result = checkNamingPolicy(fakeAst);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-SEC-001"),
-      `Binding 'password' should emit SPORE-STYLE-SEC-001`,
+      hasDiag(result.diagnostics, "FUNGI-STYLE-SEC-001"),
+      `Binding 'password' should emit FUNGI-STYLE-SEC-001`,
     );
-    const diag = getDiag(result.diagnostics, "SPORE-STYLE-SEC-001");
+    const diag = getDiag(result.diagnostics, "FUNGI-STYLE-SEC-001");
     assert.ok(diag !== undefined);
     assert.ok(
       diag.message.includes("password"),
@@ -323,7 +323,7 @@ describe("SPORE-STYLE-SEC-001 — sensitive binding names", () => {
     );
   });
 
-  it("binding named 'secret' emits SPORE-STYLE-SEC-001", () => {
+  it("binding named 'secret' emits FUNGI-STYLE-SEC-001", () => {
     const fakeAst = {
       kind: "program",
       children: [
@@ -335,12 +335,12 @@ describe("SPORE-STYLE-SEC-001 — sensitive binding names", () => {
     };
     const result = checkNamingPolicy(fakeAst);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-SEC-001"),
-      `Binding 'secret' should emit SPORE-STYLE-SEC-001`,
+      hasDiag(result.diagnostics, "FUNGI-STYLE-SEC-001"),
+      `Binding 'secret' should emit FUNGI-STYLE-SEC-001`,
     );
   });
 
-  it("binding named 'apiKey' emits SPORE-STYLE-SEC-001", () => {
+  it("binding named 'apiKey' emits FUNGI-STYLE-SEC-001", () => {
     const fakeAst = {
       kind: "program",
       children: [
@@ -352,12 +352,12 @@ describe("SPORE-STYLE-SEC-001 — sensitive binding names", () => {
     };
     const result = checkNamingPolicy(fakeAst);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-SEC-001"),
-      `Binding 'apiKey' should emit SPORE-STYLE-SEC-001`,
+      hasDiag(result.diagnostics, "FUNGI-STYLE-SEC-001"),
+      `Binding 'apiKey' should emit FUNGI-STYLE-SEC-001`,
     );
   });
 
-  it("binding named 'token' emits SPORE-STYLE-SEC-001", () => {
+  it("binding named 'token' emits FUNGI-STYLE-SEC-001", () => {
     const fakeAst = {
       kind: "program",
       children: [
@@ -369,12 +369,12 @@ describe("SPORE-STYLE-SEC-001 — sensitive binding names", () => {
     };
     const result = checkNamingPolicy(fakeAst);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-SEC-001"),
-      `Binding 'token' should emit SPORE-STYLE-SEC-001`,
+      hasDiag(result.diagnostics, "FUNGI-STYLE-SEC-001"),
+      `Binding 'token' should emit FUNGI-STYLE-SEC-001`,
     );
   });
 
-  it("binding named 'rawPassword' does NOT emit SPORE-STYLE-SEC-001", () => {
+  it("binding named 'rawPassword' does NOT emit FUNGI-STYLE-SEC-001", () => {
     const fakeAst = {
       kind: "program",
       children: [
@@ -386,12 +386,12 @@ describe("SPORE-STYLE-SEC-001 — sensitive binding names", () => {
     };
     const result = checkNamingPolicy(fakeAst);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-STYLE-SEC-001"),
-      `Binding 'rawPassword' with raw prefix should NOT emit SPORE-STYLE-SEC-001, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      !hasDiag(result.diagnostics, "FUNGI-STYLE-SEC-001"),
+      `Binding 'rawPassword' with raw prefix should NOT emit FUNGI-STYLE-SEC-001, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("binding named 'unsafeToken' does NOT emit SPORE-STYLE-SEC-001", () => {
+  it("binding named 'unsafeToken' does NOT emit FUNGI-STYLE-SEC-001", () => {
     const fakeAst = {
       kind: "program",
       children: [
@@ -403,12 +403,12 @@ describe("SPORE-STYLE-SEC-001 — sensitive binding names", () => {
     };
     const result = checkNamingPolicy(fakeAst);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-STYLE-SEC-001"),
-      `Binding 'unsafeToken' with unsafe prefix should NOT emit SPORE-STYLE-SEC-001`,
+      !hasDiag(result.diagnostics, "FUNGI-STYLE-SEC-001"),
+      `Binding 'unsafeToken' with unsafe prefix should NOT emit FUNGI-STYLE-SEC-001`,
     );
   });
 
-  it("non-sensitive binding 'username' does not emit SPORE-STYLE-SEC-001", () => {
+  it("non-sensitive binding 'username' does not emit FUNGI-STYLE-SEC-001", () => {
     const fakeAst = {
       kind: "program",
       children: [
@@ -420,8 +420,8 @@ describe("SPORE-STYLE-SEC-001 — sensitive binding names", () => {
     };
     const result = checkNamingPolicy(fakeAst);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-STYLE-SEC-001"),
-      `Binding 'username' should not emit SPORE-STYLE-SEC-001`,
+      !hasDiag(result.diagnostics, "FUNGI-STYLE-SEC-001"),
+      `Binding 'username' should not emit FUNGI-STYLE-SEC-001`,
     );
   });
 });
@@ -433,7 +433,7 @@ describe("SPORE-STYLE-SEC-001 — sensitive binding names", () => {
 // regex recovers the name from both, so SEC-001 is NOT fail-open today — but this SECURITY guard had
 // ZERO real-AST coverage, so a future parser shape change would silently disarm it with every synthetic
 // test still green (the RD-0103 / limit-enforcer Bug-A pattern). These cases drive the TRUE parser AST.
-describe("SPORE-STYLE-SEC-001 — real parsed source (RD-0122 false-green regression guard)", () => {
+describe("FUNGI-STYLE-SEC-001 — real parsed source (RD-0122 false-green regression guard)", () => {
   it("a real letDecl carries the BARE name ('password', not 'password = rhs')", () => {
     const ast = parse(`flow f() -> Int {
   let password = getSecret()
@@ -452,7 +452,7 @@ describe("SPORE-STYLE-SEC-001 — real parsed source (RD-0122 false-green regres
 }`);
       const result = checkNamingPolicy(ast);
       assert.ok(
-        hasDiag(result.diagnostics, "SPORE-STYLE-SEC-001"),
+        hasDiag(result.diagnostics, "FUNGI-STYLE-SEC-001"),
         `real \`let ${name}\` should fire SEC-001, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
       );
     });
@@ -465,7 +465,7 @@ describe("SPORE-STYLE-SEC-001 — real parsed source (RD-0122 false-green regres
 }`);
     const result = checkNamingPolicy(ast);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-STYLE-SEC-001"),
+      !hasDiag(result.diagnostics, "FUNGI-STYLE-SEC-001"),
       `benign \`let total\` should not fire SEC-001, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -475,7 +475,7 @@ describe("SPORE-STYLE-SEC-001 — real parsed source (RD-0122 false-green regres
   return id
 }`);
     const result = checkNamingPolicy(ast);
-    assert.ok(hasDiag(result.diagnostics, "SPORE-STYLE-001"), `real snake_case flow should fire STYLE-001`);
+    assert.ok(hasDiag(result.diagnostics, "FUNGI-STYLE-001"), `real snake_case flow should fire STYLE-001`);
   });
 });
 
@@ -484,7 +484,7 @@ describe("SPORE-STYLE-SEC-001 — real parsed source (RD-0122 false-green regres
 // ("patientRecord { name: String }") — the real parser emits the BARE name ("PatientRecord")
 // with fields/variants in children. typeDecl had real-source coverage; record/enum did not.
 // (Worker RD-0122 follow-up, verified 13/13 against the true parser.)
-describe("SPORE-STYLE-002 — real parsed source (RD-0122 record/enum coverage)", () => {
+describe("FUNGI-STYLE-002 — real parsed source (RD-0122 record/enum coverage)", () => {
   it("a real recordDecl carries the BARE name ('PatientRecord', not 'PatientRecord { ... }')", () => {
     const ast = parse(`record PatientRecord { name: String }`);
     let val;
@@ -494,22 +494,22 @@ describe("SPORE-STYLE-002 — real parsed source (RD-0122 record/enum coverage)"
 
   it("STYLE-002 fires on a real snake_case record name `patient_record`", () => {
     const result = checkNamingPolicy(parse(`record patient_record { name: String }`));
-    assert.ok(hasDiag(result.diagnostics, "SPORE-STYLE-002"), `real snake_case record should fire STYLE-002`);
+    assert.ok(hasDiag(result.diagnostics, "FUNGI-STYLE-002"), `real snake_case record should fire STYLE-002`);
   });
 
   it("STYLE-002 does NOT fire on a real PascalCase record `PatientRecord`", () => {
     const result = checkNamingPolicy(parse(`record PatientRecord { name: String }`));
-    assert.ok(!hasDiag(result.diagnostics, "SPORE-STYLE-002"), `PascalCase record should be clean`);
+    assert.ok(!hasDiag(result.diagnostics, "FUNGI-STYLE-002"), `PascalCase record should be clean`);
   });
 
   it("STYLE-002 fires on a real snake_case enum name `order_status`", () => {
     const result = checkNamingPolicy(parse(`enum order_status { New }`));
-    assert.ok(hasDiag(result.diagnostics, "SPORE-STYLE-002"), `real snake_case enum should fire STYLE-002`);
+    assert.ok(hasDiag(result.diagnostics, "FUNGI-STYLE-002"), `real snake_case enum should fire STYLE-002`);
   });
 
   it("STYLE-002 does NOT fire on a real PascalCase enum `OrderStatus`", () => {
     const result = checkNamingPolicy(parse(`enum OrderStatus { New }`));
-    assert.ok(!hasDiag(result.diagnostics, "SPORE-STYLE-002"), `PascalCase enum should be clean`);
+    assert.ok(!hasDiag(result.diagnostics, "FUNGI-STYLE-002"), `PascalCase enum should be clean`);
   });
 });
 
@@ -523,7 +523,7 @@ flow Get_User(id: String) -> String {
 }
 `);
     const result = checkNamingPolicy(ast);
-    const diag = getDiag(result.diagnostics, "SPORE-STYLE-001");
+    const diag = getDiag(result.diagnostics, "FUNGI-STYLE-001");
     assert.ok(diag !== undefined);
     assert.equal(diag.severity, "warning");
   });
@@ -535,12 +535,12 @@ flow Get_User(id: String) -> String {
 }
 `);
     const result = checkNamingPolicy(ast, { severity: "error" });
-    const diag = getDiag(result.diagnostics, "SPORE-STYLE-001");
+    const diag = getDiag(result.diagnostics, "FUNGI-STYLE-001");
     assert.ok(diag !== undefined);
     assert.equal(diag.severity, "error");
   });
 
-  it("flowNames: 'none' disables SPORE-STYLE-001", () => {
+  it("flowNames: 'none' disables FUNGI-STYLE-001", () => {
     const ast = parse(`
 flow Get_User(id: String) -> String {
   return id
@@ -548,19 +548,19 @@ flow Get_User(id: String) -> String {
 `);
     const result = checkNamingPolicy(ast, { flowNames: "none" });
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-STYLE-001"),
-      `flowNames: 'none' should disable SPORE-STYLE-001`,
+      !hasDiag(result.diagnostics, "FUNGI-STYLE-001"),
+      `flowNames: 'none' should disable FUNGI-STYLE-001`,
     );
   });
 
-  it("typeNames: 'none' disables SPORE-STYLE-002", () => {
+  it("typeNames: 'none' disables FUNGI-STYLE-002", () => {
     const ast = parse(`
 type userId = String
 `);
     const result = checkNamingPolicy(ast, { typeNames: "none" });
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-STYLE-002"),
-      `typeNames: 'none' should disable SPORE-STYLE-002`,
+      !hasDiag(result.diagnostics, "FUNGI-STYLE-002"),
+      `typeNames: 'none' should disable FUNGI-STYLE-002`,
     );
   });
 
@@ -576,7 +576,7 @@ type userId = String
     };
     const result = checkNamingPolicy(fakeAst, { flowNames: "none", typeNames: "none" });
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-STYLE-SEC-001"),
+      hasDiag(result.diagnostics, "FUNGI-STYLE-SEC-001"),
       `SEC-001 should fire even when other checks are disabled`,
     );
   });
@@ -606,7 +606,7 @@ flow createPatient(name: String) -> UserId {
 `);
     const result = checkNamingPolicy(ast);
     const styleDiags = result.diagnostics.filter(
-      (d) => d.code === "SPORE-STYLE-001" || d.code === "SPORE-STYLE-002",
+      (d) => d.code === "FUNGI-STYLE-001" || d.code === "FUNGI-STYLE-002",
     );
     assert.equal(
       styleDiags.length,

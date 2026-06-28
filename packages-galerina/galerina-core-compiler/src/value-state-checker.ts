@@ -8,24 +8,24 @@
 //
 // Implemented rules:
 //   Rule 1/3 — unsafe bindings cannot reach governed sinks
-//              (SPORE-VALUESTATE-003: UnsafeValueReachedGovernedSink)
+//              (FUNGI-VALUESTATE-003: UnsafeValueReachedGovernedSink)
 //   Rule 2   — safe mut requires a recognised gate function
-//              (SPORE-VALUESTATE-001: UnsafeToSafeTransitionDenied)
+//              (FUNGI-VALUESTATE-001: UnsafeToSafeTransitionDenied)
 //   Rule 2B  — safe mut inside if/else where one branch has a gate and
 //              the other doesn't
-//              (SPORE-VALUESTATE-002: UnsafeConditionalUpgrade)
+//              (FUNGI-VALUESTATE-002: UnsafeConditionalUpgrade)
 //   Rule 4   — SecureString cannot use == or be passed to log functions
-//              (SPORE-SECRET-001: SecretValueLogged)
-//              (SPORE-SECRET-002: SecretComparisonDenied)
-//              (SPORE-SECRET-003: SecretSerializationDenied)
+//              (FUNGI-SECRET-001: SecretValueLogged)
+//              (FUNGI-SECRET-002: SecretComparisonDenied)
+//              (FUNGI-SECRET-003: SecretSerializationDenied)
 //              Extended: SecureString in AuditLog.write or record literal at sink
 //   Rule 5   — protected value passed to AuditLog.write without redact()
-//              (SPORE-VALUESTATE-006: ProtectedValueAtAuditLog)
-//              (distinct from SPORE-VALUESTATE-003 for unsafe-at-sink)
+//              (FUNGI-VALUESTATE-006: ProtectedValueAtAuditLog)
+//              (distinct from FUNGI-VALUESTATE-003 for unsafe-at-sink)
 //   Phase 8B — String taint propagation
-//              (SPORE-VALUESTATE-004: TaintedValuePropagation)
+//              (FUNGI-VALUESTATE-004: TaintedValuePropagation)
 //   Phase 11B.1 — Two-hop taint propagation
-//              (SPORE-VALUESTATE-005: DerivedUnsafeValueAtSink)
+//              (FUNGI-VALUESTATE-005: DerivedUnsafeValueAtSink)
 //   Phase 11B.2 — User-defined gate functions
 //              Functions whose names start with recognised gate prefixes
 //              (validate*, sanitize*, check*, verify*, parse*, decode*)
@@ -106,7 +106,7 @@ function makeVSDiag(
 // NET-NEW 0111 — affine consume-once + monotone Raw→Verified→Authorized→Sealed passport typestate.
 // Lifts the rd-0087 proven abstract invariant into the SHIPPED source checker. Pure compile-time
 // type-system analysis (Binary/digital — touches no crypto byte; governs WHO may use a sealed value,
-// it never performs the seal). SPORE-AFFINE-001 (consume-once / CWE-664) + SPORE-PASSPORT-002 (stage-skip /
+// it never performs the seal). FUNGI-AFFINE-001 (consume-once / CWE-664) + FUNGI-PASSPORT-002 (stage-skip /
 // CWE-696). Deny-by-default: an unknown/un-gated Passport is Raw=0 (the most restricted stage).
 // ---------------------------------------------------------------------------
 export const PassportStage = { Raw: 0, Verified: 1, Authorized: 2, Sealed: 3 } as const;
@@ -330,7 +330,7 @@ function isNetworkSink(node: AstNode): boolean {
 // ---------------------------------------------------------------------------
 // Governance qualifier helpers
 //
-// Used for SPORE-VALUESTATE-006 / SPORE-VALUESTATE-007 boundary checks.
+// Used for FUNGI-VALUESTATE-006 / FUNGI-VALUESTATE-007 boundary checks.
 // ---------------------------------------------------------------------------
 
 /**
@@ -371,7 +371,7 @@ function isProtectedValueExpression(node: AstNode): boolean {
 /**
  * Returns true when the node reads a value out of a `secrets {}`-declared credential —
  * a secret SOURCE. A binding initialised from such a source is treated as a secret
- * (SecureString-equivalent), so the existing SPORE-SECRET-001 (logging) and SPORE-SECRET-003
+ * (SecureString-equivalent), so the existing FUNGI-SECRET-001 (logging) and FUNGI-SECRET-003
  * (serialization) sink guards fire if that binding ever reaches a log / serialize / audit
  * sink. Recognised accessors (receiver namespace . method):
  *   secret.get / secret.read / vault.read / vault.get / kms.decrypt / secrets.get  (any case)
@@ -389,7 +389,7 @@ function isSecretSourceExpression(node: AstNode): boolean {
 
 /**
  * Returns true when the AST node is a `redact(...)` call expression (or wrapped in ?).
- * Assigning redact(x) to a plain binding is a SPORE-VALUESTATE-007 violation.
+ * Assigning redact(x) to a plain binding is a FUNGI-VALUESTATE-007 violation.
  */
 function isRedactCall(node: AstNode): boolean {
   // Unwrap errorPropagation (?)
@@ -426,10 +426,10 @@ function interpolatedNames(node: AstNode): string[] {
  * is STILL secret. The ONLY declassifier is redact() (irreversible) — a parsed, decoded,
  * validated, or otherwise transformed secret remains a secret for sink purposes.
  *
- * Closes the SPORE-SECRET-002 derived-secret fail-open: previously only a binding whose
+ * Closes the FUNGI-SECRET-002 derived-secret fail-open: previously only a binding whose
  * init was a DIRECT secret accessor got tagged SecureString, so `let p = key.slice(0,5)`
  * (or `key + x`, or `{ tok: key }`) laundered the credential past the egress guard.
- * Tagging derived bindings here also hardens SPORE-SECRET-001 (logging) and SPORE-SECRET-003
+ * Tagging derived bindings here also hardens FUNGI-SECRET-001 (logging) and FUNGI-SECRET-003
  * (serialization), which key on the same SecureString tag.
  */
 function derivesFromSecret(
@@ -486,7 +486,7 @@ function derivesFromSecret(
 }
 
 // ---------------------------------------------------------------------------
-// U2/#204 — semantic-embedding confidentiality (SPORE-PRIVACY-002)
+// U2/#204 — semantic-embedding confidentiality (FUNGI-PRIVACY-002)
 //
 // A semantic embedding vector can be inverted back to its source text
 // (embedding-inversion / vec2text recovers ~90%+), so a CLEARTEXT embedding
@@ -721,7 +721,7 @@ function buildFullCallName(node: AstNode, aliasMap?: ReadonlyMap<string, string>
 // `boundary-untrusted` (R&D 0093, the "34B hole"): a BARE param at a posture-gated
 // entry boundary (secure/guarded flow). It behaves EXACTLY like `undefined` (trusted)
 // at every existing site — all of which test `=== "unsafe"`/`"safe"` — so it is inert
-// for VS-001/002/004/005/006/007; it fires ONLY SPORE-VALUESTATE-008 at a governed sink.
+// for VS-001/002/004/005/006/007; it fires ONLY FUNGI-VALUESTATE-008 at a governed sink.
 interface BindingInfo {
   readonly name: string;
   readonly safetyPrefix: "unsafe" | "safe" | "boundary-untrusted" | undefined;
@@ -732,18 +732,18 @@ interface BindingInfo {
    * Phase 11B.1 — Two-hop taint propagation.
    * True when this binding was derived from an unsafe or tainted binding via
    * a non-gate expression (e.g. rawQuery.trim()). Such bindings emit
-   * SPORE-VALUESTATE-005 when they reach governed sinks.
+   * FUNGI-VALUESTATE-005 when they reach governed sinks.
    */
   readonly tainted?: boolean;
   /** The original unsafe binding name this taint was derived from (for diagnostics). */
   readonly taintSource?: string;
   /**
-   * U2/#204 — SemanticVector confidentiality (SPORE-PRIVACY-002).
+   * U2/#204 — SemanticVector confidentiality (FUNGI-PRIVACY-002).
    * True when this binding holds, or is DERIVED from, a semantic embedding vector
    * (EmbeddingModel.run/.embed, or an Embedding/EmbeddingResult-typed binding) and has
    * NOT been sealed/encrypted. A cleartext embedding is inversion-bearing (vec2text), so
    * it must not cross a trust boundary in cleartext; reaching a network sink emits
-   * SPORE-PRIVACY-002. seal()/encrypt() is the sole declassifier. Propagates like `tainted`.
+   * FUNGI-PRIVACY-002. seal()/encrypt() is the sole declassifier. Propagates like `tainted`.
    */
   readonly embeddingDerived?: boolean;
   /** NET-NEW 0111: current passport typestate stage (Raw=0..Sealed=3) for a Passport-typed value. */
@@ -990,7 +990,7 @@ class ValueStateChecker {
   // C1: per-flow `let x = Module` alias map, set on flow entry; resolves an aliased sink receiver
   // (`x.write` → `AuditLog.write`) so the taint/sink gates aren't smuggled past by a rename.
   private moduleAliases: ReadonlyMap<string, string> = new Map();
-  // R&D 0093 stage-2: production/deterministic builds escalate SPORE-VALUESTATE-008 to error.
+  // R&D 0093 stage-2: production/deterministic builds escalate FUNGI-VALUESTATE-008 to error.
   private readonly mode: "production" | "development";
 
   constructor(
@@ -1068,12 +1068,12 @@ class ValueStateChecker {
       // #0093 / guarded-flow fail-open fix: `guardedFlowDecl` was omitted here, so
       // guarded-flow params were NEVER registered as value-state bindings — a
       // tainted/untrusted-origin param reaching a governed sink emitted ZERO
-      // diagnostics (SPORE-VALUESTATE-003/004/005 all silent) for the whole tier.
+      // diagnostics (FUNGI-VALUESTATE-003/004/005 all silent) for the whole tier.
       // Every sibling pass (runtime, effect-checker, taint-checker) already
       // enumerates guardedFlowDecl; the value-state checker was the lone omission.
       // R&D 0120: `governedFlowDecl` (a `governed floor_N flow …` Tower-floor entry, parser.ts:947)
       // was the SAME omission — value-state had ZERO references to it, so a governed flow's tainted
-      // params reached governed sinks with no SPORE-VALUESTATE-003/004/005 (the 0093 fail-open class).
+      // params reached governed sinks with no FUNGI-VALUESTATE-003/004/005 (the 0093 fail-open class).
       // A governed flow IS a posture-gated boundary, so it registers params + is treated like secure/guarded.
       case "governedFlowDecl":
       case "guardedFlowDecl": {
@@ -1157,7 +1157,7 @@ class ValueStateChecker {
     if (_condition !== undefined) {
       this.walkNode(_condition);
 
-      // SPORE-SECRET-004 — secret-dependent branch = timing side-channel (CWE-208): the arm taken (and thus
+      // FUNGI-SECRET-004 — secret-dependent branch = timing side-channel (CWE-208): the arm taken (and thus
       // observable execution time) depends on secret material. constantTimeEquals()/redact() are the
       // sanctioned declassifiers (already exempt in derivesFromSecret), so the canonical secure comparison
       // is NOT flagged. Advisory WARNING (not mode-gated to error): unlike secret EGRESS, secret BRANCHING
@@ -1165,7 +1165,7 @@ class ValueStateChecker {
       // blocking. (RD-0130 #3 constant-time lint; the honest scope of "side-channel resistance".)
       if (derivesFromSecret(_condition, (name) => this.lookupBinding(name))) {
         this.diagnostics.push({
-          code: "SPORE-SECRET-004",
+          code: "FUNGI-SECRET-004",
           name: "SecretDependentBranch",
           severity: "warning",
           message: `This 'if' branches on a secret-derived value, so the arm taken — and thus the flow's observable execution time — depends on secret material (timing side-channel, CWE-208).`,
@@ -1192,7 +1192,7 @@ class ValueStateChecker {
           if (thenHasGate && !elseHasGate) {
             // then-branch has gate, else doesn't
             this.diagnostics.push(makeVSDiag(
-              "SPORE-VALUESTATE-002",
+              "FUNGI-VALUESTATE-002",
               "UnsafeConditionalUpgrade",
               `'safe mut ${name}' is used in both branches of an if/else, but only the 'if' branch uses a recognised gate. Both branches must validate before upgrading to safe.`,
               elseBlock.location,
@@ -1202,7 +1202,7 @@ class ValueStateChecker {
           } else if (!thenHasGate && elseHasGate) {
             // else-branch has gate, then doesn't
             this.diagnostics.push(makeVSDiag(
-              "SPORE-VALUESTATE-002",
+              "FUNGI-VALUESTATE-002",
               "UnsafeConditionalUpgrade",
               `'safe mut ${name}' is used in both branches of an if/else, but only the 'else' branch uses a recognised gate. Both branches must validate before upgrading to safe.`,
               thenBlock.location,
@@ -1290,7 +1290,7 @@ class ValueStateChecker {
     } else if (this.currentFlowKind === "secureFlowDecl" || this.currentFlowKind === "guardedFlowDecl" || this.currentFlowKind === "governedFlowDecl") {
       // R&D 0093 "34B hole": a BARE param at a posture-gated entry boundary (secure/guarded
       // flow) is untrusted-until-gated. `boundary-untrusted` is inert everywhere EXCEPT a
-      // governed sink, where it fires SPORE-VALUESTATE-008 (warning) — closing the
+      // governed sink, where it fires FUNGI-VALUESTATE-008 (warning) — closing the
       // param-trusted-by-default fail-open at the secure/guarded tier without the false
       // positives of a full taint flip (string-concat / VS-004 stays clean). `pure`/plain
       // `flow` stay trusted-by-default (non-breaking).
@@ -1320,8 +1320,8 @@ class ValueStateChecker {
       }
     }
 
-    // SPORE-VALUESTATE-006: protected value assigned to plain binding
-    // SPORE-VALUESTATE-007: redacted value assigned to plain binding
+    // FUNGI-VALUESTATE-006: protected value assigned to plain binding
+    // FUNGI-VALUESTATE-007: redacted value assigned to plain binding
     // Only fire when:
     //   1. The binding has an explicit type annotation (colonIdx present in value string)
     //   2. The declared type annotation is plain — no "protected" or "redacted" anywhere in the type
@@ -1335,7 +1335,7 @@ class ValueStateChecker {
     if (hasExplicitType && !hasGovernanceQualifier && info.typeName !== "" && init !== undefined) {
       if (isProtectedValueExpression(init)) {
         this.diagnostics.push(makeVSDiag(
-          "SPORE-VALUESTATE-006",
+          "FUNGI-VALUESTATE-006",
           "ProtectedBoundaryViolation",
           `Cannot assign a 'protected' value to plain binding '${info.name}'. Declare the binding as 'protected ${info.typeName}', or pass the value through an authorised access gate.`,
           node.location,
@@ -1344,7 +1344,7 @@ class ValueStateChecker {
         ));
       } else if (isRedactCall(init)) {
         this.diagnostics.push(makeVSDiag(
-          "SPORE-VALUESTATE-007",
+          "FUNGI-VALUESTATE-007",
           "RedactedBoundaryViolation",
           `Cannot assign a 'redacted' value to plain binding '${info.name}'. Redaction is irreversible — a redacted value cannot be converted back to its original type.`,
           node.location,
@@ -1355,7 +1355,7 @@ class ValueStateChecker {
 
     // Secret-source inference: a binding read from a `secrets {}` credential accessor
     // (secret.get / vault.read / kms.decrypt …) is a secret. Tag it as SecureString so the
-    // existing SPORE-SECRET-001/003 sink guards block it from logs/serialization/audit output.
+    // existing FUNGI-SECRET-001/003 sink guards block it from logs/serialization/audit output.
     const secretField =
       init !== undefined &&
       info.typeName !== "SecureString" &&
@@ -1404,7 +1404,7 @@ class ValueStateChecker {
     if (info.safetyPrefix === "safe" && init !== undefined) {
       if (!this.isGateExpression(init)) {
         this.diagnostics.push(makeVSDiag(
-          "SPORE-VALUESTATE-001",
+          "FUNGI-VALUESTATE-001",
           "UnsafeToSafeTransitionDenied",
           `'safe mut ${info.name}' requires a recognised gate function on the right-hand side (validate.*, sanitize.*, json.decode<T>, parse.*).`,
           node.location,
@@ -1541,14 +1541,14 @@ class ValueStateChecker {
         // (a) STATE-SKIP: the value's stage is below the sink's required stage → deny (Raw<Verified<Authorized<Sealed).
         if (need !== undefined && b.passportStage < need) {
           this.diagnostics.push(makeVSDiag(
-            "SPORE-PASSPORT-002", "PassportStateSkip",
+            "FUNGI-PASSPORT-002", "PassportStateSkip",
             `Passport '${b.name}' is at stage ${b.passportStage} but sink '${sinkName}' requires stage ${need} (Raw<Verified<Authorized<Sealed). Advance it through the missing gate(s) before this sink.`,
             node.location, `Apply the missing gate (verify/authorize/seal) to '${b.name}' before '${sinkName}'.`));
         }
         // (b) CONSUME-ONCE: already consumed at a prior authority sink → deny re-use (affine/linear single-use).
         if (b.consumed === true) {
           this.diagnostics.push(makeVSDiag(
-            "SPORE-AFFINE-001", "PassportConsumedTwice",
+            "FUNGI-AFFINE-001", "PassportConsumedTwice",
             `Passport '${b.name}' was already consumed and cannot be re-used (affine/linear single-use).`,
             node.location, `Re-derive a fresh passport; an authority value is consume-once.`,
             undefined,
@@ -1568,7 +1568,7 @@ class ValueStateChecker {
       }
     }
 
-    // Rule 4 (serialization side): SPORE-SECRET-003 — SecureString in json.encode / serialize
+    // Rule 4 (serialization side): FUNGI-SECRET-003 — SecureString in json.encode / serialize
     if (isSerializationCall(node)) {
       const callName = buildFullCallName(node);
       for (const child of node.children ?? []) {
@@ -1583,7 +1583,7 @@ class ValueStateChecker {
       }
     }
 
-    // Secret → network egress: SPORE-SECRET-002 — a raw secret transmitted off-host.
+    // Secret → network egress: FUNGI-SECRET-002 — a raw secret transmitted off-host.
     if (isNetworkSink(node)) {
       const callName = buildFullCallName(node);
       for (const child of node.children ?? []) {
@@ -1593,7 +1593,7 @@ class ValueStateChecker {
     }
 
     // Phase 4.3: Inter-flow taint — warn when a tainted argument is passed to a
-    // user-defined flow. This is a call-site warning (SPORE-VALUESTATE-004), NOT
+    // user-defined flow. This is a call-site warning (FUNGI-VALUESTATE-004), NOT
     // full inter-procedural analysis. We do not follow into the callee body.
     const calleeName = node.value ?? "";
     if (this.userFlows.has(calleeName)) {
@@ -1617,7 +1617,7 @@ class ValueStateChecker {
             continue;
           }
           this.diagnostics.push({
-            code: "SPORE-VALUESTATE-004",
+            code: "FUNGI-VALUESTATE-004",
             name: "TaintedValuePropagation",
             severity: "error",
             message: `Tainted value '${taintName}' passed to '${calleeName}'. Validate before passing to another flow.`,
@@ -1641,7 +1641,7 @@ class ValueStateChecker {
         const lookup = (n: string) => this.lookupBinding(n);
         if (derivesFromSecret(arg, lookup)) {
           this.diagnostics.push({
-            code: "SPORE-SECRET-002",
+            code: "FUNGI-SECRET-002",
             name: "SecretCrossesFlowBoundary",
             severity: this.mode === "production" ? "error" : "warning",
             message: `A secret value is passed to flow '${calleeName}', which may transmit it off-host. The checker does not follow into the callee — seal/redact it or confirm '${calleeName}' keeps it within a trusted boundary.`,
@@ -1657,7 +1657,7 @@ class ValueStateChecker {
         const lookup = (n: string) => this.lookupBinding(n);
         if (derivesFromEmbedding(arg, lookup)) {
           this.diagnostics.push({
-            code: "SPORE-PRIVACY-002",
+            code: "FUNGI-PRIVACY-002",
             name: "EmbeddingCrossesFlowBoundary",
             severity: this.mode === "production" ? "error" : "warning",
             message: `A cleartext semantic embedding is passed to flow '${calleeName}', which may egress it. The checker does not follow into the callee — seal() it or confirm '${calleeName}' keeps it within a trusted boundary.`,
@@ -1673,7 +1673,7 @@ class ValueStateChecker {
   }
 
   /**
-   * SPORE-SECRET-002: a SecureString (incl. a value read from a `secrets {}` credential)
+   * FUNGI-SECRET-002: a SecureString (incl. a value read from a `secrets {}` credential)
    * must not be transmitted to a network/egress sink — that is an exfiltration path.
    * `redact()` / sealing breaks the chain. Mirrors checkArgForSecretLogging.
    */
@@ -1687,7 +1687,7 @@ class ValueStateChecker {
       const binding = this.lookupBinding(node.value ?? "");
       if (binding?.typeName === "SecureString") {
         this.diagnostics.push(makeVSDiag(
-          "SPORE-SECRET-002",
+          "FUNGI-SECRET-002",
           "SecretSentToNetwork",
           `SecureString binding '${binding.name}' must not be transmitted to network sink '${callName}'.`,
           location,
@@ -1707,7 +1707,7 @@ class ValueStateChecker {
   }
 
   /**
-   * SPORE-PRIVACY-002 (U2/#204): a cleartext semantic embedding (an Embedding/EmbeddingResult
+   * FUNGI-PRIVACY-002 (U2/#204): a cleartext semantic embedding (an Embedding/EmbeddingResult
    * value, or anything derived from EmbeddingModel.run/.embed) must not be transmitted to a
    * network/egress sink — an embedding is invertible (vec2text), so sending it cleartext leaks
    * the source text across the trust boundary. seal()/encrypt() breaks the chain. Filtering on
@@ -1724,7 +1724,7 @@ class ValueStateChecker {
       const binding = this.lookupBinding(node.value ?? "");
       if (binding?.embeddingDerived === true) {
         this.diagnostics.push(makeVSDiag(
-          "SPORE-PRIVACY-002",
+          "FUNGI-PRIVACY-002",
           "EmbeddingEgressDenied",
           `Cleartext semantic embedding '${binding.name}' must not be transmitted to network sink '${callName}'.`,
           location,
@@ -1741,7 +1741,7 @@ class ValueStateChecker {
     // Inline embedding source passed straight to the sink, e.g. http.post(u, EmbeddingModel.run(x)).
     if (isEmbeddingSourceExpression(node)) {
       this.diagnostics.push(makeVSDiag(
-        "SPORE-PRIVACY-002",
+        "FUNGI-PRIVACY-002",
         "EmbeddingEgressDenied",
         `A cleartext semantic embedding must not be transmitted to network sink '${callName}'.`,
         location,
@@ -1761,8 +1761,8 @@ class ValueStateChecker {
 
   /**
    * Recursively checks whether `node` or any of its descendants is an
-   * identifier that resolves to an `unsafe` binding (SPORE-VALUESTATE-003) or
-   * a tainted-but-not-directly-unsafe binding (SPORE-VALUESTATE-005).
+   * identifier that resolves to an `unsafe` binding (FUNGI-VALUESTATE-003) or
+   * a tainted-but-not-directly-unsafe binding (FUNGI-VALUESTATE-005).
    */
   private checkArgForUnsafeBinding(
     node: AstNode,
@@ -1790,7 +1790,7 @@ class ValueStateChecker {
           });
         }
         this.diagnostics.push(makeVSDiag(
-          "SPORE-VALUESTATE-003",
+          "FUNGI-VALUESTATE-003",
           "UnsafeValueReachedGovernedSink",
           `Unsafe binding '${binding.name}' cannot flow into governed sink '${sinkName}'.`,
           location,
@@ -1803,7 +1803,7 @@ class ValueStateChecker {
           },
         ));
       } else if (binding?.tainted === true) {
-        // Phase 11B.1 — SPORE-VALUESTATE-005: derived unsafe value at sink
+        // Phase 11B.1 — FUNGI-VALUESTATE-005: derived unsafe value at sink
         const sourceName = binding.taintSource ?? binding.name;
         const related: DiagnosticRelatedLocation[] = [];
         if (binding.declaredAt !== undefined) {
@@ -1813,7 +1813,7 @@ class ValueStateChecker {
           });
         }
         this.diagnostics.push(makeVSDiag(
-          "SPORE-VALUESTATE-005",
+          "FUNGI-VALUESTATE-005",
           "DerivedUnsafeValueAtSink",
           `Binding '${binding.name}' is derived from unsafe binding '${sourceName}' and cannot flow into governed sink '${sinkName}'. Even after transformation (e.g. .trim()), a value derived from unsafe input is still tainted.`,
           location,
@@ -1835,7 +1835,7 @@ class ValueStateChecker {
         }
         this.diagnostics.push({
           ...makeVSDiag(
-            "SPORE-VALUESTATE-008",
+            "FUNGI-VALUESTATE-008",
             "BoundaryInputUnclean",
             `Untrusted boundary input '${binding.name}' reaches governed sink '${sinkName}' without an explicit gate.`,
             location,
@@ -1886,7 +1886,7 @@ class ValueStateChecker {
           });
         }
         this.diagnostics.push(makeVSDiag(
-          "SPORE-SECRET-001",
+          "FUNGI-SECRET-001",
           "SecretValueLogged",
           `SecureString binding '${binding.name}' must not be passed to '${callName}'.`,
           location,
@@ -1906,7 +1906,7 @@ class ValueStateChecker {
   }
 
   /**
-   * SPORE-SECRET-003: SecureString must not be passed to serialization functions.
+   * FUNGI-SECRET-003: SecureString must not be passed to serialization functions.
    * Serializing a secret value would expose it in the output stream.
    * Extended (Task 3): also fires for SecureString in AuditLog.write and
    * SecureString field values in record literals passed to governed sinks.
@@ -1931,7 +1931,7 @@ class ValueStateChecker {
       const binding = this.lookupBinding(node.value ?? "");
       if (binding?.typeName === "SecureString") {
         this.diagnostics.push(makeVSDiag(
-          "SPORE-SECRET-003",
+          "FUNGI-SECRET-003",
           "SecretSerializationDenied",
           `SecureString binding '${binding.name}' must not be passed to '${callName}'. Secrets must not appear in serialized or audit output.`,
           location,
@@ -1949,7 +1949,7 @@ class ValueStateChecker {
   }
 
   /**
-   * Task 4: SPORE-VALUESTATE-006 (distinct from VALUESTATE-003) — fires when a
+   * Task 4: FUNGI-VALUESTATE-006 (distinct from VALUESTATE-003) — fires when a
    * protected value (e.g. protected Email) is passed to AuditLog.write without
    * going through redact(). This is more specific than VALUESTATE-003 (unsafe-at-sink).
    *
@@ -1987,7 +1987,7 @@ class ValueStateChecker {
           binding.typeName.startsWith("protected ");
         if (isProtected) {
           this.diagnostics.push(makeVSDiag(
-            "SPORE-VALUESTATE-006",
+            "FUNGI-VALUESTATE-006",
             "ProtectedValueAtAuditLog",
             `Protected binding '${binding.name}' passed to '${sinkName}' without redaction. Protected values must be redacted before appearing in audit logs.`,
             location,
@@ -2018,7 +2018,7 @@ class ValueStateChecker {
       if (right !== undefined) this.checkSecureStringEquality(right, node.location);
     }
 
-    // Phase 8B: String taint propagation — SPORE-VALUESTATE-004
+    // Phase 8B: String taint propagation — FUNGI-VALUESTATE-004
     // "SELECT " + rawInput produces a tainted string that must not reach sinks
     // Partial implementation: detect when string + contains an unsafe binding
     if (node.value === "+") {
@@ -2031,7 +2031,7 @@ class ValueStateChecker {
   }
 
   /**
-   * Phase 8B: SPORE-VALUESTATE-004 — String taint propagation.
+   * Phase 8B: FUNGI-VALUESTATE-004 — String taint propagation.
    * If a string concatenation includes an unsafe binding, the result is tainted.
    * This is the SQL injection pattern: "SELECT " + rawInput.
    */
@@ -2056,7 +2056,7 @@ class ValueStateChecker {
     }
 
     this.diagnostics.push(makeVSDiag(
-      "SPORE-VALUESTATE-004",
+      "FUNGI-VALUESTATE-004",
       "TaintedValuePropagation",
       `String concatenation includes unsafe binding '${unsafeBinding.name}'. The result is tainted and must not reach governed sinks.`,
       location,
@@ -2093,7 +2093,7 @@ class ValueStateChecker {
       const binding = this.lookupBinding(node.value ?? "");
       if (binding?.typeName === "SecureString") {
         this.diagnostics.push(makeVSDiag(
-          "SPORE-SECRET-002",
+          "FUNGI-SECRET-002",
           "SecretComparisonDenied",
           `SecureString binding '${binding.name}' must not be compared with == / !=. Use constantTimeEquals(${binding.name}, other) instead.`,
           location,
@@ -2125,7 +2125,7 @@ class ValueStateChecker {
  * @returns    A result object containing all value-state diagnostics.
  */
 // ---------------------------------------------------------------------------
-// SPORE-NUMERIC-001 — backend numeric-lowering safety gate (fail-closed, UNCONDITIONAL)
+// FUNGI-NUMERIC-001 — backend numeric-lowering safety gate (fail-closed, UNCONDITIONAL)
 //
 // A scalar 64-bit width that the WASM emitter cannot lower faithfully would be SILENTLY TRUNCATED
 // 64→32 bit (CWE-704), and the run fallback (tree-walker) would hold the value in a JS `number`
@@ -2135,7 +2135,7 @@ class ValueStateChecker {
 // build (both run checkValueStates) reject such a flow rather than emit a truncating module.
 //
 // Int64 has been LIFTED from this gate (owner-gated, 2026-06-25): the emitter now lowers it
-// faithfully (i64.const, checked $spore_*_i64, native i64.div_s|rem_s, i64 comparisons) and the
+// faithfully (i64.const, checked $fungi_*_i64, native i64.div_s|rem_s, i64 comparisons) and the
 // tree-walker carries it as a bigint — proven byte-exact (walker ≡ WASM) over the (2^53,2^63)
 // corpus. So only UInt64 remains gated, until a faithful *unsigned* 64-bit arithmetic layer lands
 // (u64 div/compare/overflow differ from the signed i64.* ops the emitter currently uses). The set
@@ -2160,7 +2160,7 @@ const NUMERIC_BIND_KINDS = new Set(["letDecl", "mutDecl", "readonlyDecl"]);
 
 function unlowerableNumericDiag(base: string, location: SourceLocation | undefined): ValueStateDiagnostic {
   return {
-    code: "SPORE-NUMERIC-001",
+    code: "FUNGI-NUMERIC-001",
     name: "UnsupportedNumericWidth",
     severity: "error",
     message: `Scalar '${base}' is a valid Galerina type, but the current WASM backend cannot lower it without silently truncating to 32 bits — a fail-open correctness hazard. 64-bit integers are not yet faithfully emitted, so this is rejected rather than silently narrowed.`,
@@ -2209,7 +2209,7 @@ function scanUnlowerableNumerics(root: AstNode): ValueStateDiagnostic[] {
 
 export function checkValueStates(
   ast: AstNode,
-  // R&D 0093 stage-2: in production/deterministic builds, SPORE-VALUESTATE-008 (the 34B-hole
+  // R&D 0093 stage-2: in production/deterministic builds, FUNGI-VALUESTATE-008 (the 34B-hole
   // boundary-input warning) escalates to an error; dev/check keep it a warning (migration).
   mode: "production" | "development" = "development",
 ): ValueStateCheckResult {
@@ -2220,7 +2220,7 @@ export function checkValueStates(
   const checker = new ValueStateChecker(userGates, userFlows, mode);
   checker.check(ast);
   const result = checker.getResult();
-  // SPORE-NUMERIC-001: fail-closed scan for scalar 64-bit widths the WASM backend would truncate.
+  // FUNGI-NUMERIC-001: fail-closed scan for scalar 64-bit widths the WASM backend would truncate.
   // Always-on (correctness, not a taint rule) — merged into the result the governed runtime +
   // production build already surface as fail-closed errors.
   const numericDiags = scanUnlowerableNumerics(ast);

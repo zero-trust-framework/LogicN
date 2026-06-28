@@ -5,7 +5,7 @@
 ```
 Proposed — Security Rule / Compiler Rule Candidate
 Phase 9B implementation target
-Diagnostic codes: SPORE-SYNTAX-006, SPORE-SYNTAX-007, SPORE-SYNTAX-008
+Diagnostic codes: FUNGI-SYNTAX-006, FUNGI-SYNTAX-007, FUNGI-SYNTAX-008
 ```
 
 ## TL;DR
@@ -22,10 +22,10 @@ Do not allow ordinary bindings or executable logic outside a flow.
 
 ```galerina
 // WRONG
-let foo: Int = 123                         // SPORE-SYNTAX-006
-mut retryCount: Int = 0                    // SPORE-SYNTAX-007
-unsafe let rawEmail: String = request.body.email  // SPORE-SYNTAX-008
-emit PatientCreated                        // SPORE-SYNTAX-009
+let foo: Int = 123                         // FUNGI-SYNTAX-006
+mut retryCount: Int = 0                    // FUNGI-SYNTAX-007
+unsafe let rawEmail: String = request.body.email  // FUNGI-SYNTAX-008
+emit PatientCreated                        // FUNGI-SYNTAX-009
 
 // RIGHT — all of the above belong inside flows
 ```
@@ -109,7 +109,7 @@ const API_VERSION: String = "v1"
 
 ### Ordinary `let`
 ```galerina
-// WRONG — SPORE-SYNTAX-006
+// WRONG — FUNGI-SYNTAX-006
 let count: Int = 0
 
 // RIGHT — belongs inside a flow
@@ -121,7 +121,7 @@ pure flow countItems(items: Array<Item>) -> Int {
 
 ### Mutable `mut`
 ```galerina
-// WRONG — SPORE-SYNTAX-007
+// WRONG — FUNGI-SYNTAX-007
 mut retryCount: Int = 0
 
 // RIGHT — mutable state must be flow-local
@@ -134,7 +134,7 @@ effects [network.outbound] {
 
 ### `unsafe let`
 ```galerina
-// WRONG — SPORE-SYNTAX-008
+// WRONG — FUNGI-SYNTAX-008
 unsafe let rawEmail: String = request.body.email
 
 // RIGHT — boundary data must be owned by a secure flow
@@ -157,7 +157,7 @@ pure flow calculateVat(price: Money<GBP>) -> Money<GBP> {
 
 ### Event emissions
 ```galerina
-// WRONG — SPORE-SYNTAX-009
+// WRONG — FUNGI-SYNTAX-009
 emit PatientCreated
 
 // RIGHT — emit belongs inside a flow
@@ -234,10 +234,10 @@ effects [secret.read] {
 
 | Code | Name | Trigger |
 |---|---|---|
-| `SPORE-SYNTAX-006` | `LET_AT_TOP_LEVEL` | `let name: T = value` outside a flow |
-| `SPORE-SYNTAX-007` | `MUT_AT_TOP_LEVEL` | `mut name: T = value` outside a flow |
-| `SPORE-SYNTAX-008` | `UNSAFE_LET_AT_TOP_LEVEL` | `unsafe let name: T = value` outside a flow |
-| `SPORE-SYNTAX-009` | `EMIT_AT_TOP_LEVEL` | `emit EventName` outside a flow |
+| `FUNGI-SYNTAX-006` | `LET_AT_TOP_LEVEL` | `let name: T = value` outside a flow |
+| `FUNGI-SYNTAX-007` | `MUT_AT_TOP_LEVEL` | `mut name: T = value` outside a flow |
+| `FUNGI-SYNTAX-008` | `UNSAFE_LET_AT_TOP_LEVEL` | `unsafe let name: T = value` outside a flow |
+| `FUNGI-SYNTAX-009` | `EMIT_AT_TOP_LEVEL` | `emit EventName` outside a flow |
 
 ---
 

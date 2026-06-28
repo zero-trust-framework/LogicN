@@ -20,6 +20,6 @@ Default N: 200,000 (Node/Python/Rust/C++), 10,000 (Galerina — runner normalise
 |------|---------|
 | `node.mjs` | Node.js |
 | `python.py` | Python 3 |
-| `benchmark.spore` | Galerina governed/manifest |
+| `benchmark.fungi` | Galerina governed/manifest |
 | `bench.rs` | Rust (compile with `rustc -O`) |
 | `bench.cpp` | C++ (compile with `g++ -O2`) |

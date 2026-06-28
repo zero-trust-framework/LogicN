@@ -529,7 +529,7 @@ ffi-report.json
 ```
 
 If Galerina compiles to Dart or native libraries, debugging must map generated failures
-back to `.spore` source.
+back to `.fungi` source.
 
 Example:
 
@@ -538,13 +538,13 @@ Flutter error:
   generated_login_page.dart:184
 
 Mapped Galerina source:
-  src/pages/login.spore:42
+  src/pages/login.fungi:42
 ```
 
 Required debug output:
 
 ```text
-.spore source maps
+.fungi source maps
 Flutter debug metadata
 compiler warnings
 type reports

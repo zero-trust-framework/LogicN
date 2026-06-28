@@ -10,7 +10,7 @@ import { type ContractEnforcer } from "./runtime/contractEnforcer.js";
 import { type ContractEnforcementRecord } from "./runtime/runtimeReport.js";
 import { type PassiveExecutionPlan, executePlan } from "./runtime/executionPlan.js";
 import { type RuntimeManifest, EffectCheckerFlags } from "./type-registry.js";
-import { SPORE_RUNTIME_006 } from "./security-policy.js";
+import { FUNGI_RUNTIME_006 } from "./security-policy.js";
 import { pureFlowCacheKey, getCachedPureFlow, setCachedPureFlow } from "./pure-flow-cache.js";
 import { activeSinkMonitor } from "./security-sink-monitor.js";
 import { buildExecutionGraph, getOrLoadGraph, storeGraph, executionGraphCacheKey, ExecOp, type ExecutionGraph } from "./execution-graph.js";
@@ -50,8 +50,8 @@ export type GalerinaValue =
   | { readonly __tag: "function";  readonly name: string }
   | { readonly __tag: "error";     readonly message: string };
 
-export const SPORE_VOID: GalerinaValue = { __tag: "void" };
-export const SPORE_NONE: GalerinaValue = { __tag: "none" };
+export const FUNGI_VOID: GalerinaValue = { __tag: "void" };
+export const FUNGI_NONE: GalerinaValue = { __tag: "none" };
 
 // =============================================================================
 // Integer fast path — avoid per-operation object allocation for Int+Int ops
@@ -187,7 +187,7 @@ const BOOL_FALSE: GalerinaValue = { __tag: "bool", value: false };
 const boolVal = (b: boolean): GalerinaValue => b ? BOOL_TRUE : BOOL_FALSE;
 
 /**
- * SPORE-FLOAT-NAN-001 — the fail-closed trap message a non-finite float construction or comparison yields.
+ * FUNGI-FLOAT-NAN-001 — the fail-closed trap message a non-finite float construction or comparison yields.
  * Whitelisted in isCheckedTrap so it PROPAGATES through the enclosing expression (never a silent NaN/Inf).
  */
 const FLOAT_NONFINITE_TRAP = "NonFiniteFloat";
@@ -197,7 +197,7 @@ const FLOAT_NONFINITE_TRAP = "NonFiniteFloat";
  * 1e400 literal) — becomes a fail-closed CHECKED TRAP that propagates (isCheckedTrap) instead of a silent
  * {__tag:"float", value:NaN|Inf}. A silent NaN passes EVERY range guard (IEEE-754: every NaN comparison is
  * false → "in range" for `>upper` AND `<lower` simultaneously) and could be signed into a manifest. Route
- * every float construction through here so a non-finite can never enter the value domain. (SPORE-FLOAT-NAN-001.)
+ * every float construction through here so a non-finite can never enter the value domain. (FUNGI-FLOAT-NAN-001.)
  */
 function mkFloat(n: number): GalerinaValue {
   return Number.isFinite(n) ? { __tag: "float", value: n } : { __tag: "runtimeError", message: FLOAT_NONFINITE_TRAP };
@@ -208,7 +208,7 @@ function mkFloat(n: number): GalerinaValue {
  * misleading boolean. This is the exact range-guard fail-open site — `NaN > limit` is `false`, so a NaN
  * sails through both an upper-bound and a lower-bound deny-guard. Backstops any non-finite that slipped a
  * producer (stdlib math, host conversion) before it reaches a guard. (== / != stay as-is: equality with a
- * NaN tends to fail CLOSED, not open, and is not a range bound.) (SPORE-FLOAT-NAN-001.)
+ * NaN tends to fail CLOSED, not open, and is not a range bound.) (FUNGI-FLOAT-NAN-001.)
  */
 function floatCmp(a: number, b: number, f: (x: number, y: number) => boolean): GalerinaValue {
   return Number.isFinite(a) && Number.isFinite(b)
@@ -265,7 +265,7 @@ export const BINARY_DISPATCH = new Map<number, _DispatchFn>([
   [dispatchKey("int", ">=", "int"),  (a, b) => boolVal((a.value as number) >= (b.value as number))],
   [dispatchKey("int", "==", "int"),  (a, b) => boolVal((a.value as number) === (b.value as number))],
   [dispatchKey("int", "!=", "int"),  (a, b) => boolVal((a.value as number) !== (b.value as number))],
-  // --- Float × Float ---  (mkFloat: a non-finite result TRAPS, never a silent NaN/Inf — SPORE-FLOAT-NAN-001;
+  // --- Float × Float ---  (mkFloat: a non-finite result TRAPS, never a silent NaN/Inf — FUNGI-FLOAT-NAN-001;
   //   floatCmp: a non-finite operand in an ORDERING compare TRAPS, never a guard-passing `false`)
   [dispatchKey("float", "+",  "float"), (a, b) => mkFloat((a.value as number) + (b.value as number))],
   [dispatchKey("float", "-",  "float"), (a, b) => mkFloat((a.value as number) - (b.value as number))],
@@ -309,7 +309,7 @@ export const BINARY_DISPATCH = new Map<number, _DispatchFn>([
   [dispatchKey("bool", "!=", "bool"), (a, b) => boolVal(a.value !== b.value)],
   // --- Int64 × Int64 ---
   // Strict-trapping i64 (Fork A=TRAP) via the checked bigint layer; exact above 2^53, no silent wrap.
-  // Shared source of truth = i64-arith.ts. (Created only once Int64 is lifted from SPORE-NUMERIC-001;
+  // Shared source of truth = i64-arith.ts. (Created only once Int64 is lifted from FUNGI-NUMERIC-001;
   // additive — these keys are unreachable while the gate rejects scalar Int64, so zero regression today.)
   [dispatchKey("int64", "+",  "int64"), (a, b) => i64R(i64AddChecked(a.value as bigint, b.value as bigint))],
   [dispatchKey("int64", "-",  "int64"), (a, b) => i64R(i64SubChecked(a.value as bigint, b.value as bigint))],
@@ -483,9 +483,9 @@ export function fitsTagged(n: number): boolean {
   return n >= MIN_TAGGED && n <= MAX_TAGGED && Number.isInteger(n);
 }
 
-/** SPORE-RUNTIME-005: Attempt to access a governed value from an unauthorized flow. */
-export const SPORE_RUNTIME_005 = {
-  code: "SPORE-RUNTIME-005",
+/** FUNGI-RUNTIME-005: Attempt to access a governed value from an unauthorized flow. */
+export const FUNGI_RUNTIME_005 = {
+  code: "FUNGI-RUNTIME-005",
   name: "UnauthorizedGovernedValueAccess",
   severity: "error" as const,
   message: "Attempt to access a governed value from an unauthorized flow.",
@@ -599,13 +599,13 @@ class SyncInterpreter {
     const paramNodes = (flowNode.children ?? []).filter(c => c.kind === "paramDecl");
     for (const [i, paramNode] of paramNodes.entries()) {
       const paramName = ((paramNode.value ?? "").split(":")[0] ?? "").trim();
-      const argVal = args.get(paramName) ?? args.get(`p${i}`) ?? SPORE_VOID;
+      const argVal = args.get(paramName) ?? args.get(`p${i}`) ?? FUNGI_VOID;
       this.scope.set(paramName, argVal);
     }
 
     // Find and execute the body block
     const body = (flowNode.children ?? []).find(c => c.kind === "block");
-    if (body === undefined) return SPORE_VOID;
+    if (body === undefined) return FUNGI_VOID;
 
     try {
       return this.execBlock(body);
@@ -629,7 +629,7 @@ class SyncInterpreter {
     // Phase-0 perf: the previous `const saved = new Map(this.scope)` snapshot was dead —
     // it copied the whole scope on every block for a restore that never ran (empty finally),
     // an O(scope) allocation per block with no behavioural effect. Removed.
-    let last: GalerinaValue = SPORE_VOID;
+    let last: GalerinaValue = FUNGI_VOID;
     for (const stmt of block.children ?? []) {
       last = this.execStmt(stmt);
     }
@@ -642,26 +642,26 @@ class SyncInterpreter {
       case "mutDecl": {
         const rawName = node.value ?? "";
         const varName = (rawName.split(":")[0] ?? rawName).trim();
-        const init = node.children?.[0] ? this.evalExprS(node.children[0]) : SPORE_VOID;
+        const init = node.children?.[0] ? this.evalExprS(node.children[0]) : FUNGI_VOID;
         this.scope.set(varName, init);
-        return SPORE_VOID;
+        return FUNGI_VOID;
       }
 
       case "assignStmt": {
         const varName = (node.value ?? "").trim();
-        const val = node.children?.[0] ? this.evalExprS(node.children[0]) : SPORE_VOID;
+        const val = node.children?.[0] ? this.evalExprS(node.children[0]) : FUNGI_VOID;
         this.scope.set(varName, val);
-        return SPORE_VOID;
+        return FUNGI_VOID;
       }
 
       case "returnStmt": {
-        const val = node.children?.[0] ? this.evalExprS(node.children[0]) : SPORE_VOID;
+        const val = node.children?.[0] ? this.evalExprS(node.children[0]) : FUNGI_VOID;
         throw new SyncReturn(val);
       }
 
       case "ifStmt": {
         const [condNode, thenBlock, elseBlock] = node.children ?? [];
-        const cond = condNode ? this.evalExprS(condNode) : SPORE_VOID;
+        const cond = condNode ? this.evalExprS(condNode) : FUNGI_VOID;
         const branch = cond.__tag === "bool" ? cond.value : cond.__tag === "int" ? cond.value !== 0 : false;
         // FAIL-CLOSED (2026-06-19): do NOT swallow non-SyncReturn throws here (same bug as whileStmt).
         // SyncReturn propagates naturally to run()'s handler; SyncNotSupported / runtimeErrors must
@@ -676,7 +676,7 @@ class SyncInterpreter {
             this.execBlock(elseBlock);
           }
         }
-        return SPORE_VOID;
+        return FUNGI_VOID;
       }
 
       case "whileStmt": {
@@ -693,12 +693,12 @@ class SyncInterpreter {
           if (iterations++ > this.maxIterations) {
             throw new SyncNotSupported(`while loop exceeded ${this.maxIterations} iterations — defer to the bounded tree-walker`);
           }
-          const cond = condNode ? this.evalExprS(condNode) : SPORE_VOID;
+          const cond = condNode ? this.evalExprS(condNode) : FUNGI_VOID;
           const running = cond.__tag === "bool" ? cond.value : cond.__tag === "int" ? cond.value !== 0 : false;
           if (!running) break;
           if (bodyBlock !== undefined) this.execBlock(bodyBlock);
         }
-        return SPORE_VOID;
+        return FUNGI_VOID;
       }
 
       case "block":
@@ -775,7 +775,7 @@ class SyncInterpreter {
           // A float-involving operand promotes to a FLOAT result via mkFloat (fail-closed on non-finite) —
           // NOT intVal, which silently mis-tagged a float result as int (a sync/async divergence) and let a
           // NaN/Inf through unchecked. (Provably dead today — every float×{int,float} key is in the dispatch
-          // map above — but kept correct as defense-in-depth for a dropped-key regression. SPORE-FLOAT-NAN-001.)
+          // map above — but kept correct as defense-in-depth for a dropped-key regression. FUNGI-FLOAT-NAN-001.)
           switch (op) {
             case "+": return bothInt ? i32R(i32AddChecked(lv, rv)) : mkFloat(lv + rv);
             case "-": return bothInt ? i32R(i32SubChecked(lv, rv)) : mkFloat(lv - rv);
@@ -820,7 +820,7 @@ class SyncInterpreter {
 
       case "block":
         if (node.value === "(expr)") {
-          return node.children?.[0] ? this.evalExprS(node.children[0]) : SPORE_VOID;
+          return node.children?.[0] ? this.evalExprS(node.children[0]) : FUNGI_VOID;
         }
         throw new SyncNotSupported("block as expression");
 
@@ -881,7 +881,7 @@ export interface RuntimeAuditEntry {
 }
 
 export interface ExecutionAuditRecord {
-  readonly schemaVersion: "spore.runtime.audit.v1";
+  readonly schemaVersion: "fungi.runtime.audit.v1";
   readonly flowName: string;
   readonly qualifier: "flow" | "pure" | "guarded" | "secure";
   readonly startedAt: string;
@@ -1115,7 +1115,7 @@ class Interpreter {
         if (raw.startsWith("0b") || raw.startsWith("0B")) return { __tag: "int", value: parseInt(raw.slice(2), 2) };
         if (raw.startsWith("0o") || raw.startsWith("0O")) return { __tag: "int", value: parseInt(raw.slice(2), 8) };
         // float if it has a '.' OR a decimal exponent (`1e400`, `9e9`); mkFloat traps an overflow-to-±Inf
-        // literal. The dotless-exponent case was previously mis-read as int (`9e9` → 9). (SPORE-FLOAT-NAN-001.)
+        // literal. The dotless-exponent case was previously mis-read as int (`9e9` → 9). (FUNGI-FLOAT-NAN-001.)
         return raw.includes(".") || /^\d+[eE][+-]?\d+$/.test(raw)
           ? mkFloat(parseFloat(raw))
           : { __tag: "int", value: parseInt(raw, 10) };
@@ -1192,7 +1192,7 @@ class Interpreter {
                 try {
                   for (const [k, v] of callArgs) this.declare(k, v);
                   const body = [...(innerFn.children ?? [])].reverse().find((c) => c.kind === "block");
-                  return body === undefined ? SPORE_VOID : (await this.executeBlock(body)) ?? SPORE_VOID;
+                  return body === undefined ? FUNGI_VOID : (await this.executeBlock(body)) ?? FUNGI_VOID;
                 } finally { this.popScope(); }
               } finally { this.callDepth -= 1; }
             }
@@ -1227,7 +1227,7 @@ class Interpreter {
       this.flowReturnBase = typeof rt === "string" ? numericBaseType(rt) : "";
     }
 
-    // Step 2A: Check deadline before doing any work — emit SPORE-RUNTIME-006
+    // Step 2A: Check deadline before doing any work — emit FUNGI-RUNTIME-006
     if (this.enforcer !== undefined) {
       try {
         this.enforcer.checkDeadline();
@@ -1235,7 +1235,7 @@ class Interpreter {
         const message = err instanceof Error ? err.message : String(err);
         const diagnosticMessage = `Flow '${flowName}' execution deadline exceeded: ${message}`;
         const value: GalerinaValue = { __tag: "err", error: { __tag: "string", value: diagnosticMessage } };
-        this.diagnostics.push({ code: SPORE_RUNTIME_006.code, message: diagnosticMessage });
+        this.diagnostics.push({ code: FUNGI_RUNTIME_006.code, message: diagnosticMessage });
         return this.buildResult(flowName, qualifier, startedAt, value, diagnosticMessage);
       }
     }
@@ -1243,7 +1243,7 @@ class Interpreter {
     if (flowNode === undefined) {
       const msg = `Flow '${flowName}' not found`;
       const value: GalerinaValue = { __tag: "runtimeError", message: msg };
-      this.diagnostics.push({ code: "SPORE-RUNTIME-002", message: msg });
+      this.diagnostics.push({ code: "FUNGI-RUNTIME-002", message: msg });
       return this.buildResult(flowName, qualifier, startedAt, value, msg);
     }
 
@@ -1280,7 +1280,7 @@ class Interpreter {
         } catch (err: unknown) {
           const message = err instanceof Error ? err.message : String(err);
           const errorMessage = `[Flow '${flowName}'] executePlan failed: ${message}`;
-          this.diagnostics.push({ code: "SPORE-RUNTIME-003", message: errorMessage });
+          this.diagnostics.push({ code: "FUNGI-RUNTIME-003", message: errorMessage });
           const value: GalerinaValue = { __tag: "runtimeError", message: errorMessage };
           return this.buildResult(flowName, qualifier, startedAt, value, errorMessage);
         }
@@ -1311,18 +1311,18 @@ class Interpreter {
     for (const child of flowNode.children ?? []) {
       if (child.kind === "paramDecl") {
         const paramName = extractParamName(child.value ?? "");
-        const argVal = args.get(paramName) ?? SPORE_VOID;
+        const argVal = args.get(paramName) ?? FUNGI_VOID;
         this.declare(paramName, argVal, false, bindingTypeName(child.value ?? ""));
       }
     }
 
-    let returnValue: GalerinaValue = SPORE_VOID;
+    let returnValue: GalerinaValue = FUNGI_VOID;
     let runtimeError: string | undefined;
 
     try {
       for (const child of flowNode.children ?? []) {
         if (child.kind === "block") {
-          returnValue = await this.executeBlock(child) ?? SPORE_VOID;
+          returnValue = await this.executeBlock(child) ?? FUNGI_VOID;
         }
       }
     } catch (error: unknown) {
@@ -1333,7 +1333,7 @@ class Interpreter {
         // Task 2: Include flow name and original error in the message
         const message = `[Flow '${flowName}'] ${causeMessage}`;
         runtimeError = message;
-        this.diagnostics.push({ code: "SPORE-RUNTIME-003", message: `Runtime exception in flow '${flowName}': ${causeMessage}` });
+        this.diagnostics.push({ code: "FUNGI-RUNTIME-003", message: `Runtime exception in flow '${flowName}': ${causeMessage}` });
         returnValue = { __tag: "runtimeError", message };
       }
     } finally {
@@ -1347,7 +1347,7 @@ class Interpreter {
         const durationMs = Date.now() - flowStartMs;
         if (durationMs > requestTimeLimitMs) {
           this.diagnostics.push({
-            code: SPORE_RUNTIME_006.code,
+            code: FUNGI_RUNTIME_006.code,
             message: `Flow '${flowName}' exceeded request_time limit of ${requestTimeLimitMs}ms (actual: ${durationMs}ms)`,
           });
         }
@@ -1357,20 +1357,20 @@ class Interpreter {
     // R6A: If manifest.requiresAudit === true, enforce that AuditLog.write was called
     if (this.manifest !== undefined && this.manifest.verified && this.manifest.requiresAudit && !this.auditWriteCalled) {
       this.diagnostics.push({
-        code: "SPORE-RUNTIME-007",
+        code: "FUNGI-RUNTIME-007",
         message: `Flow '${flowName}' is governed by a manifest that requires an audit entry, but AuditLog.write was not called.`,
       });
     }
 
     // 0040/#70: output post-conditions — evaluate `invariant { ensure result … }` against the
-    // computed return value at the single flow exit. A violation FAILS CLOSED (SPORE-INV-002): the
+    // computed return value at the single flow exit. A violation FAILS CLOSED (FUNGI-INV-002): the
     // result never escapes — the same fail-closed posture as the i32 trap (Fork-A) / 0038. Runs
     // only on the success path (a runtimeError already short-circuits to a closed result).
     if (runtimeError === undefined && !isRuntimeError(returnValue) && flowNode !== undefined) {
       const violation = await this.checkOutputPostconditions(flowNode, flowName, args, returnValue);
       if (violation !== undefined) {
         runtimeError = violation;
-        this.diagnostics.push({ code: "SPORE-INV-002", message: violation });
+        this.diagnostics.push({ code: "FUNGI-INV-002", message: violation });
         returnValue = { __tag: "runtimeError", message: violation };
       }
     }
@@ -1396,7 +1396,7 @@ class Interpreter {
           }
         : {};
     const audit: ExecutionAuditRecord = {
-      schemaVersion: "spore.runtime.audit.v1",
+      schemaVersion: "fungi.runtime.audit.v1",
       flowName,
       qualifier,
       startedAt,
@@ -1440,7 +1440,7 @@ class Interpreter {
     // only an explicit `return` or a tail `match` yields a value) cannot be checked. Replace the MISLEADING
     // "violated post-condition" (which falsely blamed the predicate) with a clear pointer to the missing return.
     if (result.__tag === "void") {
-      return `[Flow '${flowName}'] declares an output post-condition ('ensure ${describeEnsureExpr(ensures[0]!)}') but produced NO return value — add an explicit \`return <expr>\` (a bare tail expression / tail \`if\` is not returned). Fail-closed (SPORE-INV-002).`;
+      return `[Flow '${flowName}'] declares an output post-condition ('ensure ${describeEnsureExpr(ensures[0]!)}') but produced NO return value — add an explicit \`return <expr>\` (a bare tail expression / tail \`if\` is not returned). Fail-closed (FUNGI-INV-002).`;
     }
     this.pushScope();
     try {
@@ -1451,13 +1451,13 @@ class Interpreter {
         try {
           val = await this.evalExpr(expr);
         } catch {
-          return `[Flow '${flowName}'] output post-condition 'ensure ${describeEnsureExpr(expr)}' could not be evaluated — fail-closed (SPORE-INV-002).`;
+          return `[Flow '${flowName}'] output post-condition 'ensure ${describeEnsureExpr(expr)}' could not be evaluated — fail-closed (FUNGI-INV-002).`;
         }
         const holds =
           (val.__tag === "bool" && val.value === true) ||
           (val.__tag === "int" && val.value !== 0);
         if (!holds) {
-          return `[Flow '${flowName}'] violated output post-condition 'ensure ${describeEnsureExpr(expr)}' — fail-closed (SPORE-INV-002).`;
+          return `[Flow '${flowName}'] violated output post-condition 'ensure ${describeEnsureExpr(expr)}' — fail-closed (FUNGI-INV-002).`;
         }
       }
       return undefined;
@@ -1558,7 +1558,7 @@ class Interpreter {
       }
       if (initNode !== undefined) return this.evalExprAsUInt64(initNode);
     }
-    const v = initNode !== undefined ? await this.evalExpr(initNode) : SPORE_VOID;
+    const v = initNode !== undefined ? await this.evalExpr(initNode) : FUNGI_VOID;
     return isCheckedTrap(v) ? v : coerceToDeclaredNumeric(declBase, v, initNode);
   }
 
@@ -1678,7 +1678,7 @@ class Interpreter {
 
       case "returnStmt": {
         const retExpr = node.children?.[0];
-        if (retExpr === undefined) return SPORE_VOID;
+        if (retExpr === undefined) return FUNGI_VOID;
         // Step 3g: a bare `return <expr>` in an Int64 flow evaluates in an Int64 context (i64 type-directed),
         // so a large literal / int-product return is exact, matching the emitter's return-base threading.
         return this.flowReturnBase === "Int64" ? await this.evalExprAsInt64(retExpr)
@@ -1727,7 +1727,7 @@ class Interpreter {
         if (isCheckedTrap(newValue)) return newValue; // 0038 fail-closed: don't assign + discard a checked trap
         if (!this.assign(targetName, newValue)) {
           this.diagnostics.push({
-            code: "SPORE-RUNTIME-004",
+            code: "FUNGI-RUNTIME-004",
             message: `Cannot assign to undeclared binding '${targetName}'`,
           });
         }
@@ -1750,7 +1750,7 @@ class Interpreter {
             throw new Error(`Loop exceeded maximum iteration count (${MAX_ITERATIONS}) — fail-closed`);
           }
           // 0032 fix: bound CPU-only loops by the wall-clock deadline too (was only checked at capability
-          // calls). checkDeadline() throws [SPORE-TIMEOUT] when exceeded → runFlow's catch fails closed.
+          // calls). checkDeadline() throws [FUNGI-TIMEOUT] when exceeded → runFlow's catch fails closed.
           this.enforcer?.checkDeadline();
           const cond = await this.evalExpr(conditionNode);
           // Same truthy check as ifStmt: bool, non-zero int, some, ok
@@ -1828,10 +1828,10 @@ class Interpreter {
     switch (node.kind) {
       // Phase 41: returnStmt inside match arm bodies — `match x { _ => return "found" }`
       // evalExpr is called from evalMatch for arm bodies. returnStmt needs to
-      // return its inner value rather than falling to default:SPORE_VOID.
+      // return its inner value rather than falling to default:FUNGI_VOID.
       case "returnStmt": {
         const retExpr = node.children?.[0];
-        if (retExpr === undefined) return SPORE_VOID;
+        if (retExpr === undefined) return FUNGI_VOID;
         // Step 3g: a bare `return <expr>` in an Int64 flow evaluates in an Int64 context (i64 type-directed),
         // so a large literal / int-product return is exact, matching the emitter's return-base threading.
         return this.flowReturnBase === "Int64" ? await this.evalExprAsInt64(retExpr)
@@ -1850,7 +1850,7 @@ class Interpreter {
         if (raw.startsWith("0b") || raw.startsWith("0B")) return { __tag: "int", value: parseInt(raw.slice(2), 2) };
         if (raw.startsWith("0o") || raw.startsWith("0O")) return { __tag: "int", value: parseInt(raw.slice(2), 8) };
         // float if it has a '.' OR a decimal exponent (`1e400`, `9e9`); mkFloat traps an overflow-to-±Inf
-        // literal. The dotless-exponent case was previously mis-read as int (`9e9` → 9). (SPORE-FLOAT-NAN-001.)
+        // literal. The dotless-exponent case was previously mis-read as int (`9e9` → 9). (FUNGI-FLOAT-NAN-001.)
         return raw.includes(".") || /^\d+[eE][+-]?\d+$/.test(raw)
           ? mkFloat(parseFloat(raw))
           : { __tag: "int", value: parseInt(raw, 10) };
@@ -1883,7 +1883,7 @@ class Interpreter {
           }
         }
         const name = node.value ?? "";
-        if (name === "None") return SPORE_NONE;
+        if (name === "None") return FUNGI_NONE;
         if (name === "true") return { __tag: "bool", value: true };
         if (name === "false") return { __tag: "bool", value: false };
         if (name === "Ok" || name === "Err" || name === "Some") return { __tag: "unresolved", name };
@@ -1893,7 +1893,7 @@ class Interpreter {
         }
         const entry = this.lookup(name);
         if (entry !== undefined) {
-          // R4C: SPORE-RUNTIME-005 — check governed value cross-flow access
+          // R4C: FUNGI-RUNTIME-005 — check governed value cross-flow access
           const governedSourceFlow = this.governedBindingSource.get(name);
           if (
             governedSourceFlow !== undefined &&
@@ -1902,8 +1902,8 @@ class Interpreter {
             (entry.value.__tag === "protected" || entry.value.__tag === "redacted")
           ) {
             this.diagnostics.push({
-              code: SPORE_RUNTIME_005.code,
-              message: `${SPORE_RUNTIME_005.message} Binding '${name}' was created in flow '${governedSourceFlow}' but accessed from '${this.currentFlowName}'.`,
+              code: FUNGI_RUNTIME_005.code,
+              message: `${FUNGI_RUNTIME_005.message} Binding '${name}' was created in flow '${governedSourceFlow}' but accessed from '${this.currentFlowName}'.`,
             });
           }
           return entry.value;
@@ -1920,13 +1920,13 @@ class Interpreter {
       case "binaryExpr": {
         const leftNode = node.children?.[0];
         const rightNode = node.children?.[1];
-        if (leftNode === undefined || rightNode === undefined) return SPORE_VOID;
+        if (leftNode === undefined || rightNode === undefined) return FUNGI_VOID;
         return await this.evalBinary(node.value ?? "", leftNode, rightNode);
       }
 
       case "unaryExpr": {
         const operandNode = node.children?.[0];
-        if (operandNode === undefined) return SPORE_VOID;
+        if (operandNode === undefined) return FUNGI_VOID;
         const operand = await this.evalExpr(operandNode);
         const op = node.value ?? "";
         if (op === "!" && operand.__tag === "bool") return { __tag: "bool", value: !operand.value };
@@ -1943,7 +1943,7 @@ class Interpreter {
 
       case "errorPropagation": {
         const inner = node.children?.[0];
-        if (inner === undefined) return SPORE_VOID;
+        if (inner === undefined) return FUNGI_VOID;
         const val = await this.evalExpr(inner);
         if (val.__tag === "err") throw new EarlyReturn(val);
         if (val.__tag === "ok") return val.value;
@@ -1962,12 +1962,12 @@ class Interpreter {
       case "block":
         if (node.value === "(expr)") {
           const expr = node.children?.[0];
-          return expr === undefined ? SPORE_VOID : await this.evalExpr(expr);
+          return expr === undefined ? FUNGI_VOID : await this.evalExpr(expr);
         }
-        return await this.executeBlock(node) ?? SPORE_VOID;
+        return await this.executeBlock(node) ?? FUNGI_VOID;
 
       default:
-        return SPORE_VOID;
+        return FUNGI_VOID;
     }
   }
 
@@ -2006,7 +2006,7 @@ class Interpreter {
     if ((left.__tag === "int" || left.__tag === "float") && (right.__tag === "int" || right.__tag === "float")) {
       const resultTag = left.__tag === "float" || right.__tag === "float" ? "float" : "int";
       // A float result routes through mkFloat (fail-closed on non-finite — never a silent NaN/Inf that would
-      // pass a range guard or be signed). The int branch is unchanged. (SPORE-FLOAT-NAN-001.)
+      // pass a range guard or be signed). The int branch is unchanged. (FUNGI-FLOAT-NAN-001.)
       switch (op) {
         case "+": return resultTag === "float" ? mkFloat(left.value + right.value) : { __tag: "int", value: left.value + right.value };
         case "-": return resultTag === "float" ? mkFloat(left.value - right.value) : { __tag: "int", value: left.value - right.value };
@@ -2031,7 +2031,7 @@ class Interpreter {
       const l = left.value;
       const r = right.__tag === "int" || right.__tag === "float" ? right.value : 0;
       // A float-involving ordering compare routes through floatCmp (a non-finite operand TRAPS, never a
-      // guard-passing `false`). Int-only compares stay exact. (SPORE-FLOAT-NAN-001.)
+      // guard-passing `false`). Int-only compares stay exact. (FUNGI-FLOAT-NAN-001.)
       const anyFloat = left.__tag === "float" || right.__tag === "float";
       switch (op) {
         case "<":  return anyFloat ? floatCmp(l, r, (x, y) => x <  y) : boolVal(l <  r);
@@ -2150,7 +2150,7 @@ class Interpreter {
             this.enforcer.checkDeadline();
           } catch (err: unknown) {
             const message = err instanceof Error ? err.message : String(err);
-            this.diagnostics.push({ code: SPORE_RUNTIME_006.code, message });
+            this.diagnostics.push({ code: FUNGI_RUNTIME_006.code, message });
             return { __tag: "err", error: { __tag: "string", value: `Flow deadline exceeded before '${capEffect}': ${message}` } };
           }
         }
@@ -2164,7 +2164,7 @@ class Interpreter {
             context: this.getContext(),
           },
           async (capArgs) =>
-            (await callStdlib(fullName, evaluatedReceiver, capArgs, stdlibCtx)) ?? SPORE_VOID,
+            (await callStdlib(fullName, evaluatedReceiver, capArgs, stdlibCtx)) ?? FUNGI_VOID,
         );
         return result.value;
       }
@@ -2187,13 +2187,13 @@ class Interpreter {
     }
 
     if (fullName.startsWith("validate.") || fullName.startsWith("sanitize.") || fullName.startsWith("parse.")) {
-      const raw = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_VOID;
+      const raw = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       const baseName = fullName.split(".").slice(1).join(".");
       return { __tag: "ok", value: { __tag: "protected", baseType: titleCase(baseName), value: raw } };
     }
 
     if (fullName.startsWith("json.decode") || fullName.startsWith("toml.decode")) {
-      const raw = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_VOID;
+      const raw = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       if (raw.__tag === "string") {
         try {
           return { __tag: "ok", value: jsObjectToGalerina(JSON.parse(raw.value)) };
@@ -2205,13 +2205,13 @@ class Interpreter {
     }
 
     if (methodName === "redact" || fullName === "redact") {
-      const raw = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_VOID;
+      const raw = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       return { __tag: "redacted", baseType: raw.__tag === "protected" ? raw.baseType : "Unknown" };
     }
 
     if (methodName === "constantTimeEquals" || fullName === "constantTimeEquals") {
-      const a = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_NONE;
-      const b = args[1] !== undefined ? await this.evalExpr(args[1]) : SPORE_NONE;
+      const a = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_NONE;
+      const b = args[1] !== undefined ? await this.evalExpr(args[1]) : FUNGI_NONE;
       // H7: route the compiler-recommended secret-equality path through the real constant-time
       // comparison, not the short-circuiting `===` it used to use (timing side-channel).
       return { __tag: "bool", value: constantTimeStringEquals(secureComparable(a), secureComparable(b)) };
@@ -2235,7 +2235,7 @@ class Interpreter {
             // R6C: attach manifest.flow and manifest.governanceFlagsMask when available
             const enrichedEntry = this.enrichAuditEntryWithManifest(entry);
             this.auditEntries.push(enrichedEntry);
-            return SPORE_VOID;
+            return FUNGI_VOID;
           },
         );
         return result.value;
@@ -2245,13 +2245,13 @@ class Interpreter {
       // R6C: attach manifest.flow and manifest.governanceFlagsMask when available
       const enrichedEntry = this.enrichAuditEntryWithManifest(entry);
       this.auditEntries.push(enrichedEntry);
-      return SPORE_VOID;
+      return FUNGI_VOID;
     }
 
     if (methodName === "print" || fullName.startsWith("log.") || fullName.startsWith("console.")) {
-      const arg = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_VOID;
+      const arg = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       console.log(safeDisplay(arg));
-      return SPORE_VOID;
+      return FUNGI_VOID;
     }
 
     if (methodName === "format" || fullName === "format") {
@@ -2265,34 +2265,34 @@ class Interpreter {
 
     // Response helpers
     if (fullName === "Response.ok" || (receiverName === "Response" && methodName === "ok")) {
-      const data = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_VOID;
+      const data = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       return makeResponseValue(200, data);
     }
     if (fullName === "Response.created" || (receiverName === "Response" && methodName === "created")) {
-      const id = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_VOID;
+      const id = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       return makeResponseValue(201, id);
     }
     if (fullName === "Response.accepted" || (receiverName === "Response" && methodName === "accepted")) {
-      return makeResponseValue(202, SPORE_VOID);
+      return makeResponseValue(202, FUNGI_VOID);
     }
     if (fullName === "Response.noContent" || (receiverName === "Response" && methodName === "noContent")) {
-      return makeResponseValue(204, SPORE_VOID);
+      return makeResponseValue(204, FUNGI_VOID);
     }
     if (fullName === "Response.redirect" || (receiverName === "Response" && methodName === "redirect")) {
-      const url = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_VOID;
+      const url = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       return makeResponseValue(302, url);
     }
 
     // ── security::interim — BoundaryProxy (task #52) ─────────────────────────
     // Implements the pre-DRCM cross-boundary validation proxy.
-    // The .spore canonical spec lives in packages-galerina/galerina-core-security/src/interim.spore.
+    // The .fungi canonical spec lives in packages-galerina/galerina-core-security/src/interim.fungi.
     // This TypeScript bridge runs it until Stage B fully self-hosts the security module.
     //
     // pre_flight_check(caller: String, target: String, payload_size_bytes: Int) -> ValidationReceipt
     if (fullName === "security.interim.pre_flight_check") {
       const callerArg  = args[0] !== undefined ? safeDisplay(await this.evalExpr(args[0])) : "";
       const targetArg  = args[1] !== undefined ? safeDisplay(await this.evalExpr(args[1])) : "";
-      const sizeArg    = args[2] !== undefined ? await this.evalExpr(args[2]) : SPORE_VOID;
+      const sizeArg    = args[2] !== undefined ? await this.evalExpr(args[2]) : FUNGI_VOID;
       const sizeBytes  = sizeArg.__tag === "int" ? sizeArg.value : 0;
       const MAX_BYTES  = 4194304; // 4MB DWI ceiling
 
@@ -2332,7 +2332,7 @@ class Interpreter {
 
     // post_flight_cleanup(receipt: ValidationReceipt) -> Void
     if (fullName === "security.interim.post_flight_cleanup") {
-      const receiptArg = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_VOID;
+      const receiptArg = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       if (receiptArg.__tag === "record") {
         const trackingId = receiptArg.fields.get("tracking_id");
         const faultCode  = receiptArg.fields.get("fault_code");
@@ -2343,7 +2343,7 @@ class Interpreter {
         };
         this.auditEntries.push(entry as never);
       }
-      return SPORE_VOID;
+      return FUNGI_VOID;
     }
 
     // sink_monitor::scan(payload: String) -> SinkScanResult
@@ -2364,19 +2364,19 @@ class Interpreter {
 
     // ApiError helpers
     if (fullName === "ApiError.notFound" || (receiverName === "ApiError" && methodName === "notFound")) {
-      const msg = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_VOID;
+      const msg = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       return makeApiErrorValue(404, safeDisplay(msg));
     }
     if (fullName === "ApiError.badRequest" || (receiverName === "ApiError" && methodName === "badRequest")) {
-      const msg = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_VOID;
+      const msg = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       return makeApiErrorValue(400, safeDisplay(msg));
     }
     if (fullName === "ApiError.internal" || (receiverName === "ApiError" && methodName === "internal")) {
-      const msg = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_VOID;
+      const msg = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       return makeApiErrorValue(500, safeDisplay(msg));
     }
     if (fullName === "ApiError.unauthorized" || (receiverName === "ApiError" && methodName === "unauthorized")) {
-      const msg = args[0] !== undefined ? await this.evalExpr(args[0]) : SPORE_VOID;
+      const msg = args[0] !== undefined ? await this.evalExpr(args[0]) : FUNGI_VOID;
       return makeApiErrorValue(401, safeDisplay(msg));
     }
 
@@ -2414,7 +2414,7 @@ class Interpreter {
       return this.evalMethodCall(evaluatedReceiver ?? await this.evalExpr(receiver), methodName, evaluatedArgs);
     }
 
-    this.diagnostics.push({ code: "SPORE-RUNTIME-002", message: `Unresolved call: '${fullName}'` });
+    this.diagnostics.push({ code: "FUNGI-RUNTIME-002", message: `Unresolved call: '${fullName}'` });
     return { __tag: "runtimeError", message: `Unresolved call: '${fullName}'` };
   }
 
@@ -2428,9 +2428,9 @@ class Interpreter {
         // #170: count by CODE POINT to match stdlib.ts (String.length/charCount use [...s])
         // and the WASM host (__str_count/__str_length). ASCII is unaffected.
         case "charCount": return { __tag: "int", value: [...receiver.value].length };
-        case "startsWith": return { __tag: "bool", value: receiver.value.startsWith(safeDisplay(args[0] ?? SPORE_VOID)) };
-        case "endsWith": return { __tag: "bool", value: receiver.value.endsWith(safeDisplay(args[0] ?? SPORE_VOID)) };
-        case "contains": return { __tag: "bool", value: receiver.value.includes(safeDisplay(args[0] ?? SPORE_VOID)) };
+        case "startsWith": return { __tag: "bool", value: receiver.value.startsWith(safeDisplay(args[0] ?? FUNGI_VOID)) };
+        case "endsWith": return { __tag: "bool", value: receiver.value.endsWith(safeDisplay(args[0] ?? FUNGI_VOID)) };
+        case "contains": return { __tag: "bool", value: receiver.value.includes(safeDisplay(args[0] ?? FUNGI_VOID)) };
         case "toString": return receiver;
       }
     }
@@ -2483,16 +2483,16 @@ class Interpreter {
         case "length": return { __tag: "int", value: receiver.items.length };
         case "count":  return { __tag: "int", value: receiver.items.length };
         case "isEmpty": return { __tag: "bool", value: receiver.items.length === 0 };
-        case "first": return receiver.items.length > 0 ? { __tag: "some", value: receiver.items[0] ?? SPORE_VOID } : SPORE_NONE;
-        case "last": return receiver.items.length > 0 ? { __tag: "some", value: receiver.items[receiver.items.length - 1] ?? SPORE_VOID } : SPORE_NONE;
+        case "first": return receiver.items.length > 0 ? { __tag: "some", value: receiver.items[0] ?? FUNGI_VOID } : FUNGI_NONE;
+        case "last": return receiver.items.length > 0 ? { __tag: "some", value: receiver.items[receiver.items.length - 1] ?? FUNGI_VOID } : FUNGI_NONE;
         case "append": {
-          const elem = args[0] ?? SPORE_VOID;
+          const elem = args[0] ?? FUNGI_VOID;
           return { __tag: "list", items: [...receiver.items, elem] };
         }
         case "get": {
           const idx = (args[0] as { __tag: "int"; value: number } | undefined)?.value ?? 0;
           const item = receiver.items[idx];
-          return item !== undefined ? { __tag: "some", value: item } : SPORE_NONE;
+          return item !== undefined ? { __tag: "some", value: item } : FUNGI_NONE;
         }
         case "toStr":
         case "toString": return { __tag: "string", value: `[${receiver.items.map((it) => safeDisplay(it)).join(", ")}]` };
@@ -2520,7 +2520,7 @@ class Interpreter {
 
   private async evalMatch(node: AstNode): Promise<GalerinaValue> {
     const subject = node.children?.[0];
-    if (subject === undefined) return SPORE_VOID;
+    if (subject === undefined) return FUNGI_VOID;
     const subjectVal = await this.evalExpr(subject);
     const arms = (node.children ?? []).slice(1);
 
@@ -2569,19 +2569,19 @@ class Interpreter {
           }
         }
         const body = [...children].reverse().find((child) => child.kind !== "identifier");
-        return body === undefined ? SPORE_VOID : await this.evalExpr(body);
+        return body === undefined ? FUNGI_VOID : await this.evalExpr(body);
       } finally {
         this.popScope();
       }
     }
 
-    return SPORE_VOID;
+    return FUNGI_VOID;
   }
 
   private async evalMember(node: AstNode): Promise<GalerinaValue> {
     const receiver = node.children?.[0];
     const memberName = node.value ?? "";
-    if (receiver === undefined) return SPORE_VOID;
+    if (receiver === undefined) return FUNGI_VOID;
     // Check if this is a bitfield dotted access: REGISTER.field
     // e.g. V_DPM.network_outbound → look up "V_DPM.network_outbound" in staticConstants
     if (receiver.kind === "identifier") {
@@ -2607,7 +2607,7 @@ class Interpreter {
 
   private seedPrelude(): void {
     const prelude: Record<string, GalerinaValue> = {
-      None: SPORE_NONE,
+      None: FUNGI_NONE,
       true: { __tag: "bool", value: true },
       false: { __tag: "bool", value: false },
     };
@@ -2637,12 +2637,12 @@ class Interpreter {
           const paramName = extractParamName(param.value ?? "");
           if (paramName !== "") {
             const argNode = argNodes[index];
-            this.declare(paramName, argNode === undefined ? SPORE_VOID : await this.evalExpr(argNode));
+            this.declare(paramName, argNode === undefined ? FUNGI_VOID : await this.evalExpr(argNode));
           }
         }
 
         const body = [...(fn.children ?? [])].reverse().find((child) => child.kind === "block");
-        return body === undefined ? SPORE_VOID : await this.executeBlock(body) ?? SPORE_VOID;
+        return body === undefined ? FUNGI_VOID : await this.executeBlock(body) ?? FUNGI_VOID;
       } finally {
         this.popScope();
       }
@@ -2813,7 +2813,7 @@ function safeStringify(value: GalerinaValue): string {
 }
 
 function jsObjectToGalerina(obj: unknown): GalerinaValue {
-  if (obj === null || obj === undefined) return SPORE_NONE;
+  if (obj === null || obj === undefined) return FUNGI_NONE;
   if (typeof obj === "string") return { __tag: "string", value: obj };
   if (typeof obj === "number") return Number.isInteger(obj) ? { __tag: "int", value: obj } : { __tag: "float", value: obj };
   if (typeof obj === "boolean") return { __tag: "bool", value: obj };
@@ -2962,7 +2962,7 @@ function isCheckedTrap(value: GalerinaValue): boolean {
   // The liveness traps are THROWN, then a nested flow's runFlow catch wraps them as a value with a
   // "[Flow 'name'] " prefix — so match by substring, not prefix.
   return m === "IntegerOverflow" || m === "DivisionByZero" ||
-    m === FLOAT_NONFINITE_TRAP ||                      // non-finite float (NaN/±Inf) — SPORE-FLOAT-NAN-001
+    m === FLOAT_NONFINITE_TRAP ||                      // non-finite float (NaN/±Inf) — FUNGI-FLOAT-NAN-001
     m.includes("Compute budget exceeded") ||         // global compute-step cap (maxSteps)
     m.includes("Loop exceeded maximum iteration") ||  // per-loop cap (maxIterations)
     m.includes("Recursion depth exceeded");           // call-depth cap (maxCallDepth)
@@ -3275,7 +3275,7 @@ export function executeFlowSync(
  * the AST tree-walker does in evalExpr's stringLiteral case.
  */
 function makeGalerinaValue(raw: string | number | boolean | null): GalerinaValue {
-  if (raw === null) return SPORE_NONE;
+  if (raw === null) return FUNGI_NONE;
   if (typeof raw === "boolean") return raw ? { __tag: "bool", value: true } : { __tag: "bool", value: false };
   if (typeof raw === "number") return Number.isInteger(raw) ? intVal(raw) : { __tag: "float", value: raw };
   // Strip surrounding double-quotes from string literals stored in the constant pool
@@ -3295,7 +3295,7 @@ function makeGalerinaValue(raw: string | number | boolean | null): GalerinaValue
  * Phase 29B NaN-boxing — active for hot paths (ExecutionGraph register VM).
  */
 function runFromGraph(graph: ExecutionGraph, args: ReadonlyMap<string, GalerinaValue>): GalerinaValue | null {
-  const slots = new Array<GalerinaValue>(graph.slotCount).fill(SPORE_VOID);
+  const slots = new Array<GalerinaValue>(graph.slotCount).fill(FUNGI_VOID);
 
   // Load params from args into slots
   for (const [name, slot] of graph.slotNames) {
@@ -3315,22 +3315,22 @@ function runFromGraph(graph: ExecutionGraph, args: ReadonlyMap<string, GalerinaV
         break;
       }
       case ExecOp.LOAD_SLOT:
-        slots[node.dest] = slots[node.src1] ?? SPORE_VOID;
+        slots[node.dest] = slots[node.src1] ?? FUNGI_VOID;
         break;
       case ExecOp.STORE_SLOT:
-        slots[node.imm] = slots[node.src1] ?? SPORE_VOID;
+        slots[node.imm] = slots[node.src1] ?? FUNGI_VOID;
         break;
       case ExecOp.BINOP: {
-        const l = slots[node.src1] ?? SPORE_VOID;
-        const r = slots[node.src2] ?? SPORE_VOID;
+        const l = slots[node.src1] ?? FUNGI_VOID;
+        const r = slots[node.src2] ?? FUNGI_VOID;
         const fn = BINARY_DISPATCH.get(dispatchKey(l.__tag, node.opName, r.__tag));
-        slots[node.dest] = fn !== undefined ? fn(l, r) : SPORE_VOID;
+        slots[node.dest] = fn !== undefined ? fn(l, r) : FUNGI_VOID;
         break;
       }
       case ExecOp.RETURN:
-        return slots[node.src1] ?? SPORE_VOID;
+        return slots[node.src1] ?? FUNGI_VOID;
       case ExecOp.RETURN_VOID:
-        return SPORE_VOID;
+        return FUNGI_VOID;
       case ExecOp.NOP:
         // Unhandled node kind — signal caller to fall back to tree-walker
         return null;
@@ -3341,7 +3341,7 @@ function runFromGraph(graph: ExecutionGraph, args: ReadonlyMap<string, GalerinaV
     ip++;
   }
 
-  return SPORE_VOID;
+  return FUNGI_VOID;
 }
 
 export async function executeFlow(
@@ -3393,7 +3393,7 @@ export async function executeFlow(
         executionTier: "cache" as const,     // Phase 33A telemetry
         fallbackReason: "cache-hit" as const,
         audit: {
-          schemaVersion: "spore.runtime.audit.v1",
+          schemaVersion: "fungi.runtime.audit.v1",
           flowName,
           qualifier: "pure",
           startedAt: now,
@@ -3440,7 +3440,7 @@ export async function executeFlow(
             diagnostics: [],
             executionTier: "bytecode" as const,
             audit: {
-              schemaVersion: "spore.runtime.audit.v1" as const,
+              schemaVersion: "fungi.runtime.audit.v1" as const,
               flowName,
               qualifier: "pure" as const,
               startedAt: now,
@@ -3459,7 +3459,7 @@ export async function executeFlow(
           diagnostics: [],
           executionTier: "bytecode" as const,   // Phase 33A telemetry
           audit: {
-            schemaVersion: "spore.runtime.audit.v1" as const,
+            schemaVersion: "fungi.runtime.audit.v1" as const,
             flowName,
             qualifier: "pure" as const,
             startedAt: now,
@@ -3491,7 +3491,7 @@ export async function executeFlow(
         executionTier: "sync" as const,         // Phase 33A telemetry
         fallbackReason: "non-integer-args" as const, // bytecode rejected (non-int)
         audit: {
-          schemaVersion: "spore.runtime.audit.v1" as const,
+          schemaVersion: "fungi.runtime.audit.v1" as const,
           flowName,
           qualifier: "pure" as const,
           startedAt: now,
@@ -3570,7 +3570,7 @@ export async function executeFlow(
             diagnostics: [],
             executionTier: "egraph" as const,   // Phase 33A telemetry
             audit: {
-              schemaVersion: "spore.runtime.audit.v1",
+              schemaVersion: "fungi.runtime.audit.v1",
               flowName,
               qualifier: "pure",
               startedAt: now,

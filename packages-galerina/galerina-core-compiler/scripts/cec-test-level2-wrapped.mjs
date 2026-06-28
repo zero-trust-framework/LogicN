@@ -1,7 +1,7 @@
 import { parseProgram, resolveSymbols, checkTypes, checkValueStates, checkEffects, effectResultsToDiagnostics, verifyGovernance, checkEvents } from "../dist/index.js";
 
 function run(src) {
-  const parsed = parseProgram(src, "test.spore");
+  const parsed = parseProgram(src, "test.fungi");
   const sr = resolveSymbols(parsed.ast);
   const tr = checkTypes(parsed.ast);
   const vr = checkValueStates(parsed.ast);
@@ -12,57 +12,57 @@ function run(src) {
 }
 
 const tests = [
-  { name: "060-invalid-email-assignment", expected: "SPORE-TYPE-002",
+  { name: "060-invalid-email-assignment", expected: "FUNGI-TYPE-002",
     src: `type Email = Brand<String, EmailTag>
 pure flow example(rawEmail: String) -> Void {
   let email: protected Email = rawEmail
 }` },
-  { name: "062-invalid-redacted-email", expected: "SPORE-TYPE-002",
+  { name: "062-invalid-redacted-email", expected: "FUNGI-TYPE-002",
     src: `type Email = Brand<String, EmailTag>
 pure flow example(email: protected Email) -> Void {
   let auditEmail: redacted Email = email
 }` },
-  { name: "065-option-invalid-arity", expected: "SPORE-TYPE-009",
+  { name: "065-option-invalid-arity", expected: "FUNGI-TYPE-009",
     src: `pure flow example() -> Void {
   let user: Option<User, Error> = None
 }` },
-  { name: "068-result-invalid-arity", expected: "SPORE-TYPE-009",
+  { name: "068-result-invalid-arity", expected: "FUNGI-TYPE-009",
     src: `pure flow example() -> Void {
   let result: Result<User> = Ok(None)
 }` },
-  { name: "070-auto-invalid", expected: "SPORE-TYPE-002",
+  { name: "070-auto-invalid", expected: "FUNGI-TYPE-002",
     src: `pure flow example() -> Void {
   let count: Auto
 }` },
-  { name: "073-money-cross-currency-invalid", expected: "SPORE-TYPE-004",
+  { name: "073-money-cross-currency-invalid", expected: "FUNGI-TYPE-004",
     src: `pure flow example(gbp: Money<GBP>, usd: Money<USD>) -> Void {
   let total = gbp + usd
 }` },
-  { name: "076-money-times-money-invalid", expected: "SPORE-TYPE-004",
+  { name: "076-money-times-money-invalid", expected: "FUNGI-TYPE-004",
     src: `pure flow example(price: Money<GBP>, vat: Money<GBP>) -> Void {
   let result = price * vat
 }` },
-  { name: "078-money-ratio-cross-currency-invalid", expected: "SPORE-TYPE-004",
+  { name: "078-money-ratio-cross-currency-invalid", expected: "FUNGI-TYPE-004",
     src: `pure flow example(revenue: Money<GBP>, usdRevenue: Money<USD>) -> Void {
   let ratio = revenue / usdRevenue
 }` },
-  { name: "081-tensor-invalid-arity", expected: "SPORE-TYPE-009",
+  { name: "081-tensor-invalid-arity", expected: "FUNGI-TYPE-009",
     src: `pure flow example() -> Void {
   let embedding: Tensor<Float32> = None
 }` },
-  { name: "083-readonly-view-invalid", expected: "SPORE-TYPE-009",
+  { name: "083-readonly-view-invalid", expected: "FUNGI-TYPE-009",
     src: `pure flow example() -> Void {
   let users: ReadOnlyView<User, Config> = None
 }` },
-  { name: "084-unknown-type", expected: "SPORE-TYPE-001",
+  { name: "084-unknown-type", expected: "FUNGI-TYPE-001",
     src: `pure flow example() -> Void {
   let value: MadeUpType = 42
 }` },
-  { name: "085-type-mismatch", expected: "SPORE-TYPE-002",
+  { name: "085-type-mismatch", expected: "FUNGI-TYPE-002",
     src: `pure flow example() -> Void {
   let count: Int = "42"
 }` },
-  { name: "086-protected-not-redacted", expected: "SPORE-TYPE-002",
+  { name: "086-protected-not-redacted", expected: "FUNGI-TYPE-002",
     src: `type Email = Brand<String, EmailTag>
 pure flow example(email: protected Email) -> Void {
   let auditEmail: redacted Email = email

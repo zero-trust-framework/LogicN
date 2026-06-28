@@ -91,8 +91,8 @@ Examples:
 
 ```text
 Compatible with Galerina syntax draft 0.1.
-Supports `.spore` files.
-Can parse galerina-style `boot.spore` project files.
+Supports `.fungi` files.
+Can parse galerina-style `boot.fungi` project files.
 ```
 
 ---

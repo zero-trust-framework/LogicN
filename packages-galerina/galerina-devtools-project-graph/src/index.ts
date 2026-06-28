@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — public API
+// fungi-graph — public API
 //
 // Named exports only. No default export.
 // All types are re-exported for downstream TypeScript consumers.
@@ -19,12 +19,12 @@ export type {
 } from "./core/types.js";
 
 export {
-  LLN_PGRAPH_001,
-  LLN_PGRAPH_002,
-  LLN_PGRAPH_003,
-  LLN_PGRAPH_004,
-  LLN_PGRAPH_005,
-  LLN_PGRAPH_DIAGNOSTICS,
+  FUNGI_PGRAPH_001,
+  FUNGI_PGRAPH_002,
+  FUNGI_PGRAPH_003,
+  FUNGI_PGRAPH_004,
+  FUNGI_PGRAPH_005,
+  FUNGI_PGRAPH_DIAGNOSTICS,
 } from "./core/types.js";
 
 export { GraphBuilder } from "./core/builder.js";
@@ -54,11 +54,11 @@ export type {
 } from "./graphs/effect-graph.js";
 
 export {
-  LLN_PGRAPH_010,
-  LLN_PGRAPH_011,
-  LLN_PGRAPH_012,
-  LLN_PGRAPH_013,
-  LLN_PGRAPH_EFFECT_DIAGNOSTICS,
+  FUNGI_PGRAPH_010,
+  FUNGI_PGRAPH_011,
+  FUNGI_PGRAPH_012,
+  FUNGI_PGRAPH_013,
+  FUNGI_PGRAPH_EFFECT_DIAGNOSTICS,
   buildEffectGraph,
   propagateEffects,
   validateEffects,
@@ -80,11 +80,11 @@ export type {
 } from "./graphs/boundary-graph.js";
 
 export {
-  LLN_PGRAPH_020,
-  LLN_PGRAPH_021,
-  LLN_PGRAPH_022,
-  LLN_PGRAPH_023,
-  LLN_PGRAPH_BOUNDARY_DIAGNOSTICS,
+  FUNGI_PGRAPH_020,
+  FUNGI_PGRAPH_021,
+  FUNGI_PGRAPH_022,
+  FUNGI_PGRAPH_023,
+  FUNGI_PGRAPH_BOUNDARY_DIAGNOSTICS,
   buildBoundaryGraph,
   validateBoundaries,
 } from "./graphs/boundary-graph.js";
@@ -164,7 +164,7 @@ export type {
 } from "./graphs/capability-graph.js";
 
 export {
-  LLN_PGRAPH_030,
+  FUNGI_PGRAPH_030,
   buildCapabilityGraph,
   resolveCapabilities,
   validateCapabilities,

@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import * as L from "../dist/index.js";
 
 function emitMemory(src) {
-  const prog = L.parseProgram(src, "b1.spore");
+  const prog = L.parseProgram(src, "b1.fungi");
   const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, `parse errors: ${errs.map((d) => d.message).join("; ")}`);
   const fx = L.checkEffects(prog.flows, prog.ast);

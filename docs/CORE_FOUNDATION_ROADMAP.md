@@ -86,7 +86,7 @@ Goal: make the language concrete before adding more design documents.
 
 Deliverables:
 
-- At least 20 real `.spore` examples:
+- At least 20 real `.fungi` examples:
   - 5 basic examples: variables, functions, records, simple `Result`, simple
     `Option`.
   - 5 type-system examples: variants/enums, exhaustive `match`, `Tri`, explicit
@@ -124,10 +124,10 @@ Deliverables:
 - Authoritative v1 reserved keyword table (`docs/Knowledge-Bases/v1-reserved-keywords.md`).
 - Memory AST node vocabulary committed to `AstNodeKind` (`borrowExpr`, `moveExpr`,
   `pinnedDecl`, `borrowMutExpr`, `ownershipTransfer`, `configMemoryBlock`, `borrowScopeBlock`).
-- Canonical diagnostic series confirmed: `SPORE-MEMORY-*` for memory, `SPORE-SAFETY-*`
+- Canonical diagnostic series confirmed: `FUNGI-MEMORY-*` for memory, `FUNGI-SAFETY-*`
   for safety-scanner diagnostics (replaces deprecated `Galerina_COMPILER_*` codes).
-- Phase 2 memory fixture examples (`borrow-scope.spore`, `move-cleanup.spore`,
-  `reject-use-after-move.spore`) created and referenced in checker tests.
+- Phase 2 memory fixture examples (`borrow-scope.fungi`, `move-cleanup.fungi`,
+  `reject-use-after-move.fungi`) created and referenced in checker tests.
 - Scanner-level enforcement (binding-level rules) implemented in `galerina-core-compiler`.
 - Explicit phase boundary documented:
   > Phase 3 enforces binding-level memory rules. Phase 5 enforces
@@ -139,7 +139,7 @@ Exit criteria:
 - Documentation says exactly what is enforced now and what is future work.
 - Performance wording is consistent with the chosen model.
 - The v1 reserved keyword table exists and is the lexer's source of truth.
-- `SPORE-MEMORY-*` and `SPORE-SAFETY-*` are the only active diagnostic namespaces
+- `FUNGI-MEMORY-*` and `FUNGI-SAFETY-*` are the only active diagnostic namespaces
   for memory and safety checks; `Galerina_COMPILER_*` codes are frozen.
 
 ## Phase 4: Parser And AST
@@ -220,7 +220,7 @@ production package registry
 ## Near-Term Work Order
 
 1. Create the v1 grammar draft.
-2. Audit existing `.spore` examples and classify them as v1 or post-v1.
+2. Audit existing `.fungi` examples and classify them as v1 or post-v1.
 3. Add enough examples to reach the 20-example corpus.
 4. Implement parser tests around that corpus.
 5. Finalise the memory model document.

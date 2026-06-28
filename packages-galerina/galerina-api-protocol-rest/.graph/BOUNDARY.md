@@ -5,7 +5,7 @@
 
 **Status:** ✅ PASS
 
-**Scanned scope:** roots [`src`] · extensions [`.ts`, `.spore`]
+**Scanned scope:** roots [`src`] · extensions [`.ts`, `.fungi`]
 
 ## Summary
 
@@ -37,4 +37,4 @@ No boundary violations. All external imports are within the allowlist.
 _none_ — every file is reachable from an internal import or entry point.
 
 ## Entry Points
-- `src/index.spore`
+- `src/index.fungi`

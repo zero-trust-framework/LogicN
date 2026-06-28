@@ -16,15 +16,15 @@ need no runtime change; only NaN warrants a real build.**
 | # | JS quirk | Exists in Galerina? | Galerina behavior + evidence | Should fix? | ZT |
 |---|----------|-------------------|----------------------------|-------------|----|
 | 1 | `0.1+0.2 !== 0.3` (one IEEE Number) | **PARTIAL** | Int/Int64 exact+trapping immune; Float is a thin JS-double wrapper (`float +,-,*,/` raw JS, interpreter.ts:176-179); **Decimal type distinct but 0 arithmetic dispatch entries** (declared-but-unwired) | CONSIDER | 78 |
-| 2 | `+` coercion (`"1"+1="11"`, `[]+{}`) | **NO-BY-DESIGN** | `+` not overloaded: SPORE-TYPE-004 rejects mixed String/non-String (type-checker.ts:1520-1584); BINARY_DISPATCH has no `string+int` key; no ToPrimitive | ALREADY-SAFE | 98 |
+| 2 | `+` coercion (`"1"+1="11"`, `[]+{}`) | **NO-BY-DESIGN** | `+` not overloaded: FUNGI-TYPE-004 rejects mixed String/non-String (type-checker.ts:1520-1584); BINARY_DISPATCH has no `string+int` key; no ToPrimitive | ALREADY-SAFE | 98 |
 | 3 | Loose `==` (`"0"==0`, non-transitive) | **NO-BY-DESIGN** | one typed strict `==`; `galerinaValuesEqual` returns false on tag mismatch first (stdlib.ts:1342); no coercion → transitive. Compile-layer: cross-type `==` only warned (non-blocking) | CONSIDER (lint) | 90 |
 | 4 | NaN: `typeof NaN="number"`, `NaN!==NaN` | **YES** | the one inherited gap: Float `/` raw JS (no checked-div vs Int's i32DivChecked), `0.0/0.0`=NaN/no-trap; Float `==`=JS `===` so `nan==nan`=false survives; **value-state-checker has ZERO NaN/Infinity awareness** | **YES** | 38 |
-| 5 | `typeof null === "object"` | **NO-BY-DESIGN** | no `typeof`; `null`/`undefined` rejected at compile (SPORE-TYPE-008); absence = nominal `Option<T>/None` | ALREADY-SAFE | 98 |
+| 5 | `typeof null === "object"` | **NO-BY-DESIGN** | no `typeof`; `null`/`undefined` rejected at compile (FUNGI-TYPE-008); absence = nominal `Option<T>/None` | ALREADY-SAFE | 98 |
 | 6 | `[1,2,10,21].sort()→[1,10,2,21]` | **NO-BY-DESIGN** | `sort` type-aware: both-string→localeCompare else `numVal(a)-numVal(b)` (stdlib.ts:606-612); ints stay numeric | ALREADY-SAFE | 95 |
-| 7 | Hoisting + `var` leaks | **NO-BY-DESIGN** | no `var`/hoisting; use-before-declare=SPORE-NAME-001, lexical block scope, redeclare=SPORE-NAME-002 (symbol-resolver.ts) | ALREADY-SAFE | 98 |
+| 7 | Hoisting + `var` leaks | **NO-BY-DESIGN** | no `var`/hoisting; use-before-declare=FUNGI-NAME-001, lexical block scope, redeclare=FUNGI-NAME-002 (symbol-resolver.ts) | ALREADY-SAFE | 98 |
 | 8 | `this` binding chaos | **NO-BY-DESIGN** | no `this`/`class`/`new`/`bind`; `receiver.method()` is parser sugar → static callExpr; records are field-only data — nothing to rebind | ALREADY-SAFE | 96 |
 | 9 | ASI + truthiness traps | **PARTIAL** | ASI does NOT exist (`;`/newline unconditional separators); truthiness present-but-narrowed (if/while coerce via explicit set; type-checker doesn't gate conditions on Bool) but no null/quiet-NaN | CONSIDER (lint) | 88 |
-| 10 | No real ints / 2^53 wall + num↔str | **NO-BY-DESIGN** | distinct Int/Int8-64/UInt/Float; Int64=exact bigint re-read from raw text (dodges parseInt 2^53 round); no implicit num↔str (SPORE-TYPE-004) | ALREADY-SAFE | 95 |
+| 10 | No real ints / 2^53 wall + num↔str | **NO-BY-DESIGN** | distinct Int/Int8-64/UInt/Float; Int64=exact bigint re-read from raw text (dodges parseInt 2^53 round); no implicit num↔str (FUNGI-TYPE-004) | ALREADY-SAFE | 95 |
 
 ## Genuine gaps worth acting on (only one is a real build)
 
@@ -32,13 +32,13 @@ need no runtime change; only NaN warrants a real build.**
    was hardened to TRAP (i32/i64-arith.ts), the Float path was left as bare JS `/` and `===`, and K3 has
    *zero* NaN concept (verified). Plan: a `float-arith.ts` checked layer (single source across tree-walker /
    bytecode / WASM emitter — the 0014-differential discipline) trapping float div-0 + flagging NaN/Inf; an
-   `SPORE-FLOAT-NAN-001` fail-closed INDETERMINATE rule in value-state-checker; an explicit IEEE carve-out for
+   `FUNGI-FLOAT-NAN-001` fail-closed INDETERMINATE rule in value-state-checker; an explicit IEEE carve-out for
    tensor `Float32`. **This is exactly the "something we did very early on" asymmetry the owner suspected** —
    the trap posture was applied to Int but not Float.
 2. **[ADDITIVE] Wire Decimal arithmetic + a Float==Float lint (#1)** — the exact-money escape hatch is
    declared-but-unwired (0 dispatch entries); add bigint-scaled Decimal ops + a suppressible Float-equality
    warning. No mutation of Float determinism (auto-rounding `==` would itself be a new fail-OPEN).
-3. **[ADDITIVE — lint] if/while condition must be Bool (#9)** — a new SPORE-TYPE rule mirroring SPORE-TYPE-004.
+3. **[ADDITIVE — lint] if/while condition must be Bool (#9)** — a new FUNGI-TYPE rule mirroring FUNGI-TYPE-004.
 4. **[ADDITIVE — lint] cross-type `==` → error (#3)** — promote the deferred "Phase 8B" diagnostic.
 
 **#2, #5, #6, #7, #8, #10 are ALREADY-SAFE — do not invent a fix.**

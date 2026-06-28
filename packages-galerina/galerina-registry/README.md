@@ -14,8 +14,8 @@ Every package in this registry has been reviewed against the Galerina governance
 - All declared capabilities have been audited and approved.
 - Each package manifest includes a `sha256:` content-addressable hash.
 - Packages are signed by the Galerina governance authority.
-- Install scripts are prohibited (SPORE-PKG-004).
-- Untrusted registries are rejected (SPORE-PKG-002).
+- Install scripts are prohibited (FUNGI-PKG-004).
+- Untrusted registries are rejected (FUNGI-PKG-002).
 
 ## Structure
 
@@ -40,11 +40,11 @@ packages/
 
 | Code          | Meaning                                              |
 |---------------|------------------------------------------------------|
-| SPORE-PKG-001   | Package declares new capabilities not in lockfile    |
-| SPORE-PKG-002   | Package from unregistered or unverified registry     |
-| SPORE-PKG-003   | Package has no content-addressable hash              |
-| SPORE-PKG-004   | Package declares an install script (denied)          |
-| SPORE-PKG-005   | Package has no cryptographic signature               |
+| FUNGI-PKG-001   | Package declares new capabilities not in lockfile    |
+| FUNGI-PKG-002   | Package from unregistered or unverified registry     |
+| FUNGI-PKG-003   | Package has no content-addressable hash              |
+| FUNGI-PKG-004   | Package declares an install script (denied)          |
+| FUNGI-PKG-005   | Package has no cryptographic signature               |
 
 ## Status
 

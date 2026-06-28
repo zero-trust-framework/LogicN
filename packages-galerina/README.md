@@ -19,8 +19,8 @@ my-galerina-app/
 |-- galerina.lock.json       locked Galerina package graph
 |-- packages/          normal vendor/app packages
 |-- packages-galerina/       Galerina packages, optionally a nested Git repository
-|-- boot.spore
-`-- main.spore
+|-- boot.fungi
+`-- main.fungi
 ```
 
 `packages-galerina/` may later become its own Git repository or submodule. If a

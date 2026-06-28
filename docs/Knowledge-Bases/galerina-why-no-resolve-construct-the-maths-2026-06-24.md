@@ -1,7 +1,7 @@
 # Why we are NOT adding the `resolve … at boundary` construct (the maths in full)
 
 **Date:** 2026-06-24 · **Companion:** [`galerina-third-logic-delivery-and-governed-quantum-substrate-2026-06-24.md`](galerina-third-logic-delivery-and-governed-quantum-substrate-2026-06-24.md) (RD-0122, §8 decision)
-**Posture:** verify-before-build · trust the math · fail-closed (unknown→deny) · No-Coercion · Govern-Don't-Absorb · crypto-on-core (SPORE-SUBSTRATE-001)
+**Posture:** verify-before-build · trust the math · fail-closed (unknown→deny) · No-Coercion · Govern-Don't-Absorb · crypto-on-core (FUNGI-SUBSTRATE-001)
 
 > Owner: *"can you make a document explaining in detail why no, and explain the maths in detail."*
 
@@ -60,7 +60,7 @@ decideAtBoundary(v)  =  ALLOW   if v = +1
                      =  DENY    otherwise            (v ∈ {0, −1})
 ```
 
-emitting `SPORE-GOV-3VL-001` whenever the collapse turns `0 → DENY`, so it is **never silent**. This single rule — *unknown → deny, at the boundary, loudly* — is the fail-closed collapse of resolution/collapse delivery. The possibility-space is held through the computation and resolved **once**, at the boundary, by a constraint (the governance contract), not by wall-clock time. That is the third paradigm, executing today.
+emitting `FUNGI-GOV-3VL-001` whenever the collapse turns `0 → DENY`, so it is **never silent**. This single rule — *unknown → deny, at the boundary, loudly* — is the fail-closed collapse of resolution/collapse delivery. The possibility-space is held through the computation and resolved **once**, at the boundary, by a constraint (the governance contract), not by wall-clock time. That is the third paradigm, executing today.
 
 ### A.4 No-Coercion — why an untrusted operand can only lower trust
 
@@ -104,7 +104,7 @@ Holevo's bound caps the classical information extractable from a quantum state a
 
 ### B.5 Integrity still needs a keyed MAC — EUF-CMA, no quantum shortcut
 
-"Let entanglement self-prove integrity, drop the MAC" fails: a MAC's security is **EUF-CMA** (existential unforgeability under chosen-message attack) — keyed binding of *payload* to *origin*. Entanglement/QBER senses *channel disturbance*, not payload authenticity, and there is **no quantum advantage over classical MACs** (Boneh–Zhandry 2013). Crypto stays digital (SPORE-SUBSTRATE-001).
+"Let entanglement self-prove integrity, drop the MAC" fails: a MAC's security is **EUF-CMA** (existential unforgeability under chosen-message attack) — keyed binding of *payload* to *origin*. Entanglement/QBER senses *channel disturbance*, not payload authenticity, and there is **no quantum advantage over classical MACs** (Boneh–Zhandry 2013). Crypto stays digital (FUNGI-SUBSTRATE-001).
 
 **Conclusion of B:** across cost (B.1), representability (B.2), causality (B.3), capacity (B.4) and integrity (B.5), there is **no substrate advantage** that a trusted-core change could capture. The work doesn't disappear, the substrate can't represent the branch, the physics is time-bound, and crypto gains nothing. Hence **Govern, Don't Absorb**: admit the substrate as an untrusted Tier-3 co-processor (the §A.4 No-Coercion guarantee makes this safe), never fold it into the trusted core.
 
@@ -118,7 +118,7 @@ Let `S` be the trusted compiler/verifier surface (every grammar production, ever
 - a new **AST node** + a new **verifier obligation** (does the collapse point dominate every sink? is it fail-closed? does it interact with taint/effect/secret checks?),
 - a new **lowering** path through GIR → WAT/WASM that must preserve the fail-closed semantics on all three tiers.
 
-Each is a net addition to `S` with a non-zero probability of harboring a fail-open. The benefit, today, is **zero** (no flow needs it; §A proves the capability already exists). The most-secure choice minimizes `S` subject to delivering the required capability — so a construct with **no consumer** is strictly dominated by *not adding it*. Build it only when a real `.spore` flow needs to *name* the collapse point explicitly, at which point the benefit becomes non-zero and the surface cost is justified.
+Each is a net addition to `S` with a non-zero probability of harboring a fail-open. The benefit, today, is **zero** (no flow needs it; §A proves the capability already exists). The most-secure choice minimizes `S` subject to delivering the required capability — so a construct with **no consumer** is strictly dominated by *not adding it*. Build it only when a real `.fungi` flow needs to *name* the collapse point explicitly, at which point the benefit becomes non-zero and the surface cost is justified.
 
 ---
 

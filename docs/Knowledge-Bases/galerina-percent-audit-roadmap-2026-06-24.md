@@ -4,7 +4,7 @@
 **Snapshot:** graph 5,103 nodes / 5,757 edges / 2,570 files / 60 test-bearing packages · ~5,345 tests
 (compiler 3,730/3,731 — the 1 fail is the env-local orphaned `.env.galerina-signing` keyId `9c2d7d45`, a
 *correct* fail-closed verify, green on a clean checkout). Audits: **0 DEAD/RESERVED codes**; backlogs =
-322 uncurated SPORE-* / 473 doc-drift / 289 inline.
+322 uncurated FUNGI-* / 473 doc-drift / 289 inline.
 
 ## Headline %-table
 
@@ -17,7 +17,7 @@
 | crypto-signing-custody | 5 | 82 | Hybrid Ed25519+ML-DSA-65 across 3 surfaces + revocation live; **fuse-loader runtime border is Ed25519-ONLY**; Shamir zero-impl |
 | photonic-substrate-tripipe | 2 | 88 | A/B/C governance shipped+tested; rails have no live consumer; HW-gated by design |
 | security-posture | 5 | 90 | value-state/taint + secret/privacy egress + tenant G1 shipped; Gate-6 sealed; TENANT-003 + medium backlog open; no CI |
-| drcm-containment | 4 | 72 | 6 sentinels + Phases 1-4 (122 tests); not in a default-on path; vdpm.spore untested; Phases 5-7 #102-106-gated |
+| drcm-containment | 4 | 72 | 6 sentinels + Phases 1-4 (122 tests); not in a default-on path; vdpm.fungi untested; Phases 5-7 #102-106-gated |
 | devtools | 3 | 90 | Graph/benchmarks/audit-scripts shipped; gaps are stale artifacts + backlogs (mechanical) |
 | framework-app-layer | 4 | 82 | Kernel 12-gate + fuse-loader + api-server + example-app (93/93); signed registry index unwired e2e; #102-106 makes isolation simulated |
 | self-hosting-stageB | 5 | 78 | R6 parity + P9 tokenize real-WASM byte-parity; **real-WASM is tokenize-ONLY**, rest interpreted |
@@ -35,7 +35,7 @@
 ## Roadmap — three horizons
 
 ### NOW (buildable, no hard blocker; ordered by value/effort)
-1. **Fix the false production-gate** [S] — `production-check.ts` lists `SPORE-MEMORY-001/002/003/007` as
+1. **Fix the false production-gate** [S] — `production-check.ts` lists `FUNGI-MEMORY-001/002/003/007` as
    PRODUCTION_BLOCKERS but they have **no emitter** (verified: `index.ts` defines the constants only). The gate
    advertises memory-safety it never enforces. Mark RESERVED + drop from the blocker set (or wire detectors),
    and add a scanner cross-ref that fails when a production-blocking code is non-emittable. *Security credibility.*
@@ -49,11 +49,11 @@
    live, not opt-in shelf-ware.
 6. **Wire the signed central registry index e2e** [M] — generate+sign `registry-index.json`, inject `registryCheck`
    into the example-app host fuse path, add a "forked-but-signed pkg REFUSED" e2e test.
-7. **R3 env-perf fix** [M] — replace `runtime.spore` O(n²) `envLookup` with a scoped map + perf regression.
+7. **R3 env-perf fix** [M] — replace `runtime.fungi` O(n²) `envLookup` with a scoped map + perf regression.
 8. **Taxonomy Stage E** [M] — split overloaded security codes one-code-one-fault (SECRET-002→004/005, etc.).
 
 ### NEXT (small owner decision / moderate effort)
-- **SPORE-TENANT-003** body-dataflow scope-threading (G1 proves effect-surface declaration only) — owner: promote
+- **FUNGI-TENANT-003** body-dataflow scope-threading (G1 proves effect-surface declaration only) — owner: promote
   `.tenant_scoped` marker → first-class `tenant_scoped {}` block.
 - **Shamir M-of-N split/combine (G2-ext)** — algebra + 11/11 bench + frozen spec exist; **zero impl**. Completes
   the core-quorum/ext-execute custody pair.

@@ -20,9 +20,9 @@ import {
 // ---------------------------------------------------------------------------
 
 describe("buildWebGPUPlan: schema and structure", () => {
-  it("returns a plan with schemaVersion spore.gpu.v1", () => {
+  it("returns a plan with schemaVersion fungi.gpu.v1", () => {
     const plan = buildWebGPUPlan("scoreFlow", []);
-    assert.equal(plan.schemaVersion, "spore.gpu.v1");
+    assert.equal(plan.schemaVersion, "fungi.gpu.v1");
     assert.equal(plan.flowName, "scoreFlow");
   });
 
@@ -59,9 +59,9 @@ describe("buildWebGPUPlan: schema and structure", () => {
 // ---------------------------------------------------------------------------
 
 describe("buildNPUPlan: schema and structure", () => {
-  it("returns a plan with schemaVersion spore.npu.v1", () => {
+  it("returns a plan with schemaVersion fungi.npu.v1", () => {
     const plan = buildNPUPlan("inferFlow", []);
-    assert.equal(plan.schemaVersion, "spore.npu.v1");
+    assert.equal(plan.schemaVersion, "fungi.npu.v1");
     assert.equal(plan.flowName, "inferFlow");
   });
 
@@ -96,9 +96,9 @@ describe("buildNPUPlan: schema and structure", () => {
 // ---------------------------------------------------------------------------
 
 describe("buildAPUSharedMemoryPlan: schema and structure", () => {
-  it("returns a plan with schemaVersion spore.apu.v1", () => {
+  it("returns a plan with schemaVersion fungi.apu.v1", () => {
     const plan = buildAPUSharedMemoryPlan("flow", []);
-    assert.equal(plan.schemaVersion, "spore.apu.v1");
+    assert.equal(plan.schemaVersion, "fungi.apu.v1");
   });
 
   it("includes only APU-eligible tensors as shared buffers", () => {

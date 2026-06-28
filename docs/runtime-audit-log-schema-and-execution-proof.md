@@ -867,13 +867,13 @@ execution proof
 
 | Code | Meaning |
 |---|---|
-| `SPORE-AUDIT-001` | runtime audit write failed |
-| `SPORE-AUDIT-002` | execution proof hash mismatch |
-| `SPORE-AUDIT-003` | runtime manifest hash mismatch |
-| `SPORE-AUDIT-004` | denied effect execution observed |
-| `SPORE-AUDIT-005` | secret leakage detected in audit payload |
-| `SPORE-AUDIT-006` | runtime capability evidence missing |
-| `SPORE-AUDIT-007` | distributed trace correlation failed |
+| `FUNGI-AUDIT-001` | runtime audit write failed |
+| `FUNGI-AUDIT-002` | execution proof hash mismatch |
+| `FUNGI-AUDIT-003` | runtime manifest hash mismatch |
+| `FUNGI-AUDIT-004` | denied effect execution observed |
+| `FUNGI-AUDIT-005` | secret leakage detected in audit payload |
+| `FUNGI-AUDIT-006` | runtime capability evidence missing |
+| `FUNGI-AUDIT-007` | distributed trace correlation failed |
 
 ---
 

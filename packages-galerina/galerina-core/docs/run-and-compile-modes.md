@@ -36,7 +36,7 @@ The first practical implementation target is checked Run Mode on the Node.js pro
 This means the earliest useful Galerina should:
 
 ```text
-parse .spore files
+parse .fungi files
 type-check the supported subset
 run simple checked scripts
 generate diagnostics with source locations
@@ -52,7 +52,7 @@ The first production-grade backend should not be chosen until parser, type check
 
 | Mode | Purpose | Typical Command |
 |---|---|---|
-| `run` | Run a single script or project directly | `Galerina run hello.spore` |
+| `run` | Run a single script or project directly | `Galerina run hello.fungi` |
 | `run --generate` | Run and generate development docs/reports | `Galerina run --generate` |
 | `generate` | Generate development docs/reports without running | `Galerina generate` |
 | `dev` | Check, generate and run in development mode | `Galerina dev` |
@@ -67,7 +67,7 @@ The first production-grade backend should not be chosen until parser, type check
 Run Mode aLOws Galerina source files to be executed directly.
 
 ```bash
-Galerina run hello.spore
+Galerina run hello.fungi
 ```
 
 Run Mode is useful for small scripts, learning Galerina, local development, quick
@@ -91,7 +91,7 @@ basic source location errors
 Before execution, Galerina should:
 
 ```text
-read boot.spore
+read boot.fungi
 validate project config
 validate imports and packages
 validate globals, env vars and secrets
@@ -154,7 +154,7 @@ Galerina dev --watch
 Suggested flow:
 
 ```text
-read boot.spore
+read boot.fungi
 run startup validation
 parse source files
 type-check source
@@ -174,7 +174,7 @@ For faster development and server execution, Galerina may support cached IR or
 bytecode:
 
 ```text
-.spore source
+.fungi source
     -> parse
     -> type/security check
     -> cached Galerina IR or bytecode
@@ -186,7 +186,7 @@ bytecode:
 Compile Mode builds the project into production-ready outputs.
 
 ```bash
-node compiler/galerina.js build examples --exclude source-map-error.spore --out build/examples
+node compiler/galerina.js build examples --exclude source-map-error.fungi --out build/examples
 ```
 
 `Galerina build --mode release --target all` remains the intended future production
@@ -290,7 +290,7 @@ Generated names are stable manifest paths such as `app.build-manifest.json` and
 
 Source hashing is also recorded in `app.build-manifest.json` under
 `deterministicInputs`. Compile Mode stores a combined source hash plus per-file
-SHA-256 hashes for the `.spore` inputs.
+SHA-256 hashes for the `.fungi` inputs.
 
 Declared imports are recorded in the same section as dependency inputs. Compile
 Mode stores sorted dependency entries with SHA-256 hashes and a combined
@@ -322,7 +322,7 @@ The AI guide should update only after a successful compile. Failed builds should
 write `app.failure-report.json` without overwriting the last valid AI guide
 unless explicitly configured.
 
-## boot.spore Configuration
+## boot.fungi Configuration
 
 ```Galerina
 runtime {

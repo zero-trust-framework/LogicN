@@ -135,11 +135,11 @@ Provides:
 - ComputeMixBenchmarkError
 - BoolBoundaryContext
 - BoolBoundaryResult
-- SPORE_BOOL_BOUNDARY_001_FAILED_CLOSED
-- SPORE_BOOL_BOUNDARY_002_UNKNOWN_REASON
-- SPORE_BOOL_BOUNDARY_003_INVALID_INPUT
-- SPORE_BOOL_BOUNDARY_004_MISSING_BOUNDARY_NAME
-- SPORE_BOOL_BOUNDARY_005_RESULT_MISUSED
+- FUNGI_BOOL_BOUNDARY_001_FAILED_CLOSED
+- FUNGI_BOOL_BOUNDARY_002_UNKNOWN_REASON
+- FUNGI_BOOL_BOUNDARY_003_INVALID_INPUT
+- FUNGI_BOOL_BOUNDARY_004_MISSING_BOUNDARY_NAME
+- FUNGI_BOOL_BOUNDARY_005_RESULT_MISUSED
 - boolDiagnosticFailedClosed
 - boolDiagnosticUnknownReason
 - boolDiagnosticInvalidInput
@@ -925,7 +925,7 @@ Provides:
 
 ## galerina-ext-secrets-tmf
 
-OPTIONAL sealed-secrets-on-.tmf layer for Galerina. env.tmf = an encrypted-at-rest replacement for plaintext .env, edited through a governed in-memory-only CLI (no temp file, no $EDITOR, no .swp). Thin orchestration over @galerina/ext-tmf (format/crypto) + the ext-secrets-vault store discipline. No new crypto, no new container bytes; crypto stays Binary (SPORE-SUBSTRATE-001). Unsigned-but-encrypted (flags.signed=0); signed root gated on ext-tmf slice 4/#7.
+OPTIONAL sealed-secrets-on-.tmf layer for Galerina. env.tmf = an encrypted-at-rest replacement for plaintext .env, edited through a governed in-memory-only CLI (no temp file, no $EDITOR, no .swp). Thin orchestration over @galerina/ext-tmf (format/crypto) + the ext-secrets-vault store discipline. No new crypto, no new container bytes; crypto stays Binary (FUNGI-SUBSTRATE-001). Unsigned-but-encrypted (flags.signed=0); signed root gated on ext-tmf slice 4/#7.
 
 Provides:
 - SecretConfigSource
@@ -996,7 +996,7 @@ Provides:
 
 ## galerina-devtools-context
 
-Context Receipt generator for Galerina: produces minimal AI-consumable structural summaries from .spore source. 98% token reduction vs raw source while preserving full architectural intent.
+Context Receipt generator for Galerina: produces minimal AI-consumable structural summaries from .fungi source. 98% token reduction vs raw source while preserving full architectural intent.
 
 Provides:
 - DEVTOOLS_CONTEXT_VERSION
@@ -1028,7 +1028,7 @@ Provides:
 
 ## galerina-devtools-graph-algorithms
 
-Internal graph data structures and algorithms for the Galerina compiler. Designed for future extraction to spore-graph.
+Internal graph data structures and algorithms for the Galerina compiler. Designed for future extraction to fungi-graph.
 
 Provides:
 - bfsPath

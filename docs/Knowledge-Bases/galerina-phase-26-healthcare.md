@@ -34,7 +34,7 @@ fails with an error; no `.wasm` output is produced.
 
 ## Healthcare Example Governance: PHI Declared, Redacted Before Audit
 
-The `getPatient` flow (`examples/healthcare/getPatient.spore`) demonstrates the
+The `getPatient` flow (`examples/healthcare/getPatient.fungi`) demonstrates the
 PHI governance pattern:
 
 1. **PHI declaration** — `privacy { phi name dob }` marks `name` and `dob` as
@@ -56,7 +56,7 @@ the type-system level, not just at runtime policy.
 
 ## Stage B Parser Parity: Goal for Phase 26
 
-Phase 26 sets the goal of **Stage B parser parity**: the self-hosted `parser.spore`
+Phase 26 sets the goal of **Stage B parser parity**: the self-hosted `parser.fungi`
 (written in Galerina) should produce identical parse results to the TypeScript
 reference parser for all flows in the Canonical Example Corpus (CEC), including
 the new healthcare example.

@@ -5,7 +5,7 @@ import { parseProgram, checkEffects, emitGIR, emitExpr, verifyGovernance } from 
 import { computeGIRHash } from "../dist/gir-emitter.js";
 
 function parseAndEmit(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effects = checkEffects(parsed.flows, parsed.ast);
   return emitGIR(parsed.ast, parsed.flows, effects);
 }
@@ -18,7 +18,7 @@ pure flow calculateVat(price: Money<GBP>) -> Money<GBP> {
 }
 `);
 
-    assert.equal(result.gir.schemaVersion, "spore.gir.v1");
+    assert.equal(result.gir.schemaVersion, "fungi.gir.v1");
     assert.equal(result.gir.flows[0].qualifier, "pure");
     assert.deepEqual(result.gir.flows[0].effects.declared, []);
   });
@@ -163,8 +163,8 @@ contract { effects { database.write } }
 
 // ── Governance compute hint (Phase 8A) ───────────────────────────────────────
 
-describe("Governance verifier — SPORE-HINT-COMPUTE-001", () => {
-  it("emits SPORE-HINT-COMPUTE-001 when ai.inference has no compute target", () => {
+describe("Governance verifier — FUNGI-HINT-COMPUTE-001", () => {
+  it("emits FUNGI-HINT-COMPUTE-001 when ai.inference has no compute target", () => {
     const source = `
 guarded flow classify(text: String) -> Result<String, Error>
 contract { effects { ai.inference } }
@@ -172,16 +172,16 @@ contract { effects { ai.inference } }
   return Ok("label")
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const effects = checkEffects(parsed.flows, parsed.ast);
     const gov = verifyGovernance(parsed.ast, parsed.flows, effects, "dev");
     assert.ok(
-      gov.diagnostics.some((d) => d.code === "SPORE-HINT-COMPUTE-001"),
-      `Expected SPORE-HINT-COMPUTE-001, got: ${gov.diagnostics.map((d) => d.code).join(", ")}`,
+      gov.diagnostics.some((d) => d.code === "FUNGI-HINT-COMPUTE-001"),
+      `Expected FUNGI-HINT-COMPUTE-001, got: ${gov.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("does NOT emit SPORE-HINT-COMPUTE-001 when compute target is declared", () => {
+  it("does NOT emit FUNGI-HINT-COMPUTE-001 when compute target is declared", () => {
     const source = `
 guarded flow classify(text: String) -> Result<String, Error>
 contract { effects { ai.inference } }
@@ -190,12 +190,12 @@ contract { effects { ai.inference } }
   return Ok("label")
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const effects = checkEffects(parsed.flows, parsed.ast);
     const gov = verifyGovernance(parsed.ast, parsed.flows, effects, "dev");
     assert.ok(
-      !gov.diagnostics.some((d) => d.code === "SPORE-HINT-COMPUTE-001"),
-      "Unexpected SPORE-HINT-COMPUTE-001 when compute target is declared",
+      !gov.diagnostics.some((d) => d.code === "FUNGI-HINT-COMPUTE-001"),
+      "Unexpected FUNGI-HINT-COMPUTE-001 when compute target is declared",
     );
   });
 });
@@ -335,7 +335,7 @@ describe("GIR emitter — GIRRecordField location", () => {
         {
           kind: "identifier",
           value: "myField",
-          location: { file: "test.spore", line: 3, column: 5 },
+          location: { file: "test.fungi", line: 3, column: 5 },
           children: [{ kind: "stringLiteral", value: "\"hello\"" }],
         },
       ],

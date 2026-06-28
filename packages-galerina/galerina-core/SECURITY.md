@@ -1054,7 +1054,7 @@ Example internal report:
 ```json
 {
   "errorType": "JsonValidationError",
-  "file": "src/routes.spore",
+  "file": "src/routes.fungi",
   "line": 22,
   "field": "customerId",
   "problem": "Missing required field"

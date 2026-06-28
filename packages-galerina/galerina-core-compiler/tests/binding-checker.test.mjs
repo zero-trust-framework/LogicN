@@ -1,14 +1,14 @@
 // =============================================================================
 // Binding Checker Tests — Phase 11A.2
 //
-// Tests for SPORE-BINDING-005: immutable binding reassignment enforcement.
+// Tests for FUNGI-BINDING-005: immutable binding reassignment enforcement.
 //
 // Covers:
-//   - let binding reassignment → SPORE-BINDING-005
+//   - let binding reassignment → FUNGI-BINDING-005
 //   - mut binding reassignment → no error
-//   - flow parameter reassignment → SPORE-BINDING-005
-//   - readonly decl reassignment → SPORE-BINDING-005
-//   - assignStmt parsing → no SPORE-PARSE-001
+//   - flow parameter reassignment → FUNGI-BINDING-005
+//   - readonly decl reassignment → FUNGI-BINDING-005
+//   - assignStmt parsing → no FUNGI-PARSE-001
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -19,7 +19,7 @@ import { parseProgram, checkTypes } from "../dist/index.js";
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function parseAndCheck(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const typeResult = checkTypes(parsed.ast);
   return {
     parseDiags: parsed.diagnostics,
@@ -35,7 +35,7 @@ function hasDiag(diags, code) {
 // ── Assignment statement parsing ──────────────────────────────────────────────
 
 describe("Binding checker — assignStmt parsing", () => {
-  it("parses mut reassignment without SPORE-PARSE-001", () => {
+  it("parses mut reassignment without FUNGI-PARSE-001", () => {
     const { parseDiags } = parseAndCheck(`
 pure flow test() -> Int {
   mut count: Int = 0
@@ -44,12 +44,12 @@ pure flow test() -> Int {
 }
 `);
     assert.ok(
-      !hasDiag(parseDiags, "SPORE-PARSE-001"),
-      `Should not emit SPORE-PARSE-001 for mut reassignment, got: ${parseDiags.map((d) => d.code).join(", ")}`,
+      !hasDiag(parseDiags, "FUNGI-PARSE-001"),
+      `Should not emit FUNGI-PARSE-001 for mut reassignment, got: ${parseDiags.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("parses let reassignment without SPORE-PARSE-001", () => {
+  it("parses let reassignment without FUNGI-PARSE-001", () => {
     const { parseDiags } = parseAndCheck(`
 pure flow test() -> Int {
   let count: Int = 0
@@ -58,16 +58,16 @@ pure flow test() -> Int {
 }
 `);
     assert.ok(
-      !hasDiag(parseDiags, "SPORE-PARSE-001"),
-      `Should not emit SPORE-PARSE-001 for let reassignment, got: ${parseDiags.map((d) => d.code).join(", ")}`,
+      !hasDiag(parseDiags, "FUNGI-PARSE-001"),
+      `Should not emit FUNGI-PARSE-001 for let reassignment, got: ${parseDiags.map((d) => d.code).join(", ")}`,
     );
   });
 });
 
-// ── SPORE-BINDING-005: Immutable binding reassignment ───────────────────────────
+// ── FUNGI-BINDING-005: Immutable binding reassignment ───────────────────────────
 
-describe("Binding checker — SPORE-BINDING-005 let reassignment", () => {
-  it("emits SPORE-BINDING-005 for let reassignment", () => {
+describe("Binding checker — FUNGI-BINDING-005 let reassignment", () => {
+  it("emits FUNGI-BINDING-005 for let reassignment", () => {
     const { typeDiags } = parseAndCheck(`
 pure flow test() -> Int {
   let count: Int = 0
@@ -76,12 +76,12 @@ pure flow test() -> Int {
 }
 `);
     assert.ok(
-      hasDiag(typeDiags, "SPORE-BINDING-005"),
-      `Expected SPORE-BINDING-005 for let reassignment, got: ${typeDiags.map((d) => d.code).join(", ")}`,
+      hasDiag(typeDiags, "FUNGI-BINDING-005"),
+      `Expected FUNGI-BINDING-005 for let reassignment, got: ${typeDiags.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("does NOT emit SPORE-BINDING-005 for mut reassignment", () => {
+  it("does NOT emit FUNGI-BINDING-005 for mut reassignment", () => {
     const { typeDiags } = parseAndCheck(`
 pure flow test() -> Int {
   mut count: Int = 0
@@ -90,12 +90,12 @@ pure flow test() -> Int {
 }
 `);
     assert.ok(
-      !hasDiag(typeDiags, "SPORE-BINDING-005"),
-      `Should not emit SPORE-BINDING-005 for mut reassignment, got: ${typeDiags.map((d) => d.code).join(", ")}`,
+      !hasDiag(typeDiags, "FUNGI-BINDING-005"),
+      `Should not emit FUNGI-BINDING-005 for mut reassignment, got: ${typeDiags.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("emits SPORE-BINDING-005 for let reassignment in a guarded flow", () => {
+  it("emits FUNGI-BINDING-005 for let reassignment in a guarded flow", () => {
     const { typeDiags } = parseAndCheck(`
 guarded flow accumulate(items: Array<Int>) -> Int {
   let total: Int = 0
@@ -104,12 +104,12 @@ guarded flow accumulate(items: Array<Int>) -> Int {
 }
 `);
     assert.ok(
-      hasDiag(typeDiags, "SPORE-BINDING-005"),
-      `Expected SPORE-BINDING-005 for let reassignment in guarded flow, got: ${typeDiags.map((d) => d.code).join(", ")}`,
+      hasDiag(typeDiags, "FUNGI-BINDING-005"),
+      `Expected FUNGI-BINDING-005 for let reassignment in guarded flow, got: ${typeDiags.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("emits SPORE-BINDING-005 for let reassignment in a secure flow", () => {
+  it("emits FUNGI-BINDING-005 for let reassignment in a secure flow", () => {
     const { typeDiags } = parseAndCheck(`
 secure flow process(input: String) -> String {
   let result: String = "initial"
@@ -118,16 +118,16 @@ secure flow process(input: String) -> String {
 }
 `);
     assert.ok(
-      hasDiag(typeDiags, "SPORE-BINDING-005"),
-      `Expected SPORE-BINDING-005 for let reassignment in secure flow, got: ${typeDiags.map((d) => d.code).join(", ")}`,
+      hasDiag(typeDiags, "FUNGI-BINDING-005"),
+      `Expected FUNGI-BINDING-005 for let reassignment in secure flow, got: ${typeDiags.map((d) => d.code).join(", ")}`,
     );
   });
 });
 
-// ── SPORE-BINDING-005: Parameter reassignment ───────────────────────────────────
+// ── FUNGI-BINDING-005: Parameter reassignment ───────────────────────────────────
 
-describe("Binding checker — SPORE-BINDING-005 parameter reassignment", () => {
-  it("emits SPORE-BINDING-005 for flow parameter reassignment", () => {
+describe("Binding checker — FUNGI-BINDING-005 parameter reassignment", () => {
+  it("emits FUNGI-BINDING-005 for flow parameter reassignment", () => {
     const { typeDiags } = parseAndCheck(`
 pure flow test(x: Int) -> Int {
   x = 5
@@ -135,12 +135,12 @@ pure flow test(x: Int) -> Int {
 }
 `);
     assert.ok(
-      hasDiag(typeDiags, "SPORE-BINDING-005"),
-      `Expected SPORE-BINDING-005 for parameter reassignment, got: ${typeDiags.map((d) => d.code).join(", ")}`,
+      hasDiag(typeDiags, "FUNGI-BINDING-005"),
+      `Expected FUNGI-BINDING-005 for parameter reassignment, got: ${typeDiags.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("emits SPORE-BINDING-005 for multiple parameter reassignment attempts", () => {
+  it("emits FUNGI-BINDING-005 for multiple parameter reassignment attempts", () => {
     const { typeDiags } = parseAndCheck(`
 pure flow test(x: Int, y: String) -> Int {
   x = 10
@@ -148,15 +148,15 @@ pure flow test(x: Int, y: String) -> Int {
   return x
 }
 `);
-    const binding005Diags = typeDiags.filter((d) => d.code === "SPORE-BINDING-005");
+    const binding005Diags = typeDiags.filter((d) => d.code === "FUNGI-BINDING-005");
     assert.equal(
       binding005Diags.length,
       2,
-      `Expected 2 SPORE-BINDING-005 diagnostics, got: ${binding005Diags.length}`,
+      `Expected 2 FUNGI-BINDING-005 diagnostics, got: ${binding005Diags.length}`,
     );
   });
 
-  it("emits SPORE-BINDING-005 for readonly declaration reassignment", () => {
+  it("emits FUNGI-BINDING-005 for readonly declaration reassignment", () => {
     const { typeDiags } = parseAndCheck(`
 guarded flow test() -> Int {
   readonly x: Int = 42
@@ -165,16 +165,16 @@ guarded flow test() -> Int {
 }
 `);
     assert.ok(
-      hasDiag(typeDiags, "SPORE-BINDING-005"),
-      `Expected SPORE-BINDING-005 for readonly decl reassignment, got: ${typeDiags.map((d) => d.code).join(", ")}`,
+      hasDiag(typeDiags, "FUNGI-BINDING-005"),
+      `Expected FUNGI-BINDING-005 for readonly decl reassignment, got: ${typeDiags.map((d) => d.code).join(", ")}`,
     );
   });
 });
 
-// ── SPORE-BINDING-005: includes correct message and suggested fix ───────────────
+// ── FUNGI-BINDING-005: includes correct message and suggested fix ───────────────
 
-describe("Binding checker — SPORE-BINDING-005 diagnostic shape", () => {
-  it("SPORE-BINDING-005 has correct code, name, and severity", () => {
+describe("Binding checker — FUNGI-BINDING-005 diagnostic shape", () => {
+  it("FUNGI-BINDING-005 has correct code, name, and severity", () => {
     const { typeDiags } = parseAndCheck(`
 pure flow test() -> Int {
   let n: Int = 1
@@ -182,9 +182,9 @@ pure flow test() -> Int {
   return n
 }
 `);
-    const diag = typeDiags.find((d) => d.code === "SPORE-BINDING-005");
-    assert.ok(diag !== undefined, "Expected SPORE-BINDING-005 diagnostic");
-    assert.equal(diag.code, "SPORE-BINDING-005");
+    const diag = typeDiags.find((d) => d.code === "FUNGI-BINDING-005");
+    assert.ok(diag !== undefined, "Expected FUNGI-BINDING-005 diagnostic");
+    assert.equal(diag.code, "FUNGI-BINDING-005");
     assert.equal(diag.name, "IMMUTABLE_BINDING_REASSIGNED");
     assert.equal(diag.severity, "error");
     assert.ok(
@@ -211,7 +211,7 @@ guarded flow countdown() -> Int {
   return n
 }
 `);
-    const binding005 = allDiags.filter((d) => d.code === "SPORE-BINDING-005");
+    const binding005 = allDiags.filter((d) => d.code === "FUNGI-BINDING-005");
     assert.equal(
       binding005.length,
       0,
@@ -229,11 +229,11 @@ guarded flow mixed() -> Int {
   return mutable
 }
 `);
-    const binding005 = typeDiags.filter((d) => d.code === "SPORE-BINDING-005");
+    const binding005 = typeDiags.filter((d) => d.code === "FUNGI-BINDING-005");
     assert.equal(
       binding005.length,
       1,
-      `Expected exactly 1 SPORE-BINDING-005 (for 'immutable'), got: ${binding005.length}`,
+      `Expected exactly 1 FUNGI-BINDING-005 (for 'immutable'), got: ${binding005.length}`,
     );
     assert.ok(
       binding005[0].message.includes("'immutable'"),

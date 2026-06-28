@@ -1,10 +1,10 @@
 # wasm-hello-world
 
-Phase 24 milestone: `greet.spore` compiles to WAT with real instruction bodies.
+Phase 24 milestone: `greet.fungi` compiles to WAT with real instruction bodies.
 
 ## What this demonstrates
 
-`greet.spore` declares a single pure flow:
+`greet.fungi` declares a single pure flow:
 
 ```
 pure flow greet(name: String) -> String
@@ -21,7 +21,7 @@ Instead of emitting `unreachable` stubs, the compiler now emits:
 ## Compilation pipeline
 
 ```
-greet.spore
+greet.fungi
   → parseProgram()
   → checkEffects()
   → emitGIR()           (Governed Intermediate Representation)

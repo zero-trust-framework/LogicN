@@ -9,9 +9,9 @@ Version target: v0.2
 Implementation status: fully specified, planning only
 v0.1 baseline: CPU + compute planner only
 Canonical diagnostics:
-  - SPORE-COMPUTE-001 through SPORE-COMPUTE-005
-  - SPORE-WASM-001 through SPORE-WASM-005
-  - SPORE-COMPAT-001 through SPORE-COMPAT-005
+  - FUNGI-COMPUTE-001 through FUNGI-COMPUTE-005
+  - FUNGI-WASM-001 through FUNGI-WASM-005
+  - FUNGI-COMPAT-001 through FUNGI-COMPAT-005
 ```
 
 `galerina-core-compute` owns compute planning contracts, not backend execution.
@@ -546,7 +546,7 @@ export function checkTargetCompatibility(
   for (const effect of workload.effects) {
     if (profile.forbiddenEffects.includes(effect)) {
       blockers.push({
-        code: "SPORE-COMPAT-001",
+        code: "FUNGI-COMPAT-001",
         message: `Effect ${effect} is forbidden on target ${profile.target}.`,
         effect,
         target: profile.target
@@ -555,7 +555,7 @@ export function checkTargetCompatibility(
 
     if (!profile.supportedEffects.includes(effect)) {
       warnings.push({
-        code: "SPORE-COMPAT-002",
+        code: "FUNGI-COMPAT-002",
         message: `Effect ${effect} is not explicitly supported on target ${profile.target}.`,
         effect,
         target: profile.target
@@ -565,7 +565,7 @@ export function checkTargetCompatibility(
 
   if (profile.memoryLimitMb !== undefined && workload.memoryMb > profile.memoryLimitMb) {
     blockers.push({
-      code: "SPORE-COMPAT-003",
+      code: "FUNGI-COMPAT-003",
       message: `Workload memory ${workload.memoryMb}MB exceeds target limit ${profile.memoryLimitMb}MB.`,
       target: profile.target
     })
@@ -573,7 +573,7 @@ export function checkTargetCompatibility(
 
   if (workload.dataShape.sensitive && !profile.allowsSensitiveData) {
     blockers.push({
-      code: "SPORE-COMPAT-004",
+      code: "FUNGI-COMPAT-004",
       message: `Target ${profile.target} does not allow sensitive data.`,
       target: profile.target
     })
@@ -664,35 +664,35 @@ export function estimateTarget(
 
 # Diagnostic Codes
 
-## SPORE-COMPUTE
+## FUNGI-COMPUTE
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-COMPUTE-001` | Workload cannot be planned |
-| `SPORE-COMPUTE-002` | No safe fallback target exists |
-| `SPORE-COMPUTE-003` | Compute capability missing |
-| `SPORE-COMPUTE-004` | Sensitive workload requires explicit target approval |
-| `SPORE-COMPUTE-005` | Compute plan report could not be generated |
+| `FUNGI-COMPUTE-001` | Workload cannot be planned |
+| `FUNGI-COMPUTE-002` | No safe fallback target exists |
+| `FUNGI-COMPUTE-003` | Compute capability missing |
+| `FUNGI-COMPUTE-004` | Sensitive workload requires explicit target approval |
+| `FUNGI-COMPUTE-005` | Compute plan report could not be generated |
 
-## SPORE-WASM
-
-| Code | Meaning |
-| --- | --- |
-| `SPORE-WASM-001` | Forbidden effect used by WASM target |
-| `SPORE-WASM-002` | Host import required but not allowed |
-| `SPORE-WASM-003` | WASI filesystem required but not enabled |
-| `SPORE-WASM-004` | Host network required but not enabled |
-| `SPORE-WASM-005` | WASM runtime profile missing or unsupported |
-
-## SPORE-COMPAT
+## FUNGI-WASM
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-COMPAT-001` | Target forbids required effect |
-| `SPORE-COMPAT-002` | Target does not explicitly support effect |
-| `SPORE-COMPAT-003` | Workload exceeds target memory limit |
-| `SPORE-COMPAT-004` | Target does not allow sensitive data |
-| `SPORE-COMPAT-005` | Target compatibility report incomplete |
+| `FUNGI-WASM-001` | Forbidden effect used by WASM target |
+| `FUNGI-WASM-002` | Host import required but not allowed |
+| `FUNGI-WASM-003` | WASI filesystem required but not enabled |
+| `FUNGI-WASM-004` | Host network required but not enabled |
+| `FUNGI-WASM-005` | WASM runtime profile missing or unsupported |
+
+## FUNGI-COMPAT
+
+| Code | Meaning |
+| --- | --- |
+| `FUNGI-COMPAT-001` | Target forbids required effect |
+| `FUNGI-COMPAT-002` | Target does not explicitly support effect |
+| `FUNGI-COMPAT-003` | Workload exceeds target memory limit |
+| `FUNGI-COMPAT-004` | Target does not allow sensitive data |
+| `FUNGI-COMPAT-005` | Target compatibility report incomplete |
 
 ---
 
@@ -791,7 +791,7 @@ describe("target compatibility", () => {
       browserWasmProfile
     )
 
-    expect(result.blockers.some(blocker => blocker.code === "SPORE-COMPAT-001")).toBe(true)
+    expect(result.blockers.some(blocker => blocker.code === "FUNGI-COMPAT-001")).toBe(true)
   })
 })
 ```

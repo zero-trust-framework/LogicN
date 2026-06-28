@@ -1,5 +1,5 @@
 // =============================================================================
-// RD-0130 #3 — SPORE-SECRET-004 constant-time lint: a secret-dependent branch is a
+// RD-0130 #3 — FUNGI-SECRET-004 constant-time lint: a secret-dependent branch is a
 // timing side-channel (CWE-208). The arm taken — and thus the flow's observable
 // execution time — depends on secret material, which an attacker measuring latency
 // can exploit (classic case: early-return on the first mismatching byte).
@@ -23,35 +23,35 @@ contract { effects { ai.inference  network.outbound } secrets { credential k { p
 ${body}
   return 0
 }`;
-const chk = (src) => checkValueStates(parseProgram(src, "test.spore").ast);
+const chk = (src) => checkValueStates(parseProgram(src, "test.fungi").ast);
 const has = (r, code) => r.diagnostics.some((d) => d.code === code);
 const codes = (r) => r.diagnostics.map((d) => d.code).join(", ");
 
-describe("SPORE-SECRET-004 — secret-dependent branch (timing side-channel)", () => {
-  it("branching directly on a secret value → SPORE-SECRET-004 warning", () => {
+describe("FUNGI-SECRET-004 — secret-dependent branch (timing side-channel)", () => {
+  it("branching directly on a secret value → FUNGI-SECRET-004 warning", () => {
     const r = chk(wrap('  let kk = secret.get("api")\n  if kk { let a = 1 } else { let b = 2 }'));
-    assert.ok(has(r, "SPORE-SECRET-004"), codes(r));
-    const d = r.diagnostics.find((x) => x.code === "SPORE-SECRET-004");
+    assert.ok(has(r, "FUNGI-SECRET-004"), codes(r));
+    const d = r.diagnostics.find((x) => x.code === "FUNGI-SECRET-004");
     assert.equal(d.severity, "warning");
   });
 
-  it("branching on a secret-DERIVED comparison → SPORE-SECRET-004 (derivesFromSecret recurses binaryExpr)", () => {
+  it("branching on a secret-DERIVED comparison → FUNGI-SECRET-004 (derivesFromSecret recurses binaryExpr)", () => {
     const r = chk(wrap('  let kk = secret.get("api")\n  if kk.len() > 5 { let a = 1 } else { let b = 2 }'));
-    assert.ok(has(r, "SPORE-SECRET-004"), codes(r));
+    assert.ok(has(r, "FUNGI-SECRET-004"), codes(r));
   });
 
   it("the sanctioned constant-time comparison is NOT flagged (constantTimeEquals declassifies)", () => {
     const r = chk(wrap('  let kk = secret.get("api")\n  if Crypto.constantTimeEquals(kk, kk) { let a = 1 } else { let b = 2 }'));
-    assert.ok(!has(r, "SPORE-SECRET-004"), `false positive on constantTimeEquals: ${codes(r)}`);
+    assert.ok(!has(r, "FUNGI-SECRET-004"), `false positive on constantTimeEquals: ${codes(r)}`);
   });
 
   it("redact() before branching declassifies → NOT flagged", () => {
     const r = chk(wrap('  let kk = secret.get("api")\n  if redact(kk) { let a = 1 } else { let b = 2 }'));
-    assert.ok(!has(r, "SPORE-SECRET-004"), `false positive on redact: ${codes(r)}`);
+    assert.ok(!has(r, "FUNGI-SECRET-004"), `false positive on redact: ${codes(r)}`);
   });
 
   it("branching on a NON-secret value is clean (no false positive)", () => {
     const r = chk(wrap('  let n = 5\n  if n > 3 { let a = 1 } else { let b = 2 }'));
-    assert.ok(!has(r, "SPORE-SECRET-004"), `false positive on public value: ${codes(r)}`);
+    assert.ok(!has(r, "FUNGI-SECRET-004"), `false positive on public value: ${codes(r)}`);
   });
 });

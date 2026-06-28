@@ -10,7 +10,7 @@ import assert from "node:assert/strict";
 import * as L from "../dist/index.js";
 
 function compileWAT(src) {
-  const p = L.parseProgram(src, "ro.spore");
+  const p = L.parseProgram(src, "ro.fungi");
   const errs = p.diagnostics.filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "parse: " + errs.map((e) => e.message).join("; "));
   const fx = L.checkEffects(p.flows, p.ast);
@@ -19,7 +19,7 @@ function compileWAT(src) {
 }
 
 async function walker(src, flow) {
-  const p = L.parseProgram(src, "ro.spore");
+  const p = L.parseProgram(src, "ro.fungi");
   try { L.resolveSymbols(p.ast); L.checkTypes(p.ast); } catch { /* best-effort */ }
   const r = await L.executeFlow(flow, new Map(), p.ast);
   return r.value;

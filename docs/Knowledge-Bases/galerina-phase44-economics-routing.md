@@ -110,7 +110,7 @@ The audit log entry added in Phase 44 looks like:
 
 ## Auto-Inferred Routes for the Three Deployed Service Flows
 
-### 1. `verifyPassword` (verifyPasswordService.spore)
+### 1. `verifyPassword` (verifyPasswordService.fungi)
 
 ```
 qualifier:  secure
@@ -131,7 +131,7 @@ value:      (none declared)
 
 ---
 
-### 2. `healthCheck` (healthCheck.spore)
+### 2. `healthCheck` (healthCheck.fungi)
 
 ```
 qualifier:  secure
@@ -151,7 +151,7 @@ value:      (none declared)
 
 ---
 
-### 3. `rateStatus` (rateStatus.spore)
+### 3. `rateStatus` (rateStatus.fungi)
 
 ```
 qualifier:  guarded
@@ -198,7 +198,7 @@ the routing model against.
 |---|---|
 | `packages-galerina/galerina-core-compiler/src/economics-inference.ts` | `inferFlowEconomics` — the inference engine |
 | `packages-galerina/galerina-core-compiler/src/route-dispatcher.ts` | HTTP dispatch — Phase 57 will add routing enforcement here |
-| `examples/auth-service/verifyPasswordService.spore` | Primary governed service — cpu target, elevated risk |
-| `examples/auth-service/healthCheck.spore` | Liveness probe — cpu target, standard risk |
-| `examples/auth-service/rateStatus.spore` | Rate counter service — cpu target, standard risk |
+| `examples/auth-service/verifyPasswordService.fungi` | Primary governed service — cpu target, elevated risk |
+| `examples/auth-service/healthCheck.fungi` | Liveness probe — cpu target, standard risk |
+| `examples/auth-service/rateStatus.fungi` | Rate counter service — cpu target, standard risk |
 | `docs/Knowledge-Bases/galerina-roadmap-phases-41-60.md` | Phase 44 roadmap entry |

@@ -12,7 +12,7 @@ import assert from "node:assert/strict";
 import * as L from "../dist/index.js";
 
 function compileWAT(src) {
-  const p = L.parseProgram(src, "bf.spore");
+  const p = L.parseProgram(src, "bf.fungi");
   const errs = p.diagnostics.filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "parse: " + errs.map((e) => e.message).join("; "));
   const fx = L.checkEffects(p.flows, p.ast);
@@ -72,7 +72,7 @@ describe("AOT #2: branch-folding + dead-arm DCE (WAT emitter)", () => {
     const src = `pure flow h(n: Int) -> Int\ncontract { effects {} }\n{ if 10 > 3 { return 100 + n } else { return 200 + n } }`;
     for (const n of [0, 1, 7, 100]) {
       const { val } = await run(src, "h", [n]);
-      const p = L.parseProgram(src, "h.spore");
+      const p = L.parseProgram(src, "h.fungi");
       const ref = (await L.executeFlow("h", new Map([["n", { __tag: "int", value: n }]]), p.ast, p.flows)).value;
       assert.equal(ref.__tag, "int");
       assert.ok(Object.is(val, ref.value), `n=${n}: WASM ${val} must equal interp ${ref.value} (folded branch)`);

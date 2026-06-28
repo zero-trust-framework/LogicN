@@ -125,7 +125,7 @@ must not be treated as implemented app functionality.
   which form is canonical or explicitly mark the conflict unresolved.
 - Photonic public contracts must not be implemented from conflicting docs until
   `OpticalTransportMode`, `PhotonicRuntimeTarget`, `PhotonicExecutionPlan` and
-  `SPORE-PHOTONIC-001` through `SPORE-PHOTONIC-006` have one package-owned canonical
+  `FUNGI-PHOTONIC-001` through `FUNGI-PHOTONIC-006` have one package-owned canonical
   definition.
 - Webhook HMAC, replay protection and idempotency contracts must use the
   `galerina-core-network` v0.2 canonical model unless an adapter explicitly maps
@@ -618,7 +618,7 @@ must not be treated as implemented app functionality.
   database models containing personal, secret, hidden or internal fields must
   not be returned by public routes.
 - Before adding more active packages, the project must include at least 20 real
-  `.spore` example programs covering basic, intermediate and advanced syntax.
+  `.fungi` example programs covering basic, intermediate and advanced syntax.
   This requirement is currently satisfied by the 20 source fixtures in
   `packages-galerina/galerina-core/examples/`.
 
@@ -1001,14 +1001,14 @@ the active v1 build graph.
   rate-limit policy, idempotency, replay protection, jobs and runtime reports.
 - The kernel must receive raw requests and pass only typed, validated values to
   Galerina handlers unless unsafe raw access is explicitly declared.
-- The kernel must enforce `boot.spore` security policy at runtime where a runtime
+- The kernel must enforce `boot.fungi` security policy at runtime where a runtime
   adapter is present.
 - The kernel must support adapter boundaries for HTTP servers, queue backends,
   storage backends and identity providers.
 - The kernel must not include CMS features, admin dashboards, page builders,
   mandatory ORM design, mandatory template engines or frontend framework syntax.
 - The kernel package must support a non-compiled checked Run Mode smoke test for
-  validating simple `.spore` execution during framework development.
+  validating simple `.fungi` execution during framework development.
 
 ## API Server Requirements
 

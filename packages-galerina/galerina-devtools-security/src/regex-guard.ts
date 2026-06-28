@@ -29,7 +29,7 @@ const CATASTROPHIC_PATTERNS: ReadonlyArray<{ re: RegExp; label: string }> = [
  * This is a conservative heuristic guard — it catches the most common
  * catastrophic patterns. A full analysis requires a regex complexity analyser.
  * In strict/high_integrity profiles, dynamic regex from user input should be
- * disabled entirely (SPORE-PROFILE-005B).
+ * disabled entirely (FUNGI-PROFILE-005B).
  */
 export function validateRegexPattern(pattern: string): RegexValidationResult {
   if (pattern.length > MAX_PATTERN_LENGTH) {

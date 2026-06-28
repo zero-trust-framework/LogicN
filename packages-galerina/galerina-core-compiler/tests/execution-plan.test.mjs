@@ -20,7 +20,7 @@ import {
  * Parse a source string and return { ast, flows }.
  */
 function parse(source) {
-  return parseProgram(source, "test.spore");
+  return parseProgram(source, "test.fungi");
 }
 
 /**

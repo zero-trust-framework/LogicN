@@ -1,15 +1,15 @@
 // =============================================================================
 // @galerina/devtools-naming — Naming Checker
 //
-// Static analysis of .spore source files for naming anti-patterns.
+// Static analysis of .fungi source files for naming anti-patterns.
 // Enforces "Zero Ambiguity / Maximum Semantics" naming standard.
 //
 // Diagnostic codes:
-//   SPORE-NAMING-001  AbbreviatedIdentifier
-//   SPORE-NAMING-002  ImplicitReturnType
-//   SPORE-NAMING-003  GenericTypeName
-//   SPORE-NAMING-004  AbbreviatedFlowName
-//   SPORE-NAMING-005  MissingIntentOnPublicFlow
+//   FUNGI-NAMING-001  AbbreviatedIdentifier
+//   FUNGI-NAMING-002  ImplicitReturnType
+//   FUNGI-NAMING-003  GenericTypeName
+//   FUNGI-NAMING-004  AbbreviatedFlowName
+//   FUNGI-NAMING-005  MissingIntentOnPublicFlow
 // =============================================================================
 
 import type { AstNode, FlowMeta } from "@galerina/core-compiler";
@@ -19,11 +19,11 @@ import type { AstNode, FlowMeta } from "@galerina/core-compiler";
 // ---------------------------------------------------------------------------
 
 export type NamingDiagnosticCode =
-  | "SPORE-NAMING-001"
-  | "SPORE-NAMING-002"
-  | "SPORE-NAMING-003"
-  | "SPORE-NAMING-004"
-  | "SPORE-NAMING-005";
+  | "FUNGI-NAMING-001"
+  | "FUNGI-NAMING-002"
+  | "FUNGI-NAMING-003"
+  | "FUNGI-NAMING-004"
+  | "FUNGI-NAMING-005";
 
 export interface NamingDiagnostic {
   readonly code: NamingDiagnosticCode;
@@ -37,7 +37,7 @@ export interface NamingDiagnostic {
 }
 
 export interface NamingCheckResult {
-  readonly schemaVersion: "spore.naming.v1";
+  readonly schemaVersion: "fungi.naming.v1";
   readonly findings: readonly NamingDiagnostic[];
   readonly passed: boolean;
   readonly summary: string;
@@ -52,7 +52,7 @@ export interface NamingCheckOptions {
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-NAMING-001: Abbreviated identifier list
+// FUNGI-NAMING-001: Abbreviated identifier list
 // ---------------------------------------------------------------------------
 
 const BANNED_ABBREVS = new Set([
@@ -63,7 +63,7 @@ const BANNED_ABBREVS = new Set([
 
 /**
  * Loop counter exemptions: conventional single-char loop index names.
- * SPORE-NAMING-001 does NOT fire for these.
+ * FUNGI-NAMING-001 does NOT fire for these.
  */
 const LOOP_COUNTER_EXEMPTIONS = new Set(["i", "j", "k", "n"]);
 
@@ -90,7 +90,7 @@ function isAbbreviated(name: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-NAMING-002: Implicit return type helpers
+// FUNGI-NAMING-002: Implicit return type helpers
 // ---------------------------------------------------------------------------
 
 /**
@@ -103,7 +103,7 @@ function isImplicitReturnType(returnType: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-NAMING-003: Generic type name helpers
+// FUNGI-NAMING-003: Generic type name helpers
 // ---------------------------------------------------------------------------
 
 const GENERIC_TYPE_NAMES = new Set(["Any", "Object", "unknown"]);
@@ -118,7 +118,7 @@ function isGenericTypeName(typeStr: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-NAMING-004: Abbreviated flow name heuristic
+// FUNGI-NAMING-004: Abbreviated flow name heuristic
 // ---------------------------------------------------------------------------
 
 // Known short standalone flow names that are really abbreviations / compressed forms
@@ -239,7 +239,7 @@ export function checkNaming(
   flows: readonly FlowMeta[],
   options: NamingCheckOptions = {},
 ): NamingCheckResult {
-  const { strict = false, fileName = "source.spore" } = options;
+  const { strict = false, fileName = "source.fungi" } = options;
   const findings: NamingDiagnostic[] = [];
   const checkedAt = new Date().toISOString();
 
@@ -252,7 +252,7 @@ export function checkNaming(
     }
   });
 
-  // ── SPORE-NAMING-001, SPORE-NAMING-003: Walk all binding/param nodes ──────────
+  // ── FUNGI-NAMING-001, FUNGI-NAMING-003: Walk all binding/param nodes ──────────
   walkAst(ast, (node) => {
     // Binding/param identifier checks
     if (
@@ -263,10 +263,10 @@ export function checkNaming(
       const bindingName = extractBindingName(node.value ?? "");
       const typeAnnotation = extractTypeAnnotation(node.value ?? "");
 
-      // SPORE-NAMING-001: Check the binding name itself
+      // FUNGI-NAMING-001: Check the binding name itself
       if (bindingName !== undefined && isAbbreviated(bindingName)) {
         findings.push({
-          code: "SPORE-NAMING-001",
+          code: "FUNGI-NAMING-001",
           name: "AbbreviatedIdentifier",
           severity: "warning",
           message: `Identifier '${bindingName}' is an abbreviation. Use a fully-spelled domain name (e.g. '${bindingName}' → a descriptive name like 'errorMessage', 'requestBody', 'contextData').`,
@@ -277,10 +277,10 @@ export function checkNaming(
         });
       }
 
-      // SPORE-NAMING-003: Check if the type is generic/opaque
+      // FUNGI-NAMING-003: Check if the type is generic/opaque
       if (typeAnnotation !== undefined && isGenericTypeName(typeAnnotation)) {
         findings.push({
-          code: "SPORE-NAMING-003",
+          code: "FUNGI-NAMING-003",
           name: "GenericTypeName",
           severity: "warning",
           message: `Binding '${bindingName ?? "?"}' uses generic type '${typeAnnotation}'. Replace with a named domain type alias (e.g. 'type UserPayload = Object' then use UserPayload).`,
@@ -292,7 +292,7 @@ export function checkNaming(
       }
     }
 
-    // SPORE-NAMING-001 on flow-level param identifier nodes (parsed as identifier children)
+    // FUNGI-NAMING-001 on flow-level param identifier nodes (parsed as identifier children)
     // These are emitted by the parser when params are in identifier form
     if (node.kind === "identifier") {
       const val = (node.value ?? "").trim();
@@ -302,7 +302,7 @@ export function checkNaming(
           // Only emit for identifiers that look like binding names (start lowercase)
           if (/^[a-z]/.test(val)) {
             findings.push({
-              code: "SPORE-NAMING-001",
+              code: "FUNGI-NAMING-001",
               name: "AbbreviatedIdentifier",
               severity: "warning",
               message: `Identifier '${val}' is an abbreviation. Use a fully-spelled domain name.`,
@@ -321,20 +321,20 @@ export function checkNaming(
   for (const flow of flows) {
     const flowNode = flowNodeMap.get(flow.name);
 
-    // SPORE-NAMING-001: Check param names from FlowMeta
+    // FUNGI-NAMING-001: Check param names from FlowMeta
     for (const param of flow.params) {
       const paramName = extractBindingName(param);
       if (paramName !== undefined && isAbbreviated(paramName)) {
         // Deduplicate: if already emitted from AST walk, skip
         const alreadyEmitted = findings.some(
           (f) =>
-            f.code === "SPORE-NAMING-001" &&
+            f.code === "FUNGI-NAMING-001" &&
             f.identifierName === paramName &&
             f.flowName === flow.name,
         );
         if (!alreadyEmitted) {
           findings.push({
-            code: "SPORE-NAMING-001",
+            code: "FUNGI-NAMING-001",
             name: "AbbreviatedIdentifier",
             severity: "warning",
             message: `Parameter '${paramName}' in flow '${flow.name}' is an abbreviation. Use a fully-spelled domain name.`,
@@ -345,11 +345,11 @@ export function checkNaming(
         }
       }
 
-      // SPORE-NAMING-003: Check param types from FlowMeta
+      // FUNGI-NAMING-003: Check param types from FlowMeta
       const paramType = extractTypeAnnotation(param);
       if (paramType !== undefined && isGenericTypeName(paramType)) {
         findings.push({
-          code: "SPORE-NAMING-003",
+          code: "FUNGI-NAMING-003",
           name: "GenericTypeName",
           severity: "warning",
           message: `Parameter '${paramName ?? "?"}' in flow '${flow.name}' uses generic type '${paramType}'. Replace with a named domain type alias.`,
@@ -360,10 +360,10 @@ export function checkNaming(
       }
     }
 
-    // SPORE-NAMING-002: Implicit return type
+    // FUNGI-NAMING-002: Implicit return type
     if (isImplicitReturnType(flow.returnType)) {
       findings.push({
-        code: "SPORE-NAMING-002",
+        code: "FUNGI-NAMING-002",
         name: "ImplicitReturnType",
         severity: "warning",
         message: `Flow '${flow.name}' has implicit/void return type. Declare an explicit return type to communicate intent (e.g. '-> Unit' for intentional no-value, '-> Result<T, Error>' for fallible flows).`,
@@ -372,10 +372,10 @@ export function checkNaming(
       });
     }
 
-    // SPORE-NAMING-004: Abbreviated flow name
+    // FUNGI-NAMING-004: Abbreviated flow name
     if (isAbbreviatedFlowName(flow.name)) {
       findings.push({
-        code: "SPORE-NAMING-004",
+        code: "FUNGI-NAMING-004",
         name: "AbbreviatedFlowName",
         severity: "warning",
         message: `Flow name '${flow.name}' is too short or generic to convey domain intent. Use a name that includes a domain noun (e.g. 'hashPassword' instead of 'hash', 'processOrder' instead of 'proc').`,
@@ -384,14 +384,14 @@ export function checkNaming(
       });
     }
 
-    // SPORE-NAMING-005: secure/guarded flow with no intent
+    // FUNGI-NAMING-005: secure/guarded flow with no intent
     if (
       (flow.qualifier === "secure" || flow.qualifier === "guarded") &&
       flowNode !== undefined &&
       !hasIntentDecl(flowNode)
     ) {
       findings.push({
-        code: "SPORE-NAMING-005",
+        code: "FUNGI-NAMING-005",
         name: "MissingIntentOnPublicFlow",
         severity: "warning",
         message: `${flow.qualifier} flow '${flow.name}' has no contract { intent { ... } } block. Intent documents what this flow protects and why it is ${flow.qualifier} — required by the Zero-Ambiguity standard.`,
@@ -410,7 +410,7 @@ export function checkNaming(
     : `${deduped.length} finding${deduped.length === 1 ? "" : "s"}: ${summariseByCodes(deduped)}`;
 
   return {
-    schemaVersion: "spore.naming.v1",
+    schemaVersion: "fungi.naming.v1",
     findings: deduped,
     passed,
     summary,

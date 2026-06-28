@@ -2,7 +2,7 @@
 // =============================================================================
 // rebuild-fusable-packages.mjs — keep fused .wasm artifacts fresh in dev
 // =============================================================================
-// For every FUSABLE package (one that has a `package.spore.json` descriptor),
+// For every FUSABLE package (one that has a `package.fungi.json` descriptor),
 // rebuild its governed `.wasm` IF its `/src` is newer than `dist/<name>.wasm`
 // (or the .wasm doesn't exist yet). Rebuild = `node galerina.mjs build --package`.
 //
@@ -30,19 +30,19 @@ if (process.env.GALERINA_SKIP_FUSE_REBUILD === "1") {
 
 const SKIP_DIRS = new Set(["node_modules", "dist", ".git", "build", ".graph"]);
 
-/** Find every directory containing a package.spore.json under `base`. */
+/** Find every directory containing a package.fungi.json under `base`. */
 function findDescriptors(base, depth = 0, acc = []) {
   if (depth > 6 || !existsSync(base)) return acc;
   let entries;
   try { entries = readdirSync(base, { withFileTypes: true }); } catch { return acc; }
   for (const e of entries) {
-    if (e.isFile() && e.name === "package.spore.json") acc.push(base);
+    if (e.isFile() && e.name === "package.fungi.json") acc.push(base);
     else if (e.isDirectory() && !SKIP_DIRS.has(e.name)) findDescriptors(join(base, e.name), depth + 1, acc);
   }
   return acc;
 }
 
-/** Newest mtime (ms) of any .spore under `dir` (recursively, skipping build dirs). */
+/** Newest mtime (ms) of any .fungi under `dir` (recursively, skipping build dirs). */
 function newestSpore(dir, depth = 0) {
   let newest = 0;
   let entries;
@@ -50,7 +50,7 @@ function newestSpore(dir, depth = 0) {
   for (const e of entries) {
     if (SKIP_DIRS.has(e.name)) continue;
     const p = join(dir, e.name);
-    if (e.isFile() && p.endsWith(".spore")) {
+    if (e.isFile() && p.endsWith(".fungi")) {
       const m = statSync(p).mtimeMs;
       if (m > newest) newest = m;
     } else if (e.isDirectory() && depth < 6) {
@@ -71,7 +71,7 @@ const details = [];
 
 for (const dir of pkgDirs) {
   let desc;
-  try { desc = JSON.parse(readFileSync(join(dir, "package.spore.json"), "utf8")); } catch { continue; }
+  try { desc = JSON.parse(readFileSync(join(dir, "package.fungi.json"), "utf8")); } catch { continue; }
   const name = desc.name;
   if (!name) continue;
 
@@ -79,9 +79,9 @@ for (const dir of pkgDirs) {
   const wasm = join(dir, "dist", `${name}.wasm`);
   const srcMtime = newestSpore(srcRoot);
 
-  // No .spore source to fuse — e.g. an ext-bridge with a `.ts` entry (galerina-ext-bridge-quantum) that carries a
-  // package.spore.json descriptor but is NOT a fusable .spore module. `galerina build --package` would try to parse
-  // a non-.spore entry and fail with SPORE-PARSE-001. Not a build failure — there is simply nothing to fuse. Skip.
+  // No .fungi source to fuse — e.g. an ext-bridge with a `.ts` entry (galerina-ext-bridge-quantum) that carries a
+  // package.fungi.json descriptor but is NOT a fusable .fungi module. `galerina build --package` would try to parse
+  // a non-.fungi entry and fail with FUNGI-PARSE-001. Not a build failure — there is simply nothing to fuse. Skip.
   if (srcMtime === 0) { skipped++; continue; }
 
   const wasmMtime = existsSync(wasm) ? statSync(wasm).mtimeMs : 0;

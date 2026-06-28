@@ -11,7 +11,7 @@ import {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function parseAndCheck(source) {
-  const parsed = parseProgram(source, "financial.spore");
+  const parsed = parseProgram(source, "financial.fungi");
   return checkTypes(parsed.ast);
 }
 
@@ -24,7 +24,7 @@ function diagsWithCode(result, code) {
 }
 
 function parse(source) {
-  return parseProgram(source, "financial.spore");
+  return parseProgram(source, "financial.fungi");
 }
 
 function hasNoDiags(result) {
@@ -32,7 +32,7 @@ function hasNoDiags(result) {
 }
 
 async function parseAndRun(source, flowName, args = new Map()) {
-  const parsed = parseProgram(source, "financial.spore");
+  const parsed = parseProgram(source, "financial.fungi");
   resolveSymbols(parsed.ast);
   checkTypes(parsed.ast);
   return await executeFlow(flowName, args, parsed.ast);
@@ -41,40 +41,40 @@ async function parseAndRun(source, flowName, args = new Map()) {
 // ── 1. Money types: Money<GBP>, Money<USD>, Money<EUR>, Money<JPY> ───────────
 
 describe("Financial — Money type declarations", () => {
-  it("accepts Money<GBP> as a parameter type without SPORE-TYPE-001", () => {
+  it("accepts Money<GBP> as a parameter type without FUNGI-TYPE-001", () => {
     const result = parseAndCheck(`
 pure flow getPrice(amount: Money<GBP>) -> Money<GBP> {
   return amount
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-001"), "Money<GBP> should be a known type");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-001"), "Money<GBP> should be a known type");
   });
 
-  it("accepts Money<USD> as a parameter type without SPORE-TYPE-001", () => {
+  it("accepts Money<USD> as a parameter type without FUNGI-TYPE-001", () => {
     const result = parseAndCheck(`
 pure flow convert(amount: Money<USD>) -> Money<USD> {
   return amount
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-001"), "Money<USD> should be a known type");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-001"), "Money<USD> should be a known type");
   });
 
-  it("accepts Money<EUR> as a parameter type without SPORE-TYPE-001", () => {
+  it("accepts Money<EUR> as a parameter type without FUNGI-TYPE-001", () => {
     const result = parseAndCheck(`
 pure flow price(amount: Money<EUR>) -> Money<EUR> {
   return amount
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-001"), "Money<EUR> should be a known type");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-001"), "Money<EUR> should be a known type");
   });
 
-  it("accepts Money<JPY> as a parameter type without SPORE-TYPE-001", () => {
+  it("accepts Money<JPY> as a parameter type without FUNGI-TYPE-001", () => {
     const result = parseAndCheck(`
 pure flow jpy(amount: Money<JPY>) -> Money<JPY> {
   return amount
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-001"), "Money<JPY> should be a known type");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-001"), "Money<JPY> should be a known type");
   });
 
   it("accepts all four currency types together in the same flow", () => {
@@ -88,24 +88,24 @@ flow exchangeRates(
   return
 }
 `);
-    const typeErrors = diagsWithCode(result, "SPORE-TYPE-001");
+    const typeErrors = diagsWithCode(result, "FUNGI-TYPE-001");
     assert.equal(typeErrors.length, 0, "No unknown-type errors for all four currency Money types");
   });
 
-  it("does not emit SPORE-TYPE-009 for Money<GBP> (correct arity)", () => {
+  it("does not emit FUNGI-TYPE-009 for Money<GBP> (correct arity)", () => {
     const result = parseAndCheck(`
 pure flow gross(price: Money<GBP>) -> Money<GBP> {
   return price
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-009"), "Money<GBP> has arity 1 — no arity error");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-009"), "Money<GBP> has arity 1 — no arity error");
   });
 });
 
 // ── 2. Valid same-currency arithmetic: Money<GBP> + Money<GBP> ───────────────
 
 describe("Financial — valid same-currency arithmetic (type check)", () => {
-  it("does not emit SPORE-TYPE-004 for Money<GBP> + Money<GBP>", () => {
+  it("does not emit FUNGI-TYPE-004 for Money<GBP> + Money<GBP>", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let price: Money<GBP> = Money.gbp("100.00")
@@ -114,13 +114,13 @@ flow test() -> String {
   return "ok"
 }
 `);
-    const moneyErrors = diagsWithCode(result, "SPORE-TYPE-004").filter(
+    const moneyErrors = diagsWithCode(result, "FUNGI-TYPE-004").filter(
       (d) => d.message.includes("Money") && d.message.includes("currency"),
     );
     assert.equal(moneyErrors.length, 0, "Same-currency addition must not emit cross-currency error");
   });
 
-  it("does not emit SPORE-TYPE-004 for Money<USD> + Money<USD>", () => {
+  it("does not emit FUNGI-TYPE-004 for Money<USD> + Money<USD>", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let a: Money<USD> = Money.usd("50.00")
@@ -129,13 +129,13 @@ flow test() -> String {
   return "ok"
 }
 `);
-    const moneyErrors = diagsWithCode(result, "SPORE-TYPE-004").filter(
+    const moneyErrors = diagsWithCode(result, "FUNGI-TYPE-004").filter(
       (d) => d.message.includes("currency"),
     );
     assert.equal(moneyErrors.length, 0, "USD + USD should not emit a currency error");
   });
 
-  it("does not emit SPORE-TYPE-004 for Money<EUR> - Money<EUR>", () => {
+  it("does not emit FUNGI-TYPE-004 for Money<EUR> - Money<EUR>", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let invoice: Money<EUR> = Money.eur("200.00")
@@ -144,17 +144,17 @@ flow test() -> String {
   return "ok"
 }
 `);
-    const moneyErrors = diagsWithCode(result, "SPORE-TYPE-004").filter(
+    const moneyErrors = diagsWithCode(result, "FUNGI-TYPE-004").filter(
       (d) => d.message.includes("currency"),
     );
     assert.equal(moneyErrors.length, 0, "EUR - EUR should not emit a currency error");
   });
 });
 
-// ── 3. Invalid cross-currency: SPORE-TYPE-004 ──────────────────────────────────
+// ── 3. Invalid cross-currency: FUNGI-TYPE-004 ──────────────────────────────────
 
-describe("Financial — cross-currency rejection (SPORE-TYPE-004)", () => {
-  it("emits SPORE-TYPE-004 for Money<GBP> + Money<USD>", () => {
+describe("Financial — cross-currency rejection (FUNGI-TYPE-004)", () => {
+  it("emits FUNGI-TYPE-004 for Money<GBP> + Money<USD>", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let gbp: Money<GBP> = Money.gbp("100.00")
@@ -164,14 +164,14 @@ flow test() -> String {
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-TYPE-004"),
-      "Expected SPORE-TYPE-004 for Money<GBP> + Money<USD>",
+      hasDiag(result, "FUNGI-TYPE-004"),
+      "Expected FUNGI-TYPE-004 for Money<GBP> + Money<USD>",
     );
-    const diag = diagsWithCode(result, "SPORE-TYPE-004").find((d) => d.message.includes("currency"));
-    assert.ok(diag !== undefined, "SPORE-TYPE-004 message must mention 'currency'");
+    const diag = diagsWithCode(result, "FUNGI-TYPE-004").find((d) => d.message.includes("currency"));
+    assert.ok(diag !== undefined, "FUNGI-TYPE-004 message must mention 'currency'");
   });
 
-  it("emits SPORE-TYPE-004 for Money<GBP> + Money<EUR>", () => {
+  it("emits FUNGI-TYPE-004 for Money<GBP> + Money<EUR>", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let gbp: Money<GBP> = Money.gbp("50.00")
@@ -180,10 +180,10 @@ flow test() -> String {
   return "ok"
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-004"), "Expected SPORE-TYPE-004 for GBP + EUR");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-004"), "Expected FUNGI-TYPE-004 for GBP + EUR");
   });
 
-  it("emits SPORE-TYPE-004 for Money<USD> - Money<JPY>", () => {
+  it("emits FUNGI-TYPE-004 for Money<USD> - Money<JPY>", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let usd: Money<USD> = Money.usd("100.00")
@@ -192,10 +192,10 @@ flow test() -> String {
   return "ok"
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-004"), "Expected SPORE-TYPE-004 for USD - JPY");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-004"), "Expected FUNGI-TYPE-004 for USD - JPY");
   });
 
-  it("emits SPORE-TYPE-004 for Money * Money (dimensionally invalid)", () => {
+  it("emits FUNGI-TYPE-004 for Money * Money (dimensionally invalid)", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let price: Money<GBP> = Money.gbp("100.00")
@@ -204,10 +204,10 @@ flow test() -> String {
   return "ok"
 }
 `);
-    const moneyMulDiag = diagsWithCode(result, "SPORE-TYPE-004").find(
+    const moneyMulDiag = diagsWithCode(result, "FUNGI-TYPE-004").find(
       (d) => d.message.includes("Money") && d.message.includes("*"),
     );
-    assert.ok(moneyMulDiag !== undefined, "Expected SPORE-TYPE-004 for Money * Money");
+    assert.ok(moneyMulDiag !== undefined, "Expected FUNGI-TYPE-004 for Money * Money");
   });
 });
 
@@ -390,7 +390,7 @@ pure flow takeHome() -> String {
     assert.ok(result.value.value.includes("3000.00"), `Expected 3000.00, got: ${result.value.value}`);
   });
 
-  it("Decimal type is recognised without SPORE-TYPE-001", () => {
+  it("Decimal type is recognised without FUNGI-TYPE-001", () => {
     const result = parseAndCheck(`
 pure flow salaryCalc(
   annual: Money<GBP>,
@@ -400,7 +400,7 @@ pure flow salaryCalc(
   return annual
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-001"), "Decimal must be a known type");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-001"), "Decimal must be a known type");
   });
 });
 
@@ -646,7 +646,7 @@ flow reconcile(inv: Invoice, pmt: Payment, bal: Balance) -> Bool {
 
 describe("Financial — brand types: AccountId, TransactionId, CardNumber", () => {
   it("type checker accepts AccountId as a Brand<String, ...> alias (alias itself not flagged)", () => {
-    // The string literal "AccountId" inside Brand<> may emit SPORE-TYPE-001 — that is expected.
+    // The string literal "AccountId" inside Brand<> may emit FUNGI-TYPE-001 — that is expected.
     // The alias 'AccountId' itself must NOT be flagged as an unknown type.
     const result = parseAndCheck(`
 type AccountId = Brand<String, "AccountId">
@@ -655,15 +655,15 @@ flow getAccount(id: AccountId) -> String {
   return "ok"
 }
 `);
-    const type001 = diagsWithCode(result, "SPORE-TYPE-001");
+    const type001 = diagsWithCode(result, "FUNGI-TYPE-001");
     assert.ok(
       !type001.some((d) => d.message.includes("'AccountId'")),
-      "AccountId alias itself must not appear in SPORE-TYPE-001 messages",
+      "AccountId alias itself must not appear in FUNGI-TYPE-001 messages",
     );
   });
 
   it("type checker accepts TransactionId as a Brand<String, ...> alias (alias itself not flagged)", () => {
-    // The string literal "TransactionId" inside Brand<> may emit SPORE-TYPE-001 — that is expected.
+    // The string literal "TransactionId" inside Brand<> may emit FUNGI-TYPE-001 — that is expected.
     const result = parseAndCheck(`
 type TransactionId = Brand<String, "TransactionId">
 
@@ -671,15 +671,15 @@ flow getTransaction(id: TransactionId) -> String {
   return "ok"
 }
 `);
-    const type001 = diagsWithCode(result, "SPORE-TYPE-001");
+    const type001 = diagsWithCode(result, "FUNGI-TYPE-001");
     assert.ok(
       !type001.some((d) => d.message.includes("'TransactionId'")),
-      "TransactionId alias itself must not appear in SPORE-TYPE-001 messages",
+      "TransactionId alias itself must not appear in FUNGI-TYPE-001 messages",
     );
   });
 
   it("type checker accepts CardNumber as a Brand<String, ...> alias (alias itself not flagged)", () => {
-    // The string literal "CardNumber" inside Brand<> may emit SPORE-TYPE-001 — that is expected.
+    // The string literal "CardNumber" inside Brand<> may emit FUNGI-TYPE-001 — that is expected.
     const result = parseAndCheck(`
 type CardNumber = Brand<String, "CardNumber">
 
@@ -687,14 +687,14 @@ flow maskCard(card: CardNumber) -> String {
   return "****"
 }
 `);
-    const type001 = diagsWithCode(result, "SPORE-TYPE-001");
+    const type001 = diagsWithCode(result, "FUNGI-TYPE-001");
     assert.ok(
       !type001.some((d) => d.message.includes("'CardNumber'")),
-      "CardNumber alias itself must not appear in SPORE-TYPE-001 messages",
+      "CardNumber alias itself must not appear in FUNGI-TYPE-001 messages",
     );
   });
 
-  it("emits SPORE-TYPE-003 when a string literal is directly assigned to AccountId", () => {
+  it("emits FUNGI-TYPE-003 when a string literal is directly assigned to AccountId", () => {
     const result = parseAndCheck(`
 type AccountId = Brand<String, "AccountId">
 
@@ -704,12 +704,12 @@ flow test() -> String {
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-TYPE-003"),
-      "Assigning a raw string to AccountId (Brand) must emit SPORE-TYPE-003",
+      hasDiag(result, "FUNGI-TYPE-003"),
+      "Assigning a raw string to AccountId (Brand) must emit FUNGI-TYPE-003",
     );
   });
 
-  it("emits SPORE-TYPE-003 when a string literal is directly assigned to TransactionId", () => {
+  it("emits FUNGI-TYPE-003 when a string literal is directly assigned to TransactionId", () => {
     const result = parseAndCheck(`
 type TransactionId = Brand<String, "TransactionId">
 
@@ -719,12 +719,12 @@ flow test() -> String {
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-TYPE-003"),
-      "Assigning a raw string to TransactionId must emit SPORE-TYPE-003",
+      hasDiag(result, "FUNGI-TYPE-003"),
+      "Assigning a raw string to TransactionId must emit FUNGI-TYPE-003",
     );
   });
 
-  it("emits SPORE-TYPE-003 when a string literal is assigned to CardNumber", () => {
+  it("emits FUNGI-TYPE-003 when a string literal is assigned to CardNumber", () => {
     const result = parseAndCheck(`
 type CardNumber = Brand<String, "CardNumber">
 
@@ -734,12 +734,12 @@ flow test() -> String {
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-TYPE-003"),
-      "Assigning a raw card number string to CardNumber brand must emit SPORE-TYPE-003",
+      hasDiag(result, "FUNGI-TYPE-003"),
+      "Assigning a raw card number string to CardNumber brand must emit FUNGI-TYPE-003",
     );
   });
 
-  it("SPORE-TYPE-003 diagnostic for CardNumber includes a suggested validate gate", () => {
+  it("FUNGI-TYPE-003 diagnostic for CardNumber includes a suggested validate gate", () => {
     const result = parseAndCheck(`
 type CardNumber = Brand<String, "CardNumber">
 
@@ -750,22 +750,22 @@ contract { effects { database.write } }
   return "ok"
 }
 `);
-    const diag = diagsWithCode(result, "SPORE-TYPE-003")[0];
-    assert.ok(diag !== undefined, "Expected SPORE-TYPE-003 for unsafe CardNumber assignment");
+    const diag = diagsWithCode(result, "FUNGI-TYPE-003")[0];
+    assert.ok(diag !== undefined, "Expected FUNGI-TYPE-003 for unsafe CardNumber assignment");
     assert.ok(
       diag.suggestedCode !== undefined && diag.suggestedCode.includes("validate"),
       `Expected suggestedCode mentioning 'validate', got: ${diag.suggestedCode}`,
     );
   });
 
-  it("does not emit SPORE-TYPE-003 for a plain String binding (no brand)", () => {
+  it("does not emit FUNGI-TYPE-003 for a plain String binding (no brand)", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let ref: String = "ACC-001"
   return ref
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-003"), "Plain String binding must not emit SPORE-TYPE-003");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-003"), "Plain String binding must not emit FUNGI-TYPE-003");
   });
 });
 
@@ -899,7 +899,7 @@ contract { effects { audit.write } }
   return "ok"
 }
 `, "processPayment");
-    assert.equal(result.audit.schemaVersion, "spore.runtime.audit.v1");
+    assert.equal(result.audit.schemaVersion, "fungi.runtime.audit.v1");
   });
 
   it("validates that payment amount is positive before processing", async () => {

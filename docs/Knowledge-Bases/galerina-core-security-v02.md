@@ -295,14 +295,14 @@ class ProtectedSecret<T> {
     /**
      * Canonical public unwrap API.
      * The sink must be approved before the value is released.
-     * Emits SPORE-SECRET-001 if the sink is not approved.
+     * Emits FUNGI-SECRET-001 if the sink is not approved.
      */
     unwrapForApprovedSink(
         sink: SecretSafeSink
     ): T {
         if (!isSafeSink(sink.type)) {
             throw new Error(
-                `SPORE-SECRET-001: secret cannot be sent to sink ${sink.type}`
+                `FUNGI-SECRET-001: secret cannot be sent to sink ${sink.type}`
             );
         }
 
@@ -479,11 +479,11 @@ Result:
 
 | Code          | Meaning                         |
 | ------------- | ------------------------------- |
-| SPORE-SECRET-001 | Unsafe log sink                 |
-| SPORE-SECRET-002 | Unsafe secret propagation       |
-| SPORE-SECRET-003 | Secret serialization prohibited |
-| SPORE-SECRET-004 | Invalid secret derivation       |
-| SPORE-SECRET-005 | Missing taint metadata          |
+| FUNGI-SECRET-001 | Unsafe log sink                 |
+| FUNGI-SECRET-002 | Unsafe secret propagation       |
+| FUNGI-SECRET-003 | Secret serialization prohibited |
+| FUNGI-SECRET-004 | Invalid secret derivation       |
+| FUNGI-SECRET-005 | Missing taint metadata          |
 
 ---
 
@@ -505,7 +505,7 @@ galerina-core-security/
 
   diagnostics/
     SecretDiagnostic.ts
-    codes.ts              (SPORE-SECRET-001–005)
+    codes.ts              (FUNGI-SECRET-001–005)
 
   policies/
     redaction.ts          (SecretRedactionPolicy, DEFAULT_REDACTION_POLICY)

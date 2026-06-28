@@ -139,7 +139,7 @@ describe("Indexer", () => {
     // Use a temp index dir so we start clean regardless of prior test runs
     const { mkdtemp, rmdir } = await import("node:fs/promises");
     const { tmpdir } = await import("node:os");
-    const tempDir = await mkdtemp(join(tmpdir(), "spore-idx-test-"));
+    const tempDir = await mkdtemp(join(tmpdir(), "fungi-idx-test-"));
 
     try {
       // First build into temp dir — should index all files
@@ -219,7 +219,7 @@ describe("Search — basic", () => {
       id: "aaa",
       flowName: "handleInboundRequest",
       qualifier: "secure",
-      filePath: "test-a.spore",
+      filePath: "test-a.fungi",
       lexicalTokens: tokenizeWithCompounds("inboundRequest rawPlaintextPassword handleInboundRequest"),
       declaredEffects: [],
       economicsHints: [],
@@ -239,7 +239,7 @@ describe("Search — basic", () => {
       id: "bbb",
       flowName: "handleReq",
       qualifier: "secure",
-      filePath: "test-b.spore",
+      filePath: "test-b.fungi",
       lexicalTokens: tokenizeWithCompounds("req pass handleReq"),
       declaredEffects: [],
       economicsHints: [],

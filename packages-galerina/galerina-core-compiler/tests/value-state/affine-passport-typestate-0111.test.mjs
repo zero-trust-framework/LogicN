@@ -2,9 +2,9 @@
 // RD-0111 — affine consume-once + monotone Raw→Verified→Authorized→Sealed passport typestate.
 //
 // Two compile-time denies on Passport-typed values in the shipped value-state checker:
-//   SPORE-AFFINE-001   — a passport consumed at an authority sink cannot be re-used (affine/linear).
-//   SPORE-PASSPORT-002 — a passport below a sink's required stage is denied (illegal stage-skip).
-// Lifts the rd-0087 proven abstract invariant onto real .spore source. Binary/digital, deny-by-default
+//   FUNGI-AFFINE-001   — a passport consumed at an authority sink cannot be re-used (affine/linear).
+//   FUNGI-PASSPORT-002 — a passport below a sink's required stage is denied (illegal stage-skip).
+// Lifts the rd-0087 proven abstract invariant onto real .fungi source. Binary/digital, deny-by-default
 // (an un-gated passport is Raw=0). The chain-recognition (`authorize.passport(v)` where v is an
 // unannotated let-binding) is the load-bearing detail the original build-spec got wrong.
 // =============================================================================
@@ -19,21 +19,21 @@ const codes = (src) =>
 const isPassportDeny = (c) => /AFFINE|PASSPORT/i.test(c);
 
 describe("RD-0111 passport typestate: the two denies fire", () => {
-  it("consume-once: a passport re-used at a second authority sink → SPORE-AFFINE-001", () => {
+  it("consume-once: a passport re-used at a second authority sink → FUNGI-AFFINE-001", () => {
     const c = codes(`secure flow grantTwice(p: Passport) -> Bool {
   let v = verify.passport(p)
   let a = authorize.passport(v)
   database.write(a)
   response.body(a)
 }`);
-    assert.ok(c.includes("SPORE-AFFINE-001"), `expected SPORE-AFFINE-001, got: ${c.join(",")}`);
+    assert.ok(c.includes("FUNGI-AFFINE-001"), `expected FUNGI-AFFINE-001, got: ${c.join(",")}`);
   });
 
-  it("state-skip: a Raw passport at an Authorized-requiring sink → SPORE-PASSPORT-002", () => {
+  it("state-skip: a Raw passport at an Authorized-requiring sink → FUNGI-PASSPORT-002", () => {
     const c = codes(`secure flow skipStages(p: Passport) -> Bool {
   response.body(p)
 }`);
-    assert.ok(c.includes("SPORE-PASSPORT-002"), `expected SPORE-PASSPORT-002, got: ${c.join(",")}`);
+    assert.ok(c.includes("FUNGI-PASSPORT-002"), `expected FUNGI-PASSPORT-002, got: ${c.join(",")}`);
   });
 });
 

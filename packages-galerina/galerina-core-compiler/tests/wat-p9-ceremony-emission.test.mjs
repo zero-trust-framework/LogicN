@@ -2,7 +2,7 @@
  * P9 bootstrap ceremony — EMISSION gate.
  *
  * The single gate to P9 is self-hosting: the self-hosted lexer (src/self-hosted/
- * lexer.spore), whose `tokenize` flow RETURNS a record (a token list), must emit real
+ * lexer.fungi), whose `tokenize` flow RETURNS a record (a token list), must emit real
  * WASM instead of `unreachable`. Before P9.4b record lowering, `tokenize` fell back
  * to `unreachable`; with P9.4b (record construction + field access) and P9.4c (guarded
  * export gating), the whole lexer now lowers to a real, wabt-assembling WASM module.
@@ -28,7 +28,7 @@ import {
 } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const LEXER_PATH = join(__dir, "../src/self-hosted/lexer.spore");
+const LEXER_PATH = join(__dir, "../src/self-hosted/lexer.fungi");
 
 function isStub(body) {
   const b = (body ?? "").trim();
@@ -38,9 +38,9 @@ function isStub(body) {
 function compileLexer() {
   let src = readFileSync(LEXER_PATH, "utf8");
   if (src.charCodeAt(0) === 0xFEFF) src = src.slice(1);
-  const prog = parseProgram(src, "lexer.spore");
+  const prog = parseProgram(src, "lexer.fungi");
   const perr = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
-  assert.equal(perr.length, 0, "lexer.spore parses cleanly");
+  assert.equal(perr.length, 0, "lexer.fungi parses cleanly");
   const fx = checkEffects(prog.flows, prog.ast);
   const { gir } = emitGIR(prog.ast, prog.flows, fx);
   const mod = buildWATModuleFromGIR(gir, undefined, "lexer", prog.ast, true);
@@ -59,7 +59,7 @@ describe("P9 ceremony — self-hosted lexer emits real WASM", () => {
     const tok = mod.functions.find((f) => f.name === "tokenize");
     assert.ok(tok, "tokenize flow present");
     assert.equal(isStub(tok.body), false, "tokenize emits a real body, not unreachable");
-    assert.match(wat, /global \$__spore_heap/, "record bump-allocator heap is emitted");
+    assert.match(wat, /global \$__fungi_heap/, "record bump-allocator heap is emitted");
   });
 
   // Honest assembly check. `assembleWAT` falls back to a 240-byte minimal-encoder
@@ -73,7 +73,7 @@ describe("P9 ceremony — self-hosted lexer emits real WASM", () => {
 
   it("the wabt pipeline genuinely compiles a CLEAN module (control)", async () => {
     // Proves real wabt is wired and assembleWAT compiles faithfully when the module links.
-    const prog = parseProgram("pure flow add(a: Int, b: Int) -> Int contract { effects {} } { return a + b }", "c.spore");
+    const prog = parseProgram("pure flow add(a: Int, b: Int) -> Int contract { effects {} } { return a + b }", "c.fungi");
     const fx = checkEffects(prog.flows, prog.ast);
     const { gir } = emitGIR(prog.ast, prog.flows, fx);
     const wat = renderWAT(buildWATModuleFromGIR(gir, undefined, "c", prog.ast, true));
@@ -92,11 +92,11 @@ describe("P9 ceremony — self-hosted lexer emits real WASM", () => {
     assert.match(wat, /\$host___str_count/, "charCount → host import");
     assert.match(wat, /\$host___result_ok/, "Ok → host import");
     // owner Fork A=TRAP: integer +/-/* now lower to checked-arith helper calls
-    // ($spore_checked_add_i32 / _sub_ / _mul_), which the module also defines — these are
+    // ($fungi_checked_add_i32 / _sub_ / _mul_), which the module also defines — these are
     // DEFINED calls, not undefined ones, so they belong in the allowed set.
     const noUndefinedCalls = [...wat.matchAll(/\(call \$([A-Za-z0-9_]+)/g)]
       .map((m) => m[1])
-      .every((c) => c.startsWith("host_") || /^spore_checked_(add|sub|mul)_i32$/.test(c) || /^(makeKeywordTable|scanWord|scanOperator|scanDigits|scanString|scanCharLit|scanLineComment|scanBlockComment|tokenize)$/.test(c));
+      .every((c) => c.startsWith("host_") || /^fungi_checked_(add|sub|mul)_i32$/.test(c) || /^(makeKeywordTable|scanWord|scanOperator|scanDigits|scanString|scanCharLit|scanLineComment|scanBlockComment|tokenize)$/.test(c));
     assert.equal(noUndefinedCalls, true, "no undefined function calls remain in the lexer");
     const asm = await assembleWAT(wat);
     assert.equal(usedRealWabt(asm), true, "lexer module LINKS + assembles via REAL wabt (no stub fallback)");

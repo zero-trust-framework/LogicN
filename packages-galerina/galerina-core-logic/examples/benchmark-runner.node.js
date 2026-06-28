@@ -130,7 +130,7 @@ function buildRuntimes(config) {
   const root = projectRootFromExamplesDir();
   const examples = path.join(root, "galerina-core", "examples");
   const compiler = path.join(root, "galerina-core", "compiler", "galerina.js");
-  const sporeFile = path.join(examples, "compute-mix-throughput-benchmark.spore");
+  const fungiFile = path.join(examples, "compute-mix-throughput-benchmark.fungi");
   const nodeFile = path.join(examples, "compute-mix-throughput-benchmark.node.js");
   const pythonFile = path.join(examples, "compute-mix-throughput-benchmark.py");
   const common = buildCommonArgs(config);
@@ -141,7 +141,7 @@ function buildRuntimes(config) {
     runtimes.push({
       name: "galerina-prototype",
       command: process.execPath,
-      args: [compiler, "run", sporeFile, ...common],
+      args: [compiler, "run", fungiFile, ...common],
     });
   }
 

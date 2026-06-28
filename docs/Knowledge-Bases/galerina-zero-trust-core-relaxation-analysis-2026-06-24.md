@@ -1,6 +1,6 @@
 # Should we lower the zero-trust core to allow interesting new tech? — analysis
 
-**Date:** 2026-06-24 · **Posture:** Govern-Don't-Absorb · fail-closed · crypto-on-core (SPORE-SUBSTRATE-001)
+**Date:** 2026-06-24 · **Posture:** Govern-Don't-Absorb · fail-closed · crypto-on-core (FUNGI-SUBSTRATE-001)
 **Companion:** [`galerina-why-no-resolve-construct-the-maths-2026-06-24.md`](galerina-why-no-resolve-construct-the-maths-2026-06-24.md)
 
 > Owner: *"if we lowered the ZT core a little we could allow some interesting new technology in to make Galerina a lot better — discuss."*

@@ -15,7 +15,7 @@
 [x] Add task report type
 [x] Add unsafe shell placeholder
 [x] Deny shell by default
-[x] Load tasks.spore
+[x] Load tasks.fungi
 [ ] Run named task operations
 [x] Support task dependencies
 [x] Detect circular dependencies

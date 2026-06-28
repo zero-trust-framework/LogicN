@@ -13,7 +13,7 @@ import { join, resolve, sep } from "node:path";
 
 const REPO_ROOT = resolve(import.meta.dirname, "../../..");
 const SCAN_DIRS = ["packages-galerina", "governance", "scripts"];
-const EXTS = new Set([".ts", ".mjs", ".js", ".cjs", ".spore"]);
+const EXTS = new Set([".ts", ".mjs", ".js", ".cjs", ".fungi"]);
 const SKIP = new Set(["node_modules", "dist", "build", ".git"]);
 
 // FRAMEWORK files with parked NUL bytes (owner-gated fix). Remove an entry once its NULs become `\0`.

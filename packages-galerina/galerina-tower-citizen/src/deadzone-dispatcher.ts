@@ -24,9 +24,9 @@ export const DEFAULT_ON_INDETERMINATE: OnIndeterminate = { kind: "trap" };
 
 /** Thrown when a dead-zone reading cannot be resolved to a definite trit under the declared policy. */
 export class SubstrateDeadZoneTrap extends Error {
-  readonly code = "SPORE-SUBSTRATE-DEADZONE" as const;
+  readonly code = "FUNGI-SUBSTRATE-DEADZONE" as const;
   constructor(message: string) {
-    super(`[SPORE-SUBSTRATE-DEADZONE]: ${message}`);
+    super(`[FUNGI-SUBSTRATE-DEADZONE]: ${message}`);
     this.name = "SubstrateDeadZoneTrap";
   }
 }

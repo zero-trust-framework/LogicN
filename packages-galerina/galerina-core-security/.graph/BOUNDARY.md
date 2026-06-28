@@ -5,7 +5,7 @@
 
 **Status:** ✅ PASS
 
-**Scanned scope:** roots [`src`] · extensions [`.ts`, `.spore`]
+**Scanned scope:** roots [`src`] · extensions [`.ts`, `.fungi`]
 
 ## Summary
 
@@ -34,12 +34,12 @@ _none_
 No boundary violations. All external imports are within the allowlist.
 
 ## Orphaned Files
-- `src/dss/dag-validator.spore`
-- `src/dss/dss-supervisor.spore`
-- `src/dss/epilogue-receipt.spore`
-- `src/dss/mmcp-registry.spore`
-- `src/interim.spore`
+- `src/dss/dag-validator.fungi`
+- `src/dss/dss-supervisor.fungi`
+- `src/dss/epilogue-receipt.fungi`
+- `src/dss/mmcp-registry.fungi`
+- `src/interim.fungi`
 
 ## Entry Points
-- `src/dss/index.spore`
+- `src/dss/index.fungi`
 - `src/index.ts`

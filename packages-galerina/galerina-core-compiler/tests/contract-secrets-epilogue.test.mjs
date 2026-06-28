@@ -40,7 +40,7 @@ contract {
 }`;
 
 describe("contract sub-blocks — secrets / epilogue / economics", () => {
-  const parsed = parseProgram(SRC, "t.spore");
+  const parsed = parseProgram(SRC, "t.fungi");
 
   it("parses with zero errors", () => {
     const errs = parsed.diagnostics.filter((d) => d.severity === "error");
@@ -57,7 +57,7 @@ describe("contract sub-blocks — secrets / epilogue / economics", () => {
   });
 
   it("a flow that omits secrets/epilogue still parses (auto-by-default, no block required)", () => {
-    const p = parseProgram(`pure flow f() -> Int\ncontract { intent { "no governed blocks" } }\n{ return 1 }`, "t.spore");
+    const p = parseProgram(`pure flow f() -> Int\ncontract { intent { "no governed blocks" } }\n{ return 1 }`, "t.fungi");
     const errs = p.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errs.length, 0, errs.map((e) => e.code).join(", "));
   });
@@ -77,7 +77,7 @@ contract {
     on_tamper_signal zeroize
   }
 }
-{ return x }`, "t.spore");
+{ return x }`, "t.fungi");
     const errs = p.diagnostics.filter(d => d.severity === "error");
     assert.equal(errs.length, 0, errs.map(e => e.code).join(", "));
     const blocks = contractSubBlocks(p.ast);
@@ -88,7 +88,7 @@ contract {
   it("liability {} parses (though writing it manually triggers GOV-018 warning)", () => {
     const p = parseProgram(`secure flow f(x: Int) -> Int
 contract { intent { "x." }  effects { audit.write }  liability { max_exposure 10000 } }
-{ return x }`, "t.spore");
+{ return x }`, "t.fungi");
     const errs = p.diagnostics.filter(d => d.severity === "error");
     assert.equal(errs.length, 0, errs.map(e => e.code).join(", "));
     const blocks = contractSubBlocks(p.ast);
@@ -99,7 +99,7 @@ contract { intent { "x." }  effects { audit.write }  liability { max_exposure 10
   it("omitting cyber_physical_hardening and liability is correct for normal flows (auto-by-default)", () => {
     const p = parseProgram(`pure flow f(x: Int) -> Int
 contract { intent { "Standard flow — no manual hardening needed." } }
-{ return x }`, "t.spore");
+{ return x }`, "t.fungi");
     const errs = p.diagnostics.filter(d => d.severity === "error");
     assert.equal(errs.length, 0);
     const blocks = contractSubBlocks(p.ast);

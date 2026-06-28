@@ -1,11 +1,11 @@
 /**
- * Self-hosted governance verifier (governance-verifier.spore) — execution tests.
+ * Self-hosted governance verifier (governance-verifier.fungi) — execution tests.
  *
- * Exercises the Stage B governance checks by executing the .spore flows through
+ * Exercises the Stage B governance checks by executing the .fungi flows through
  * the production interpreter and asserting their diagnostics. Covers:
- *   - SPORE-GOV-002 (secure flow declares no effects)
- *   - SPORE-VAL-001 (safety_critical flow missing audit.write)
- *   - SPORE-VAL-002 (safety_critical flow not deterministic)
+ *   - FUNGI-GOV-002 (secure flow declares no effects)
+ *   - FUNGI-VAL-001 (safety_critical flow missing audit.write)
+ *   - FUNGI-VAL-002 (safety_critical flow not deterministic)
  *   - hasAudit derived from the effects array (not trusted from caller)
  */
 
@@ -17,9 +17,9 @@ import { dirname, join } from "node:path";
 import { parseProgram, executeFlow } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const GOV_SPORE = join(__dir, "..", "src", "self-hosted", "governance-verifier.spore");
+const GOV_FUNGI = join(__dir, "..", "src", "self-hosted", "governance-verifier.fungi");
 
-const program = parseProgram(readFileSync(GOV_SPORE, "utf8"), "governance-verifier.spore");
+const program = parseProgram(readFileSync(GOV_FUNGI, "utf8"), "governance-verifier.fungi");
 
 // ── value-model builders (interpreter takes tagged values / Maps) ──
 const vInt = (n) => ({ __tag: "int", value: n });
@@ -64,20 +64,20 @@ async function verify(flowDefs) {
 const codesFor = (diags, flowName) =>
   diags.filter((d) => d.flowName === flowName).map((d) => d.code).sort();
 
-describe("governance-verifier.spore — parses clean", () => {
+describe("governance-verifier.fungi — parses clean", () => {
   it("has zero parse errors", () => {
     const errors = program.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, errors.map((e) => e.message).join(", "));
   });
 });
 
-describe("governance-verifier.spore — secure flow effect requirement (SPORE-GOV-002)", () => {
-  it("secure flow with no effects → SPORE-GOV-002", async () => {
+describe("governance-verifier.fungi — secure flow effect requirement (FUNGI-GOV-002)", () => {
+  it("secure flow with no effects → FUNGI-GOV-002", async () => {
     const { failed, diags } = await verify([
       { name: "chargeCard", kind: "secure", effects: [], classification: "standard", deterministic: false },
     ]);
     assert.equal(failed, 1);
-    assert.deepEqual(codesFor(diags, "chargeCard"), ["SPORE-GOV-002"]);
+    assert.deepEqual(codesFor(diags, "chargeCard"), ["FUNGI-GOV-002"]);
   });
 
   it("secure flow with at least one effect → passes", async () => {
@@ -90,19 +90,19 @@ describe("governance-verifier.spore — secure flow effect requirement (SPORE-GO
   });
 });
 
-describe("governance-verifier.spore — safety_critical requirements (SPORE-VAL-001/002)", () => {
-  it("missing audit.write → SPORE-VAL-001", async () => {
+describe("governance-verifier.fungi — safety_critical requirements (FUNGI-VAL-001/002)", () => {
+  it("missing audit.write → FUNGI-VAL-001", async () => {
     const { diags } = await verify([
       { name: "fireThruster", kind: "guarded", effects: ["hw.write"], classification: "safety_critical", deterministic: true },
     ]);
-    assert.deepEqual(codesFor(diags, "fireThruster"), ["SPORE-VAL-001"]);
+    assert.deepEqual(codesFor(diags, "fireThruster"), ["FUNGI-VAL-001"]);
   });
 
-  it("not deterministic → SPORE-VAL-002", async () => {
+  it("not deterministic → FUNGI-VAL-002", async () => {
     const { diags } = await verify([
       { name: "fireThruster", kind: "guarded", effects: ["audit.write"], classification: "safety_critical", deterministic: false },
     ]);
-    assert.deepEqual(codesFor(diags, "fireThruster"), ["SPORE-VAL-002"]);
+    assert.deepEqual(codesFor(diags, "fireThruster"), ["FUNGI-VAL-002"]);
   });
 
   it("audit.write present + deterministic → passes", async () => {
@@ -122,7 +122,7 @@ describe("governance-verifier.spore — safety_critical requirements (SPORE-VAL-
   });
 });
 
-describe("governance-verifier.spore — combined / multi-flow pass", () => {
+describe("governance-verifier.fungi — combined / multi-flow pass", () => {
   it("secure + safety_critical violations accumulate per flow", async () => {
     // logEvent is BOTH secure (no effects → GOV-002) AND safety_critical
     // (no audit → VAL-001, not deterministic → VAL-002): 3 diagnostics.
@@ -134,8 +134,8 @@ describe("governance-verifier.spore — combined / multi-flow pass", () => {
     assert.equal(passed, 1);
     assert.equal(failed, 2);
     assert.deepEqual(codesFor(diags, "okFlow"), []);
-    assert.deepEqual(codesFor(diags, "chargeCard"), ["SPORE-GOV-002"]);
-    assert.deepEqual(codesFor(diags, "logEvent"), ["SPORE-GOV-002", "SPORE-VAL-001", "SPORE-VAL-002"]);
+    assert.deepEqual(codesFor(diags, "chargeCard"), ["FUNGI-GOV-002"]);
+    assert.deepEqual(codesFor(diags, "logEvent"), ["FUNGI-GOV-002", "FUNGI-VAL-001", "FUNGI-VAL-002"]);
   });
 
   it("empty flow list → 0 passed / 0 failed", async () => {
@@ -182,7 +182,7 @@ async function checkBody(flowDefs) {
   return { passed: field("passed"), failed: field("failed"), diags };
 }
 
-describe("governance-verifier.spore — body audit-call governance (SPORE-VAL-001)", () => {
+describe("governance-verifier.fungi — body audit-call governance (FUNGI-VAL-001)", () => {
   it("secure flow whose body calls auditWrite → passes", async () => {
     const { passed, failed, diags } = await checkBody([
       { name: "chargeCard", kind: "secure",
@@ -193,14 +193,14 @@ describe("governance-verifier.spore — body audit-call governance (SPORE-VAL-00
     assert.deepEqual(codesFor(diags, "chargeCard"), []);
   });
 
-  it("secure flow with NO audit call → SPORE-VAL-001", async () => {
+  it("secure flow with NO audit call → FUNGI-VAL-001", async () => {
     const { passed, failed, diags } = await checkBody([
       { name: "chargeCard", kind: "secure",
         body: [stmt("exprStmt", [callExpr("doThing")])] },
     ]);
     assert.equal(passed, 0);
     assert.equal(failed, 1);
-    assert.deepEqual(codesFor(diags, "chargeCard"), ["SPORE-VAL-001"]);
+    assert.deepEqual(codesFor(diags, "chargeCard"), ["FUNGI-VAL-001"]);
   });
 
   it("secure flow whose audit call is nested inside an if body → passes (recursion)", async () => {
@@ -225,7 +225,7 @@ describe("governance-verifier.spore — body audit-call governance (SPORE-VAL-00
     assert.deepEqual(codesFor(diags, "chargeCard"), []);
   });
 
-  it("secure flow with no audit in either branch → SPORE-VAL-001", async () => {
+  it("secure flow with no audit in either branch → FUNGI-VAL-001", async () => {
     const { passed, failed, diags } = await checkBody([
       { name: "chargeCard", kind: "secure",
         body: [stmt("if", [nameExpr("cond")],
@@ -234,7 +234,7 @@ describe("governance-verifier.spore — body audit-call governance (SPORE-VAL-00
     ]);
     assert.equal(passed, 0);
     assert.equal(failed, 1);
-    assert.deepEqual(codesFor(diags, "chargeCard"), ["SPORE-VAL-001"]);
+    assert.deepEqual(codesFor(diags, "chargeCard"), ["FUNGI-VAL-001"]);
   });
 
   it("non-secure (pure) flow without audit → no diagnostic", async () => {
@@ -285,7 +285,7 @@ describe("governance-verifier.spore — body audit-call governance (SPORE-VAL-00
     assert.equal(passed, 2);
     assert.equal(failed, 1);
     assert.deepEqual(codesFor(diags, "okSecure"), []);
-    assert.deepEqual(codesFor(diags, "badSecure"), ["SPORE-VAL-001"]);
+    assert.deepEqual(codesFor(diags, "badSecure"), ["FUNGI-VAL-001"]);
     assert.deepEqual(codesFor(diags, "purePass"), []);
   });
 });

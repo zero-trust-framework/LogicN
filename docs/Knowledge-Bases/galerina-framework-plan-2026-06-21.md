@@ -21,16 +21,16 @@ ready**; the framework / admission / crypto surface is **Binary-only by invarian
 | **L4 App** | a concrete `my-galerina-app/` (TritMesh = example only) | convention + scaffold |
 
 ## 3. Build & distribution
-- `galerina build App.spore` → **one signed `build/App.wasm` + signed `.lmanifest`** (CBOR, Ed25519).
+- `galerina build App.fungi` → **one signed `build/App.wasm` + signed `.lmanifest`** (CBOR, Ed25519).
   Intra-app flows fuse to one wasm (`module-registry.ts`); cross-package = one signed wasm per
   package, host-linked at the fuse border (`planComposition`).
 - **Capability binding lives in the signed `.lmanifest fuse{}` block** — never in `.tmf`.
-- App layout (B1 scaffolder): `App.spore + App.manifest + flows/ + deps/ + proofs/ + tests/`, deny-by-default.
+- App layout (B1 scaffolder): `App.fungi + App.manifest + flows/ + deps/ + proofs/ + tests/`, deny-by-default.
   **`tests/` = developer-authored tests** (hand-written, mirrors the monorepo `<pkg>/tests/` convention), kept
   SEPARATE from generated / contract-driven tests (R&D 0016) so a regen never clobbers hand-written ones —
   generated output lands under `proofs/` (or a clearly-marked `generated/`). Owner note 2026-06-22 (task #214).
 - Distribution: `package-galerina.json` + lock + the **governed resolver** (hash + Ed25519 signature +
-  registry origin + `installScript:deny`, SPORE-PKG-001..006). `.env` = runtime-only secrets, never
+  registry origin + `installScript:deny`, FUNGI-PKG-001..006). `.env` = runtime-only secrets, never
   compiled in (prod = vault/KMS).
 
 ## 4. The admission border (security keystone)
@@ -93,7 +93,7 @@ fires a fault. A second, **live** weak link was concrete and is now fixed (item 
    `bridgesUsed`/`byOp` but excluded from the bit-exact channel). `hybrid-engine.ts` dispatch + `buildReceipt`
    + the receipt interface; `photonic-dispatch.test.mjs` updated to the new semantics (+2 assertions).
    tower-citizen 206/206; full suite 53/53 · 4989.
-3. ✅ **BUILT (2026-06-22)** — pin **SPORE-MONO-001**: `parseEmergencyBlock` now SURFACES an emergency-block
+3. ✅ **BUILT (2026-06-22)** — pin **FUNGI-MONO-001**: `parseEmergencyBlock` now SURFACES an emergency-block
    `allow`/`grant` as an `allow:` action node (was: silently consumed by the "unknown action — skip" branch,
    so the verifier's `EMERGENCY_EXPANDS_CAPABILITY` check could never fire → fail-silent permission widening
    in the Binary governance core). The existing verifier error now fires as a hard compile error. Parser-only

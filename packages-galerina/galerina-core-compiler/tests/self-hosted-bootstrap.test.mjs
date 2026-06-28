@@ -1,10 +1,10 @@
 /**
  * R6 bootstrap conformance gate — Stage A (TS) == Stage B (self-hosted), full parity.
  *
- * For each corpus flow (tests/r6-corpus/r6-00N-*.spore) the SAME source is executed by:
+ * For each corpus flow (tests/r6-corpus/r6-00N-*.fungi) the SAME source is executed by:
  *   Stage A — parseProgram + executeFlow (the production TS interpreter)
- *   Stage B — self-hosted pipeline: lexer.spore → parser.spore → gir-emitter.spore(buildFlowTable)
- *             → runtime.spore(runProgram), all interpreted Galerina
+ *   Stage B — self-hosted pipeline: lexer.fungi → parser.fungi → gir-emitter.fungi(buildFlowTable)
+ *             → runtime.fungi(runProgram), all interpreted Galerina
  * and the return VALUES are normalized to a canonical string and asserted equal.
  *
  * This is the 100%-Axis-B marker: Galerina compiles AND runs Galerina at parity with the
@@ -34,10 +34,10 @@ function loadSH(file) {
 
 let lexer, parser, gir, rt;
 before(() => {
-  lexer = loadSH("lexer.spore");
-  parser = loadSH("parser.spore");
-  gir = loadSH("gir-emitter.spore");
-  rt = loadSH("runtime.spore");
+  lexer = loadSH("lexer.fungi");
+  parser = loadSH("parser.fungi");
+  gir = loadSH("gir-emitter.fungi");
+  rt = loadSH("runtime.fungi");
 });
 
 // ── value builders (Stage B harness) ──
@@ -90,7 +90,7 @@ function normB(rec) {
 }
 
 async function stageA(src, flow, argsObj) {
-  const p = parseProgram(src, "corpus.spore");
+  const p = parseProgram(src, "corpus.fungi");
   const r = await executeFlow(flow, new Map(Object.entries(argsObj)), p.ast);
   return normA(r);
 }
@@ -120,13 +120,13 @@ async function conform(file, flow, argsObj, rtArgs, expected) {
 describe("R6 bootstrap conformance — Stage A == Stage B (full parity)", () => {
   describe("R6-001 classify (R1: strings + Result + contract.types)", () => {
     it("classify(70) → Ok(\"pass\")", async () => {
-      await conform("r6-001-classify.spore", "classify", { score: vInt(70) }, [rtInt(70)], 'Ok("pass")');
+      await conform("r6-001-classify.fungi", "classify", { score: vInt(70) }, [rtInt(70)], 'Ok("pass")');
     });
     it("classify(20) → Ok(\"fail\")", async () => {
-      await conform("r6-001-classify.spore", "classify", { score: vInt(20) }, [rtInt(20)], 'Ok("fail")');
+      await conform("r6-001-classify.fungi", "classify", { score: vInt(20) }, [rtInt(20)], 'Ok("fail")');
     });
     it("classify(-5) → Err(\"negative\")", async () => {
-      await conform("r6-001-classify.spore", "classify", { score: vInt(-5) }, [rtInt(-5)], 'Err("negative")');
+      await conform("r6-001-classify.fungi", "classify", { score: vInt(-5) }, [rtInt(-5)], 'Err("negative")');
     });
   });
 
@@ -136,39 +136,39 @@ describe("R6 bootstrap conformance — Stage A == Stage B (full parity)", () => 
     it("distanceSq({x:3,y:4}) → 25", async () => {
       const stageAPoint = { __tag: "record", fields: new Map([["x", vInt(3)], ["y", vInt(4)]]) };
       const stageBPoint = rtRecord([["x", rtInt(3)], ["y", rtInt(4)]]);
-      await conform("r6-002-distance.spore", "distanceSq", { p: stageAPoint }, [stageBPoint], "25");
+      await conform("r6-002-distance.fungi", "distanceSq", { p: stageAPoint }, [stageBPoint], "25");
     });
     it("distanceSq({x:0,y:5}) → 25", async () => {
       const stageAPoint = { __tag: "record", fields: new Map([["x", vInt(0)], ["y", vInt(5)]]) };
       const stageBPoint = rtRecord([["x", rtInt(0)], ["y", rtInt(5)]]);
-      await conform("r6-002-distance.spore", "distanceSq", { p: stageAPoint }, [stageBPoint], "25");
+      await conform("r6-002-distance.fungi", "distanceSq", { p: stageAPoint }, [stageBPoint], "25");
     });
   });
 
   describe("R6-003 listLen (R2: array literal + .count())", () => {
     it("listLen() → 4", async () => {
-      await conform("r6-003-listlen.spore", "listLen", {}, [], "4");
+      await conform("r6-003-listlen.fungi", "listLen", {}, [], "4");
     });
   });
 
   describe("R6-004 recordAmount (R4: secure flow + effects + AuditLog.write)", () => {
     it("recordAmount(5) → Ok(5)", async () => {
-      await conform("r6-004-record-amount.spore", "recordAmount", { amount: vInt(5) }, [rtInt(5)], 'Ok(5)');
+      await conform("r6-004-record-amount.fungi", "recordAmount", { amount: vInt(5) }, [rtInt(5)], 'Ok(5)');
     });
     it("recordAmount(0) → Ok(0)", async () => {
-      await conform("r6-004-record-amount.spore", "recordAmount", { amount: vInt(0) }, [rtInt(0)], 'Ok(0)');
+      await conform("r6-004-record-amount.fungi", "recordAmount", { amount: vInt(0) }, [rtInt(0)], 'Ok(0)');
     });
   });
 
   describe("R6-005 nameOf (R5: match + Option)", () => {
     it("nameOf(1) → Some(\"alpha\")", async () => {
-      await conform("r6-005-name-of.spore", "nameOf", { code: vInt(1) }, [rtInt(1)], 'Some("alpha")');
+      await conform("r6-005-name-of.fungi", "nameOf", { code: vInt(1) }, [rtInt(1)], 'Some("alpha")');
     });
     it("nameOf(2) → Some(\"beta\")", async () => {
-      await conform("r6-005-name-of.spore", "nameOf", { code: vInt(2) }, [rtInt(2)], 'Some("beta")');
+      await conform("r6-005-name-of.fungi", "nameOf", { code: vInt(2) }, [rtInt(2)], 'Some("beta")');
     });
     it("nameOf(9) → None", async () => {
-      await conform("r6-005-name-of.spore", "nameOf", { code: vInt(9) }, [rtInt(9)], "None");
+      await conform("r6-005-name-of.fungi", "nameOf", { code: vInt(9) }, [rtInt(9)], "None");
     });
   });
 });
@@ -243,7 +243,7 @@ contract { intent { "Double a number." } }
 { return n * 2 }`;
 
     // FILE A: imports and calls FILE B's flow
-    const fileA = `import flow double from "./mathUtils.spore"
+    const fileA = `import flow double from "./mathUtils.fungi"
 
 pure flow compute(x: Int) -> Int
 contract { intent { "Use the imported double flow." } }
@@ -293,7 +293,7 @@ contract { intent { "Use the imported double flow." } }
   });
 
   it("AuditLog.write — produces an observable audit entry in Stage B", async () => {
-    const src = readFileSync(join(CORPUS, "r6-004-record-amount.spore"), "utf8");
+    const src = readFileSync(join(CORPUS, "r6-004-record-amount.fungi"), "utf8");
     const full = await runBFull(src, "recordAmount", [rtInt(5)]);
     const auditLog = full.fields?.get("auditLog");
     assert.ok(auditLog, "auditLog field must exist on RunResult");

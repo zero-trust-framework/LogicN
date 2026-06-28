@@ -50,7 +50,7 @@ export interface PackageManifest {
   /** Ed25519 or similar package signature — proves origin, prevents tampering. */
   readonly signature?: string;
   /** The keyId of the signing key — paired with a revocation predicate so a package
-   *  signed by a REVOKED key is refused at resolution time (SPORE-PKG-006). */
+   *  signed by a REVOKED key is refused at resolution time (FUNGI-PKG-006). */
   readonly signerKeyId?: string;
   /** Source registry URL — auditable origin for every resolved package. */
   readonly registry?: string;
@@ -88,7 +88,7 @@ export interface PackageResolverDiagnostic {
 //
 // Detects when a new package version declares more capabilities than the
 // lockfile snapshot — a breaking security change that must be reviewed.
-// Fires SPORE-PKG-001.
+// Fires FUNGI-PKG-001.
 // ---------------------------------------------------------------------------
 
 export interface CapabilityExpansionResult {
@@ -99,7 +99,7 @@ export interface CapabilityExpansionResult {
 
 /**
  * Compares a resolved manifest against the lockfile snapshot.
- * Returns SPORE-PKG-001 if the new manifest declares capabilities
+ * Returns FUNGI-PKG-001 if the new manifest declares capabilities
  * not present in the lockfile.
  */
 export function checkPackageCapabilityExpansion(
@@ -117,7 +117,7 @@ export function checkPackageCapabilityExpansion(
     expanded: true,
     addedCapabilities: added,
     diagnostics: [{
-      code: "SPORE-PKG-001",
+      code: "FUNGI-PKG-001",
       name: "CapabilityExpanded",
       severity: "error",
       packageName: resolved.name,
@@ -131,7 +131,7 @@ export function checkPackageCapabilityExpansion(
 // Install script check
 //
 // All packages default to "deny" for install scripts.
-// Fires SPORE-PKG-004 if installScript is "allow" (or any non-deny value).
+// Fires FUNGI-PKG-004 if installScript is "allow" (or any non-deny value).
 // ---------------------------------------------------------------------------
 
 /**
@@ -141,7 +141,7 @@ export function checkPackageCapabilityExpansion(
 export function checkInstallScript(manifest: PackageManifest): readonly PackageResolverDiagnostic[] {
   if (manifest.installScript !== undefined && manifest.installScript !== "deny") {
     return [{
-      code: "SPORE-PKG-004",
+      code: "FUNGI-PKG-004",
       name: "InstallScriptDenied",
       severity: "error",
       packageName: manifest.name,
@@ -157,7 +157,7 @@ export function checkInstallScript(manifest: PackageManifest): readonly PackageR
 //
 // Warns (or, under requireCertified, errors) when a package lacks a hash or
 // signature, or carries a placeholder/invalid hash.
-// Fires SPORE-PKG-003 (missing/invalid hash) and SPORE-PKG-005 (missing signature).
+// Fires FUNGI-PKG-003 (missing/invalid hash) and FUNGI-PKG-005 (missing signature).
 // ---------------------------------------------------------------------------
 
 /**
@@ -175,7 +175,7 @@ function hasValidContentHash(hash: string | undefined): boolean {
 
 /**
  * Checks that a package manifest has both a content hash and a signature.
- * Missing hash → SPORE-PKG-003. Missing signature → SPORE-PKG-005.
+ * Missing hash → FUNGI-PKG-003. Missing signature → FUNGI-PKG-005.
  */
 /** Options for provenance checking — lets the host inject a revocation predicate and
  *  a fail-closed certified-registry policy. */
@@ -187,15 +187,15 @@ export interface ProvenanceCheckOptions {
    */
   readonly isRevoked?: ((keyId: string) => boolean) | undefined;
   /**
-   * Certified-registry mode. When true, provenance findings (SPORE-PKG-003 missing/invalid
-   * hash, SPORE-PKG-005 missing signature) are promoted from warning to ERROR, and a package
-   * with NO declared registry is rejected as untrusted (SPORE-PKG-002). Default false keeps
+   * Certified-registry mode. When true, provenance findings (FUNGI-PKG-003 missing/invalid
+   * hash, FUNGI-PKG-005 missing signature) are promoted from warning to ERROR, and a package
+   * with NO declared registry is rejected as untrusted (FUNGI-PKG-002). Default false keeps
    * the lenient, back-compatible behavior.
    */
   readonly requireCertified?: boolean | undefined;
   /**
    * Allow-list of trusted source registries. When provided, any package whose `registry`
-   * is set but NOT in this list is rejected with SPORE-PKG-002 (UntrustedRegistry). An EMPTY
+   * is set but NOT in this list is rejected with FUNGI-PKG-002 (UntrustedRegistry). An EMPTY
    * allow-list under `requireCertified` rejects ALL registries (fail-closed deny-by-default).
    * When omitted (and not in certified mode), registry trust is not enforced (back-compat).
    */
@@ -205,7 +205,7 @@ export interface ProvenanceCheckOptions {
 // ---------------------------------------------------------------------------
 // Registry trust check (dependency-confusion control)
 //
-// Emits SPORE-PKG-002 (UntrustedRegistry) when a package's source registry is not
+// Emits FUNGI-PKG-002 (UntrustedRegistry) when a package's source registry is not
 // on the project's trusted allow-list, or — under requireCertified — is absent.
 // Fail-closed: an empty allow-list in certified mode rejects every registry.
 // ---------------------------------------------------------------------------
@@ -215,8 +215,8 @@ export interface ProvenanceCheckOptions {
  *
  * Enforcement is opt-in and fail-closed:
  *   - No `trustedRegistries` AND not `requireCertified` => no check (back-compat).
- *   - `trustedRegistries` provided => a declared registry NOT in the list => SPORE-PKG-002.
- *   - `requireCertified` => a package with NO declared registry => SPORE-PKG-002, and an
+ *   - `trustedRegistries` provided => a declared registry NOT in the list => FUNGI-PKG-002.
+ *   - `requireCertified` => a package with NO declared registry => FUNGI-PKG-002, and an
  *     EMPTY allow-list rejects every registry.
  */
 export function checkRegistryTrust(
@@ -233,7 +233,7 @@ export function checkRegistryTrust(
   if (registry === undefined || registry === "") {
     if (opts?.requireCertified === true) {
       return [{
-        code: "SPORE-PKG-002",
+        code: "FUNGI-PKG-002",
         name: "UntrustedRegistry",
         severity: "error",
         packageName: manifest.name,
@@ -247,7 +247,7 @@ export function checkRegistryTrust(
   // Declared registry that is not on the allow-list (empty list rejects all).
   if (!allow.includes(registry)) {
     return [{
-      code: "SPORE-PKG-002",
+      code: "FUNGI-PKG-002",
       name: "UntrustedRegistry",
       severity: "error",
       packageName: manifest.name,
@@ -270,7 +270,7 @@ export function checkPackageProvenance(
 
   if (!hasValidContentHash(manifest.hash)) {
     diags.push({
-      code: "SPORE-PKG-003",
+      code: "FUNGI-PKG-003",
       name: "MissingHash",
       severity: provenanceSeverity,
       packageName: manifest.name,
@@ -281,7 +281,7 @@ export function checkPackageProvenance(
 
   if (!manifest.signature) {
     diags.push({
-      code: "SPORE-PKG-005",
+      code: "FUNGI-PKG-005",
       name: "MissingSignature",
       severity: provenanceSeverity,
       packageName: manifest.name,
@@ -302,7 +302,7 @@ export function checkPackageProvenance(
     }
     if (revoked) {
       diags.push({
-        code: "SPORE-PKG-006",
+        code: "FUNGI-PKG-006",
         name: "RevokedSigner",
         severity: "error",
         packageName: manifest.name,
@@ -322,7 +322,7 @@ export function checkPackageProvenance(
 // ---------------------------------------------------------------------------
 
 export interface ResolverReport {
-  readonly schemaVersion: "spore.resolver.report.v1";
+  readonly schemaVersion: "fungi.resolver.report.v1";
   readonly generatedAt: string;
   readonly packages: readonly ResolvedPackageEntry[];
   readonly capabilities: readonly string[];
@@ -394,7 +394,7 @@ export function getResolverReport(
   });
 
   return {
-    schemaVersion: "spore.resolver.report.v1",
+    schemaVersion: "fungi.resolver.report.v1",
     generatedAt,
     packages,
     capabilities: [...allCapabilities].sort(),

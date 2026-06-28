@@ -74,7 +74,7 @@ Weighting by how much each dimension defines whether Galerina *is* what it claim
   one-code-one-fault) + remove the **MEMORY-001..007 false production-blocking gate**.
 
 ### MID
-- **Self-hosted Stage-B past lexer**: prove `parser.spore → type-checker.spore → governance-verifier.spore` to WASM
+- **Self-hosted Stage-B past lexer**: prove `parser.fungi → type-checker.fungi → governance-verifier.fungi` to WASM
   byte-parity via the #105 gate — the lever moving Axis-B 80%→100% (`tokenize` is the only flow at byte-parity today).
 - **Close the 4 WASM codegen gaps**: #200 nested-member walker · #171 None sentinel · #172 `__int_to_str` i32
   truncation · run-host string unification.

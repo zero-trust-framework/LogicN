@@ -41,31 +41,31 @@ compiler:
       file: "src/import-resolver.ts"
 
     - id: type_checker
-      description: "Check type correctness (SPORE-TYPE-001..022)"
+      description: "Check type correctness (FUNGI-TYPE-001..022)"
       input: "AstNode"
       output: "TypeCheckResult"
       file: "src/type-checker.ts"
 
     - id: value_state_checker
-      description: "Check value-state correctness (SPORE-VALUESTATE-*, SPORE-SECRET-*)"
+      description: "Check value-state correctness (FUNGI-VALUESTATE-*, FUNGI-SECRET-*)"
       input: "AstNode"
       output: "ValueStateCheckResult"
       file: "src/value-state-checker.ts"
 
     - id: effect_checker
-      description: "Check effect declarations (SPORE-EFFECT-001..004)"
+      description: "Check effect declarations (FUNGI-EFFECT-001..004)"
       input: "AstNode + FlowMeta[]"
       output: "EffectCheckResult[]"
       file: "src/effect-checker.ts"
 
     - id: event_checker
-      description: "Check event declarations (SPORE-EVENT-001..002)"
+      description: "Check event declarations (FUNGI-EVENT-001..002)"
       input: "AstNode"
       output: "EventCheckResult"
       file: "src/event-checker.ts"
 
     - id: governance_verifier
-      description: "Verify governance, contracts, response.denies (SPORE-GOV-*)"
+      description: "Verify governance, contracts, response.denies (FUNGI-GOV-*)"
       input: "AstNode + FlowMeta[] + EffectCheckResult[]"
       output: "GovernanceVerifyResult"
       file: "src/governance-verifier.ts"

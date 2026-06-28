@@ -5,7 +5,7 @@
 Galerina uses **one unified syntax** for all language concerns: application logic,
 runtime configuration, build targets, security policy and effect declarations.
 
-The file extension for all Galerina source files is `.spore`.
+The file extension for all Galerina source files is `.fungi`.
 
 ```text
 One language.
@@ -41,7 +41,7 @@ All domains share the same syntax rules. They differ in what they declare:
 | Security declarations | Capabilities, permissions, policy boundaries |
 | Effect declarations | Side-effect tracking and verification |
 
-## Example: Unified .spore File
+## Example: Unified .fungi File
 
 ```galerina
 package user_service
@@ -169,24 +169,24 @@ service payments {
 
 ```text
 src/
-  main.spore
-  auth.spore
-  api.spore
+  main.fungi
+  auth.fungi
+  api.fungi
 
 runtime/
-  workers.spore
-  scheduling.spore
+  workers.fungi
+  scheduling.fungi
 
 build/
-  targets.spore
-  reports.spore
+  targets.fungi
+  reports.fungi
 
 security/
-  policy.spore
-  capabilities.spore
+  policy.fungi
+  capabilities.fungi
 ```
 
-All files use valid `.spore` syntax.
+All files use valid `.fungi` syntax.
 
 ## Core Principle
 

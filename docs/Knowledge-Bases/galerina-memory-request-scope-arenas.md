@@ -146,13 +146,13 @@ api UploadApi {
 
 | Code | Meaning |
 |---|---|
-| `SPORE-MEMORY-SCOPE-001` | Request-scoped value cannot escape request arena |
-| `SPORE-MEMORY-SCOPE-002` | Global store requires promoted or copied value |
-| `SPORE-MEMORY-SCOPE-003` | Async task captures request value beyond request lifetime |
-| `SPORE-MEMORY-SCOPE-004` | Native binding cannot receive request arena pointer without unsafe permission |
-| `SPORE-MEMORY-SCOPE-005` | Request arena exceeded configured memory budget |
-| `SPORE-MEMORY-SCOPE-006` | Cross-arena reference detected in checked runtime |
-| `SPORE-MEMORY-SCOPE-007` | Sensitive request arena must be zeroed before reuse |
+| `FUNGI-MEMORY-SCOPE-001` | Request-scoped value cannot escape request arena |
+| `FUNGI-MEMORY-SCOPE-002` | Global store requires promoted or copied value |
+| `FUNGI-MEMORY-SCOPE-003` | Async task captures request value beyond request lifetime |
+| `FUNGI-MEMORY-SCOPE-004` | Native binding cannot receive request arena pointer without unsafe permission |
+| `FUNGI-MEMORY-SCOPE-005` | Request arena exceeded configured memory budget |
+| `FUNGI-MEMORY-SCOPE-006` | Cross-arena reference detected in checked runtime |
+| `FUNGI-MEMORY-SCOPE-007` | Sensitive request arena must be zeroed before reuse |
 
 ---
 

@@ -88,7 +88,7 @@ authorize(v)  =  (v == ALLOW)                       # i.e. admit IFF v == +1
 collapse(v)   =  "allow" if v == ALLOW else "deny"  # BOTH 0 and −1 ⇒ "deny"
 ```
 
-and an INDETERMINATE (0) reaching the boundary additionally emits the audit diagnostic `SPORE-GOV-3VL-001`
+and an INDETERMINATE (0) reaching the boundary additionally emits the audit diagnostic `FUNGI-GOV-3VL-001`
 (`three-valued-governance.ts:102,121-128,145`) — it is structurally impossible to drop a 0 silently.
 
 So the **B8 admission predicate** is:
@@ -129,20 +129,20 @@ G_verify = ALLOW  if attestation present ∧ sha256(wasm) == attestation.sha256
 **(c) Admission / `fuse-loader` Gates 1 / 2 / 2b / 3:**
 
 - **Gate 1 — `G1`** sha256 pin (`fuse-loader.ts:492-503`):
-  `G1 = ALLOW iff actualSha == descriptor.wasmSha256, else DENY` (tamper → `SPORE-FUSE-…`).
+  `G1 = ALLOW iff actualSha == descriptor.wasmSha256, else DENY` (tamper → `FUNGI-FUSE-…`).
 - **Gate 2 — `G2`** detached Ed25519 vs **pinned keyId** (no X.509 path-building) (`fuse-loader.ts:519-525`):
   `G2 = ALLOW iff signature == "verified" against the pinned key, else DENY`.
 - **Gate 2b — `G2b`** revocation, fail-closed (`fuse-loader.ts:527-542`):
 
   ```
   G2b = ALLOW   if revocationCheck(keyId) == false
-      = DENY    if revocationCheck(keyId) == true            # SPORE-FUSE-KEY-REVOKED
-      = DENY    if revocationCheck throws / unverifiable      # SPORE-FUSE-REVOCATION-UNVERIFIABLE  (unknown → DENY)
+      = DENY    if revocationCheck(keyId) == true            # FUNGI-FUSE-KEY-REVOKED
+      = DENY    if revocationCheck throws / unverifiable      # FUNGI-FUSE-REVOCATION-UNVERIFIABLE  (unknown → DENY)
   ```
 
   Note the **third row is the fail-closed law**: an *unknown* revocation status is a DENY, not an allow.
 - **Gate 3 — `G3`** deny-by-default capabilities (`fuse-loader.ts:445`, gate at `:547`):
-  `G3 = ALLOW iff every requested capability is in the built-in registry, else DENY` (`SPORE-FUSE-UNKNOWN-CAP`).
+  `G3 = ALLOW iff every requested capability is in the built-in registry, else DENY` (`FUNGI-FUSE-UNKNOWN-CAP`).
 
 **(d) K3 boundary `decideAtBoundary` — `G_K3`** is the fold itself (§2.3), not a separate clause; it converts the
 composed trit to admit/reject and audits a 0.
@@ -218,7 +218,7 @@ Compose: `A = allOf([+1,+1,+1,+1,+1,+1,+1]) = min(…) = +1`.
 
 → **ADMIT.** Request enters the governed flow; effects are capability-bounded; the response goes back to the wire
 (optionally through opt-in S5 morphing, which derives frame sizing from the digital AEAD keystream and **replaces**
-any cleartext routing tag — never accompanies one, else `SPORE-PRIVACY-002`).
+any cleartext routing tag — never accompanies one, else `FUNGI-PRIVACY-002`).
 
 ### Example B — `POST /orders` with a **revoked cert/key**, DENIED (−1)
 
@@ -231,7 +231,7 @@ Same as A, except the signing key `K7` has been revoked. The host injects
 | `G_verify` | hash matches | +1 |
 | `G1` sha256 pin | matches | +1 |
 | `G2` Ed25519 | signature **is** cryptographically valid vs K7 | +1 |
-| `G2b` revocation | `revocationCheck(K7) == true` → `SPORE-FUSE-KEY-REVOKED` | **−1** |
+| `G2b` revocation | `revocationCheck(K7) == true` → `FUNGI-FUSE-KEY-REVOKED` | **−1** |
 | `G3` caps | (not reached / would be +1) | +1 |
 | `G_S1` cert | (independent of the manifest key) | +1 |
 
@@ -240,7 +240,7 @@ Compose: `A = allOf([+1,+1,+1,+1,−1,+1,+1]) = min(…) = −1` (Theorem 1: one
 
 → **DENY.** Note the subtlety: the signature *passed* (`G2 = +1`) — Gate 2 only proves the bytes were signed by K7,
 and the leaked private key would forge a valid signature. **Gate 2b is what catches it**, and it is fail-closed even
-if the revocation registry itself throws (the `SPORE-FUSE-REVOCATION-UNVERIFIABLE` branch, `fuse-loader.ts:537`, also
+if the revocation registry itself throws (the `FUNGI-FUSE-REVOCATION-UNVERIFIABLE` branch, `fuse-loader.ts:537`, also
 returns DENY: unknown → DENY).
 
 ### Example C — `GET /report` over a vanilla third-party HTTPS API with an **unreachable OCSP responder** (the
@@ -267,10 +267,10 @@ Upstream gates (`G_shim … G3`) are all +1 (the local module is fine). Compose:
 
 ```
 A = allOf([+1,+1,+1,+1,+1,+1, 0]) = min(…) = 0
-decideAtBoundary(0) = { decision:"deny", authorized:false, diagnostic: SPORE-GOV-3VL-001 }
+decideAtBoundary(0) = { decision:"deny", authorized:false, diagnostic: FUNGI-GOV-3VL-001 }
 ```
 
-→ **DENY**, and an `SPORE-GOV-3VL-001` audit record is emitted (an indeterminate verdict reached the boundary and was
+→ **DENY**, and an `FUNGI-GOV-3VL-001` audit record is emitted (an indeterminate verdict reached the boundary and was
 collapsed). A conventional TLS client would *soft-fail* here and connect anyway; B8's `revocation-unknown → DENY`
 maths refuses. This is exactly the MITM-hardening value 0068 attributes to the cert-gate over standard transport.
 
@@ -282,7 +282,7 @@ From `done/0068-…`; tier tags are honest:
 |---|---|---|
 | **MITM / TLS interception** | (a) `G_S1` K3 cert-gate `cert_verdict = vAnd(pin_match, chain_valid, not_expired, revocation_fresh)`, **revocation-unknown → DENY** (Example C); (b) content-addressed cert/key **pinning** via fuse Gates 1/2/2b (`fuse-loader.ts:492-542`), no X.509 path re-impl; (c) the no-downgrade / no-plaintext `DEFAULT_TLS_POLICY` floor (`core-network/src/index.ts:116-123`, `allowDowngrade:false`, `allowPlaintextFallback:false`). | cert-gate **NET-NEW** · pinning **SHIPPED** · TLS floor **SHIPPED-declarative** (live-handshake enforcement = the B8 net-new piece) |
 | **SSRF / metadata-endpoint / DNS-rebind (outbound)** | `egress-guard.ts` (169.254.169.254 deny `:104`; AWS IPv6 metadata `:176`; metadata hostnames `:194-199`) + capability-bounded `network.outbound` (deny-by-default, `fuse-loader.ts:227-233`); `verifyWasm` performs **no instantiation** (`wasm-runtime.ts:99`). | **SHIPPED** |
-| **Token theft / bearer replay** | capability-**DECLARED** auth (vs bearer-possession) at the package boundary (Gate 3, `SPORE-FUSE-UNKNOWN-CAP`); a Governed Trust Capsule travels over HTTP as an attenuating caveat token; **channel-binding** the request identity to the connection via TLS exporter keying (RFC 5705) → capsule `cnf` (RFC 8747). NB the **shipped kernel auth is presence-only** today (`kernel.ts:306-309` = `mode=="required" ∧ no Authorization ⇒ 401`, zero token/sig/claim verification) — the S1-style verdict is the real fix. | caps **SHIPPED** · capsule caveats **DECIDED** (slice 5 / #12) · RFC-5705 channel-binding **NET-NEW** |
+| **Token theft / bearer replay** | capability-**DECLARED** auth (vs bearer-possession) at the package boundary (Gate 3, `FUNGI-FUSE-UNKNOWN-CAP`); a Governed Trust Capsule travels over HTTP as an attenuating caveat token; **channel-binding** the request identity to the connection via TLS exporter keying (RFC 5705) → capsule `cnf` (RFC 8747). NB the **shipped kernel auth is presence-only** today (`kernel.ts:306-309` = `mode=="required" ∧ no Authorization ⇒ 401`, zero token/sig/claim verification) — the S1-style verdict is the real fix. | caps **SHIPPED** · capsule caveats **DECIDED** (slice 5 / #12) · RFC-5705 channel-binding **NET-NEW** |
 | **Response tampering / supply-chain of API responses** | govern-don't-absorb + verify-before-parse: a response is trusted only to the extent it carries its own signature/hash Galerina can verify. Raw TLS gives transport integrity, not app-level provenance. | transport integrity **SHIPPED (TLS)** · app-level provenance **NOT-POSSIBLE-OVER-STANDARD** unless the peer signs its payloads |
 
 ---
@@ -311,9 +311,9 @@ This is the **highest-value, lowest-risk, crypto-stays-digital** move and the co
 - **Inputs:** the four library-derived signals `{pin_match, chain_valid, not_expired, revocation_fresh}` each as a
   `Verdict`; the pinned anchor set; a revocation source.
 - **Output:** `cert_verdict = vAnd(...) ∈ {−1,0,+1}`, fed into the admission `allOf`, resolved by
-  `decideAtBoundary` (emits `SPORE-GOV-3VL-001` on a 0).
+  `decideAtBoundary` (emits `FUNGI-GOV-3VL-001` on a 0).
 - **Tests to write:** (1) all-good → +1 → admit (Example A); (2) revoked → −1 → deny (Example B); (3)
-  **revocation-unknown → 0 → deny + `SPORE-GOV-3VL-001`** (Example C — the soft-fail closure); (4) pin mismatch → −1;
+  **revocation-unknown → 0 → deny + `FUNGI-GOV-3VL-001`** (Example C — the soft-fail closure); (4) pin mismatch → −1;
   (5) expired → −1; (6) golden vector that a fetch *throwing* yields DENY not allow.
 - **HARD PARTS / gotchas:**
   - **`revocation_fresh` must map unknown → 0 (then deny), never → +1.** This is the single most-likely bug — it is
@@ -367,14 +367,14 @@ This is the **highest-value, lowest-risk, crypto-stays-digital** move and the co
     key state at each step is genuinely unbuilt.
   - **Morphing (S5) is opt-in `transport.obfuscate`, deny-by-default**; frame sizing must derive from the digital
     AEAD/KDF keystream, and a morphed frame must **replace** any cleartext routing tag (else re-opens
-    `SPORE-PRIVACY-002`). It resists size/boundary analysis but NOT timing/volume — say so; no perf claim without a
+    `FUNGI-PRIVACY-002`). It resists size/boundary analysis but NOT timing/volume — say so; no perf claim without a
     bench.
 
 ### The single biggest gotcha across all of B8 (called out explicitly)
 
 **The in-sandbox isolation guarantee is ASPIRATIONAL until #102-106 (+ Stage-B P9.4).** "TLS terminates inside the
 WASM sandbox = mathematical security" is a *sound direction* but its isolation **guarantee** rests on DRCM/DSS.wasm —
-`build/dss-supervisor.wasm` is a **115-byte placeholder** and the real DSS is ~31 KB of uncompiled `.spore`. The
+`build/dss-supervisor.wasm` is a **115-byte placeholder** and the real DSS is ~31 KB of uncompiled `.fungi`. The
 shipped, citable half is the **kernel anti-middleware request pipeline + one-time fail-closed admission**
 (`kernel.ts`, the fixed non-bypassable pipeline; idempotency gate `kernel.ts:329-344`). Do **not** present in-sandbox
 termination as settled isolation. Deployment stance (main-app-as-WASM + packages-outside, R&D 0052) is DECIDED; the

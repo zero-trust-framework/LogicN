@@ -18,7 +18,7 @@ import { type SubstrateParameters, type SubstrateGuarantee, checkGuarantee } fro
 
 /** A model snapshot: the parameters + declared guarantee, plus the figures STAMPED FROM `checkGuarantee`. */
 export interface SubstrateModelSnapshot {
-  readonly schema: "spore.substrate.snapshot.v1";
+  readonly schema: "fungi.substrate.snapshot.v1";
   readonly lane: string;
   readonly params: SubstrateParameters;
   readonly guarantee: SubstrateGuarantee;
@@ -40,7 +40,7 @@ export function buildSubstrateSnapshot(
 ): SubstrateModelSnapshot {
   const check = checkGuarantee(params, guarantee);
   return {
-    schema: "spore.substrate.snapshot.v1",
+    schema: "fungi.substrate.snapshot.v1",
     lane,
     params,
     guarantee,

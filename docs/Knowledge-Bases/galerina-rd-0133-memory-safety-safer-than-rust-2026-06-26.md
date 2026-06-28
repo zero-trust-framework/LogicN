@@ -1,7 +1,7 @@
 # RD-0133 — Galerina memory-safety: "as-safe-or-safer than Rust" positioning
 
 - **Date:** 2026-06-26 · **Status:** ⏸ **DEFERRED (owner hold — do NOT action yet)** · **Roadmap task:** #65
-- **ZT score:** 8/10 (R&D-direction soundness under the AZT honesty bar — 7–10 sound · 5–7 doable-with-care · 3–5 risky · 0–3 fail-open). Honesty fix, not a build: retiring the 4 emitter-less `SPORE-MEMORY-001/002/003/007` codes *removes* a false-gate (a fail-open appearance), and memory-safety-by-value-semantics is real (no raw pointers, WASM sandbox). Net ZT *improvement* — only drops if the story is documented without actually retiring the dead codes.
+- **ZT score:** 8/10 (R&D-direction soundness under the AZT honesty bar — 7–10 sound · 5–7 doable-with-care · 3–5 risky · 0–3 fail-open). Honesty fix, not a build: retiring the 4 emitter-less `FUNGI-MEMORY-001/002/003/007` codes *removes* a false-gate (a fail-open appearance), and memory-safety-by-value-semantics is real (no raw pointers, WASM sandbox). Net ZT *improvement* — only drops if the story is documented without actually retiring the dead codes.
 - **Source:** owner note (2026-06-26) + `notes/70-beyond-1-bit.md` context · **TODO:** `notes/TODO-deferred-rd-memory-safety-and-beyond-1bit.md`
 
 ## Thesis (verified)
@@ -12,14 +12,14 @@ memory). The bug classes Rust's borrow checker exists to prevent — use-after-f
 dangling pointers, data races — **cannot occur in Galerina by construction.**
 
 ## The plan (when un-deferred → #65, a small honesty fix)
-1. **Fix the one real defect — the false gate.** `SPORE-MEMORY-001/002/003/007` (use-after-move / borrow-after-move
+1. **Fix the one real defect — the false gate.** `FUNGI-MEMORY-001/002/003/007` (use-after-move / borrow-after-move
    / borrow-escapes-scope / unchecked-access) are reserved codes with **no emitter** (the false-gate class). Because
    Galerina is value-semantics those bugs can't happen → **retire the 4 dead codes + document
    memory-safety-by-value-semantics**, don't implement a checker for a bug class that doesn't exist.
-2. **Keep `SPORE-AFFINE-001`** (affine consume-once typestate) — the one real linear-resource guarantee.
+2. **Keep `FUNGI-AFFINE-001`** (affine consume-once typestate) — the one real linear-resource guarantee.
 3. **Tell the true story:** *as safe* (memory-safe by construction); *safer #1* no `unsafe{}` escape hatch;
    *safer #2* WASM sandbox contains even a compiler bug; *safer #3* information-flow safety (caps+effects+taint,
-   `SPORE-SECRET-001..004`) Rust doesn't address.
+   `FUNGI-SECRET-001..004`) Rust doesn't address.
 4. **Do NOT chase the RD-0130-refuted hardware claims** (CHERI 0-cycle, photonic immutability, WDM zero-alloc).
 5. **Caveat:** revisit only if Galerina ever adds shared mutable references.
 

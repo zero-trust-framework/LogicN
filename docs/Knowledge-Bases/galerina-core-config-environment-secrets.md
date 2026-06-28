@@ -212,7 +212,7 @@ const result = loadConfigFromObjects({
     version: "0.1.0",
     root: ".",
     entryFiles: [
-      "packages-galerina/galerina-framework-example-app/src/index.spore"
+      "packages-galerina/galerina-framework-example-app/src/index.fungi"
     ],
     packages: [
       "packages-galerina/galerina-core",
@@ -251,7 +251,7 @@ export function loadEnvironmentConfig(
 
     if (value === undefined) {
       diagnostics.push({
-        code: "SPORE-CONFIG-001",
+        code: "FUNGI-CONFIG-001",
         severity: "error",
         message: `Required environment variable ${name} is missing.`,
         path: "environment.variables",
@@ -271,7 +271,7 @@ export function loadEnvironmentConfig(
 
     if (value === undefined) {
       diagnostics.push({
-        code: "SPORE-CONFIG-002",
+        code: "FUNGI-CONFIG-002",
         severity: "error",
         message: `Required secret ${name} is missing.`,
         path: "environment.secrets",
@@ -373,7 +373,7 @@ Example host boundary violation diagnostic:
 
 ```json
 {
-  "code": "SPORE-CONFIG-010",
+  "code": "FUNGI-CONFIG-010",
   "severity": "error",
   "message": "Host package.json must not define Galerina runtime policy.",
   "path": "package.json.galerinaRuntime",
@@ -398,17 +398,17 @@ config-diagnostics.ts
 host-package-boundary.ts
 ```
 
-### Diagnostic Codes (SPORE-CONFIG series)
+### Diagnostic Codes (FUNGI-CONFIG series)
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-CONFIG-001` | required public environment variable missing |
-| `SPORE-CONFIG-002` | required secret missing |
-| `SPORE-CONFIG-003` | unknown environment mode |
-| `SPORE-CONFIG-004` | production strict mode disabled |
-| `SPORE-CONFIG-005` | unsafe secret default detected |
-| `SPORE-CONFIG-006` | development package enabled in production |
-| `SPORE-CONFIG-010` | host package manifest boundary violation |
+| `FUNGI-CONFIG-001` | required public environment variable missing |
+| `FUNGI-CONFIG-002` | required secret missing |
+| `FUNGI-CONFIG-003` | unknown environment mode |
+| `FUNGI-CONFIG-004` | production strict mode disabled |
+| `FUNGI-CONFIG-005` | unsafe secret default detected |
+| `FUNGI-CONFIG-006` | development package enabled in production |
+| `FUNGI-CONFIG-010` | host package manifest boundary violation |
 
 ---
 
@@ -708,7 +708,7 @@ pub fn expose_config() -> Config {
 Expected diagnostic:
 
 ```text
-SPORE-BOUNDARY-006
+FUNGI-BOUNDARY-006
 secret escaping public API
 ```
 
@@ -730,12 +730,12 @@ Runtime manifests should include secret metadata only — no raw values:
 }
 ```
 
-### Diagnostic Codes (SPORE-SECRET series)
+### Diagnostic Codes (FUNGI-SECRET series)
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-SECRET-001` | required secret unavailable |
-| `SPORE-SECRET-002` | secret value attempted to flow to unsafe sink |
+| `FUNGI-SECRET-001` | required secret unavailable |
+| `FUNGI-SECRET-002` | secret value attempted to flow to unsafe sink |
 
 ---
 
@@ -965,7 +965,7 @@ export async function loadEnvironmentConfig(
   // Validate mode.
   if (!["development", "test", "staging", "production"].includes(input.mode)) {
     diagnostics.push({
-      code: "SPORE-CONFIG-003",
+      code: "FUNGI-CONFIG-003",
       severity: "error",
       message: `Unknown environment mode: ${input.mode}.`
     })
@@ -974,7 +974,7 @@ export async function loadEnvironmentConfig(
   // Check .env file policy.
   if (input.allowDotEnv && !policy.allowDotEnvFiles) {
     diagnostics.push({
-      code: "SPORE-CONFIG-004",
+      code: "FUNGI-CONFIG-004",
       severity: "error",
       message: `.env files are not allowed in ${input.mode} mode.`
     })

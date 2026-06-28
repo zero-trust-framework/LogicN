@@ -91,8 +91,8 @@ The governance layer (WASM) remains authoritative. CUDA kernels are invoked only
 ## References
 
 - Phase 42: Deno WebGPU benchmark harness (4.17M ops/sec baseline)
-- Phase 56: Governance verifier stub (`governanceVerifierService.spore`)
-- Phase 57: Effect checker stub (`effectCheckerService.spore`)
+- Phase 56: Governance verifier stub (`governanceVerifierService.fungi`)
+- Phase 57: Effect checker stub (`effectCheckerService.fungi`)
 - Phase 60: Full runtime effect + governance enforcement (target)
 - CUDA toolkit: https://developer.nvidia.com/cuda-downloads
 - cudarc: https://github.com/coreylowman/cudarc

@@ -46,7 +46,7 @@ function trustLabel(node: DataNode): string {
  * Renders the provenance report as a formatted text string.
  *
  * @param graph         - The provenance graph to render
- * @param fileCount     - Total number of .spore files scanned
+ * @param fileCount     - Total number of .fungi files scanned
  */
 export function renderTextReport(graph: ProvenanceGraph, fileCount: number): string {
   const lines: string[] = [];
@@ -118,7 +118,7 @@ export function renderTextReport(graph: ProvenanceGraph, fileCount: number): str
 
   // If no flows found
   if (flowGroups.size === 0) {
-    lines.push("  (no flows found — check that the directory contains .spore files)");
+    lines.push("  (no flows found — check that the directory contains .fungi files)");
     lines.push("");
   }
 
@@ -141,7 +141,7 @@ export function renderTextReport(graph: ProvenanceGraph, fileCount: number): str
 
 export function renderJsonReport(graph: ProvenanceGraph, fileCount: number): string {
   const output = {
-    schemaVersion: "spore.provenance.v1",
+    schemaVersion: "fungi.provenance.v1",
     fileCount,
     ...graph,
   };
@@ -154,7 +154,7 @@ export function renderJsonReport(graph: ProvenanceGraph, fileCount: number): str
 // Spec: https://www.w3.org/TR/prov-json/
 //
 // Mapping:
-//   source nodes   → entity  (spore:tainted: true when !isTrusted)
+//   source nodes   → entity  (fungi:tainted: true when !isTrusted)
 //   transform/gate nodes → activity
 //   sink nodes     → entity + wasGeneratedBy link to last gate in the same flow
 // ---------------------------------------------------------------------------
@@ -169,10 +169,10 @@ export interface ProvReportOptions {
  *
  * Structure:
  * {
- *   "prefix": { "spore": "https://galerina.io/prov/v1#" },
- *   "entity":  { "spore:source_N": { "prov:label": "...", "spore:tainted": true } },
- *   "activity": { "spore:gate_N": { "prov:label": "...", "spore:kind": "gate" } },
- *   "wasGeneratedBy": { "spore:clean_N": { "prov:entity": "...", "prov:activity": "..." } }
+ *   "prefix": { "fungi": "https://galerina.io/prov/v1#" },
+ *   "entity":  { "fungi:source_N": { "prov:label": "...", "fungi:tainted": true } },
+ *   "activity": { "fungi:gate_N": { "prov:label": "...", "fungi:kind": "gate" } },
+ *   "wasGeneratedBy": { "fungi:clean_N": { "prov:entity": "...", "prov:activity": "..." } }
  * }
  */
 export function renderProvReport(graph: ProvenanceGraph, opts: ProvReportOptions = {}): string {
@@ -182,7 +182,7 @@ export function renderProvReport(graph: ProvenanceGraph, opts: ProvReportOptions
   }
 
   const prefix = {
-    spore: "https://galerina.io/prov/v1#",
+    fungi: "https://galerina.io/prov/v1#",
   };
 
   const entity: Record<string, Record<string, unknown>> = {};
@@ -200,7 +200,7 @@ export function renderProvReport(graph: ProvenanceGraph, opts: ProvReportOptions
   // Process transforms first to build lastGate map
   for (const node of graph.nodes) {
     if (node.kind === "transform") {
-      lastGateByFlow.set(node.flowName, `spore:gate_${node.id}`);
+      lastGateByFlow.set(node.flowName, `fungi:gate_${node.id}`);
     }
   }
 
@@ -211,39 +211,39 @@ export function renderProvReport(graph: ProvenanceGraph, opts: ProvReportOptions
   for (const node of graph.nodes) {
     if (node.kind === "source") {
       entityCounter++;
-      const key = `spore:source_${entityCounter}`;
+      const key = `fungi:source_${entityCounter}`;
       entity[key] = {
         "prov:label": node.label,
-        "spore:tainted": !node.isTrusted,
-        "spore:flowName": node.flowName,
-        "spore:kind": node.sourceKind ?? "unknown",
+        "fungi:tainted": !node.isTrusted,
+        "fungi:flowName": node.flowName,
+        "fungi:kind": node.sourceKind ?? "unknown",
       };
     } else if (node.kind === "transform") {
       activityCounter++;
-      const key = `spore:gate_${activityCounter}`;
+      const key = `fungi:gate_${activityCounter}`;
       activity[key] = {
         "prov:label": node.label,
-        "spore:kind": node.transformKind ?? "gate",
-        "spore:flowName": node.flowName,
-        "spore:trusted": node.isTrusted,
+        "fungi:kind": node.transformKind ?? "gate",
+        "fungi:flowName": node.flowName,
+        "fungi:trusted": node.isTrusted,
       };
       // Update lastGateByFlow with the key for later sink linking
       lastGateByFlow.set(node.flowName, key);
     } else if (node.kind === "sink") {
       // Sink nodes appear as entities; link to last gate via wasGeneratedBy
       entityCounter++;
-      const entityKey = `spore:sink_${entityCounter}`;
+      const entityKey = `fungi:sink_${entityCounter}`;
       entity[entityKey] = {
         "prov:label": node.label,
-        "spore:tainted": !node.isTrusted,
-        "spore:flowName": node.flowName,
-        "spore:kind": node.sinkKind ?? "unknown",
+        "fungi:tainted": !node.isTrusted,
+        "fungi:flowName": node.flowName,
+        "fungi:kind": node.sinkKind ?? "unknown",
       };
 
       const lastGate = lastGateByFlow.get(node.flowName);
       if (lastGate !== undefined) {
         cleanCounter++;
-        const wgbKey = `spore:clean_${cleanCounter}`;
+        const wgbKey = `fungi:clean_${cleanCounter}`;
         wasGeneratedBy[wgbKey] = {
           "prov:entity": entityKey,
           "prov:activity": lastGate,

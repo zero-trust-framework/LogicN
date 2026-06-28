@@ -42,7 +42,7 @@ test("executeWASMFlow hardening does NOT over-reject: a faithful const module st
 
 test("#165: `Float % Float` emits a fail-closed trap, never `i32.rem_s` over f64", async () => {
   const src = `pure flow m(a: Float, b: Float) -> Float contract { effects {} } { return a % b }`;
-  const parsed = parseProgram(src, "m.spore");
+  const parsed = parseProgram(src, "m.fungi");
   // Reach the WASM emitter for the flow body. The emitted module must trap on the
   // float-modulo, NOT contain an i32.rem_s applied to f64 operands.
   const { emitWAT } = await import("../dist/wat-emitter.js");
@@ -57,9 +57,9 @@ test("#165: `Float % Float` emits a fail-closed trap, never `i32.rem_s` over f64
 // ── guarded-flow value-state parity (the lone-omission fail-open) ──────────────
 
 function check(source) {
-  return checkValueStates(parseProgram(source, "t.spore").ast);
+  return checkValueStates(parseProgram(source, "t.fungi").ast);
 }
-const has003 = (r) => r.diagnostics.some((d) => d.code === "SPORE-VALUESTATE-003");
+const has003 = (r) => r.diagnostics.some((d) => d.code === "FUNGI-VALUESTATE-003");
 const body = (kind) => `
 ${kind} flow test(raw: String) -> Result<String, Error>
 contract { effects { database.write } }
@@ -70,7 +70,7 @@ contract { effects { database.write } }
 }
 `;
 
-test("guarded-flow value-state: an unsafe binding at a governed sink fires SPORE-VALUESTATE-003 (parity with secure)", () => {
+test("guarded-flow value-state: an unsafe binding at a governed sink fires FUNGI-VALUESTATE-003 (parity with secure)", () => {
   assert.ok(has003(check(body("secure"))), "secure-flow baseline must fire VALUESTATE-003");
   assert.ok(
     has003(check(body("guarded"))),

@@ -10,12 +10,12 @@ deny-by-default, fail-closed gate the host runs before the App Kernel will compo
 (see [`host/server.ts`](../host/server.ts)). Three independent gates must all pass:
 
 1. **Hash pin** — the component's sha256 must match the `sha256` declared for it in
-   `App.manifest` (`deps[]`). A changed binary is refused (`SPORE-FUSE-HASH-MISMATCH`).
+   `App.manifest` (`deps[]`). A changed binary is refused (`FUNGI-FUSE-HASH-MISMATCH`).
 2. **Signature** — the component's manifest must carry a valid Ed25519 signature from
    an authorised `signer`. An unsigned or wrongly-signed component is refused
-   (`SPORE-FUSE-UNSIGNED` / `SPORE-FUSE-SIG-INVALID`).
+   (`FUNGI-FUSE-UNSIGNED` / `FUNGI-FUSE-SIG-INVALID`).
 3. **Revocation** — a revoked signing key is refused even if the signature is
-   otherwise valid (`SPORE-FUSE-KEY-REVOKED`).
+   otherwise valid (`FUNGI-FUSE-KEY-REVOKED`).
 
 Capability imports are **closed / deny-by-default**: a component may only import a
 capability the host explicitly provides at the seam. An unresolved import is a

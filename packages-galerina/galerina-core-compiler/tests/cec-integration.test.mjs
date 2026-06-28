@@ -1,17 +1,17 @@
 // =============================================================================
 // CEC Integration Tests — Canonical Example Corpus
 //
-// Finds all example.spore files under docs/Examples/, compiles each through the
+// Finds all example.fungi files under docs/Examples/, compiles each through the
 // full Galerina compiler pipeline, and compares actual diagnostics to the
 // expected.diagnostics.txt companion file.
 //
-// Stability tiers (read from /// test_status: header in .spore files):
+// Stability tiers (read from /// test_status: header in .fungi files):
 //
 //   stable  → fully asserted: diagnostic mismatch is a test failure
 //   draft   → compile-only: a crash is a test failure, mismatch is not
 //   (none)  → defaults to draft
 //
-// To mark an example stable, add `/// test_status: stable` to its .spore header.
+// To mark an example stable, add `/// test_status: stable` to its .fungi header.
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -41,22 +41,22 @@ const EXAMPLES_DIR = join(__dir, "../../../docs/Examples");
 // They represent known gaps from domain imports, legacy syntax, or intro-level
 // examples that deliberately use top-level bindings for pedagogical clarity.
 const SUPPRESS = new Set([
-  "SPORE-TYPE-001",        // unknown type — domain types from imports
-  "SPORE-TYPE-009",        // generic arity — legacy Tensor<T> examples
-  "SPORE-NAME-001",        // undeclared name — stdlib from imports
-  "SPORE-GOV-002",         // missing audit — examples focused on other concepts
-  "SPORE-GOV-007",         // authority block missing reason
-  "SPORE-SYNTAX-003",      // future-reserved keyword
-  "SPORE-SYNTAX-006",      // top-level let — intro examples
-  "SPORE-SYNTAX-007",      // top-level mut — intro examples
-  "SPORE-SYNTAX-008",      // top-level binding variant
-  "SPORE-VALUESTATE-006",  // ProtectedBoundaryViolation — Wave 2 false positives being resolved
-  "SPORE-VALUESTATE-002",  // UnsafeConditionalUpgrade — Wave 2 implementation may need tuning
-  "SPORE-EVENT-003",       // ContractEmitsUndeclaredEvent — Wave 1 new diagnostic, needs tuning
-  "SPORE-EVENT-005",       // EventEmittedNotInContract — Wave 1 new diagnostic, needs tuning
-  "SPORE-EFFECT-004",      // NonCanonicalEffectName — Wave 2 added pii.write alias; examples updated separately
-  "SPORE-STDLIB-001",      // StdlibEffectNotDeclared — Phase 18H new diagnostic; CEC examples updated separately
-  "SPORE-STDLIB-002",      // UnknownEffectfulStdlibCall — #153 fail-closed sibling of -001; CEC examples use unregistered effectful methods pedagogically
+  "FUNGI-TYPE-001",        // unknown type — domain types from imports
+  "FUNGI-TYPE-009",        // generic arity — legacy Tensor<T> examples
+  "FUNGI-NAME-001",        // undeclared name — stdlib from imports
+  "FUNGI-GOV-002",         // missing audit — examples focused on other concepts
+  "FUNGI-GOV-007",         // authority block missing reason
+  "FUNGI-SYNTAX-003",      // future-reserved keyword
+  "FUNGI-SYNTAX-006",      // top-level let — intro examples
+  "FUNGI-SYNTAX-007",      // top-level mut — intro examples
+  "FUNGI-SYNTAX-008",      // top-level binding variant
+  "FUNGI-VALUESTATE-006",  // ProtectedBoundaryViolation — Wave 2 false positives being resolved
+  "FUNGI-VALUESTATE-002",  // UnsafeConditionalUpgrade — Wave 2 implementation may need tuning
+  "FUNGI-EVENT-003",       // ContractEmitsUndeclaredEvent — Wave 1 new diagnostic, needs tuning
+  "FUNGI-EVENT-005",       // EventEmittedNotInContract — Wave 1 new diagnostic, needs tuning
+  "FUNGI-EFFECT-004",      // NonCanonicalEffectName — Wave 2 added pii.write alias; examples updated separately
+  "FUNGI-STDLIB-001",      // StdlibEffectNotDeclared — Phase 18H new diagnostic; CEC examples updated separately
+  "FUNGI-STDLIB-002",      // UnknownEffectfulStdlibCall — #153 fail-closed sibling of -001; CEC examples use unregistered effectful methods pedagogically
 ]);
 
 // ── Pipeline ──────────────────────────────────────────────────────────────────
@@ -69,7 +69,7 @@ function runPipeline(source, filePath) {
   const effectResults = checkEffects(parsed.flows, parsed.ast);
   // verifyGovernance(ast, flows, effectResults, profile)
   // Use "dev" profile — examples may omit intent/governance for pedagogical focus.
-  // "production" emits SPORE-GOV-010 as error for secure flows without intent,
+  // "production" emits FUNGI-GOV-010 as error for secure flows without intent,
   // which would cause false failures in many well-formed examples.
   const govResult = verifyGovernance(parsed.ast, parsed.flows, effectResults, "dev");
   const eventResult = checkEvents(parsed.ast);
@@ -98,7 +98,7 @@ function walkDir(dir) {
   for (const e of entries) {
     const full = join(dir, e.name);
     if (e.isDirectory()) found.push(...walkDir(full));
-    else if (e.name === "example.spore") found.push(full);
+    else if (e.name === "example.fungi") found.push(full);
   }
   return found;
 }
@@ -106,7 +106,7 @@ function walkDir(dir) {
 // ── Header parser ─────────────────────────────────────────────────────────────
 
 /**
- * Read test_status from the /// header of a .spore file.
+ * Read test_status from the /// header of a .fungi file.
  * Returns "stable" | "draft" (default: "draft").
  */
 function parseTestStatus(source) {
@@ -116,32 +116,32 @@ function parseTestStatus(source) {
 
 function loadExamples() {
   if (!existsSync(EXAMPLES_DIR)) return [];
-  return walkDir(EXAMPLES_DIR).map((sporeFile) => {
+  return walkDir(EXAMPLES_DIR).map((fungiFile) => {
     // Strip UTF-8 BOM if present (Windows sometimes adds it)
-    const raw = readFileSync(sporeFile, "utf8");
+    const raw = readFileSync(fungiFile, "utf8");
     const source = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
 
-    const diagFile = sporeFile.replace(/example\.spore$/, "expected.diagnostics.txt");
+    const diagFile = fungiFile.replace(/example\.fungi$/, "expected.diagnostics.txt");
     let rawExpected = "none";
     try { rawExpected = readFileSync(diagFile, "utf8").trim(); } catch { /* not present */ }
 
-    // Parse expected: "none" | list of SPORE-* codes
+    // Parse expected: "none" | list of FUNGI-* codes
     const lines = rawExpected.split("\n").map((l) => l.trim())
       .filter((l) => l.length > 0 && !l.startsWith("//") && !l.startsWith("#"));
     const expectNone = lines.length === 0 || lines[0].toLowerCase() === "none";
     const expectedCodes = expectNone ? []
-      : lines.filter((l) => /^SPORE-[A-Z]+-\d+/.test(l)).map((l) => l.split(/\s/)[0]);
+      : lines.filter((l) => /^FUNGI-[A-Z]+-\d+/.test(l)).map((l) => l.split(/\s/)[0]);
 
     // Human-readable name: "Level-1-Basics/001-pure-flow"
-    const normalized = sporeFile.replace(/\\/g, "/");
+    const normalized = fungiFile.replace(/\\/g, "/");
     const marker = "/Examples/";
     const afterExamples = normalized.slice(normalized.indexOf(marker) + marker.length);
-    const name = afterExamples.replace("/example.spore", "");
+    const name = afterExamples.replace("/example.fungi", "");
 
     // Read test_status header: "stable" | "draft"
     const testStatus = parseTestStatus(source);
 
-    return { name, file: sporeFile, source, expectNone, expectedCodes, testStatus };
+    return { name, file: fungiFile, source, expectNone, expectedCodes, testStatus };
   });
 }
 
@@ -152,7 +152,7 @@ const DRAFT_EXAMPLES  = ALL.filter((e) => e.testStatus !== "stable");
 // ── Stable examples: fully asserted ──────────────────────────────────────────
 describe("CEC integration — stable examples", () => {
   if (STABLE_EXAMPLES.length === 0) {
-    it("(no stable examples found — add `/// test_status: stable` to an example.spore)", () => {
+    it("(no stable examples found — add `/// test_status: stable` to an example.fungi)", () => {
       // infrastructure is wired, just no stable examples yet
     });
   }

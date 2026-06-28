@@ -4,4 +4,4 @@
 # unregistered code, and on any entry here that is already registered.
 #
 # 2026-06-16: baseline was 65; ALL reconciled into compiler-diagnostics.md. Allowlist now EMPTY.
-# Every emitted SPORE-* code is documented. Keep it that way — register new codes, don't grow this list.
+# Every emitted FUNGI-* code is documented. Keep it that way — register new codes, don't grow this list.

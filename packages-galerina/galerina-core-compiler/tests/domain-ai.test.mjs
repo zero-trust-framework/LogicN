@@ -11,17 +11,17 @@ import {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function parse(source) {
-  return parseProgram(source, "test.spore");
+  return parseProgram(source, "test.fungi");
 }
 
 function parseAndCheckEffects(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effectResults = checkEffects(parsed.flows, parsed.ast ?? { kind: "program" });
   return { parsed, effectResults };
 }
 
 function parseAndVerify(source, profile = "dev") {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effects = checkEffects(parsed.flows, parsed.ast);
   return { parsed, effects, gov: verifyGovernance(parsed.ast, parsed.flows, effects, profile) };
 }
@@ -58,7 +58,7 @@ intent "Run text classification using the on-device classifier model" {
     assert.ok(hasNoParseDiagErrors(result), `Parse errors: ${result.diagnostics.map((d) => d.message).join(", ")}`);
   });
 
-  it("recognises ai.inference as a canonical effect — no SPORE-EFFECT-004", () => {
+  it("recognises ai.inference as a canonical effect — no FUNGI-EFFECT-004", () => {
     const { effectResults } = parseAndCheckEffects(`
 guarded flow classify(request: Request) -> Result<Response, AiError>
 contract { effects { ai.inference } }
@@ -67,7 +67,7 @@ contract { effects { ai.inference } }
 }
 `);
     assert.ok(
-      !hasEffectDiag(effectResults, "SPORE-EFFECT-004"),
+      !hasEffectDiag(effectResults, "FUNGI-EFFECT-004"),
       "ai.inference should be a canonical effect name — no alias diagnostic expected",
     );
   });
@@ -288,11 +288,11 @@ contract { effects { ai.inference } }
 });
 
 // =============================================================================
-// 6. SPORE-HINT-COMPUTE-001: ai.inference without compute target
+// 6. FUNGI-HINT-COMPUTE-001: ai.inference without compute target
 // =============================================================================
 
-describe("AI domain — SPORE-HINT-COMPUTE-001: ai.inference without compute target", () => {
-  it("emits SPORE-HINT-COMPUTE-001 when ai.inference declared but no compute target block", () => {
+describe("AI domain — FUNGI-HINT-COMPUTE-001: ai.inference without compute target", () => {
+  it("emits FUNGI-HINT-COMPUTE-001 when ai.inference declared but no compute target block", () => {
     const { gov } = parseAndVerify(`
 guarded flow runClassifier(request: Request) -> Result<Response, AiError>
 contract { effects { ai.inference } }
@@ -301,12 +301,12 @@ contract { effects { ai.inference } }
 }
 `);
     assert.ok(
-      hasGovDiag(gov, "SPORE-HINT-COMPUTE-001"),
-      "Expected SPORE-HINT-COMPUTE-001 when ai.inference declared without compute target",
+      hasGovDiag(gov, "FUNGI-HINT-COMPUTE-001"),
+      "Expected FUNGI-HINT-COMPUTE-001 when ai.inference declared without compute target",
     );
   });
 
-  it("SPORE-HINT-COMPUTE-001 is info severity", () => {
+  it("FUNGI-HINT-COMPUTE-001 is info severity", () => {
     const { gov } = parseAndVerify(`
 guarded flow infer(request: Request) -> Result<Response, AiError>
 contract { effects { ai.inference } }
@@ -314,12 +314,12 @@ contract { effects { ai.inference } }
   return Ok(Response.ok({}))
 }
 `);
-    const diag = gov.diagnostics.find((d) => d.code === "SPORE-HINT-COMPUTE-001");
-    assert.ok(diag !== undefined, "Expected SPORE-HINT-COMPUTE-001 diagnostic");
+    const diag = gov.diagnostics.find((d) => d.code === "FUNGI-HINT-COMPUTE-001");
+    assert.ok(diag !== undefined, "Expected FUNGI-HINT-COMPUTE-001 diagnostic");
     assert.equal(diag.severity, "info");
   });
 
-  it("SPORE-HINT-COMPUTE-001 includes a suggestedFix mentioning compute target", () => {
+  it("FUNGI-HINT-COMPUTE-001 includes a suggestedFix mentioning compute target", () => {
     const { gov } = parseAndVerify(`
 guarded flow infer(request: Request) -> Result<Response, AiError>
 contract { effects { ai.inference } }
@@ -327,15 +327,15 @@ contract { effects { ai.inference } }
   return Ok(Response.ok({}))
 }
 `);
-    const diag = gov.diagnostics.find((d) => d.code === "SPORE-HINT-COMPUTE-001");
-    assert.ok(diag?.suggestedFix !== undefined, "Expected suggestedFix on SPORE-HINT-COMPUTE-001");
+    const diag = gov.diagnostics.find((d) => d.code === "FUNGI-HINT-COMPUTE-001");
+    assert.ok(diag?.suggestedFix !== undefined, "Expected suggestedFix on FUNGI-HINT-COMPUTE-001");
     assert.ok(
       diag.suggestedFix.includes("compute target"),
       `Expected suggestedFix to mention 'compute target', got: ${diag.suggestedFix}`,
     );
   });
 
-  it("does NOT emit SPORE-HINT-COMPUTE-001 when compute target block is present", () => {
+  it("does NOT emit FUNGI-HINT-COMPUTE-001 when compute target block is present", () => {
     const { gov } = parseAndVerify(`
 guarded flow runClassifier(request: Request) -> Result<Response, AiError>
 contract { effects { ai.inference } }
@@ -347,12 +347,12 @@ contract { effects { ai.inference } }
 }
 `);
     assert.ok(
-      !hasGovDiag(gov, "SPORE-HINT-COMPUTE-001"),
-      "SPORE-HINT-COMPUTE-001 should not fire when compute target block is present",
+      !hasGovDiag(gov, "FUNGI-HINT-COMPUTE-001"),
+      "FUNGI-HINT-COMPUTE-001 should not fire when compute target block is present",
     );
   });
 
-  it("does NOT emit SPORE-HINT-COMPUTE-001 for flows without ai.inference", () => {
+  it("does NOT emit FUNGI-HINT-COMPUTE-001 for flows without ai.inference", () => {
     const { gov } = parseAndVerify(`
 guarded flow saveRecord(request: Request) -> Result<Response, Error>
 contract { effects { database.write, audit.write } }
@@ -361,8 +361,8 @@ contract { effects { database.write, audit.write } }
 }
 `);
     assert.ok(
-      !hasGovDiag(gov, "SPORE-HINT-COMPUTE-001"),
-      "SPORE-HINT-COMPUTE-001 should not fire for non-AI flows",
+      !hasGovDiag(gov, "FUNGI-HINT-COMPUTE-001"),
+      "FUNGI-HINT-COMPUTE-001 should not fire for non-AI flows",
     );
   });
 });
@@ -628,7 +628,7 @@ intent "Run AI classification on-device only" {
     assert.ok(hasNoParseDiagErrors(result), `Parse errors: ${result.diagnostics.map((d) => d.message).join(", ")}`);
   });
 
-  it("does not emit SPORE-GOV-004 when remote.execution is denied and no network.outbound is declared", () => {
+  it("does not emit FUNGI-GOV-004 when remote.execution is denied and no network.outbound is declared", () => {
     const { gov } = parseAndVerify(`
 secure flow runLocalModel(request: Request) -> Result<Response, AiError>
 contract {
@@ -642,8 +642,8 @@ intent "Run model on-device without remote" {
 }
 `);
     assert.ok(
-      !hasGovDiag(gov, "SPORE-GOV-004"),
-      "SPORE-GOV-004 should not fire when network.outbound is not declared",
+      !hasGovDiag(gov, "FUNGI-GOV-004"),
+      "FUNGI-GOV-004 should not fire when network.outbound is not declared",
     );
   });
 });
@@ -693,7 +693,7 @@ intent "Classify user text using local model" {
     assert.equal(effectErrors(effectResults).length, 0, "No effect errors expected for fully declared AI classify flow");
   });
 
-  it("full classify flow with compute target suppresses SPORE-HINT-COMPUTE-001", () => {
+  it("full classify flow with compute target suppresses FUNGI-HINT-COMPUTE-001", () => {
     const { gov } = parseAndVerify(`
 secure flow classifyText(request: Request) -> Result<Response, AiError>
 contract { effects { ai.inference, audit.write } }
@@ -705,8 +705,8 @@ intent "Classify text on-device" {
 }
 `);
     assert.ok(
-      !hasGovDiag(gov, "SPORE-HINT-COMPUTE-001"),
-      "SPORE-HINT-COMPUTE-001 should be absent when compute target block is present",
+      !hasGovDiag(gov, "FUNGI-HINT-COMPUTE-001"),
+      "FUNGI-HINT-COMPUTE-001 should be absent when compute target block is present",
     );
   });
 });
@@ -757,7 +757,7 @@ contract { effects { ai.inference, audit.write } }
     );
   });
 
-  it("AI flow missing audit.write triggers SPORE-GOV-002 when database.write also declared", () => {
+  it("AI flow missing audit.write triggers FUNGI-GOV-002 when database.write also declared", () => {
     const { gov } = parseAndVerify(`
 guarded flow classifyAndSave(request: Request) -> Result<Response, AiError>
 contract { effects { ai.inference, database.write } }
@@ -767,17 +767,17 @@ contract { effects { ai.inference, database.write } }
 }
 `);
     assert.ok(
-      hasGovDiag(gov, "SPORE-GOV-002"),
-      "Expected SPORE-GOV-002 when database.write declared without audit.write",
+      hasGovDiag(gov, "FUNGI-GOV-002"),
+      "Expected FUNGI-GOV-002 when database.write declared without audit.write",
     );
   });
 });
 
 // =============================================================================
-// 15. SPORE-GOV-004: denied target selected
+// 15. FUNGI-GOV-004: denied target selected
 // =============================================================================
 
-describe("AI domain — SPORE-GOV-004: denied target selected", () => {
+describe("AI domain — FUNGI-GOV-004: denied target selected", () => {
   it("governance verifier result has diagnostics array for AI flow", () => {
     const { gov } = parseAndVerify(`
 secure flow runModel(request: Request) -> Result<Response, AiError>
@@ -789,7 +789,7 @@ intent "Run model remotely" {
     assert.ok(Array.isArray(gov.diagnostics), "governance result must have diagnostics array");
   });
 
-  it("emits SPORE-GOV-004 when compute target denies remote.execution but network.outbound is declared", () => {
+  it("emits FUNGI-GOV-004 when compute target denies remote.execution but network.outbound is declared", () => {
     // The compute target body uses deny: prefix identifiers via the block parser.
     // We test the contradiction: deny remote but declare network.outbound.
     // Since compute target block body parsing stores deny: identifiers in block children,
@@ -801,13 +801,13 @@ intent "Run model locally" {
   return Ok(Response.ok({}))
 }
 `);
-    // SPORE-GOV-001 may fire because intent says "locally" but network.outbound declared.
+    // FUNGI-GOV-001 may fire because intent says "locally" but network.outbound declared.
     // The verifier should complete without throwing.
     assert.ok(typeof gov.diagnostics === "object", "Verifier must complete without throwing");
     assert.ok(Array.isArray(gov.diagnostics), "diagnostics must be an array");
   });
 
-  it("pure flow with ai.inference emits SPORE-EFFECT-003", () => {
+  it("pure flow with ai.inference emits FUNGI-EFFECT-003", () => {
     const { effectResults } = parseAndCheckEffects(`
 pure flow badClassify(text: String) -> String
 contract { effects { ai.inference } }
@@ -815,7 +815,7 @@ contract { effects { ai.inference } }
   return text
 }
 `);
-    assert.ok(hasEffectDiag(effectResults, "SPORE-EFFECT-003"), "Expected SPORE-EFFECT-003: pure flow must not declare ai.inference");
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-003"), "Expected FUNGI-EFFECT-003: pure flow must not declare ai.inference");
   });
 
   it("effectResultsToDiagnostics includes ai.inference effect error from pure flow", () => {
@@ -827,10 +827,10 @@ contract { effects { ai.inference } }
 }
 `);
     const diags = effectResultsToDiagnostics(effectResults);
-    assert.ok(diags.some((d) => d.code === "SPORE-EFFECT-003"), "Expected SPORE-EFFECT-003 in flattened diagnostics");
+    assert.ok(diags.some((d) => d.code === "FUNGI-EFFECT-003"), "Expected FUNGI-EFFECT-003 in flattened diagnostics");
   });
 
-  it("'ai' as an effect alias triggers SPORE-EFFECT-004 with suggestion ai.inference", () => {
+  it("'ai' as an effect alias triggers FUNGI-EFFECT-004 with suggestion ai.inference", () => {
     const { effectResults } = parseAndCheckEffects(`
 guarded flow classify(text: String) -> Result<Response, AiError>
 contract { effects { ai } }
@@ -838,14 +838,14 @@ contract { effects { ai } }
   return Ok(Response.ok({}))
 }
 `);
-    // 'ai' is a broad alias — emits SPORE-EFFECT-005 (BroadAliasUsed) not SPORE-EFFECT-004
+    // 'ai' is a broad alias — emits FUNGI-EFFECT-005 (BroadAliasUsed) not FUNGI-EFFECT-004
     assert.ok(
-      hasEffectDiag(effectResults, "SPORE-EFFECT-005"),
-      "Expected SPORE-EFFECT-005 for broad alias effect name 'ai'",
+      hasEffectDiag(effectResults, "FUNGI-EFFECT-005"),
+      "Expected FUNGI-EFFECT-005 for broad alias effect name 'ai'",
     );
     const aliasHint = effectResults
       .flatMap((r) => r.diagnostics)
-      .find((d) => d.code === "SPORE-EFFECT-005");
+      .find((d) => d.code === "FUNGI-EFFECT-005");
     assert.equal(aliasHint?.suggestedCode, "ai.inference", "Expected suggestedCode to be 'ai.inference'");
   });
 });
@@ -884,7 +884,7 @@ contract { effects { ai.inference, audit.write } }
     assert.equal(effectErrors(effectResults).length, 0, "No effect errors expected for complete AI pipeline");
   });
 
-  it("governance verifier does not emit SPORE-GOV-002 when ai flow declares audit.write", () => {
+  it("governance verifier does not emit FUNGI-GOV-002 when ai flow declares audit.write", () => {
     const { gov } = parseAndVerify(`
 guarded flow auditedAi(request: Request) -> Result<Response, AiError>
 contract { effects { ai.inference, database.write, audit.write } }
@@ -895,8 +895,8 @@ contract { effects { ai.inference, database.write, audit.write } }
 }
 `);
     assert.ok(
-      !hasGovDiag(gov, "SPORE-GOV-002"),
-      "SPORE-GOV-002 must not fire when audit.write is declared alongside database.write in AI flow",
+      !hasGovDiag(gov, "FUNGI-GOV-002"),
+      "FUNGI-GOV-002 must not fire when audit.write is declared alongside database.write in AI flow",
     );
   });
 });

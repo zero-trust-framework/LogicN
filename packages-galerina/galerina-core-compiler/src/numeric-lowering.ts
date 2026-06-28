@@ -7,7 +7,7 @@
  * (docs/Knowledge-Bases/galerina-i64-lowering-plan-verified-2026-06-25.md) Step 0: ONE `numericBaseType`
  * + ONE `parseI64Literal` feeding two tier-specific origination hooks, so the I64_MIN/I64_MAX literal
  * edges can never DIVERGE between tiers — a divergence is a silent 64→32 truncation fail-open (CWE-704),
- * exactly what `SPORE-NUMERIC-001` gates against.
+ * exactly what `FUNGI-NUMERIC-001` gates against.
  *
  * NEVER parse an Int64 literal with `parseInt()` / `Number()` — they round above 2^53, which is the
  * precise fail-open. `BigInt` is exact across the whole i64 range.
@@ -17,11 +17,11 @@ import { U64_MIN, U64_MAX } from "./u64-arith.js";
 import { type AstNode } from "./parser.js";
 
 /**
- * The scalar 64-bit widths the SPORE-NUMERIC-001 GATE rejects: a value the *compile/admit* pipeline cannot
+ * The scalar 64-bit widths the FUNGI-NUMERIC-001 GATE rejects: a value the *compile/admit* pipeline cannot
  * carry faithfully, so declaring one fails closed at check / build / governed-run (value-state-checker).
  *
  * Int64 has been LIFTED (owner-gated, 2026-06-25): the WASM emitter now lowers it faithfully (i64.const /
- * checked $spore_*_i64 / native i64.div_s|rem_s / i64 comparisons) and the tree-walker carries it as a
+ * checked $fungi_*_i64 / native i64.div_s|rem_s / i64 comparisons) and the tree-walker carries it as a
  * bigint — proven byte-exact, walker ≡ WASM, over the full (2^53,2^63) corpus (wat-i64-differential). So
  * the gate no longer rejects Int64; only UInt64 remains, because faithful *unsigned* 64-bit arithmetic
  * (u64 div/compare/overflow differ from the signed i64.* ops) has no layer yet. Int8/Int16 widen to i32
@@ -47,7 +47,7 @@ export const BACKEND_UNLOWERABLE_SCALAR: ReadonlySet<string> = new Set([]);
  *
  * SUPERSET of the (now-empty) gate set above: it pins Int64 AND UInt64, neither of which is GATE-rejected
  * any longer (the walker lowers both faithfully via the exact bigint i64/u64 layers) but both are still
- * unsafe on the i32-only tiers. `flowDeclaresUnlowerable64` consults THIS set; the SPORE-NUMERIC-001 gate
+ * unsafe on the i32-only tiers. `flowDeclaresUnlowerable64` consults THIS set; the FUNGI-NUMERIC-001 gate
  * consults BACKEND_UNLOWERABLE_SCALAR. Invariant: anything the gate rejects must also be here (fast-tier
  * unsafe) — vacuously true now the gate is empty, but it must hold if a width is ever re-gated.
  */
@@ -163,7 +163,7 @@ function bindingDeclaredBase(bindingValue: string): string {
  * Does a flow DECLARE any unlowerable 64-bit scalar (param, return, or a binding anywhere in its body)?
  * The fast execution tiers (bytecode VM, sync fast-path) are i32-only and would SILENTLY TRUNCATE such a
  * value — so they bail on a `true` here and defer to the faithful tree-walker (which carries int64 as a
- * bigint). Consults `FAST_TIER_UNLOWERABLE_SCALAR` (NOT the SPORE-NUMERIC-001 gate set): post-lift, Int64 is
+ * bigint). Consults `FAST_TIER_UNLOWERABLE_SCALAR` (NOT the FUNGI-NUMERIC-001 gate set): post-lift, Int64 is
  * admitted by the gate (WASM + walker lower it faithfully) yet STILL must bail off the i32-only fast tiers,
  * so the bail set is a superset of the gate set. Param Int64 already bails in the bytecode VM via its
  * INTEGER_TYPES check; this also catches an INTERNAL `let y: Int64` in an int-param flow (the

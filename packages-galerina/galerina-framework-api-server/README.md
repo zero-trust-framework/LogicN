@@ -640,13 +640,13 @@ Recommended first structure:
 
   /examples
     /basic-api
-      boot.spore
-      routes.spore
+      boot.fungi
+      routes.fungi
       Galerina.server.config
 
     /webhook-api
-      boot.spore
-      webhook.spore
+      boot.fungi
+      webhook.fungi
       Galerina.server.config
 
   /tests
@@ -684,8 +684,8 @@ For the first prototype, keep it smaller:
 
   /examples
     /basic-api
-      boot.spore
-      routes.spore
+      boot.fungi
+      routes.fungi
       Galerina.server.config
 
   /tests

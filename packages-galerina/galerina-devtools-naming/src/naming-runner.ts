@@ -36,14 +36,14 @@ export interface NamingAuditReport extends NamingCheckResult {
  * Parses the source, then runs the naming checker over the AST.
  * Returns a structured NamingAuditReport usable in CI.
  *
- * @param source  - Galerina source code (.spore content)
+ * @param source  - Galerina source code (.fungi content)
  * @param options - Naming audit options
  */
 export function runNamingAudit(
   source: string,
   options: NamingRunnerOptions = {},
 ): NamingAuditReport {
-  const { fileName = "source.spore", strict = false } = options;
+  const { fileName = "source.fungi", strict = false } = options;
 
   // Parse
   const parsed = parseProgram(source, fileName);
@@ -54,7 +54,7 @@ export function runNamingAudit(
   if (parseErrorCount > 0 && parsed.flows.length === 0) {
     // Hard parse failure — no AST to walk
     return {
-      schemaVersion: "spore.naming.v1",
+      schemaVersion: "fungi.naming.v1",
       source: source.slice(0, 200) + (source.length > 200 ? "..." : ""),
       parseErrors: parseErrorCount,
       findings: [],

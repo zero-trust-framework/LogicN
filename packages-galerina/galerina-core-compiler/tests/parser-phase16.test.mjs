@@ -6,7 +6,7 @@ import { parseProgram } from "../dist/index.js";
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function parseOk(source) {
-  const result = parseProgram(source, "test.spore");
+  const result = parseProgram(source, "test.fungi");
   const errors = result.diagnostics.filter((d) => d.severity === "error");
   assert.equal(
     errors.length,
@@ -284,7 +284,7 @@ blorp this is all garbage text here no braces
 flow good(a: Int) -> Int {
   return a
 }
-`, "test.spore");
+`, "test.fungi");
 
     const errors = result.diagnostics.filter((d) => d.severity === "error");
     // The good flow should still parse
@@ -301,7 +301,7 @@ quux blah blah
 pure flow add(a: Int, b: Int) -> Int {
   return a
 }
-`, "test.spore");
+`, "test.fungi");
 
     // The flow after the bad keyword should still parse
     assert.ok(result.flows.length >= 1, "Expected flow to parse after recovery");
@@ -319,7 +319,7 @@ pure flow first(a: Int) -> Int {
 pure flow second(b: String) -> String {
   return b
 }
-`, "test.spore");
+`, "test.fungi");
 
     assert.ok(result.flows.length >= 2, `Expected 2 flows after recovery, got ${result.flows.length}`);
     const names = result.flows.map((f) => f.name);

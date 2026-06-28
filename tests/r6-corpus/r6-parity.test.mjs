@@ -23,11 +23,11 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dir, "../..");
 
 const R6_FILES = [
-  "r6-01-pure-add.spore",
-  "r6-02-governed-read.spore",
-  "r6-03-secure-write.spore",
-  "r6-04-invariant-check.spore",
-  "r6-05-full-governance.spore",
+  "r6-01-pure-add.fungi",
+  "r6-02-governed-read.fungi",
+  "r6-03-secure-write.fungi",
+  "r6-04-invariant-check.fungi",
+  "r6-05-full-governance.fungi",
 ];
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -37,7 +37,7 @@ function relPath(file) {
 }
 
 function manifestJsonPath(file) {
-  return join(ROOT, "build", basename(file, ".spore") + ".lmanifest.json");
+  return join(ROOT, "build", basename(file, ".fungi") + ".lmanifest.json");
 }
 
 // ── Stage A compile acceptance (0 errors) ────────────────────────────────────

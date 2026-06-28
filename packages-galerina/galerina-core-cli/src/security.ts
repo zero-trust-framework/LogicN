@@ -1,4 +1,4 @@
-// CLI output redaction — fail-closed tripwire (R&D 0094-redact PART-A, SPORE-CLI-REDACT-001).
+// CLI output redaction — fail-closed tripwire (R&D 0094-redact PART-A, FUNGI-CLI-REDACT-001).
 //
 // Two detector classes:
 //  - ASSIGNMENT patterns scrub `key = value` / `header: value` forms (a prefix group is preserved).
@@ -7,12 +7,12 @@
 //    fail-OPEN: a bare token with no `key=` prefix used to print as cleartext.
 //
 // A BARE match is also a TRIPWIRE: a raw credential token reaching CLI output means an upstream
-// boundary already leaked it. The checked API reports that bypass (SPORE-CLI-REDACT-001) so a caller
+// boundary already leaked it. The checked API reports that bypass (FUNGI-CLI-REDACT-001) so a caller
 // can fail closed (warn / suppress / exit non-zero); the value itself is always redacted either way.
 // Redaction is best-effort defense-in-depth, never the primary secret boundary — it can only ever
 // add safety, never weaken it.
 
-export const SPORE_CLI_REDACT_001 = "SPORE-CLI-REDACT-001";
+export const FUNGI_CLI_REDACT_001 = "FUNGI-CLI-REDACT-001";
 
 const REDACTION = "SecureString(redacted)";
 
@@ -53,7 +53,7 @@ export interface RedactionResult {
 
 /**
  * Redact and report. The returned `text` is always safe to print; `tripwire`/`markers` let a caller
- * fail closed when a raw credential token slipped past an upstream boundary (SPORE-CLI-REDACT-001).
+ * fail closed when a raw credential token slipped past an upstream boundary (FUNGI-CLI-REDACT-001).
  */
 export function redactCliOutputChecked(value: string): RedactionResult {
   let text = value;

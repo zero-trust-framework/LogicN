@@ -7,7 +7,7 @@
  * DENIES one field while RETURNING the rest. This adds it: each field of a response record
  * is admitted by its OWN K3 verdict (`decideAtBoundary`, fail-closed); authorized fields
  * pass through unchanged, and DENY / INDETERMINATE fields become a typed `Masked` sentinel
- * carrying the verdict + SPORE-GOV-3VL-001 — keep-the-rest.
+ * carrying the verdict + FUNGI-GOV-3VL-001 — keep-the-rest.
  *
  * Invariants (inherited verbatim from the K3 algebra in three-valued-governance.ts — NOT
  * re-proved here):
@@ -16,7 +16,7 @@
  *    (`authorize` ⇔ +1). There is no path by which a non-allowed field leaks.
  *  - **Per-field vAnd fold.** Multiple actor caps on a field fold via `allOf` (Kleene ∧ = the
  *    most-cautious verdict wins); this can only LOWER a field, never lift it.
- *  - **Never silent.** An INDETERMINATE collapse carries SPORE-GOV-3VL-001 in the `Masked`
+ *  - **Never silent.** An INDETERMINATE collapse carries FUNGI-GOV-3VL-001 in the `Masked`
  *    sentinel and to the optional `onDiagnostic` sink. This shapes GOVERNANCE only — it never
  *    transforms a value or touches crypto; an admitted value is returned byte-identical.
  */
@@ -34,7 +34,7 @@ export interface Masked {
   /** The collapsed verdict that withheld the field: 0 (INDETERMINATE) or -1 (DENY). Never +1. */
   readonly verdict: Verdict;
   readonly reason: "denied" | "indeterminate";
-  /** SPORE-GOV-3VL-001 IFF the field was withheld by an INDETERMINATE collapse; else null. */
+  /** FUNGI-GOV-3VL-001 IFF the field was withheld by an INDETERMINATE collapse; else null. */
   readonly diagnostic: GovernanceDiagnostic | null;
 }
 
@@ -59,7 +59,7 @@ function foldField(fv: FieldVerdict): Verdict {
 
 /**
  * Mask a single value by its verdict. Returns `null` when AUTHORIZED (caller keeps the value),
- * or a `Masked` sentinel when withheld. The optional sink receives SPORE-GOV-3VL-001 on an
+ * or a `Masked` sentinel when withheld. The optional sink receives FUNGI-GOV-3VL-001 on an
  * INDETERMINATE collapse.
  */
 export function maskByVerdict(
@@ -84,7 +84,7 @@ export interface PartialReturn<T> {
   readonly maskedFields: readonly string[];
   /** True IFF the record had ≥1 field and EVERY field was withheld (a fully-masked response). */
   readonly allMasked: boolean;
-  /** SPORE-GOV-3VL-001 diagnostics — one per field withheld by an INDETERMINATE collapse. */
+  /** FUNGI-GOV-3VL-001 diagnostics — one per field withheld by an INDETERMINATE collapse. */
   readonly diagnostics: readonly { readonly field: string; readonly diagnostic: GovernanceDiagnostic }[];
 }
 

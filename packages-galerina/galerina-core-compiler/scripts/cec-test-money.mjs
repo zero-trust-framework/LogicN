@@ -4,7 +4,7 @@ const src = `pure flow ex(gbp: Money<GBP>, usd: Money<USD>) -> Void {
   let total = gbp + usd
 }`;
 
-const p = parseProgram(src, "test.spore");
+const p = parseProgram(src, "test.fungi");
 const t = checkTypes(p.ast);
 console.log("Money cross-currency test:");
 if (t.diagnostics.length === 0) {

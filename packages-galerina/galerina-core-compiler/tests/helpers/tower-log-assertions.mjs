@@ -49,15 +49,15 @@ export function assertAuditEvent(runResult, expected) {
 }
 
 /**
- * Assert that NO SPORE-INV-000 events fired (clean execution).
+ * Assert that NO FUNGI-INV-000 events fired (clean execution).
  * Use in tests that should complete without any traps.
  */
 export function assertNoTraps(runResult) {
   const entries = runResult?.auditEntries ?? runResult?.auditLog ?? [];
   const traps = entries.filter(
     (e) =>
-      e.code === "SPORE-INV-000" ||
-      e.fields?.code === "SPORE-INV-000" ||
+      e.code === "FUNGI-INV-000" ||
+      e.fields?.code === "FUNGI-INV-000" ||
       e.event === "trap" ||
       e.event === "invariant_violation",
   );

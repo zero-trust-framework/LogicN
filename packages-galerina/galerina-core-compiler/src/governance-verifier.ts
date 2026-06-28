@@ -7,40 +7,40 @@
 // Spec: docs/Knowledge-Bases/galerina-governance-verifier-spec.md
 //
 // Implemented diagnostics (Stage A / Phase 10C):
-//   SPORE-GOV-002      MISSING_AUDIT_FOR_GOVERNED_SINK
-//   SPORE-GOV-003      PROTECTED_DATA_IN_RESPONSE          (Phase 10C)
-//   SPORE-GOV-004      DENIED_TARGET_SELECTED
-//   SPORE-GOV-005      POLICY_PURPOSE_MISMATCH
-//   SPORE-GOV-007      AUTHORITY_BLOCK_MISSING_REASON
-//   SPORE-GOV-008      EXPERIMENTAL_CODE_IN_PRODUCTION_PROFILE
-//   SPORE-GOV-009      PRIVILEGED_FLOW_MISSING_CAPABILITY
-//   SPORE-GOV-010      INTENT_MISSING_ON_SECURE_FLOW
-//   SPORE-GOV-011      UnknownContractSet
-//   SPORE-GOV-012      ContractSetRequirementNotMet
-//   SPORE-CONTEXT-001  REQUIRED_CONTEXT_NOT_ACCESSED       (Phase 10C)
-//   SPORE-HINT-COMPUTE-001  COMPUTE_TARGET_MISSING_FOR_AI_INFERENCE (planning hint)
+//   FUNGI-GOV-002      MISSING_AUDIT_FOR_GOVERNED_SINK
+//   FUNGI-GOV-003      PROTECTED_DATA_IN_RESPONSE          (Phase 10C)
+//   FUNGI-GOV-004      DENIED_TARGET_SELECTED
+//   FUNGI-GOV-005      POLICY_PURPOSE_MISMATCH
+//   FUNGI-GOV-007      AUTHORITY_BLOCK_MISSING_REASON
+//   FUNGI-GOV-008      EXPERIMENTAL_CODE_IN_PRODUCTION_PROFILE
+//   FUNGI-GOV-009      PRIVILEGED_FLOW_MISSING_CAPABILITY
+//   FUNGI-GOV-010      INTENT_MISSING_ON_SECURE_FLOW
+//   FUNGI-GOV-011      UnknownContractSet
+//   FUNGI-GOV-012      ContractSetRequirementNotMet
+//   FUNGI-CONTEXT-001  REQUIRED_CONTEXT_NOT_ACCESSED       (Phase 10C)
+//   FUNGI-HINT-COMPUTE-001  COMPUTE_TARGET_MISSING_FOR_AI_INFERENCE (planning hint)
 //
 // Phase 2 — Contract Blocks validation (new):
-//   SPORE-GOV-019  LIMITS_UNKNOWN_FIELD           (limits {} typo detection)
-//   SPORE-GOV-020  AUTHORITY_OVERLY_BROAD         (authority { requires * })
+//   FUNGI-GOV-019  LIMITS_UNKNOWN_FIELD           (limits {} typo detection)
+//   FUNGI-GOV-020  AUTHORITY_OVERLY_BROAD         (authority { requires * })
 //
 // Phase 3 — Governance Verifier completion (new):
-//   SPORE-GOV-001  INTENT_BEHAVIOR_MISMATCH       (heuristic: read/pure intent + write effects)
-//   SPORE-GOV-006  GOVERNANCE_PROOF_REQUIRED_BUT_MISSING (high-risk secure flow, no epilogue)
-//   SPORE-TERM-001 TERMINATION_ANNOTATION_MISSING (recursive strict/deterministic flow, no decreases)
+//   FUNGI-GOV-001  INTENT_BEHAVIOR_MISMATCH       (heuristic: read/pure intent + write effects)
+//   FUNGI-GOV-006  GOVERNANCE_PROOF_REQUIRED_BUT_MISSING (high-risk secure flow, no epilogue)
+//   FUNGI-TERM-001 TERMINATION_ANNOTATION_MISSING (recursive strict/deterministic flow, no decreases)
 //
 // DRCM Phase 2 — invariant {} block (task #36):
-//   SPORE-INV-001  PRE_CONDITION_STATICALLY_FALSE  ensure expr constant-folds to false
-//   SPORE-INV-002  POST_CONDITION_VIOLATED          (future: post-body invariant violation)
-//   SPORE-INV-003  INVARIANT_BLOCK_EMPTY            invariant {} with no ensure statements
-//   SPORE-INV-004  SYMBOL_UNRESOLVED_IN_INVARIANT   ensure references a name not in parameter scope
+//   FUNGI-INV-001  PRE_CONDITION_STATICALLY_FALSE  ensure expr constant-folds to false
+//   FUNGI-INV-002  POST_CONDITION_VIOLATED          (future: post-body invariant violation)
+//   FUNGI-INV-003  INVARIANT_BLOCK_EMPTY            invariant {} with no ensure statements
+//   FUNGI-INV-004  SYMBOL_UNRESOLVED_IN_INVARIANT   ensure references a name not in parameter scope
 // =============================================================================
 
 import { type AstNode, type AstNodeKind, type FlowMeta, type SourceLocation } from "./parser.js";
 import { KNOWN_SIGNALS, KNOWN_FLOORS, normaliseFloor, KNOWN_CAPABILITIES } from "./capability-types.js";
 import { type EffectCheckResult } from "./effect-checker.js";
 import { GovernanceFlags, type GovernanceFlagsMask, type RuntimeManifest } from "./type-registry.js";
-import { buildProofGraphCached, computeExecutionSignature, generateEpilogueReceipt, type EpilogueFailureAction, type EpilogueProofStrategy, type ProofGraph, type ProofObligation, SPORE_HW_001, SPORE_HW_002, SPORE_HW_003, SPORE_HW_004, TAMPER_RESPONSE_STRATEGIES } from "./proof-graph.js";
+import { buildProofGraphCached, computeExecutionSignature, generateEpilogueReceipt, type EpilogueFailureAction, type EpilogueProofStrategy, type ProofGraph, type ProofObligation, FUNGI_HW_001, FUNGI_HW_002, FUNGI_HW_003, FUNGI_HW_004, TAMPER_RESPONSE_STRATEGIES } from "./proof-graph.js";
 import { HARDWARE_TRUST_PROFILES, ProofLevel } from "./type-registry.js";
 import { checkResilienceViolations, checkFaultHandlerViolations } from "./resilience-inference.js";
 import { checkObservabilityWarnings } from "./observability-inference.js";
@@ -183,39 +183,39 @@ function makeGovDiag(
 // Diagnostic constants
 // ---------------------------------------------------------------------------
 
-/** SPORE-GOV-003: A field listed in contract.response.denies appears in the response body. */
-export const SPORE_GOV_003 = {
-  code: "SPORE-GOV-003",
+/** FUNGI-GOV-003: A field listed in contract.response.denies appears in the response body. */
+export const FUNGI_GOV_003 = {
+  code: "FUNGI-GOV-003",
   name: "PROTECTED_DATA_IN_RESPONSE",
   severity: "error" as const,
   message: "A field listed in contract.response.denies appears in the response body. Protected or sensitive data must not leak through the API surface.",
 } as const;
 
-/** SPORE-CONTEXT-001: A required context field declared in contract.context is never accessed. */
-export const SPORE_CONTEXT_001 = {
-  code: "SPORE-CONTEXT-001",
+/** FUNGI-CONTEXT-001: A required context field declared in contract.context is never accessed. */
+export const FUNGI_CONTEXT_001 = {
+  code: "FUNGI-CONTEXT-001",
   name: "REQUIRED_CONTEXT_NOT_ACCESSED",
   severity: "warning" as const,
   message: "A required context field declared in contract.context is never accessed in the flow body.",
 } as const;
 
-/** SPORE-GOV-011: `use SetName` references a contract set not declared at program scope. */
-export const SPORE_GOV_011 = {
-  code: "SPORE-GOV-011",
+/** FUNGI-GOV-011: `use SetName` references a contract set not declared at program scope. */
+export const FUNGI_GOV_011 = {
+  code: "FUNGI-GOV-011",
   name: "UnknownContractSet",
   severity: "error" as const,
   message: "Contract set referenced with 'use' is not declared at program scope.",
 } as const;
 
-/** SPORE-GOV-012: Contract set audit requirement not met by flow's declared effects. */
-export const SPORE_GOV_012 = {
-  code: "SPORE-GOV-012",
+/** FUNGI-GOV-012: Contract set audit requirement not met by flow's declared effects. */
+export const FUNGI_GOV_012 = {
+  code: "FUNGI-GOV-012",
   name: "ContractSetRequirementNotMet",
   severity: "warning" as const,
   message: "Contract set requires audit.write but the flow does not declare it.",
 } as const;
 
-// ── SPORE-TENANT codes (G1 — deny-by-default tenant-isolation border, R&D 0109) ──
+// ── FUNGI-TENANT codes (G1 — deny-by-default tenant-isolation border, R&D 0109) ──
 // A data-access effect on a tenant-partitioned vault/resource MUST be bound to the
 // caller's PROVEN scope. Mechanic = CAPABILITY INTERSECTION over the manifest, not an
 // AST/query-string rewriter (Galerina does not own the MeshQL string): a tenant-scoped
@@ -227,7 +227,7 @@ export const SPORE_GOV_012 = {
 // SCOPE HONESTY (calibrated, R&D 0109): this is a per-flow effect-SURFACE intersection —
 // it proves the flow DECLARED the caller-scope binding alongside its tenant-scoped access.
 // It does NOT yet prove the binding is threaded to every row-level access inside the body
-// (that body-dataflow proof is the deferred SPORE-TENANT-003, value-state territory). The
+// (that body-dataflow proof is the deferred FUNGI-TENANT-003, value-state territory). The
 // current border is the high-value compile gate that kills the common IDOR shape: a
 // tenant-partitioned read with NO caller-scope capability declared at all.
 //
@@ -248,172 +248,172 @@ const TENANT_SCOPED_SUFFIX = ".tenant_scoped";
  * The caller-scope binding proof: a marker effect a flow declares to assert that every
  * tenant-scoped access in its body is parameterized by the caller's proven scope (S_user /
  * actor tenant capability mask). Its presence is the intersection witness; its absence on a
- * tenant-scoped access is deny-by-default (SPORE-TENANT-002).
+ * tenant-scoped access is deny-by-default (FUNGI-TENANT-002).
  */
 const TENANT_SCOPE_BINDING = "tenant.scope";
 
-/** SPORE-TENANT-001: a `tenant.scope` binding is declared but no tenant-scoped access uses it. */
-export const SPORE_TENANT_001 = {
-  code: "SPORE-TENANT-001",
+/** FUNGI-TENANT-001: a `tenant.scope` binding is declared but no tenant-scoped access uses it. */
+export const FUNGI_TENANT_001 = {
+  code: "FUNGI-TENANT-001",
   name: "DANGLING_TENANT_SCOPE_BINDING",
   severity: "warning" as const,
   message: "A 'tenant.scope' caller-scope binding is declared but the flow has no tenant-scoped (.tenant_scoped) data-access effect to bind. Remove the unused binding, or mark the data access tenant-scoped.",
 } as const;
 
-/** SPORE-TENANT-002: a tenant-scoped data access is not bound to the caller's proven scope (fail-closed). */
-export const SPORE_TENANT_002 = {
-  code: "SPORE-TENANT-002",
+/** FUNGI-TENANT-002: a tenant-scoped data access is not bound to the caller's proven scope (fail-closed). */
+export const FUNGI_TENANT_002 = {
+  code: "FUNGI-TENANT-002",
   name: "UNSCOPED_TENANT_DATA_ACCESS",
   severity: "error" as const,
   message: "A tenant-scoped data-access effect is not bound to the caller's proven scope. Deny-by-default: cross-tenant access (IDOR / OWASP-A01) is refused at compile time until the access is parameterized by the caller scope.",
 } as const;
 
-// ── SPORE-SUBSTRATE codes (Direction B) ──────────────────────────────────────────────
+// ── FUNGI-SUBSTRATE codes (Direction B) ──────────────────────────────────────────────
 // The substrate {} contract block's three invariants, fail-closed. Codes are shared
 // with Direction C's SUBSTRATE_DIAGNOSTICS (galerina-tower-citizen/src/substrate-model.ts);
 // the strings must match byte-for-byte. Implemented in substrate-inference.ts.
 // Spec: docs/Knowledge-Bases/galerina-substrate-contracts.md.
 
-/** SPORE-CRYPTO-PQ-001: a crypto.sign effect in a certified profile must declare a PQ/hybrid algorithm. */
-export const SPORE_CRYPTO_PQ_001 = {
-  code: "SPORE-CRYPTO-PQ-001",
+/** FUNGI-CRYPTO-PQ-001: a crypto.sign effect in a certified profile must declare a PQ/hybrid algorithm. */
+export const FUNGI_CRYPTO_PQ_001 = {
+  code: "FUNGI-CRYPTO-PQ-001",
   name: "SIGN_EFFECT_NOT_POST_QUANTUM",
   severity: "error" as const,
   message: "A crypto.sign effect in a certified profile must declare a post-quantum/hybrid signing algorithm — add crypto.sign.hybrid, crypto.sign.mldsa65, or crypto.sign.slhdsa. Ed25519-only signatures are Shor-breakable (harvest-now-forge-later).",
 } as const;
 
-/** PQ/hybrid signing-algorithm marker effects that satisfy SPORE-CRYPTO-PQ-001. */
+/** PQ/hybrid signing-algorithm marker effects that satisfy FUNGI-CRYPTO-PQ-001. */
 const PQ_SIGN_ALGORITHMS = new Set(["crypto.sign.hybrid", "crypto.sign.mldsa65", "crypto.sign.slhdsa"]);
 
-/** SPORE-SUBSTRATE-001: a crypto/hash/sign effect declared on a noisy lane (integrity is never tolerated). */
-export const SPORE_SUBSTRATE_001 = {
-  code: "SPORE-SUBSTRATE-001",
+/** FUNGI-SUBSTRATE-001: a crypto/hash/sign effect declared on a noisy lane (integrity is never tolerated). */
+export const FUNGI_SUBSTRATE_001 = {
+  code: "FUNGI-SUBSTRATE-001",
   name: "CRYPTO_ON_NOISY_LANE",
   severity: "error" as const,
   message: "A crypto/hash/sign effect declared on a noisy lane. Integrity requires bit-exactness and cannot be tolerance-bounded — move it to a digital lane.",
 } as const;
 
-/** SPORE-SUBSTRATE-002: declared tolerance not provable under the modeled noise at the declared redundancy. */
-export const SPORE_SUBSTRATE_002 = {
-  code: "SPORE-SUBSTRATE-002",
+/** FUNGI-SUBSTRATE-002: declared tolerance not provable under the modeled noise at the declared redundancy. */
+export const FUNGI_SUBSTRATE_002 = {
+  code: "FUNGI-SUBSTRATE-002",
   name: "TOLERANCE_UNACHIEVABLE_UNDER_NOISE",
   severity: "error" as const, // downgraded to warning in the dev profile by substrate-inference
   message: "Declared substrate tolerance is not provable under the modeled noise at the declared redundancy. Declare redundancy (TMR) to clear it.",
 } as const;
 
-/** SPORE-SUBSTRATE-003: declared redundancy cannot meet tolerance under the model (incl. pBad ≥ 0.5). */
-export const SPORE_SUBSTRATE_003 = {
-  code: "SPORE-SUBSTRATE-003",
+/** FUNGI-SUBSTRATE-003: declared redundancy cannot meet tolerance under the model (incl. pBad ≥ 0.5). */
+export const FUNGI_SUBSTRATE_003 = {
+  code: "FUNGI-SUBSTRATE-003",
   name: "REDUNDANCY_INSUFFICIENT",
   severity: "error" as const,
   message: "Declared redundancy cannot meet the tolerance under the modeled noise (raise N, or — when the lane error ≥ 0.5 — voting cannot converge and the lane must change).",
 } as const;
 
-/** SPORE-SUBSTRATE-004: an un-voted (N=1) noisy result feeds a context requiring determinism. */
-export const SPORE_SUBSTRATE_004 = {
-  code: "SPORE-SUBSTRATE-004",
+/** FUNGI-SUBSTRATE-004: an un-voted (N=1) noisy result feeds a context requiring determinism. */
+export const FUNGI_SUBSTRATE_004 = {
+  code: "FUNGI-SUBSTRATE-004",
   name: "UNVOTED_ANALOG_INTO_DETERMINISTIC",
   severity: "error" as const,
   message: "An un-voted (redundancy: 1) result from a noisy lane feeds a context requiring determinism. Add a consensus vote (redundancy: tmr) or use a digital lane.",
 } as const;
 
-/** SPORE-SUBSTRATE-005: an external-reach effect declared on a noisy/photonic lane (the compute-only fence).
+/** FUNGI-SUBSTRATE-005: an external-reach effect declared on a noisy/photonic lane (the compute-only fence).
  *  A noisy/photonic lane is an untrusted Tier-3 compute accelerator (degrade-only); it may do pure MAC/compute
  *  but must have ZERO network/persistence/secret/process/ledger reach — else the untrusted lane becomes a
  *  confused deputy into trusted resources. Deny-by-default; crypto/hash/sign is owned separately by 001. */
-export const SPORE_SUBSTRATE_005 = {
-  code: "SPORE-SUBSTRATE-005",
+export const FUNGI_SUBSTRATE_005 = {
+  code: "FUNGI-SUBSTRATE-005",
   name: "REACH_EFFECT_ON_COMPUTE_ONLY_LANE",
   severity: "error" as const,
   message: "A network/persistence/secret/process effect is declared on a noisy/photonic lane. That lane is an untrusted compute-only accelerator with no external reach — move the effect to a digital lane.",
 } as const;
 
-// ── SPORE-ASSIMILATE codes ──────────────────────────────────────────────────────────
+// ── FUNGI-ASSIMILATE codes ──────────────────────────────────────────────────────────
 //
-// SPORE-ASSIMILATE-001  assimilated plugin declared outside boot.spore project manifest.
-//                     Only boot.spore may grant assimilation authority. Individual flow
+// FUNGI-ASSIMILATE-001  assimilated plugin declared outside boot.fungi project manifest.
+//                     Only boot.fungi may grant assimilation authority. Individual flow
 //                     files cannot promote plugins to Hot-Code Residency.
-// SPORE-ASSIMILATE-002  assimilation_memory_budget not declared in boot.spore governance {}
+// FUNGI-ASSIMILATE-002  assimilation_memory_budget not declared in boot.fungi governance {}
 //                     block but an assimilated plugin exists in the project.
 //                     When omitted, the runtime auto-calculates: min(RAM * 0.20, 256MB).
 //                     Declare explicitly only to override the auto ceiling.
 //                     Add: governance { assimilation_memory_budget: auto } or
-//                          governance { assimilation_memory_budget: 50MB } to boot.spore.
-// SPORE-ASSIMILATE-003  assimilated plugin contract {} has no access { grant } block.
+//                          governance { assimilation_memory_budget: 50MB } to boot.fungi.
+// FUNGI-ASSIMILATE-003  assimilated plugin contract {} has no access { grant } block.
 //                     All assimilated plugins must declare explicit capability grants —
 //                     they are pre-warmed at boot so V_DPM bits must be known ahead of time.
 
-// ── SPORE-BORDER codes (Hardened Border protocol) ───────────────────────────────────
+// ── FUNGI-BORDER codes (Hardened Border protocol) ───────────────────────────────────
 //
-// SPORE-BORDER-001  Plugin input missing required field — schema deviation detected.
+// FUNGI-BORDER-001  Plugin input missing required field — schema deviation detected.
 //                 Treated as potential schema poisoning attack. Plugin call blocked.
-// SPORE-BORDER-002  Plugin input type mismatch — expected vs actual type differs.
+// FUNGI-BORDER-002  Plugin input type mismatch — expected vs actual type differs.
 //                 Schema deviation treated as hostile input. Logged as SECURITY_ALERT.
-// SPORE-BORDER-003  Plugin input field too large — exceeds maxLength constraint.
+// FUNGI-BORDER-003  Plugin input field too large — exceeds maxLength constraint.
 //                 Possible buffer overflow attempt. Plugin call blocked.
-// SPORE-BORDER-004  Plugin input value out of range — below minimum or above maximum.
+// FUNGI-BORDER-004  Plugin input value out of range — below minimum or above maximum.
 //                 Range violation treated as boundary probe. Plugin call blocked.
-// SPORE-BORDER-005  Plugin triggered unexpected trap (panic-as-security event).
+// FUNGI-BORDER-005  Plugin triggered unexpected trap (panic-as-security event).
 //                 Plugin version automatically blacklisted. AuditEvent generated.
 
-// ── SPORE-GATE codes ────────────────────────────────────────────────────────────────
+// ── FUNGI-GATE codes ────────────────────────────────────────────────────────────────
 //
-// SPORE-GATE-001  gate(condition) references a condition not in knownDomainGuards.
+// FUNGI-GATE-001  gate(condition) references a condition not in knownDomainGuards.
 //               Stage A: warning (guard may be in another file).
 //               Stage B: error (full project context available).
-// SPORE-GATE-002  gate {} wraps a pure flow — redundant.
+// FUNGI-GATE-002  gate {} wraps a pure flow — redundant.
 //               Pure flows have no side effects, so a gate is meaningless.
 
-// ── SPORE-ACCESS codes ──────────────────────────────────────────────────────────────
+// ── FUNGI-ACCESS codes ──────────────────────────────────────────────────────────────
 //
-// SPORE-ACCESS-001  access {} grant references unknown capability name.
-// SPORE-ACCESS-002  access {} grants capability not declared in flow's effects {}.
+// FUNGI-ACCESS-001  access {} grant references unknown capability name.
+// FUNGI-ACCESS-002  access {} grants capability not declared in flow's effects {}.
 //                 Default Deny means grants must be consistent with the flow's own effects.
 
-/** SPORE-GOV-019: A `limits {}` block declares a limit the runtime does not enforce (typo, or an intentional
+/** FUNGI-GOV-019: A `limits {}` block declares a limit the runtime does not enforce (typo, or an intentional
  *  business limit like `rate …`/`max amount …` that has no runtime enforcer — warn so it isn't relied on). */
-export const SPORE_GOV_019 = {
-  code: "SPORE-GOV-019",
+export const FUNGI_GOV_019 = {
+  code: "FUNGI-GOV-019",
   name: "LIMITS_UNKNOWN_FIELD",
   severity: "warning" as const,
   message: "Limit is not recognised by the runtime enforcer and will NOT be enforced at runtime. Runtime-enforced forms: max request size N <bytes|kb|mb|gb>, max batch size N, max memory N <bytes|kb|mb|gb>, max prompt N chars. Enforce other limits explicitly in the flow body.",
 } as const;
 
-/** SPORE-GOV-020: authority block uses 'requires *' or 'requires all' — overly broad grant. */
-export const SPORE_GOV_020 = {
-  code: "SPORE-GOV-020",
+/** FUNGI-GOV-020: authority block uses 'requires *' or 'requires all' — overly broad grant. */
+export const FUNGI_GOV_020 = {
+  code: "FUNGI-GOV-020",
   name: "AUTHORITY_OVERLY_BROAD",
   severity: "warning" as const,
   message: "Overly broad authority: 'requires *' grants all capabilities. Declare specific capabilities instead.",
 } as const;
 
-/** SPORE-GOV-006: Secure flow with high max_risk_liability has no epilogue {} proof strategy. */
-export const SPORE_GOV_006 = {
-  code: "SPORE-GOV-006",
+/** FUNGI-GOV-006: Secure flow with high max_risk_liability has no epilogue {} proof strategy. */
+export const FUNGI_GOV_006 = {
+  code: "FUNGI-GOV-006",
   name: "GOVERNANCE_PROOF_REQUIRED_BUT_MISSING",
   severity: "warning" as const,
   message: "Secure flow has high max_risk_liability but no epilogue {} proof strategy declared.",
 } as const;
 
-/** SPORE-GOV-001: Detected intent/behaviour mismatch (read/query intent vs write effects, etc.). */
-export const SPORE_GOV_001 = {
-  code: "SPORE-GOV-001",
+/** FUNGI-GOV-001: Detected intent/behaviour mismatch (read/query intent vs write effects, etc.). */
+export const FUNGI_GOV_001 = {
+  code: "FUNGI-GOV-001",
   name: "INTENT_BEHAVIOR_MISMATCH",
   severity: "warning" as const,
   message: "Intent declaration contradicts declared effects or behaviour.",
 } as const;
 
-/** SPORE-TERM-001: Recursive flow in strict/deterministic profile lacks a decreases annotation. */
-export const SPORE_TERM_001 = {
-  code: "SPORE-TERM-001",
+/** FUNGI-TERM-001: Recursive flow in strict/deterministic profile lacks a decreases annotation. */
+export const FUNGI_TERM_001 = {
+  code: "FUNGI-TERM-001",
   name: "TERMINATION_ANNOTATION_MISSING",
   severity: "warning" as const,
   message: "Recursive flow in strict/deterministic profile lacks a 'decreases' annotation.",
 } as const;
 
-/** SPORE-GOV-013: A pure flow calls a flow with effects. Pure flows cannot cross into governed boundaries. */
-export const SPORE_GOV_013 = {
-  code: "SPORE-GOV-013",
+/** FUNGI-GOV-013: A pure flow calls a flow with effects. Pure flows cannot cross into governed boundaries. */
+export const FUNGI_GOV_013 = {
+  code: "FUNGI-GOV-013",
   name: "BoundaryViolation",
   severity: "error" as const,
   message: "A pure flow calls a flow with effects. Pure flows cannot cross into governed boundaries.",
@@ -421,48 +421,48 @@ export const SPORE_GOV_013 = {
   suggestedFix: "Change 'pure flow' to 'guarded flow' and declare the required effects.",
 } as const;
 
-/** SPORE-GOV-005: policy { purpose "read-only" } but flow also uses database.write (or similar). */
-export const SPORE_GOV_005 = {
-  code: "SPORE-GOV-005",
+/** FUNGI-GOV-005: policy { purpose "read-only" } but flow also uses database.write (or similar). */
+export const FUNGI_GOV_005 = {
+  code: "FUNGI-GOV-005",
   name: "PolicyPurposeMismatch",
   severity: "warning" as const,
   message: "Policy purpose contradicts declared effects.",
 } as const;
 
-/** SPORE-GOV-007: authority block exists but has no reason clause. */
-export const SPORE_GOV_007 = {
-  code: "SPORE-GOV-007",
+/** FUNGI-GOV-007: authority block exists but has no reason clause. */
+export const FUNGI_GOV_007 = {
+  code: "FUNGI-GOV-007",
   name: "AuthorityBlockMissingReason",
   severity: "error" as const,
   message: `Authority block must include a reason declaration. Add: reason "Explain why this authority is needed"`,
 } as const;
 
-/** SPORE-GOV-009: privileged flow declares no effects or capabilities.
+/** FUNGI-GOV-009: privileged flow declares no effects or capabilities.
  *  RESERVED / currently UNREACHABLE on real source: the `privileged` flow qualifier is NOT yet wired in the
- *  parser, so real `privileged flow {…}` emits SPORE-PARSE-001 (verified) and recovers as a plain flow — this
+ *  parser, so real `privileged flow {…}` emits FUNGI-PARSE-001 (verified) and recovers as a plain flow — this
  *  check can only fire on a synthetic AST. Kept for when the qualifier lands; do NOT read it as an active
  *  enforced rule. (RD-0122 false-green audit: dead-check + synthetic-only test; real-source tripwire is in
  *  governance-verifier.test.mjs.) */
-export const SPORE_GOV_009 = {
-  code: "SPORE-GOV-009",
+export const FUNGI_GOV_009 = {
+  code: "FUNGI-GOV-009",
   name: "PrivilegedFlowMissingCapability",
   severity: "warning" as const,
   message: "Privileged flow declares no effects or capabilities. Privileged flows should explicitly declare what authority they require.",
 } as const;
 
 // ---------------------------------------------------------------------------
-// SPORE-VAL-001 / SPORE-VAL-002 / SPORE-VAL-003 — Value/Safety governance
+// FUNGI-VAL-001 / FUNGI-VAL-002 / FUNGI-VAL-003 — Value/Safety governance
 // ---------------------------------------------------------------------------
 
 /**
- * SPORE-VAL-001: A `safety_critical` flow does not declare `audit.write`.
+ * FUNGI-VAL-001: A `safety_critical` flow does not declare `audit.write`.
  *
  * Safety-critical flows have the highest consequence classification. The audit
  * trail is non-negotiable — it is the primary evidence of correct operation.
  * Every safety_critical flow must produce an audit record.
  */
-export const SPORE_VAL_001 = {
-  code: "SPORE-VAL-001",
+export const FUNGI_VAL_001 = {
+  code: "FUNGI-VAL-001",
   name: "SafetyCriticalMissingAudit",
   severity: "error" as const,
   message: "A safety_critical flow must declare audit.write in its effects block.",
@@ -471,14 +471,14 @@ export const SPORE_VAL_001 = {
 } as const;
 
 /**
- * SPORE-VAL-002: A `safety_critical` flow does not declare
+ * FUNGI-VAL-002: A `safety_critical` flow does not declare
  * `require deterministic_execution` in its `contract.safety` block.
  *
  * Deterministic execution is a pre-condition for formal verification of
  * safety-critical systems. Without it, the ProofGraph cannot be trusted.
  */
-export const SPORE_VAL_002 = {
-  code: "SPORE-VAL-002",
+export const FUNGI_VAL_002 = {
+  code: "FUNGI-VAL-002",
   name: "SafetyCriticalMissingDeterminism",
   severity: "error" as const,
   message: "A safety_critical flow must declare `require deterministic_execution` in contract.safety.",
@@ -487,14 +487,14 @@ export const SPORE_VAL_002 = {
 } as const;
 
 /**
- * SPORE-VAL-003: The `classification` value in `contract.value` is not a
+ * FUNGI-VAL-003: The `classification` value in `contract.value` is not a
  * recognised Galerina value classification.
  *
  * Value classifications are a closed set — unrecognised values cannot be
  * mapped to governance rules, tooling checks, or regulatory frameworks.
  */
-export const SPORE_VAL_003 = {
-  code: "SPORE-VAL-003",
+export const FUNGI_VAL_003 = {
+  code: "FUNGI-VAL-003",
   name: "UnknownValueClassification",
   severity: "error" as const,
   message: "Unrecognised classification in contract.value. Use a recognised classification: safety_critical, mission_critical, regulated, financial, medical, government, national_security, confidential, internal, or public.",
@@ -507,99 +507,99 @@ export const SPORE_VAL_003 = {
 // These are PLANNED (DRCM phases) but exported here for test suites and tooling.
 // ---------------------------------------------------------------------------
 
-/** SPORE-RES-001: retry declared on mutation effect without idempotent: true. */
-export const SPORE_RES_001 = {
-  code: "SPORE-RES-001",
+/** FUNGI-RES-001: retry declared on mutation effect without idempotent: true. */
+export const FUNGI_RES_001 = {
+  code: "FUNGI-RES-001",
   name: "RESILIENCE_RETRY_ON_MUTATION",
   severity: "error" as const,
   message: "retry declared on a flow with mutation effects (database.write, gateway.charge) without idempotent: true. Retrying mutations risks duplicate writes.",
 } as const;
 
-/** SPORE-OBS-001: explicit observability {} on a pure flow (no side effects to observe). */
-export const SPORE_OBS_001 = {
-  code: "SPORE-OBS-001",
+/** FUNGI-OBS-001: explicit observability {} on a pure flow (no side effects to observe). */
+export const FUNGI_OBS_001 = {
+  code: "FUNGI-OBS-001",
   name: "OBSERVABILITY_ON_PURE_FLOW",
   severity: "warning" as const,
   message: "Explicit observability {} declared on a pure flow. Pure flows have no side effects — telemetry is meaningless here.",
 } as const;
 
-// ── SPORE-ASSUME codes ────────────────────────────────────────────────────────────────
+// ── FUNGI-ASSUME codes ────────────────────────────────────────────────────────────────
 //
-// SPORE-ASSUME-001  Flow referenced in assuming() does not exist in the known flow registry.
-// SPORE-ASSUME-002  Claim in assuming() does not match any ProofObligation in the flow's manifest.
-// SPORE-ASSUME-003  Referenced manifest is not present or sourceHash has changed (tampered/stale).
-// SPORE-ASSUME-004  assuming() references a flow from a different trust domain (cross-module).
+// FUNGI-ASSUME-001  Flow referenced in assuming() does not exist in the known flow registry.
+// FUNGI-ASSUME-002  Claim in assuming() does not match any ProofObligation in the flow's manifest.
+// FUNGI-ASSUME-003  Referenced manifest is not present or sourceHash has changed (tampered/stale).
+// FUNGI-ASSUME-004  assuming() references a flow from a different trust domain (cross-module).
 //                 Only permitted when that flow's manifest carries a valid GovernanceSignature.
 //
 // These codes enforce the Proof-Tracing safety property:
 //   "A developer cannot bypass a proof — they can only reference a proof that exists."
 
-// ── SPORE-MONO codes ────────────────────────────────────────────────────────────────────
+// ── FUNGI-MONO codes ────────────────────────────────────────────────────────────────────
 //
-// SPORE-MONO-001  Emergency transition attempts to ADD a capability (expand permissions).
+// FUNGI-MONO-001  Emergency transition attempts to ADD a capability (expand permissions).
 //               Only DENY/CLEAR operations are permitted in emergency {} blocks.
 //               Monotonicity rule: V_DPM bits can only be cleared, never set.
-// SPORE-MONO-002  Emergency transition references an unknown signal type.
+// FUNGI-MONO-002  Emergency transition references an unknown signal type.
 //               Valid signals: invariant_failure, capability_denied, fuel_exhausted,
 //               manifest_tampered, quarantine_request, any_failure.
 
-// ── SPORE-TRAP codes ────────────────────────────────────────────────────────────────────
+// ── FUNGI-TRAP codes ────────────────────────────────────────────────────────────────────
 //
-// SPORE-TRAP-001  trap error code is not a valid identifier (empty or contains spaces).
+// FUNGI-TRAP-001  trap error code is not a valid identifier (empty or contains spaces).
 //               Error codes must be SCREAMING_SNAKE_CASE identifiers.
-// SPORE-TRAP-002  trap condition references symbols not in the flow's parameter scope.
-//               Same as SPORE-INV-004 but for trapDecl nodes.
+// FUNGI-TRAP-002  trap condition references symbols not in the flow's parameter scope.
+//               Same as FUNGI-INV-004 but for trapDecl nodes.
 
-// ── SPORE-DAG codes ─────────────────────────────────────────────────────────────────────
+// ── FUNGI-DAG codes ─────────────────────────────────────────────────────────────────────
 //
-// SPORE-DAG-001  governed flow declares an unknown Tower floor.
+// FUNGI-DAG-001  governed flow declares an unknown Tower floor.
 //              Valid floors: floor_1..4 / execution / containment / proof / attestation.
-// SPORE-DAG-002  governed flow floor is inconsistent with the flow's effects profile.
+// FUNGI-DAG-002  governed flow floor is inconsistent with the flow's effects profile.
 //              A floor_1 (Execution) flow cannot declare secret.access effects —
 //              secret access is a Floor 3+ capability.
 
-// ── SPORE-MATCH codes ───────────────────────────────────────────────────────────────────
+// ── FUNGI-MATCH codes ───────────────────────────────────────────────────────────────────
 //
-// SPORE-MATCH-001  match expression on a known enum type has no wildcard (_) arm
+// FUNGI-MATCH-001  match expression on a known enum type has no wildcard (_) arm
 //                and does not cover all known variants. Missing arms create "governance holes"
 //                where a V_DPM signal or capability could pass unchecked.
 //                Only fires when the match target type is known to the compiler.
 
-/** SPORE-EC-001 (PLANNED Phase 5): static cost overflow — max_aggregate_flow_budget exceeded by estimated loop. */
-export const SPORE_EC_001 = {
-  code: "SPORE-EC-001",
+/** FUNGI-EC-001 (PLANNED Phase 5): static cost overflow — max_aggregate_flow_budget exceeded by estimated loop. */
+export const FUNGI_EC_001 = {
+  code: "FUNGI-EC-001",
   name: "ECONOMICS_COST_OVERFLOW",
   severity: "error" as const,
   message: "Static economic analysis: estimated aggregate cost exceeds max_aggregate_flow_budget ceiling.",
 } as const;
 
-/** SPORE-EC-002 (PLANNED Phase 5): charge_failure_tolerance_ratio breached — DPM quarantine triggered. */
-export const SPORE_EC_002 = {
-  code: "SPORE-EC-002",
+/** FUNGI-EC-002 (PLANNED Phase 5): charge_failure_tolerance_ratio breached — DPM quarantine triggered. */
+export const FUNGI_EC_002 = {
+  code: "FUNGI-EC-002",
   name: "ECONOMICS_FAILURE_TOLERANCE_BREACHED",
   severity: "error" as const,
   message: "Charge failure rate exceeded tolerance ratio — DSS DPM quarantine bit set.",
 } as const;
 
-/** SPORE-ID-001 (PLANNED Phase 3): manifest missing, tampered, or signature verification failed. */
-export const SPORE_ID_001 = {
-  code: "SPORE-ID-001",
+/** FUNGI-ID-001 (PLANNED Phase 3): manifest missing, tampered, or signature verification failed. */
+export const FUNGI_ID_001 = {
+  code: "FUNGI-ID-001",
   name: "MANIFEST_VERIFICATION_FAILED",
   severity: "error" as const,
   message: "Module manifest is missing, has been tampered with, or signature verification failed. Module cannot be instantiated.",
 } as const;
 
-/** SPORE-AU-001 (PLANNED Phase 6): epilogue { strategy: none } on high-trust flow. */
-export const SPORE_AU_001 = {
-  code: "SPORE-AU-001",
+/** FUNGI-AU-001 (PLANNED Phase 6): epilogue { strategy: none } on high-trust flow. */
+export const FUNGI_AU_001 = {
+  code: "FUNGI-AU-001",
   name: "EPILOGUE_NONE_ON_HIGH_TRUST",
   severity: "error" as const,
   message: "epilogue { strategy: none } declared on a high-trust flow (max_risk_liability: high). High-trust flows must produce a verifiable receipt.",
 } as const;
 
-/** SPORE-DRCM-UNSUPPORTED: bare step/invariant/emergency syntax used without @experimental_profile wrapper in --release. */
-export const SPORE_DRCM_UNSUPPORTED = {
-  code: "SPORE-DRCM-UNSUPPORTED",
+/** FUNGI-DRCM-UNSUPPORTED: bare step/invariant/emergency syntax used without @experimental_profile wrapper in --release. */
+export const FUNGI_DRCM_UNSUPPORTED = {
+  code: "FUNGI-DRCM-UNSUPPORTED",
   name: "DRCM_FEATURE_NOT_YET_SUPPORTED",
   severity: "error" as const,
   message: "DRCM feature used without @experimental_profile wrapper in --release build. Wrap with @experimental_profile(name: \"drcm_core_v1\", status: \"planned_phaseN\") { ... }.",
@@ -613,7 +613,7 @@ export const RECOGNISED_VALUE_CLASSIFICATIONS = new Set([
 ]);
 
 // ---------------------------------------------------------------------------
-// SPORE-GOV-005 helpers
+// FUNGI-GOV-005 helpers
 // ---------------------------------------------------------------------------
 
 /**
@@ -646,7 +646,7 @@ function extractPolicyPurposes(flowNode: AstNode): string[] {
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-GOV-007 helpers
+// FUNGI-GOV-007 helpers
 // ---------------------------------------------------------------------------
 
 /**
@@ -665,7 +665,7 @@ function hasAuthorityReason(authorityNode: AstNode): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-GOV-009 helpers
+// FUNGI-GOV-009 helpers
 // ---------------------------------------------------------------------------
 
 /**
@@ -689,7 +689,7 @@ function isPrivilegedFlow(flowNode: AstNode, flow: FlowMeta): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-GOV-003 helpers
+// FUNGI-GOV-003 helpers
 // ---------------------------------------------------------------------------
 
 /**
@@ -839,7 +839,7 @@ function collectBodyFieldNames(flowNode: AstNode): Set<string> {
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-CONTEXT-001 helpers
+// FUNGI-CONTEXT-001 helpers
 // ---------------------------------------------------------------------------
 
 /**
@@ -866,7 +866,7 @@ function extractRequiredContext(flowNode: AstNode): string[] {
 }
 
 /**
- * Phase 25 SPORE-VAL: Extracts the `classification` value from `contract.value { classification ... }`.
+ * Phase 25 FUNGI-VAL: Extracts the `classification` value from `contract.value { classification ... }`.
  *
  * The AST structure is:
  *   contractDecl → identifier [value:block] → identifier [decl:classification <cls> domain <dom> ...]
@@ -895,7 +895,7 @@ function extractValueClassification(flowNode: AstNode): string | null {
 }
 
 /**
- * Phase 25 SPORE-VAL: Extracts requirements from `contract.safety { require ... }`.
+ * Phase 25 FUNGI-VAL: Extracts requirements from `contract.safety { require ... }`.
  *
  * The AST structure is:
  *   contractDecl → identifier [safety:block] → identifier [require:<req1>.require.<req2>...]
@@ -1003,7 +1003,7 @@ function isContextFieldAccessed(flowNode: AstNode, fieldName: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// Phase 2 — SPORE-GOV-019: limits {} field name validation
+// Phase 2 — FUNGI-GOV-019: limits {} field name validation
 // ---------------------------------------------------------------------------
 
 /**
@@ -1050,7 +1050,7 @@ function extractLimitsFields(flowNode: AstNode): Array<{ field: string; decl: st
 }
 
 // ---------------------------------------------------------------------------
-// Phase 2 — SPORE-GOV-020: authority overly-broad detection
+// Phase 2 — FUNGI-GOV-020: authority overly-broad detection
 // ---------------------------------------------------------------------------
 
 /**
@@ -1090,7 +1090,7 @@ function hasOverlyBroadAuthority(authNode: AstNode): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// Phase 3 — SPORE-GOV-006: economics max_risk_liability extraction
+// Phase 3 — FUNGI-GOV-006: economics max_risk_liability extraction
 // ---------------------------------------------------------------------------
 
 /**
@@ -1142,7 +1142,7 @@ function hasEpilogueBlock(flowNode: AstNode): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// Phase 3 — SPORE-TERM-001: termination annotation helpers
+// Phase 3 — FUNGI-TERM-001: termination annotation helpers
 // ---------------------------------------------------------------------------
 
 /**
@@ -1161,7 +1161,7 @@ function hasRecursiveCall(flowNode: AstNode, flowName: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// Phase 3 — SPORE-GOV-001: intent/behaviour mismatch (extended heuristic)
+// Phase 3 — FUNGI-GOV-001: intent/behaviour mismatch (extended heuristic)
 // ---------------------------------------------------------------------------
 
 /**
@@ -1241,7 +1241,7 @@ export function extractArenaLimitMB(flowNode: AstNode): number | undefined {
 // ---------------------------------------------------------------------------
 
 /**
- * SPORE-INV-004: Collect all identifier references in an ensure expression that
+ * FUNGI-INV-004: Collect all identifier references in an ensure expression that
  * are NOT in the flow's parameter scope. These would silently emit (i32.const 0)
  * in the WAT emitter — catching them in the Verifier (Floor 3) instead keeps the
  * emitter "dumb" and gives developers actionable error messages.
@@ -1337,12 +1337,12 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-GOV-007: check top-level authority blocks for missing reason ──
+    // ── FUNGI-GOV-007: check top-level authority blocks for missing reason ──
     for (const child of ast.children ?? []) {
       if (child.kind === "authorityDecl" && !hasAuthorityReason(child)) {
         this.diagnostics.push(makeGovDiag(
-          SPORE_GOV_007.code,
-          SPORE_GOV_007.name,
+          FUNGI_GOV_007.code,
+          FUNGI_GOV_007.name,
           "error",
           `Top-level authority block must include a reason declaration. ` +
           `Add: reason "Explain why this authority is needed"`,
@@ -1365,33 +1365,33 @@ class GovernanceVerifier {
       this.verifyFlow(flow, flowNode, effectResult, profile, flows, effectResults);
     }
 
-    // ── SPORE-MONO-001/002: Policy monotonicity verification (DRCM Phase 4, task #39) ──
+    // ── FUNGI-MONO-001/002: Policy monotonicity verification (DRCM Phase 4, task #39) ──
     // Scan all AST nodes for policyDecl blocks and verify emergency {} transitions.
     const allNodes = ast.children ?? [];
     this.verifyPolicyMonotonicity(allNodes);
 
-    // ── SPORE-INHERIT-001/002: Policy hierarchy subset verification (task #72) ──
+    // ── FUNGI-INHERIT-001/002: Policy hierarchy subset verification (task #72) ──
     // Verifies parent_policy: annotations — child permitted_effects ⊆ parent.
     this.verifyPolicyHierarchy(allNodes);
 
-    // ── SPORE-DAG-001/002: governed flow floor validation ───────────────────────────
+    // ── FUNGI-DAG-001/002: governed flow floor validation ───────────────────────────
     this.verifyGovernedFlows(allNodes);
 
-    // ── SPORE-GATE-001/002: gate {} admission guard block validation ────────────────
+    // ── FUNGI-GATE-001/002: gate {} admission guard block validation ────────────────
     this.verifyGateBlocks(allNodes);
 
-    // ── SPORE-ARCH-002: Stable-Dependencies enforcement (R&D 0045, owner: always a hard error) ──
+    // ── FUNGI-ARCH-002: Stable-Dependencies enforcement (R&D 0045, owner: always a hard error) ──
     // A more-stable flow (lower contract.architecture volatility) must not depend on a more-volatile
     // one. Cross-flow pass over the observed call graph; only flows that DECLARE a volatility participate.
     this.verifyArchitectureStability(ast, flows);
 
-    // ── SPORE-STATIC-001/002: static compile-time constant validation ──────────────
+    // ── FUNGI-STATIC-001/002: static compile-time constant validation ──────────────
     this.verifyStaticDecls(allNodes);
 
-    // ── SPORE-BF-001/002: bitfield register bitmask validation ─────────────────────
+    // ── FUNGI-BF-001/002: bitfield register bitmask validation ─────────────────────
     this.verifyBitfieldDecls(allNodes);
 
-    // ── SPORE-ASSIMILATE-001/003: assimilated plugin validation ─────────────────────
+    // ── FUNGI-ASSIMILATE-001/003: assimilated plugin validation ─────────────────────
     this.verifyAssimilatedPlugins(allNodes, sourceFile ?? "");
   }
 
@@ -1416,7 +1416,7 @@ class GovernanceVerifier {
   ): void {
     const loc = flow.location;
 
-    // ── SPORE-GOV-008: Experimental code in production ──────────────────────
+    // ── FUNGI-GOV-008: Experimental code in production ──────────────────────
     if (flow.qualifier === "flow" && flowNode?.kind === "flowDecl") {
       // Check for 'experimental' qualifier pattern — if name starts with Exp or
       // if the source file contains 'experimental flow'
@@ -1424,12 +1424,12 @@ class GovernanceVerifier {
     // Direct check: experimentalFlowDecl doesn't exist as a kind, but if
     // someday it does, we'd check here. For now, skip.
 
-    // ── SPORE-GOV-010: secure flow without intent ───────────────────────────
+    // ── FUNGI-GOV-010: secure flow without intent ───────────────────────────
     if (flow.qualifier === "secure" && flowNode !== undefined) {
       if (!hasIntentDecl(flowNode)) {
         const isProduction = profile === "production" || profile === "deterministic";
         this.diagnostics.push(makeGovDiag(
-          "SPORE-GOV-010",
+          "FUNGI-GOV-010",
           "INTENT_MISSING_ON_SECURE_FLOW",
           isProduction ? "error" : "info",
           `secure flow '${flow.name}' has no intent declaration. Intent is recommended for all secure flows and required in production profiles.`,
@@ -1442,7 +1442,7 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-GOV-002: governed sink without audit ──────────────────────────
+    // ── FUNGI-GOV-002: governed sink without audit ──────────────────────────
     // If a flow writes to a governed sink (database.write) but doesn't
     // declare audit.write, emit a warning
     if (flowNode !== undefined) {
@@ -1453,7 +1453,7 @@ class GovernanceVerifier {
       if (hasDbWrite && !hasAuditWrite && !hasAuditLogCall) {
         const isProduction = profile === "production" || profile === "deterministic";
         this.diagnostics.push(makeGovDiag(
-          "SPORE-GOV-002",
+          "FUNGI-GOV-002",
           "MISSING_AUDIT_FOR_GOVERNED_SINK",
           isProduction ? "warning" : "info",
           `Flow '${flow.name}' writes to a database but declares no audit.write effect and calls no AuditLog.write(). Consider adding audit evidence.`,
@@ -1467,7 +1467,7 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-GOV-004: denied compute target selected ───────────────────────
+    // ── FUNGI-GOV-004: denied compute target selected ───────────────────────
     // Check if flow denies remote.execution but declares network.outbound
     if (flowNode !== undefined) {
       const deniedTargets = extractDeniedTargets(flowNode);
@@ -1479,7 +1479,7 @@ class GovernanceVerifier {
 
       if (hasRemoteDenied && hasNetworkOutbound) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-GOV-004",
+          "FUNGI-GOV-004",
           "DENIED_TARGET_SELECTED",
           "error",
           `Flow '${flow.name}' denies remote.execution but declares network.outbound. These constraints are contradictory.`,
@@ -1493,7 +1493,7 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-HINT-COMPUTE-001: ai.inference without compute target preference ─
+    // ── FUNGI-HINT-COMPUTE-001: ai.inference without compute target preference ─
     // Planning hint — not a governance error. Helps developers optimise.
     if (flowNode !== undefined) {
       const hasAiInference = flow.declaredEffects.includes("ai.inference");
@@ -1501,7 +1501,7 @@ class GovernanceVerifier {
 
       if (hasAiInference && !hasComputeTarget) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-HINT-COMPUTE-001",
+          "FUNGI-HINT-COMPUTE-001",
           "COMPUTE_TARGET_MISSING_FOR_AI_INFERENCE",
           "info",
           `Flow '${flow.name}' uses ai.inference but has no compute target preference. NPU or GPU acceleration would improve performance.`,
@@ -1511,7 +1511,7 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-GOV-001: intent / behaviour mismatch (heuristic) ─────────────
+    // ── FUNGI-GOV-001: intent / behaviour mismatch (heuristic) ─────────────
     // Check for clear-cut contradictions between intent text and effects.
     // Also retain the original "local" vs network.outbound detection.
     if (flowNode !== undefined && hasIntentDecl(flowNode)) {
@@ -1527,7 +1527,7 @@ class GovernanceVerifier {
         const hasNetworkEffect = flow.declaredEffects.includes("network.outbound");
         if (hasLocalHint && hasNetworkEffect) {
           this.diagnostics.push(makeGovDiag(
-            "SPORE-GOV-001",
+            "FUNGI-GOV-001",
             "INTENT_BEHAVIOR_MISMATCH",
             "warning",
             `Flow '${flow.name}' intent suggests local execution but declares network.outbound. Verify intent matches actual behaviour.`,
@@ -1541,7 +1541,7 @@ class GovernanceVerifier {
         const mismatches = detectIntentMismatch(intentText, flow.declaredEffects);
         for (const mismatch of mismatches) {
           this.diagnostics.push(makeGovDiag(
-            "SPORE-GOV-001",
+            "FUNGI-GOV-001",
             "INTENT_BEHAVIOR_MISMATCH",
             "warning",
             `Flow '${flow.name}': intent/behaviour mismatch — ${mismatch}.`,
@@ -1553,10 +1553,10 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-GOV-003: response contract violation ──────────────────────────
+    // ── FUNGI-GOV-003: response contract violation ──────────────────────────
     // If contract.response.denies lists a field and the flow body uses that
     // field name as a named argument label in a callExpr (e.g. return record
-    // with email: ...), emit SPORE-GOV-003.
+    // with email: ...), emit FUNGI-GOV-003.
     if (flowNode !== undefined) {
       const deniedFields = extractResponseDeniedFields(flowNode);
       if (deniedFields.size > 0) {
@@ -1564,8 +1564,8 @@ class GovernanceVerifier {
         for (const field of deniedFields) {
           if (bodyFields.has(field)) {
             this.diagnostics.push(makeGovDiag(
-              SPORE_GOV_003.code,
-              SPORE_GOV_003.name,
+              FUNGI_GOV_003.code,
+              FUNGI_GOV_003.name,
               "error",
               `Flow '${flow.name}' returns field '${field}' which is denied by contract.response.denies. ` +
               `Protected data must not leak through the API surface. Use redact(${field}) or remove the field.`,
@@ -1577,7 +1577,7 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-CONTEXT-001: required context field not accessed ──────────────
+    // ── FUNGI-CONTEXT-001: required context field not accessed ──────────────
     // If contract.context declares require actor (or other field) and the
     // flow body never references that field, emit a warning.
     if (flowNode !== undefined) {
@@ -1585,8 +1585,8 @@ class GovernanceVerifier {
       for (const field of requiredContextFields) {
         if (!isContextFieldAccessed(flowNode, field)) {
           this.diagnostics.push(makeGovDiag(
-            SPORE_CONTEXT_001.code,
-            SPORE_CONTEXT_001.name,
+            FUNGI_CONTEXT_001.code,
+            FUNGI_CONTEXT_001.name,
             "warning",
             `Flow '${flow.name}' declares context.require '${field}' but never accesses it in the flow body. ` +
             `Required context fields should be read and used.`,
@@ -1597,7 +1597,7 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-GOV-005: policy purpose mismatch ─────────────────────────────
+    // ── FUNGI-GOV-005: policy purpose mismatch ─────────────────────────────
     // If a flow declares a policy block with purpose "read-only" but also
     // declares database.write in its effects, emit a warning.
     if (flowNode !== undefined) {
@@ -1608,8 +1608,8 @@ class GovernanceVerifier {
           const hasDeniedEffect = flow.declaredEffects.includes(deniedEffect);
           if (hasDeniedEffect) {
             this.diagnostics.push(makeGovDiag(
-              SPORE_GOV_005.code,
-              SPORE_GOV_005.name,
+              FUNGI_GOV_005.code,
+              FUNGI_GOV_005.name,
               "warning",
               `Flow '${flow.name}' declares purpose '${purpose}' but also uses ${deniedEffect} effect. ` +
               `Verify the policy purpose matches actual behaviour.`,
@@ -1621,15 +1621,15 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-GOV-007: authority block missing reason ───────────────────────
+    // ── FUNGI-GOV-007: authority block missing reason ───────────────────────
     // If an authority block exists but has no reason clause, emit an error.
     if (flowNode !== undefined) {
       const authorityNodes = findNodes(flowNode, "authorityDecl");
       for (const authNode of authorityNodes) {
         if (!hasAuthorityReason(authNode)) {
           this.diagnostics.push(makeGovDiag(
-            SPORE_GOV_007.code,
-            SPORE_GOV_007.name,
+            FUNGI_GOV_007.code,
+            FUNGI_GOV_007.name,
             "error",
             `Authority block in flow '${flow.name}' must include a reason declaration. ` +
             `Add: reason "Explain why this authority is needed"`,
@@ -1640,18 +1640,18 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-GOV-009: privileged flow without capability (RESERVED — see SPORE_GOV_009) ──
+    // ── FUNGI-GOV-009: privileged flow without capability (RESERVED — see FUNGI_GOV_009) ──
     // If a flow has qualifier "privileged" but declares no effects or contract, emit a warning.
     // NOTE (RD-0122): the `privileged` qualifier is NOT wired in the parser — real `privileged flow` →
-    // SPORE-PARSE-001 (recovers as a plain flow), so isPrivilegedFlow only matches a synthetic AST and this
+    // FUNGI-PARSE-001 (recovers as a plain flow), so isPrivilegedFlow only matches a synthetic AST and this
     // branch is currently unreachable on real code. Kept for when/if the qualifier is implemented.
     if (flowNode !== undefined && isPrivilegedFlow(flowNode, flow)) {
       const hasEffects = flow.declaredEffects.length > 0;
       const hasContract = (flowNode.children ?? []).some((c) => c.kind === "contractDecl");
       if (!hasEffects && !hasContract) {
         this.diagnostics.push(makeGovDiag(
-          SPORE_GOV_009.code,
-          SPORE_GOV_009.name,
+          FUNGI_GOV_009.code,
+          FUNGI_GOV_009.name,
           "warning",
           `Privileged flow '${flow.name}' declares no effects or capabilities. ` +
           `Privileged flows should explicitly declare what authority they require.`,
@@ -1661,9 +1661,9 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-GOV-013: pure flow crossing into governed boundary ────────────
+    // ── FUNGI-GOV-013: pure flow crossing into governed boundary ────────────
     // If a pure flow body contains a callExpr whose name resolves to a flow
-    // in the program that is "guarded" or "secure", emit SPORE-GOV-013.
+    // in the program that is "guarded" or "secure", emit FUNGI-GOV-013.
     if (flowNode !== undefined && flow.qualifier === "pure") {
       const callNodes = findNodes(flowNode, "callExpr");
       for (const callNode of callNodes) {
@@ -1681,19 +1681,19 @@ class GovernanceVerifier {
           (calleeEffectResult?.declaredEffects ?? []).length > 0;
         if (isGoverned) {
           this.diagnostics.push(makeGovDiag(
-            SPORE_GOV_013.code,
-            SPORE_GOV_013.name,
+            FUNGI_GOV_013.code,
+            FUNGI_GOV_013.name,
             "error",
             `Pure flow '${flow.name}' calls '${calleeName}' which is a governed or effectful flow. ` +
-            SPORE_GOV_013.message,
+            FUNGI_GOV_013.message,
             callNode.location ?? loc,
-            SPORE_GOV_013.suggestedFix,
+            FUNGI_GOV_013.suggestedFix,
           ));
         }
       }
     }
 
-    // ── SPORE-GOV-011/012: contract set references ──────────────────────────
+    // ── FUNGI-GOV-011/012: contract set references ──────────────────────────
     if (flowNode !== undefined) {
       // Find contractDecl child of the flow
       const contractNode = (flowNode.children ?? []).find((c) => c.kind === "contractDecl");
@@ -1705,17 +1705,17 @@ class GovernanceVerifier {
             const contractSetNode = this.knownContractSets.get(setName);
 
             if (contractSetNode === undefined) {
-              // SPORE-GOV-011: unknown contract set
+              // FUNGI-GOV-011: unknown contract set
               this.diagnostics.push(makeGovDiag(
-                SPORE_GOV_011.code,
-                SPORE_GOV_011.name,
+                FUNGI_GOV_011.code,
+                FUNGI_GOV_011.name,
                 "error",
                 `Flow '${flow.name}' references unknown contract set '${setName}'. Declare it with: contract set ${setName} { ... }`,
                 child.location ?? loc,
                 `Add at program scope: contract set ${setName} { rules { } events { } audit { } }`,
               ));
             } else {
-              // SPORE-GOV-012: check audit requirements
+              // FUNGI-GOV-012: check audit requirements
               // Find audit:block child in the contractSetDecl
               const auditBlock = (contractSetNode.children ?? []).find(
                 (c) => c.kind === "identifier" && c.value === "audit:block",
@@ -1725,8 +1725,8 @@ class GovernanceVerifier {
                 const hasAuditWrite = flow.declaredEffects.includes("audit.write");
                 if (!hasAuditWrite) {
                   this.diagnostics.push(makeGovDiag(
-                    SPORE_GOV_012.code,
-                    SPORE_GOV_012.name,
+                    FUNGI_GOV_012.code,
+                    FUNGI_GOV_012.name,
                     "warning",
                     `Flow '${flow.name}' uses contract set '${setName}' which requires audit.write, but the flow does not declare it.`,
                     child.location ?? loc,
@@ -1740,47 +1740,47 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-VAL: contract.value and contract.safety enforcement ──────────
+    // ── FUNGI-VAL: contract.value and contract.safety enforcement ──────────
     if (flowNode !== undefined) {
       const classification = extractValueClassification(flowNode);
 
       if (classification !== null) {
-        // SPORE-VAL-003: Unknown classification
+        // FUNGI-VAL-003: Unknown classification
         if (!RECOGNISED_VALUE_CLASSIFICATIONS.has(classification)) {
           this.diagnostics.push({
-            ...SPORE_VAL_003,
-            message: `${SPORE_VAL_003.message.replace("Unrecognised classification in contract.value.", `Unknown classification '${classification}' in contract.value for flow '${flow.name}':`)}`,
+            ...FUNGI_VAL_003,
+            message: `${FUNGI_VAL_003.message.replace("Unrecognised classification in contract.value.", `Unknown classification '${classification}' in contract.value for flow '${flow.name}':`)}`,
             location: loc,
-            suggestedFix: SPORE_VAL_003.suggestedFix,
+            suggestedFix: FUNGI_VAL_003.suggestedFix,
           });
         }
 
         if (classification === "safety_critical") {
-          // SPORE-VAL-001: safety_critical must declare audit.write
+          // FUNGI-VAL-001: safety_critical must declare audit.write
           if (!flow.declaredEffects.includes("audit.write")) {
             this.diagnostics.push({
-              ...SPORE_VAL_001,
-              message: `Flow '${flow.name}' is classified safety_critical but does not declare audit.write. ${SPORE_VAL_001.why}`,
+              ...FUNGI_VAL_001,
+              message: `Flow '${flow.name}' is classified safety_critical but does not declare audit.write. ${FUNGI_VAL_001.why}`,
               location: loc,
-              suggestedFix: SPORE_VAL_001.suggestedFix,
+              suggestedFix: FUNGI_VAL_001.suggestedFix,
             });
           }
 
-          // SPORE-VAL-002: safety_critical must require deterministic_execution in contract.safety
+          // FUNGI-VAL-002: safety_critical must require deterministic_execution in contract.safety
           const safetyReqs = extractSafetyRequirements(flowNode);
           if (!safetyReqs.has("deterministic_execution")) {
             this.diagnostics.push({
-              ...SPORE_VAL_002,
-              message: `Flow '${flow.name}' is classified safety_critical but does not declare 'require deterministic_execution' in contract.safety. ${SPORE_VAL_002.why}`,
+              ...FUNGI_VAL_002,
+              message: `Flow '${flow.name}' is classified safety_critical but does not declare 'require deterministic_execution' in contract.safety. ${FUNGI_VAL_002.why}`,
               location: loc,
-              suggestedFix: SPORE_VAL_002.suggestedFix,
+              suggestedFix: FUNGI_VAL_002.suggestedFix,
             });
           }
         }
       }
     }
 
-    // ── SPORE-HW: contract.hardware ProofLevel enforcement ─────────────────
+    // ── FUNGI-HW: contract.hardware ProofLevel enforcement ─────────────────
     // Phase 26B: auto-infer proof requirements from HARDWARE_TRUST_PROFILES.
     // No explicit contract syntax needed — the seal and proof level are automatic.
     if (flowNode !== undefined) {
@@ -1801,47 +1801,47 @@ class GovernanceVerifier {
         const profile = HARDWARE_TRUST_PROFILES.get(targetId);
         if (profile === undefined) {
           // R&D 0045 (tier D): an unrecognised hardware target is K3 INDETERMINATE — surface a YELLOW
-          // uncertainty warning (SPORE-HW-004), not a red error. The build still succeeds; the warning
+          // uncertainty warning (FUNGI-HW-004), not a red error. The build still succeeds; the warning
           // clears automatically once the target is registered. Advisory only (a target declaration is
           // not a governed sink). Was previously a silent `continue` (uncertainty was invisible).
           this.diagnostics.push({
-            ...SPORE_HW_004,
-            message: `Flow '${flow.name}' declares hardware target '${targetId}', which ${SPORE_HW_004.message}`,
+            ...FUNGI_HW_004,
+            message: `Flow '${flow.name}' declares hardware target '${targetId}', which ${FUNGI_HW_004.message}`,
             location: loc,
-            suggestedFix: SPORE_HW_004.suggestedFix,
+            suggestedFix: FUNGI_HW_004.suggestedFix,
           });
           continue;
         }
 
-        // SPORE-HW-001: quantum target requires FormalRequired proof chain
+        // FUNGI-HW-001: quantum target requires FormalRequired proof chain
         if (profile.requiredProofLevel >= ProofLevel.FormalRequired) {
           this.diagnostics.push({
-            ...SPORE_HW_001,
-            message: `Flow '${flow.name}' declares hardware target '${targetId}' (ExperimentalPlane). ${SPORE_HW_001.message}`,
+            ...FUNGI_HW_001,
+            message: `Flow '${flow.name}' declares hardware target '${targetId}' (ExperimentalPlane). ${FUNGI_HW_001.message}`,
             location: loc,
-            suggestedFix: SPORE_HW_001.suggestedFix,
+            suggestedFix: FUNGI_HW_001.suggestedFix,
           });
         }
 
-        // SPORE-HW-002: sealed target (NPU/TPU/ANE) without audit.write
+        // FUNGI-HW-002: sealed target (NPU/TPU/ANE) without audit.write
         if (profile.requiredProofLevel >= ProofLevel.Sealed &&
             profile.requiredProofLevel < ProofLevel.FormalRequired &&
             !hasAuditWrite) {
           this.diagnostics.push({
-            ...SPORE_HW_002,
-            message: `Flow '${flow.name}' uses sealed hardware target '${targetId}' but does not declare audit.write. ${SPORE_HW_002.message}`,
+            ...FUNGI_HW_002,
+            message: `Flow '${flow.name}' uses sealed hardware target '${targetId}' but does not declare audit.write. ${FUNGI_HW_002.message}`,
             location: loc,
-            suggestedFix: SPORE_HW_002.suggestedFix,
+            suggestedFix: FUNGI_HW_002.suggestedFix,
           });
         }
 
-        // SPORE-HW-003: AcceleratorPlane (photonic/neuromorphic) without attestation requirement
+        // FUNGI-HW-003: AcceleratorPlane (photonic/neuromorphic) without attestation requirement
         if (profile.requiresAttestation && !hasAuditAttestation && !hasAuditWrite) {
           this.diagnostics.push({
-            ...SPORE_HW_003,
-            message: `Flow '${flow.name}' uses AcceleratorPlane target '${targetId}'. ${SPORE_HW_003.message}`,
+            ...FUNGI_HW_003,
+            message: `Flow '${flow.name}' uses AcceleratorPlane target '${targetId}'. ${FUNGI_HW_003.message}`,
             location: loc,
-            suggestedFix: SPORE_HW_003.suggestedFix,
+            suggestedFix: FUNGI_HW_003.suggestedFix,
           });
         }
       }
@@ -1882,7 +1882,7 @@ class GovernanceVerifier {
       if (isProduction) {
         const arenaLimitMb = fn !== undefined ? extractArenaLimitMB(fn) : undefined;
         const manifest: RuntimeManifest = {
-          schemaVersion: "spore.runtime.manifest.v1",
+          schemaVersion: "fungi.runtime.manifest.v1",
           flow: flow.name,
           qualifier: flow.qualifier,
           requiresAudit:    (mask & GovernanceFlags.RequiresAudit) !== 0,
@@ -1911,7 +1911,7 @@ class GovernanceVerifier {
         kind: "effect",
         claim: `Flow ${flow.name} declares required effects`,
         satisfiedBy: "contract.effects",
-        diagnosticCode: "SPORE-EFFECT-001",
+        diagnosticCode: "FUNGI-EFFECT-001",
       });
       if (hasContractFlag) obligations.push({
         kind: "capability",
@@ -1922,7 +1922,7 @@ class GovernanceVerifier {
         kind: "privacy",
         claim: `Flow ${flow.name} declares privacy policy`,
         satisfiedBy: "contract.privacy",
-        diagnosticCode: "SPORE-VALUESTATE-006",
+        diagnosticCode: "FUNGI-VALUESTATE-006",
       });
 
       // Build ExecutionSignature from flow flags
@@ -1946,29 +1946,29 @@ class GovernanceVerifier {
       this.proofGraphsByFlow.set(flow.name, pg);
     }
 
-    // ── SPORE-GOV-017: cyber_physical_hardening {} value validation ────────────
+    // ── FUNGI-GOV-017: cyber_physical_hardening {} value validation ────────────
     // Validates that if a flow explicitly declares cyber_physical_hardening {},
     // the values are recognised. Also warns if declared on a low-risk flow
     // (auto-by-default is preferred; manual declaration should have good reason).
-    // ── SPORE-GOV-018: manual liability {} block warning ────────────────────────
+    // ── FUNGI-GOV-018: manual liability {} block warning ────────────────────────
     // liability {} is auto-calculated — writing it manually is a design smell.
     if (flowNode !== undefined) {
       this.verifyPhysicalHardeningBlock(flowNode, flow.name);
       this.verifyLiabilityBlock(flowNode, flow.name);
     }
 
-    // ── Phase 2: SPORE-GOV-019 limits block field validation ───────────────────
+    // ── Phase 2: FUNGI-GOV-019 limits block field validation ───────────────────
     if (flowNode !== undefined) {
       this.verifyLimitsBlock(flowNode, flow.name);
     }
 
-    // ── Phase 2: SPORE-GOV-020 authority overly-broad detection ────────────────
+    // ── Phase 2: FUNGI-GOV-020 authority overly-broad detection ────────────────
     if (flowNode !== undefined) {
       const authNodes = findNodes(flowNode, "authorityDecl");
       for (const authNode of authNodes) {
         if (hasOverlyBroadAuthority(authNode)) {
           this.diagnostics.push(makeGovDiag(
-            "SPORE-GOV-020",
+            "FUNGI-GOV-020",
             "AUTHORITY_OVERLY_BROAD",
             "warning",
             `Authority block in flow '${flow.name}' uses 'requires *' or 'requires all', which grants all capabilities. ` +
@@ -1980,12 +1980,12 @@ class GovernanceVerifier {
       }
     }
 
-    // ── Phase 3: SPORE-GOV-006 high-risk secure flow without epilogue ──────────
+    // ── Phase 3: FUNGI-GOV-006 high-risk secure flow without epilogue ──────────
     if (flowNode !== undefined && flow.qualifier === "secure") {
       const maxRisk = extractMaxRiskLiability(flowNode);
       if (maxRisk !== undefined && maxRisk >= 5000 && !hasEpilogueBlock(flowNode)) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-GOV-006",
+          "FUNGI-GOV-006",
           "GOVERNANCE_PROOF_REQUIRED_BUT_MISSING",
           "warning",
           `Secure flow '${flow.name}' has high max_risk_liability (${maxRisk}) but no epilogue {} proof strategy declared. ` +
@@ -1996,12 +1996,12 @@ class GovernanceVerifier {
       }
     }
 
-    // ── Phase 3: SPORE-TERM-001 recursive secure flow without decreases ────────
+    // ── Phase 3: FUNGI-TERM-001 recursive secure flow without decreases ────────
     if (flowNode !== undefined) {
       this.verifyTerminationAnnotation(flow, flowNode);
     }
 
-    // ── SPORE-GOV-015/016: epilogue {} strategy validation ─────────────────────
+    // ── FUNGI-GOV-015/016: epilogue {} strategy validation ─────────────────────
     // When a flow explicitly declares an `epilogue {}` block, validate that the
     // proof strategy and failure action are recognised values.  An omitted block
     // is AUTO-by-default (the runtime selects the tier from the ValueGraph) and
@@ -2010,7 +2010,7 @@ class GovernanceVerifier {
       this.verifyEpilogueBlock(flowNode, flow.name);
     }
 
-    // ── SPORE-GOV-004 / SPORE-LIMIT-001: Domain Guard Differential Proof (task #56) ──
+    // ── FUNGI-GOV-004 / FUNGI-LIMIT-001: Domain Guard Differential Proof (task #56) ──
     // If the flow's contract declares [conforms_to: PolicyName], load the external
     // policy and verify that the contract's declared effects and limits are a strict
     // SUBSET of the policy's permitted_effects and enforced_limits ceilings.
@@ -2018,7 +2018,7 @@ class GovernanceVerifier {
       this.verifyDomainGuardConformance(flow, flowNode);
     }
 
-    // ── SPORE-TENANT-001/002: deny-by-default tenant-isolation border (G1, R&D 0109) ──
+    // ── FUNGI-TENANT-001/002: deny-by-default tenant-isolation border (G1, R&D 0109) ──
     // A tenant-scoped data-access effect (`*.tenant_scoped`) must be bound to the caller's
     // proven scope (the `tenant.scope` marker effect). Capability intersection over the
     // manifest — an unbound tenant-scoped access is a FAIL-CLOSED compile error in every
@@ -2026,34 +2026,34 @@ class GovernanceVerifier {
     // declared effects, not the AST node) so a missing flow node never silently skips it.
     this.verifyTenantIsolation(flow, loc);
 
-    // ── SPORE-INV-001/002: invariant {} static evaluation (DRCM Phase 2 — task #36) ──
+    // ── FUNGI-INV-001/002: invariant {} static evaluation (DRCM Phase 2 — task #36) ──
     // For each `ensure expr` in the invariant block:
     //   - Statically provable TRUE  → record as statically_verified in ProofGraph
-    //   - Statically provable FALSE → SPORE-INV-001 hard error (dead code: invariant always fails)
+    //   - Statically provable FALSE → FUNGI-INV-001 hard error (dead code: invariant always fails)
     //   - Unknown at compile time   → record as runtime-precheck (WAT gate to be injected)
     if (flowNode !== undefined) {
       this.verifyInvariantBlock(flow, flowNode, loc);
       this.verifyArchitectureBlock(flow, flowNode, loc);
     }
 
-    // ── SPORE-TRAP-001/002: trap {} declarations in flow body ───────────────────
+    // ── FUNGI-TRAP-001/002: trap {} declarations in flow body ───────────────────
     if (flowNode !== undefined) {
       this.verifyTrapDecls(flow, flowNode, loc);
     }
 
-    // ── SPORE-MATCH-001: match exhaustiveness check ─────────────────────────────
+    // ── FUNGI-MATCH-001: match exhaustiveness check ─────────────────────────────
     if (flowNode !== undefined) {
       this.checkMatchExhaustiveness(flow, flowNode, loc);
     }
 
-    // ── SPORE-CAP-001: Network wildcard ban (DRCM Phase 1 — task #30) ──────────
+    // ── FUNGI-CAP-001: Network wildcard ban (DRCM Phase 1 — task #30) ──────────
     // Wildcard `*` in network capability declarations introduces parsing vulnerabilities
     // and ambient authority leaks. Force explicit NetworkTarget variants.
     if (flowNode !== undefined) {
       this.verifyNetworkWildcardBan(flow, flowNode, loc);
     }
 
-    // ── SPORE-RES-001: Resilience violation — retry + mutation without idempotent (task #58) ──
+    // ── FUNGI-RES-001: Resilience violation — retry + mutation without idempotent (task #58) ──
     if (flowNode !== undefined) {
       const resViolations = checkResilienceViolations(flowNode, flow);
       for (const v of resViolations) {
@@ -2068,25 +2068,25 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-FAULT-001/003: first-class fault-handler governance (0017) ──
+    // ── FUNGI-FAULT-001/003: first-class fault-handler governance (0017) ──
     // A declared on_*_fault handler that fails open (log outside on_rotation_fault) or violates deny-only
     // monotonicity (on_denial_fault retry) is rejected. The inferred secure default (halt) never violates.
     if (flowNode !== undefined) {
       for (const v of checkFaultHandlerViolations(flowNode)) {
         this.diagnostics.push(makeGovDiag(
           v.code,
-          v.code === "SPORE-FAULT-003" ? "FAULT_HANDLER_FAIL_OPEN" : "FAULT_HANDLER_MONOTONICITY",
+          v.code === "FUNGI-FAULT-003" ? "FAULT_HANDLER_FAIL_OPEN" : "FAULT_HANDLER_MONOTONICITY",
           "error",
           v.message,
           loc,
-          v.code === "SPORE-FAULT-003"
+          v.code === "FUNGI-FAULT-003"
             ? "Replace 'log' with 'halt' or 'quarantine' (log is fail-open; only on_rotation_fault may opt in)."
             : "Replace 'retry' with 'halt', 'quarantine', or 'fallback <flow>' for on_denial_fault.",
         ));
       }
     }
 
-    // ── SPORE-OBS-001: Observability on pure flow warning (task #58) ──
+    // ── FUNGI-OBS-001: Observability on pure flow warning (task #58) ──
     if (flowNode !== undefined) {
       const obsWarnings = checkObservabilityWarnings(flowNode, flow);
       for (const w of obsWarnings) {
@@ -2101,7 +2101,7 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-SUBSTRATE-001..004: substrate {} contract obligations (Direction B) ──
+    // ── FUNGI-SUBSTRATE-001..004: substrate {} contract obligations (Direction B) ──
     // B1 crypto-on-noisy-lane · B2 redundancy sufficiency vs the noise model ·
     // B3 un-voted analog into a deterministic sink. Inert for flows without a
     // substrate {} block (or lane: digital). Safety is inherited from Direction A's
@@ -2116,7 +2116,7 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-CRYPTO-PQ-001: a Sign effect must be post-quantum/hybrid in a certified profile ──
+    // ── FUNGI-CRYPTO-PQ-001: a Sign effect must be post-quantum/hybrid in a certified profile ──
     // (quantum-resistance posture R2). Ed25519-only — or algorithm-unspecified — signing is
     // Shor-breakable, so it is denied when the deployment is certified (production/deterministic);
     // dev/check-only profiles allow it. The author asserts the algorithm with a marker effect
@@ -2127,14 +2127,14 @@ class GovernanceVerifier {
       );
       if (signEffects.length > 0 && !signEffects.some(e => PQ_SIGN_ALGORITHMS.has(e))) {
         this.diagnostics.push(makeGovDiag(
-          SPORE_CRYPTO_PQ_001.code, SPORE_CRYPTO_PQ_001.name, SPORE_CRYPTO_PQ_001.severity,
-          SPORE_CRYPTO_PQ_001.message, loc,
+          FUNGI_CRYPTO_PQ_001.code, FUNGI_CRYPTO_PQ_001.name, FUNGI_CRYPTO_PQ_001.severity,
+          FUNGI_CRYPTO_PQ_001.message, loc,
           "Declare the PQ algorithm: effects { crypto.sign crypto.sign.hybrid }.",
         ));
       }
     }
 
-    // ── SPORE-OBS-002: observability {} must not access privacy {} scope (task #66) ──
+    // ── FUNGI-OBS-002: observability {} must not access privacy {} scope (task #66) ──
     // The observability block emits telemetry (best-effort, lossy, non-authoritative).
     // Telemetry must NEVER contain PII, PHI, or secrets declared in privacy {}.
     // Privacy-scoped variables (masked fields) must not appear in observability metrics.
@@ -2167,7 +2167,7 @@ class GovernanceVerifier {
             for (const privField of privacyFields) {
               if (decl.includes(privField)) {
                 this.diagnostics.push(makeGovDiag(
-                  "SPORE-OBS-002",
+                  "FUNGI-OBS-002",
                   "OBSERVABILITY_ACCESSES_PRIVACY_SCOPE",
                   "error",
                   `Flow '${flow.name}': observability {} references '${privField}' which is declared in privacy {}. ` +
@@ -2182,25 +2182,25 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-ASSUME-001..004: assuming {} proof-tracing verification (task #74) ──
+    // ── FUNGI-ASSUME-001..004: assuming {} proof-tracing verification (task #74) ──
     if (flowNode !== undefined) {
       this.verifyAssumingBlocks(flowNode, flow, loc);
     }
 
-    // ── SPORE-ACCESS-001/002: access {} capability grant enforcement (task #89) ──
+    // ── FUNGI-ACCESS-001/002: access {} capability grant enforcement (task #89) ──
     if (flowNode !== undefined) {
       this.verifyAccessBlocks(flowNode, flow, loc);
     }
   }
 
   /**
-   * SPORE-ASSUME-001..004: Verify all `assuming {}` blocks in a contract.
+   * FUNGI-ASSUME-001..004: Verify all `assuming {}` blocks in a contract.
    *
    * For each assumingDecl:
-   *   1. Check flowRef names a known flow in this compilation unit (SPORE-ASSUME-001)
-   *   2. Check the claim string appears as a ProofObligation in the known flow (SPORE-ASSUME-002)
-   *   3. If the flow is external, require that it was compiled with a valid GovernanceSignature (SPORE-ASSUME-004)
-   *   Note: SPORE-ASSUME-003 (manifest file freshness) is a Phase 5 check — requires disk I/O at admission gate.
+   *   1. Check flowRef names a known flow in this compilation unit (FUNGI-ASSUME-001)
+   *   2. Check the claim string appears as a ProofObligation in the known flow (FUNGI-ASSUME-002)
+   *   3. If the flow is external, require that it was compiled with a valid GovernanceSignature (FUNGI-ASSUME-004)
+   *   Note: FUNGI-ASSUME-003 (manifest file freshness) is a Phase 5 check — requires disk I/O at admission gate.
    *         In Stage A we emit a warning-only placeholder for cross-module assuming().
    */
   private verifyAssumingBlocks(
@@ -2220,7 +2220,7 @@ class GovernanceVerifier {
 
       if (refFlowName === "") {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-ASSUME-001",
+          "FUNGI-ASSUME-001",
           "ASSUMING_MISSING_FLOW_REF",
           "error",
           `Flow '${flow.name}': assuming() requires a flow reference as first argument. ` +
@@ -2233,7 +2233,7 @@ class GovernanceVerifier {
 
       if (claim === "") {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-ASSUME-001",
+          "FUNGI-ASSUME-001",
           "ASSUMING_MISSING_CLAIM",
           "error",
           `Flow '${flow.name}': assuming() requires a claim string as second argument. ` +
@@ -2248,16 +2248,16 @@ class GovernanceVerifier {
       const refFlow = this.knownFlows.get(refFlowName);
       if (refFlow === undefined) {
         // The flow is either external or doesn't exist.
-        // External flows require GovernanceSignature — emit SPORE-ASSUME-004 warning.
-        // Full manifest-file lookup (SPORE-ASSUME-003) is deferred to Phase 5 admission gate.
+        // External flows require GovernanceSignature — emit FUNGI-ASSUME-004 warning.
+        // Full manifest-file lookup (FUNGI-ASSUME-003) is deferred to Phase 5 admission gate.
         // #178 fail-closed: a proof borrowed from a flow OUTSIDE this compilation unit cannot be
         // verified here, and the admission gate does NOT yet enforce the external GovernanceSignature
-        // (DRCM Phase-5 SPORE-ASSUME-003 check is unbuilt). Trusting an unverified cross-trust-domain
+        // (DRCM Phase-5 FUNGI-ASSUME-003 check is unbuilt). Trusting an unverified cross-trust-domain
         // proof is fail-OPEN — so it is an ERROR in production/deterministic, a warning in dev (where
         // separate-compilation iteration relies on the future admission-gate check).
         const isProductionAssume = this.currentProfile === "production" || this.currentProfile === "deterministic";
         this.diagnostics.push(makeGovDiag(
-          "SPORE-ASSUME-004",
+          "FUNGI-ASSUME-004",
           "ASSUMING_EXTERNAL_FLOW",
           isProductionAssume ? "error" : "warning",
           `Flow '${flow.name}': assuming() references '${refFlowName}' which is not in this ` +
@@ -2276,7 +2276,7 @@ class GovernanceVerifier {
       const refFlowContract = (refFlow.node?.children ?? []).find(c => c.kind === "contractDecl");
       if (refFlowContract === undefined) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-ASSUME-002",
+          "FUNGI-ASSUME-002",
           "ASSUMING_NO_CONTRACT",
           "error",
           `Flow '${flow.name}': assuming() references '${refFlowName}' but that flow has ` +
@@ -2308,7 +2308,7 @@ class GovernanceVerifier {
 
       if (!claimFound) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-ASSUME-002",
+          "FUNGI-ASSUME-002",
           "ASSUMING_CLAIM_NOT_FOUND",
           "warning",
           `Flow '${flow.name}': assuming() claims '${claim}' is proved in '${refFlowName}', ` +
@@ -2327,12 +2327,12 @@ class GovernanceVerifier {
   // ── DRCM Phase 2: invariant {} static evaluation ─────────────────────────────
   // Three outcomes per `ensure` expression:
   //   1. Statically TRUE  → statically_verified in ProofGraph (Goal A: no runtime overhead)
-  //   2. Statically FALSE → SPORE-INV-001 hard error (invariant can never be satisfied)
+  //   2. Statically FALSE → FUNGI-INV-001 hard error (invariant can never be satisfied)
   //   3. Unknown          → runtime-precheck in ProofGraph (WAT gate injected — Unit 3, task #36)
 
-  // ── SPORE-ARCH-001: contract.architecture volatility value check (R&D 0045) ────
+  // ── FUNGI-ARCH-001: contract.architecture volatility value check (R&D 0045) ────
   // Parse-only `contract.architecture { volatility: LOW|MED|HIGH  depends_on [...] }`. Fail-closed on an
-  // INVALID volatility token (a typo) → SPORE-ARCH-001 error. A MISSING volatility is allowed (treated as the
+  // INVALID volatility token (a typo) → FUNGI-ARCH-001 error. A MISSING volatility is allowed (treated as the
   // most-volatile HIGH downstream when Stable-Dependencies enforcement lands — a later, gated pass).
   private verifyArchitectureBlock(flow: FlowMeta, flowNode: AstNode, loc: SourceLocation | undefined): void {
     const contractNode = (flowNode.children ?? []).find(c => c.kind === "contractDecl");
@@ -2348,7 +2348,7 @@ class GovernanceVerifier {
       const m = raw.match(/\bvolatility\b\s*:?\s*([A-Za-z_]+)/);
       if (m && !VALID.has((m[1] ?? "").toUpperCase())) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-ARCH-001",
+          "FUNGI-ARCH-001",
           "InvalidVolatility",
           "error",
           `Flow '${flow.name}': contract.architecture volatility must be LOW, MED, or HIGH (got '${m[1]}').`,
@@ -2371,12 +2371,12 @@ class GovernanceVerifier {
     for (const child of archBlock.children ?? []) {
       if (child.kind !== "identifier" || !(child.value ?? "").startsWith("decl:")) continue;
       const m = (child.value ?? "").slice("decl:".length).match(/\bvolatility\b\s*:?\s*([A-Za-z_]+)/);
-      if (m) return LEVEL[(m[1] ?? "").toUpperCase()]; // undefined if invalid (already SPORE-ARCH-001)
+      if (m) return LEVEL[(m[1] ?? "").toUpperCase()]; // undefined if invalid (already FUNGI-ARCH-001)
     }
     return undefined;
   }
 
-  // ── SPORE-ARCH-002: Stable-Dependencies enforcement (R&D 0045) ─────────────────
+  // ── FUNGI-ARCH-002: Stable-Dependencies enforcement (R&D 0045) ─────────────────
   // A more-stable flow (lower volatility) must NOT depend on a more-volatile one — the Stable
   // Dependencies Principle. Owner decision: ALWAYS a hard error (every profile). Only flows that DECLARE
   // a volatility participate (an undeclared flow is "unknown" → not checked → no false positives). Edges
@@ -2405,7 +2405,7 @@ class GovernanceVerifier {
         const lb = volat.get(callee);
         if (lb !== undefined && la < lb) {
           this.diagnostics.push(makeGovDiag(
-            "SPORE-ARCH-002",
+            "FUNGI-ARCH-002",
             "StableDependencyViolation",
             "error",
             `Architectural Violation: flow '${name}' (volatility ${NAME[la]}) depends on '${callee}' ` +
@@ -2431,7 +2431,7 @@ class GovernanceVerifier {
     // Build the set of names that are in scope for ensure expressions.
     // In scope: flow parameters (from paramDecl children).
     // The WAT emitter maps these to $p0, $p1, … via local.get.
-    // Any identifier in ensure that's NOT in this set → SPORE-INV-004.
+    // Any identifier in ensure that's NOT in this set → FUNGI-INV-004.
     const paramNames = new Set<string>(
       (flowNode.children ?? [])
         .filter(c => c.kind === "paramDecl")
@@ -2440,7 +2440,7 @@ class GovernanceVerifier {
     );
     // 0040/#70: `result` is the magic OUTPUT symbol. An `ensure` that references it is an
     // output post-condition checked against the return value at the single flow exit — not a
-    // parameter pre-condition. Add it to the in-scope set so it is NOT rejected as SPORE-INV-004;
+    // parameter pre-condition. Add it to the in-scope set so it is NOT rejected as FUNGI-INV-004;
     // it is enforced fail-closed by the interpreter (interpreter.checkOutputPostconditions),
     // and the WAT tier declines such flows to that interpreter until single-exit lowering lands.
     const scopeNames = new Set<string>([...paramNames, "result"]);
@@ -2455,12 +2455,12 @@ class GovernanceVerifier {
 
       const isPostcondition = exprReferencesResult(exprNode);
 
-      // SPORE-INV-004: every identifier in the ensure expr must be in scope — a flow parameter,
+      // FUNGI-INV-004: every identifier in the ensure expr must be in scope — a flow parameter,
       // or `result` for an output post-condition. Unknown names (typos) are still rejected.
       const unresolvedNames = collectUnresolvedIdentifiers(exprNode, scopeNames);
       for (const name of unresolvedNames) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-INV-004",
+          "FUNGI-INV-004",
           "SYMBOL_UNRESOLVED_IN_INVARIANT",
           "error",
           `Flow '${flow.name}': invariant 'ensure ${this.describeExpr(exprNode)}' references ` +
@@ -2475,9 +2475,9 @@ class GovernanceVerifier {
       const staticResult = this.tryStaticEval(exprNode);
 
       if (staticResult === false) {
-        // SPORE-INV-001: statically proved FALSE → invariant can NEVER be satisfied
+        // FUNGI-INV-001: statically proved FALSE → invariant can NEVER be satisfied
         this.diagnostics.push(makeGovDiag(
-          "SPORE-INV-001",
+          "FUNGI-INV-001",
           "PRE_CONDITION_STATICALLY_FALSE",
           "error",
           `Flow '${flow.name}': invariant 'ensure ${this.describeExpr(exprNode)}' can never be satisfied ` +
@@ -2499,13 +2499,13 @@ class GovernanceVerifier {
         // Unknown — runtime-precheck (WAT gate will be injected in WAT emitter, Unit 3)
         this.proofObligations.push(`invariant_runtime:${flow.name}:ensure ${exprDesc}:runtime-precheck`);
       }
-      // staticResult === false → SPORE-INV-001 error already emitted above; not recorded as obligation
+      // staticResult === false → FUNGI-INV-001 error already emitted above; not recorded as obligation
     }
 
     // If the invariant block exists but is empty, warn
     if (invariantCount === 0) {
       this.diagnostics.push(makeGovDiag(
-        "SPORE-INV-003",
+        "FUNGI-INV-003",
         "INVARIANT_BLOCK_EMPTY",
         "warning",
         `Flow '${flow.name}' declares an invariant {} block with no 'ensure' statements. ` +
@@ -2571,7 +2571,7 @@ class GovernanceVerifier {
     return "...";
   }
 
-  // ── SPORE-CAP-001: Network wildcard ban (DRCM Phase 1 — task #30) ─────────────
+  // ── FUNGI-CAP-001: Network wildcard ban (DRCM Phase 1 — task #30) ─────────────
 
   private verifyNetworkWildcardBan(flow: FlowMeta, flowNode: AstNode, loc: SourceLocation | undefined): void {
     const contractNode = (flowNode.children ?? []).find(c => c.kind === "contractDecl");
@@ -2581,7 +2581,7 @@ class GovernanceVerifier {
     // Wildcards can appear as:
     //   effects { network.* }
     //   authority { requires network.* }
-    //   authority { requires * }  (overly broad — also caught by SPORE-GOV-020)
+    //   authority { requires * }  (overly broad — also caught by FUNGI-GOV-020)
     for (const child of contractNode.children ?? []) {
       if (child.kind !== "identifier") continue;
       const val = child.value ?? "";
@@ -2596,7 +2596,7 @@ class GovernanceVerifier {
 
       if (isNetworkDecl || isWildcardRef) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-CAP-001",
+          "FUNGI-CAP-001",
           "NETWORK_WILDCARD_BANNED",
           "error",
           `Flow '${flow.name}' uses a wildcard '*' in a network capability declaration. ` +
@@ -2613,7 +2613,7 @@ class GovernanceVerifier {
     for (const effect of flow.declaredEffects) {
       if (effect.includes("*")) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-CAP-001",
+          "FUNGI-CAP-001",
           "NETWORK_WILDCARD_BANNED",
           "error",
           `Flow '${flow.name}' declares wildcard effect '${effect}'. ` +
@@ -2642,7 +2642,7 @@ class GovernanceVerifier {
       // (fail-closed); a warning in dev (the policy may be in another file still being authored).
       const isProduction = this.currentProfile === "production" || this.currentProfile === "deterministic";
       this.diagnostics.push(makeGovDiag(
-        "SPORE-GOV-004",
+        "FUNGI-GOV-004",
         "DOMAIN_GUARD_NOT_FOUND",
         isProduction ? "error" : "warning",
         `Flow '${flow.name}' declares [conforms_to: ${policyName}] but no policy '${policyName}' was found in this file.` +
@@ -2675,7 +2675,7 @@ class GovernanceVerifier {
       for (const declaredEffect of flow.declaredEffects) {
         if (denyAll || !permittedEffects.has(declaredEffect)) {
           this.diagnostics.push(makeGovDiag(
-            "SPORE-GOV-004",
+            "FUNGI-GOV-004",
             "DOMAIN_GUARD_POLICY_VIOLATION",
             "error",
             denyAll
@@ -2691,32 +2691,32 @@ class GovernanceVerifier {
       }
     }
 
-    // ── SPORE-LIMIT-001: enforced_limits ceiling check ─────────────────────────
+    // ── FUNGI-LIMIT-001: enforced_limits ceiling check ─────────────────────────
     // TODO (task #56 Phase 2): Full structured limit comparison.
     // parseLimitMB() and per-field comparison pending implementation.
     // When implemented: compare contract limits {} values against policy enforced_limits {}
-    // ceilings and emit SPORE-LIMIT-001 on violation.
+    // ceilings and emit FUNGI-LIMIT-001 on violation.
     // No diagnostic emitted here until structured parsing is in place.
   }
 
   /**
-   * G1 — deny-by-default tenant-isolation border (SPORE-TENANT-001/002, R&D 0109).
+   * G1 — deny-by-default tenant-isolation border (FUNGI-TENANT-001/002, R&D 0109).
    *
    * Capability intersection over the manifest (NOT an AST / query-string rewriter): a
    * data-access effect on a tenant-partitioned resource is declared by the `.tenant_scoped`
    * suffix (e.g. `vault.read.tenant_scoped`); the caller-scope proof is the sibling marker
    * effect `tenant.scope`. The intersection is:
    *
-   *   tenantScopedAccesses ≠ ∅  ∧  `tenant.scope` ∉ effects  ⇒  DENY  (SPORE-TENANT-002)
+   *   tenantScopedAccesses ≠ ∅  ∧  `tenant.scope` ∉ effects  ⇒  DENY  (FUNGI-TENANT-002)
    *
    * Fail-closed in EVERY profile — a cross-tenant read (IDOR / OWASP-A01) is refused at
    * compile time unless the access is bound to the caller's proven scope. A `tenant.scope`
    * declared without any tenant-scoped access to bind is a dangling capability (advisory
-   * SPORE-TENANT-001), never an error.
+   * FUNGI-TENANT-001), never an error.
    *
    * SCOPE (honest): proves the binding is DECLARED on the flow's effect surface; the
    * body-level dataflow proof (every row-access threaded by the scope) is the deferred
-   * SPORE-TENANT-003. This border kills the common "no caller-scope at all" IDOR shape.
+   * FUNGI-TENANT-003. This border kills the common "no caller-scope at all" IDOR shape.
    */
   private verifyTenantIsolation(flow: FlowMeta, loc: SourceLocation | undefined): void {
     const tenantScopedAccesses = flow.declaredEffects.filter(
@@ -2728,9 +2728,9 @@ class GovernanceVerifier {
       // No tenant-partitioned access. A lone `tenant.scope` binding is dangling (advisory).
       if (hasScopeBinding) {
         this.diagnostics.push(makeGovDiag(
-          SPORE_TENANT_001.code,
-          SPORE_TENANT_001.name,
-          SPORE_TENANT_001.severity,
+          FUNGI_TENANT_001.code,
+          FUNGI_TENANT_001.name,
+          FUNGI_TENANT_001.severity,
           `Flow '${flow.name}' declares the caller-scope binding '${TENANT_SCOPE_BINDING}' but has no tenant-scoped data-access effect (ending '${TENANT_SCOPED_SUFFIX}') to bind.`,
           loc,
           `Remove '${TENANT_SCOPE_BINDING}' from effects, or mark the data access tenant-scoped, e.g. effects { vault.read${TENANT_SCOPED_SUFFIX} ${TENANT_SCOPE_BINDING} }.`,
@@ -2742,9 +2742,9 @@ class GovernanceVerifier {
     // Deny-by-default: a tenant-scoped access with NO proven caller scope is fail-closed.
     if (!hasScopeBinding) {
       this.diagnostics.push(makeGovDiag(
-        SPORE_TENANT_002.code,
-        SPORE_TENANT_002.name,
-        SPORE_TENANT_002.severity,
+        FUNGI_TENANT_002.code,
+        FUNGI_TENANT_002.name,
+        FUNGI_TENANT_002.severity,
         `Tenant-isolation violation in flow '${flow.name}': the tenant-scoped data access ` +
         `'${tenantScopedAccesses.join("', '")}' is not bound to the caller's proven scope. ` +
         `Deny-by-default: cross-tenant access (IDOR / OWASP-A01) is refused at compile time ` +
@@ -2755,7 +2755,7 @@ class GovernanceVerifier {
     }
   }
 
-  // ── Phase 2.1 — SPORE-GOV-019: limits {} field name validation ─────────────
+  // ── Phase 2.1 — FUNGI-GOV-019: limits {} field name validation ─────────────
 
   private verifyLimitsBlock(flowNode: AstNode, flowName: string): void {
     const fields = extractLimitsFields(flowNode);
@@ -2767,7 +2767,7 @@ class GovernanceVerifier {
       // (the author believes the limit is in force when it is decorative). (RD-0121/CWE-1287.)
       if (isRecognizedLimitDecl(decl) || KNOWN_LIMITS_FIELDS.has(field)) continue;
       this.diagnostics.push(makeGovDiag(
-        "SPORE-GOV-019",
+        "FUNGI-GOV-019",
         "LIMITS_UNKNOWN_FIELD",
         "warning",
         `Flow '${flowName}' limit '${decl}' is not recognised by the runtime enforcer and will NOT be ` +
@@ -2780,7 +2780,7 @@ class GovernanceVerifier {
     }
   }
 
-  // ── Phase 3.3 — SPORE-TERM-001: termination annotation on recursive flows ──
+  // ── Phase 3.3 — FUNGI-TERM-001: termination annotation on recursive flows ──
 
   private verifyTerminationAnnotation(flow: FlowMeta, flowNode: AstNode): void {
     // Only applies to strict/deterministic security profile secure flows.
@@ -2823,7 +2823,7 @@ class GovernanceVerifier {
     if (flow.decreasesMetric !== undefined) return;
 
     this.diagnostics.push(makeGovDiag(
-      "SPORE-TERM-001",
+      "FUNGI-TERM-001",
       "TERMINATION_ANNOTATION_MISSING",
       "warning",
       `Recursive flow '${flow.name}' in strict/deterministic profile lacks a 'decreases' annotation. ` +
@@ -2866,7 +2866,7 @@ class GovernanceVerifier {
     const shielding = extractValue("enclosure_shielding");
     if (shielding !== undefined && !VALID_SHIELDING.has(shielding)) {
       this.diagnostics.push(makeGovDiag(
-        "SPORE-GOV-017", "InvalidPhysicalHardeningValue", "error",
+        "FUNGI-GOV-017", "InvalidPhysicalHardeningValue", "error",
         `Flow '${flowName}' declares cyber_physical_hardening { enclosure_shielding ${shielding} } but '${shielding}' is not a recognised shielding tier.`,
         hardeningNode.location,
         `Valid values: active_mesh | deep_trench | standard_fabric`,
@@ -2876,7 +2876,7 @@ class GovernanceVerifier {
     const tamper = extractValue("on_tamper_signal");
     if (tamper !== undefined && !VALID_TAMPER.has(tamper)) {
       this.diagnostics.push(makeGovDiag(
-        "SPORE-GOV-017", "InvalidPhysicalHardeningValue", "error",
+        "FUNGI-GOV-017", "InvalidPhysicalHardeningValue", "error",
         `Flow '${flowName}' declares cyber_physical_hardening { on_tamper_signal ${tamper} } but '${tamper}' is not a recognised tamper response.`,
         hardeningNode.location,
         `Valid values: zeroize | quarantine_core | halt | demote_to_local`,
@@ -2894,7 +2894,7 @@ class GovernanceVerifier {
       );
     if (!hasHighRisk) {
       this.diagnostics.push(makeGovDiag(
-        "SPORE-GOV-017", "PhysicalHardeningOnLowRiskFlow", "warning",
+        "FUNGI-GOV-017", "PhysicalHardeningOnLowRiskFlow", "warning",
         `Flow '${flowName}' explicitly declares cyber_physical_hardening {} but has no high max_risk_liability in economics {}. ` +
         `The runtime auto-selects the appropriate shielding tier from the ValueGraph. ` +
         `Omit this block unless operating on Tier 1 hardware with proven physical-breach risk.`,
@@ -2915,7 +2915,7 @@ class GovernanceVerifier {
 
     // liability {} is auto-calculated — writing it manually is a design smell.
     this.diagnostics.push(makeGovDiag(
-      "SPORE-GOV-018", "ManualLiabilityDeclaration", "warning",
+      "FUNGI-GOV-018", "ManualLiabilityDeclaration", "warning",
       `Flow '${flowName}' manually declares a liability {} contract block. ` +
       `liability {} is auto-calculated from the ValueGraph breach-risk matrix and stored in the ProofGraph. ` +
       `Declaring it manually couples your source code to a specific risk assessment that may go stale.`,
@@ -2925,11 +2925,11 @@ class GovernanceVerifier {
   }
 
   /**
-   * SPORE-INHERIT-001/002: Hierarchical policy inheritance subset verification (task #72).
+   * FUNGI-INHERIT-001/002: Hierarchical policy inheritance subset verification (task #72).
    *
    * When a policy declares `parent_policy: ParentName`, this verifier checks:
-   *   SPORE-INHERIT-001: parent policy name is not found in knownDomainGuards
-   *   SPORE-INHERIT-002: child policy's permitted_effects ⊄ parent's permitted_effects
+   *   FUNGI-INHERIT-001: parent policy name is not found in knownDomainGuards
+   *   FUNGI-INHERIT-002: child policy's permitted_effects ⊄ parent's permitted_effects
    *                    (child attempts to use effects the parent doesn't allow)
    *
    * Monotonicity of inheritance: a child policy can ONLY be more restrictive than its parent.
@@ -2940,9 +2940,9 @@ class GovernanceVerifier {
    *   policy InvoiceRead { parent_policy: FinanceFullAccess; permitted_effects { database.read } }
    *   → database.read has no bit → always permitted (it's a no-op, read-only) ✓
    *
-   * Example (invalid — SPORE-INHERIT-002):
+   * Example (invalid — FUNGI-INHERIT-002):
    *   policy InvoiceRead { parent_policy: FinanceFullAccess; permitted_effects { network.outbound } }
-   *   → network.outbound not in FinanceFullAccess.permitted_effects → SPORE-INHERIT-002 ✗
+   *   → network.outbound not in FinanceFullAccess.permitted_effects → FUNGI-INHERIT-002 ✗
    */
   private verifyPolicyHierarchy(nodes: readonly AstNode[]): void {
     // Helper: extract permitted_effects from a policyDecl node
@@ -2976,11 +2976,11 @@ class GovernanceVerifier {
       const parentName = (parentClause.value ?? "").replace(/^parent_policy:/, "").trim();
       if (parentName === "") continue;
 
-      // SPORE-INHERIT-001: Parent policy not found
+      // FUNGI-INHERIT-001: Parent policy not found
       const parentNode = this.knownDomainGuards.get(parentName);
       if (parentNode === undefined) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-INHERIT-001",
+          "FUNGI-INHERIT-001",
           "PARENT_POLICY_NOT_FOUND",
           "error",
           `Policy '${policyName}': parent_policy '${parentName}' is not defined in this ` +
@@ -2992,7 +2992,7 @@ class GovernanceVerifier {
         continue;
       }
 
-      // SPORE-INHERIT-002: Child declares effects not in parent's permitted set
+      // FUNGI-INHERIT-002: Child declares effects not in parent's permitted set
       const parentEffects = extractPermittedEffects(parentNode);
       const childEffects  = extractPermittedEffects(node);
 
@@ -3005,7 +3005,7 @@ class GovernanceVerifier {
         const covered = parentEffects.has(childEff) || parentEffects.has(rootFamily);
         if (!covered) {
           this.diagnostics.push(makeGovDiag(
-            "SPORE-INHERIT-002",
+            "FUNGI-INHERIT-002",
             "CHILD_POLICY_EXCEEDS_PARENT",
             "error",
             `Policy '${policyName}': permitted_effects includes '${childEff}' but parent ` +
@@ -3021,7 +3021,7 @@ class GovernanceVerifier {
   }
 
   /**
-   * SPORE-MONO-001/002: Verify emergency {} transitions in all top-level policy {} blocks.
+   * FUNGI-MONO-001/002: Verify emergency {} transitions in all top-level policy {} blocks.
    *
    * Scans the AST for policyDecl nodes, extracts emergencyTransitionDecl children,
    * and validates monotonicity of each transition.
@@ -3046,10 +3046,10 @@ class GovernanceVerifier {
         const signal = transition.value ?? "";
         const transLoc = transition.location ?? loc;
 
-        // SPORE-MONO-002: Unknown signal type
+        // FUNGI-MONO-002: Unknown signal type
         if (!KNOWN_SIGNALS.has(signal)) {
           this.diagnostics.push(makeGovDiag(
-            "SPORE-MONO-002",
+            "FUNGI-MONO-002",
             "UNKNOWN_EMERGENCY_SIGNAL",
             "error",
             `Policy '${policyName}': emergency {} transition uses unknown signal '${signal}'. ` +
@@ -3059,7 +3059,7 @@ class GovernanceVerifier {
           ));
         }
 
-        // SPORE-MONO-001: Check actions for permission expansion
+        // FUNGI-MONO-001: Check actions for permission expansion
         for (const action of (transition.children ?? [])) {
           const val = action.value ?? "";
           // deny:X and action:X are always valid (clearing bits or setting mode flags)
@@ -3068,7 +3068,7 @@ class GovernanceVerifier {
           if (val.startsWith("allow:")) {
             const capName = val.replace(/^allow:/, "");
             this.diagnostics.push(makeGovDiag(
-              "SPORE-MONO-001",
+              "FUNGI-MONO-001",
               "EMERGENCY_EXPANDS_CAPABILITY",
               "error",
               `Policy '${policyName}': emergency {} transition on '${signal}' attempts to ` +
@@ -3082,7 +3082,7 @@ class GovernanceVerifier {
           } else if (!val.startsWith("deny:") && !val.startsWith("action:") && val !== "") {
             // Unknown action type
             this.diagnostics.push(makeGovDiag(
-              "SPORE-MONO-001",
+              "FUNGI-MONO-001",
               "EMERGENCY_UNKNOWN_ACTION",
               "warning",
               `Policy '${policyName}': emergency {} transition on '${signal}' contains ` +
@@ -3142,7 +3142,7 @@ class GovernanceVerifier {
       const rawStrategy = tokens[gpIdx + 1] ?? "";
       if (!VALID_STRATEGIES.has(rawStrategy)) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-GOV-015",
+          "FUNGI-GOV-015",
           "EpilogueInvalidStrategy",
           "error",
           `Flow '${flowName}' declares epilogue { generate_proof ${rawStrategy || "<missing>"} } but '${rawStrategy || "<missing>"}' is not a recognised proof strategy.`,
@@ -3161,7 +3161,7 @@ class GovernanceVerifier {
       const rawAction = tokens[ovfIdx + 1] ?? "";
       if (!VALID_FAILURES.has(rawAction)) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-GOV-016",
+          "FUNGI-GOV-016",
           "EpilogueInvalidFailureAction",
           "error",
           `Flow '${flowName}' declares epilogue { on_verification_failure ${rawAction || "<missing>"} } but '${rawAction || "<missing>"}' is not a recognised failure action.`,
@@ -3190,12 +3190,12 @@ class GovernanceVerifier {
     }
   }
 
-  // ── SPORE-TRAP-001/002: trap declarations in flow body ────────────────────────
+  // ── FUNGI-TRAP-001/002: trap declarations in flow body ────────────────────────
 
   /**
    * Scan the flow body for trapDecl nodes and verify:
-   *  - SPORE-TRAP-001: error code is a valid identifier (not empty, no spaces)
-   *  - SPORE-TRAP-002: condition references only symbols in parameter scope
+   *  - FUNGI-TRAP-001: error code is a valid identifier (not empty, no spaces)
+   *  - FUNGI-TRAP-002: condition references only symbols in parameter scope
    *
    * Also records trap obligations in the ProofGraph (CBOR Tag 403, trapKind field).
    */
@@ -3243,10 +3243,10 @@ class GovernanceVerifier {
       const errorCode = stmt.value ?? "ERR_TRAP";
       const condExpr = stmt.children?.[0];
 
-      // SPORE-TRAP-001: error code must be a valid identifier (non-empty, no spaces)
+      // FUNGI-TRAP-001: error code must be a valid identifier (non-empty, no spaces)
       if (!errorCode || errorCode.trim() === "" || /\s/.test(errorCode)) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-TRAP-001",
+          "FUNGI-TRAP-001",
           "TRAP_INVALID_ERROR_CODE",
           "error",
           `Flow '${flow.name}': trap has invalid error code '${errorCode}'. ` +
@@ -3256,12 +3256,12 @@ class GovernanceVerifier {
         ));
       }
 
-      // SPORE-TRAP-002: condition must only reference symbols in parameter or local scope
+      // FUNGI-TRAP-002: condition must only reference symbols in parameter or local scope
       if (condExpr !== undefined) {
         const unresolvedNames = collectUnresolvedIdentifiers(condExpr, localScope);
         for (const name of unresolvedNames) {
           this.diagnostics.push(makeGovDiag(
-            "SPORE-TRAP-002",
+            "FUNGI-TRAP-002",
             "TRAP_SYMBOL_UNRESOLVED",
             "error",
             `Flow '${flow.name}': trap condition references '${name}' which is not a parameter. ` +
@@ -3277,14 +3277,14 @@ class GovernanceVerifier {
     }
   }
 
-  // ── SPORE-DAG-001/002: governed flow floor validation ─────────────────────────
+  // ── FUNGI-DAG-001/002: governed flow floor validation ─────────────────────────
 
   /**
   /**
-   * SPORE-STATIC-001/002: Verify top-level `static NAME = EXPR` declarations.
+   * FUNGI-STATIC-001/002: Verify top-level `static NAME = EXPR` declarations.
    *
-   * SPORE-STATIC-002: Redeclaration — the same name declared more than once.
-   * SPORE-STATIC-001: Non-constant initializer — static uses a callExpr (runtime value).
+   * FUNGI-STATIC-002: Redeclaration — the same name declared more than once.
+   * FUNGI-STATIC-001: Non-constant initializer — static uses a callExpr (runtime value).
    *
    * Static constants must have unique names and must be initialized with compile-time
    * literals (number, string, bool, or a previously-declared static identifier).
@@ -3294,10 +3294,10 @@ class GovernanceVerifier {
     for (const node of nodes) {
       if (node.kind !== "staticDecl") continue;
       const name = node.value ?? "";
-      // SPORE-STATIC-002: redeclaration
+      // FUNGI-STATIC-002: redeclaration
       if (seen.has(name)) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-STATIC-002",
+          "FUNGI-STATIC-002",
           "STATIC_REDECLARATION",
           "error",
           `Static constant '${name}' is declared more than once. Static constants must be unique.`,
@@ -3306,11 +3306,11 @@ class GovernanceVerifier {
         ));
       }
       seen.add(name);
-      // SPORE-STATIC-001: value must be a compile-time constant (not a function call)
+      // FUNGI-STATIC-001: value must be a compile-time constant (not a function call)
       const valueExpr = node.children?.[0];
       if (valueExpr !== undefined && valueExpr.kind === "callExpr") {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-STATIC-001",
+          "FUNGI-STATIC-001",
           "STATIC_NOT_CONSTANT",
           "warning",
           `Static constant '${name}' uses a function call as its value. Static constants should be ` +
@@ -3323,10 +3323,10 @@ class GovernanceVerifier {
   }
 
   /**
-   * SPORE-BF-001/002: Verify top-level `bitfield NAME { field: bitPos }` declarations.
+   * FUNGI-BF-001/002: Verify top-level `bitfield NAME { field: bitPos }` declarations.
    *
-   * SPORE-BF-002: Bit position out of range — V_DPM is a 32-bit register (positions 0-31).
-   * SPORE-BF-001: Duplicate bit position — two fields map to the same bit.
+   * FUNGI-BF-002: Bit position out of range — V_DPM is a 32-bit register (positions 0-31).
+   * FUNGI-BF-001: Duplicate bit position — two fields map to the same bit.
    *
    * Each field in a bitfield must have a unique bit position within [0, 31].
    */
@@ -3342,10 +3342,10 @@ class GovernanceVerifier {
         const fieldName = (parts[0] ?? "").trim();
         const bitPos = parseInt((parts[1] ?? "").trim(), 10);
 
-        // SPORE-BF-002: bit position out of range (0-31 for 32-bit register)
+        // FUNGI-BF-002: bit position out of range (0-31 for 32-bit register)
         if (isNaN(bitPos) || bitPos < 0 || bitPos > 31) {
           this.diagnostics.push(makeGovDiag(
-            "SPORE-BF-002",
+            "FUNGI-BF-002",
             "BITFIELD_BIT_OUT_OF_RANGE",
             "error",
             `Bitfield '${name}': field '${fieldName}' uses bit position ${isNaN(bitPos) ? "NaN" : bitPos}. ` +
@@ -3356,11 +3356,11 @@ class GovernanceVerifier {
           continue;
         }
 
-        // SPORE-BF-001: duplicate bit position within the same bitfield
+        // FUNGI-BF-001: duplicate bit position within the same bitfield
         if (seenBits.has(bitPos)) {
           const existing = seenBits.get(bitPos)!;
           this.diagnostics.push(makeGovDiag(
-            "SPORE-BF-001",
+            "FUNGI-BF-001",
             "BITFIELD_BIT_OVERLAP",
             "error",
             `Bitfield '${name}': fields '${existing}' and '${fieldName}' both use bit position ${bitPos}. ` +
@@ -3377,7 +3377,7 @@ class GovernanceVerifier {
 
   /**
    * Scan all top-level AST nodes for governedFlowDecl and verify the floor name.
-   *  - SPORE-DAG-001: floor name must be in KNOWN_FLOORS
+   *  - FUNGI-DAG-001: floor name must be in KNOWN_FLOORS
    *  - No other checks in Stage A (full DAG validation is Phase 5)
    */
   private verifyGovernedFlows(nodes: readonly AstNode[]): void {
@@ -3389,10 +3389,10 @@ class GovernanceVerifier {
       const floorName = parts[1] ?? "";
       const flowName = parts.slice(2).join(":");
 
-      // SPORE-DAG-001: unknown floor name
+      // FUNGI-DAG-001: unknown floor name
       if (!KNOWN_FLOORS.has(floorName)) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-DAG-001",
+          "FUNGI-DAG-001",
           "GOVERNED_FLOW_UNKNOWN_FLOOR",
           "error",
           `governed flow '${flowName}' declares unknown Tower floor '${floorName}'. ` +
@@ -3408,16 +3408,16 @@ class GovernanceVerifier {
     }
   }
 
-  // ── SPORE-ASSIMILATE: assimilated plugin verification ──────────────────────────
+  // ── FUNGI-ASSIMILATE: assimilated plugin verification ──────────────────────────
 
   /**
    * Verify all assimilatedPluginDecl nodes in the top-level AST children.
    *
-   * SPORE-ASSIMILATE-001: assimilated plugin declared outside boot.spore.
+   * FUNGI-ASSIMILATE-001: assimilated plugin declared outside boot.fungi.
    *   In Stage A single-file compilation we don't have full project context,
    *   so this is a WARNING with note "full enforcement in Stage B".
    *
-   * SPORE-ASSIMILATE-003: assimilated plugin has no contract {} with access { grant } block.
+   * FUNGI-ASSIMILATE-003: assimilated plugin has no contract {} with access { grant } block.
    *   V_DPM bits must be pre-warmed at boot, so capability grants are mandatory.
    */
   private verifyAssimilatedPlugins(nodes: readonly AstNode[], sourceFile: string): void {
@@ -3426,21 +3426,21 @@ class GovernanceVerifier {
 
       const alias = node.value ?? "<unknown>";
 
-      // SPORE-ASSIMILATE-001: warn if not in boot.spore (Stage A warning; Stage B will be error)
-      if (!sourceFile.endsWith("boot.spore")) {
+      // FUNGI-ASSIMILATE-001: warn if not in boot.fungi (Stage A warning; Stage B will be error)
+      if (!sourceFile.endsWith("boot.fungi")) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-ASSIMILATE-001",
+          "FUNGI-ASSIMILATE-001",
           "ASSIMILATE_OUTSIDE_BOOT",
           "warning",
-          `Assimilated plugin '${alias}' is declared outside boot.spore. ` +
-          `Only boot.spore may grant Hot-Code Residency. ` +
-          `Move this declaration to boot.spore. (Full enforcement in Stage B multi-file compilation.)`,
+          `Assimilated plugin '${alias}' is declared outside boot.fungi. ` +
+          `Only boot.fungi may grant Hot-Code Residency. ` +
+          `Move this declaration to boot.fungi. (Full enforcement in Stage B multi-file compilation.)`,
           node.location,
-          `Move 'import plugin assimilate ...' to boot.spore. The assimilation_memory_budget will auto-calculate from available RAM when omitted.`,
+          `Move 'import plugin assimilate ...' to boot.fungi. The assimilation_memory_budget will auto-calculate from available RAM when omitted.`,
         ));
       }
 
-      // SPORE-ASSIMILATE-003: require contract {} with at least one grant
+      // FUNGI-ASSIMILATE-003: require contract {} with at least one grant
       const contractNode = (node.children ?? []).find(c => c.kind === "contractDecl");
       let hasGrant = false;
       if (contractNode !== undefined) {
@@ -3468,7 +3468,7 @@ class GovernanceVerifier {
 
       if (!hasGrant) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-ASSIMILATE-003",
+          "FUNGI-ASSIMILATE-003",
           "ASSIMILATE_MISSING_CAPABILITY_GRANTS",
           "error",
           `Assimilated plugin '${alias}' has no access { grant } block in its contract. ` +
@@ -3480,16 +3480,16 @@ class GovernanceVerifier {
     }
   }
 
-  // ── SPORE-GATE-001/002: gate {} admission guard verification ──────────────────────
+  // ── FUNGI-GATE-001/002: gate {} admission guard verification ──────────────────────
 
   /**
-   * SPORE-GATE-001/002: Verify gate {} admission guard blocks.
+   * FUNGI-GATE-001/002: Verify gate {} admission guard blocks.
    *
-   * SPORE-GATE-001: gate(condition) references a condition not in knownDomainGuards.
+   * FUNGI-GATE-001: gate(condition) references a condition not in knownDomainGuards.
    *               Stage A: warning (guard may be in another file).
    *               Stage B: error (full project context available).
    *
-   * SPORE-GATE-002: gate {} wraps a pure flow — redundant.
+   * FUNGI-GATE-002: gate {} wraps a pure flow — redundant.
    *               Pure flows have no side effects, so a gate is meaningless.
    */
   private verifyGateBlocks(nodes: readonly AstNode[]): void {
@@ -3498,27 +3498,27 @@ class GovernanceVerifier {
       const condition = node.value ?? "";
       const loc = node.location ?? { file: "", line: 0, column: 0 };
 
-      // SPORE-GATE-001: Unknown condition name
+      // FUNGI-GATE-001: Unknown condition name
       if (condition !== "" && !this.knownDomainGuards.has(condition)) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-GATE-001",
+          "FUNGI-GATE-001",
           "GATE_UNKNOWN_CONDITION",
           "warning",
           `gate(${condition}): condition '${condition}' is not defined as a guard {} in this ` +
-          `compilation unit. In Stage A single-file compilation, the guard may be in boot.spore. ` +
+          `compilation unit. In Stage A single-file compilation, the guard may be in boot.fungi. ` +
           `Full enforcement in Stage B multi-file compilation.`,
           loc,
-          `Declare 'guard ${condition} { permitted_effects { ... } }' in boot.spore, ` +
+          `Declare 'guard ${condition} { permitted_effects { ... } }' in boot.fungi, ` +
           `or check the condition name spelling.`,
         ));
       }
 
-      // SPORE-GATE-002: gate wrapping pure flows is redundant
+      // FUNGI-GATE-002: gate wrapping pure flows is redundant
       for (const child of node.children ?? []) {
         if (child.kind === "pureFlowDecl") {
           const flowName = child.value ?? "unknown";
           this.diagnostics.push(makeGovDiag(
-            "SPORE-GATE-002",
+            "FUNGI-GATE-002",
             "GATE_WRAPS_PURE_FLOW",
             "warning",
             `gate(${condition}): wraps pure flow '${flowName}'. Pure flows have no side effects ` +
@@ -3532,15 +3532,15 @@ class GovernanceVerifier {
     }
   }
 
-  // ── SPORE-ACCESS-001/002: access {} capability grant verification ──────────────────
+  // ── FUNGI-ACCESS-001/002: access {} capability grant verification ──────────────────
 
   /**
-   * SPORE-ACCESS-001/002: Verify access {} capability negotiation blocks.
+   * FUNGI-ACCESS-001/002: Verify access {} capability negotiation blocks.
    *
-   * SPORE-ACCESS-001: access {} grant references an unknown capability name.
+   * FUNGI-ACCESS-001: access {} grant references an unknown capability name.
    *                 Valid capability names are in KNOWN_CAPABILITIES.
    *
-   * SPORE-ACCESS-002: access {} grant capability is not declared in flow's effects {}.
+   * FUNGI-ACCESS-002: access {} grant capability is not declared in flow's effects {}.
    *                 A flow granting network.outbound to callers must itself declare
    *                 allow network.outbound in its effects {}.
    *
@@ -3566,10 +3566,10 @@ class GovernanceVerifier {
       const capName = (grant.value ?? "").replace("grant:", "").trim();
       if (capName === "") continue;
 
-      // SPORE-ACCESS-001: unknown capability name
+      // FUNGI-ACCESS-001: unknown capability name
       if (!KNOWN_CAPABILITIES.has(capName) && !capName.includes(".")) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-ACCESS-001",
+          "FUNGI-ACCESS-001",
           "ACCESS_UNKNOWN_CAPABILITY",
           "warning",
           `Flow '${flow.name}': access {} grants unknown capability '${capName}'. ` +
@@ -3579,7 +3579,7 @@ class GovernanceVerifier {
         ));
       }
 
-      // SPORE-ACCESS-002: granted capability not in flow's declared effects
+      // FUNGI-ACCESS-002: granted capability not in flow's declared effects
       // access { grant X } means "callers need X to use this flow"
       // The flow itself must have declared X if X has a V_DPM bit
       const effectEquivalent = capName; // e.g. "network.outbound"
@@ -3589,7 +3589,7 @@ class GovernanceVerifier {
 
       if (capHasBit && !flowHasEffect) {
         this.diagnostics.push(makeGovDiag(
-          "SPORE-ACCESS-002",
+          "FUNGI-ACCESS-002",
           "ACCESS_GRANT_WITHOUT_EFFECT",
           "warning",
           `Flow '${flow.name}': access {} grants '${capName}' to callers but the flow ` +
@@ -3602,14 +3602,14 @@ class GovernanceVerifier {
     }
   }
 
-  // ── SPORE-MATCH-001: match exhaustiveness checking ─────────────────────────────
+  // ── FUNGI-MATCH-001: match exhaustiveness checking ─────────────────────────────
 
   /**
    * Scan the flow body for matchExpr nodes that:
    *  - Have no wildcard (_) arm
    *  - Target a known enum-like type (SystemCapabilityType or EmergencySignalType)
    *    identified by: <6 arms AND subject is a field access or local var on a known type
-   *  - Emits SPORE-MATCH-001 WARNING (not error) — conservative approach
+   *  - Emits FUNGI-MATCH-001 WARNING (not error) — conservative approach
    */
   private checkMatchExhaustiveness(flow: FlowMeta, flowNode: AstNode, loc: SourceLocation): void {
     const blockNode = (flowNode.children ?? []).find(c => c.kind === "block");
@@ -3637,7 +3637,7 @@ class GovernanceVerifier {
 
     // Check if there is a wildcard arm
     const hasWildcard = arms.some(arm => arm.value === "_");
-    if (hasWildcard) return; // wildcard covers all cases — no SPORE-MATCH-001
+    if (hasWildcard) return; // wildcard covers all cases — no FUNGI-MATCH-001
 
     // Check if there is a guard arm (when condition => body) — not an enum match
     const hasGuardArm = arms.some(arm => arm.value === "__guard__");
@@ -3665,7 +3665,7 @@ class GovernanceVerifier {
     if (!looksLikeKnownEnum) return;
 
     this.diagnostics.push(makeGovDiag(
-      "SPORE-MATCH-001",
+      "FUNGI-MATCH-001",
       "MATCH_NON_EXHAUSTIVE",
       "warning",
       `Flow '${flow.name}': match expression on '${subjectDesc}' has no wildcard (_) arm ` +

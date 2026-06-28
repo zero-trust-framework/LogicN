@@ -56,7 +56,7 @@ r = T_c↦⎨
 e = vAnd(t*, r)          # vAnd = minTrit = Kleene ∧   (three-valued-governance.ts:49-51 → tpl-simulator.ts:149-152)
 ```
 
-`vAnd` delegates to `minTrit`, whose body is literally `return a < b ? a : b;` (`tpl-simulator.ts:149-152`) — i.e. exact numeric **min** over the total order. The boundary decision is the shipped `decideAtBoundary(e)` **unchanged** (`three-valued-governance.ts:141-153`): `e=+1 → allow`; `e=-1 → deny`; `e=0 → deny + SPORE-GOV-3VL-001` (audited).
+`vAnd` delegates to `minTrit`, whose body is literally `return a < b ? a : b;` (`tpl-simulator.ts:149-152`) — i.e. exact numeric **min** over the total order. The boundary decision is the shipped `decideAtBoundary(e)` **unchanged** (`three-valued-governance.ts:141-153`): `e=+1 → allow`; `e=-1 → deny`; `e=0 → deny + FUNGI-GOV-3VL-001` (audited).
 
 #### `vAnd = minTrit` truth table (a along rows, b along cols)
 
@@ -99,11 +99,11 @@ Therefore DTM can only **degrade** a verdict toward deny; it can never raise `0`
 - **(3) `e = +1 ⇒ t* = +1` (ALLOW requires the core).** `min(t*, r) = +1` forces both arguments `= +1`; since `r`'s codomain is `{-1, 0}`, `r` can never be `+1`, so the maximum DTM can leave is `t*` unchanged. **Authorization is decided entirely by the cryptographic/governance core**; DTM is never *sufficient* for ALLOW.
 - **(4) Threshold-independence.** Because the discretizer's codomain excludes `+1` (§2.3), the bound `e ≤ t*` holds for **every** choice of `tau_deny`. A miscalibrated, stale, or even adversarially-chosen threshold can only make the gate **more restrictive**, never permissive. **Safety does not depend on tuning `tau_deny`** — the proof does not trust the threshold.
 
-The precise sense in which `T_c` is safely absorbed: DTM can **cost availability** (a legitimate `+1` degraded to `0`/deny when telemetry looks anomalous — auditable via `SPORE-GOV-3VL-001`), but it can **never cost safety** (it cannot produce an illegitimate ALLOW). That availability-not-safety split is exactly the substrate model's framing (`substrate-model.ts:16-19`).
+The precise sense in which `T_c` is safely absorbed: DTM can **cost availability** (a legitimate `+1` degraded to `0`/deny when telemetry looks anomalous — auditable via `FUNGI-GOV-3VL-001`), but it can **never cost safety** (it cannot produce an illegitimate ALLOW). That availability-not-safety split is exactly the substrate model's framing (`substrate-model.ts:16-19`).
 
 ### 2.6 The hard crypto rule, formally
 
-A failed AEAD tag (Poly1305/GCM mismatch on `kemdem` ciphertext, 0065 S2/S3) enters as `t* = -1` **directly** — it is *not* routed through `F/I/N`, not weighted, not compared to `tau_deny`. By Corollary (2), `vAnd(-1, r) = -1` for all `r`. Integrity is binary; it is **never** tolerance-bounded or scored. `T_c`/`F`/`I`/`N` are floats living only in the exporter; they never feed a KDF, cipher keystream, AAD, nonce, or signature input — structurally fenced by `SPORE-SUBSTRATE-001 CRYPTO_ON_NOISY_LANE='error'` (`substrate-model.ts:257,310-312`).
+A failed AEAD tag (Poly1305/GCM mismatch on `kemdem` ciphertext, 0065 S2/S3) enters as `t* = -1` **directly** — it is *not* routed through `F/I/N`, not weighted, not compared to `tau_deny`. By Corollary (2), `vAnd(-1, r) = -1` for all `r`. Integrity is binary; it is **never** tolerance-bounded or scored. `T_c`/`F`/`I`/`N` are floats living only in the exporter; they never feed a KDF, cipher keystream, AAD, nonce, or signature input — structurally fenced by `FUNGI-SUBSTRATE-001 CRYPTO_ON_NOISY_LANE='error'` (`substrate-model.ts:257,310-312`).
 
 ---
 
@@ -127,7 +127,7 @@ e   = vAnd(t*, r) = min(+1, 0) = 0 ... wait — verify against the table:
 ```
 Apply the §2.4 restricted table, row `t*=+1`, col `r=0`: **`e = +1`** (min(+1,0)=0? — no: the *codomain rule* matters here). Re-derive precisely with `min` over the order: `min(+1, 0) = 0`. **This is the key subtlety:** a high `T_c` produces `r = 0`, and `min(+1, 0) = 0`, which would *degrade* the ALLOW.
 
-So healthy telemetry alone yields `e = 0 → deny + SPORE-GOV-3VL-001`. **DTM cannot keep a `+1` at `+1` merely by looking healthy** — it can only ever leave a `+1` unchanged if `r = +1`, which the codomain `{-1, 0}` forbids. The correct integration therefore is: **`r` is folded only when DTM has an *objection*** (see Example B/C); a non-objecting telemetry tick is `r = +1`-equivalent in the fold *only if* it is treated as "absent" (identity for `min` is `+1`). Operationally, the exporter emits `r ∈ {-1, 0}` and the fold uses `vAnd(t*, r)` **only on an active reading**; when there is no objection the DTM contributes the `min`-identity `+1` (i.e. it is omitted from the conjunction), preserving `t* = +1`. **Output: ALLOW.**
+So healthy telemetry alone yields `e = 0 → deny + FUNGI-GOV-3VL-001`. **DTM cannot keep a `+1` at `+1` merely by looking healthy** — it can only ever leave a `+1` unchanged if `r = +1`, which the codomain `{-1, 0}` forbids. The correct integration therefore is: **`r` is folded only when DTM has an *objection*** (see Example B/C); a non-objecting telemetry tick is `r = +1`-equivalent in the fold *only if* it is treated as "absent" (identity for `min` is `+1`). Operationally, the exporter emits `r ∈ {-1, 0}` and the fold uses `vAnd(t*, r)` **only on an active reading**; when there is no objection the DTM contributes the `min`-identity `+1` (i.e. it is omitted from the conjunction), preserving `t* = +1`. **Output: ALLOW.**
 
 > **Gotcha surfaced (carry into §4):** because `min`'s identity is `+1` and the discretizer's codomain is `{-1, 0}`, a literal `vAnd(t*, 0)` on *every* tick would silently degrade healthy `+1`s. The build MUST fold DTM as a conjunction member that **defaults to the identity `+1` (omission) and only contributes `-1` or `0` when it has an objection.** This preserves Corollary (3) (ALLOW still requires `t*=+1`) while not punishing healthy channels.
 
@@ -190,7 +190,7 @@ DTM lives **inside** the `galerina-telemetry-sidecar` exporter from R&D 0050 —
 
 ### Step 5 — Hard-route the AEAD-tag failure as a direct `-1` (NEVER scored)
 - **Where:** the receiver path that produces `t*`. On AEAD-tag mismatch, set `t* = -1` **before** any DTM fold; do **not** pass it through `F/I/N`.
-- **Cite/fence:** `SPORE-SUBSTRATE-001 CRYPTO_ON_NOISY_LANE='error'` (`substrate-model.ts:257,310-312`) already forbids a float lane from touching crypto.
+- **Cite/fence:** `FUNGI-SUBSTRATE-001 CRYPTO_ON_NOISY_LANE='error'` (`substrate-model.ts:257,310-312`) already forbids a float lane from touching crypto.
 - **Test:** Example C — adversary-maximal `T_c` with a failed tag still denies.
 
 ### HARD PARTS / gotchas (called out explicitly)

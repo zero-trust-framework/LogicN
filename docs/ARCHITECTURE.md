@@ -60,7 +60,7 @@ not be implemented until reconciled:
 - photonic ownership and naming: `galerina-core-photonic` owns photonic runtime
   target and execution plan semantics; `galerina-core-vector` may reference vector
   suitability only, and the conflicting `OpticalTransportMode` enums and
-  `SPORE-PHOTONIC-001` through `SPORE-PHOTONIC-006` meanings remain unresolved.
+  `FUNGI-PHOTONIC-001` through `FUNGI-PHOTONIC-006` meanings remain unresolved.
 - logic semantics: `galerina-core-logic` README and
   `galerina-core-logic-tri-decision-bool.md` are the current v0.2 canonical
   developer-facing shape for `TriState`, `Decision`, `BoolBoundaryResult` and
@@ -1516,7 +1516,7 @@ files.
 The framework layer can be exercised without compiling by running Galerina core
 checked Run Mode against `.
 
-spore` test fixtures.
+fungi` test fixtures.
 
 
 
@@ -1524,7 +1524,7 @@ spore` test fixtures.
 packages-galerina/galerina-framework-app-kernel/tests/
 `-- hello-world.
 
-spore
+fungi
 ```
 
 The current smoke test runs through the Galerina core prototype:
@@ -2357,9 +2357,9 @@ Cross-package capability inheritance warnings: `docs/Knowledge-Bases/galerina-de
 | `galerina-intent-graph.md` | Machine-readable intent graph build artefact |
 | `galerina-natural-language-governance-summary.md` | Deterministic governance summary generation |
 
-## SPORE-Graph
+## FUNGI-Graph
 
-The `spore-graph` standalone library (Apache 2.0) lives at `C:\laragon\www\SPORE-Graph\` and
+The `fungi-graph` standalone library (Apache 2.0) lives at `C:\laragon\www\FUNGI-Graph\` and
 provides: graph data structures, BFS/DFS/topoSort/fixpoint algorithms, Galerina-specific
 graph types (EffectGraph, BoundaryGraph, ProjectGraph, DependencyGraph), and the runtime
 logging pipeline (JSONL audit writer, proof chain, event causality DAG).

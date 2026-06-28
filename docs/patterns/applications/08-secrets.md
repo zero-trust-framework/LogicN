@@ -10,9 +10,9 @@ Galerina provides a `SecureString` type for credential values. The compiler enfo
 
 | Code | Rule |
 |------|------|
-| `SPORE-SECRET-001` | `SecureString` may not be passed to `log.*`, `print`, or `audit.write` |
-| `SPORE-SECRET-002` | `SecureString` may not be compared with `==` or `!=` |
-| `SPORE-SECRET-003` | `SecureString` may not be serialised to JSON, YAML, or any output encoder |
+| `FUNGI-SECRET-001` | `SecureString` may not be passed to `log.*`, `print`, or `audit.write` |
+| `FUNGI-SECRET-002` | `SecureString` may not be compared with `==` or `!=` |
+| `FUNGI-SECRET-003` | `SecureString` may not be serialised to JSON, YAML, or any output encoder |
 
 These rules are enforced regardless of variable name. Any binding of type `SecureString` is subject to them.
 
@@ -34,9 +34,9 @@ Galerina's `SecureString` type closes all three paths at compile time.
 
 ```galerina
 let apiKey: SecureString = Secret.env("API_KEY")
-// SPORE-SECRET-001 fires if passed to log.*
-// SPORE-SECRET-002 fires if compared with ==
-// SPORE-SECRET-003 fires if passed to json.encode
+// FUNGI-SECRET-001 fires if passed to log.*
+// FUNGI-SECRET-002 fires if compared with ==
+// FUNGI-SECRET-003 fires if passed to json.encode
 
 // Correct comparison — constant-time:
 let match: Bool = constantTimeEquals(apiKey, expected)
@@ -115,7 +115,7 @@ guarded flow rotateApiKey(newKey: SecureString) {
     event: "api_key_rotated",
     actor: actor.id,
     timestamp: now()
-    // newKey is NOT included — SPORE-SECRET-001 would fire
+    // newKey is NOT included — FUNGI-SECRET-001 would fire
   })
 }
 ```
@@ -140,7 +140,7 @@ A `protected Email` may appear in an audit log (after `redact()`). A `SecureStri
 AuditLog.write({ email: redact(email) })   // OK
 
 // Credential — must never appear:
-AuditLog.write({ key: redact(apiKey) })    // SPORE-SECRET-001 — redact() does not lift the restriction
+AuditLog.write({ key: redact(apiKey) })    // FUNGI-SECRET-001 — redact() does not lift the restriction
 ```
 
-`redact()` is not a bypass for `SPORE-SECRET-001`. Secrets are excluded from all output paths regardless of transformation.
+`redact()` is not a bypass for `FUNGI-SECRET-001`. Secrets are excluded from all output paths regardless of transformation.

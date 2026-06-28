@@ -1,4 +1,4 @@
-// packages-galerina/galerina-tower-citizen/tests/substrate-erasure.test.mjs — SPORE-RETAIN-001 (R&D 0116/0118).
+// packages-galerina/galerina-tower-citizen/tests/substrate-erasure.test.mjs — FUNGI-RETAIN-001 (R&D 0116/0118).
 //
 // The Substrate Dispatch Gateway runtime defense. Proves the zero-trust discovery rule (an eraseModel
 // is never taken from a drive's self-report; `overwrite` needs a verified attestation, else fail-closed
@@ -38,12 +38,12 @@ test("effectiveEraseModel: unknown / undefined substrate fails closed to crypto-
 });
 
 // ── the admission truth table ──
-test("DENY: cleartext secret to a crypto-only substrate is unerasable (SPORE-RETAIN-001)", () => {
+test("DENY: cleartext secret to a crypto-only substrate is unerasable (FUNGI-RETAIN-001)", () => {
   const a = admitSubstrateWrite(secretCleartext, { id: "holo-0", claimedEraseModel: "crypto-only", attested: true });
   assert.equal(a.admitted, false);
   assert.equal(a.decision.authorized, false);
   assert.equal(a.effectiveEraseModel, "crypto-only");
-  assert.match(a.reason, /SPORE-RETAIN-001/);
+  assert.match(a.reason, /FUNGI-RETAIN-001/);
 });
 test("DENY: a LYING WORM drive (self-claimed overwrite) gets cleartext secret denied — the attack is closed", () => {
   const a = admitSubstrateWrite(secretCleartext, { id: "evil-worm", claimedEraseModel: "overwrite", attested: false });

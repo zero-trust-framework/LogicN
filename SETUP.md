@@ -1,6 +1,6 @@
 # Galerina — Setup Guide
 
-Install Galerina on Windows, Linux, or macOS. The `galerina` command lets you compile `.spore` programs to WebAssembly, run them, and type-check with full governance.
+Install Galerina on Windows, Linux, or macOS. The `galerina` command lets you compile `.fungi` programs to WebAssembly, run them, and type-check with full governance.
 
 ---
 
@@ -170,13 +170,13 @@ Once `galerina` is on your PATH, try the governance-cost benchmark — it comput
 
 **Run it:**
 ```bash
-galerina run packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.spore --invoke main
+galerina run packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.fungi --invoke main
 # → 5050
 ```
 
 **Compile to WebAssembly:**
 ```bash
-galerina build packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.spore
+galerina build packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-cost/benchmark.fungi
 # → build/benchmark.wasm  (133 bytes)
 # → build/benchmark.wat   (28 lines)
 ```
@@ -189,8 +189,8 @@ wasmtime --invoke main build/benchmark.wasm
 
 **Type-check with governance:**
 ```bash
-galerina check examples/auth-service/verifyPassword.spore
-# → ✅ verifyPassword.spore: 0 errors, 0 governance warnings
+galerina check examples/auth-service/verifyPassword.fungi
+# → ✅ verifyPassword.fungi: 0 errors, 0 governance warnings
 ```
 
 ---
@@ -240,30 +240,30 @@ npm run run -- --quick
 Galerina/
 ├── examples/
 │   └── auth-service/           ← 31 real governed flows
-│       ├── verifyPassword.spore       verify a user password
-│       ├── governanceService.spore    proof-graph generation
-│       ├── runtimeProfileService.spore security profiles
-│       ├── sovereignTransaction.spore  Tier 1 ASIC hardening example
+│       ├── verifyPassword.fungi       verify a user password
+│       ├── governanceService.fungi    proof-graph generation
+│       ├── runtimeProfileService.fungi security profiles
+│       ├── sovereignTransaction.fungi  Tier 1 ASIC hardening example
 │       └── ...28 more flows
 │
 ├── packages-galerina/
 │   └── galerina-devtools-benchmarks/
 │       └── benchmarks/
-│           ├── governance-cost/    benchmark.spore ← good starting point
-│           ├── nbody/              benchmark.spore
-│           ├── data-query/         benchmark.spore
+│           ├── governance-cost/    benchmark.fungi ← good starting point
+│           ├── nbody/              benchmark.fungi
+│           ├── data-query/         benchmark.fungi
 │           └── ...20 more
 │
 └── tests/
     └── r6-corpus/              ← 5 verified reference flows
-        ├── r6-001-classify.spore
-        ├── r6-002-distance.spore
-        ├── r6-003-listlen.spore
-        ├── r6-004-record-amount.spore
-        └── r6-005-name-of.spore
+        ├── r6-001-classify.fungi
+        ├── r6-002-distance.fungi
+        ├── r6-003-listlen.fungi
+        ├── r6-004-record-amount.fungi
+        └── r6-005-name-of.fungi
 ```
 
-Open any `.spore` file in VS Code to see Galerina source with full governance contracts.
+Open any `.fungi` file in VS Code to see Galerina source with full governance contracts.
 
 ---
 
@@ -284,7 +284,7 @@ Open any `.spore` file in VS Code to see Galerina source with full governance co
 > If you write `contract {}` *inside* the body braces, that is the old syntax and will not work correctly.
 
 ```galerina
-// ── hello.spore ─────────────────────────────────────────────────────────────────
+// ── hello.fungi ─────────────────────────────────────────────────────────────────
 //
 // Your first Galerina flow.
 //
@@ -333,14 +333,14 @@ contract {
 
 // ── Running this flow ─────────────────────────────────────────────────────────
 //
-//   galerina run hello.spore --invoke greet
+//   galerina run hello.fungi --invoke greet
 //   → Hello, World! Welcome to Galerina.
 //
-//   galerina build hello.spore
+//   galerina build hello.fungi
 //   → build/hello.wasm (tiny, runs without Node.js via wasmtime)
 //
-//   galerina check hello.spore
-//   → ✅ hello.spore: 0 errors, 0 governance warnings
+//   galerina check hello.fungi
+//   → ✅ hello.fungi: 0 errors, 0 governance warnings
 //
 // ──────────────────────────────────────────────────────────────────────────────
 

@@ -423,7 +423,7 @@ export function validateEffects(
   for (const effect of input.effects) {
     if (!isEffectAllowedForTarget(effect.name, input.target)) {
       diagnostics.push({
-        code: "SPORE-EFFECT-002",
+        code: "FUNGI-EFFECT-002",
         severity: "error",
         message: `Effect ${effect.name} is forbidden for target ${input.target}.`
       })
@@ -802,7 +802,7 @@ describe("galerina verify", () => {
     const result = await verifyArtefact(invalidArtefact)
 
     expect(result.success).toBe(false)
-    expect(result.diagnostics.some(d => d.code === "SPORE-MANIFEST-002")).toBe(true)
+    expect(result.diagnostics.some(d => d.code === "FUNGI-MANIFEST-002")).toBe(true)
   })
 })
 ```

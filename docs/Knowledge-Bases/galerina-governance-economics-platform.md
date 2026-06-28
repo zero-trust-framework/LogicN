@@ -174,7 +174,7 @@ contract {
 The `economics` section is parsed by the compiler. It produces:
 
 - A declared cost model in the runtime manifest, readable by cost attribution tools.
-- A compile-time warning (`SPORE-ECON-001`) when `external_calls` is exceeded at
+- A compile-time warning (`FUNGI-ECON-001`) when `external_calls` is exceeded at
   the type level (e.g. a loop calling `payment.charge` without a declared batch).
 - A `cost_centre` tag on every audit event, enabling per-flow cost attribution.
 - Input to the CostGraph for execution plan optimisation.
@@ -246,7 +246,7 @@ It produces a machine-readable evidence pack suitable for:
 
 ```json
 {
-  "schemaVersion": "spore.roi-report.v1",
+  "schemaVersion": "fungi.roi-report.v1",
   "generatedAt": "2026-06-01T00:00:00Z",
   "system": "order-processing-service",
   "period": "2026-Q1",
@@ -387,7 +387,7 @@ Without contract.ai:  A prompt injection causes 50,000 tokens to be submitted
                       to GPT-4o. Bill arrives at month end.
 
 With contract.ai:     The compiler rejects prompts where token count exceeds
-                      max_prompt_tokens at the boundary (SPORE-AI-003: prompt
+                      max_prompt_tokens at the boundary (FUNGI-AI-003: prompt
                       exceeds declared token limit). The expensive call never
                       happens.
 ```

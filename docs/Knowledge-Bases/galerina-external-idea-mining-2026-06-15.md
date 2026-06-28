@@ -48,11 +48,11 @@ Source: ModelOpt #2 + TE per-tensor effective-precision log.
 `PrecisionTechnique` + forbidden-mutation hashes (tokenizer/template/context); the verifier reads the
 bridge's exported quant config vs tensor headers and enforces `declared==observed`, recording the coverage
 table as a signed manifest record (Ed25519 over SHA-256, reusing `backendArtifactHash`). New diagnostic
-**SPORE-PRECISION-ATTEST**: any *unexpected-unquantized / quantized-but-excluded / mismatch* → DENY.
+**FUNGI-PRECISION-ATTEST**: any *unexpected-unquantized / quantized-but-excluded / mismatch* → DENY.
 **Why:** closes a real fail-OPEN — an attested Brawn bridge could ship a layer at the wrong precision (or
 swap the tokenizer) and still pass the naive `packageHash` pin. ModelOpt proves it's mechanizable from
 exported metadata alone ("a gate, not a guideline").
-**First step:** KB stub `galerina-precision-attestation.md` + `SPORE-PRECISION-ATTEST` fixture manifest whose
+**First step:** KB stub `galerina-precision-attestation.md` + `FUNGI-PRECISION-ATTEST` fixture manifest whose
 observed coverage contradicts its declared precision (assert DENY).
 
 ### #2 — Tolerance-bounded accuracy contract: measured loss ≤ ε under a hash-matched comparability proof · **X** · M
@@ -69,7 +69,7 @@ tolerance is admissible only when fully pinned; this widens the pin-set and ties
 
 ### #3 — Bind `substrate{ redundancy:N, tolerance:ε }` to a witnessed (N, accuracy±std) curve · **B** · M
 Source: SPDNN (shot budget K → monotone accuracy±std) + TE residual-variance.
-**Map:** harden `verifySubstrate` / SPORE-SUBSTRATE-002/-003: require the `substrate{}` block to carry/reference
+**Map:** harden `verifySubstrate` / FUNGI-SUBSTRATE-002/-003: require the `substrate{}` block to carry/reference
 a **witness row** binding declared ε to a measured (N, std_dev) pair, and REJECT any ε tighter than N
 empirically supports. `substrate-math.nmrFailureProbability` stays the conservative canonical checker; the
 witness only tightens it.
@@ -80,7 +80,7 @@ witness only tightens it.
 
 ### #4 — Typed deterministic-sink reducer: only an expectation or N-voted aggregate may cross noisy→deterministic · **B** · M
 Source: SPDNN (never lets a raw single-photon sample reach the classifier) + PNN SNR-vs-depth.
-**Map:** give **SPORE-SUBSTRATE-004** an enforceable structural shape — a compiler pass verifies every dataflow
+**Map:** give **FUNGI-SUBSTRATE-004** an enforceable structural shape — a compiler pass verifies every dataflow
 edge from a `substrate{lane:noisy}` value into a deterministic sink passes through an **attested reducer**
 (`expectation` path, or `voted@N` via consensusTrit/TMR with residual variance < ε). A bare un-voted noisy
 sample → DENY. Reuses the shipped `safety{require deterministic_execution}` sink + the `vAnd` no-coercion theorem.
@@ -92,7 +92,7 @@ Source: MiniCPM/BitCPM spectrum + ModelOpt exact-vs-calibrated cast.
 **Map:** widen the narrow `PrecisionTechnique` union (`precision-types.ts`) to real production techniques:
 `ternary-QAT(1.58b) | int4-QAT | gptq | awq | marlin | nf4 | gguf-Qk | fp8`; a contract declares expected
 technique+bit-width, a pass verifies the bridge artifact against an allow-list (BitNet requires `ternary`;
-a noisy lane forbids high-precision crypto per SPORE-SUBSTRATE-001). Add `storagePrecision` vs
+a noisy lane forbids high-precision crypto per FUNGI-SUBSTRATE-001). Add `storagePrecision` vs
 `computePrecision` (the fake-quantized case).
 **Why:** the enum is too narrow today to honestly govern non-BitNet quantized bridges. Low effort, high honesty.
 **First step:** extend the union + add storage/compute fields; test: a manifest claiming `gptq` on a noisy lane → deny.
@@ -111,8 +111,8 @@ pure-E5M2 → reject) and emits the recipe hash into the manifest.
 ### #7 — Fusion-group precision-homogeneity invariant · **A** · S
 Source: ModelOpt recipe-search runtime fusion rules.
 **Map:** a static invariant inside `recipe{}` (spirit of Static Manifest Clamping, structurally identical to
-SPORE-SUBSTRATE-002): declare fusion groups as named module sets; verify all members share one
-`PrecisionTechnique`. New diagnostic **SPORE-PRECISION-FUSE** (deny if any member's format is unset/divergent).
+FUNGI-SUBSTRATE-002): declare fusion groups as named module sets; verify all members share one
+`PrecisionTechnique`. New diagnostic **FUNGI-PRECISION-FUSE** (deny if any member's format is unset/divergent).
 **Why:** a purely-statically-checkable invariant grounded in a real deploy failure (vLLM fused in_proj /
 fused MoE gate+up); zero kernel contact. Small once #6 exists.
 
@@ -150,7 +150,7 @@ Source: linear_open_lm carry-state + decay-stability bound.
 Ed25519 signature (reuse the attested-bridge pattern, no new crypto); state/egress sentinels accept a resume
 only if hash+sig match, else DENY. Companion structural rule: on a noisy lane require a **contractive carry
 (decay γ<1)** so bounded per-step error can't blow up; forbid a non-contractive accumulator into a
-deterministic sink (SPORE-SUBSTRATE-004 analogue).
+deterministic sink (FUNGI-SUBSTRATE-004 analogue).
 **Why:** carrying a compact recurrent state across requests is a NEW trust surface (state injection ⇒ full
 output control). Same Ed25519+SHA-256 discipline already used for bridges.
 
@@ -167,8 +167,8 @@ tolerance-provable-at-N into something a sentinel can actually evaluate and log.
 ## 3. Cross-cutting themes
 
 1. **Calibration/quantization-as-attestation** — declared→verified→recorded numeric facts on `BridgeManifest`+`DeterminismMode`.
-2. **Tolerance-provable-at-N as a witnessed monotone curve, not a constant** — SPDNN(K), TE(amax-history/sync), ModelOpt(gated reruns) all witness ε against a measured (N, residual-variance) pair, valid only for the noise model it was measured on. Hardens SPORE-SUBSTRATE-002/-003.
-3. **Noise-aware safe-conversion at the deterministic boundary** — expectation / N-voting before a deterministic sink; mirrors SPORE-SUBSTRATE-004 + the `vAnd` no-coercion theorem. Noise degrades availability, never manufactures an ALLOW.
+2. **Tolerance-provable-at-N as a witnessed monotone curve, not a constant** — SPDNN(K), TE(amax-history/sync), ModelOpt(gated reruns) all witness ε against a measured (N, residual-variance) pair, valid only for the noise model it was measured on. Hardens FUNGI-SUBSTRATE-002/-003.
+3. **Noise-aware safe-conversion at the deterministic boundary** — expectation / N-voting before a deterministic sink; mirrors FUNGI-SUBSTRATE-004 + the `vAnd` no-coercion theorem. Noise degrades availability, never manufactures an ALLOW.
 4. **Deny-by-default + explicit re-enable as the canonical precision-policy shape** — ModelOpt `disable_all` + TE `__post_init__` reject structurally-impossible configs at COMPILE time. External validation of Galerina's own stance.
 5. **Widen the pinned surface beyond weights** — config/converter/sync/comparability/noise-model drift silently produces garbage; `backendArtifactHash`/`pinnedEnvHash` should cover them, not just tensor weights.
 6. **Untrusted output AND untrusted state as first-class trust boundaries** — a tool call or a resumed recurrent state must FULLY satisfy a declared schema and carry Ed25519+SHA-256 provenance or be denied whole.
@@ -205,7 +205,7 @@ needs **no external infra**:
    of the determinism model.* This is the single most coherent next step; all three extend `contract.test.mjs`
    + `validateManifestShape`.
 2. **#3 + #4** (substrate witness + typed reducer, M+M) — harden the shipped `verifySubstrate` /
-   SPORE-SUBSTRATE-002/003/004 from asserted constants to witnessed curves; SPDNN gives the physical precedent.
+   FUNGI-SUBSTRATE-002/003/004 from asserted constants to witnessed curves; SPDNN gives the physical precedent.
 3. **#1** (precision attestation gate, M) — closes a real fail-OPEN in the Brawn attestation path.
 4. **#6 + #7** (`recipe{}` block + fusion homogeneity) — a larger architectural addition; **design doc first**.
 5. **#9** (`routePrecision`, L) and **#10/#11** (tool-schema gate + carry-state provenance) — grounded design targets for the next lane expansion.

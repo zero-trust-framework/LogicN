@@ -178,7 +178,7 @@ terms:
     category: type_system
     definition: >
       Compile-time inference marker. Tells the compiler to resolve the concrete type
-      from the initializer. Not a type itself — never emits SPORE-TYPE-001. Deferred
+      from the initializer. Not a type itself — never emits FUNGI-TYPE-001. Deferred
       to the inference pass.
     doc: "auto-type-inference.md"
     not_to_be_confused_with: "Any (unsafe dynamic type, not in Galerina v1)"
@@ -232,7 +232,7 @@ terms:
     definition: >
       Monetary amount parameterised by currency tag (GBP, USD, EUR, JPY).
       Arithmetic is only allowed between same-currency values.
-      Cross-currency arithmetic is SPORE-TYPE-004.
+      Cross-currency arithmetic is FUNGI-TYPE-004.
     doc: "formal-type-system-spec.md"
     examples:
       - "let price: Money<GBP> = Money.of(1999, GBP)"
@@ -277,7 +277,7 @@ terms:
     definition: >
       Multi-dimensional numeric array parameterised by element type and shape.
       Arity 2: Tensor<ElementType, Shape>. Bare Tensor without parameters is
-      invalid (SPORE-TYPE-009). Use AnyTensor for fully erased form.
+      invalid (FUNGI-TYPE-009). Use AnyTensor for fully erased form.
     doc: "galerina-tensor-arity-decision.md"
     not_to_be_confused_with: "AnyTensor (erased form), Matrix (fixed 2D)"
     examples:
@@ -356,7 +356,7 @@ terms:
     definition: >
       Upgrades an unsafe binding to safe state by applying a recognised gate
       function on the right-hand side. The gate must be from the approved registry
-      (validate.*, sanitize.*, json.decode, parse.*). Emits SPORE-VALUESTATE-001
+      (validate.*, sanitize.*, json.decode, parse.*). Emits FUNGI-VALUESTATE-001
       if the RHS is not a recognised gate.
     doc: "value-state-annotations.md"
     phase: "value-state-checker"
@@ -425,14 +425,14 @@ terms:
     definition: >
       Timing-safe equality check for secret/protected values. Required instead
       of == for SecureString comparisons. Direct == on SecureString emits
-      SPORE-SECRET-002.
+      FUNGI-SECRET-002.
     doc: "stdlib-gates.yaml"
     examples:
       - "let valid: Bool = constantTimeEquals(expected, provided)"
 
   # ── Diagnostics ──────────────────────────────────────────────────────────────
 
-  - canonical: "SPORE-TYPE-001"
+  - canonical: "FUNGI-TYPE-001"
     aliases:
       - "UnknownType"
       - "unknown type error"
@@ -446,7 +446,7 @@ terms:
     doc: "formal-type-system-spec.md"
     phase: "type-checker"
 
-  - canonical: "SPORE-TYPE-009"
+  - canonical: "FUNGI-TYPE-009"
     aliases:
       - "InvalidGenericInstantiation"
       - "arity mismatch"
@@ -461,7 +461,7 @@ terms:
     doc: "formal-type-system-spec.md"
     phase: "type-checker"
 
-  - canonical: "SPORE-VALUESTATE-001"
+  - canonical: "FUNGI-VALUESTATE-001"
     aliases:
       - "UnsafeToSafeTransitionDenied"
       - "missing gate"
@@ -474,7 +474,7 @@ terms:
     doc: "value-state-annotations.md"
     phase: "value-state-checker"
 
-  - canonical: "SPORE-VALUESTATE-003"
+  - canonical: "FUNGI-VALUESTATE-003"
     aliases:
       - "UnsafeValueReachedGovernedSink"
       - "unsafe at sink"
@@ -487,7 +487,7 @@ terms:
     doc: "value-state-annotations.md"
     phase: "value-state-checker"
 
-  - canonical: "SPORE-SECRET-001"
+  - canonical: "FUNGI-SECRET-001"
     aliases:
       - "SecretValueLogged"
       - "secret in log"
@@ -499,7 +499,7 @@ terms:
     doc: "value-state-annotations.md"
     phase: "value-state-checker"
 
-  - canonical: "SPORE-SECRET-002"
+  - canonical: "FUNGI-SECRET-002"
     aliases:
       - "SecretComparisonDenied"
       - "secret equality"
@@ -512,7 +512,7 @@ terms:
     doc: "value-state-annotations.md"
     phase: "value-state-checker"
 
-  - canonical: "SPORE-TYPE-004"
+  - canonical: "FUNGI-TYPE-004"
     aliases:
       - "InvalidBinaryOperation"
       - "invalid operator"
@@ -527,7 +527,7 @@ terms:
     doc: "operator-type-rules.md"
     phase: "type-checker (Phase 7B)"
 
-  - canonical: "SPORE-MATCH-001"
+  - canonical: "FUNGI-MATCH-001"
     aliases:
       - "NonExhaustiveMatch"
       - "non-exhaustive match"
@@ -542,7 +542,7 @@ terms:
     doc: "formal-type-system-spec.md"
     phase: "type-checker (Phase 7B)"
 
-  - canonical: "SPORE-NAME-001"
+  - canonical: "FUNGI-NAME-001"
     aliases:
       - "UNDECLARED_NAME"
       - "undefined name"

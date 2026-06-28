@@ -25,7 +25,7 @@ Compiled output should usually not be committed unless the project has a specifi
 
 ## Commit These
 
-- `.spore` source files
+- `.fungi` source files
 - app configuration
 - tests
 - documentation
@@ -45,7 +45,7 @@ Compiled output should usually not be committed unless the project has a specifi
 
 ## Source Maps
 
-Source maps and debug metadata are important because compiled errors should map back to original `.spore` files and line numbers.
+Source maps and debug metadata are important because compiled errors should map back to original `.fungi` files and line numbers.
 
 For local development, source maps may be generated but not committed.
 

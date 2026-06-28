@@ -10,7 +10,7 @@ source and adopted.
 > `partial`** (real but bounded/mitigated) and **21 `no`** (15 structurally absent because we are a *compiler*, not
 > a web app — each verified against the host effect-runtime, the stub web packages, and the real parsers, not
 > assumed). The Galerina **language** structurally prevents ~12 of these classes for app developers (deny-by-default
-> effects, Map-backed prototype-pollution-immune records, the taint-checker, `SPORE-SOURCE-ESCAPE-001`, the
+> effects, Map-backed prototype-pollution-immune records, the taint-checker, `FUNGI-SOURCE-ESCAPE-001`, the
 > fail-closed App Kernel). **The single most important real finding is 61-9 (SSRF):** the live interpreter `http.*`
 > path (`stdlib.ts` `fetch`) uses a bypassable inline regex and never calls the already-built `egress-guard.ts` —
 > `[::ffff:169.254.169.254]`, `*.corp`, `100.64.x` CGNAT, and DNS-rebinding all pass. It is the only
@@ -23,9 +23,9 @@ source and adopted.
 | **Supply Chain & Dependency Hijacking** ||||||
 | 60-1 | Malicious `@types` packages | partial | partial | 30 pkgs `@types/node ^25.9.1`/`^22.10.0`; `fuse-loader.ts:24-65` drops `@types/node`, hand-declares node slices | config | 62 |
 | 60-2 | Typosquatting | no | n/a | All 8 external deps spelled correctly; `audit-name-collisions.mjs` guards names | already-safe | 90 |
-| 60-3 | Dependency-confusion | partial | yes | All internal deps `file:`; `@galerina` scope unclaimed, `@galerina/core` not `private`; LANG strength SPORE-PKG-002 + `fuse-loader` registryCheck | config | 58 |
+| 60-3 | Dependency-confusion | partial | yes | All internal deps `file:`; `@galerina` scope unclaimed, `@galerina/core` not `private`; LANG strength FUNGI-PKG-002 + `fuse-loader` registryCheck | config | 58 |
 | 60-4 | Deep transitive vulns | **yes** | n/a | snarkjs locks 38 entries (ejs/escodegen/static-eval…); **no `npm audit`/OSV/dependabot in CI** | ci | 48 |
-| 60-5 | Malicious lifecycle scripts | partial | yes | 0 first-party hooks; only `argon2 install` (legit gyp); no `.npmrc`/`ignore-scripts`; LANG SPORE-PKG-004 deny | config | 60 |
+| 60-5 | Malicious lifecycle scripts | partial | yes | 0 first-party hooks; only `argon2 install` (legit gyp); no `.npmrc`/`ignore-scripts`; LANG FUNGI-PKG-004 deny | config | 60 |
 | 60-6 | Unpinned deps (`^`/`~`) | **yes** | partial | 100% caret, 0 pins; locks mitigate `npm ci` but `npm install`/root absorb | config | 55 |
 | **Build Pipeline & CI/CD** ||||||
 | 60-7 | Poisoned post-`tsc` artifacts | no | no | `dist/` untracked, no post-tsc mutation; `.lindex` integrity-tagged | already-safe | 84 |

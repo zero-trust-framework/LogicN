@@ -35,7 +35,7 @@ test("plan: a declared capability with no provider falls back to the built-in ho
 test("plan: SET-SIGNED — one unsigned member refuses the whole set", () => {
   assert.throws(
     () => planComposition([member("a", null, []), member("b", null, [], "unsigned")], KNOWN),
-    /SPORE-FUSE-SET-UNSIGNED/,
+    /FUNGI-FUSE-SET-UNSIGNED/,
   );
   // allowUnsigned overrides
   assert.doesNotThrow(() =>
@@ -46,7 +46,7 @@ test("plan: SET-SIGNED — one unsigned member refuses the whole set", () => {
 test("plan: DENY-BY-DEFAULT — an unsatisfied capability refuses the set", () => {
   assert.throws(
     () => planComposition([member("app", null, ["filesystem.write"])], KNOWN),
-    /SPORE-FUSE-UNKNOWN-CAP/,
+    /FUNGI-FUSE-UNKNOWN-CAP/,
   );
 });
 
@@ -57,7 +57,7 @@ test("plan: ambiguous provider (two providers for a CONSUMED capability) is refu
         [member("p1", "log.write", []), member("p2", "log.write", []), member("c", null, ["log.write"])],
         KNOWN,
       ),
-    /SPORE-FUSE-SET-AMBIGUOUS/,
+    /FUNGI-FUSE-SET-AMBIGUOUS/,
   );
 });
 
@@ -73,14 +73,14 @@ test("plan: a CONSUMED capability with a provider but no registered host-import 
         [member("p", "custom.unknown", []), member("c", null, ["custom.unknown"])],
         KNOWN,
       ),
-    /SPORE-FUSE-PROVIDES-UNKNOWN/,
+    /FUNGI-FUSE-PROVIDES-UNKNOWN/,
   );
 });
 
 test("plan: a package that both provides AND declares the same capability is refused", () => {
   assert.throws(
     () => planComposition([member("p", "clock.read", ["clock.read"])], KNOWN),
-    /SPORE-FUSE-SET-SELF/,
+    /FUNGI-FUSE-SET-SELF/,
   );
 });
 
@@ -92,7 +92,7 @@ test("plan: a provider cycle is refused", () => {
         [member("A", "clock.read", ["log.write"]), member("B", "log.write", ["clock.read"])],
         KNOWN,
       ),
-    /SPORE-FUSE-SET-CYCLE/,
+    /FUNGI-FUSE-SET-CYCLE/,
   );
 });
 
@@ -117,7 +117,7 @@ test("makeProviderFactory mirrors the capability shape and routes every function
 // ───────────────────── fusePackages orchestrator (real demo) ─────────────────────
 
 test("fusePackages: the set-signed invariant refuses a placeholder-signed package without allowUnsigned", async () => {
-  await assert.rejects(() => fusePackages([DEMO_DIR], { warn: () => {} }), /SPORE-FUSE-SET-UNSIGNED/);
+  await assert.rejects(() => fusePackages([DEMO_DIR], { warn: () => {} }), /FUNGI-FUSE-SET-UNSIGNED/);
 });
 
 test("fusePackages: a one-package set composes (allowUnsigned) and invoke('main') runs the governed wasm", async () => {
@@ -131,7 +131,7 @@ test("fusePackages: a one-package set composes (allowUnsigned) and invoke('main'
 test("fusePackages: a duplicate package name in the set is refused", async () => {
   await assert.rejects(
     () => fusePackages([DEMO_DIR, DEMO_DIR], { allowUnsigned: true, warn: () => {} }),
-    /SPORE-FUSE-SET-DUPLICATE/,
+    /FUNGI-FUSE-SET-DUPLICATE/,
   );
 });
 
@@ -166,7 +166,7 @@ test("fusePackages: WITHOUT the provider, the consumer's clock.read falls back t
 test("requireSignature OVERRIDES allowUnsigned (fail-secure) — fusePackages refuses an unsigned set", async () => {
   await assert.rejects(
     () => fusePackages([PROVIDER_DIR, CONSUMER_DIR], { allowUnsigned: true, requireSignature: true, warn: () => {} }),
-    /SPORE-FUSE-SET-UNSIGNED/,
+    /FUNGI-FUSE-SET-UNSIGNED/,
     "posture 'on' (requireSignature) must refuse unsigned even when allowUnsigned was passed (set-signed invariant fires)",
   );
 });
@@ -180,7 +180,7 @@ test("requireSignature OVERRIDES allowUnsigned for a single fusePackage too", as
 
 test("buildImportClosure: an UNTRUSTED inventory (trusted:false) with wasmSha256 + signature per module", async () => {
   const closure = await buildImportClosure([PROVIDER_DIR, CONSUMER_DIR], { warn: () => {} });
-  assert.equal(closure.schemaVersion, "spore.import-closure.v1");
+  assert.equal(closure.schemaVersion, "fungi.import-closure.v1");
   assert.equal(closure.trusted, false, "the closure is a report, NOT a trusted lockfile");
   assert.equal(closure.modules.length, 2);
   const byName = Object.fromEntries(closure.modules.map((m) => [m.name, m]));

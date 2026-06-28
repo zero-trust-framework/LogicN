@@ -1,0 +1,8 @@
+project "AiContextDemo"
+
+entry "./hello.fungi"
+
+secure flow main() -> Result<Void, Error> {
+  print("AI context example")
+  return Ok()
+}

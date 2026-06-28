@@ -11,8 +11,8 @@
 > **Status:** research-phase charter (draft, 2026-06-16). **Posture (binding):** grounded, cited,
 > adversarially verified; honest-core vs aspirational kept separate; **no perf number without a reproducible
 > benchmark + the machine**; **no invented crypto**; fail-closed (`unknown → deny`). **Boundary:** R&D-only.
-> **Builds on (already shipped in Galerina):** SPORE-SECRET-002 (secret egress, derived-secret-hardened),
-> SPORE-PRIVACY-002 (cleartext-embedding egress / SealTaint), the `privacy {}` contract block (parsed),
+> **Builds on (already shipped in Galerina):** FUNGI-SECRET-002 (secret egress, derived-secret-hardened),
+> FUNGI-PRIVACY-002 (cleartext-embedding egress / SealTaint), the `privacy {}` contract block (parsed),
 > taint propagation, capability/effect model, the tri-encryption verdict 5 (no leak-free in-network semantic
 > routing → encrypt + filter at trusted endpoints).
 
@@ -81,6 +81,6 @@ are "the taint/effect machinery + one label." Each direction ships only with: a 
 threat model, an honest scoping note (what stays a host lib), and an adversarial fail-open review.
 
 ## 4. Connects to
-SPORE-PRIVACY-002 / `galerina-privacy-embedding-egress.md` (the shipped embedding rule), the `privacy {}` block spec
+FUNGI-PRIVACY-002 / `galerina-privacy-embedding-egress.md` (the shipped embedding rule), the `privacy {}` block spec
 (`galerina-contract-privacy-observability.md`), and `galerina-design-stability-and-forward-planning.md` (namespace
-ownership for the new SPORE-PRIVACY-* / SPORE-DP-* codes this phase would add).
+ownership for the new FUNGI-PRIVACY-* / FUNGI-DP-* codes this phase would add).

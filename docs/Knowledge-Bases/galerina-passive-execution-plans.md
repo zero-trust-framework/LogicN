@@ -53,7 +53,7 @@ This description is the **Passive Execution Plan**.
 ## Architecture
 
 ```text
-Source (.spore file)
+Source (.fungi file)
       ↓
     Lexer + Parser
       ↓

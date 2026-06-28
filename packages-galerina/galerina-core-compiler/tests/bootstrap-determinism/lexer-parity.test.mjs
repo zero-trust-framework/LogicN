@@ -1,21 +1,21 @@
 // =============================================================================
-// Phase R7A: Stage B Lexer Parity — TypeScript lexer vs lexer.spore
+// Phase R7A: Stage B Lexer Parity — TypeScript lexer vs lexer.fungi
 //
-// Verifies that the self-hosted lexer (src/self-hosted/lexer.spore) produces
+// Verifies that the self-hosted lexer (src/self-hosted/lexer.fungi) produces
 // the same token sequence as the TypeScript reference lexer (lex) for
 // real Galerina source.
 //
 // Test input: "pure flow add(a: Int, b: Int) -> Int { return a }"
 //
 // Gap reporting strategy:
-//   If lexer.spore does not yet match, the test logs the diff and passes with
+//   If lexer.fungi does not yet match, the test logs the diff and passes with
 //   assert.ok(true) so CI does not block.  When full parity is reached, flip
 //   the PARITY_ACHIEVED flag to true to convert to hard assertions.
 //
 // Known gaps at time of writing (see LEXER_PARITY_STATUS.md):
-//   1. Multi-char operators: lexer.spore emits Symbol("-") + Symbol(">") where
+//   1. Multi-char operators: lexer.fungi emits Symbol("-") + Symbol(">") where
 //      the TS lexer emits operator("->").  Need scanOperator() helper.
-//   2. Kind casing: lexer.spore uses PascalCase ("Keyword", "Identifier", …)
+//   2. Kind casing: lexer.fungi uses PascalCase ("Keyword", "Identifier", …)
 //      while the TS lexer uses lowercase ("keyword", "identifier", …).
 // =============================================================================
 
@@ -34,7 +34,7 @@ import {
 } from "../../dist/index.js";
 
 // ---------------------------------------------------------------------------
-// Flip to true once lexer.spore achieves full parity with the TS lexer.
+// Flip to true once lexer.fungi achieves full parity with the TS lexer.
 // When true, every comparison becomes a hard assertion.
 // ---------------------------------------------------------------------------
 const PARITY_ACHIEVED = true;
@@ -44,13 +44,13 @@ const PARITY_ACHIEVED = true;
 // ---------------------------------------------------------------------------
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const LEXER_PATH = join(__dir, "../../src/self-hosted/lexer.spore");
+const LEXER_PATH = join(__dir, "../../src/self-hosted/lexer.fungi");
 
-/** Load and compile lexer.spore, stripping BOM if present. */
+/** Load and compile lexer.fungi, stripping BOM if present. */
 function loadSelfHostedLexer() {
   let source = readFileSync(LEXER_PATH, "utf8");
   if (source.charCodeAt(0) === 0xFEFF) source = source.slice(1);
-  const parsed = parseProgram(source, "lexer.spore");
+  const parsed = parseProgram(source, "lexer.fungi");
   resolveSymbols(parsed.ast);
   checkTypes(parsed.ast);
   return parsed;
@@ -68,11 +68,11 @@ async function selfHostedTokens(parsed, input) {
   const result = await executeFlow("tokenize", args, parsed.ast);
 
   if (result.value.__tag !== "ok") {
-    throw new Error(`lexer.spore tokenize returned non-Ok: ${JSON.stringify(result.value)}`);
+    throw new Error(`lexer.fungi tokenize returned non-Ok: ${JSON.stringify(result.value)}`);
   }
   const list = result.value.value;
   if (list.__tag !== "list") {
-    throw new Error(`lexer.spore Ok value is not a list: ${list.__tag}`);
+    throw new Error(`lexer.fungi Ok value is not a list: ${list.__tag}`);
   }
   return list.items.map((t) => {
     if (t.__tag !== "record") return { kind: "??", value: "??" };
@@ -95,7 +95,7 @@ async function selfHostedTokens(parsed, input) {
  *
  * TS lexer uses:  keyword | identifier | symbol | operator | number |
  *                 string  | char       | newline | eof
- * lexer.spore uses: Keyword | Identifier | Symbol | Operator | NumberLiteral |
+ * lexer.fungi uses: Keyword | Identifier | Symbol | Operator | NumberLiteral |
  *                 StringLiteral | CharLiteral | Newline | Eof
  */
 function tsPascalKind(kind) {
@@ -137,12 +137,12 @@ const FLOW_GREET_SOURCE = "pure flow add(a: Int, b: Int) -> Int { return a }";
 // Tests
 // ---------------------------------------------------------------------------
 
-describe("Stage B lexer parity: TS lexer vs lexer.spore", () => {
+describe("Stage B lexer parity: TS lexer vs lexer.fungi", () => {
 
   // ── 1. TS lexer baseline ─────────────────────────────────────────────────
 
   it("TS lexer: tokenises FLOW_GREET_SOURCE without diagnostics", () => {
-    const result = lex(FLOW_GREET_SOURCE, "parity.spore");
+    const result = lex(FLOW_GREET_SOURCE, "parity.fungi");
     const errors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       errors.length,
@@ -152,13 +152,13 @@ describe("Stage B lexer parity: TS lexer vs lexer.spore", () => {
   });
 
   it("TS lexer: produces > 10 tokens for FLOW_GREET_SOURCE", () => {
-    const result = lex(FLOW_GREET_SOURCE, "parity.spore");
+    const result = lex(FLOW_GREET_SOURCE, "parity.fungi");
     // "pure flow add(a: Int, b: Int) -> Int { return a }" yields 18 significant + eof = 19 total
     assert.ok(result.tokens.length > 10, `Expected >10 tokens, got ${result.tokens.length}`);
   });
 
   it("TS lexer: produces expected token sequence for FLOW_GREET_SOURCE", () => {
-    const result = lex(FLOW_GREET_SOURCE, "parity.spore");
+    const result = lex(FLOW_GREET_SOURCE, "parity.fungi");
     const sig = result.tokens.filter(
       (t) => t.kind !== "eof" && t.kind !== "newline",
     );
@@ -190,21 +190,21 @@ describe("Stage B lexer parity: TS lexer vs lexer.spore", () => {
     }
   });
 
-  // ── 2. lexer.spore baseline ────────────────────────────────────────────────
+  // ── 2. lexer.fungi baseline ────────────────────────────────────────────────
 
-  it("lexer.spore: parses with zero errors", () => {
+  it("lexer.fungi: parses with zero errors", () => {
     let source = readFileSync(LEXER_PATH, "utf8");
     if (source.charCodeAt(0) === 0xFEFF) source = source.slice(1);
-    const parsed = parseProgram(source, "lexer.spore");
+    const parsed = parseProgram(source, "lexer.fungi");
     const errors = parsed.diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       errors.length,
       0,
-      `lexer.spore parse errors: ${errors.map((e) => e.message).join("; ")}`,
+      `lexer.fungi parse errors: ${errors.map((e) => e.message).join("; ")}`,
     );
   });
 
-  it("lexer.spore: tokenize flow executes without runtime errors on FLOW_GREET_SOURCE", async () => {
+  it("lexer.fungi: tokenize flow executes without runtime errors on FLOW_GREET_SOURCE", async () => {
     const parsed = loadSelfHostedLexer();
     const args = new Map();
     args.set("source", { __tag: "string", value: FLOW_GREET_SOURCE });
@@ -213,7 +213,7 @@ describe("Stage B lexer parity: TS lexer vs lexer.spore", () => {
     assert.equal(
       runtimeErrors.length,
       0,
-      `lexer.spore runtime errors: ${runtimeErrors.map((e) => e.message).join("; ")}`,
+      `lexer.fungi runtime errors: ${runtimeErrors.map((e) => e.message).join("; ")}`,
     );
     assert.equal(result.value.__tag, "ok", "tokenize should return Ok(...)");
   });
@@ -223,22 +223,22 @@ describe("Stage B lexer parity: TS lexer vs lexer.spore", () => {
   it("parity: both lexers produce the same number of significant tokens", async () => {
     const parsed = loadSelfHostedLexer();
 
-    const tsResult  = lex(FLOW_GREET_SOURCE, "parity.spore");
+    const tsResult  = lex(FLOW_GREET_SOURCE, "parity.fungi");
     const tsSig     = significantTokens(tsResult.tokens.map((t) => ({ kind: t.kind, value: t.value })));
-    const sporeTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
-    const sporeSig    = significantTokens(sporeTokens);
+    const fungiTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
+    const fungiSig    = significantTokens(fungiTokens);
 
-    const msg = `TypeScript lexer: ${tsSig.length} tokens, lexer.spore: ${sporeSig.length} tokens`;
+    const msg = `TypeScript lexer: ${tsSig.length} tokens, lexer.fungi: ${fungiSig.length} tokens`;
     console.log(`  [parity] ${msg}`);
 
     if (PARITY_ACHIEVED) {
-      assert.equal(sporeSig.length, tsSig.length, msg);
+      assert.equal(fungiSig.length, tsSig.length, msg);
     } else {
       // Report gap without failing
-      if (sporeSig.length !== tsSig.length) {
+      if (fungiSig.length !== tsSig.length) {
         console.log(`  [parity] GAP — token counts differ. ${msg}`);
         console.log("  [parity] TS tokens:  ", tsSig.map((t) => `${t.kind}:${JSON.stringify(t.value)}`).join(", "));
-        console.log("  [parity] spore tokens: ", sporeSig.map((t) => `${t.kind}:${JSON.stringify(t.value)}`).join(", "));
+        console.log("  [parity] fungi tokens: ", fungiSig.map((t) => `${t.kind}:${JSON.stringify(t.value)}`).join(", "));
       }
       assert.ok(true, "Parity check (informational only — PARITY_ACHIEVED=false)");
     }
@@ -247,24 +247,24 @@ describe("Stage B lexer parity: TS lexer vs lexer.spore", () => {
   it("parity: token kinds match at each position (normalised to PascalCase)", async () => {
     const parsed = loadSelfHostedLexer();
 
-    const tsResult  = lex(FLOW_GREET_SOURCE, "parity.spore");
+    const tsResult  = lex(FLOW_GREET_SOURCE, "parity.fungi");
     const tsSig     = significantTokens(tsResult.tokens.map((t) => ({ kind: t.kind, value: t.value })));
-    const sporeTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
-    const sporeSig    = significantTokens(sporeTokens);
+    const fungiTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
+    const fungiSig    = significantTokens(fungiTokens);
 
-    const minLen = Math.min(tsSig.length, sporeSig.length);
+    const minLen = Math.min(tsSig.length, fungiSig.length);
     const mismatches = [];
     for (let i = 0; i < minLen; i++) {
       const tsKind  = tsPascalKind(tsSig[i].kind);
-      const sporeKind = sporeSig[i].kind;
-      if (tsKind !== sporeKind) {
-        mismatches.push(`[${i}] TS=${tsKind} spore=${sporeKind} (value=${JSON.stringify(tsSig[i].value)})`);
+      const fungiKind = fungiSig[i].kind;
+      if (tsKind !== fungiKind) {
+        mismatches.push(`[${i}] TS=${tsKind} fungi=${fungiKind} (value=${JSON.stringify(tsSig[i].value)})`);
       }
     }
 
     if (mismatches.length > 0) {
       console.log(`  [parity] Kind mismatches (${mismatches.length}): ${mismatches.join("; ")}`);
-    } else if (tsSig.length === sporeSig.length) {
+    } else if (tsSig.length === fungiSig.length) {
       console.log("  [parity] All kind positions match!");
     }
 
@@ -278,24 +278,24 @@ describe("Stage B lexer parity: TS lexer vs lexer.spore", () => {
   it("parity: token values match at each position", async () => {
     const parsed = loadSelfHostedLexer();
 
-    const tsResult  = lex(FLOW_GREET_SOURCE, "parity.spore");
+    const tsResult  = lex(FLOW_GREET_SOURCE, "parity.fungi");
     const tsSig     = significantTokens(tsResult.tokens.map((t) => ({ kind: t.kind, value: t.value })));
-    const sporeTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
-    const sporeSig    = significantTokens(sporeTokens);
+    const fungiTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
+    const fungiSig    = significantTokens(fungiTokens);
 
-    const minLen = Math.min(tsSig.length, sporeSig.length);
+    const minLen = Math.min(tsSig.length, fungiSig.length);
     const mismatches = [];
     for (let i = 0; i < minLen; i++) {
-      if (tsSig[i].value !== sporeSig[i].value) {
+      if (tsSig[i].value !== fungiSig[i].value) {
         mismatches.push(
-          `[${i}] TS=${JSON.stringify(tsSig[i].value)} spore=${JSON.stringify(sporeSig[i].value)}`,
+          `[${i}] TS=${JSON.stringify(tsSig[i].value)} fungi=${JSON.stringify(fungiSig[i].value)}`,
         );
       }
     }
 
     if (mismatches.length > 0) {
       console.log(`  [parity] Value mismatches (${mismatches.length}): ${mismatches.join("; ")}`);
-    } else if (tsSig.length === sporeSig.length) {
+    } else if (tsSig.length === fungiSig.length) {
       console.log("  [parity] All value positions match!");
     }
 
@@ -311,29 +311,29 @@ describe("Stage B lexer parity: TS lexer vs lexer.spore", () => {
   it("parity: print full side-by-side comparison", async () => {
     const parsed = loadSelfHostedLexer();
 
-    const tsResult  = lex(FLOW_GREET_SOURCE, "parity.spore");
+    const tsResult  = lex(FLOW_GREET_SOURCE, "parity.fungi");
     const tsSig     = tsResult.tokens.map((t) => ({ kind: t.kind, value: t.value }));
-    const sporeTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
+    const fungiTokens = await selfHostedTokens(parsed, FLOW_GREET_SOURCE);
 
     console.log("\n  [parity] Side-by-side token comparison:");
     console.log("  [parity] Source:", JSON.stringify(FLOW_GREET_SOURCE));
-    console.log("  [parity] idx | TS lexer              | lexer.spore             | match?");
+    console.log("  [parity] idx | TS lexer              | lexer.fungi             | match?");
     console.log("  [parity] ----+----------------------+----------------------+-------");
 
-    const maxLen = Math.max(tsSig.length, sporeTokens.length);
+    const maxLen = Math.max(tsSig.length, fungiTokens.length);
     let matchCount = 0;
     let mismatchCount = 0;
 
     for (let i = 0; i < maxLen; i++) {
       const ts  = tsSig[i]    ? `${tsSig[i].kind}:${JSON.stringify(tsSig[i].value)}`.padEnd(22) : "(missing)".padEnd(22);
-      const spore = sporeTokens[i] ? `${sporeTokens[i].kind}:${JSON.stringify(sporeTokens[i].value)}`.padEnd(22) : "(missing)".padEnd(22);
+      const fungi = fungiTokens[i] ? `${fungiTokens[i].kind}:${JSON.stringify(fungiTokens[i].value)}`.padEnd(22) : "(missing)".padEnd(22);
       const tsKind  = tsSig[i]    ? tsPascalKind(tsSig[i].kind) : null;
-      const sporeKind = sporeTokens[i] ? sporeTokens[i].kind          : null;
+      const fungiKind = fungiTokens[i] ? fungiTokens[i].kind          : null;
       const tsVal   = tsSig[i]    ? tsSig[i].value    : null;
-      const sporeVal  = sporeTokens[i] ? sporeTokens[i].value : null;
-      const match   = tsKind === sporeKind && tsVal === sporeVal ? "OK" : "GAP";
+      const fungiVal  = fungiTokens[i] ? fungiTokens[i].value : null;
+      const match   = tsKind === fungiKind && tsVal === fungiVal ? "OK" : "GAP";
       if (match === "OK") matchCount++; else mismatchCount++;
-      console.log(`  [parity] ${String(i).padStart(3)} | ${ts}| ${spore}| ${match}`);
+      console.log(`  [parity] ${String(i).padStart(3)} | ${ts}| ${fungi}| ${match}`);
     }
 
     console.log(`\n  [parity] Summary: ${matchCount} matches, ${mismatchCount} mismatches out of ${maxLen} total positions`);

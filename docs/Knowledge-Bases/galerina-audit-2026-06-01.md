@@ -24,7 +24,7 @@
 |---|---|---|---|
 | 25 | WAT real arithmetic (i32.add/sub/mul, let bindings) | ✅ | +25 |
 | 26 | WAT control flow (if/else, while, else-if, mut/assign) | ✅ | +10 |
-| 26B | ImmutableInputSeal, HardwareGovernanceClass, ProofLevel, SPORE-HW-001/002/003 | ✅ | +20 |
+| 26B | ImmutableInputSeal, HardwareGovernanceClass, ProofLevel, FUNGI-HW-001/002/003 | ✅ | +20 |
 | 27 | WASM instantiation (wabt) — 8/8 benchmarks, native speed | ✅ | +16 |
 | 27B | Sync fast-path — 14.3× tree-walker speedup | ✅ | — |
 | 28 | Profile enforcement (strict/high_integrity) + Tainted<T>/SafeFor<Context,T> | ✅ | +14 |
@@ -34,13 +34,13 @@
 | 31B | Bytecode VM auto-wired into executeFlow (220K calls/sec) | ✅ | — |
 | 32 | Governance diff CLI — exit 2 on authority widening | ✅ | +9 |
 | 33A | Tier telemetry — executionTier + fallbackReason on FlowExecutionResult. All 5 tiers tagged: cache/bytecode/sync/egraph/tree | ✅ | — |
-| 34 | verifyPasswordService.spore — live governed HTTP service, POST /auth/verify, BCrypt.verify, audit | ✅ | +13 |
+| 34 | verifyPasswordService.fungi — live governed HTTP service, POST /auth/verify, BCrypt.verify, audit | ✅ | +13 |
 | 35 | Password.verify/hash/needsMigration — stable API facade over bcrypt/Argon2 | ✅ | — |
 | 36 | Argon2.hash/verify (Argon2id, OWASP preferred). Password.verify auto-routes by hash prefix | ✅ | — |
 | 37 | Password.migrate — verify+rehash bcrypt→Argon2id on successful verify | ✅ | — |
 | 38 | Deno WebGPU GPU benchmark live — RTX 3050 Ti, 3.99M ops/sec, result=1,000,000,000 | ✅ | — |
 | 39 | GovernanceSignature Ed25519 — signProofGraph/verifyGovernanceSignature, tamper-detection verified | ✅ | — |
-| 40 | Stage B executable — compiler.capabilities.spore (8 flows), lexer.spore (makeKeywordTable=40kw, scanWord works). 20 bootstrap tests. | ✅ | +20 |
+| 40 | Stage B executable — compiler.capabilities.fungi (8 flows), lexer.fungi (makeKeywordTable=40kw, scanWord works). 20 bootstrap tests. | ✅ | +20 |
 
 ---
 
@@ -58,8 +58,8 @@
 | Hardware governance classes | `HardwareGovernanceClass` | ✅ |
 | Proof level escalation | `ProofLevel` (0–4) | ✅ |
 | Hardware trust profiles | `HARDWARE_TRUST_PROFILES` (37 targets) | ✅ |
-| Hardware diagnostics | `SPORE_HW_001/002/003` | ✅ |
-| Value/Safety diagnostics | `SPORE_VAL_001/002/003` | ✅ |
+| Hardware diagnostics | `FUNGI_HW_001/002/003` | ✅ |
+| Value/Safety diagnostics | `FUNGI_VAL_001/002/003` | ✅ |
 | ProofGraph caching | `buildProofGraphCached`, `getProofCacheStats` | ✅ |
 | Governance diff | `diffGovernance`, `renderGovernanceDiff` | ✅ |
 | CostGraph | `@galerina/core-economics` package | ✅ |
@@ -95,10 +95,10 @@
 | KB documents | 368 |
 | Example files | 11 (aerospace + healthcare) |
 | Security invariants enforced | 11 (all from governance hierarchy) |
-| SPORE-PROFILE codes | 7 (001–007) |
-| SPORE-TAINT codes | 4 (001–004) |
-| SPORE-HW codes | 3 (001–003) |
-| SPORE-VAL codes | 3 (001–003) |
+| FUNGI-PROFILE codes | 7 (001–007) |
+| FUNGI-TAINT codes | 4 (001–004) |
+| FUNGI-HW codes | 3 (001–003) |
+| FUNGI-VAL codes | 3 (001–003) |
 
 ---
 
@@ -127,7 +127,7 @@
 
 Phase 33: integer fast-path + hardware routing (CostGraph routes pure flows to bytecode VM automatically — partially done via Phase 31B wiring).
 
-Phase 34: `verifyPassword` HTTP service = **Runtime 25%** — the first `.spore` file that IS the service.
+Phase 34: `verifyPassword` HTTP service = **Runtime 25%** — the first `.fungi` file that IS the service.
 
 Required before Phase 34 (from security hardening review):
 1. Request body taint at HTTP boundary (auto-taint `req.body`)

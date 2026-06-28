@@ -11,7 +11,7 @@ import assert from "node:assert/strict";
 import * as L from "../dist/index.js";
 
 function compileWAT(src) {
-  const p = L.parseProgram(src, "op.spore");
+  const p = L.parseProgram(src, "op.fungi");
   const errs = p.diagnostics.filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "parse: " + errs.map((e) => e.message).join("; "));
   const fx = L.checkEffects(p.flows, p.ast);
@@ -54,7 +54,7 @@ describe("0040 WASM single-exit output post-conditions", () => {
   });
 
   it("WASM ≡ interpreter on the boundary: both pass at 100, both trap at 101", async () => {
-    const parsed = L.parseProgram(CLAMP, "c.spore");
+    const parsed = L.parseProgram(CLAMP, "c.fungi");
     for (const [a, expectTrap] of [[0, false], [100, false], [101, true], [200, true]]) {
       const { val, trapped } = await run(CLAMP, "clamp", [a]);
       const ref = await L.executeFlow("clamp", new Map([["a", { __tag: "int", value: a }]]), parsed.ast, parsed.flows);

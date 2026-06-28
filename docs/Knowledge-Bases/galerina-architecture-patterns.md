@@ -20,13 +20,13 @@ Each pattern has:
 
 For forward-looking syntax in examples, wrap with:
 
-```spore
+```fungi
 @experimental_profile(name: "drcm_core_v1", status: "planned_phase_5") {
   ;; ... forward syntax here ...
 }
 ```
 
-In `--release` builds, the compiler parses but skips verification of these blocks. Under `--enable-experimental-profile=drcm_core_v1`, full verification runs. Bare `step` without a wrapper emits `SPORE-DRCM-UNSUPPORTED`.
+In `--release` builds, the compiler parses but skips verification of these blocks. Under `--enable-experimental-profile=drcm_core_v1`, full verification runs. Bare `step` without a wrapper emits `FUNGI-DRCM-UNSUPPORTED`.
 
 ---
 
@@ -34,7 +34,7 @@ In `--release` builds, the compiler parses but skips verification of these block
 
 **Use when:** a flow is purely computational — no I/O, no network, no secrets, no mutation. Math functions, string transforms, validation logic, data mapping.
 
-```spore
+```fungi
 pure flow scoreToGrade(score: Int) -> String
 contract {
   intent { "Convert a numeric score to a letter grade." }
@@ -50,7 +50,7 @@ contract {
 **Rules:** S-001, S-002, S-004 (no effects declared = pure)  
 **Common mistakes:**
 - Adding `request`/`response` blocks (not an API flow — use Pattern 2 for that)
-- Calling `AuditLog.write` inside a `pure` flow (immediate `SPORE-EFFECT-003`)
+- Calling `AuditLog.write` inside a `pure` flow (immediate `FUNGI-EFFECT-003`)
 - Using `secure` qualifier when no capability/secrets are needed
 
 ---
@@ -59,7 +59,7 @@ contract {
 
 **Use when:** a flow handles external HTTP/webhook/event ingress. It accepts untrusted input, validates it, performs business logic, and returns a typed response.
 
-```spore
+```fungi
 secure flow createOrder(readonly req: CreateOrderRequest, ctx: RequestContext)
   -> Result<OrderResponse, ApiError>
 contract {
@@ -82,9 +82,9 @@ contract {
 **Rules:** S-001, S-002, S-003, S-004, C-001, E-001  
 **Common mistakes:**
 - Omitting `request`/`response` on an API route (required for external flows)
-- Omitting `effects` when `db.write` or `audit.write` occurs (SPORE-EFFECT-001)
+- Omitting `effects` when `db.write` or `audit.write` occurs (FUNGI-EFFECT-001)
 - Logging the raw request body before sanitizing (potential secret/PII leak)
-- Using `pure` when the flow touches a database (SPORE-EFFECT-003)
+- Using `pure` when the flow touches a database (FUNGI-EFFECT-003)
 
 ---
 
@@ -92,7 +92,7 @@ contract {
 
 **Use when:** a flow mutates sensitive state — financial ledger, medical records, government data. Full contract required: authority, effects, privacy, secrets, audit, limits, and invariants (DRCM Phase 2+).
 
-```spore
+```fungi
 secure flow transferFunds(
   readonly payload: TransferPayload,
   ctx: RequestContext
@@ -109,7 +109,7 @@ contract {
   ;; invariant {} is LIVE as of DRCM Phase 2 — no @experimental_profile wrapper needed.
   ;; ensure payload.amount > 0:
   ;;   - Runtime parameter → WAT assertion gate injected (i32.eqz + unreachable)
-  ;;   - SPORE-INV-001 fires at compile time if statically provable false
+  ;;   - FUNGI-INV-001 fires at compile time if statically provable false
   ;; ensure runtime::getAvailableBalance(...) >= payload.amount:
   ;;   - Function call → runtime-precheck (WAT gate injected)
   invariant {
@@ -132,9 +132,9 @@ contract {
 **Rules:** S-001–S-005, C-001–C-005, E-001–E-003, K-004, A-001–A-005  
 **Common mistakes:**
 - Omitting `privacy {}` on a flow that handles `account_number` (PII/PCI violation)
-- Omitting `secrets {}` when calling vault for `LEDGER_WRITE_KEY` (SPORE-SECRET-001)
+- Omitting `secrets {}` when calling vault for `LEDGER_WRITE_KEY` (FUNGI-SECRET-001)
 - Setting `audit.level = standard` on financial mutations (must be `cryptographic_state_hash`)
-- Writing `liability {}` manually (always auto-computed — SPORE-GOV-018)
+- Writing `liability {}` manually (always auto-computed — FUNGI-GOV-018)
 - Not handling the `Err` branch of `LedgerRepository.setBalance`
 
 ---
@@ -145,7 +145,7 @@ contract {
 
 > **Note:** `step` is a DRCM Phase 5 (2026-10) feature. Wrap with `@experimental_profile(name: "drcm_core_v1", status: "planned_phase_5") { ... }` until then.
 
-```spore
+```fungi
 secure flow fulfillShipment(orderId: String, ctx: RequestContext)
   -> Result<ShipmentConfirmation, LogisticsError>
 contract {
@@ -181,7 +181,7 @@ contract {
 - 4MB sealed linear memory per isolate
 - Immutable serialised input snapshot (no live pointers)
 - Fuel budget from `policy::calculateStepFuelLimit`
-- Trap on fuel exhaustion → `SPORE-RESOURCE-001`
+- Trap on fuel exhaustion → `FUNGI-RESOURCE-001`
 
 ---
 
@@ -189,7 +189,7 @@ contract {
 
 **Use when:** a flow needs to access a credential (API key, database password, signing key) from `.env`, vault, or KMS.
 
-```spore
+```fungi
 secure flow sendPaymentNotification(payload: NotificationPayload) -> Result<Void, NotifyError>
 contract {
   intent { "Send a payment confirmation notification via the email gateway." }
@@ -200,7 +200,7 @@ contract {
 {
   let apiKey: SecureString = secret.get("EMAIL_API_KEY")
 
-  ;; ❌ WRONG — would trigger SPORE-SECRET-002:
+  ;; ❌ WRONG — would trigger FUNGI-SECRET-002:
   ;; http.post("https://email.api/send", body: { key: apiKey, to: payload.email })
 
   ;; ✅ CORRECT — apiKey is passed as a header, not in body; http driver handles auth
@@ -212,8 +212,8 @@ contract {
 **Key rule:** `SecureString` cannot flow into log, network body, or serialized records. The compiler catches this at Stage A. `redact()` is the only safe escape.
 
 **Common mistakes:**
-- String-interpolating a secret into a log message (SPORE-SECRET-001)
-- Including a secret in a JSON body that gets serialized (SPORE-SECRET-003)
+- String-interpolating a secret into a log message (FUNGI-SECRET-001)
+- Including a secret in a JSON body that gets serialized (FUNGI-SECRET-003)
 - Forgetting that concatenation `"prefix" + apiKey` produces `TaintedString` which inherits all sink restrictions
 
 ---
@@ -268,7 +268,7 @@ contract {
 ```
 Wasmtime binary (TCB)
 │
-└─ DSS.wasm  ← compiled from dss.spore — the supervisor
+└─ DSS.wasm  ← compiled from dss.fungi — the supervisor
      │
      ├─ V_DPM: 0b11111111  (all capabilities active at launch)
      │    Bit 0: network.outbound
@@ -292,10 +292,10 @@ Wasmtime binary (TCB)
 ```
 
 **Fault behavior:**
-- DWI fuel exhausted → `FuelExhaustionFault` (SPORE-RESOURCE-001) → DSS discards isolate, rolls back
-- Invariant pre-condition fails → `SPORE-INV-001` → DSS discards isolate, returns error
-- Capability violation → DSS traps mid-instruction, drops V_DPM bit → `SPORE-MONO-001`
-- Secret in output stream → `SPORE-SECRET-BREACH` (trap 3001) → entire session terminated
+- DWI fuel exhausted → `FuelExhaustionFault` (FUNGI-RESOURCE-001) → DSS discards isolate, rolls back
+- Invariant pre-condition fails → `FUNGI-INV-001` → DSS discards isolate, returns error
+- Capability violation → DSS traps mid-instruction, drops V_DPM bit → `FUNGI-MONO-001`
+- Secret in output stream → `FUNGI-SECRET-BREACH` (trap 3001) → entire session terminated
 
 ---
 
@@ -305,7 +305,7 @@ Wasmtime binary (TCB)
 
 > **Note:** `policy { emergency { ... } }` is DRCM Phase 4 (2026-09).
 
-```spore
+```fungi
 ;; Requires @experimental_profile(name: "drcm_core_v1", status: "planned_phase_4"):
 @experimental_profile(name: "drcm_core_v1", status: "planned_phase_4") {
 secure flow monitoredPaymentProcessor(...) -> Result<...>
@@ -353,7 +353,7 @@ The `.lmanifest` is emitted at compile time alongside the `.wasm` binary. It is 
 
 ```json
 {
-  "schemaVersion": "spore.manifest.v1",
+  "schemaVersion": "fungi.manifest.v1",
   "sourceHash": "sha256:3f4a...",
   "derivedConstraints": [
     "CardholderData never_touches TelemetryLog",

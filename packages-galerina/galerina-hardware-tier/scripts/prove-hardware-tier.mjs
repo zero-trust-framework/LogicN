@@ -58,7 +58,7 @@ const realized = (k) => { const d = decider.decide(k); return d.target === "phot
 {
   const undef = HARDWARE_TIER_PROFILES.get("not-a-target") === undefined;
   const deny = resolveHardware({ targetId: "not-a-target", attestationVerified: true, componentFullyEligible: true }) === "binary";
-  ok("H5 unknown target ⇒ K3 INDETERMINATE ⇒ DENY ⇒ binary (SPORE-HW-004)", undef && deny, "get(unknown)=undefined → binary");
+  ok("H5 unknown target ⇒ K3 INDETERMINATE ⇒ DENY ⇒ binary (FUNGI-HW-004)", undef && deny, "get(unknown)=undefined → binary");
 }
 
 // O1 — product table ≤ Tdigital.

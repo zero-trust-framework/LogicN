@@ -186,7 +186,7 @@ BUILD dependency resolution authority -> USER_PROGRAM execution
 
 ```text
 COMPILER capability -> CompilerHost internal operation only
-  Example: filesystem.read used to open a .spore source file
+  Example: filesystem.read used to open a .fungi source file
 
 BUILD capability -> package cache read/write within BUILD domain
   Example: fetching a resolved package into the local cache
@@ -279,7 +279,7 @@ compiler.capability.denial   — any attempted undeclared operation
 
 Audit events carry the authority domain, the originating component, a
 content-hash of the relevant artefact where applicable, and a monotonic
-event sequence number anchored to the SPORE-Graph EventDAG.
+event sequence number anchored to the FUNGI-Graph EventDAG.
 
 Audit records are append-only. The compiler cannot suppress or redact its own
 capability audit trail.
@@ -340,7 +340,7 @@ its own authority under its own rules, the governance model is not yet real.
 
 ```text
 capability-registry.yaml                         — full capability definitions
-galerina-semantic-graph-system.md                  — SPORE-Graph EventDAG
+galerina-semantic-graph-system.md                  — FUNGI-Graph EventDAG
 galerina-deterministic-selfhost-verification.md    — verification protocol
 galerina-governed-memory-blocks.md                 — governed object identity
 authority-model.md                               — compile-time vs runtime authority

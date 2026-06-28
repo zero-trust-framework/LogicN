@@ -1,9 +1,9 @@
 # Galerina Diagnostic Schema — Master Index
-# Machine-readable registry for all SPORE-* diagnostic codes
+# Machine-readable registry for all FUNGI-* diagnostic codes
 # Load this file to resolve any diagnostic code without parsing prose.
 #
 # Diagnostic interface (all families):
-#   code:             string   — e.g. "SPORE-TYPE-001"
+#   code:             string   — e.g. "FUNGI-TYPE-001"
 #   name:             string   — e.g. "UnknownType"
 #   severity:         error | warning | info
 #   message:          string   — what went wrong
@@ -17,30 +17,30 @@
 # See: docs/Knowledge-Bases/galerina-language-lessons.md
 schemaVersion: "1.0"
 families:
-  - id: SPORE-TYPE
+  - id: FUNGI-TYPE
     file: type.schema.yaml
     description: "Type checker diagnostics"
-  - id: SPORE-NAME
+  - id: FUNGI-NAME
     file: name.schema.yaml
     description: "Symbol resolution diagnostics"
-  - id: SPORE-MATCH
+  - id: FUNGI-MATCH
     file: match.schema.yaml
     description: "Match exhaustiveness diagnostics"
-  - id: SPORE-VALUESTATE
+  - id: FUNGI-VALUESTATE
     file: valuestate.schema.yaml
     description: "Value-state checker diagnostics"
-  - id: SPORE-SECRET
+  - id: FUNGI-SECRET
     file: secret.schema.yaml
     description: "Secret / SecureString diagnostics"
-  - id: SPORE-EFFECT
+  - id: FUNGI-EFFECT
     file: effect.schema.yaml
     description: "Effect checker diagnostics"
-  - id: SPORE-GOV
+  - id: FUNGI-GOV
     file: governance.schema.yaml
     description: "Governance verifier diagnostics"
-  - id: SPORE-SYNTAX
+  - id: FUNGI-SYNTAX
     file: syntax.schema.yaml
     description: "Syntax rule violations"
-  - id: SPORE-PARSE
+  - id: FUNGI-PARSE
     file: parse.schema.yaml
     description: "Parser diagnostics"

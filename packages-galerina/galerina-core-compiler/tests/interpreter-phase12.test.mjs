@@ -4,7 +4,7 @@ import { describe, it } from "node:test";
 import { parseProgram, checkTypes, resolveSymbols, executeFlow } from "../dist/index.js";
 
 async function parseAndRun(source, flowName, args = new Map()) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   resolveSymbols(parsed.ast);
   checkTypes(parsed.ast);
   return await executeFlow(flowName, args, parsed.ast);
@@ -61,9 +61,9 @@ guarded flow test() -> Int {
 }
 `, "test");
     const hasRuntimeDiag = result.diagnostics.some(
-      (d) => d.code === "SPORE-RUNTIME-004",
+      (d) => d.code === "FUNGI-RUNTIME-004",
     );
-    assert.ok(hasRuntimeDiag, "Expected SPORE-RUNTIME-004 diagnostic for undeclared binding assignment");
+    assert.ok(hasRuntimeDiag, "Expected FUNGI-RUNTIME-004 diagnostic for undeclared binding assignment");
   });
 });
 
@@ -124,14 +124,14 @@ guarded flow test() -> Int {
   return i
 }
 `, "test");
-    // FAIL-CLOSED (2026-06-18, hazard fix): previously this hit the 100k cap, pushed SPORE-RUNTIME-005,
+    // FAIL-CLOSED (2026-06-18, hazard fix): previously this hit the 100k cap, pushed FUNGI-RUNTIME-005,
     // BROKE, and returned SUCCESS with partial state (a fail-open bug). It now TRAPS at the cap and the
     // flow returns a runtimeError — a non-terminating loop must never be reported as a successful run.
     assert.equal(result.value.__tag, "runtimeError", "infinite loop must fail closed (runtimeError), not succeed");
     assert.ok(
       /Loop exceeded/.test(result.value.message ?? "") ||
-        result.diagnostics.some((d) => d.code === "SPORE-RUNTIME-003"),
-      "fail-closed loop trap should surface 'Loop exceeded' / SPORE-RUNTIME-003",
+        result.diagnostics.some((d) => d.code === "FUNGI-RUNTIME-003"),
+      "fail-closed loop trap should surface 'Loop exceeded' / FUNGI-RUNTIME-003",
     );
   });
 });

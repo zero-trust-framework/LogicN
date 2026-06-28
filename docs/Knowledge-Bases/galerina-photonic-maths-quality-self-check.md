@@ -13,7 +13,7 @@ run CPU-side against a physics-faithful emulator; hardware is TRACK-not-build, #
 `requiredRedundancy(n, phys, tol)` (`galerina-ext-photonic-emulator/src/partition-decider.ts:87`) computes the
 votes needed for the declared `tolerance` given the lane's noise physics. If the **systematic ADC-quantization
 floor exceeds the tolerance** (`qFloor > target`) it returns **`Infinity` → refuse** (voting can't beat a
-systematic floor). Enforced at compile time as **SPORE-SUBSTRATE-002/003** — you cannot declare a precision the lane
+systematic floor). Enforced at compile time as **FUNGI-SUBSTRATE-002/003** — you cannot declare a precision the lane
 can't deliver. Backed by `nmrFailureProbability`/`singleLaneErrorProbability` (`galerina-substrate-math/src/index.ts:68,90`).
 
 **2. Deciding to run it — net-win gate, fail-closed to digital.**

@@ -7,7 +7,7 @@ Phase 18+ — Design Proposal
 Decision: Resource pressure is a governed runtime state, not an accidental crash
 Foundation: contract.limits (implemented), contractEnforcer.ts (implemented)
 Full resource governance: Phase 18+
-New diagnostics: SPORE-RUNTIME-RESOURCE-001..005 (future)
+New diagnostics: FUNGI-RUNTIME-RESOURCE-001..005 (future)
 ```
 
 ## TL;DR
@@ -70,12 +70,12 @@ No silent failure. No uncontrolled crash. The fallback behaviour is declared in 
 
 | Code | Name | When |
 |---|---|---|
-| SPORE-RUNTIME-RESOURCE-001 | DISK_FULL | Filesystem write fails due to full disk |
-| SPORE-RUNTIME-RESOURCE-002 | MEMORY_PRESSURE | Flow allocates more than declared budget |
-| SPORE-RUNTIME-RESOURCE-003 | CPU_SATURATED | Worker pool exhausted, no available cores |
-| SPORE-RUNTIME-RESOURCE-004 | GPU_SATURATED | GPU workload cannot be scheduled |
-| SPORE-RUNTIME-RESOURCE-005 | TEMP_SPACE_EXCEEDED | Temporary write exceeds declared limit |
-| SPORE-RESOURCE-006 | UnboundedMemoryRead | `fs.readAll(file)` without memory budget |
+| FUNGI-RUNTIME-RESOURCE-001 | DISK_FULL | Filesystem write fails due to full disk |
+| FUNGI-RUNTIME-RESOURCE-002 | MEMORY_PRESSURE | Flow allocates more than declared budget |
+| FUNGI-RUNTIME-RESOURCE-003 | CPU_SATURATED | Worker pool exhausted, no available cores |
+| FUNGI-RUNTIME-RESOURCE-004 | GPU_SATURATED | GPU workload cannot be scheduled |
+| FUNGI-RUNTIME-RESOURCE-005 | TEMP_SPACE_EXCEEDED | Temporary write exceeds declared limit |
+| FUNGI-RESOURCE-006 | UnboundedMemoryRead | `fs.readAll(file)` without memory budget |
 
 ---
 
@@ -84,12 +84,12 @@ No silent failure. No uncontrolled crash. The fallback behaviour is declared in 
 Compiler can warn on unbounded reads:
 
 ```galerina
-// WARNING: SPORE-RESOURCE-006 — unbounded memory read
+// WARNING: FUNGI-RESOURCE-006 — unbounded memory read
 let wholeFile = fs.readAll(largePath)
 ```
 
 ```text
-SPORE-RESOURCE-006: fs.readAll() on potentially large file.
+FUNGI-RESOURCE-006: fs.readAll() on potentially large file.
 Use stream.readChunks() or declare memory budget.
 ```
 
@@ -172,7 +172,7 @@ The compiler flags risky patterns before they reach production:
 
 ```galerina
 // Compiler warning at build time
-let data = fs.readAll(request.params.filePath)?   // SPORE-RESOURCE-006
+let data = fs.readAll(request.params.filePath)?   // FUNGI-RESOURCE-006
 ```
 
 ```galerina
@@ -184,7 +184,7 @@ For AI inference workloads:
 
 ```galerina
 // Warning if tensor larger than declared GPU memory
-let embedding: Tensor<Float32, [1000000]>        // SPORE-RESOURCE-007 (future)
+let embedding: Tensor<Float32, [1000000]>        // FUNGI-RESOURCE-007 (future)
 ```
 
 ---
@@ -195,9 +195,9 @@ let embedding: Tensor<Float32, [1000000]>        // SPORE-RESOURCE-007 (future)
 Phase 16 (now): contract.limits enforcement (max request size, max batch size) ← in contractEnforcer.ts
 Phase 17: service resources {} declaration
 Phase 17: fallback {} block parsing
-Phase 18: SPORE-RUNTIME-RESOURCE-001..005 diagnostics
+Phase 18: FUNGI-RUNTIME-RESOURCE-001..005 diagnostics
 Phase 18: Runtime health report format (memory/disk/cpu/gpu)
-Phase 18: SPORE-RESOURCE-006 unbounded memory read warning
+Phase 18: FUNGI-RESOURCE-006 unbounded memory read warning
 Phase 19: backpressure declaration (queue {})
 Phase 19: degraded mode protocol
 Phase 21: GPU/NPU resource governance (connects to Hardware as Capabilities)

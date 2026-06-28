@@ -42,7 +42,7 @@ Weighting by how much each dimension defines whether Galerina *is* what it claim
 - **3 remaining dev-tool script fixture tests** (code-index/audit-coverage/gen-code-registry — need a small testable-core extraction) — closes the tooling test gap (codes.mjs done).
 
 ### MID
-- **Self-hosted Stage-B past lexer**: prove `parser.spore → type-checker.spore → governance-verifier.spore` to WASM byte-parity via the #105 gate — the lever moving Axis-B 80%→100%.
+- **Self-hosted Stage-B past lexer**: prove `parser.fungi → type-checker.fungi → governance-verifier.fungi` to WASM byte-parity via the #105 gate — the lever moving Axis-B 80%→100%.
 - **Close the 4 WASM codegen gaps**: #200 nested-member walker · #171 None sentinel · #172 `__int_to_str` i32 truncation · run-host string unification.
 - **0014 governance-fidelity differential harness** (graph/WASM == walker, byte-identical, fail-closed) — prerequisite for the lean→WASM router + extending Stage-B parity.
 - **ML-DSA-65 hybrid signing** over the SHA-256 digest (#34, offline custody) — the remaining PQ gap (verify is PQ-ready; signer still standalone Ed25519).

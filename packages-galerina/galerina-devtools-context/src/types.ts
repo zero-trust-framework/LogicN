@@ -44,10 +44,10 @@ export interface FlowContextReceipt {
 }
 
 /**
- * Result of generating receipts for an entire .spore file.
+ * Result of generating receipts for an entire .fungi file.
  */
 export interface FileContextReceipts {
-  readonly schemaVersion: "spore.context-receipt.v1";
+  readonly schemaVersion: "fungi.context-receipt.v1";
   readonly sourceFile: string;
   readonly flowCount: number;
   readonly receipts: readonly FlowContextReceipt[];

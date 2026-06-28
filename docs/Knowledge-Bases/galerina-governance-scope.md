@@ -301,9 +301,9 @@ Galerina's architecture — ProofGraph, ExecutionGraph, deterministic compilatio
 
 | Code | Name | Trigger |
 |---|---|---|
-| `SPORE-VAL-001` | SafetyCriticalGovernanceRequired | `value.classification safety_critical` without `safety.require deterministic_execution` |
-| `SPORE-VAL-002` | MissionCriticalFallbackRequired | `value.classification mission_critical` without `safety.require approved_fallback_plan` |
-| `SPORE-VAL-003` | ValueClassificationMissing | `estimated_loss_per_incident` > £1M without `value.classification` declared |
+| `FUNGI-VAL-001` | SafetyCriticalGovernanceRequired | `value.classification safety_critical` without `safety.require deterministic_execution` |
+| `FUNGI-VAL-002` | MissionCriticalFallbackRequired | `value.classification mission_critical` without `safety.require approved_fallback_plan` |
+| `FUNGI-VAL-003` | ValueClassificationMissing | `estimated_loss_per_incident` > £1M without `value.classification` declared |
 
 ---
 

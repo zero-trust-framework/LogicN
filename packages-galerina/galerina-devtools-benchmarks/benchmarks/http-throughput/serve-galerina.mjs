@@ -13,9 +13,9 @@ const rdUrl    = pathToFileURL(join(lnRoot, "dist/route-dispatcher.js")).href;
 const { parseProgram } = await import(indexUrl);
 const { startServer }  = await import(rdUrl);
 
-const healthSpore = join(lnRoot, "../../examples/auth-service/healthCheck.spore");
+const healthSpore = join(lnRoot, "../../examples/auth-service/healthCheck.fungi");
 const source = readFileSync(healthSpore, "utf8");
-const parsed = parseProgram(source, "healthCheck.spore");
+const parsed = parseProgram(source, "healthCheck.fungi");
 
 const server = await startServer(parsed.ast, parsed.flows, {
   port: 0, host: "127.0.0.1", mode: "dev", rateLimit: 100000,

@@ -1,5 +1,5 @@
 <!-- ABSORBED R&D SOURCE — verbatim mirror. Galerina is the main library; the R&D repo is upstream/authoring.
-     Source: Galerina-R-AND-D/tri-encription/research/SPORE-AMD-024-tmf-confidentiality.md  ·  Pinned: R&D fb68d06 (2026-06-16)
+     Source: Galerina-R-AND-D/tri-encription/research/FUNGI-AMD-024-tmf-confidentiality.md  ·  Pinned: R&D fb68d06 (2026-06-16)
      Integrated Galerina view: galerina-tmf-engine.md  ·  Catalog: galerina-rd-absorption-catalog.md
      Rule: edit the upstream source then re-vendor; do not fork this copy (feedback-auto-import-rd-docs). -->
 
@@ -8,10 +8,10 @@
 ---
 # Engineering Amendment: Sovereign Confidentiality & Geometric Integrity Layout for `.tmf`
 
-- **Document ID:** SPORE-AMD-024
+- **Document ID:** FUNGI-AMD-024
 - **Status:** R&D Reference Blueprint / Approved Architecture
 - **Security Domain:** Software Governance-Verifier & Cryptographic Invariants
-- **Reference Specs:** `SPORE-SUBSTRATE-001` (Crypto-on-Core) · `FIPS-203` (ML-KEM) · `FIPS-204` (ML-DSA) · `NIST SP 800-227` (HPKE / Hybrid KEM)
+- **Reference Specs:** `FUNGI-SUBSTRATE-001` (Crypto-on-Core) · `FIPS-203` (ML-KEM) · `FIPS-204` (ML-DSA) · `NIST SP 800-227` (HPKE / Hybrid KEM)
 - **Provenance:** R&D artifact (NOT a monorepo / production scaffold). Grounded in the companion research
   notes in this folder — [`quantum-resilient-tri-encryption.md`](quantum-resilient-tri-encryption.md) and
   [`photonic-sha256-integrity.md`](photonic-sha256-integrity.md) — which carry the citations behind every
@@ -36,7 +36,7 @@ The ternary and small-signed connection within post-quantum cryptography is rest
   5-valued, *not* ternary).
 
 All polynomial operations — ring reductions, the NTT, matrix–vector products — must execute with **zero-error
-precision on a deterministic, digital lane** (`SPORE-SUBSTRATE-001`).
+precision on a deterministic, digital lane** (`FUNGI-SUBSTRATE-001`).
 
 ### 1.2 Software Governance-Verifier Enforcement
 
@@ -222,6 +222,6 @@ triggers an immediate **phase collapse to state `0`**, failing closed and denyin
 
 `quantum-resilient-tri-encryption.md` (the confidentiality design + KEM-DEM rationale) ·
 `photonic-sha256-integrity.md` (why the digest stays digital; photonics = QRNG/PUF/LSH outside the gate) ·
-Galerina KBs: `galerina-substrate-failure-model.md` (`SPORE-SUBSTRATE-001`), `galerina-quantum-resistance-posture.md`
+Galerina KBs: `galerina-substrate-failure-model.md` (`FUNGI-SUBSTRATE-001`), `galerina-quantum-resistance-posture.md`
 (keep SHA-256; PQ the signature), `galerina-three-valued-governance.md` (K3 fail-closed proofs),
 `galerina-ext-bridge-quantum-design.md` (FFSM #199 — sign `sha256(output)` on the deterministic core).

@@ -78,11 +78,11 @@ module changed; supports per-module revocation).
   still pass), then the set is planned and instantiated in **provider-before-consumer order**, wiring peer-backed
   capabilities through the existing `capabilityRegistry` hook.
 - **`planComposition(members, knownCaps, opts)`** — PURE, fail-closed planner enforcing the Phase A invariants:
-  **SET-SIGNED** (one unsigned member refuses the whole set — `SPORE-FUSE-SET-UNSIGNED`), **DENY-BY-DEFAULT** routing
-  (a consumed capability resolves to a peer provider or a host shim; unsatisfied → `SPORE-FUSE-UNKNOWN-CAP`),
-  **UNAMBIGUOUS** (`SPORE-FUSE-SET-AMBIGUOUS`), **ACYCLIC** (Kahn topo-sort; `SPORE-FUSE-SET-CYCLE`), no self-provision
-  (`SPORE-FUSE-SET-SELF`), and the closed-import-surface rule (a *consumed* provided capability must have a registered
-  host-import shape — `SPORE-FUSE-PROVIDES-UNKNOWN`). An **unconsumed `provides`** (a seam/protocol like `"rest"`) is
+  **SET-SIGNED** (one unsigned member refuses the whole set — `FUNGI-FUSE-SET-UNSIGNED`), **DENY-BY-DEFAULT** routing
+  (a consumed capability resolves to a peer provider or a host shim; unsatisfied → `FUNGI-FUSE-UNKNOWN-CAP`),
+  **UNAMBIGUOUS** (`FUNGI-FUSE-SET-AMBIGUOUS`), **ACYCLIC** (Kahn topo-sort; `FUNGI-FUSE-SET-CYCLE`), no self-provision
+  (`FUNGI-FUSE-SET-SELF`), and the closed-import-surface rule (a *consumed* provided capability must have a registered
+  host-import shape — `FUNGI-FUSE-PROVIDES-UNKNOWN`). An **unconsumed `provides`** (a seam/protocol like `"rest"`) is
   inert metadata, not a capability link.
 - **`makeProviderFactory(cap, registry, getProvider)`** — re-backs a capability by mirroring its registered host-import
   SHAPE and routing every function to the provider module's `invoke` (the closed shape IS the cross-module ABI).
@@ -100,7 +100,7 @@ first regardless of input order). +3 e2e tests; app-kernel 54/54. **Phase B/C re
 
 **CLI — SHIPPED 2026-06-20.** `galerina fuse <dir…> [--allow-unsigned] [--governance-dir <d>] [--invoke <pkg>:<export>]`
 host-links a SET of built packages from the command line, prints the resolved composition (per-package seam +
-capabilities), and optionally invokes an entry. Fail-closed (`SPORE-FUSE-SET-UNSIGNED` without `--allow-unsigned`).
+capabilities), and optionally invokes an entry. Fail-closed (`FUNGI-FUSE-SET-UNSIGNED` without `--allow-unsigned`).
 Verified: `galerina fuse clockprovider clockconsumer --allow-unsigned --invoke clockconsumer:main → 42`.
 
 ## Open / next

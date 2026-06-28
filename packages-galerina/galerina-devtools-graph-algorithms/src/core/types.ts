@@ -24,7 +24,7 @@ export interface Graph<N, E> {
 }
 
 export interface GraphJSON<N, E> {
-  schemaVersion: "spore.graph.v1";
+  schemaVersion: "fungi.graph.v1";
   nodes: Array<{ id: NodeId; data: N }>;
   edges: Array<{ from: NodeId; to: NodeId; data: E }>;
 }

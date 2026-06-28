@@ -235,7 +235,7 @@ const EXECUTION_MODE_MATRIX = [
   {
     mode: "run",
     purpose: "Run a single script or project directly after checks.",
-    command: "Galerina run hello.spore",
+    command: "Galerina run hello.fungi",
     productionRecommended: false
   },
   {
@@ -564,8 +564,8 @@ function fail(message) {
 function initProject(dir) {
   const root = path.resolve(dir || ".");
   fs.mkdirSync(path.join(root, "src"), { recursive: true });
-  const boot = path.join(root, "boot.spore");
-  const mainFile = path.join(root, "src", "main.spore");
+  const boot = path.join(root, "boot.fungi");
+  const mainFile = path.join(root, "src", "main.fungi");
 
   writeIfMissing(boot, `project "LOApp"
 
@@ -575,7 +575,7 @@ language {
   compatibility "prototype"
 }
 
-entry "./src/main.spore"
+entry "./src/main.fungi"
 
 targets {
   binary {
@@ -771,7 +771,7 @@ function loadProject(input, excludePatterns = []) {
     return !excludePatterns.some((pattern) => relative.includes(pattern) || path.basename(file) === pattern);
   });
   if (filteredFiles.length === 0) {
-    fail(`No .spore files found under ${root}`);
+    fail(`No .fungi files found under ${root}`);
   }
 
   return {
@@ -796,7 +796,7 @@ function listLOFiles(root) {
       const full = path.join(dir, entry.name);
       if (entry.isDirectory()) {
         walk(full);
-      } else if (entry.isFile() && entry.name.endsWith(".spore")) {
+      } else if (entry.isFile() && entry.name.endsWith(".fungi")) {
         output.push(full);
       }
     }
@@ -861,7 +861,7 @@ function shouldTriggerDevWatch(changedPath, inputPath, outDir, singleFileInput) 
     return normaliseFsPath(changedPath) === normaliseFsPath(inputPath);
   }
 
-  if (changedPath.endsWith(".spore")) {
+  if (changedPath.endsWith(".fungi")) {
     return true;
   }
 
@@ -869,7 +869,7 @@ function shouldTriggerDevWatch(changedPath, inputPath, outDir, singleFileInput) 
     return true;
   }
 
-  return path.extname(changedPath) === ".spore";
+  return path.extname(changedPath) === ".fungi";
 }
 
 function formatWatchPath(changedPath, inputPath) {
@@ -982,7 +982,7 @@ function createDevWatcher(inputPath, outDir, singleFileInput, onChange) {
         onChange({
           eventType,
           changedPath,
-          requiresRefresh: Boolean(changedPath && !changedPath.endsWith(".spore"))
+          requiresRefresh: Boolean(changedPath && !changedPath.endsWith(".fungi"))
         });
       });
       return {
@@ -1021,7 +1021,7 @@ function createDevWatcher(inputPath, outDir, singleFileInput, onChange) {
           return;
         }
         const requiresRefresh = !singleFileInput && (
-          !changedPath.endsWith(".spore") || isExistingDirectory(changedPath)
+          !changedPath.endsWith(".fungi") || isExistingDirectory(changedPath)
         );
         onChange({ eventType, changedPath, requiresRefresh });
       });
@@ -1095,17 +1095,17 @@ function runPrototypeTests(project) {
   const root = fs.statSync(project.input).isFile() ? path.dirname(project.input) : project.input;
   const tests = [];
 
-  test("parse hello.spore secure main flow", () => {
-    const result = analyseProject(loadProject(path.join(root, "hello.spore")));
+  test("parse hello.fungi secure main flow", () => {
+    const result = analyseProject(loadProject(path.join(root, "hello.fungi")));
     assertNoLexErrors(result);
     const mainFlow = result.ast.flows.find((flow) => flow.name === "main");
-    assert(mainFlow, "Expected hello.spore to define flow main.");
+    assert(mainFlow, "Expected hello.fungi to define flow main.");
     assert(mainFlow.qualifier === "secure", "Expected main flow to be secure.");
     assert(mainFlow.returns === "Result<Void, Error>", "Expected main flow to return Result<Void, Error>.");
   });
 
   test("parse pure vector flow modifiers", () => {
-    const result = analyseProject(projectFromSource("vector-flow.spore", `pure vector flow vectorTotal(input: Array<Int>) -> Int {
+    const result = analyseProject(projectFromSource("vector-flow.fungi", `pure vector flow vectorTotal(input: Array<Int>) -> Int {
   return input[0] + input[1] + input[2]
 }
 
@@ -1123,7 +1123,7 @@ pure vector required flow strictVectorTotal(input: Array<Int>) -> Int {
   });
 
   test("parse async flow modifier", () => {
-    const result = analyseProject(projectFromSource("async-flow.spore", `async flow loadUser(id: UserId) -> Result<User, ApiError>
+    const result = analyseProject(projectFromSource("async-flow.fungi", `async flow loadUser(id: UserId) -> Result<User, ApiError>
 effects [network.outbound] {
   let response = await api.get("/users/{id}")
   return User.fromJson(response)
@@ -1137,46 +1137,46 @@ effects [network.outbound] {
     assert(asyncFlow.effects.includes("network.outbound"), "Expected async flow effects to be parsed.");
   });
 
-  test("parse boot.spore project and targets", () => {
-    const result = analyseProject(loadProject(path.join(root, "boot.spore")));
+  test("parse boot.fungi project and targets", () => {
+    const result = analyseProject(loadProject(path.join(root, "boot.fungi")));
     assertNoLexErrors(result);
-    assert(result.ast.project === "OrderRiskDemo", "Expected boot.spore project name to be OrderRiskDemo.");
-    assert(result.ast.entry === "./src/main.spore", "Expected boot.spore to declare ./src/main.spore entry.");
+    assert(result.ast.project === "OrderRiskDemo", "Expected boot.fungi project name to be OrderRiskDemo.");
+    assert(result.ast.entry === "./src/main.fungi", "Expected boot.fungi to declare ./src/main.fungi entry.");
     for (const target of ["binary", "wasm", "gpu", "photonic", "ternary", "omni"]) {
-      assert(result.ast.targets.some((item) => item.name === target), `Expected boot.spore to declare ${target} target.`);
+      assert(result.ast.targets.some((item) => item.name === target), `Expected boot.fungi to declare ${target} target.`);
     }
-    assert(result.ast.runtime.memory.softLimit === "512mb", "Expected boot.spore runtime soft memory limit.");
-    assert(result.ast.runtime.runMode === "checked", "Expected boot.spore runtime run mode.");
-    assert(result.ast.runtime.cacheIr === true, "Expected boot.spore runtime cache_ir setting.");
-    assert(result.ast.globals.some((global) => global.name === "PAYMENT_WEBHOOK_SECRET" && global.type === "SecureString"), "Expected boot.spore global registry secret.");
+    assert(result.ast.runtime.memory.softLimit === "512mb", "Expected boot.fungi runtime soft memory limit.");
+    assert(result.ast.runtime.runMode === "checked", "Expected boot.fungi runtime run mode.");
+    assert(result.ast.runtime.cacheIr === true, "Expected boot.fungi runtime cache_ir setting.");
+    assert(result.ast.globals.some((global) => global.name === "PAYMENT_WEBHOOK_SECRET" && global.type === "SecureString"), "Expected boot.fungi global registry secret.");
     assert(result.ast.runtime.memory.spill.deny.includes("SecureString"), "Expected runtime spill deny list to include SecureString.");
   });
 
   test("valid examples check without intentional error fixture", () => {
-    const result = analyseProject(loadProject(root, ["source-map-error.spore"]));
+    const result = analyseProject(loadProject(root, ["source-map-error.fungi"]));
     const errors = result.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
     assert(errors.length === 0, `Expected valid examples to have no errors, found ${errors.length}.`);
   });
 
-  test("source-map-error.spore reports compute target incompatibility", () => {
-    const result = analyseProject(loadProject(path.join(root, "source-map-error.spore")));
+  test("source-map-error.fungi reports compute target incompatibility", () => {
+    const result = analyseProject(loadProject(path.join(root, "source-map-error.fungi")));
     const diagnostic = result.diagnostics.find((item) => item.errorType === "TargetCompatibilityError");
     assert(diagnostic, "Expected TargetCompatibilityError diagnostic.");
     assert(diagnostic.problem.includes("readFile"), "Expected diagnostic to mention readFile.");
   });
 
   test("diagnostics include standard Galerina codes and recovery fields", () => {
-    const result = analyseProject(loadProject(path.join(root, "source-map-error.spore")));
+    const result = analyseProject(loadProject(path.join(root, "source-map-error.fungi")));
     const diagnostic = result.diagnostics.find((item) => item.errorType === "TargetCompatibilityError");
     assert(diagnostic.code === "galerina-ERR-TARGET-002", `Expected standard target error code, found ${diagnostic?.code}.`);
     assert(diagnostic.level === "error", "Expected standard diagnostic level.");
     assert(diagnostic.category === "target", "Expected target diagnostic category.");
     assert(diagnostic.recoveryAction === "move_unsupported_operation_or_select_fallback", "Expected recovery action.");
-    assert(diagnostic.source.file === "source-map-error.spore", "Expected structured source field.");
+    assert(diagnostic.source.file === "source-map-error.fungi", "Expected structured source field.");
   });
 
   test("logic width target checks report simulation and unsupported targets", () => {
-    const result = analyseProject(projectFromSource("logic-width.spore", `project "LogicWidthDemo"
+    const result = analyseProject(projectFromSource("logic-width.fungi", `project "LogicWidthDemo"
 
 logic width 5
 
@@ -1197,7 +1197,7 @@ flow main() -> Result<Void, Error> {
   });
 
   test("logic mode ternary warns when binary target uses simulation", () => {
-    const result = analyseProject(projectFromSource("logic-ternary.spore", `project "LogicTernaryDemo"
+    const result = analyseProject(projectFromSource("logic-ternary.fungi", `project "LogicTernaryDemo"
 
 logic mode ternary
 
@@ -1217,7 +1217,7 @@ flow main() -> Result<Void, Error> {
   });
 
   test("browser target blocks server-only imports", () => {
-    const result = analyseProject(projectFromSource("browser-import-block.spore", `project "BrowserImportBlockDemo"
+    const result = analyseProject(projectFromSource("browser-import-block.fungi", `project "BrowserImportBlockDemo"
 
 target browser {
   output js
@@ -1249,17 +1249,17 @@ secure flow main() -> Result<Void, Error> {
   });
 
   test("browser-safe example plans JavaScript output", () => {
-    const result = analyseProject(loadProject(path.join(root, "browser-form.spore")));
+    const result = analyseProject(loadProject(path.join(root, "browser-form.fungi")));
     const errors = result.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
-    assert(errors.length === 0, `Expected browser-form.spore to have no errors, found ${errors.length}.`);
-    assert(hasEnabledTarget(result.ast, "browser"), "Expected browser-form.spore to enable browser target.");
+    assert(errors.length === 0, `Expected browser-form.fungi to have no errors, found ${errors.length}.`);
+    assert(hasEnabledTarget(result.ast, "browser"), "Expected browser-form.fungi to enable browser target.");
     const manifest = buildManifest(result, { "app.browser.js": browserJavaScriptPlaceholder(result) });
     assert(manifest.targetOutputs.browserJavaScript === "app.browser.js", "Expected manifest to include browser JavaScript output.");
     assert(browserJavaScriptPlaceholder(result).includes("server-only imports blocked"), "Expected browser placeholder to mention import security.");
   });
 
   test("memory checks warn on explicit Json clone", () => {
-    const result = analyseProject(projectFromSource("json-clone.spore", `project "JsonCloneDemo"
+    const result = analyseProject(projectFromSource("json-clone.fungi", `project "JsonCloneDemo"
 
 secure flow clonePayload(req: Request) -> Result<Void, Error> {
   let payload: Json = req.json()
@@ -1273,7 +1273,7 @@ secure flow clonePayload(req: Request) -> Result<Void, Error> {
   });
 
   test("memory checks reject mutation through read-only Json borrow", () => {
-    const result = analyseProject(projectFromSource("readonly-json-mutation.spore", `project "ReadOnlyMutationDemo"
+    const result = analyseProject(projectFromSource("readonly-json-mutation.fungi", `project "ReadOnlyMutationDemo"
 
 secure flow processPayload(payload: &Json) -> Result<Void, Error> {
   payload.set("$.status", "processed")
@@ -1286,7 +1286,7 @@ secure flow processPayload(payload: &Json) -> Result<Void, Error> {
   });
 
   test("type checker reports unknown declared types", () => {
-    const result = analyseProject(projectFromSource("unknown-type.spore", `flow loadThing() -> MissingType {
+    const result = analyseProject(projectFromSource("unknown-type.fungi", `flow loadThing() -> MissingType {
   return MissingType()
 }
 `));
@@ -1296,7 +1296,7 @@ secure flow processPayload(payload: &Json) -> Result<Void, Error> {
   });
 
   test("type checker reports missing enum match cases", () => {
-    const result = analyseProject(projectFromSource("missing-match.spore", `enum PaymentStatus {
+    const result = analyseProject(projectFromSource("missing-match.fungi", `enum PaymentStatus {
   Paid
   Pending
   Failed
@@ -1314,7 +1314,7 @@ flow decision(status: PaymentStatus) -> Decision {
   });
 
   test("schema generator emits CreateOrderRequest JSON schema", () => {
-    const result = analyseProject(loadProject(path.join(root, "api-orders.spore")));
+    const result = analyseProject(loadProject(path.join(root, "api-orders.fungi")));
     const report = buildJsonSchemaReport(result.ast);
     const schema = report.schemas.CreateOrderRequest;
     assert(schema, "Expected CreateOrderRequest schema.");
@@ -1323,7 +1323,7 @@ flow decision(status: PaymentStatus) -> Decision {
   });
 
   test("openapi generator emits OrdersApi route", () => {
-    const result = analyseProject(loadProject(path.join(root, "api-orders.spore")));
+    const result = analyseProject(loadProject(path.join(root, "api-orders.fungi")));
     const openapi = buildOpenApi(result);
     assert(openapi.paths["/orders"], "Expected /orders path.");
     assert(openapi.paths["/orders"].post.operationId === "createOrder", "Expected createOrder operationId.");
@@ -1332,24 +1332,24 @@ flow decision(status: PaymentStatus) -> Decision {
   test("target planner reports fallback-covered compute blocks", () => {
     const result = analyseProject(loadProject(root));
     const report = buildTargetReport(result);
-    const compatible = report.computeBlocks.find((block) => block.file === "compute-block.spore");
-    const incompatible = report.computeBlocks.find((block) => block.file === "source-map-error.spore");
-    assert(compatible && compatible.fallbackCovered === true, "Expected compute-block.spore to have fallback coverage.");
-    assert(incompatible && incompatible.status === "blocked", "Expected source-map-error.spore to be blocked.");
+    const compatible = report.computeBlocks.find((block) => block.file === "compute-block.fungi");
+    const incompatible = report.computeBlocks.find((block) => block.file === "source-map-error.fungi");
+    assert(compatible && compatible.fallbackCovered === true, "Expected compute-block.fungi to have fallback coverage.");
+    assert(incompatible && incompatible.status === "blocked", "Expected source-map-error.fungi to be blocked.");
     assert(report.summary.computeBlocksBlocked >= 1, "Expected target report to count blocked compute blocks.");
     assert(report.logicCapability.some((target) => target.target === "ternary" && target.nativeLogicWidth === 3), "Expected ternary logic capability in target report.");
   });
 
   test("target planner reports CPU reference verification", () => {
-    const result = analyseProject(loadProject(path.join(root, "compute-block.spore")));
+    const result = analyseProject(loadProject(path.join(root, "compute-block.fungi")));
     const report = buildTargetReport(result);
-    const block = report.computeBlocks.find((item) => item.file === "compute-block.spore");
-    assert(block.verification.cpuReference === true, "Expected compute-block.spore to request CPU reference verification.");
+    const block = report.computeBlocks.find((item) => item.file === "compute-block.fungi");
+    assert(block.verification.cpuReference === true, "Expected compute-block.fungi to request CPU reference verification.");
     assert(report.precisionSummary.cpuReferenceChecks === 1, "Expected one CPU reference check.");
   });
 
   test("ai context includes compact summaries", () => {
-    const result = analyseProject(loadProject(root, ["source-map-error.spore"]));
+    const result = analyseProject(loadProject(root, ["source-map-error.fungi"]));
     const context = buildAiContext(result);
     assert(context.summary.sourceFileCount > 0, "Expected source file count.");
     assert(context.routeSummary.length === 1, "Expected one route summary.");
@@ -1359,7 +1359,7 @@ flow decision(status: PaymentStatus) -> Decision {
   });
 
   test("strict comments are extracted and mismatches are reported", () => {
-    const result = analyseProject(projectFromSource("strict-comment-mismatch.spore", `/// @purpose Updates an order.
+    const result = analyseProject(projectFromSource("strict-comment-mismatch.fungi", `/// @purpose Updates an order.
 /// @output Result<Order, Error>
 /// @effects [database.read]
 secure flow updateOrder(order: Order) -> Result<Order, Error>
@@ -1374,7 +1374,7 @@ effects [database.write] {
   });
 
   test("map manifest and generated docs describe compiled API output", () => {
-    const result = analyseProject(loadProject(root, ["source-map-error.spore"]));
+    const result = analyseProject(loadProject(root, ["source-map-error.fungi"]));
     const mapManifest = buildMapManifest(result);
     const docsManifest = buildDocsManifest(result);
     const apiGuide = apiGuideMarkdown(result);
@@ -1385,7 +1385,7 @@ effects [database.write] {
   });
 
   test("successful builds include regenerated AI guide", () => {
-    const result = analyseProject(loadProject(root, ["source-map-error.spore"]));
+    const result = analyseProject(loadProject(root, ["source-map-error.fungi"]));
     const outputs = {
       "app.ai-guide.md": aiGuideMarkdown(result),
       "app.ai-context.json": JSON.stringify(buildAiContext(result), null, 2)
@@ -1397,7 +1397,7 @@ effects [database.write] {
   });
 
   test("build manifest marks prototype artefacts as non-executable placeholders", () => {
-    const result = analyseProject(loadProject(root, ["source-map-error.spore"]));
+    const result = analyseProject(loadProject(root, ["source-map-error.fungi"]));
     const manifest = buildManifest(result, {
       "app.bin": "placeholder",
       "app.wasm": "placeholder"
@@ -1408,7 +1408,7 @@ effects [database.write] {
   });
 
   test("build manifest includes generated output naming policy", () => {
-    const result = analyseProject(loadProject(root, ["source-map-error.spore"]));
+    const result = analyseProject(loadProject(root, ["source-map-error.fungi"]));
     const manifest = buildManifest(result, {
       "app.bin": "placeholder",
       "app.wasm": "placeholder"
@@ -1419,7 +1419,7 @@ effects [database.write] {
   });
 
   test("build manifest includes per-source hashes", () => {
-    const result = analyseProject(loadProject(root, ["source-map-error.spore"]));
+    const result = analyseProject(loadProject(root, ["source-map-error.fungi"]));
     const manifest = buildManifest(result, {
       "app.bin": "placeholder",
       "app.wasm": "placeholder"
@@ -1430,7 +1430,7 @@ effects [database.write] {
   });
 
   test("build manifest includes dependency hashes", () => {
-    const result = analyseProject(projectFromSource("imports.spore", `project "Imports"
+    const result = analyseProject(projectFromSource("imports.fungi", `project "Imports"
 import browser.dom
 import server.database
 secure flow main() -> Result<Void, Error> {
@@ -1448,7 +1448,7 @@ secure flow main() -> Result<Void, Error> {
   });
 
   test("build manifest defines deterministic build rules", () => {
-    const result = analyseProject(loadProject(root, ["source-map-error.spore"]));
+    const result = analyseProject(loadProject(root, ["source-map-error.fungi"]));
     const manifest = buildManifest(result, {
       "app.bin": "placeholder",
       "app.wasm": "placeholder"
@@ -1459,7 +1459,7 @@ secure flow main() -> Result<Void, Error> {
   });
 
   test("verify checks build artifact status metadata", () => {
-    const result = analyseProject(loadProject(root, ["source-map-error.spore"]));
+    const result = analyseProject(loadProject(root, ["source-map-error.fungi"]));
     const outDir = fs.mkdtempSync(path.join(os.tmpdir(), "galerina-verify-artifacts-"));
     try {
       build(result, outDir);
@@ -1480,11 +1480,11 @@ secure flow main() -> Result<Void, Error> {
     const outDir = fs.mkdtempSync(path.join(os.tmpdir(), "galerina-build-clean-"));
     const keepFile = path.join(outDir, "keep.txt");
     try {
-      build(analyseProject(loadProject(path.join(root, "browser-form.spore"))), outDir);
+      build(analyseProject(loadProject(path.join(root, "browser-form.fungi"))), outDir);
       assert(fs.existsSync(path.join(outDir, "app.browser.js")), "Expected browser build to create app.browser.js.");
       fs.writeFileSync(keepFile, "user-owned file\n", "utf8");
 
-      build(analyseProject(loadProject(path.join(root, "hello.spore"))), outDir);
+      build(analyseProject(loadProject(path.join(root, "hello.fungi"))), outDir);
       assert(!fs.existsSync(path.join(outDir, "app.browser.js")), "Expected stale browser output to be cleaned.");
       assert(fs.existsSync(keepFile), "Expected non-generated file to be preserved.");
     } finally {
@@ -1493,7 +1493,7 @@ secure flow main() -> Result<Void, Error> {
   });
 
   test("runtime report describes memory pressure and spill policy", () => {
-    const result = analyseProject(loadProject(path.join(root, "boot.spore")));
+    const result = analyseProject(loadProject(path.join(root, "boot.fungi")));
     const report = buildRuntimeReport(result);
     assert(report.execution.runMode === "checked", "Expected runtime report run mode.");
     assert(report.memory.softLimit === "512mb", "Expected runtime report soft memory limit.");
@@ -1503,7 +1503,7 @@ secure flow main() -> Result<Void, Error> {
   });
 
   test("memory report describes pressure ladder and cache bypass", () => {
-    const result = analyseProject(loadProject(path.join(root, "boot.spore")));
+    const result = analyseProject(loadProject(path.join(root, "boot.fungi")));
     const report = buildMemoryReport(result);
     assert(report.pressureLadder.length === 7, "Expected memory pressure ladder to have seven stages.");
     assert(report.cacheLimit.name === "cache_bypass", "Expected cache bypass policy.");
@@ -1512,7 +1512,7 @@ secure flow main() -> Result<Void, Error> {
   });
 
   test("execution report describes run and compile modes", () => {
-    const result = analyseProject(loadProject(path.join(root, "boot.spore")));
+    const result = analyseProject(loadProject(path.join(root, "boot.fungi")));
     const report = buildExecutionReport(result);
     assert(report.runtime.runMode === "checked", "Expected execution report run mode.");
     assert(report.compileMode.mapManifest === true, "Expected compile mode map manifest.");
@@ -1521,7 +1521,7 @@ secure flow main() -> Result<Void, Error> {
   });
 
   test("global report describes registry and redacts secrets", () => {
-    const result = analyseProject(loadProject(path.join(root, "boot.spore")));
+    const result = analyseProject(loadProject(path.join(root, "boot.fungi")));
     const report = buildGlobalReport(result);
     const secret = report.globals.find((global) => global.name === "PAYMENT_WEBHOOK_SECRET");
     assert(report.summary.secretCount >= 1, "Expected at least one global secret.");
@@ -1530,7 +1530,7 @@ secure flow main() -> Result<Void, Error> {
   });
 
   test("global secret must use SecureString", () => {
-    const result = analyseProject(projectFromSource("bad-global-secret.spore", `globals {
+    const result = analyseProject(projectFromSource("bad-global-secret.fungi", `globals {
   secret API_KEY: String = env.secret("API_KEY")
 }
 `));
@@ -1539,7 +1539,7 @@ secure flow main() -> Result<Void, Error> {
   });
 
   test("run mode executes simple checked print script", () => {
-    const source = projectFromSource("hello-run.spore", `secure flow main() -> Result<Void, Error> {
+    const source = projectFromSource("hello-run.fungi", `secure flow main() -> Result<Void, Error> {
   print("hello from Galerina")
   return Ok()
 }
@@ -1551,7 +1551,7 @@ secure flow main() -> Result<Void, Error> {
   });
 
   test("run mode executes simple checked console.log script", () => {
-    const source = projectFromSource("hello-console-run.spore", `secure flow main() -> Result<Void, Error> {
+    const source = projectFromSource("hello-console-run.fungi", `secure flow main() -> Result<Void, Error> {
   console.log("hello from Galerina console")
   return Ok()
 }
@@ -1563,7 +1563,7 @@ secure flow main() -> Result<Void, Error> {
   });
 
   test("run mode resolves simple let bindings and string concatenation", () => {
-    const source = projectFromSource("concat-run.spore", `pure vector flow vectorTotal(input: Int) -> Int {
+    const source = projectFromSource("concat-run.fungi", `pure vector flow vectorTotal(input: Int) -> Int {
   return input
 }
 
@@ -1611,7 +1611,7 @@ secure flow main() -> Result<Void, Error> {
   });
 
   test("development generate writes reports without production binaries", () => {
-    const result = analyseProject(loadProject(root, ["source-map-error.spore"]));
+    const result = analyseProject(loadProject(root, ["source-map-error.fungi"]));
     const outDir = fs.mkdtempSync(path.join(os.tmpdir(), "galerina-dev-"));
     try {
       const written = generateDevelopmentOutputs(result, outDir);
@@ -1653,17 +1653,17 @@ secure flow main() -> Result<Void, Error> {
   test("dev watch only reruns for source changes", () => {
     const watchRoot = fs.mkdtempSync(path.join(os.tmpdir(), "galerina-watch-filter-"));
     const outDir = path.join(watchRoot, ".build-dev");
-    const mainFile = path.join(watchRoot, "src", "main.spore");
-    const siblingFile = path.join(watchRoot, "src", "other.spore");
+    const mainFile = path.join(watchRoot, "src", "main.fungi");
+    const siblingFile = path.join(watchRoot, "src", "other.fungi");
     try {
       fs.mkdirSync(path.dirname(mainFile), { recursive: true });
       fs.mkdirSync(outDir, { recursive: true });
       fs.writeFileSync(mainFile, "secure flow main() -> Result<Void, Error> { return Ok() }\n", "utf8");
       fs.writeFileSync(siblingFile, "flow helper() -> Result<Void, Error> { return Ok() }\n", "utf8");
 
-      assert(shouldTriggerDevWatch(mainFile, watchRoot, outDir, false) === true, "Expected directory mode to react to .spore changes.");
+      assert(shouldTriggerDevWatch(mainFile, watchRoot, outDir, false) === true, "Expected directory mode to react to .fungi changes.");
       assert(shouldTriggerDevWatch(path.join(outDir, "app.ai-context.json"), watchRoot, outDir, false) === false, "Expected dev outputs to be ignored.");
-      assert(shouldTriggerDevWatch(path.join(watchRoot, "README.md"), watchRoot, outDir, false) === false, "Expected non-.spore files to be ignored.");
+      assert(shouldTriggerDevWatch(path.join(watchRoot, "README.md"), watchRoot, outDir, false) === false, "Expected non-.fungi files to be ignored.");
       assert(shouldTriggerDevWatch(mainFile, mainFile, outDir, true) === true, "Expected single-file mode to react to the requested file.");
       assert(shouldTriggerDevWatch(siblingFile, mainFile, outDir, true) === false, "Expected single-file mode to ignore sibling files.");
     } finally {
@@ -2166,7 +2166,7 @@ function applyProjectChecks(project, ast, diagnostics) {
       line: 1,
       column: 1,
       problem: "No binary target was declared, so CPU binary compatibility is enabled implicitly.",
-      suggestedFix: "Declare a binary target in boot.spore for explicit output paths."
+      suggestedFix: "Declare a binary target in boot.fungi for explicit output paths."
     });
   }
 
@@ -2226,7 +2226,7 @@ function applyImportCapabilityChecks(ast, diagnostics) {
 
   const blockedCapabilities = new Set(ast.capabilities?.block || []);
   const browserTargetFiles = new Set(browserTargets.map((target) => target.file));
-  const browserDeclaredInBoot = browserTargets.some((target) => target.file === "boot.spore");
+  const browserDeclaredInBoot = browserTargets.some((target) => target.file === "boot.fungi");
   for (const imported of ast.imports) {
     if (!browserDeclaredInBoot && !browserTargetFiles.has(imported.file)) continue;
     const capability = capabilityForImport(imported.module);
@@ -3778,7 +3778,7 @@ function memoryCorrectionExampleDiagnostics() {
     standardDiagnostic({
       severity: "error",
       errorType: "MemoryIntegrityError",
-      file: "examples/cache-demo.spore",
+      file: "examples/cache-demo.fungi",
       line: 42,
       column: 1,
       target: "runtime",
@@ -3788,7 +3788,7 @@ function memoryCorrectionExampleDiagnostics() {
     standardDiagnostic({
       severity: "fatal",
       errorType: "MemoryCorruptionFatal",
-      file: "examples/cache-demo.spore",
+      file: "examples/cache-demo.fungi",
       line: 42,
       column: 1,
       target: "runtime",
@@ -3921,7 +3921,7 @@ function buildMapManifest(result) {
     version: "0.1.0",
     compiler: VERSION,
     buildMode: result.ast.buildContract.mode || "debug",
-    entry: "boot.spore",
+    entry: "boot.fungi",
     applicationEntry: result.ast.entry,
     outputs: {
       binary: "app.bin",
@@ -4468,7 +4468,7 @@ The guide hash is recorded in app.build-manifest.json after generation.
 
 ## Entry Points
 
-- boot.spore
+- boot.fungi
 - ${result.ast.entry || "application entry not declared"}
 
 ## API Routes
@@ -4625,13 +4625,13 @@ function strictPurposeFor(result, kind, name) {
 function compiledOutputsForSource(file, result) {
   const outputs = ["app.bin", "app.wasm", "app.source-map.json", "app.map-manifest.json"];
   if (result.ast.globals.some((global) => global.file === file)) outputs.push("app.global-report.json", "docs/global-registry-guide.md");
-  if (result.ast.runtime && file.endsWith("boot.spore")) outputs.push("app.runtime-report.json", "app.memory-report.json", "docs/runtime-guide.md", "docs/memory-pressure-guide.md");
+  if (result.ast.runtime && file.endsWith("boot.fungi")) outputs.push("app.runtime-report.json", "app.memory-report.json", "docs/runtime-guide.md", "docs/memory-pressure-guide.md");
   if (result.ast.apis.some((api) => api.file === file)) outputs.push("app.openapi.json", "app.api-report.json", "docs/api-guide.md");
   if (result.ast.webhooks.some((webhook) => webhook.file === file)) outputs.push("app.api-report.json", "docs/webhook-guide.md");
   if (result.ast.types.some((type) => type.file === file)) outputs.push("app.schemas.json", "docs/type-reference.md");
   if (result.ast.computeBlocks.some((block) => block.file === file)) outputs.push("app.gpu.plan", "app.photonic.plan", "app.ternary.sim", "app.omni-logic.sim", "app.target-report.json");
   if (result.ast.targets.some((target) => target.file === file && target.name === "browser")) outputs.push("app.browser.js", "app.target-report.json", "app.security-report.json");
-  if (file.endsWith("boot.spore")) outputs.push("app.execution-report.json", "docs/run-compile-mode-guide.md");
+  if (file.endsWith("boot.fungi")) outputs.push("app.execution-report.json", "docs/run-compile-mode-guide.md");
   return Array.from(new Set(outputs));
 }
 

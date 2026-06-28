@@ -132,8 +132,8 @@ result_pattern      = "Ok" , "(" , pattern , ")" | "Err" , "(" , pattern , ")" ;
 
 `Option<T>` and `Result<T, E>` are standard generic types. Matches over enums,
 `Option`, and `Result` must be exhaustive unless a wildcard arm is accepted by
-policy. General exhaustiveness diagnostics use `SPORE-MATCH-*`; type-level
-match diagnostics may also report `SPORE-TYPE-021`.
+policy. General exhaustiveness diagnostics use `FUNGI-MATCH-*`; type-level
+match diagnostics may also report `FUNGI-TYPE-021`.
 
 ## Flow Declarations
 
@@ -146,7 +146,7 @@ flow_decl           = [ flow_qualifier ] , "flow" , identifier ,
 
 flow_qualifier      = "pure" | "guarded" | "secure" ;
 (* Top-level qualifiers 'safe flow', 'guard flow', and 'unsafe flow' are
-   REMOVED. They emit SPORE-SYNTAX-LEGACY-002 (warning) if encountered.
+   REMOVED. They emit FUNGI-SYNTAX-LEGACY-002 (warning) if encountered.
    Use 'pure', 'guarded', or 'secure' instead. *)
 
 param_list          = param , { "," , param } ;
@@ -276,7 +276,7 @@ emit_stmt           = "emit" , identifier ;
 
 effects_clause      = [ "with" ] , "effects" , "[" ,
                       [ effect_name , { "," , effect_name } ] , "]" ;
-(* REMOVED — SPORE-SYNTAX-LEGACY-001 (hard error)
+(* REMOVED — FUNGI-SYNTAX-LEGACY-001 (hard error)
    'with effects [...]' is no longer valid syntax. The parser emits a hard
    error when this form is encountered. The canonical form is:
      contract { effects { database.read, audit.write } }
@@ -288,7 +288,7 @@ effect_name         = identifier , "." , identifier ,
 intent_clause       = "intent" , string_literal ;
 ```
 
-`with effects [...]` is a **hard error** (SPORE-SYNTAX-LEGACY-001). All effect
+`with effects [...]` is a **hard error** (FUNGI-SYNTAX-LEGACY-001). All effect
 declarations must use `contract { effects {} }`. The `effects_clause` production
 above is retained in the grammar for documentation purposes only and is not
 parsed by the v1 parser.
@@ -385,7 +385,7 @@ assignment_stmt     = assignable , "=" , expression ;
 return_stmt         = "return" , expression ;
 
 if_stmt             = "if" , expression , block , [ "else" , block ] ;
-(* Phase 41 — 'else if' is a HARD ERROR (SPORE-SYNTAX-010). The grammar intentionally
+(* Phase 41 — 'else if' is a HARD ERROR (FUNGI-SYNTAX-010). The grammar intentionally
    does not allow 'else if_stmt' (recursive else-if chains). The 'else' arm accepts
    only a plain block. Use 'match' for multi-branch conditions, or write sequential
    'if' statements. Example:
@@ -403,7 +403,7 @@ if_stmt             = "if" , expression , block , [ "else" , block ] ;
        _               => return "low"
      }
 
-     // ERROR SPORE-SYNTAX-010 — else if is not valid Galerina:
+     // ERROR FUNGI-SYNTAX-010 — else if is not valid Galerina:
      // if a { ... } else if b { ... }
 *)
 match_stmt          = match_expr ;
@@ -527,9 +527,9 @@ flow's execution. `runtime deterministic` disables all adaptive optimisation.
 ## Explicitly Excluded From v1
 
 ```text
-safe flow, unsafe flow, guard flow  — emit SPORE-SYNTAX-LEGACY-002 (warning)
-with effects [...]                  — hard error SPORE-SYNTAX-LEGACY-001
-else if                             — hard error SPORE-SYNTAX-010
+safe flow, unsafe flow, guard flow  — emit FUNGI-SYNTAX-LEGACY-002 (warning)
+with effects [...]                  — hard error FUNGI-SYNTAX-LEGACY-001
+else if                             — hard error FUNGI-SYNTAX-010
 top-level fn
 fn effects clauses
 assignment expressions
@@ -601,6 +601,6 @@ The following were formalised or clarified in Phase 41:
 | Integer/string literal arms | `200 => return "ok"` in `match` expressions |
 | `effects {}` optional | Omission = pure (no effects declared) |
 | Top-level result types | Preferred over `contract.types {}` for public flows |
-| No `else if` | Hard error SPORE-SYNTAX-010; use `match` or sequential `if` |
+| No `else if` | Hard error FUNGI-SYNTAX-010; use `match` or sequential `if` |
 | `unsafe let` boundary form | Marks raw HTTP/request input at flow entry |
 

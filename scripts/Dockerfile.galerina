@@ -27,7 +27,7 @@ ENV NODE_ENV=production
 
 # Health check via governed flow
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD node galerina.mjs run examples/deployment/health-check.spore --invoke getHealthStatus || exit 1
+  CMD node galerina.mjs run examples/deployment/health-check.fungi --invoke getHealthStatus || exit 1
 
 # Default: run governance check on mounted app
 CMD ["node", "galerina.mjs", "tower-log", "list"]

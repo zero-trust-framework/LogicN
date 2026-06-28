@@ -34,7 +34,7 @@ not repeat them. Parent research: [`research/photonic-lane-D-qrng.md`](../resear
 Specify the **digital** stage of a NIST-conformant random-bit pipeline that turns a physical/quantum noise
 source into `rnd` (FIPS-204 hedged-signing nonce) or a key-generation seed `ξ`, **fail-closed**: any health
 fault, or a DRBG reseed-required condition, returns **no bytes** (`unknown → deny`, mirroring
-`SPORE-ENTROPY-001/002`). The pipeline is the three SP 800-90 layers, of which a QRNG occupies only the first box:
+`FUNGI-ENTROPY-001/002`). The pipeline is the three SP 800-90 layers, of which a QRNG occupies only the first box:
 
 ```
 [ noise source ] → [ 90B continuous health tests ] → [ 90A HMAC_DRBG(SHA-256) ] → rnd / keygen seed ξ
@@ -110,7 +110,7 @@ Internal state `{ K (32 B), V (32 B), reseed_counter }`. `reseed_interval = 2^48
   pre-`Update(additional_input)`; `V = HMAC(K, V)` repeatedly until `n` bytes; truncate to `n`;
   post-`Update(additional_input)`; `reseed_counter += 1`.
 
-## 5. Fail-closed rules (normative — mirrors `SPORE-ENTROPY-001/002`)
+## 5. Fail-closed rules (normative — mirrors `FUNGI-ENTROPY-001/002`)
 
 1. **Health-test failure → out of service.** On the first RCT or APT failure the source is latched failed and
    the pipeline returns **`null`** (no bytes). 90B §4.3: on a persistent failure "the entropy source **shall
@@ -164,7 +164,7 @@ The reference reproduces `ReturnedBits` **byte-exact**.
 
 ## 7. Galerina role (governance boundary)
 
-Crypto and entropy cannot live in `.spore` (`galerina check` rejects even bitwise ops; `signature-custody-v0` §7).
+Crypto and entropy cannot live in `.fungi` (`galerina check` rejects even bitwise ops; `signature-custody-v0` §7).
 This pipeline is a **host-side** SP 800-90 RBG invoked through the Galerina capability boundary (`entropy.qrng`).
 Galerina governs the **availability and admission** of the entropy capability: a failed 90B health test →
 entropy source unavailable → `unknown → deny`, identical to how a missing vetted verifier makes the reader

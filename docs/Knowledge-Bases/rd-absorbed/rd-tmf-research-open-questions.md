@@ -13,11 +13,11 @@ default** so work can proceed; flag any you want to overrule. Ordered by leverag
 
 ## ✅ Ratified 2026-06-15 (resolved — no longer open)
 - **#11 crypto-on-deterministic-core → RESOLVED, and it is *shipped*, not a proposal.** Galerina's
-  `verifySubstrate()` already fires `SPORE-SUBSTRATE-001` when a `Crypto`/`Hash`/`Sign` effect sits on
+  `verifySubstrate()` already fires `FUNGI-SUBSTRATE-001` when a `Crypto`/`Hash`/`Sign` effect sits on
   `lane: noisy`. `.tmf` crypto (TMX-256, ML-DSA, ML-KEM, Ascon) is declared `lane: digital` and inherits
   the check for free. *Provenance integrity (the signed digest) ≠ value reproducibility.*
 - **#13 engine placement → RESOLVED: mirror the FFSM bridge pattern.** `.tmf`/TritMesh DB are
-  capability-bounded backends wrapped *outside* the runtime; pure-TS/`.spore` governance contract in
+  capability-bounded backends wrapped *outside* the runtime; pure-TS/`.fungi` governance contract in
   `packages-galerina/`; heavy byte/Keccak/lattice work via a vetted library in an isolated execution layer;
   declared `lane: digital`. *Govern it, don't absorb it.*
 - **Confidentiality (#1 ML-KEM param, #5 KDF, #6 ZK) → DEFERRED.** Integrity + Authenticity ship first
@@ -78,9 +78,9 @@ The items below remain genuinely open (format/encoding + validation refinements)
     → *Default:* only as an **availability** feature for **non-trust** data, strictly outside the
     verification gate, and any repaired byte must re-verify against the signed root or be rejected.
 13. **Implementation language.** A `.tmf`/crypto engine needs byte buffers + a Keccak permutation
-    + lattice math. The Galerina issues record this is **not expressible in `.spore` today** (no byte
+    + lattice math. The Galerina issues record this is **not expressible in `.fungi` today** (no byte
     buffers / bitwise / crypto effect). So: where does the engine live?
-    → *Open fork for you.* Options: (a) Rust/`libtmf_core` engine governed by `.spore` (the boundary
+    → *Open fork for you.* Options: (a) Rust/`libtmf_core` engine governed by `.fungi` (the boundary
     notes' original intent); (b) wait on Galerina gaining a `bytes`/`crypto` capability and keep the
     engine spec-only/Blocked; (c) some FFI/`compute{}` boundary. This is a real decision — I did
     not assume it. (Recorded because it gates any executable v0.)

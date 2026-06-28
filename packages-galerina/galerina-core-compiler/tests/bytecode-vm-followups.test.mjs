@@ -36,7 +36,7 @@ contract { effects {} }
 
 test("runBytecode: a non-terminating loop TRAPS at maxIterations (no uncatchable hang)", () => {
   clearBytecodeCache();
-  const p = parse(LOOP_FOREVER, "loop.spore");
+  const p = parse(LOOP_FOREVER, "loop.fungi");
   const prog = compileToBytecode(p.ast, "loopForever");
   assert.notEqual(prog, null, "while-true flow must be bytecode-eligible (pure, integer-only)");
   // Pre-fix this spun forever. With a low cap it must throw the 'Loop exceeded' trap promptly.
@@ -47,7 +47,7 @@ test("runBytecode: a bounded loop under the cap still computes the correct value
   clearBytecodeCache();
   const p = parse(
     "pure flow sumTo(n: Int) -> Int contract { effects {} } { mut t: Int = 0  mut i: Int = 1  while i <= n { t = t + i  i = i + 1 } return t }",
-    "sum.spore",
+    "sum.fungi",
   );
   const prog = compileToBytecode(p.ast, "sumTo");
   // 100 iterations, cap 100_000 → runs; cap 50 → traps (proves the cap is honored, not ignored).
@@ -58,7 +58,7 @@ test("runBytecode: a bounded loop under the cap still computes the correct value
 test("end-to-end: a runaway pure flow FAILS CLOSED via the bytecode tier (byte-identical to the walker)", async () => {
   clearBytecodeCache();
   clearPureFlowCache?.();
-  const p = parse(LOOP_FOREVER, "loop-e2e.spore");
+  const p = parse(LOOP_FOREVER, "loop-e2e.fungi");
 
   // Fast tier (bytecode VM) with a low cap → runtimeError, NOT a hang or a silent partial-success.
   const fast = await executeFlow(
@@ -80,8 +80,8 @@ test("end-to-end: a runaway pure flow FAILS CLOSED via the bytecode tier (byte-i
 
 // ── Follow-up 2: cache keyed per program AST, not by flow name alone ─────────────────────────────────
 test("two distinct flows both named `main` compiled in sequence return their OWN results (direct)", () => {
-  const a = parse("pure flow main() -> Int contract { effects {} } { return 11 }", "a.spore");
-  const b = parse("pure flow main() -> Int contract { effects {} } { return 22 }", "b.spore");
+  const a = parse("pure flow main() -> Int contract { effects {} } { return 11 }", "a.fungi");
+  const b = parse("pure flow main() -> Int contract { effects {} } { return 22 }", "b.fungi");
   clearBytecodeCache();
   const ra = tryRunBytecode(a.ast, a.flows, "main", []);
   const rb = tryRunBytecode(b.ast, b.flows, "main", []); // NB: no clear between — exercises the cache
@@ -92,20 +92,20 @@ test("two distinct flows both named `main` compiled in sequence return their OWN
 test("benchmark-runner repro: per-file `main` is isolated even when only the pure-flow cache is cleared", async () => {
   // Mirrors galerina-runner.mjs: it calls clearPureFlowCache() between benchmark files but NOT the bytecode
   // cache; every benchmark's entry flow is named `main`. Pre-fix, file B's `main` got file A's bytecode.
-  const a = parse("pure flow main() -> Int contract { effects {} } { return 100 }", "benchA.spore");
-  const b = parse("pure flow main() -> Int contract { effects {} } { return 200 }", "benchB.spore");
+  const a = parse("pure flow main() -> Int contract { effects {} } { return 100 }", "benchA.fungi");
+  const b = parse("pure flow main() -> Int contract { effects {} } { return 200 }", "benchB.fungi");
   clearBytecodeCache();
   clearPureFlowCache?.();
 
   const ra = await executeFlow("main", new Map(), a.ast, a.flows, undefined, undefined,
-    { pureFastPath: true, sourceTag: "benchA.spore" }, undefined, undefined);
+    { pureFastPath: true, sourceTag: "benchA.fungi" }, undefined, undefined);
   assert.equal(ra.executionTier, "bytecode");
   assert.equal(ra.value.value, 100);
 
   clearPureFlowCache?.(); // ← exactly what the runner clears between files (bytecode cache untouched)
 
   const rb = await executeFlow("main", new Map(), b.ast, b.flows, undefined, undefined,
-    { pureFastPath: true, sourceTag: "benchB.spore" }, undefined, undefined);
+    { pureFastPath: true, sourceTag: "benchB.fungi" }, undefined, undefined);
   assert.equal(rb.executionTier, "bytecode");
   assert.equal(rb.value.value, 200, "pre-fix this returned 100 — file A's cached bytecode poisoned file B");
 });

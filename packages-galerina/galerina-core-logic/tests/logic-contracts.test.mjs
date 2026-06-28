@@ -52,7 +52,7 @@ describe("galerina-core-logic contracts", () => {
 
     assert.equal(
       diagnostics.some(
-        (diagnostic) => diagnostic.code === "SPORE-LOGIC-005",
+        (diagnostic) => diagnostic.code === "FUNGI-LOGIC-005",
       ),
       true,
     );
@@ -110,19 +110,19 @@ describe("galerina-core-logic contracts", () => {
 
     assert.equal(
       diagnostics.some(
-        (diagnostic) => diagnostic.code === "SPORE-LOGIC-013",
+        (diagnostic) => diagnostic.code === "FUNGI-LOGIC-013",
       ),
       true,
     );
     assert.equal(
       diagnostics.some(
-        (diagnostic) => diagnostic.code === "SPORE-LOGIC-011",
+        (diagnostic) => diagnostic.code === "FUNGI-LOGIC-011",
       ),
       true,
     );
     assert.equal(
       diagnostics.some(
-        (diagnostic) => diagnostic.code === "SPORE-LOGIC-014",
+        (diagnostic) => diagnostic.code === "FUNGI-LOGIC-014",
       ),
       true,
     );

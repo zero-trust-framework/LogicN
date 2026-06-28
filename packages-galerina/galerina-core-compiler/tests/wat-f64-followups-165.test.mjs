@@ -9,7 +9,7 @@ import { describe, it } from "node:test";
 import * as L from "../dist/index.js";
 
 async function run(src) {
-  const p = L.parseProgram(src, "t.spore");
+  const p = L.parseProgram(src, "t.fungi");
   const errs = (p.diagnostics ?? []).filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "parse: " + errs.map((d) => d.message).join("; "));
   const fx = L.checkEffects(p.flows, p.ast);

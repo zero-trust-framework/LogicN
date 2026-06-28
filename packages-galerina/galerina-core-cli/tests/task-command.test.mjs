@@ -7,11 +7,11 @@ import { describe, it } from "node:test";
 import { runCli } from "../dist/index.js";
 
 describe("Galerina task command", () => {
-  it("lists and dry-runs tasks from tasks.spore", async () => {
+  it("lists and dry-runs tasks from tasks.fungi", async () => {
     const cwd = await mkdtemp(join(tmpdir(), "galerina-core-cli-task-"));
 
     await writeFile(
-      join(cwd, "tasks.spore"),
+      join(cwd, "tasks.fungi"),
       `task prepare {
   description "Prepare build inputs"
   effects [filesystem]

@@ -3,7 +3,7 @@
 // Resolves a cached capability tier {binary|hybrid|photonic} ONCE at boot/admission, ATTESTED
 // (derived from the bridge manifest behind verifyAttestation, NOT a self-asserted boolean), reused
 // as a Passive Execution Plan input. Cache-invalidation = re-attestation. Fail-closed: UNKNOWN or
-// UNATTESTED ⇒ binary (the K3 dead-zone collapses to DENY → binary, SPORE-HW-004).
+// UNATTESTED ⇒ binary (the K3 dead-zone collapses to DENY → binary, FUNGI-HW-004).
 //
 // NEUTRAL by design: this package never calls verifyAttestation itself (that lives in the Tower,
 // with node:crypto, on the BRIDGE attestation surface — `galerina.bridge.manifest.v2`, NOT the audit
@@ -13,7 +13,7 @@
 // Resolution order (0054 spec §1.2), mirrored exactly:
 //   1. read the attested manifest's hardwareIdentity → targetId
 //   2. GATE: attestation verified?            → if NO  ⇒ 'binary' (UNATTESTED ⇒ floor)
-//   3. profiles.get(targetId)                  → if undefined ⇒ 'binary' (UNKNOWN ⇒ K3 DENY, SPORE-HW-004)
+//   3. profiles.get(targetId)                  → if undefined ⇒ 'binary' (UNKNOWN ⇒ K3 DENY, FUNGI-HW-004)
 //   4. profile.requiresAttestation && !verified ⇒ 'binary' (defensive; step 2 already gated)
 //   5. AcceleratorPlane && component fully-eligible ⇒ 'photonic' (the preference ceiling)
 //   6. AcceleratorPlane (whole component) / ExecutionPlane ⇒ 'hybrid' (digital core + offloaded eligible)
@@ -44,7 +44,7 @@ export function resolveHardware(input: ResolveHardwareInput): Tier {
   // JSON/env round-trip or a mis-wired caller passing the verifyAttestation result object instead of .ok)
   // must collapse to the floor — never coerce-pass the gate.
   if (input.attestationVerified !== true) return "binary";
-  // 3. UNKNOWN target ⇒ K3 INDETERMINATE ⇒ DENY ⇒ binary (SPORE-HW-004).
+  // 3. UNKNOWN target ⇒ K3 INDETERMINATE ⇒ DENY ⇒ binary (FUNGI-HW-004).
   const profile = profiles.get(input.targetId);
   if (!profile) return "binary";
   // 4. defensive (step 2 already ensured verified === true here).

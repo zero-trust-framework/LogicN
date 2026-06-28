@@ -18,7 +18,7 @@ import { parseProgram, executeFlow } from "../dist/index.js";
 
 async function runFlow(body, opts = {}) {
   const src = `pure flow main() -> Int\ncontract { effects {} }\n{ ${body} }`;
-  const p = parseProgram(src, "fc.spore");
+  const p = parseProgram(src, "fc.fungi");
   const errs = p.diagnostics.filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "unexpected parse error: " + errs.map((e) => e.message).join("; "));
   const r = await executeFlow("main", new Map(), p.ast, p.flows, undefined, undefined, opts, undefined, undefined);

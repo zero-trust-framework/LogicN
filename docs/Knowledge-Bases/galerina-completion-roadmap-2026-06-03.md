@@ -22,9 +22,9 @@ Six layers to 100%. Priority order: KB first, WASM last.
 | # | Task | Status |
 |---|---|---|
 | 2.1 | `request {}` content validation — `accepts`, `requires` field checking | pending |
-| 2.2 | `response {}` content validation — `returns`, `denies` field checking (extend SPORE-GOV-003) | pending |
+| 2.2 | `response {}` content validation — `returns`, `denies` field checking (extend FUNGI-GOV-003) | pending |
 | 2.3 | `limits {}` enforcement — validate that declared CPU/memory/time limits are syntactically correct and warn if limits are unreachable given the security profile | pending |
-| 2.4 | `authority {}` deep validation — validate that `requires` references known capabilities; warn on overly broad authority (no `reason` = SPORE-GOV-007 already, but add `requires *` detection) | pending |
+| 2.4 | `authority {}` deep validation — validate that `requires` references known capabilities; warn on overly broad authority (no `reason` = FUNGI-GOV-007 already, but add `requires *` detection) | pending |
 | 2.5 | `observability {}` and `model {}` and `context {}` blocks — currently parsed/retained but not validated; add basic validation | pending |
 
 ---
@@ -34,11 +34,11 @@ Six layers to 100%. Priority order: KB first, WASM last.
 
 | # | Task | Status |
 |---|---|---|
-| 3.1 | SPORE-GOV-006 GOVERNANCE_PROOF_REQUIRED_BUT_MISSING — high-risk flow (high max_risk_liability) with no epilogue {} fires a warning | pending |
+| 3.1 | FUNGI-GOV-006 GOVERNANCE_PROOF_REQUIRED_BUT_MISSING — high-risk flow (high max_risk_liability) with no epilogue {} fires a warning | pending |
 | 3.2 | Epilogue auto-policy — governance verifier auto-assigns sha256_seal to the ProofGraph when economics.max_risk_liability ≥ threshold, without requiring explicit epilogue {} declaration | pending |
-| 3.3 | `decreases` keyword — parser recognises `pure flow f(n: Int) decreases n { ... }` signature modifier; governance verifier enforces SPORE-TERM-001 (decreasing metric) | pending |
-| 3.4 | SPORE-TERM-001 MISSING_TERMINATION_PROOF — fires warning when a recursive flow in `strict` profile lacks a `decreases` annotation | pending |
-| 3.5 | SPORE-GOV-001 INTENT_BEHAVIOR_MISMATCH — heuristic: fire warning when intent string contains action verbs that contradict declared effects (e.g. intent says "read only" but effects include `database.write`) | pending |
+| 3.3 | `decreases` keyword — parser recognises `pure flow f(n: Int) decreases n { ... }` signature modifier; governance verifier enforces FUNGI-TERM-001 (decreasing metric) | pending |
+| 3.4 | FUNGI-TERM-001 MISSING_TERMINATION_PROOF — fires warning when a recursive flow in `strict` profile lacks a `decreases` annotation | pending |
+| 3.5 | FUNGI-GOV-001 INTENT_BEHAVIOR_MISMATCH — heuristic: fire warning when intent string contains action verbs that contradict declared effects (e.g. intent says "read only" but effects include `database.write`) | pending |
 
 ---
 
@@ -67,14 +67,14 @@ Six layers to 100%. Priority order: KB first, WASM last.
 ---
 
 ## Phase 6 — WASM Execution (96% → 100%)
-**Goal:** `wasmtime galerina.wasm program.spore` works. governance-cost jumps from 3.2K/s → ~500M/s.
+**Goal:** `wasmtime galerina.wasm program.fungi` works. governance-cost jumps from 3.2K/s → ~500M/s.
 
 | # | Task | Status |
 |---|---|---|
-| 6.1 | Compile `runtime.spore` through Phase 27 WAT emitter → `galerina-runtime.wat` | pending |
+| 6.1 | Compile `runtime.fungi` through Phase 27 WAT emitter → `galerina-runtime.wat` | pending |
 | 6.2 | Assemble `galerina-runtime.wat` → `galerina-runtime.wasm` via wabt | pending |
-| 6.3 | WASI host shim — expose `wasi:filesystem` + `wasi:cli` to `galerina-runtime.wasm` so it can read `.spore` source files | pending |
-| 6.4 | `wasmtime galerina-runtime.wasm <program.spore>` — end-to-end run | pending |
+| 6.3 | WASI host shim — expose `wasi:filesystem` + `wasi:cli` to `galerina-runtime.wasm` so it can read `.fungi` source files | pending |
+| 6.4 | `wasmtime galerina-runtime.wasm <program.fungi>` — end-to-end run | pending |
 | 6.5 | Benchmark: governance-cost governed via wasmtime vs baseline 3.2K/s | pending |
 | 6.6 | WASM SIMD expansion — f32x4, i8x16 shuffle, vectorised string ops for text-html + matrix-multiply | pending |
 

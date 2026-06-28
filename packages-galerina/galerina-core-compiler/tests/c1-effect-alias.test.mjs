@@ -7,11 +7,11 @@ import assert from "node:assert/strict";
 import { parseProgram, inferDirectEffectsForFlow, buildModuleAliasMap, checkStdlibEffects } from "../dist/index.js";
 
 function flowNode(src) {
-  const p = parseProgram(src, "c1.spore");
+  const p = parseProgram(src, "c1.fungi");
   return (p.ast.children ?? []).find((c) => c.kind && /Flow/.test(c.kind));
 }
 function stdlibCodes(src) {
-  const p = parseProgram(src, "c1.spore");
+  const p = parseProgram(src, "c1.fungi");
   const fn = (p.ast.children ?? []).find((c) => c.kind && /Flow/.test(c.kind));
   return checkStdlibEffects(p.flows[0], fn, "production").map((d) => d.code);
 }
@@ -52,12 +52,12 @@ test("C1: resolving a non-module alias is harmless (no spurious effect)", () => 
 
 // ── stdlib-deny (#153 / H2): an UNREGISTERED method on an aliased effectful module ──
 test("C1/H2 stdlib-deny: direct unregistered effectful method requires the broad effect (control)", () => {
-  assert.ok(stdlibCodes(wrap("  Database.someNewMethod(msg)")).includes("SPORE-STDLIB-002"));
+  assert.ok(stdlibCodes(wrap("  Database.someNewMethod(msg)")).includes("FUNGI-STDLIB-002"));
 });
 test("C1/H2 stdlib-deny: an ALIASED unregistered effectful method still requires it (was the bypass)", () => {
-  assert.ok(stdlibCodes(wrap("  let x = Database\n  x.someNewMethod(msg)")).includes("SPORE-STDLIB-002"),
+  assert.ok(stdlibCodes(wrap("  let x = Database\n  x.someNewMethod(msg)")).includes("FUNGI-STDLIB-002"),
     "aliasing must not escape the #153 deny-by-default broad-effect rule");
 });
 test("C1/H2 stdlib-deny: a transitive alias chain is covered too", () => {
-  assert.ok(stdlibCodes(wrap("  let x = Database\n  let y = x\n  y.someNewMethod(msg)")).includes("SPORE-STDLIB-002"));
+  assert.ok(stdlibCodes(wrap("  let x = Database\n  let y = x\n  y.someNewMethod(msg)")).includes("FUNGI-STDLIB-002"));
 });

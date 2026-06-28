@@ -160,7 +160,7 @@ SafeFor<LogLine>        ← Log.escapeLine()
 SafeFor<RegexLiteral>   ← Regex.escapeLiteral()
 ```
 
-**Current status:** `Tainted<T>` and `SafeFor<Context, T>` are implemented (Phase 28). OWASP-aligned catalogue with 22 untaint boundaries. SPORE-TAINT-001/003/004 diagnostics enforced.
+**Current status:** `Tainted<T>` and `SafeFor<Context, T>` are implemented (Phase 28). OWASP-aligned catalogue with 22 untaint boundaries. FUNGI-TAINT-001/003/004 diagnostics enforced.
 
 ---
 
@@ -301,7 +301,7 @@ galerina build --profile government
 
 Profiles can enable: deterministic execution · audit requirements · proof generation · restricted capabilities · stricter verification — **without changing language syntax**.
 
-**Current status:** `strict` and `high_integrity` profiles enforced (Phase 28). SPORE-PROFILE-001 (recursion), SPORE-PROFILE-002 (unbounded loops), SPORE-PROFILE-006 (missing runtime budget).
+**Current status:** `strict` and `high_integrity` profiles enforced (Phase 28). FUNGI-PROFILE-001 (recursion), FUNGI-PROFILE-002 (unbounded loops), FUNGI-PROFILE-006 (missing runtime budget).
 
 ---
 

@@ -770,11 +770,11 @@ unsafe self-modifying runtime logic
 
 | Code | Meaning |
 |---|---|
-| `SPORE-OMNI-001` | Omni logic feature disabled |
-| `SPORE-OMNI-002` | advisory logic attempted privileged action |
-| `SPORE-OMNI-003` | unsupported Omni state |
-| `SPORE-OMNI-004` | non-deterministic logic used in restricted runtime path |
-| `SPORE-OMNI-005` | Omni reasoning trace missing |
+| `FUNGI-OMNI-001` | Omni logic feature disabled |
+| `FUNGI-OMNI-002` | advisory logic attempted privileged action |
+| `FUNGI-OMNI-003` | unsupported Omni state |
+| `FUNGI-OMNI-004` | non-deterministic logic used in restricted runtime path |
+| `FUNGI-OMNI-005` | Omni reasoning trace missing |
 
 ---
 

@@ -6,7 +6,7 @@ import { parseProgram, checkEffects, checkFlowEffects, effectResultsToDiagnostic
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function parseAndCheck(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effectResults = checkEffects(parsed.flows, parsed.ast ?? { kind: "program" });
   const allDiagnostics = [
     ...parsed.diagnostics,
@@ -40,7 +40,7 @@ pure flow calculateVat(amount: Money<GBP>) -> Money<GBP> {
     assert.equal(effectErrors(effectResults).length, 0);
   });
 
-  it("emits SPORE-EFFECT-003 when pure flow declares effects", () => {
+  it("emits FUNGI-EFFECT-003 when pure flow declares effects", () => {
     const { effectResults } = parseAndCheck(`
 pure flow badFlow(x: Int) -> Int
 effects [database.read] {
@@ -48,8 +48,8 @@ effects [database.read] {
 }
 `);
     const errors = effectErrors(effectResults);
-    assert.ok(errors.length > 0, "Expected SPORE-EFFECT-003 error");
-    assert.ok(errors.some((d) => d.code === "SPORE-EFFECT-003"));
+    assert.ok(errors.length > 0, "Expected FUNGI-EFFECT-003 error");
+    assert.ok(errors.some((d) => d.code === "FUNGI-EFFECT-003"));
   });
 
   it("includes a suggested fix for pure flow with effects", () => {
@@ -59,8 +59,8 @@ effects [database.write] {
   return x
 }
 `);
-    const err = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "SPORE-EFFECT-003");
-    assert.ok(err?.suggestedFix !== undefined, "Expected suggestedFix on SPORE-EFFECT-003");
+    const err = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "FUNGI-EFFECT-003");
+    assert.ok(err?.suggestedFix !== undefined, "Expected suggestedFix on FUNGI-EFFECT-003");
   });
 });
 
@@ -117,8 +117,8 @@ effects [payment.charge] {
 }
 `);
     const warnings = effectWarnings(effectResults);
-    assert.ok(warnings.some((d) => d.code === "SPORE-EFFECT-001"),
-      "Expected SPORE-EFFECT-001 warning for privileged effect on plain flow");
+    assert.ok(warnings.some((d) => d.code === "FUNGI-EFFECT-001"),
+      "Expected FUNGI-EFFECT-001 warning for privileged effect on plain flow");
   });
 
   // ── FO-DISPATCH-MISSING-CASE regression (galerina-fail-open-taxonomy.md) ────────
@@ -128,7 +128,7 @@ effects [payment.charge] {
   // undeclared effect on a user-named receiver (OrdersDB.find → database.read — neither a
   // secure-tier nor a registered stdlib effect) emitted ZERO diagnostics and signed a manifest
   // attesting effects [none]. These tests pin the closed hole.
-  it("emits SPORE-EFFECT-001 for a plain flow with an undeclared database.read", () => {
+  it("emits FUNGI-EFFECT-001 for a plain flow with an undeclared database.read", () => {
     const { effectResults } = parseAndCheck(`
 flow loadOrder(order: Order) -> Result<Order, OrderError>
   contract { effects {  } }
@@ -137,8 +137,8 @@ flow loadOrder(order: Order) -> Result<Order, OrderError>
 }
 `);
     assert.ok(
-      hasEffectDiag(effectResults, "SPORE-EFFECT-001"),
-      "Expected SPORE-EFFECT-001: plain flow performs undeclared database.read (OrdersDB.find)",
+      hasEffectDiag(effectResults, "FUNGI-EFFECT-001"),
+      "Expected FUNGI-EFFECT-001: plain flow performs undeclared database.read (OrdersDB.find)",
     );
   });
 
@@ -156,7 +156,7 @@ flow loadOrder(order: Order) -> Result<Order, OrderError>
     );
   });
 
-  it("emits SPORE-EFFECT-002 for a plain flow fn helper with an undeclared effect", () => {
+  it("emits FUNGI-EFFECT-002 for a plain flow fn helper with an undeclared effect", () => {
     const { effectResults } = parseAndCheck(`
 flow processOrder(order: Order) -> Result<Unit, Error>
   contract { effects {  } }
@@ -169,8 +169,8 @@ flow processOrder(order: Order) -> Result<Unit, Error>
 }
 `);
     assert.ok(
-      hasEffectDiag(effectResults, "SPORE-EFFECT-002"),
-      "Expected SPORE-EFFECT-002: plain flow fn helper uses database.write not declared on the parent",
+      hasEffectDiag(effectResults, "FUNGI-EFFECT-002"),
+      "Expected FUNGI-EFFECT-002: plain flow fn helper uses database.write not declared on the parent",
     );
   });
 });
@@ -184,7 +184,7 @@ describe("Effect checker — EFFECT-001 covers every effectful flow kind", () =>
   const EFFECTFUL_FLOW_KINDS = ["flow", "guarded", "secure"];
 
   for (const kind of EFFECTFUL_FLOW_KINDS) {
-    it(`${kind} flow with an undeclared effect emits SPORE-EFFECT-001`, () => {
+    it(`${kind} flow with an undeclared effect emits FUNGI-EFFECT-001`, () => {
       const { effectResults } = parseAndCheck(`
 ${kind} flow loadOrder(order: Order) -> Result<Order, OrderError>
   contract { effects {  } }
@@ -193,8 +193,8 @@ ${kind} flow loadOrder(order: Order) -> Result<Order, OrderError>
 }
 `);
       assert.ok(
-        hasEffectDiag(effectResults, "SPORE-EFFECT-001"),
-        `Expected SPORE-EFFECT-001 for an undeclared effect on a "${kind}" flow — the undeclared-effect pass must not skip any effectful flow kind`,
+        hasEffectDiag(effectResults, "FUNGI-EFFECT-001"),
+        `Expected FUNGI-EFFECT-001 for an undeclared effect on a "${kind}" flow — the undeclared-effect pass must not skip any effectful flow kind`,
       );
     });
   }
@@ -258,7 +258,7 @@ guarded flow saveOrder(order: Order) -> Result<OrderId, OrderError>
     assert.equal(effectErrors(effectResults).length, 0);
   });
 
-  it("emits SPORE-EFFECT-001 for guarded flow missing a declared effect", () => {
+  it("emits FUNGI-EFFECT-001 for guarded flow missing a declared effect", () => {
     const { effectResults } = parseAndCheck(`
 guarded flow saveOrder(order: Order) -> Result<OrderId, OrderError>
   contract { effects {  } }
@@ -267,7 +267,7 @@ guarded flow saveOrder(order: Order) -> Result<OrderId, OrderError>
   return Ok(orderId)
 }
 `);
-    assert.ok(hasEffectDiag(effectResults, "SPORE-EFFECT-001"));
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-001"));
   });
 
   it("warns for a guarded flow with an overdeclared effect", () => {
@@ -284,7 +284,7 @@ guarded flow noOp(order: Order) -> Result<OrderId, OrderError>
 
 // intentional: guarded flows in source strings use "with effects [...]" canonical syntax
 describe("Effect checker - pure flow calls effectful flow", () => {
-  it("emits SPORE-EFFECT-003 when pure flow calls a guarded flow", () => {
+  it("emits FUNGI-EFFECT-003 when pure flow calls a guarded flow", () => {
     const { effectResults } = parseAndCheck(`
 guarded flow saveOrder(order: Order) -> Result<OrderId, OrderError>
   contract { effects { database.write } }
@@ -296,7 +296,7 @@ pure flow calculate(order: Order) -> Result<OrderId, OrderError> {
   return saveOrder(order)
 }
 `);
-    assert.ok(hasEffectDiag(effectResults, "SPORE-EFFECT-003"));
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-003"));
   });
 
   it("allows pure flow calling another pure flow", () => {
@@ -333,8 +333,8 @@ guarded flow processOrder(order: Order) -> Result<OrderId, ProcessError>
 
 // intentional: guarded flows in source strings use "with effects [...]" canonical syntax
 describe("Effect checker - canonical effect names", () => {
-  it("effects [network] emits SPORE-EFFECT-005 (BroadAliasUsed) with suggestion network.outbound", () => {
-    // 'network' is a broad alias — now emits SPORE-EFFECT-005 (warning), not SPORE-EFFECT-004 (error)
+  it("effects [network] emits FUNGI-EFFECT-005 (BroadAliasUsed) with suggestion network.outbound", () => {
+    // 'network' is a broad alias — now emits FUNGI-EFFECT-005 (warning), not FUNGI-EFFECT-004 (error)
     const { effectResults } = parseAndCheck(`
 guarded flow fetchRate(currency: String) -> Result<Decimal, RateError>
   contract { effects { network } }
@@ -343,12 +343,12 @@ guarded flow fetchRate(currency: String) -> Result<Decimal, RateError>
   return json.decode(rawResponse)
 }
 `);
-    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "SPORE-EFFECT-005");
+    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "FUNGI-EFFECT-005");
     assert.equal(diag?.suggestedCode, "network.outbound");
   });
 
-  it("effects [database] emits SPORE-EFFECT-005 (BroadAliasUsed) with suggestion database.read", () => {
-    // 'database' is a broad alias — now emits SPORE-EFFECT-005 (warning), not SPORE-EFFECT-004 (error)
+  it("effects [database] emits FUNGI-EFFECT-005 (BroadAliasUsed) with suggestion database.read", () => {
+    // 'database' is a broad alias — now emits FUNGI-EFFECT-005 (warning), not FUNGI-EFFECT-004 (error)
     const { effectResults } = parseAndCheck(`
 guarded flow loadOrder(order: Order) -> Result<Order, OrderError>
   contract { effects { database } }
@@ -356,7 +356,7 @@ guarded flow loadOrder(order: Order) -> Result<Order, OrderError>
   return Ok(OrdersDB.find(order.id)?)
 }
 `);
-    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "SPORE-EFFECT-005");
+    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "FUNGI-EFFECT-005");
     assert.equal(diag?.suggestedCode, "database.read");
   });
 
@@ -369,7 +369,7 @@ guarded flow fetchRate(currency: String) -> Result<Decimal, RateError>
   return json.decode(rawResponse)
 }
 `);
-    assert.ok(!effectResults.flatMap((r) => r.diagnostics).some((d) => d.code === "SPORE-EFFECT-004"));
+    assert.ok(!effectResults.flatMap((r) => r.diagnostics).some((d) => d.code === "FUNGI-EFFECT-004"));
   });
 });
 
@@ -393,7 +393,7 @@ guarded flow processOrder(order: Order) -> Result<OrderId, ProcessError>
     assert.equal(effectErrors(effectResults).length, 0);
   });
 
-  it("flow A calls flow B and misses B's effect: SPORE-EFFECT-002", () => {
+  it("flow A calls flow B and misses B's effect: FUNGI-EFFECT-002", () => {
     const { effectResults } = parseAndCheck(`
 guarded flow saveOrder(order: Order) -> Result<OrderId, OrderError>
   contract { effects { database.write } }
@@ -408,7 +408,7 @@ guarded flow processOrder(order: Order) -> Result<OrderId, ProcessError>
   return Ok(orderId)
 }
 `);
-    assert.ok(hasEffectDiag(effectResults, "SPORE-EFFECT-002"));
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-002"));
   });
 
   it("two-hop propagation requires the root caller to declare inherited effects", () => {
@@ -431,20 +431,20 @@ guarded flow processOrder(order: Order) -> Result<OrderId, ProcessError>
   return saveOrder(order)
 }
 `);
-    assert.ok(hasEffectDiag(effectResults, "SPORE-EFFECT-002"));
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-002"));
   });
 });
 
 // intentional: guarded flows in source strings use "with effects [...]" canonical syntax
 describe("Effect checker - extended call patterns", () => {
-  it("http.get in pure flow body emits SPORE-EFFECT-003", () => {
+  it("http.get in pure flow body emits FUNGI-EFFECT-003", () => {
     const { effectResults } = parseAndCheck(`
 pure flow fetchRate(currency: String) -> Result<Decimal, RateError> {
   unsafe let rawResponse = http.get("https://rates.example.com/" + currency)?
   return json.decode(rawResponse)
 }
 `);
-    assert.ok(hasEffectDiag(effectResults, "SPORE-EFFECT-003"));
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-003"));
   });
 
   it("http.post in guarded flow with network.outbound declared has no diagnostics", () => {
@@ -459,16 +459,16 @@ guarded flow syncOrder(order: Order) -> Result<Unit, SyncError>
     assert.equal(effectErrors(effectResults).length, 0);
   });
 
-  it("fs.readText in pure flow emits SPORE-EFFECT-003", () => {
+  it("fs.readText in pure flow emits FUNGI-EFFECT-003", () => {
     const { effectResults } = parseAndCheck(`
 pure flow readFile(path: String) -> Result<String, FileError> {
   return fs.readText(path)
 }
 `);
-    assert.ok(hasEffectDiag(effectResults, "SPORE-EFFECT-003"));
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-003"));
   });
 
-  it("Env.get in guarded flow without secret.read emits SPORE-EFFECT-001", () => {
+  it("Env.get in guarded flow without secret.read emits FUNGI-EFFECT-001", () => {
     const { effectResults } = parseAndCheck(`
 guarded flow loadSecret(name: String) -> Result<String, Error>
   contract { effects {  } }
@@ -476,7 +476,7 @@ guarded flow loadSecret(name: String) -> Result<String, Error>
   return Env.get(name)
 }
 `);
-    assert.ok(hasEffectDiag(effectResults, "SPORE-EFFECT-001"));
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-001"));
   });
 });
 
@@ -513,7 +513,7 @@ guarded flow processRequest() -> Result<Unit, Error>
       "No errors expected: all transitive effects are declared");
   });
 
-  it("reports SPORE-EFFECT-002 when a caller misses transitive effect after graph refactor", () => {
+  it("reports FUNGI-EFFECT-002 when a caller misses transitive effect after graph refactor", () => {
     const { effectResults } = parseAndCheck(`
 guarded flow innerWrite() -> Result<Unit, Error>
   contract { effects { database.write } }
@@ -528,8 +528,8 @@ guarded flow outerCall() -> Result<Unit, Error>
   return innerWrite()
 }
 `);
-    assert.ok(hasEffectDiag(effectResults, "SPORE-EFFECT-002"),
-      "Expected SPORE-EFFECT-002: outerCall misses database.write from innerWrite");
+    assert.ok(hasEffectDiag(effectResults, "FUNGI-EFFECT-002"),
+      "Expected FUNGI-EFFECT-002: outerCall misses database.write from innerWrite");
   });
 
   it("handles circular flow references gracefully without hanging", () => {
@@ -566,8 +566,8 @@ guarded flow saveRecord(record: Record) -> Result<Unit, Error>
   return Ok(unit)
 }
 `);
-    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "SPORE-EFFECT-001");
-    assert.ok(diag !== undefined, "Expected SPORE-EFFECT-001 diagnostic");
+    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "FUNGI-EFFECT-001");
+    assert.ok(diag !== undefined, "Expected FUNGI-EFFECT-001 diagnostic");
     assert.ok(diag.suggestedCode !== undefined, "Expected suggestedCode on EFFECT-001");
     assert.ok(diag.suggestedCode.includes("contract {"), "suggestedCode must contain 'contract {'");
     assert.ok(diag.suggestedCode.includes("effects {"), "suggestedCode must contain 'effects {'");
@@ -583,7 +583,7 @@ guarded flow writeAndAudit(data: Data) -> Result<Unit, Error>
 }
 `);
     const diag = effectResults.flatMap((r) => r.diagnostics).find(
-      (d) => d.code === "SPORE-EFFECT-001" && d.suggestedCode?.includes("contract {")
+      (d) => d.code === "FUNGI-EFFECT-001" && d.suggestedCode?.includes("contract {")
     );
     assert.ok(diag !== undefined, "Expected EFFECT-001 with contract suggestedCode");
     assert.ok(diag.suggestedCode.includes("database.write"), "suggestedCode must list database.write");
@@ -600,8 +600,8 @@ guarded flow storePersonal(data: PII) -> Result<Unit, Error>
   return Ok(unit)
 }
 `);
-    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "SPORE-EFFECT-004");
-    assert.ok(diag !== undefined, "Expected SPORE-EFFECT-004 for pii.write");
+    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "FUNGI-EFFECT-004");
+    assert.ok(diag !== undefined, "Expected FUNGI-EFFECT-004 for pii.write");
     assert.equal(diag.suggestedCode, "database.write",
       "pii.write should suggest database.write");
   });
@@ -614,8 +614,8 @@ guarded flow sendRequest(payload: Payload) -> Result<Unit, Error>
   return Ok(unit)
 }
 `);
-    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "SPORE-EFFECT-004");
-    assert.ok(diag !== undefined, "Expected SPORE-EFFECT-004 for http.post");
+    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "FUNGI-EFFECT-004");
+    assert.ok(diag !== undefined, "Expected FUNGI-EFFECT-004 for http.post");
     assert.equal(diag.suggestedCode, "network.outbound",
       "http.post should suggest network.outbound");
   });
@@ -628,8 +628,8 @@ guarded flow fetchData(url: String) -> Result<String, Error>
   return Ok(unit)
 }
 `);
-    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "SPORE-EFFECT-004");
-    assert.ok(diag !== undefined, "Expected SPORE-EFFECT-004 for http.get");
+    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "FUNGI-EFFECT-004");
+    assert.ok(diag !== undefined, "Expected FUNGI-EFFECT-004 for http.get");
     assert.equal(diag.suggestedCode, "network.outbound",
       "http.get should suggest network.outbound");
   });
@@ -642,8 +642,8 @@ guarded flow loadFile(path: String) -> Result<String, Error>
   return Ok(unit)
 }
 `);
-    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "SPORE-EFFECT-004");
-    assert.ok(diag !== undefined, "Expected SPORE-EFFECT-004 for file.read");
+    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "FUNGI-EFFECT-004");
+    assert.ok(diag !== undefined, "Expected FUNGI-EFFECT-004 for file.read");
     assert.equal(diag.suggestedCode, "filesystem.read",
       "file.read should suggest filesystem.read");
   });
@@ -657,7 +657,7 @@ guarded flow sendEmail(msg: EmailMessage) -> Result<Unit, Error>
 }
 `);
     assert.ok(
-      !effectResults.flatMap((r) => r.diagnostics).some((d) => d.code === "SPORE-EFFECT-004"),
+      !effectResults.flatMap((r) => r.diagnostics).some((d) => d.code === "FUNGI-EFFECT-004"),
       "email.send is canonical — should not emit EFFECT-004"
     );
   });
@@ -678,8 +678,8 @@ guarded flow processOrder(order: Order) -> Result<Unit, Error>
 }
 `);
     assert.ok(
-      hasEffectDiag(effectResults, "SPORE-EFFECT-002"),
-      "Expected SPORE-EFFECT-002: fn helper uses database.write not declared on parent"
+      hasEffectDiag(effectResults, "FUNGI-EFFECT-002"),
+      "Expected FUNGI-EFFECT-002: fn helper uses database.write not declared on parent"
     );
   });
 
@@ -697,7 +697,7 @@ guarded flow processOrder(order: Order) -> Result<Unit, Error>
 `);
     const errors = effectErrors(effectResults);
     assert.ok(
-      !errors.some((d) => d.code === "SPORE-EFFECT-002"),
+      !errors.some((d) => d.code === "FUNGI-EFFECT-002"),
       "No EFFECT-002 expected when parent declares the fn helper's effect"
     );
   });
@@ -714,8 +714,8 @@ guarded flow storeOrder(order: Order) -> Result<Unit, Error>
   return Ok(unit)
 }
 `);
-    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "SPORE-EFFECT-001");
-    assert.ok(diag !== undefined, "Expected SPORE-EFFECT-001");
+    const diag = effectResults.flatMap((r) => r.diagnostics).find((d) => d.code === "FUNGI-EFFECT-001");
+    assert.ok(diag !== undefined, "Expected FUNGI-EFFECT-001");
     // The flow declaration is on line 2, OrdersDB.insert is on a later line.
     // Location line should be greater than 2 if pointing at the call.
     if (diag.location !== undefined) {
@@ -732,7 +732,7 @@ describe("Effect checker — #153 fail-closed unknown effectful stdlib call", ()
     return effectResults.flatMap((r) => r.diagnostics).map((d) => d.code);
   }
 
-  it("SPORE-STDLIB-002: unregistered method on effectful Database module is DENIED when no effect declared", () => {
+  it("FUNGI-STDLIB-002: unregistered method on effectful Database module is DENIED when no effect declared", () => {
     const codes = diagCodes(`
 secure flow doIt(x: Int) -> Int contract { effects { } } {
   let r = Database.zonkify(x)
@@ -740,12 +740,12 @@ secure flow doIt(x: Int) -> Int contract { effects { } } {
 }
 `);
     assert.ok(
-      codes.includes("SPORE-STDLIB-002"),
-      `Expected SPORE-STDLIB-002 for an unrecognised method on an effectful module, got: ${codes.join(", ")}`,
+      codes.includes("FUNGI-STDLIB-002"),
+      `Expected FUNGI-STDLIB-002 for an unrecognised method on an effectful module, got: ${codes.join(", ")}`,
     );
   });
 
-  it("SPORE-STDLIB-002: unregistered effectful method is allowed once the broad effect is declared", () => {
+  it("FUNGI-STDLIB-002: unregistered effectful method is allowed once the broad effect is declared", () => {
     const codes = diagCodes(`
 secure flow doIt(x: Int) -> Int contract { effects { database.read } } {
   let r = Database.zonkify(x)
@@ -753,8 +753,8 @@ secure flow doIt(x: Int) -> Int contract { effects { database.read } } {
 }
 `);
     assert.ok(
-      !codes.includes("SPORE-STDLIB-002"),
-      `Did not expect SPORE-STDLIB-002 once database.read is declared, got: ${codes.join(", ")}`,
+      !codes.includes("FUNGI-STDLIB-002"),
+      `Did not expect FUNGI-STDLIB-002 once database.read is declared, got: ${codes.join(", ")}`,
     );
   });
 
@@ -766,8 +766,8 @@ secure flow doIt(x: String) -> String contract { effects { } } {
 }
 `);
     assert.ok(
-      !codes.includes("SPORE-STDLIB-002"),
-      `Did not expect SPORE-STDLIB-002 for a pure stdlib module, got: ${codes.join(", ")}`,
+      !codes.includes("FUNGI-STDLIB-002"),
+      `Did not expect FUNGI-STDLIB-002 for a pure stdlib module, got: ${codes.join(", ")}`,
     );
   });
 
@@ -779,12 +779,12 @@ secure flow doIt(x: Int) -> Int contract { effects { } } {
 }
 `);
     assert.ok(
-      !codes.includes("SPORE-STDLIB-002"),
-      `Did not expect SPORE-STDLIB-002 for an unknown user module, got: ${codes.join(", ")}`,
+      !codes.includes("FUNGI-STDLIB-002"),
+      `Did not expect FUNGI-STDLIB-002 for an unknown user module, got: ${codes.join(", ")}`,
     );
   });
 
-  it("SPORE-STDLIB-002 covers Http (network.outbound) too", () => {
+  it("FUNGI-STDLIB-002 covers Http (network.outbound) too", () => {
     const codes = diagCodes(`
 secure flow doIt(x: String) -> String contract { effects { } } {
   let r = Http.exfiltrate(x)
@@ -792,8 +792,8 @@ secure flow doIt(x: String) -> String contract { effects { } } {
 }
 `);
     assert.ok(
-      codes.includes("SPORE-STDLIB-002"),
-      `Expected SPORE-STDLIB-002 for an unrecognised method on Http, got: ${codes.join(", ")}`,
+      codes.includes("FUNGI-STDLIB-002"),
+      `Expected FUNGI-STDLIB-002 for an unrecognised method on Http, got: ${codes.join(", ")}`,
     );
   });
 });

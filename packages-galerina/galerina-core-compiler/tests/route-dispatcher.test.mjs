@@ -5,7 +5,7 @@ import { describe, it } from "node:test";
 import { serve } from "../dist/index.js";
 
 async function withServer(source, fn) {
-  const server = await serve(source, "test.spore", { port: 0 });
+  const server = await serve(source, "test.fungi", { port: 0 });
   try {
     await fn(server);
   } finally {
@@ -140,6 +140,6 @@ flow bad(request: UnknownType) -> String {
 }
 route GET "/bad" { flow bad }
 `;
-    await assert.rejects(() => serve(source, "test.spore", { port: 0 }));
+    await assert.rejects(() => serve(source, "test.fungi", { port: 0 }));
   });
 });

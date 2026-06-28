@@ -47,11 +47,11 @@ executeFlow(name, args, ast, flows): Promise<FlowExecutionResult>
 
 ### 9A-2: Full Expression Type Inference (Phase 8B continuation)
 
-**Goal:** SPORE-TYPE-003 (branded type enforcement) + complete expression propagation
+**Goal:** FUNGI-TYPE-003 (branded type enforcement) + complete expression propagation
 
 **Branded type enforcement:**
 - Track `type Email = Brand<String, "EmailAddress">` in collectDeclarations
-- In assignment checking: `let email: Email = rawString` → SPORE-TYPE-003
+- In assignment checking: `let email: Email = rawString` → FUNGI-TYPE-003
 - Requires parser to capture type alias bodies (currently uses skipBalancedBraces)
 
 **Priority:** Fix parser's `parseTypeDecl` to capture alias body (the `= Brand<...>` part), then use it in type checker.
@@ -78,8 +78,8 @@ executeFlow(name, args, ast, flows): Promise<FlowExecutionResult>
 ### 9A-5: Governance/Proof Chain Completion
 
 **Remaining proof chain gaps:**
-- SPORE-GOV-003 (protected data without authority) — requires expression type inference
-- SPORE-GOV-005 (policy purpose mismatch) — requires intent/behavior analysis
+- FUNGI-GOV-003 (protected data without authority) — requires expression type inference
+- FUNGI-GOV-005 (policy purpose mismatch) — requires intent/behavior analysis
 - Proof chain wired into `serve()` per-request
 - SHA-256 over actual persisted JSONL audit file (not just in-memory events)
 
@@ -118,7 +118,7 @@ More complex than the lexer but bounded:
 - No network, no I/O
 - Well-specified (grammar in `galerina-grammar.ebnf`)
 
-**Success criterion:** Same `.spore` input → Stage A AST === Stage B AST.
+**Success criterion:** Same `.fungi` input → Stage A AST === Stage B AST.
 
 ### Stage B3: Cross-verification
 
@@ -141,7 +141,7 @@ After lexer + parser self-host:
 ### Phase 9A complete when:
 - `executeFlow` is async
 - Real HTTP via `fetch()` works
-- SPORE-TYPE-003 branded type enforcement implemented
+- FUNGI-TYPE-003 branded type enforcement implemented
 - `Decimal` uses arbitrary-precision arithmetic
 - Route auto-JSON parsing works
 - 95%+ TypeScript Runtime weighted score
@@ -158,11 +158,11 @@ After lexer + parser self-host:
 | Milestone | Complexity | % gain |
 |---|---|---|
 | Async interpreter | High | +6% runtime |
-| SPORE-TYPE-003 (branded) | Medium | +3% type checker |
+| FUNGI-TYPE-003 (branded) | Medium | +3% type checker |
 | Decimal arbitrary precision | Low | +2% stdlib |
 | Route auto-JSON | Low | +2% route |
 | Channel<T> | High | +2% stdlib |
-| SPORE-GOV-003/005 | Medium | +2% governance |
+| FUNGI-GOV-003/005 | Medium | +2% governance |
 
 Projected Phase 9A completion: **~93% TypeScript Runtime**
 
@@ -174,4 +174,4 @@ Projected Phase 9A completion: **~93% TypeScript Runtime**
 - `docs/Knowledge-Bases/galerina-adaptive-runtime-profiles.md` — async runtime model
 - `docs/Knowledge-Bases/galerina-intent-guided-optimisation.md` — IGO runtime concept
 - `docs/Knowledge-Bases/galerina-language-lessons.md` — lessons from other languages
-- `docs/Knowledge-Bases/galerina-type-improvements-phase-8.md` — SPORE-TYPE-003 spec
+- `docs/Knowledge-Bases/galerina-type-improvements-phase-8.md` — FUNGI-TYPE-003 spec

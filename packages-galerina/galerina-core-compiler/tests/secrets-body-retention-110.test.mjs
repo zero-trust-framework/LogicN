@@ -33,7 +33,7 @@ function findDeep(node, kind, out = []) {
 }
 
 describe("BUILD #110: secrets{} body is RETAINED in the AST", () => {
-  const { ast, diagnostics } = parseProgram(SRC, "t.spore");
+  const { ast, diagnostics } = parseProgram(SRC, "t.fungi");
 
   it("parses with zero errors", () => {
     const errs = (diagnostics ?? []).filter((d) => d.severity === "error");
@@ -64,8 +64,8 @@ describe("BUILD #110: secrets{} body is RETAINED in the AST", () => {
 });
 
 describe("BUILD #110: manifest emits a signed secret-rotation ProofObligation", () => {
-  const { ast, flows } = parseProgram(SRC, "t.spore");
-  const manifest = generateManifest(SRC, "t.spore", flows, undefined, "2026-06-25T00:00:00.000Z", ast, SRC);
+  const { ast, flows } = parseProgram(SRC, "t.fungi");
+  const manifest = generateManifest(SRC, "t.fungi", flows, undefined, "2026-06-25T00:00:00.000Z", ast, SRC);
   const rotation = (manifest.proofObligations ?? []).filter((o) => o.kind === "secret-rotation");
 
   it("binds the declared rotation policy to a runtime-precheck obligation", () => {
@@ -82,16 +82,16 @@ describe("BUILD #110: no false obligations / edge cases", () => {
   contract { secrets { credential api { provider vault } } }
   return x
 }`;
-    const { ast, flows } = parseProgram(src, "t.spore");
-    const m = generateManifest(src, "t.spore", flows, undefined, "2026-06-25T00:00:00.000Z", ast, src);
+    const { ast, flows } = parseProgram(src, "t.fungi");
+    const m = generateManifest(src, "t.fungi", flows, undefined, "2026-06-25T00:00:00.000Z", ast, src);
     assert.equal((m.proofObligations ?? []).filter((o) => o.kind === "secret-rotation").length, 0);
   });
 
   it("a flow with NO secrets{} at all emits NO secret-rotation obligation (and still parses)", () => {
     const src = `pure flow f() -> Int\ncontract { intent { "no secrets" } }\n{ return 1 }`;
-    const { ast, flows, diagnostics } = parseProgram(src, "t.spore");
+    const { ast, flows, diagnostics } = parseProgram(src, "t.fungi");
     assert.equal((diagnostics ?? []).filter((d) => d.severity === "error").length, 0);
-    const m = generateManifest(src, "t.spore", flows, undefined, "2026-06-25T00:00:00.000Z", ast, src);
+    const m = generateManifest(src, "t.fungi", flows, undefined, "2026-06-25T00:00:00.000Z", ast, src);
     assert.equal((m.proofObligations ?? []).filter((o) => o.kind === "secret-rotation").length, 0);
   });
 
@@ -106,7 +106,7 @@ secure flow b(y: Int) -> Int effects [database.write] {
   contract { effects { database.write } }
   return y
 }`;
-    const { flows, diagnostics } = parseProgram(src, "t.spore");
+    const { flows, diagnostics } = parseProgram(src, "t.fungi");
     assert.equal((diagnostics ?? []).filter((d) => d.severity === "error").length, 0);
     assert.equal(flows.length, 2, "both flows parse despite the nested unknown blocks");
     const b = flows.find((f) => f.name === "b");
@@ -124,8 +124,8 @@ secure flow b(y: Int) -> Int effects [database.write] {
   }
   return x
 }`;
-    const { ast, flows } = parseProgram(src, "t.spore");
-    const m = generateManifest(src, "t.spore", flows, undefined, "2026-06-25T00:00:00.000Z", ast, src);
+    const { ast, flows } = parseProgram(src, "t.fungi");
+    const m = generateManifest(src, "t.fungi", flows, undefined, "2026-06-25T00:00:00.000Z", ast, src);
     const rot = (m.proofObligations ?? []).filter((o) => o.kind === "secret-rotation");
     assert.equal(rot.length, 2);
     assert.ok(rot.some((o) => /db rotates every 1h/.test(o.description)));

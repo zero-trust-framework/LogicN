@@ -53,7 +53,7 @@ describe("scanner — metadata extraction", () => {
     assert.ok(titled.length > 0, "no docs had a title extracted from headings");
   });
 
-  test("extracts SPORE codes from governance-rules doc (>=20 codes)", () => {
+  test("extracts FUNGI codes from governance-rules doc (>=20 codes)", () => {
     const gov = scanResult.docs.find(d => d.id.includes("governance-rules"));
     if (!gov) {
       // Non-fatal: doc might not be present
@@ -61,14 +61,14 @@ describe("scanner — metadata extraction", () => {
       return;
     }
     assert.ok(gov.lnlCodes.length >= 20,
-      `expected >=20 SPORE codes, got ${gov.lnlCodes.length}`);
+      `expected >=20 FUNGI codes, got ${gov.lnlCodes.length}`);
   });
 
-  test("SPORE codes match expected pattern SPORE-XXX-NNN", () => {
-    const re = /^SPORE-[A-Z]+-\d+$/;
+  test("FUNGI codes match expected pattern FUNGI-XXX-NNN", () => {
+    const re = /^FUNGI-[A-Z]+-\d+$/;
     for (const doc of scanResult.docs) {
       for (const code of doc.lnlCodes) {
-        assert.ok(re.test(code), `unexpected SPORE code format: "${code}" in ${doc.id}`);
+        assert.ok(re.test(code), `unexpected FUNGI code format: "${code}" in ${doc.id}`);
       }
     }
   });

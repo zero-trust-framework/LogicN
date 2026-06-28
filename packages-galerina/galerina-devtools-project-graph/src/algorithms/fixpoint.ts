@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — Iterative fixpoint propagation
+// fungi-graph — Iterative fixpoint propagation
 //
 // Used for dataflow analyses (e.g. effect propagation across the call graph)
 // where values must flow through edges until no further changes occur.
@@ -7,9 +7,9 @@
 
 import { GraphBuilder } from "../core/builder.js";
 import type { Graph, GraphNode, NodeId } from "../core/types.js";
-import { LLN_PGRAPH_004 } from "../core/types.js";
+import { FUNGI_PGRAPH_004 } from "../core/types.js";
 
-/** Default maximum iterations before emitting SPORE-PGRAPH-004. */
+/** Default maximum iterations before emitting FUNGI-PGRAPH-004. */
 const DEFAULT_MAX_ITERATIONS = 1_000;
 
 export type FixpointResult<N, E> =
@@ -18,7 +18,7 @@ export type FixpointResult<N, E> =
       readonly ok: false;
       readonly graph: Graph<N, E>;
       readonly iterations: number;
-      readonly diagnostic: typeof LLN_PGRAPH_004;
+      readonly diagnostic: typeof FUNGI_PGRAPH_004;
     };
 
 /**
@@ -70,7 +70,7 @@ export function fixpoint<N, E>(
     ok: false,
     graph: current,
     iterations: maxIterations,
-    diagnostic: LLN_PGRAPH_004,
+    diagnostic: FUNGI_PGRAPH_004,
   };
 }
 

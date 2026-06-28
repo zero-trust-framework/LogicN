@@ -79,7 +79,7 @@ When total memory pressure rises, Galerina should respond in this order:
 
 Disk spill is a safety valve, not a normal performance path.
 
-## Runtime Policy in boot.spore
+## Runtime Policy in boot.fungi
 
 ```Galerina
 runtime {

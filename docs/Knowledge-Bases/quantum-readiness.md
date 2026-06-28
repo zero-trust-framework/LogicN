@@ -158,7 +158,7 @@ Example diagnostic:
 
 ```json
 {
-  "code": "SPORE-CRYPTO-001",
+  "code": "FUNGI-CRYPTO-001",
   "severity": "error",
   "message": "Random.number() cannot be used for token generation. Use SecureRandom.",
   "safeToShow": true

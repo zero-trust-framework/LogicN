@@ -307,7 +307,7 @@ Example:
   "message": "Cached memory limit reached. Cache entry moved to general memory.",
   "recoveryAction": "cache_demoted_to_general_memory",
   "source": {
-    "file": "examples/cache-demo.spore",
+    "file": "examples/cache-demo.fungi",
     "line": 42
   }
 }

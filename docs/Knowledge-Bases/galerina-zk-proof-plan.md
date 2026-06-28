@@ -8,7 +8,7 @@
 ## Status (2026-06-03)
 
 The `epilogue { generate_proof zk_snark_receipt }` strategy is **PARSED and VALIDATED**
-(SPORE-GOV-015/016). The runtime produces a clearly-labelled PENDING stub receipt:
+(FUNGI-GOV-015/016). The runtime produces a clearly-labelled PENDING stub receipt:
 
 ```
 zkReceiptStub: "zk_snark_receipt:PENDING — prover not yet integrated. Planned: snarkjs/bellman backend."

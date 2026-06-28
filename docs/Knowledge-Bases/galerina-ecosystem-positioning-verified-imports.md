@@ -12,12 +12,12 @@ the existing fuse/admission path**: the verified-import HYBRID profile, and the 
 ## Already shipped (the reframe describes reality)
 - `contract` **effects / intent** parsed in core (`parser.ts:71,402,647,749-770`); permissions are **capability
   deny-by-default** + Domain-Guard `guard.permitted_capabilities` (no separate permissions sub-block).
-- `governance-verifier.ts` SPORE-GOV effect obligations (verified).
+- `governance-verifier.ts` FUNGI-GOV effect obligations (verified).
 - `galerina build --package` signs **wasm + lmanifest**, fuse descriptor + `wasmSha256` embedded **before** signing; build
   signs **standalone Ed25519** today.
-- **fuse-loader three fail-closed gates:** hash (`SPORE-FUSE-HASH-MISMATCH`), signature (`crypto.verify`,
-  `SPORE-FUSE-UNSIGNED`/`SIG-INVALID`), deny-by-default capabilities via a **closed wasm import object**
-  (`SPORE-FUSE-UNKNOWN-CAP`).
+- **fuse-loader three fail-closed gates:** hash (`FUNGI-FUSE-HASH-MISMATCH`), signature (`crypto.verify`,
+  `FUNGI-FUSE-UNSIGNED`/`SIG-INVALID`), deny-by-default capabilities via a **closed wasm import object**
+  (`FUNGI-FUSE-UNKNOWN-CAP`).
 - `SecurityPosture` off|auto|on (default **auto**, fail-secure; prod/staging/unknown → on).
 - `#94` import DAG wired.
 
@@ -45,8 +45,8 @@ framing in **docs / north-star only**.
   `allowFilePath`. Fail-secure: only an explicit `off` relaxes. Tamper is denied by the loader regardless. +4 tests.
 - **`requireSignature` enforcement** in `fuse-loader.ts` (`FusePackageOptions`) — wired into BOTH `fusePackage`
   (single) and `fusePackages` (set). It **overrides `allowUnsigned` fail-secure**: an unsigned import is refused even
-  if `allowUnsigned:true` was passed (single ⇒ `SPORE-FUSE-UNSIGNED` "posture requires a signature"; set ⇒
-  `SPORE-FUSE-SET-UNSIGNED`). The host derives the boolean from `deriveImportProfile(...)` and passes it — app-kernel
+  if `allowUnsigned:true` was passed (single ⇒ `FUNGI-FUSE-UNSIGNED` "posture requires a signature"; set ⇒
+  `FUNGI-FUSE-SET-UNSIGNED`). The host derives the boolean from `deriveImportProfile(...)` and passes it — app-kernel
   stays decoupled from core-config. +2 tests.
 - **`buildImportClosure(dirs)`** — the UNTRUSTED `import-closure.json` report (`trusted:false` ALWAYS): `{ name,
   wasmSha256, keyId, signature }` per module, each run through Gates 1+2 (a tampered module throws). NOT a lockfile —
@@ -60,7 +60,7 @@ framing in **docs / north-star only**.
   manifest as **UNSIGNED** until #34 (Node FIPS-204 key custody) lands.
 - **Tech debt:** `#105` `admitAndInstantiate` gate is **export/test-only**, NOT in the production fuse path.
 - **Forward line:** signed-hash admission is the trust fence for a capability-gated photonic T-MAC offload across
-  untrusted peers (deny-by-default via Gate 3; unknown→deny mirrors `SPORE-SUBSTRATE-001`; Gate-1 `wasmSha256` is the audit
+  untrusted peers (deny-by-default via Gate 3; unknown→deny mirrors `FUNGI-SUBSTRATE-001`; Gate-1 `wasmSha256` is the audit
   anchor). Governance stays digital + bit-exact on core; HW-gated; no perf claim.
 
 Pairs with [[galerina-social-ecosystem-cloud-native]], [[galerina-wasm-compilation-granularity]] (0052 — the import model

@@ -422,12 +422,12 @@ import { HARDWARE_TRUST_PROFILES } from "./type-registry.js";
 import { detectCpuProfile, resolveHardwareTarget } from "./runtime/hardwareRouter.js";
 
 /**
- * SPORE-HW-001: Hardware target declared in contract.hardware must be in HARDWARE_TRUST_PROFILES.
- * SPORE-HW-002: Hardware target governance class must not exceed GovernancePlane for
+ * FUNGI-HW-001: Hardware target declared in contract.hardware must be in HARDWARE_TRUST_PROFILES.
+ * FUNGI-HW-002: Hardware target governance class must not exceed GovernancePlane for
  *             flows that issue leases or modify policy.
- * SPORE-HW-003: If target resolves to a lower tier on this host, emit a warning (not an error)
+ * FUNGI-HW-003: If target resolves to a lower tier on this host, emit a warning (not an error)
  *             because the WASM fallback ensures correctness.
- * SPORE-HW-004: safety_critical and medical classifications cannot use FP4/FP8 precision.
+ * FUNGI-HW-004: safety_critical and medical classifications cannot use FP4/FP8 precision.
  */
 export function verifyHardwareTarget(
   targetId: string,
@@ -438,22 +438,22 @@ export function verifyHardwareTarget(
 ): void {
   const profile = HARDWARE_TRUST_PROFILES.get(targetId);
   if (!profile) {
-    diagnostics.push({ code: "SPORE-HW-001", severity: "error",
+    diagnostics.push({ code: "FUNGI-HW-001", severity: "error",
       message: `Unknown hardware target: "${targetId}". Check galerina-hardware-targets.md for valid IDs.` });
     return;
   }
   if (flowIssuesLeases && profile.governanceClass !== HardwareGovernanceClass.GovernancePlane) {
-    diagnostics.push({ code: "SPORE-HW-002", severity: "error",
+    diagnostics.push({ code: "FUNGI-HW-002", severity: "error",
       message: `Flow issues leases but declares non-GovernancePlane target "${targetId}". Lease-issuing flows must run on CPU or WASM.` });
   }
   const resolved = resolveHardwareTarget(targetId, "wasm", cpuProfile);
   if (resolved !== targetId) {
-    diagnostics.push({ code: "SPORE-HW-003", severity: "warn",
+    diagnostics.push({ code: "FUNGI-HW-003", severity: "warn",
       message: `Target "${targetId}" not available on this host (${cpuProfile.simdTier}). Routing to "${resolved}". Correctness preserved; performance reduced.` });
   }
   if ((classification === "medical" || classification === "safety_critical") &&
       (targetId.includes("fp4") || targetId.includes("fp8"))) {
-    diagnostics.push({ code: "SPORE-HW-004", severity: "error",
+    diagnostics.push({ code: "FUNGI-HW-004", severity: "error",
       message: `FP4/FP8 precision forbidden for "${classification}" classification. Use FP32.` });
   }
 }

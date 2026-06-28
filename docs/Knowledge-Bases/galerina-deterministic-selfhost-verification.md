@@ -111,7 +111,7 @@ The following are known sources of non-determinism in compiler implementations. 
 
 ## Build Proof Integration
 
-The verification procedure extends the `ExecutionProofChain` from `SPORE-Graph` with compiler-specific fields. Each build produces a proof record:
+The verification procedure extends the `ExecutionProofChain` from `FUNGI-Graph` with compiler-specific fields. Each build produces a proof record:
 
 ```
 CompilerBuildProof {
@@ -153,10 +153,10 @@ The limitation is acknowledged. Full elimination of the Thompson Trust attack re
 
 ---
 
-## SPORE-BUILD-001: NON_DETERMINISTIC_BUILD
+## FUNGI-BUILD-001: NON_DETERMINISTIC_BUILD
 
 ```
-Code:     SPORE-BUILD-001
+Code:     FUNGI-BUILD-001
 Name:     NON_DETERMINISTIC_BUILD
 Severity: ERROR (blocks release)
 ```
@@ -167,7 +167,7 @@ Severity: ERROR (blocks release)
 
 **Resolution:** Identify the source of non-determinism (see the sources listed above), eliminate it, and re-run verification.
 
-**Not triggered by:** Builds that differ because source files differ, configuration differs, or the compiler version differs. `SPORE-BUILD-001` is specifically about same-input → different-output.
+**Not triggered by:** Builds that differ because source files differ, configuration differs, or the compiler version differs. `FUNGI-BUILD-001` is specifically about same-input → different-output.
 
 ---
 
@@ -193,7 +193,7 @@ The `verify-selfhost` subcommand runs the full verification pipeline.
    - Assert TypedASTHash(B1) == TypedASTHash(B2)
    - Assert GeneratedOutputHash(B1) == GeneratedOutputHash(B2)
    - Assert ExecutionProofHash(B1) == ExecutionProofHash(B2)
-   - If any assertion fails: emit SPORE-BUILD-001, stop
+   - If any assertion fails: emit FUNGI-BUILD-001, stop
 
 4. Build B3
    - Use B2 as the compiler
@@ -202,7 +202,7 @@ The `verify-selfhost` subcommand runs the full verification pipeline.
 
 5. Compare B2 and B3
    - Same four assertions
-   - If any assertion fails: emit SPORE-BUILD-001, stop
+   - If any assertion fails: emit FUNGI-BUILD-001, stop
 
 6. Generate Proof
    - All six hash comparisons passed
@@ -213,7 +213,7 @@ The `verify-selfhost` subcommand runs the full verification pipeline.
 
 **Exit codes:**
 - `0` — all comparisons passed, proof issued
-- `1` — `SPORE-BUILD-001` triggered, proof not issued
+- `1` — `FUNGI-BUILD-001` triggered, proof not issued
 - `2` — build failure unrelated to determinism (compilation error in compiler source)
 
 ---
@@ -225,7 +225,7 @@ The `verify-selfhost` subcommand runs the full verification pipeline.
 - Implement `GeneratedOutputHash` and `TypedASTHash` comparison
 - Implement deterministic ordering for all collections that affect output
 - Implement `galerina verify-selfhost` command with the pipeline described above
-- Implement `SPORE-BUILD-001` diagnostic
+- Implement `FUNGI-BUILD-001` diagnostic
 - Emit `CompilerBuildProof` records
 
 **Extend after Stage B:**
@@ -249,7 +249,7 @@ The self-hosted compiler's output is only deterministic if the compiler's execut
 - The same compiler configuration flags.
 - No ambient authority that varies between runs (system time, environment variables not passed as explicit inputs).
 
-If the root capability provider supplies different authority on different runs, the compiler may make different decisions, and the output will diverge. `SPORE-BUILD-001` will fire, but the root cause will be in the capability provider, not in the compiler logic itself.
+If the root capability provider supplies different authority on different runs, the compiler may make different decisions, and the output will diverge. `FUNGI-BUILD-001` will fire, but the root cause will be in the capability provider, not in the compiler logic itself.
 
 This is why the root capability provider is listed as a dependency: identical authority is a prerequisite for identical output.
 
@@ -262,7 +262,7 @@ This is why the root capability provider is listed as a dependency: identical au
 3. Compare four hashes: SemanticGraph, TypedAST, GeneratedOutput, ExecutionProof.
 4. All four must match across B1 == B2 == B3.
 5. Eliminate: timestamps in output, random codegen names, hash map iteration order, unsorted filesystem enumeration, completion-order parallel merging.
-6. `SPORE-BUILD-001` fires when same-input → different-output is detected.
+6. `FUNGI-BUILD-001` fires when same-input → different-output is detected.
 7. Deterministic verification narrows the Thompson Trust attack surface but does not eliminate it.
 8. The root capability provider must supply identical authority on every run.
 9. Stage B delivers two-build comparison and output hashing. Three-build and formal proofs are post-Stage B.

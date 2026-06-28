@@ -7,10 +7,10 @@
 //   - IMPACT : transitive downstream blast-radius (every flow that reaches this via calls);
 //              IMPACT 0 ⟺ nothing depends on it ⟹ safe to delete.
 //
-// Reuses the same callee-resolution pattern as SPORE-GOV-013 (findNodes(flow,"callExpr") → match a
+// Reuses the same callee-resolution pattern as FUNGI-GOV-013 (findNodes(flow,"callExpr") → match a
 // flow name). Only flow→flow calls count; stdlib/method calls (`Db.fetch`) are not flows. This is
-// the generated-tier data behind the `//spore:` comments the CLI writes; the contract.architecture
-// `depends_on` (authored intent) should agree with `//spore: USES` (observed reality) — a mismatch is a WARN.
+// the generated-tier data behind the `//fungi:` comments the CLI writes; the contract.architecture
+// `depends_on` (authored intent) should agree with `//fungi: USES` (observed reality) — a mismatch is a WARN.
 // =============================================================================
 
 import type { AstNode } from "./parser.js";
@@ -120,29 +120,29 @@ export function analyzeProgramFlowDependencies(files: readonly ProgramFile[]): P
 }
 
 /**
- * Render the canonical generated `//spore:` dependency comment lines for one flow (R&D 0045 vocabulary).
+ * Render the canonical generated `//fungi:` dependency comment lines for one flow (R&D 0045 vocabulary).
  * Count-prefixed `(N)` so the blast-radius is visible even if a long list is truncated by a writer.
  * USES/USEDBY are omitted when empty; IMPACT always renders (it carries the safe-to-delete signal).
  */
 export function renderDependencyComments(deps: FlowDependencies): string[] {
   const lines: string[] = [];
   if (deps.uses.length > 0) {
-    lines.push(`//spore: USES: (${deps.uses.length}) ${deps.uses.join(", ")}`);
+    lines.push(`//fungi: USES: (${deps.uses.length}) ${deps.uses.join(", ")}`);
   }
   if (deps.usedBy.length > 0) {
-    lines.push(`//spore: USEDBY: (${deps.usedBy.length}) ${deps.usedBy.join(", ")}`);
+    lines.push(`//fungi: USEDBY: (${deps.usedBy.length}) ${deps.usedBy.join(", ")}`);
   }
-  lines.push(deps.impact === 0 ? `//spore: IMPACT: (0) — safe to delete` : `//spore: IMPACT: (${deps.impact})`);
+  lines.push(deps.impact === 0 ? `//fungi: IMPACT: (0) — safe to delete` : `//fungi: IMPACT: (${deps.impact})`);
   return lines;
 }
 
 /**
- * Rewrite a .spore source so each flow has its current generated `//spore:` block immediately above its
- * declaration. SILENTLY OVERWRITES the old contiguous `//spore:` block (R&D 0045 decision #3 — the generated
- * tier is machine-owned). Touches ONLY `//spore:` lines: removes the contiguous run of `//spore:` lines directly
+ * Rewrite a .fungi source so each flow has its current generated `//fungi:` block immediately above its
+ * declaration. SILENTLY OVERWRITES the old contiguous `//fungi:` block (R&D 0045 decision #3 — the generated
+ * tier is machine-owned). Touches ONLY `//fungi:` lines: removes the contiguous run of `//fungi:` lines directly
  * above a flow declaration and inserts the fresh block — never a human `//` line, a `contract`, or any code.
  * Processes bottom-up so line indices stay valid; idempotent when the metadata is already current.
- * `genByFlow` maps a flow name → its fresh `//spore:` lines (renderDependencyComments + renderComplexityComment).
+ * `genByFlow` maps a flow name → its fresh `//fungi:` lines (renderDependencyComments + renderComplexityComment).
  */
 export function rewriteGeneratedComments(
   source: string,
@@ -157,7 +157,7 @@ export function rewriteGeneratedComments(
     if (gen === undefined) continue;
     const indent = fm[1] ?? "";
     let start = i;
-    while (start - 1 >= 0 && /^\s*\/\/spore:/.test(lines[start - 1] ?? "")) start--;
+    while (start - 1 >= 0 && /^\s*\/\/fungi:/.test(lines[start - 1] ?? "")) start--;
     lines.splice(start, i - start, ...gen.map((l) => indent + l));
     i = start; // continue scanning above the block we just wrote
   }

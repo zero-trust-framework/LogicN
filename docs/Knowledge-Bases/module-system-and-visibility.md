@@ -18,10 +18,10 @@ Compile-time verification   — all imports validated before execution
 
 ## Module Structure
 
-Each `.spore` file is a module. Directory hierarchy maps to module hierarchy.
+Each `.fungi` file is a module. Directory hierarchy maps to module hierarchy.
 
 ```text
-math/vector.spore  →  module path: math.vector
+math/vector.fungi  →  module path: math.vector
 ```
 
 ## Import Syntax
@@ -86,7 +86,7 @@ Standard library modules are explicit imports. No implicit preloaded namespaces.
 Modules may re-export symbols from dependencies:
 
 ```galerina
-// math/mod.spore
+// math/mod.fungi
 public import math.vector::{Vector}
 public import math.matrix::{Matrix}
 ```
@@ -152,7 +152,7 @@ independent modules.
 Example diagnostic:
 
 ```text
-SPORE-E3007: cyclic module dependency
+FUNGI-E3007: cyclic module dependency
 
 Module `auth.session` depends on `auth.user`.
 Module `auth.user` depends on `auth.session`.
@@ -228,13 +228,13 @@ Accessible within the same package but not externally.
 Only public symbols may be imported externally.
 
 ```galerina
-// auth.spore
+// auth.fungi
 private fn hash_password() {}
 public fn login() {}
 
-// app.spore
+// app.fungi
 import auth::{login}         // valid
-import auth::{hash_password} // compiler error: SPORE-E3004
+import auth::{hash_password} // compiler error: FUNGI-E3004
 ```
 
 ### Visibility vs Authority
@@ -254,16 +254,16 @@ public fn send_request() effects(network.connect) { ... }
 ## Compiler Error Codes
 
 ```text
-SPORE-E3001 unresolved import
-SPORE-E3002 duplicate symbol
-SPORE-E3003 invalid package reference
-SPORE-E3004 visibility violation
-SPORE-E3005 ambiguous import
-SPORE-E3006 invalid relative import
-SPORE-E3007 cyclic dependency
-SPORE-E3008 inaccessible package symbol
-SPORE-E3009 invalid visibility modifier
-SPORE-E3010 private field access
+FUNGI-E3001 unresolved import
+FUNGI-E3002 duplicate symbol
+FUNGI-E3003 invalid package reference
+FUNGI-E3004 visibility violation
+FUNGI-E3005 ambiguous import
+FUNGI-E3006 invalid relative import
+FUNGI-E3007 cyclic dependency
+FUNGI-E3008 inaccessible package symbol
+FUNGI-E3009 invalid visibility modifier
+FUNGI-E3010 private field access
 ```
 
 ## Recommended Practices
@@ -290,15 +290,15 @@ module app/users/service
 The declared name must match the package manifest and source location.
 
 ```text
-File path:    app/src/users/service.spore
+File path:    app/src/users/service.fungi
 Module path:  app/users/service
 ```
 
 If the declaration and path disagree, the compiler emits:
 
 ```text
-SPORE-MODULE-001: module declaration does not match source location
-file: app/src/users/service.spore
+FUNGI-MODULE-001: module declaration does not match source location
+file: app/src/users/service.fungi
 found: app/payments/service
 expected: app/users/service
 ```
@@ -435,7 +435,7 @@ return type or parameters:
 private type SecretToken = String
 
 pub fn export_token() -> SecretToken { ... }
-// SPORE-VIS-003: public function exposes private return type
+// FUNGI-VIS-003: public function exposes private return type
 ```
 
 Correct approach — expose a safe wrapper type:
@@ -584,22 +584,22 @@ The formatter may group and sort imports automatically.
 Module system diagnostics:
 
 ```text
-SPORE-MODULE-001  module declaration does not match source location
-SPORE-MODULE-002  import path escapes package boundary
-SPORE-MODULE-003  circular import detected
-SPORE-MODULE-004  imported module not found
-SPORE-MODULE-005  import not listed in package policy
-SPORE-MODULE-006  wildcard symbol import not allowed
-SPORE-VIS-001     cannot import private symbol
-SPORE-VIS-002     cannot import package-visible symbol from outside package
-SPORE-VIS-003     public function exposes private return type
-SPORE-VIS-004     public module exports non-public dependency type
-SPORE-VIS-005     runtime-only symbol used by application code
-SPORE-CAP-001     imported function requires ungranted capability
-SPORE-CAP-002     imported module declares denied effect
+FUNGI-MODULE-001  module declaration does not match source location
+FUNGI-MODULE-002  import path escapes package boundary
+FUNGI-MODULE-003  circular import detected
+FUNGI-MODULE-004  imported module not found
+FUNGI-MODULE-005  import not listed in package policy
+FUNGI-MODULE-006  wildcard symbol import not allowed
+FUNGI-VIS-001     cannot import private symbol
+FUNGI-VIS-002     cannot import package-visible symbol from outside package
+FUNGI-VIS-003     public function exposes private return type
+FUNGI-VIS-004     public module exports non-public dependency type
+FUNGI-VIS-005     runtime-only symbol used by application code
+FUNGI-CAP-001     imported function requires ungranted capability
+FUNGI-CAP-002     imported module declares denied effect
 ```
 
-See also the `SPORE-E3xxx` series in the compiler diagnostics for earlier
+See also the `FUNGI-E3xxx` series in the compiler diagnostics for earlier
 prototype codes.
 
 ---

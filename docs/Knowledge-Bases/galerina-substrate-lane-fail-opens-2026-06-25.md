@@ -1,9 +1,9 @@
 # Substrate-lane fail-opens found + fixed (2026-06-25)
 
-Two real fail-opens in the `substrate {}` crypto-on-noisy-lane gate (`SPORE-SUBSTRATE-001`), both
+Two real fail-opens in the `substrate {}` crypto-on-noisy-lane gate (`FUNGI-SUBSTRATE-001`), both
 surfaced while building the `examples/gaming-substrate/` worked example (the owner's *"could we add
 `lane: gaming`"* prompt). Each let a crypto effect run on a tolerance-bounded photonic/noisy lane
-**undetected** — the precise thing `SPORE-SUBSTRATE-001` exists to prevent. Both fixed; both pinned
+**undetected** — the precise thing `FUNGI-SUBSTRATE-001` exists to prevent. Both fixed; both pinned
 by regression tests. Same family as the threat-model C1/H2 seam and the RD-0093 `;;`-comment
 fail-open: *the gate is right; the dispatch/parse misses a case.*
 
@@ -11,13 +11,13 @@ fail-open: *the gate is right; the dispatch/parse misses a case.*
 
 **Bug.** `CRYPTO_EFFECT = /^crypto\.(hash|sign|verify|encrypt|decrypt|seal)$/` was `$`-anchored.
 A **certified** deployment profile *mandates* a post-quantum signature — bare `crypto.sign` is
-rejected by `SPORE-CRYPTO-PQ-001`, forcing `crypto.sign.hybrid` / `crypto.sign.mldsa65` /
+rejected by `FUNGI-CRYPTO-PQ-001`, forcing `crypto.sign.hybrid` / `crypto.sign.mldsa65` /
 `crypto.sign.slhdsa`. None of those match the `$`-anchored regex, so the crypto-on-core gate
 (`substrate-inference.ts` B1) **did not fire** on a PQ signature placed on a photonic lane. The
 fail-open lived in exactly the highest-assurance posture (certified).
 
-Empirical (pre-fix): `crypto.sign` on photonic → `SPORE-SUBSTRATE-001` ✓; `crypto.sign.hybrid` on
-photonic → **no `SPORE-SUBSTRATE-001`** ✗.
+Empirical (pre-fix): `crypto.sign` on photonic → `FUNGI-SUBSTRATE-001` ✓; `crypto.sign.hybrid` on
+photonic → **no `FUNGI-SUBSTRATE-001`** ✗.
 
 **Fix.** Match the whole crypto family fail-closed — `(\.|$)` instead of `$`:
 `/^crypto\.(hash|sign|verify|encrypt|decrypt|seal)(\.|$)/`. Matches `crypto.sign` and any
@@ -32,7 +32,7 @@ regex: `substrate-inference.ts:65` (security-critical) and `test-generator.ts:26
 `{ value: "digital", malformed: true }` (spec §8: never silently coerce). But
 `checkSubstrateViolations` ran `if (inf.lane === "digital") return []` **before** the
 `if (inf.malformed)` check. So a malformed lane — value forced to `"digital"` — hit the digital
-early-return and was swallowed: no `SPORE-SUBSTRATE-002`, and the crypto-on-noisy gate dropped.
+early-return and was swallowed: no `FUNGI-SUBSTRATE-002`, and the crypto-on-noisy gate dropped.
 
 Two ways to trigger it:
 - **`lane: gaming`** (the literal idea) → compiled **clean**, the whole substrate block ignored.
@@ -43,12 +43,12 @@ Two ways to trigger it:
 
 **Fix.** Move the `if (inf.malformed)` block **above** the `if (inf.lane === "digital") return []`
 early-return in `checkSubstrateViolations` (`substrate-inference.ts`). A malformed lane now emits
-`SPORE-SUBSTRATE-002` (error) instead of masquerading as an author-chosen inert digital lane. The
+`FUNGI-SUBSTRATE-002` (error) instead of masquerading as an author-chosen inert digital lane. The
 diagnostic message + suggestedFix now name the `lane` value set and the trailing-comment gotcha.
 
-Empirical (post-fix): `lane: gaming` → `SPORE-SUBSTRATE-002` ✓; `lane: photonic // comment` +
-`crypto.sign.hybrid` → `SPORE-SUBSTRATE-002` (build fails closed) ✓; clean `lane: photonic` +
-`crypto.sign.hybrid` → `SPORE-SUBSTRATE-001` ✓.
+Empirical (post-fix): `lane: gaming` → `FUNGI-SUBSTRATE-002` ✓; `lane: photonic // comment` +
+`crypto.sign.hybrid` → `FUNGI-SUBSTRATE-002` (build fails closed) ✓; clean `lane: photonic` +
+`crypto.sign.hybrid` → `FUNGI-SUBSTRATE-001` ✓.
 
 ## Residual (tracked, not a security hole)
 The root cause behind Fix 2's comment case is that **trailing `//` comments are not stripped inside
@@ -62,8 +62,8 @@ while unsupervised. Workaround documented in the example README: comments on the
 - `substrate-contracts.test.mjs`: **38 pass / 0 fail** (was 30; +8 regression tests covering the
   three PQ sign variants on photonic vs digital, `lane: gaming` → `-002`, and the comment-polluted
   lane failing closed).
-- `examples/gaming-substrate/` — all three `.spore` verified with `node galerina.mjs check` to match
-  their `expected_diagnostics` headers (01 clean, 02 clean, 03 `SPORE-SUBSTRATE-001`).
+- `examples/gaming-substrate/` — all three `.fungi` verified with `node galerina.mjs check` to match
+  their `expected_diagnostics` headers (01 clean, 02 clean, 03 `FUNGI-SUBSTRATE-001`).
 
 *Source: this session (2026-06-25), full-auto. Both fixes in `galerina-core-compiler/src`
 (`substrate-inference.ts`, `test-generator.ts`) + tests; example dir `examples/gaming-substrate/`.*

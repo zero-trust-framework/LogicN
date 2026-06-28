@@ -77,14 +77,14 @@ describe("GraphBuilder — construction", () => {
 });
 
 describe("GraphBuilder — JSON round-trip", () => {
-  it("toJSON produces spore.graph.v1 schema", () => {
+  it("toJSON produces fungi.graph.v1 schema", () => {
     const g = new GraphBuilder()
       .addNode("n1", { x: 1 })
       .addNode("n2", { x: 2 })
       .addEdge("n1", "n2", { label: "edge" })
       .build();
     const json = g.toJSON();
-    assert.equal(json.schemaVersion, "spore.graph.v1");
+    assert.equal(json.schemaVersion, "fungi.graph.v1");
     assert.equal(json.nodes.length, 2);
     assert.equal(json.edges.length, 1);
   });
@@ -108,7 +108,7 @@ describe("GraphBuilder — JSON round-trip", () => {
 
   it("fromJSON throws on wrong schemaVersion", () => {
     assert.throws(
-      () => GraphBuilder.fromJSON({ schemaVersion: "lln.graph.v0", nodes: [], edges: [] }),
+      () => GraphBuilder.fromJSON({ schemaVersion: "fungi-.graph.v0", nodes: [], edges: [] }),
       /unsupported graph schemaVersion/,
     );
   });

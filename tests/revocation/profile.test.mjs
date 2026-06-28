@@ -49,11 +49,11 @@ test("resolveSigningProfileWarned surfaces a coded warning ONLY when it fail-sec
   resolveSigningProfileWarned((m) => warned.push(m), "production");
   assert.equal(warned.length, 0, "recognized profiles must not warn");
 
-  // Unrecognized → exactly one SPORE-PROFILE-UNRECOGNIZED warning that names the bad value.
+  // Unrecognized → exactly one FUNGI-PROFILE-UNRECOGNIZED warning that names the bad value.
   warned = [];
   const r = resolveSigningProfileWarned((m) => warned.push(m), "prod ");
   assert.equal(r.profile, "production");
   assert.equal(warned.length, 1);
-  assert.ok(warned[0].includes("SPORE-PROFILE-UNRECOGNIZED"), "warning must carry the code");
+  assert.ok(warned[0].includes("FUNGI-PROFILE-UNRECOGNIZED"), "warning must carry the code");
   assert.ok(warned[0].includes("prod "), "warning must name the offending value");
 });

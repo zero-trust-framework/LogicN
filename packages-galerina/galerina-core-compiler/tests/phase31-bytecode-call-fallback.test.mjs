@@ -27,7 +27,7 @@ describe("Phase 31: pure-flow-calls-pure-flow under pureFastPath", () => {
       "pure flow leaf(x: Int) -> Int contract { effects {} } { return x * 2 + 1 }",
       "pure flow main() -> Int contract { effects {} } { return leaf(10) }",
     ].join("\n");
-    const parsed = parseProgram(src, "call-fallback.spore");
+    const parsed = parseProgram(src, "call-fallback.fungi");
     const result = await executeFlow(
       "main", new Map(), parsed.ast, parsed.flows, undefined, undefined,
       { pureFastPath: true },
@@ -45,7 +45,7 @@ describe("Phase 31: pure-flow-calls-pure-flow under pureFastPath", () => {
       "pure flow fib(n: Int) -> Int contract { effects {} }",
       "{ if n < 2 { return n } else { return fib(n - 1) + fib(n - 2) } }",
     ].join("\n");
-    const parsed = parseProgram(src, "fib-fallback.spore");
+    const parsed = parseProgram(src, "fib-fallback.fungi");
     const result = await executeFlow(
       "fib", new Map([["n", { __tag: "int", value: 10 }]]),
       parsed.ast, parsed.flows, undefined, undefined,

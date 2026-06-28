@@ -5,7 +5,7 @@
 Two closely related features protect the Galerina package ecosystem:
 
 1. **Supply-chain attestation** — every resolved dependency is pinned by content
-   hash; hash drift fails the build with `SPORE-SUPPLY-001`
+   hash; hash drift fails the build with `FUNGI-SUPPLY-001`
 2. **Package governance manifests** — every published package declares its
    effects, capabilities, resource requirements, secrets and diagnostic ranges
    before installation
@@ -67,9 +67,9 @@ galerina build --locked
 do not resolve new versions
 do not rewrite the lockfile
 fail on missing hash
-fail on hash mismatch (SPORE-SUPPLY-001)
+fail on hash mismatch (FUNGI-SUPPLY-001)
 fail on unsigned package if policy requires signatures
-fail on permission drift (SPORE-SUPPLY-002)
+fail on permission drift (FUNGI-SUPPLY-002)
 ```
 
 ### Hash is Necessary but Not Sufficient
@@ -88,13 +88,13 @@ A hash tells you the bytes did not change. It does not prove the bytes are safe.
 
 | Code | Meaning |
 |---|---|
-| `SPORE-SUPPLY-001` | Dependency content hash mismatch |
-| `SPORE-SUPPLY-002` | Dependency permission set changed since last lockfile update |
+| `FUNGI-SUPPLY-001` | Dependency content hash mismatch |
+| `FUNGI-SUPPLY-002` | Dependency permission set changed since last lockfile update |
 
 Example:
 
 ```text
-SPORE-SUPPLY-001: dependency content hash mismatch
+FUNGI-SUPPLY-001: dependency content hash mismatch
 
 Import:      galerina-http@1.4.2
 Expected:    sha256:9b7a...
@@ -122,7 +122,7 @@ Resolution:
       "effects": ["network.external", "secret.read"],
       "capabilities": ["payment.charge"],
       "resources": ["PaymentProvider"],
-      "diagnostics": "SPORE-PAYMENTS-1000..1199"
+      "diagnostics": "FUNGI-PAYMENTS-1000..1199"
     },
     "./types": { "effects": [], "capabilities": [] }
   },
@@ -170,7 +170,7 @@ Accept package authority? [y/N]
 If an update changes authority:
 
 ```text
-SPORE-SUPPLY-002: dependency permission set changed
+FUNGI-SUPPLY-002: dependency permission set changed
 
 Package:    @galerina/payments@1.4.3
 New effect: file.write
@@ -184,7 +184,7 @@ Resolution:
 Packages may reserve their own diagnostic range:
 
 ```text
-SPORE-PAYMENTS-1000..1199
+FUNGI-PAYMENTS-1000..1199
 ```
 
 This avoids collision between packages and allows the LSP to route diagnostics
@@ -193,11 +193,11 @@ to package-specific documentation.
 Suggested core ranges:
 
 ```text
-SPORE-CORE-0000..0999      core language
-SPORE-TYPE-1000..1999      type system
-SPORE-EFFECT-2000..2999    effect checker
-SPORE-SECURITY-3000..3999  security checker
-SPORE-PACKAGE-4000..4999   package/supply-chain checker
+FUNGI-CORE-0000..0999      core language
+FUNGI-TYPE-1000..1999      type system
+FUNGI-EFFECT-2000..2999    effect checker
+FUNGI-SECURITY-3000..3999  security checker
+FUNGI-PACKAGE-4000..4999   package/supply-chain checker
 ```
 
 ### No Install-Time Execution

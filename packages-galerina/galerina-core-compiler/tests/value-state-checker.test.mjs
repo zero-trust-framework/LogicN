@@ -6,7 +6,7 @@ import { parseProgram, checkValueStates } from "../dist/index.js";
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function parseAndCheck(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   return checkValueStates(parsed.ast);
 }
 
@@ -18,10 +18,10 @@ function diagsWithCode(result, code) {
   return result.diagnostics.filter((d) => d.code === code);
 }
 
-// ── SPORE-VALUESTATE-001: safe mut requires a gate ──────────────────────────────
+// ── FUNGI-VALUESTATE-001: safe mut requires a gate ──────────────────────────────
 
 describe("Value-state checker — safe mut gate requirement", () => {
-  it("emits SPORE-VALUESTATE-001 when safe mut has no gate call", () => {
+  it("emits FUNGI-VALUESTATE-001 when safe mut has no gate call", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String) -> Result<String, Error>
 contract { effects { database.read } }
@@ -32,12 +32,12 @@ contract { effects { database.read } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-001"),
-      `Expected SPORE-VALUESTATE-001, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-001"),
+      `Expected FUNGI-VALUESTATE-001, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-001 when safe mut uses validate.*", () => {
+  it("does not emit FUNGI-VALUESTATE-001 when safe mut uses validate.*", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String) -> Result<String, Error>
 contract { effects { database.read } }
@@ -48,12 +48,12 @@ contract { effects { database.read } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-001"),
-      `Unexpected SPORE-VALUESTATE-001 with validate.* gate`,
+      !hasDiag(result, "FUNGI-VALUESTATE-001"),
+      `Unexpected FUNGI-VALUESTATE-001 with validate.* gate`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-001 when safe mut uses json.decode", () => {
+  it("does not emit FUNGI-VALUESTATE-001 when safe mut uses json.decode", () => {
     const result = parseAndCheck(`
 secure flow test(raw: Bytes) -> Result<String, Error>
 contract { effects { database.read } }
@@ -64,12 +64,12 @@ contract { effects { database.read } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-001"),
-      `Unexpected SPORE-VALUESTATE-001 with json.decode gate`,
+      !hasDiag(result, "FUNGI-VALUESTATE-001"),
+      `Unexpected FUNGI-VALUESTATE-001 with json.decode gate`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-001 when safe mut uses sanitize.*", () => {
+  it("does not emit FUNGI-VALUESTATE-001 when safe mut uses sanitize.*", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String) -> Result<String, Error>
 contract { effects { database.read } }
@@ -80,12 +80,12 @@ contract { effects { database.read } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-001"),
-      `Unexpected SPORE-VALUESTATE-001 with sanitize.* gate`,
+      !hasDiag(result, "FUNGI-VALUESTATE-001"),
+      `Unexpected FUNGI-VALUESTATE-001 with sanitize.* gate`,
     );
   });
 
-  it("emits SPORE-VALUESTATE-001 when safe mut uses an arbitrary expression (no gate)", () => {
+  it("emits FUNGI-VALUESTATE-001 when safe mut uses an arbitrary expression (no gate)", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String) -> Result<String, Error>
 contract { effects { database.read } }
@@ -96,16 +96,16 @@ contract { effects { database.read } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-001"),
-      `Expected SPORE-VALUESTATE-001 for non-gate upgrade`,
+      hasDiag(result, "FUNGI-VALUESTATE-001"),
+      `Expected FUNGI-VALUESTATE-001 for non-gate upgrade`,
     );
   });
 });
 
-// ── SPORE-VALUESTATE-003: unsafe binding at governed sink ───────────────────────
+// ── FUNGI-VALUESTATE-003: unsafe binding at governed sink ───────────────────────
 
 describe("Value-state checker — unsafe at governed sink", () => {
-  it("emits SPORE-VALUESTATE-003 when unsafe let reaches a DB insert", () => {
+  it("emits FUNGI-VALUESTATE-003 when unsafe let reaches a DB insert", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String) -> Result<String, Error>
 contract { effects { database.write } }
@@ -116,12 +116,12 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-003"),
-      `Expected SPORE-VALUESTATE-003, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-003"),
+      `Expected FUNGI-VALUESTATE-003, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-003 when binding is upgraded before sink", () => {
+  it("does not emit FUNGI-VALUESTATE-003 when binding is upgraded before sink", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String) -> Result<String, Error>
 contract { effects { database.write } }
@@ -133,12 +133,12 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-003"),
-      `Unexpected SPORE-VALUESTATE-003 after safe mut upgrade`,
+      !hasDiag(result, "FUNGI-VALUESTATE-003"),
+      `Unexpected FUNGI-VALUESTATE-003 after safe mut upgrade`,
     );
   });
 
-  it("emits SPORE-VALUESTATE-003 when unsafe let reaches AuditLog.write", () => {
+  it("emits FUNGI-VALUESTATE-003 when unsafe let reaches AuditLog.write", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String) -> Result<String, Error>
 contract { effects { audit.write } }
@@ -149,12 +149,12 @@ contract { effects { audit.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-003"),
-      `Expected SPORE-VALUESTATE-003 for AuditLog.write`,
+      hasDiag(result, "FUNGI-VALUESTATE-003"),
+      `Expected FUNGI-VALUESTATE-003 for AuditLog.write`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-003 for plain let bindings at a sink", () => {
+  it("does not emit FUNGI-VALUESTATE-003 for plain let bindings at a sink", () => {
     const result = parseAndCheck(`
 secure flow test() -> Result<String, Error>
 contract { effects { database.write } }
@@ -165,16 +165,16 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-003"),
-      `Unexpected SPORE-VALUESTATE-003 for safe let binding`,
+      !hasDiag(result, "FUNGI-VALUESTATE-003"),
+      `Unexpected FUNGI-VALUESTATE-003 for safe let binding`,
     );
   });
 });
 
-// ── SPORE-SECRET-001: SecureString in log call ──────────────────────────────────
+// ── FUNGI-SECRET-001: SecureString in log call ──────────────────────────────────
 
 describe("Value-state checker — SecureString logging", () => {
-  it("emits SPORE-SECRET-001 when SecureString is passed to print", () => {
+  it("emits FUNGI-SECRET-001 when SecureString is passed to print", () => {
     const result = parseAndCheck(`
 secure flow test() -> Result<String, Error>
 contract { effects { secret.read } }
@@ -185,12 +185,12 @@ contract { effects { secret.read } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-SECRET-001"),
-      `Expected SPORE-SECRET-001, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-SECRET-001"),
+      `Expected FUNGI-SECRET-001, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("emits SPORE-SECRET-001 when SecureString is passed to log.info", () => {
+  it("emits FUNGI-SECRET-001 when SecureString is passed to log.info", () => {
     const result = parseAndCheck(`
 secure flow test() -> Result<String, Error>
 contract { effects { secret.read } }
@@ -201,12 +201,12 @@ contract { effects { secret.read } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-SECRET-001"),
-      `Expected SPORE-SECRET-001 for log.info`,
+      hasDiag(result, "FUNGI-SECRET-001"),
+      `Expected FUNGI-SECRET-001 for log.info`,
     );
   });
 
-  it("does not emit SPORE-SECRET-001 when SecureString is passed to redact", () => {
+  it("does not emit FUNGI-SECRET-001 when SecureString is passed to redact", () => {
     const result = parseAndCheck(`
 secure flow test() -> Result<String, Error>
 contract { effects { secret.read } }
@@ -217,12 +217,12 @@ contract { effects { secret.read } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-SECRET-001"),
-      `Unexpected SPORE-SECRET-001 when using redact()`,
+      !hasDiag(result, "FUNGI-SECRET-001"),
+      `Unexpected FUNGI-SECRET-001 when using redact()`,
     );
   });
 
-  it("does not emit SPORE-SECRET-001 for non-SecureString passed to print", () => {
+  it("does not emit FUNGI-SECRET-001 for non-SecureString passed to print", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let msg: String = "hello"
@@ -231,16 +231,16 @@ flow test() -> String {
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-SECRET-001"),
-      `Unexpected SPORE-SECRET-001 for plain String`,
+      !hasDiag(result, "FUNGI-SECRET-001"),
+      `Unexpected FUNGI-SECRET-001 for plain String`,
     );
   });
 });
 
-// ── SPORE-SECRET-002: SecureString equality comparison ─────────────────────────
+// ── FUNGI-SECRET-002: SecureString equality comparison ─────────────────────────
 
 describe("Value-state checker — SecureString equality", () => {
-  it("emits SPORE-SECRET-002 when SecureString is compared with ==", () => {
+  it("emits FUNGI-SECRET-002 when SecureString is compared with ==", () => {
     const result = parseAndCheck(`
 secure flow test() -> Result<Bool, Error>
 contract { effects { secret.read } }
@@ -252,12 +252,12 @@ contract { effects { secret.read } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-SECRET-002"),
-      `Expected SPORE-SECRET-002, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-SECRET-002"),
+      `Expected FUNGI-SECRET-002, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("emits SPORE-SECRET-002 when SecureString is compared with !=", () => {
+  it("emits FUNGI-SECRET-002 when SecureString is compared with !=", () => {
     const result = parseAndCheck(`
 secure flow test() -> Result<Bool, Error>
 contract { effects { secret.read } }
@@ -269,12 +269,12 @@ contract { effects { secret.read } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-SECRET-002"),
-      `Expected SPORE-SECRET-002 for != comparison`,
+      hasDiag(result, "FUNGI-SECRET-002"),
+      `Expected FUNGI-SECRET-002 for != comparison`,
     );
   });
 
-  it("does not emit SPORE-SECRET-002 for plain String equality", () => {
+  it("does not emit FUNGI-SECRET-002 for plain String equality", () => {
     const result = parseAndCheck(`
 flow test(a: String, b: String) -> Bool {
   let equal: Bool = a == b
@@ -282,12 +282,12 @@ flow test(a: String, b: String) -> Bool {
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-SECRET-002"),
-      `Unexpected SPORE-SECRET-002 for String == String`,
+      !hasDiag(result, "FUNGI-SECRET-002"),
+      `Unexpected FUNGI-SECRET-002 for String == String`,
     );
   });
 
-  it("does not emit SPORE-SECRET-002 for numeric equality", () => {
+  it("does not emit FUNGI-SECRET-002 for numeric equality", () => {
     const result = parseAndCheck(`
 flow test(a: Int, b: Int) -> Bool {
   let equal: Bool = a == b
@@ -295,8 +295,8 @@ flow test(a: Int, b: Int) -> Bool {
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-SECRET-002"),
-      `Unexpected SPORE-SECRET-002 for Int == Int`,
+      !hasDiag(result, "FUNGI-SECRET-002"),
+      `Unexpected FUNGI-SECRET-002 for Int == Int`,
     );
   });
 });
@@ -336,10 +336,10 @@ pure flow add(a: Int, b: Int) -> Int {
   });
 });
 
-// ── Phase 8B: String taint propagation (SPORE-VALUESTATE-004) ──────────────────
+// ── Phase 8B: String taint propagation (FUNGI-VALUESTATE-004) ──────────────────
 
-describe("Value-state checker — SPORE-VALUESTATE-004 string taint propagation", () => {
-  it("emits SPORE-VALUESTATE-004 when unsafe binding concatenated with string literal", () => {
+describe("Value-state checker — FUNGI-VALUESTATE-004 string taint propagation", () => {
+  it("emits FUNGI-VALUESTATE-004 when unsafe binding concatenated with string literal", () => {
     const result = parseAndCheck(`
 secure flow buildQuery(raw: String) -> Result<String, Error>
 contract { effects { database.read } }
@@ -350,22 +350,22 @@ contract { effects { database.read } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-004"),
-      `Expected SPORE-VALUESTATE-004 for unsafe string concatenation, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-004"),
+      `Expected FUNGI-VALUESTATE-004 for unsafe string concatenation, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-004 for safe-only string concatenation", () => {
+  it("does not emit FUNGI-VALUESTATE-004 for safe-only string concatenation", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let greeting: String = "Hello " + "World"
   return greeting
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-VALUESTATE-004"), "Unexpected SPORE-VALUESTATE-004 for safe concat");
+    assert.ok(!hasDiag(result, "FUNGI-VALUESTATE-004"), "Unexpected FUNGI-VALUESTATE-004 for safe concat");
   });
 
-  it("SPORE-VALUESTATE-004 includes why and risk fields", () => {
+  it("FUNGI-VALUESTATE-004 includes why and risk fields", () => {
     const result = parseAndCheck(`
 secure flow buildQuery(raw: String) -> Result<String, Error>
 contract { effects { database.read } }
@@ -375,17 +375,17 @@ contract { effects { database.read } }
   return Ok(query)
 }
 `);
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-VALUESTATE-004");
-    assert.ok(diag !== undefined, "Expected SPORE-VALUESTATE-004");
-    assert.ok(diag.why !== undefined, "Expected why field on SPORE-VALUESTATE-004");
-    assert.ok(diag.risk !== undefined, "Expected risk field on SPORE-VALUESTATE-004");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-VALUESTATE-004");
+    assert.ok(diag !== undefined, "Expected FUNGI-VALUESTATE-004");
+    assert.ok(diag.why !== undefined, "Expected why field on FUNGI-VALUESTATE-004");
+    assert.ok(diag.risk !== undefined, "Expected risk field on FUNGI-VALUESTATE-004");
   });
 });
 
-// ── Phase 11B.1: Two-hop taint propagation (SPORE-VALUESTATE-005) ──────────────
+// ── Phase 11B.1: Two-hop taint propagation (FUNGI-VALUESTATE-005) ──────────────
 
 describe("Value-state checker — Phase 11B.1 two-hop taint propagation", () => {
-  it("emits SPORE-VALUESTATE-005 for value derived from unsafe binding at sink", () => {
+  it("emits FUNGI-VALUESTATE-005 for value derived from unsafe binding at sink", () => {
     // The "laundered unsafe value" pattern
     const result = parseAndCheck(`
 guarded flow search(readonly request: Request) -> String
@@ -398,7 +398,7 @@ contract { effects { database.read } }
 }
 `);
     assert.ok(
-      result.diagnostics.some(d => d.code === "SPORE-VALUESTATE-005" || d.code === "SPORE-VALUESTATE-003"),
+      result.diagnostics.some(d => d.code === "FUNGI-VALUESTATE-005" || d.code === "FUNGI-VALUESTATE-003"),
       `Expected taint-at-sink for derived unsafe value, got: ${result.diagnostics.map(d => d.code).join(", ")}`,
     );
   });
@@ -415,7 +415,7 @@ contract { effects { database.read } }
 }
 `);
     const taintDiags = result.diagnostics.filter(d =>
-      d.code === "SPORE-VALUESTATE-005" || d.code === "SPORE-VALUESTATE-003",
+      d.code === "FUNGI-VALUESTATE-005" || d.code === "FUNGI-VALUESTATE-003",
     );
     assert.equal(taintDiags.length, 0, `Validation gate should break taint chain, got: ${taintDiags.map(d => d.code).join(", ")}`);
   });
@@ -433,12 +433,12 @@ contract { effects { database.write } }
 }
 `);
     const hasTaint = result.diagnostics.some(d =>
-      d.code === "SPORE-VALUESTATE-005" || d.code === "SPORE-VALUESTATE-003",
+      d.code === "FUNGI-VALUESTATE-005" || d.code === "FUNGI-VALUESTATE-003",
     );
     assert.ok(hasTaint, `Multi-hop taint through method chain should be caught, got: ${result.diagnostics.map(d => d.code).join(", ")}`);
   });
 
-  it("SPORE-VALUESTATE-005 includes why and risk fields", () => {
+  it("FUNGI-VALUESTATE-005 includes why and risk fields", () => {
     const result = parseAndCheck(`
 guarded flow test(readonly request: Request) -> String
 contract { effects { database.write } }
@@ -449,10 +449,10 @@ contract { effects { database.write } }
   return "ok"
 }
 `);
-    const diag = result.diagnostics.find(d => d.code === "SPORE-VALUESTATE-005");
-    assert.ok(diag !== undefined, `Expected SPORE-VALUESTATE-005`);
-    assert.ok(diag.why !== undefined, "Expected why field on SPORE-VALUESTATE-005");
-    assert.ok(diag.risk !== undefined, "Expected risk field on SPORE-VALUESTATE-005");
+    const diag = result.diagnostics.find(d => d.code === "FUNGI-VALUESTATE-005");
+    assert.ok(diag !== undefined, `Expected FUNGI-VALUESTATE-005`);
+    assert.ok(diag.why !== undefined, "Expected why field on FUNGI-VALUESTATE-005");
+    assert.ok(diag.risk !== undefined, "Expected risk field on FUNGI-VALUESTATE-005");
   });
 
   it("does not taint a plain let binding with no unsafe dependency", () => {
@@ -464,8 +464,8 @@ flow test() -> String {
 }
 `);
     assert.ok(
-      !result.diagnostics.some(d => d.code === "SPORE-VALUESTATE-005"),
-      "Should not emit SPORE-VALUESTATE-005 for clean bindings",
+      !result.diagnostics.some(d => d.code === "FUNGI-VALUESTATE-005"),
+      "Should not emit FUNGI-VALUESTATE-005 for clean bindings",
     );
   });
 });
@@ -488,7 +488,7 @@ contract { effects { database.write } }
 }
 `);
     const taintDiags = result.diagnostics.filter(d =>
-      d.code === "SPORE-VALUESTATE-005" || d.code === "SPORE-VALUESTATE-003"
+      d.code === "FUNGI-VALUESTATE-005" || d.code === "FUNGI-VALUESTATE-003"
     );
     assert.equal(taintDiags.length, 0, `validate* fn should break taint chain, got: ${taintDiags.map(d => d.code).join(", ")}`);
   });
@@ -508,7 +508,7 @@ contract { effects { database.write } }
 }
 `);
     const taintDiags = result.diagnostics.filter(d =>
-      d.code === "SPORE-VALUESTATE-005" || d.code === "SPORE-VALUESTATE-003"
+      d.code === "FUNGI-VALUESTATE-005" || d.code === "FUNGI-VALUESTATE-003"
     );
     assert.equal(taintDiags.length, 0, `sanitize* fn should break taint chain, got: ${taintDiags.map(d => d.code).join(", ")}`);
   });
@@ -528,7 +528,7 @@ contract { effects { database.write } }
 }
 `);
     const taintDiags = result.diagnostics.filter(d =>
-      d.code === "SPORE-VALUESTATE-005" || d.code === "SPORE-VALUESTATE-003"
+      d.code === "FUNGI-VALUESTATE-005" || d.code === "FUNGI-VALUESTATE-003"
     );
     assert.equal(taintDiags.length, 0, `check* fn should break taint chain, got: ${taintDiags.map(d => d.code).join(", ")}`);
   });
@@ -548,7 +548,7 @@ contract { effects { database.write } }
 }
 `);
     const taintDiags = result.diagnostics.filter(d =>
-      d.code === "SPORE-VALUESTATE-005" || d.code === "SPORE-VALUESTATE-003"
+      d.code === "FUNGI-VALUESTATE-005" || d.code === "FUNGI-VALUESTATE-003"
     );
     assert.equal(taintDiags.length, 0, `verify* fn should break taint chain, got: ${taintDiags.map(d => d.code).join(", ")}`);
   });
@@ -568,12 +568,12 @@ contract { effects { database.write } }
 }
 `);
     const taintDiags = result.diagnostics.filter(d =>
-      d.code === "SPORE-VALUESTATE-005" || d.code === "SPORE-VALUESTATE-003"
+      d.code === "FUNGI-VALUESTATE-005" || d.code === "FUNGI-VALUESTATE-003"
     );
     assert.ok(taintDiags.length > 0, `Non-gate fn should NOT break taint chain`);
   });
 
-  it("user gate fn used with safe mut does not emit SPORE-VALUESTATE-001", () => {
+  it("user gate fn used with safe mut does not emit FUNGI-VALUESTATE-001", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String) -> Result<String, Error>
 contract { effects { database.write } }
@@ -588,7 +588,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-001"),
+      !hasDiag(result, "FUNGI-VALUESTATE-001"),
       `User gate fn should satisfy safe mut gate requirement`
     );
   });
@@ -597,7 +597,7 @@ contract { effects { database.write } }
 // ── Rust-style related locations ──────────────────────────────────────────────
 
 describe("Value-state checker — Rust-style related locations", () => {
-  it("SPORE-VALUESTATE-003 includes relatedLocations pointing to unsafe declaration", () => {
+  it("FUNGI-VALUESTATE-003 includes relatedLocations pointing to unsafe declaration", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String) -> Result<String, Error>
 contract { effects { database.write } }
@@ -607,13 +607,13 @@ contract { effects { database.write } }
   return Ok(saved)
 }
 `);
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-VALUESTATE-003");
-    assert.ok(diag !== undefined, "Expected SPORE-VALUESTATE-003");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-VALUESTATE-003");
+    assert.ok(diag !== undefined, "Expected FUNGI-VALUESTATE-003");
     assert.ok(diag.why !== undefined, "Expected why field");
     assert.ok(diag.risk !== undefined, "Expected risk field");
   });
 
-  it("SPORE-SECRET-001 includes why and risk fields", () => {
+  it("FUNGI-SECRET-001 includes why and risk fields", () => {
     const result = parseAndCheck(`
 secure flow test() -> Result<String, Error>
 contract { effects { secret.read } }
@@ -623,17 +623,17 @@ contract { effects { secret.read } }
   return Ok("done")
 }
 `);
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-SECRET-001");
-    assert.ok(diag !== undefined, "Expected SPORE-SECRET-001");
-    assert.ok(diag.why !== undefined, "Expected why field on SPORE-SECRET-001");
-    assert.ok(diag.risk !== undefined, "Expected risk field on SPORE-SECRET-001");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-SECRET-001");
+    assert.ok(diag !== undefined, "Expected FUNGI-SECRET-001");
+    assert.ok(diag.why !== undefined, "Expected why field on FUNGI-SECRET-001");
+    assert.ok(diag.risk !== undefined, "Expected risk field on FUNGI-SECRET-001");
   });
 });
 
-// ── SPORE-VALUESTATE-006: ProtectedBoundaryViolation ───────────────────────────
+// ── FUNGI-VALUESTATE-006: ProtectedBoundaryViolation ───────────────────────────
 
-describe("Value-state checker — SPORE-VALUESTATE-006 ProtectedBoundaryViolation", () => {
-  it("emits SPORE-VALUESTATE-006 when protect() value assigned to plain binding", () => {
+describe("Value-state checker — FUNGI-VALUESTATE-006 ProtectedBoundaryViolation", () => {
+  it("emits FUNGI-VALUESTATE-006 when protect() value assigned to plain binding", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let email: Email = protect("user@example.com")
@@ -641,32 +641,32 @@ flow test() -> String {
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-006"),
-      `Expected SPORE-VALUESTATE-006 for let email: Email = protect(...), got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-006"),
+      `Expected FUNGI-VALUESTATE-006 for let email: Email = protect(...), got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("emits SPORE-VALUESTATE-006 when protect() assigned to plain String binding", () => {
+  it("emits FUNGI-VALUESTATE-006 when protect() assigned to plain String binding", () => {
     const result = parseAndCheck(
       'flow test() -> String { let x: String = protect("raw")\nreturn "ok" }',
     );
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-006"),
-      `Expected SPORE-VALUESTATE-006 for String = protect("raw"), got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-006"),
+      `Expected FUNGI-VALUESTATE-006 for String = protect("raw"), got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-006 when declared type includes 'protected'", () => {
+  it("does not emit FUNGI-VALUESTATE-006 when declared type includes 'protected'", () => {
     const result = parseAndCheck(
       'flow test() -> String { let x: protected Email = protect("user@example.com")\nreturn "ok" }',
     );
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-006"),
-      `Unexpected SPORE-VALUESTATE-006 when declared type is 'protected Email'`,
+      !hasDiag(result, "FUNGI-VALUESTATE-006"),
+      `Unexpected FUNGI-VALUESTATE-006 when declared type is 'protected Email'`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-006 for plain string literal assigned to String", () => {
+  it("does not emit FUNGI-VALUESTATE-006 for plain string literal assigned to String", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let safe: String = "hello"
@@ -674,48 +674,48 @@ flow test() -> String {
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-006"),
-      `Unexpected SPORE-VALUESTATE-006 for a plain String literal`,
+      !hasDiag(result, "FUNGI-VALUESTATE-006"),
+      `Unexpected FUNGI-VALUESTATE-006 for a plain String literal`,
     );
   });
 });
 
-// ── SPORE-VALUESTATE-007: RedactedBoundaryViolation ────────────────────────────
+// ── FUNGI-VALUESTATE-007: RedactedBoundaryViolation ────────────────────────────
 
-describe("Value-state checker — SPORE-VALUESTATE-007 RedactedBoundaryViolation", () => {
-  it("emits SPORE-VALUESTATE-007 when redact() value assigned to plain String binding", () => {
+describe("Value-state checker — FUNGI-VALUESTATE-007 RedactedBoundaryViolation", () => {
+  it("emits FUNGI-VALUESTATE-007 when redact() value assigned to plain String binding", () => {
     const result = parseAndCheck(
       'flow test() -> String { let s: String = redact("secret")\nreturn "ok" }',
     );
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-007"),
-      `Expected SPORE-VALUESTATE-007 for String = redact("secret"), got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-007"),
+      `Expected FUNGI-VALUESTATE-007 for String = redact("secret"), got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("SPORE-VALUESTATE-007 message mentions irreversibility or redaction", () => {
+  it("FUNGI-VALUESTATE-007 message mentions irreversibility or redaction", () => {
     const result = parseAndCheck(
       'flow test() -> String { let s: String = redact("secret")\nreturn "ok" }',
     );
-    const diag = diagsWithCode(result, "SPORE-VALUESTATE-007")[0];
-    assert.ok(diag !== undefined, "Expected SPORE-VALUESTATE-007");
+    const diag = diagsWithCode(result, "FUNGI-VALUESTATE-007")[0];
+    assert.ok(diag !== undefined, "Expected FUNGI-VALUESTATE-007");
     assert.ok(
       diag.message.includes("irreversible") || diag.message.includes("redact"),
       `Expected 'irreversible' or 'redact' in message: ${diag.message}`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-007 when declared type includes 'redacted'", () => {
+  it("does not emit FUNGI-VALUESTATE-007 when declared type includes 'redacted'", () => {
     const result = parseAndCheck(
       'flow test() -> String { let s: redacted String = redact("secret")\nreturn "ok" }',
     );
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-007"),
-      `Unexpected SPORE-VALUESTATE-007 when declared type is 'redacted String'`,
+      !hasDiag(result, "FUNGI-VALUESTATE-007"),
+      `Unexpected FUNGI-VALUESTATE-007 when declared type is 'redacted String'`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-007 for a plain string literal assigned to String", () => {
+  it("does not emit FUNGI-VALUESTATE-007 for a plain string literal assigned to String", () => {
     const result = parseAndCheck(`
 flow test() -> String {
   let safe: String = "public"
@@ -723,16 +723,16 @@ flow test() -> String {
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-007"),
-      `Unexpected SPORE-VALUESTATE-007 for a plain String literal`,
+      !hasDiag(result, "FUNGI-VALUESTATE-007"),
+      `Unexpected FUNGI-VALUESTATE-007 for a plain String literal`,
     );
   });
 });
 
-// ── SPORE-VALUESTATE-002: UnsafeConditionalUpgrade ─────────────────────────────
+// ── FUNGI-VALUESTATE-002: UnsafeConditionalUpgrade ─────────────────────────────
 
-describe("Value-state checker — SPORE-VALUESTATE-002 UnsafeConditionalUpgrade", () => {
-  it("emits SPORE-VALUESTATE-002 when then-branch uses gate but else-branch does not", () => {
+describe("Value-state checker — FUNGI-VALUESTATE-002 UnsafeConditionalUpgrade", () => {
+  it("emits FUNGI-VALUESTATE-002 when then-branch uses gate but else-branch does not", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String, cond: Bool) -> Result<String, Error>
 contract { effects { database.write } }
@@ -747,12 +747,12 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-002"),
-      `Expected SPORE-VALUESTATE-002 for asymmetric gate usage, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-002"),
+      `Expected FUNGI-VALUESTATE-002 for asymmetric gate usage, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("emits SPORE-VALUESTATE-002 when else-branch uses gate but then-branch does not", () => {
+  it("emits FUNGI-VALUESTATE-002 when else-branch uses gate but then-branch does not", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String, cond: Bool) -> Result<String, Error>
 contract { effects { database.write } }
@@ -767,12 +767,12 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-002"),
-      `Expected SPORE-VALUESTATE-002 when only else-branch has gate, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-002"),
+      `Expected FUNGI-VALUESTATE-002 when only else-branch has gate, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-002 when both branches use a gate", () => {
+  it("does not emit FUNGI-VALUESTATE-002 when both branches use a gate", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String, cond: Bool) -> Result<String, Error>
 contract { effects { database.write } }
@@ -787,12 +787,12 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-002"),
-      `Unexpected SPORE-VALUESTATE-002 when both branches use a gate`,
+      !hasDiag(result, "FUNGI-VALUESTATE-002"),
+      `Unexpected FUNGI-VALUESTATE-002 when both branches use a gate`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-002 when only one branch has a safe mut (no asymmetry)", () => {
+  it("does not emit FUNGI-VALUESTATE-002 when only one branch has a safe mut (no asymmetry)", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String, cond: Bool) -> Result<String, Error>
 contract { effects { database.write } }
@@ -805,8 +805,8 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-002"),
-      `Unexpected SPORE-VALUESTATE-002 when only then-branch has safe mut`,
+      !hasDiag(result, "FUNGI-VALUESTATE-002"),
+      `Unexpected FUNGI-VALUESTATE-002 when only then-branch has safe mut`,
     );
   });
 });
@@ -827,7 +827,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-003"),
+      hasDiag(result, "FUNGI-VALUESTATE-003"),
       `Expected VALUESTATE-003 inside if body — non-gate condition does not clear taint, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -846,15 +846,15 @@ contract { effects { database.write } }
   return Ok("ok")
 }
 `);
-    const diags = diagsWithCode(result, "SPORE-VALUESTATE-003");
+    const diags = diagsWithCode(result, "FUNGI-VALUESTATE-003");
     assert.ok(diags.length >= 1, `Expected at least one VALUESTATE-003 inside if/else with unsafe at sink, got: ${result.diagnostics.map((d) => d.code).join(", ")}`);
   });
 });
 
 // ── SECRET-003 extended: AuditLog.write with SecureString ────────────────────
 
-describe("Value-state checker — SPORE-SECRET-003 extended detection", () => {
-  it("emits SPORE-SECRET-003 when SecureString is passed to AuditLog.write", () => {
+describe("Value-state checker — FUNGI-SECRET-003 extended detection", () => {
+  it("emits FUNGI-SECRET-003 when SecureString is passed to AuditLog.write", () => {
     const result = parseAndCheck(`
 secure flow test() -> Result<String, Error>
 contract { effects { audit.write, secret.read } }
@@ -865,12 +865,12 @@ contract { effects { audit.write, secret.read } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-SECRET-003"),
-      `Expected SPORE-SECRET-003 for SecureString in AuditLog.write, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-SECRET-003"),
+      `Expected FUNGI-SECRET-003 for SecureString in AuditLog.write, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("does not emit SPORE-SECRET-003 when SecureString is redacted before AuditLog.write", () => {
+  it("does not emit FUNGI-SECRET-003 when SecureString is redacted before AuditLog.write", () => {
     const result = parseAndCheck(`
 secure flow test() -> Result<String, Error>
 contract { effects { audit.write, secret.read } }
@@ -881,8 +881,8 @@ contract { effects { audit.write, secret.read } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-SECRET-003"),
-      `Unexpected SPORE-SECRET-003 when SecureString is redacted before AuditLog.write`,
+      !hasDiag(result, "FUNGI-SECRET-003"),
+      `Unexpected FUNGI-SECRET-003 when SecureString is redacted before AuditLog.write`,
     );
   });
 });
@@ -890,7 +890,7 @@ contract { effects { audit.write, secret.read } }
 // ── Task 4: protected value at AuditLog.write → VALUESTATE-006 ──────────────
 
 describe("Value-state checker — protected value at AuditLog.write (VALUESTATE-006)", () => {
-  it("emits SPORE-VALUESTATE-006 for protected Email binding at AuditLog.write without redact", () => {
+  it("emits FUNGI-VALUESTATE-006 for protected Email binding at AuditLog.write without redact", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String) -> Result<String, Error>
 contract { effects { audit.write, database.write } }
@@ -902,12 +902,12 @@ contract { effects { audit.write, database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-006"),
-      `Expected SPORE-VALUESTATE-006 for protected Email at AuditLog.write, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-006"),
+      `Expected FUNGI-VALUESTATE-006 for protected Email at AuditLog.write, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("does not emit SPORE-VALUESTATE-006 for protected Email wrapped in redact() at AuditLog.write", () => {
+  it("does not emit FUNGI-VALUESTATE-006 for protected Email wrapped in redact() at AuditLog.write", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String) -> Result<String, Error>
 contract { effects { audit.write, database.write } }
@@ -919,12 +919,12 @@ contract { effects { audit.write, database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-006"),
-      `Unexpected SPORE-VALUESTATE-006 when protected value is redacted before AuditLog.write`,
+      !hasDiag(result, "FUNGI-VALUESTATE-006"),
+      `Unexpected FUNGI-VALUESTATE-006 when protected value is redacted before AuditLog.write`,
     );
   });
 
-  it("emits SPORE-VALUESTATE-003 (not VALUESTATE-006) for raw unsafe value at DatabaseDB.write", () => {
+  it("emits FUNGI-VALUESTATE-003 (not VALUESTATE-006) for raw unsafe value at DatabaseDB.write", () => {
     const result = parseAndCheck(`
 secure flow test(raw: String) -> Result<String, Error>
 contract { effects { database.write } }
@@ -935,12 +935,12 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-003"),
-      `Expected SPORE-VALUESTATE-003 for raw unsafe at DatabaseDB.write, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-003"),
+      `Expected FUNGI-VALUESTATE-003 for raw unsafe at DatabaseDB.write, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-006"),
-      `Unexpected SPORE-VALUESTATE-006 for raw unsafe at DatabaseDB.write (should be VALUESTATE-003)`,
+      !hasDiag(result, "FUNGI-VALUESTATE-006"),
+      `Unexpected FUNGI-VALUESTATE-006 for raw unsafe at DatabaseDB.write (should be VALUESTATE-003)`,
     );
   });
 });
@@ -962,7 +962,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-005") || hasDiag(result, "SPORE-VALUESTATE-003"),
+      hasDiag(result, "FUNGI-VALUESTATE-005") || hasDiag(result, "FUNGI-VALUESTATE-003"),
       `Expected a taint-at-sink diagnostic for record-laundered unsafe input, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -979,7 +979,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-005") && !hasDiag(result, "SPORE-VALUESTATE-003"),
+      !hasDiag(result, "FUNGI-VALUESTATE-005") && !hasDiag(result, "FUNGI-VALUESTATE-003"),
       `Gate-sanitized record field must not trip taint, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -987,7 +987,7 @@ contract { effects { database.write } }
 
 // ── Secret taint guard: secrets {} accessors are SecureString-equivalent ──────
 // A binding read from a secret accessor (secret.get / vault.read / kms / secrets.*)
-// is inferred SecureString, so the existing SPORE-SECRET-001 (log) / SPORE-SECRET-003
+// is inferred SecureString, so the existing FUNGI-SECRET-001 (log) / FUNGI-SECRET-003
 // (serialize) sink guards block it from leaking. redact() is the safe escape.
 describe("Value-state checker — secret-source taint (secrets {} credentials)", () => {
   const mk = (body) => `secure flow f() -> Int
@@ -996,25 +996,25 @@ contract { intent { "x" }  secrets { credential k { provider "vault" } } }
 ${body}
   return 0
 }`;
-  it("a secret read then logged → SPORE-SECRET-001", () => {
+  it("a secret read then logged → FUNGI-SECRET-001", () => {
     const r = parseAndCheck(mk('  let key = secret.get("LEDGER_WRITE_KEY")\n  log.info(key)'));
-    assert.ok(hasDiag(r, "SPORE-SECRET-001"), `expected SECRET-001, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(r, "FUNGI-SECRET-001"), `expected SECRET-001, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
   });
-  it("a secret read then serialized → SPORE-SECRET-003", () => {
+  it("a secret read then serialized → FUNGI-SECRET-003", () => {
     const r = parseAndCheck(mk('  let key = vault.read("K")\n  let s = json.encode(key)'));
-    assert.ok(hasDiag(r, "SPORE-SECRET-003"), `expected SECRET-003, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(r, "FUNGI-SECRET-003"), `expected SECRET-003, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
   });
   it("redact(secret) before logging → clean (redact is the safe escape)", () => {
     const r = parseAndCheck(mk('  let key = secret.get("K")\n  log.info(redact(key))'));
-    assert.ok(!hasDiag(r, "SPORE-SECRET-001"), `redact must clear the secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
+    assert.ok(!hasDiag(r, "FUNGI-SECRET-001"), `redact must clear the secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
   });
   it("a non-secret value logged → no SECRET diagnostic", () => {
     const r = parseAndCheck(mk('  let x = compute(1)\n  log.info(x)'));
-    assert.ok(!hasDiag(r, "SPORE-SECRET-001") && !hasDiag(r, "SPORE-SECRET-003"));
+    assert.ok(!hasDiag(r, "FUNGI-SECRET-001") && !hasDiag(r, "FUNGI-SECRET-003"));
   });
 });
 
-// ── Secret → network egress guard (SPORE-SECRET-002) ───────────────────────────
+// ── Secret → network egress guard (FUNGI-SECRET-002) ───────────────────────────
 describe("Value-state checker — secret to network egress", () => {
   const mk = (body) => `secure flow f() -> Int
 contract { intent { "x" }  secrets { credential k { provider "vault" } } }
@@ -1022,50 +1022,50 @@ contract { intent { "x" }  secrets { credential k { provider "vault" } } }
 ${body}
   return 0
 }`;
-  it("a secret sent to http.post → SPORE-SECRET-002", () => {
+  it("a secret sent to http.post → FUNGI-SECRET-002", () => {
     const r = parseAndCheck(mk('  let key = secret.get("K")\n  let r = http.post("https://x", key)'));
-    assert.ok(hasDiag(r, "SPORE-SECRET-002"), `expected SECRET-002, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(r, "FUNGI-SECRET-002"), `expected SECRET-002, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
   });
-  it("a secret sent to fetch(...) → SPORE-SECRET-002", () => {
+  it("a secret sent to fetch(...) → FUNGI-SECRET-002", () => {
     const r = parseAndCheck(mk('  let key = vault.read("K")\n  let r = fetch(key)'));
-    assert.ok(hasDiag(r, "SPORE-SECRET-002"));
+    assert.ok(hasDiag(r, "FUNGI-SECRET-002"));
   });
   it("redact(secret) to http.post → clean", () => {
     const r = parseAndCheck(mk('  let key = secret.get("K")\n  let r = http.post("u", redact(key))'));
-    assert.ok(!hasDiag(r, "SPORE-SECRET-002"));
+    assert.ok(!hasDiag(r, "FUNGI-SECRET-002"));
   });
   it("a non-secret value to http.post → clean", () => {
     const r = parseAndCheck(mk('  let x = build(1)\n  let r = http.post("u", x)'));
-    assert.ok(!hasDiag(r, "SPORE-SECRET-002"));
+    assert.ok(!hasDiag(r, "FUNGI-SECRET-002"));
   });
 
   // ── Derived-secret egress (regression: the credential laundering fail-open) ──
   // A secret transformed via slice/concat/record/etc. must STILL be blocked — these
   // are exactly the exfiltration vectors (the same evasion class as vec2text on a
   // semantic vector). Before the derivesFromSecret fix, all of these leaked clean.
-  it("a SLICED secret sent to http.post → SPORE-SECRET-002", () => {
+  it("a SLICED secret sent to http.post → FUNGI-SECRET-002", () => {
     const r = parseAndCheck(mk('  let key = secret.get("K")\n  let part = key.slice(0,5)\n  let r = http.post("u", part)'));
-    assert.ok(hasDiag(r, "SPORE-SECRET-002"), `expected SECRET-002 for sliced secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(r, "FUNGI-SECRET-002"), `expected SECRET-002 for sliced secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
   });
-  it("a CONCATENATED secret sent to http.post → SPORE-SECRET-002", () => {
+  it("a CONCATENATED secret sent to http.post → FUNGI-SECRET-002", () => {
     const r = parseAndCheck(mk('  let key = secret.get("K")\n  let p = key + "Z"\n  let r = http.post("u", p)'));
-    assert.ok(hasDiag(r, "SPORE-SECRET-002"), `expected SECRET-002 for concatenated secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(r, "FUNGI-SECRET-002"), `expected SECRET-002 for concatenated secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
   });
-  it("a secret wrapped in a RECORD field sent to http.post → SPORE-SECRET-002", () => {
+  it("a secret wrapped in a RECORD field sent to http.post → FUNGI-SECRET-002", () => {
     const r = parseAndCheck(mk('  let key = secret.get("K")\n  let rec = { tok: key }\n  let r = http.post("u", rec)'));
-    assert.ok(hasDiag(r, "SPORE-SECRET-002"), `expected SECRET-002 for record-wrapped secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(r, "FUNGI-SECRET-002"), `expected SECRET-002 for record-wrapped secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
   });
-  it("a DOUBLY-derived secret (slice then concat) sent to http.post → SPORE-SECRET-002", () => {
+  it("a DOUBLY-derived secret (slice then concat) sent to http.post → FUNGI-SECRET-002", () => {
     const r = parseAndCheck(mk('  let key = secret.get("K")\n  let a = key.slice(0,8)\n  let b = a + "!"\n  let r = http.post("u", b)'));
-    assert.ok(hasDiag(r, "SPORE-SECRET-002"), `expected SECRET-002 for doubly-derived secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
+    assert.ok(hasDiag(r, "FUNGI-SECRET-002"), `expected SECRET-002 for doubly-derived secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
   });
   it("redact() of a secret via an intermediate binding → clean (redact is the sole declassifier)", () => {
     const r = parseAndCheck(mk('  let key = secret.get("K")\n  let safe = redact(key)\n  let r = http.post("u", safe)'));
-    assert.ok(!hasDiag(r, "SPORE-SECRET-002"), `redact-via-binding must clear the secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
+    assert.ok(!hasDiag(r, "FUNGI-SECRET-002"), `redact-via-binding must clear the secret, got: ${r.diagnostics.map((d) => d.code).join(", ")}`);
   });
   it("a derived NON-secret value → clean (no false positive)", () => {
     const r = parseAndCheck(mk('  let x = build(1)\n  let p = x.slice(0,2)\n  let r = http.post("u", p)'));
-    assert.ok(!hasDiag(r, "SPORE-SECRET-002"));
+    assert.ok(!hasDiag(r, "FUNGI-SECRET-002"));
   });
 });
 
@@ -1084,7 +1084,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-005") || hasDiag(result, "SPORE-VALUESTATE-003"),
+      hasDiag(result, "FUNGI-VALUESTATE-005") || hasDiag(result, "FUNGI-VALUESTATE-003"),
       `Expected taint-at-sink for list with tainted element, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -1100,7 +1100,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-005") && !hasDiag(result, "SPORE-VALUESTATE-003"),
+      !hasDiag(result, "FUNGI-VALUESTATE-005") && !hasDiag(result, "FUNGI-VALUESTATE-003"),
       `Unexpected taint diagnostic for clean list, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -1118,7 +1118,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-005") && !hasDiag(result, "SPORE-VALUESTATE-003"),
+      !hasDiag(result, "FUNGI-VALUESTATE-005") && !hasDiag(result, "FUNGI-VALUESTATE-003"),
       `Gate-sanitized list element must not trip taint, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -1140,7 +1140,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-005") || hasDiag(result, "SPORE-VALUESTATE-003"),
+      hasDiag(result, "FUNGI-VALUESTATE-005") || hasDiag(result, "FUNGI-VALUESTATE-003"),
       `Expected taint-at-sink for p.id from tainted record, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -1157,7 +1157,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-005") && !hasDiag(result, "SPORE-VALUESTATE-003"),
+      !hasDiag(result, "FUNGI-VALUESTATE-005") && !hasDiag(result, "FUNGI-VALUESTATE-003"),
       `Unexpected taint for clean record field, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -1181,8 +1181,8 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-004"),
-      `Expected SPORE-VALUESTATE-004 for tainted arg to user flow, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-004"),
+      `Expected FUNGI-VALUESTATE-004 for tainted arg to user flow, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
@@ -1200,8 +1200,8 @@ contract { effects { database.write } }
   return Ok("ok")
 }
 `);
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-VALUESTATE-004");
-    assert.ok(diag !== undefined, "Expected SPORE-VALUESTATE-004");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-VALUESTATE-004");
+    assert.ok(diag !== undefined, "Expected FUNGI-VALUESTATE-004");
     assert.ok(
       diag.message.includes("processData"),
       `Expected 'processData' in message: ${diag.message}`,
@@ -1223,8 +1223,8 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-004"),
-      `Unexpected SPORE-VALUESTATE-004 for clean arg to user flow, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      !hasDiag(result, "FUNGI-VALUESTATE-004"),
+      `Unexpected FUNGI-VALUESTATE-004 for clean arg to user flow, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 });
@@ -1242,8 +1242,8 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-003"),
-      `Expected SPORE-VALUESTATE-003 for source_from Network.ClientSocket, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-003"),
+      `Expected FUNGI-VALUESTATE-003 for source_from Network.ClientSocket, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
@@ -1257,8 +1257,8 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-003"),
-      `Expected SPORE-VALUESTATE-003 for source_from Network.HttpRequest, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-003"),
+      `Expected FUNGI-VALUESTATE-003 for source_from Network.HttpRequest, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
@@ -1273,7 +1273,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-003"),
+      !hasDiag(result, "FUNGI-VALUESTATE-003"),
       `Unexpected VALUESTATE-003 after gate upgrade of source_from param, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -1288,7 +1288,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-003") && !hasDiag(result, "SPORE-VALUESTATE-005"),
+      !hasDiag(result, "FUNGI-VALUESTATE-003") && !hasDiag(result, "FUNGI-VALUESTATE-005"),
       `Unexpected taint diagnostic for InternalService.Config source_from, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -1303,7 +1303,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-003"),
+      hasDiag(result, "FUNGI-VALUESTATE-003"),
       `Expected VALUESTATE-003 for External.* source_from, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -1318,7 +1318,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-003") && !hasDiag(result, "SPORE-VALUESTATE-005"),
+      !hasDiag(result, "FUNGI-VALUESTATE-003") && !hasDiag(result, "FUNGI-VALUESTATE-005"),
       `Unexpected taint for Database.PrimaryKey source_from, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -1334,7 +1334,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-003"),
+      hasDiag(result, "FUNGI-VALUESTATE-003"),
       `Expected VALUESTATE-003 for an unknown/unregistered source_from origin (deny-by-default), got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -1350,7 +1350,7 @@ contract { effects { database.write } }
 }
 `);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-003"),
+      !hasDiag(result, "FUNGI-VALUESTATE-003"),
       `Unexpected VALUESTATE-003 after gating an unknown-origin param, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });

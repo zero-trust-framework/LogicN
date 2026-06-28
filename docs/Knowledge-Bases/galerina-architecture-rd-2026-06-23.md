@@ -58,7 +58,7 @@ prove substrate posture; a GIR-derived tag adds audit value with zero analog con
 (#6); record per-package Tri-Pipe coverage to kill the "Binary-by-invariant vs unwired-gap" ambiguity (#16).
 
 **`contract.permissions{}`.** Keep it a DISTINCT physical-device grant block with its own `V_PERM` register and
-`SPORE-PERM-001..006`, fail-closed, AI-cannot-self-grant, folding as a `vAnd` operand. Full design:
+`FUNGI-PERM-001..006`, fail-closed, AI-cannot-self-grant, folding as a `vAnd` operand. Full design:
 [galerina-contract-permissions-design.md](galerina-contract-permissions-design.md).
 
 > All photonic perf is projected/emulated, never measured silicon. Crypto/keys stay Binary everywhere.

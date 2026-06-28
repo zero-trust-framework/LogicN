@@ -6,11 +6,11 @@
  * user-facing CLI end to end, so a regression in the build→sign→persist→verify plumbing is caught:
  *
  *   (1) keygen --hybrid                       mint a hybrid Ed25519+ML-DSA-65 key in a temp dir
- *   (2) write a PURE .spore flow returning Int  (no effects → fuses clean, signs over governance facts)
+ *   (2) write a PURE .fungi flow returning Int  (no effects → fuses clean, signs over governance facts)
  *   (3) build under GALERINA_MANIFEST_PROFILE=certified (MANDATES hybrid; a classical-only key fail-closes)
  *         → the emitted build/<name>.lmanifest.json must be a both-half v2 hybrid signature
- *   (4) verify <flow>.spore                      exit 0 + output naming BOTH halves (Ed25519 AND ML-DSA-65)
- *   (5) flip a byte of the manifest body       verify FAILS CLOSED (exit 1, SPORE-MANIFEST-TAMPER)
+ *   (4) verify <flow>.fungi                      exit 0 + output naming BOTH halves (Ed25519 AND ML-DSA-65)
+ *   (5) flip a byte of the manifest body       verify FAILS CLOSED (exit 1, FUNGI-MANIFEST-TAMPER)
  *
  * Uses the EXISTING dist (no rebuild) — same posture as cli-keygen-hybrid.test.mjs.
  */
@@ -44,27 +44,27 @@ test("hybrid CLI round-trip: certified build emits a v2 both-half manifest, veri
     assert.equal(kg.status, 0, `keygen --hybrid should exit 0: ${out(kg)}`);
 
     // ── (2) write the PURE Int flow. ──
-    const spore = join(dir, "answer.spore");
-    writeFileSync(spore, PURE_FLOW);
+    const fungi = join(dir, "answer.fungi");
+    writeFileSync(fungi, PURE_FLOW);
 
     // ── (3) build under certified — MANDATES the hybrid signature (no PQ downgrade). ──
-    const build = run(["build", "answer.spore"], { GALERINA_MANIFEST_PROFILE: "certified" }, dir);
+    const build = run(["build", "answer.fungi"], { GALERINA_MANIFEST_PROFILE: "certified" }, dir);
     assert.equal(build.status, 0, `certified build should succeed: ${out(build)}`);
 
     const jsonPath = join(dir, "build", "answer.lmanifest.json");
     const manifest = JSON.parse(readFileSync(jsonPath, "utf8"));
 
     // The persisted manifest is a v2 hybrid: a durable on-disk PQ signature fact.
-    assert.equal(manifest.schemaVersion, "spore.manifest.v2", "certified hybrid manifest bumps to schema v2");
+    assert.equal(manifest.schemaVersion, "fungi.manifest.v2", "certified hybrid manifest bumps to schema v2");
     const sig = manifest.governanceSignature;
     assert.ok(sig && typeof sig === "object", "manifest carries a governanceSignature");
     assert.equal(sig.algorithm, "Ed25519+ML-DSA-65", "both-half hybrid algorithm");
-    assert.equal(sig.sigAlgorithm, "spore.gov.sig.v2", "v2 envelope signature version");
+    assert.equal(sig.sigAlgorithm, "fungi.gov.sig.v2", "v2 envelope signature version");
     assert.ok(typeof sig.signature === "string" && sig.signature.includes("|"),
       "the signature concatenates BOTH halves as '<ed25519>|<mldsa>'");
 
     // ── (4) verify — exit 0, output names BOTH crypto halves. ──
-    const verify = run(["verify", "answer.spore"], {}, dir);
+    const verify = run(["verify", "answer.fungi"], {}, dir);
     assert.equal(verify.status, 0, `verify of a clean hybrid manifest should exit 0: ${out(verify)}`);
     const vout = out(verify);
     assert.match(vout, /Ed25519/, "verify output names the classical (Ed25519) half");
@@ -73,15 +73,15 @@ test("hybrid CLI round-trip: certified build emits a v2 both-half manifest, veri
 
     // ── (5) flip a byte of the manifest BODY (a signed field) and re-verify → FAIL CLOSED. ──
     // The signature is left intact; mutating any signed body field breaks the re-derived bodyHash, so
-    // the verifier must reject (exit 1, SPORE-MANIFEST-TAMPER) rather than admit a tampered manifest.
+    // the verifier must reject (exit 1, FUNGI-MANIFEST-TAMPER) rather than admit a tampered manifest.
     const tampered = JSON.parse(readFileSync(jsonPath, "utf8"));
     tampered.flowCount = (tampered.flowCount ?? 0) + 1; // a one-field flip = "one byte" of the body
     writeFileSync(jsonPath, JSON.stringify(tampered, null, 2));
 
-    const verifyTampered = run(["verify", "answer.spore"], {}, dir);
+    const verifyTampered = run(["verify", "answer.fungi"], {}, dir);
     assert.equal(verifyTampered.status, 1, `tampered manifest must fail closed (exit 1): ${out(verifyTampered)}`);
-    assert.match(out(verifyTampered), /SPORE-MANIFEST-TAMPER/,
-      "tamper is reported as SPORE-MANIFEST-TAMPER (fail-closed)");
+    assert.match(out(verifyTampered), /FUNGI-MANIFEST-TAMPER/,
+      "tamper is reported as FUNGI-MANIFEST-TAMPER (fail-closed)");
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

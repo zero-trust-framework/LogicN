@@ -8,7 +8,7 @@
 //
 // Covers:
 //   - trapDecl AST node shape (kind, value = errorCode, children = [conditionExpr])
-//   - Governance verifier: SPORE-TRAP-001 for invalid error code identifier
+//   - Governance verifier: FUNGI-TRAP-001 for invalid error code identifier
 //   - Value-state checker: trap does NOT declassify (VSC-002, owner decision A) — taint
 //     survives a trap; declassification requires an explicit validate.*/sanitize.*/redact() gate
 // =============================================================================
@@ -28,7 +28,7 @@ import {
 // ---------------------------------------------------------------------------
 
 function parse(source) {
-  return parseProgram(source, "test.spore");
+  return parseProgram(source, "test.fungi");
 }
 
 function parseAndVerify(source, profile = "dev") {
@@ -137,11 +137,11 @@ contract { effects {} }
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-TRAP-001: invalid error code identifier
+// FUNGI-TRAP-001: invalid error code identifier
 // ---------------------------------------------------------------------------
 
-describe("SPORE-TRAP-001: trap error code must be a valid identifier", () => {
-  it("valid ALL_CAPS error code — no SPORE-TRAP-001", () => {
+describe("FUNGI-TRAP-001: trap error code must be a valid identifier", () => {
+  it("valid ALL_CAPS error code — no FUNGI-TRAP-001", () => {
     const source = `
 secure flow check(amount: Int) -> Void
 contract {
@@ -155,14 +155,14 @@ contract {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      !hasDiag(result, "SPORE-TRAP-001"),
-      `Expected no SPORE-TRAP-001 for valid error code ERR_INVALID_AMOUNT`,
+      !hasDiag(result, "FUNGI-TRAP-001"),
+      `Expected no FUNGI-TRAP-001 for valid error code ERR_INVALID_AMOUNT`,
     );
   });
 
-  it("empty error code (just trap x == 0 :) emits SPORE-TRAP-001 or parse error", () => {
+  it("empty error code (just trap x == 0 :) emits FUNGI-TRAP-001 or parse error", () => {
     // An empty error code after the colon is invalid. The parser may reject this
-    // at parse time, or the governance verifier should emit SPORE-TRAP-001.
+    // at parse time, or the governance verifier should emit FUNGI-TRAP-001.
     // Either outcome is acceptable here.
     const source = `
 secure flow checkTrap(n: Int) -> Void
@@ -176,10 +176,10 @@ contract {
 }
 `;
     const result = parseAndVerify(source);
-    // Valid error code — no SPORE-TRAP-001 expected
+    // Valid error code — no FUNGI-TRAP-001 expected
     assert.ok(
-      !hasDiag(result, "SPORE-TRAP-001"),
-      `Expected no SPORE-TRAP-001 for a valid error code ERR_VALID_CODE, got: ${result.diagnostics.filter((d) => d.code === "SPORE-TRAP-001").map((d) => d.message).join("; ")}`,
+      !hasDiag(result, "FUNGI-TRAP-001"),
+      `Expected no FUNGI-TRAP-001 for a valid error code ERR_VALID_CODE, got: ${result.diagnostics.filter((d) => d.code === "FUNGI-TRAP-001").map((d) => d.message).join("; ")}`,
     );
   });
 });
@@ -205,8 +205,8 @@ contract {
 `;
     const result = parseAndCheckValues(source);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-003"),
-      `trap must NOT launder taint; expected SPORE-VALUESTATE-003, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-VALUESTATE-003"),
+      `trap must NOT launder taint; expected FUNGI-VALUESTATE-003, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
@@ -226,12 +226,12 @@ contract {
 `;
     const result = parseAndCheckValues(source);
     assert.ok(
-      hasDiag(result, "SPORE-VALUESTATE-003"),
+      hasDiag(result, "FUNGI-VALUESTATE-003"),
       `a length/format guard must not clear taint for an injection sink, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("an explicit validate.* gate DOES declassify (no SPORE-VALUESTATE-003)", () => {
+  it("an explicit validate.* gate DOES declassify (no FUNGI-VALUESTATE-003)", () => {
     const source = `
 secure flow processValidated(rawInput: String) -> Result<String, Error>
 contract {
@@ -247,7 +247,7 @@ contract {
 `;
     const result = parseAndCheckValues(source);
     assert.ok(
-      !hasDiag(result, "SPORE-VALUESTATE-003"),
+      !hasDiag(result, "FUNGI-VALUESTATE-003"),
       `an explicit validate.* gate must clear taint, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -266,12 +266,12 @@ contract {
 `;
     const result = parseAndVerify(source);
     const trapErrors = result.diagnostics.filter(
-      (d) => d.code === "SPORE-TRAP-001" || d.code === "SPORE-TRAP-002",
+      (d) => d.code === "FUNGI-TRAP-001" || d.code === "FUNGI-TRAP-002",
     );
     assert.equal(
       trapErrors.length,
       0,
-      `Expected no SPORE-TRAP errors for valid trap declaration, got: ${trapErrors.map((d) => `${d.code}: ${d.message}`).join("; ")}`,
+      `Expected no FUNGI-TRAP errors for valid trap declaration, got: ${trapErrors.map((d) => `${d.code}: ${d.message}`).join("; ")}`,
     );
   });
 });

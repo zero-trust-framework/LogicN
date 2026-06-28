@@ -38,7 +38,7 @@ grammar:
     - feature: "top_level_result_types"
       rule: "type ResultName = Result<X,E> at compilation unit level preferred over contract.types"
     - feature: "no_else_if"
-      diagnostic: "SPORE-SYNTAX-010"
+      diagnostic: "FUNGI-SYNTAX-010"
       rule: "'else if' is a hard error; use match or sequential if"
     - feature: "unsafe_let_boundary"
       rule: "'unsafe let x = request.params.y' marks raw HTTP input at flow boundary"
@@ -60,47 +60,47 @@ grammar:
 diagnostics:
   canonical: docs/Knowledge-Bases/galerina-compiler-pipeline.md
   description: >
-    Pipeline doc owns the diagnostic series (SPORE-SYNTAX-*, SPORE-TYPE-*, etc.)
+    Pipeline doc owns the diagnostic series (FUNGI-SYNTAX-*, FUNGI-TYPE-*, etc.)
     and maps them to compiler passes. Full codes are in per-subsystem specs.
   subsystems:
-    - series: "SPORE-TYPE-*"
+    - series: "FUNGI-TYPE-*"
       canonical: docs/Knowledge-Bases/formal-type-system-spec.md
-    - series: "SPORE-VALUESTATE-*, SPORE-SECRET-*, SPORE-SAFETY-*"
+    - series: "FUNGI-VALUESTATE-*, FUNGI-SECRET-*, FUNGI-SAFETY-*"
       canonical: docs/Knowledge-Bases/value-state-annotations.md
-    - series: "SPORE-EFFECT-*"
+    - series: "FUNGI-EFFECT-*"
       canonical: docs/Knowledge-Bases/effect-checker-and-boundary-checker.md
-    - series: "SPORE-NAME-*"
+    - series: "FUNGI-NAME-*"
       canonical: docs/Knowledge-Bases/galerina-symbol-resolver-spec.md
-    - series: "SPORE-MATCH-*"
+    - series: "FUNGI-MATCH-*"
       canonical: docs/Knowledge-Bases/formal-type-system-spec.md
-    - series: "SPORE-GOV-*, SPORE-INTENT-*, SPORE-PII-*, SPORE-PHI-*, SPORE-AUDIT-*"
+    - series: "FUNGI-GOV-*, FUNGI-INTENT-*, FUNGI-PII-*, FUNGI-PHI-*, FUNGI-AUDIT-*"
       canonical: docs/Knowledge-Bases/galerina-governance-verifier-spec.md
-    - series: "SPORE-SEC-*"
+    - series: "FUNGI-SEC-*"
       canonical: docs/Knowledge-Bases/galerina-security-model-layers.md
-    - series: "SPORE-SYNTAX-*, SPORE-PARSE-*"
+    - series: "FUNGI-SYNTAX-*, FUNGI-PARSE-*"
       canonical: docs/Knowledge-Bases/galerina-compiler-pipeline.md
-    - series: "SPORE-BACKEND-*"
+    - series: "FUNGI-BACKEND-*"
       canonical: docs/Knowledge-Bases/galerina-compiler-pipeline.md
-    - series: "SPORE-TARGET-*"
+    - series: "FUNGI-TARGET-*"
       canonical: docs/Knowledge-Bases/galerina-phase13-passive-plans-target-bridges.md
-    - series: "SPORE-RUNTIME-*"
+    - series: "FUNGI-RUNTIME-*"
       canonical: docs/Knowledge-Bases/galerina-runtime-lifecycle.md
-    - series: "SPORE-HW-*"
+    - series: "FUNGI-HW-*"
       canonical: docs/Knowledge-Bases/galerina-post-quantum-hardware-security.md
       note: >
-        SPORE-HW-001/002/003 — hardware governance class diagnostics (Phase 26B).
-        SPORE-HW-101/102/103/104 — post-quantum attestation diagnostics (Phase 55):
+        FUNGI-HW-001/002/003 — hardware governance class diagnostics (Phase 26B).
+        FUNGI-HW-101/102/103/104 — post-quantum attestation diagnostics (Phase 55):
         MissingRequiredAttestation, UnsupportedAttestationAlgorithm,
         HybridAttestationIncomplete, AttestationEvidenceStale.
-    - series: "SPORE-TAINT-*"
+    - series: "FUNGI-TAINT-*"
       canonical: docs/Knowledge-Bases/galerina-security-model-layers.md
       note: "Taint propagation and sanitiser boundary diagnostics (Phase 28+)"
-    - series: "SPORE-PROFILE-*"
+    - series: "FUNGI-PROFILE-*"
       canonical: docs/Knowledge-Bases/galerina-security-model-layers.md
       note: "Profile enforcement diagnostics: strict, high_integrity (Phase 28+)"
-    - series: "SPORE-STYLE-*"
+    - series: "FUNGI-STYLE-*"
       canonical: docs/Knowledge-Bases/compiler-diagnostics.md
-      note: "Code style advisory diagnostics (SPORE-STYLE-001: else if chain)"
+      note: "Code style advisory diagnostics (FUNGI-STYLE-001: else if chain)"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # PIPELINE
@@ -133,7 +133,7 @@ type_system:
   canonical: docs/Knowledge-Bases/formal-type-system-spec.md
   description: >
     Authoritative type rules. Covers primitives, generics, branded types, match
-    exhaustiveness, type inference, and all SPORE-TYPE-* diagnostics.
+    exhaustiveness, type inference, and all FUNGI-TYPE-* diagnostics.
   supplementary:
     - path: docs/Knowledge-Bases/auto-type-inference.md
       note: Auto keyword — compile-time inference
@@ -158,7 +158,7 @@ effects:
     how they propagate upward through the call graph, and boundary rules.
   critical_rule: >
     fn CANNOT declare effects. Only flow, pure flow, guarded flow, and secure
-    flow may declare effects. fn declaring effects emits SPORE-SEC-014.
+    flow may declare effects. fn declaring effects emits FUNGI-SEC-014.
     See flow-vs-fn-security-model.md for the canonical security contract.
   supplementary:
     - path: docs/Knowledge-Bases/flow-vs-fn-security-model.md
@@ -217,7 +217,7 @@ security:
     - path: docs/Knowledge-Bases/flow-vs-fn-security-model.md
       note: fn cannot cross trust boundaries or hold runtime authority
     - path: docs/Knowledge-Bases/value-state-annotations.md
-      note: unsafe/safe value-state tracking, SPORE-VALUESTATE-*, SPORE-SECRET-*
+      note: unsafe/safe value-state tracking, FUNGI-VALUESTATE-*, FUNGI-SECRET-*
     - path: docs/Knowledge-Bases/galerina-core-security-secret-reference-model.md
       note: SecureString, redact, constantTimeEquals
     - path: docs/Knowledge-Bases/galerina-security-taint-types.md
@@ -241,9 +241,9 @@ security_hardware:
   description: >
     Post-quantum attestation transition policy, hardware memory-safety requirements
     (CHERI, ARM MTE), and confidential-execution (TEE) contracts for sensitive flows.
-    Introduces HardwareTrustProfile, SPORE-HW-* diagnostics, and proof-chain binding rules.
+    Introduces HardwareTrustProfile, FUNGI-HW-* diagnostics, and proof-chain binding rules.
     Phase 13+ bridge policy; Phase 16+ attestation hardening; Phase 17+ strict enforcement.
-  diagnostic_series: "SPORE-HW-*"
+  diagnostic_series: "FUNGI-HW-*"
   profiles:
     - compat
     - hybrid
@@ -303,8 +303,8 @@ bridge_plans:
     TargetBridgePlan. Defines TargetBridgePlan and HardwareTrustProfile data
     contracts, deterministic bridge selection algorithm, capability matrix, and
     security/governance invariants. Bridge selection cannot widen permissions;
-    unsupported ops degrade to governed CPU path. Diagnostics: SPORE-TARGET-101
-    through SPORE-TARGET-103.
+    unsupported ops degrade to governed CPU path. Diagnostics: FUNGI-TARGET-101
+    through FUNGI-TARGET-103.
   phase: 13
   scope: compiler-side
   runtime_impact: none
@@ -324,7 +324,7 @@ bridge_plans:
     - path: docs/Knowledge-Bases/galerina-signed-attestation.md
       note: Attestation algorithms referenced in HardwareTrustProfile
   diagnostics_series:
-    - series: "SPORE-TARGET-101 through SPORE-TARGET-103"
+    - series: "FUNGI-TARGET-101 through FUNGI-TARGET-103"
       note: Bridge selection and hardware trust profile diagnostics
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -336,7 +336,7 @@ photonic_ternary:
     Compiler-safe contracts for Tri (three-valued type) in type checking and
     lowering, and for photonic compute bridging. Covers: Tri type model,
     truth tables (and/or/not), match exhaustiveness requirement, type system
-    enforcement (SPORE-TYPE-031 through SPORE-TYPE-033), GIRTriInfo metadata,
+    enforcement (FUNGI-TYPE-031 through FUNGI-TYPE-033), GIRTriInfo metadata,
     photonic bridge eligibility predicate, balanced ternary internal encoding,
     security/correctness invariants, and required test additions.
     Phase 13+, compiler-side only, no runtime impact.
@@ -344,9 +344,9 @@ photonic_ternary:
   scope: compiler-side
   runtime_impact: none
   diagnostics_series:
-    - series: "SPORE-TYPE-031 through SPORE-TYPE-033"
+    - series: "FUNGI-TYPE-031 through FUNGI-TYPE-033"
       note: Tri type enforcement (InvalidTriCondition, InvalidTriOperand, TriBoolImplicitCoercionDenied)
-    - series: "SPORE-PHOTONIC-001 through SPORE-PHOTONIC-004"
+    - series: "FUNGI-PHOTONIC-001 through FUNGI-PHOTONIC-004"
       note: Photonic bridge eligibility (MissingPhotonicCalibration, UnsupportedPhotonicOp, DeterminismRisk, TrustProfileMismatch)
   supplementary:
     - path: docs/Knowledge-Bases/galerina-core-logic-tri-decision-bool.md
@@ -362,7 +362,7 @@ photonic_ternary:
     - path: docs/Knowledge-Bases/galerina-phase13-passive-plans-target-bridges.md
       note: Phase 13 TargetBridgePlan and HardwareTrustProfile contracts
     - path: docs/Knowledge-Bases/formal-type-system-spec.md
-      note: Authoritative type rules and full SPORE-TYPE-* diagnostics
+      note: Authoritative type rules and full FUNGI-TYPE-* diagnostics
     - path: docs/Knowledge-Bases/mathematics-and-tri-logic.md
       note: Mathematical foundations for Tri
 
@@ -374,28 +374,28 @@ stage_b:
     Stage B is the self-hosted Galerina compiler — Galerina compiling Galerina.
     8 total files are planned. Status as of Phase 69:
   files:
-    - name: lexer.spore
+    - name: lexer.fungi
       status: DONE
       note: makeKeywordTable (40kw), scanWord works. Phase 40.
-    - name: compiler.capabilities.spore
+    - name: compiler.capabilities.fungi
       status: DONE
       note: 8 flows. Phase 40.
-    - name: parser.spore
+    - name: parser.fungi
       status: PARTIAL
       note: Flow headers parsed. Body parsing Phase 46.
-    - name: type-checker.spore
+    - name: type-checker.fungi
       status: PLANNED
       note: Phase 47 — minimal inference stub
-    - name: effect-checker.spore
+    - name: effect-checker.fungi
       status: PLANNED
       note: Phase 57
-    - name: governance-verifier.spore
+    - name: governance-verifier.fungi
       status: PLANNED
       note: Phase 56
-    - name: gir-emitter.spore
+    - name: gir-emitter.fungi
       status: PLANNED
       note: Phase 58
-    - name: runtime.spore
+    - name: runtime.fungi
       status: PLANNED
       note: Phase 60+
 

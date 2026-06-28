@@ -19,19 +19,19 @@ import {
   UNTAINT_BOUNDARIES, INJECTION_SINKS,
   buildProofGraphCached, computeExecutionSignature,
   clearProofCache, getProofCacheStats,
-  SPORE_TAINT_001, SPORE_TAINT_003, SPORE_TAINT_004, SPORE_TAINT_005, SPORE_TAINT_006,
-  SPORE_PROFILE_001, SPORE_PROFILE_002, SPORE_PROFILE_005B, SPORE_PROFILE_006,
-  SPORE_VAL_001, SPORE_VAL_002, SPORE_HW_001, SPORE_HW_002,
+  FUNGI_TAINT_001, FUNGI_TAINT_003, FUNGI_TAINT_004, FUNGI_TAINT_005, FUNGI_TAINT_006,
+  FUNGI_PROFILE_001, FUNGI_PROFILE_002, FUNGI_PROFILE_005B, FUNGI_PROFILE_006,
+  FUNGI_VAL_001, FUNGI_VAL_002, FUNGI_HW_001, FUNGI_HW_002,
 } from "../dist/index.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-function taintCodes(src)   { const p = parseProgram(src, "t.spore"); return checkTaint(p.ast, p.flows).map(d=>d.code); }
-function profileCodes(src, profiles) { const p = parseProgram(src, "t.spore"); return checkProfiles(p.ast, p.flows, profiles).map(d=>d.code); }
+function taintCodes(src)   { const p = parseProgram(src, "t.fungi"); return checkTaint(p.ast, p.flows).map(d=>d.code); }
+function profileCodes(src, profiles) { const p = parseProgram(src, "t.fungi"); return checkProfiles(p.ast, p.flows, profiles).map(d=>d.code); }
 function govCodes(src, profile="production") {
-  const p = parseProgram(src, "t.spore");
+  const p = parseProgram(src, "t.fungi");
   const fx = checkEffects(p.flows, p.ast);
   return verifyGovernance(p.ast, p.flows, fx, profile).diagnostics.map(d=>d.code);
 }
@@ -130,19 +130,19 @@ describe("Security F8: dynamic regex validation", () => {
     assert.equal(validateRegexPattern("a+b+c+"), null);
   });
 
-  it("SPORE-PROFILE-005B: strict profile blocks dynamic regex call", () => {
+  it("FUNGI-PROFILE-005B: strict profile blocks dynamic regex call", () => {
     const src = "pure flow f(pattern: String, s: String) -> Bool contract { effects {} } { return s.matchesPattern(pattern) }";
-    assert.ok(profileCodes(src, ["strict"]).includes("SPORE-PROFILE-005B"), "must emit SPORE-PROFILE-005B");
+    assert.ok(profileCodes(src, ["strict"]).includes("FUNGI-PROFILE-005B"), "must emit FUNGI-PROFILE-005B");
   });
 
-  it("SPORE-PROFILE-005B: high_integrity profile blocks dynamic regex call", () => {
+  it("FUNGI-PROFILE-005B: high_integrity profile blocks dynamic regex call", () => {
     const src = "pure flow f(p: String, s: String) -> Bool contract { effects {} } { return s.extractGroups(p) }";
-    assert.ok(profileCodes(src, ["high_integrity"]).includes("SPORE-PROFILE-005B"));
+    assert.ok(profileCodes(src, ["high_integrity"]).includes("FUNGI-PROFILE-005B"));
   });
 
   it("dynamic regex allowed in non-strict profiles", () => {
     const src = "pure flow f(p: String, s: String) -> Bool contract { effects {} } { return s.matchesPattern(p) }";
-    assert.ok(!profileCodes(src, ["deterministic"]).includes("SPORE-PROFILE-005B"));
+    assert.ok(!profileCodes(src, ["deterministic"]).includes("FUNGI-PROFILE-005B"));
   });
 });
 
@@ -156,60 +156,60 @@ describe("Security F1: effect gate diagnostics", () => {
 
   it("strict profile denies recursion (pre-condition for effect gate)", () => {
     const src = "pure flow fib(n: Int) -> Int contract { effects {} } { if n <= 1 { return n } return fib(n-1) + fib(n-2) }";
-    assert.ok(profileCodes(src, ["strict"]).includes("SPORE-PROFILE-001"));
+    assert.ok(profileCodes(src, ["strict"]).includes("FUNGI-PROFILE-001"));
   });
 
   it("deterministic profile denies unbounded loops", () => {
     const src = "pure flow s(n: Int) -> Int contract { effects {} } { mut t: Int = 0  while t < n { t = t + 1 } return t }";
-    assert.ok(profileCodes(src, ["deterministic"]).includes("SPORE-PROFILE-002"));
+    assert.ok(profileCodes(src, ["deterministic"]).includes("FUNGI-PROFILE-002"));
   });
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-TAINT: Injection sink protection
+// FUNGI-TAINT: Injection sink protection
 // ---------------------------------------------------------------------------
 
 describe("Security: taint injection prevention (OWASP-aligned)", () => {
-  it("SPORE-TAINT-001: raw req.body reaches SQL sink", () => {
+  it("FUNGI-TAINT-001: raw req.body reaches SQL sink", () => {
     const src = ["secure flow q(req: Request) -> Response contract { effects { database.read } }",
       "{ let userId: String = req.body  let r: String = Database.query(userId)  return r }"].join("\n");
-    assert.ok(taintCodes(src).includes("SPORE-TAINT-001"));
+    assert.ok(taintCodes(src).includes("FUNGI-TAINT-001"));
   });
 
-  it("SPORE-TAINT-001: NOT fired when sanitised with Sql.parameterize", () => {
+  it("FUNGI-TAINT-001: NOT fired when sanitised with Sql.parameterize", () => {
     const src = ["secure flow q(req: Request) -> Response contract { effects { database.read } }",
       "{ let s: String = Sql.parameterize(req.body)  let r: String = Database.query(s)  return r }"].join("\n");
-    assert.ok(!taintCodes(src).includes("SPORE-TAINT-001"));
+    assert.ok(!taintCodes(src).includes("FUNGI-TAINT-001"));
   });
 
-  it("SPORE-TAINT-003: HTML-escaped value at SQL sink (wrong context)", () => {
+  it("FUNGI-TAINT-003: HTML-escaped value at SQL sink (wrong context)", () => {
     const src = ["secure flow q(req: Request) -> Response contract { effects { database.read } }",
       "{ let h: String = Html.escapeContent(req.body)  let r: String = Database.query(h)  return r }"].join("\n");
-    assert.ok(taintCodes(src).includes("SPORE-TAINT-003"));
+    assert.ok(taintCodes(src).includes("FUNGI-TAINT-003"));
   });
 
-  it("SPORE-TAINT-004: Sql.escape discouraged (prefer Sql.parameterize)", () => {
+  it("FUNGI-TAINT-004: Sql.escape discouraged (prefer Sql.parameterize)", () => {
     const src = ["secure flow q(req: Request) -> Response contract { effects { database.read } }",
       "{ let s: String = Sql.escape(req.body)  return s }"].join("\n");
-    assert.ok(taintCodes(src).includes("SPORE-TAINT-004"));
+    assert.ok(taintCodes(src).includes("FUNGI-TAINT-004"));
   });
 
-  it("SPORE-TAINT-005: Http.setHeader is in INJECTION_SINKS catalogue", () => {
+  it("FUNGI-TAINT-005: Http.setHeader is in INJECTION_SINKS catalogue", () => {
     assert.ok(INJECTION_SINKS.get("Http.setHeader") === "HttpHeaderValue", "Http.setHeader must require SafeFor<HttpHeaderValue>");
     assert.ok(INJECTION_SINKS.get("Response.setHeader") === "HttpHeaderValue");
     assert.ok(INJECTION_SINKS.get("Response.header") === "HttpHeaderValue");
   });
 
-  it("SPORE-TAINT-006: outbound URL sinks require SafeFor<SafeUrl>", () => {
+  it("FUNGI-TAINT-006: outbound URL sinks require SafeFor<SafeUrl>", () => {
     assert.ok(INJECTION_SINKS.get("Http.fetch") === "SafeUrl");
     assert.ok(INJECTION_SINKS.get("Http.request") === "SafeUrl");
     assert.ok(INJECTION_SINKS.get("Network.call") === "SafeUrl");
   });
 
-  it("SPORE-TAINT-001: literal SQL arg is NOT tainted", () => {
+  it("FUNGI-TAINT-001: literal SQL arg is NOT tainted", () => {
     const src = ["secure flow q() -> Response contract { effects { database.read } }",
       "{ let r: String = Database.query(\"SELECT 1\")  return r }"].join("\n");
-    assert.ok(!taintCodes(src).includes("SPORE-TAINT-001"));
+    assert.ok(!taintCodes(src).includes("FUNGI-TAINT-001"));
   });
 
   it("OWASP: 22+ untaint boundaries exported", () => {
@@ -229,48 +229,48 @@ describe("Security: taint injection prevention (OWASP-aligned)", () => {
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-VAL: High-consequence safety governance
+// FUNGI-VAL: High-consequence safety governance
 // ---------------------------------------------------------------------------
 
 describe("Security: safety_critical governance enforcement", () => {
-  it("SPORE-VAL-001: safety_critical without audit.write", () => {
+  it("FUNGI-VAL-001: safety_critical without audit.write", () => {
     const src = ["secure flow f(t: Int) -> Bool contract {",
       "  effects { telemetry.read }  value { classification safety_critical } } { return true }"].join("\n");
-    assert.ok(govCodes(src).includes("SPORE-VAL-001"));
+    assert.ok(govCodes(src).includes("FUNGI-VAL-001"));
   });
 
-  it("SPORE-VAL-002: safety_critical without deterministic_execution", () => {
+  it("FUNGI-VAL-002: safety_critical without deterministic_execution", () => {
     const src = ["secure flow f(t: Int) -> Bool contract {",
       "  effects { audit.write }  value { classification safety_critical } } { return true }"].join("\n");
-    assert.ok(govCodes(src).includes("SPORE-VAL-002"));
+    assert.ok(govCodes(src).includes("FUNGI-VAL-002"));
   });
 
   it("correct safety_critical passes both checks", () => {
     const src = ["secure flow f(t: Int) -> Bool contract {",
       "  effects { audit.write telemetry.read }  value { classification safety_critical }",
       "  safety { require deterministic_execution } } { return true }"].join("\n");
-    assert.ok(!govCodes(src).some(c => c.startsWith("SPORE-VAL-00")));
+    assert.ok(!govCodes(src).some(c => c.startsWith("FUNGI-VAL-00")));
   });
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-HW: Hardware governance class enforcement
+// FUNGI-HW: Hardware governance class enforcement
 // ---------------------------------------------------------------------------
 
 describe("Security: hardware governance class enforcement", () => {
-  it("SPORE-HW-001: quantum target requires FormalRequired proof chain", () => {
+  it("FUNGI-HW-001: quantum target requires FormalRequired proof chain", () => {
     const src = "secure flow q(n: Int) -> Bool contract { effects { audit.write } hardware { target quantum fallback cpu } } { return true }";
-    assert.ok(govCodes(src).includes("SPORE-HW-001"));
+    assert.ok(govCodes(src).includes("FUNGI-HW-001"));
   });
 
-  it("SPORE-HW-002: NPU target without audit.write warns", () => {
+  it("FUNGI-HW-002: NPU target without audit.write warns", () => {
     const src = "pure flow q(n: Int) -> Int contract { effects {} hardware { target npu fallback cpu } } { return n }";
-    assert.ok(govCodes(src).includes("SPORE-HW-002"));
+    assert.ok(govCodes(src).includes("FUNGI-HW-002"));
   });
 
-  it("arm.sve2 with audit.write produces no SPORE-HW diagnostics", () => {
+  it("arm.sve2 with audit.write produces no FUNGI-HW diagnostics", () => {
     const src = "secure flow f(t: Int) -> Bool contract { effects { audit.write } hardware { target arm.sve2 require mte fallback cpu } } { return true }";
-    const codes = govCodes(src).filter(c => c.startsWith("SPORE-HW"));
+    const codes = govCodes(src).filter(c => c.startsWith("FUNGI-HW"));
     assert.equal(codes.length, 0, `unexpected HW diags: ${codes.join(",")}`);
   });
 });
@@ -304,41 +304,41 @@ describe("Security: ProofGraph cache integrity", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Constant SPORE diagnostic codes (stability check)
+// Constant FUNGI diagnostic codes (stability check)
 // ---------------------------------------------------------------------------
 
 describe("Security: diagnostic code constants are stable", () => {
-  it("SPORE_TAINT codes have correct severity", () => {
-    assert.equal(SPORE_TAINT_001.severity, "error");
-    assert.equal(SPORE_TAINT_003.severity, "error");
-    assert.equal(SPORE_TAINT_004.severity, "warning");
-    assert.equal(SPORE_TAINT_005.severity, "error");
-    assert.equal(SPORE_TAINT_006.severity, "warning");
+  it("FUNGI_TAINT codes have correct severity", () => {
+    assert.equal(FUNGI_TAINT_001.severity, "error");
+    assert.equal(FUNGI_TAINT_003.severity, "error");
+    assert.equal(FUNGI_TAINT_004.severity, "warning");
+    assert.equal(FUNGI_TAINT_005.severity, "error");
+    assert.equal(FUNGI_TAINT_006.severity, "warning");
   });
 
-  it("SPORE_PROFILE codes have correct severity", () => {
-    assert.equal(SPORE_PROFILE_001.severity, "error");
-    assert.equal(SPORE_PROFILE_002.severity, "error");
-    assert.equal(SPORE_PROFILE_005B.severity, "error");
-    assert.equal(SPORE_PROFILE_006.severity, "warning");
+  it("FUNGI_PROFILE codes have correct severity", () => {
+    assert.equal(FUNGI_PROFILE_001.severity, "error");
+    assert.equal(FUNGI_PROFILE_002.severity, "error");
+    assert.equal(FUNGI_PROFILE_005B.severity, "error");
+    assert.equal(FUNGI_PROFILE_006.severity, "warning");
   });
 
-  it("SPORE_VAL codes are errors", () => {
-    assert.equal(SPORE_VAL_001.severity, "error");
-    assert.equal(SPORE_VAL_002.severity, "error");
+  it("FUNGI_VAL codes are errors", () => {
+    assert.equal(FUNGI_VAL_001.severity, "error");
+    assert.equal(FUNGI_VAL_002.severity, "error");
   });
 
-  it("SPORE_HW-001 is error, SPORE_HW-002 is warning", () => {
-    assert.equal(SPORE_HW_001.severity, "error");
-    assert.equal(SPORE_HW_002.severity, "warning");
+  it("FUNGI_HW-001 is error, FUNGI_HW-002 is warning", () => {
+    assert.equal(FUNGI_HW_001.severity, "error");
+    assert.equal(FUNGI_HW_002.severity, "warning");
   });
 
-  it("all diagnostic codes follow SPORE-* naming pattern", () => {
-    const codes = [SPORE_TAINT_001, SPORE_TAINT_003, SPORE_TAINT_004, SPORE_TAINT_005, SPORE_TAINT_006,
-      SPORE_PROFILE_001, SPORE_PROFILE_002, SPORE_PROFILE_005B, SPORE_PROFILE_006,
-      SPORE_VAL_001, SPORE_VAL_002, SPORE_HW_001, SPORE_HW_002];
+  it("all diagnostic codes follow FUNGI-* naming pattern", () => {
+    const codes = [FUNGI_TAINT_001, FUNGI_TAINT_003, FUNGI_TAINT_004, FUNGI_TAINT_005, FUNGI_TAINT_006,
+      FUNGI_PROFILE_001, FUNGI_PROFILE_002, FUNGI_PROFILE_005B, FUNGI_PROFILE_006,
+      FUNGI_VAL_001, FUNGI_VAL_002, FUNGI_HW_001, FUNGI_HW_002];
     for (const d of codes) {
-      assert.ok(d.code.startsWith("SPORE-"), `${d.code} must start with SPORE-`);
+      assert.ok(d.code.startsWith("FUNGI-"), `${d.code} must start with FUNGI-`);
       assert.ok(d.name.length > 0, `${d.code} must have a name`);
     }
   });

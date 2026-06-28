@@ -4,8 +4,8 @@ Galerina derives test obligations from each flow's `contract {}` (intent,
 pre/post-conditions, effects, fail-closed branches). Generate them for this app:
 
 ```sh
-node ../../galerina.mjs generate tests src/App.spore           # human-readable obligations
-node ../../galerina.mjs generate tests src/App.spore --tap     # TAP plan for CI
+node ../../galerina.mjs generate tests src/App.fungi           # human-readable obligations
+node ../../galerina.mjs generate tests src/App.fungi --tap     # TAP plan for CI
 ```
 
 Commit the generated proofs here so the governance surface of the app is checked on

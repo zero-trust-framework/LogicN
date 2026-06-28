@@ -101,13 +101,13 @@ primitive.
 ### Invalid Patterns
 
 ```galerina
-// Branch on secret — SPORE-SECURITY-SECRET-BRANCH
+// Branch on secret — FUNGI-SECURITY-SECRET-BRANCH
 if apiKey == candidate { grantAccess() }
 
-// Secret-dependent array index — SPORE-SECURITY-SECRET-INDEX
+// Secret-dependent array index — FUNGI-SECURITY-SECRET-INDEX
 let b = table[secretByte]
 
-// Secret-dependent loop shape — SPORE-SECURITY-SECRET-LOOP-SHAPE
+// Secret-dependent loop shape — FUNGI-SECURITY-SECRET-LOOP-SHAPE
 for i in 0..secret.length {
   if secret[i] != expected[i] { return false }
 }
@@ -144,13 +144,13 @@ during optimisation. Backend-specific tests for each approved target are require
 
 | Code | Meaning |
 |---|---|
-| `SPORE-SECURITY-SECRET-BRANCH` | Secret-derived branch condition |
-| `SPORE-SECURITY-SECRET-INDEX` | Secret-derived memory index or address |
-| `SPORE-SECURITY-SECRET-LOOP-SHAPE` | Secret-derived loop count or break |
-| `SPORE-SECURITY-SECRET-MATCH` | Secret-derived match discriminant |
-| `SPORE-SECURITY-SECRET-CODEGEN` | Backend would emit secret-dependent pattern |
-| `SPORE-SECURITY-SECRET-OPTIMIZATION` | Optimisation would alter constant-time behaviour |
-| `SPORE-SECURITY-SECRET-BACKEND-UNPROVEN` | Target has no approved constant-time implementation |
+| `FUNGI-SECURITY-SECRET-BRANCH` | Secret-derived branch condition |
+| `FUNGI-SECURITY-SECRET-INDEX` | Secret-derived memory index or address |
+| `FUNGI-SECURITY-SECRET-LOOP-SHAPE` | Secret-derived loop count or break |
+| `FUNGI-SECURITY-SECRET-MATCH` | Secret-derived match discriminant |
+| `FUNGI-SECURITY-SECRET-CODEGEN` | Backend would emit secret-dependent pattern |
+| `FUNGI-SECURITY-SECRET-OPTIMIZATION` | Optimisation would alter constant-time behaviour |
+| `FUNGI-SECURITY-SECRET-BACKEND-UNPROVEN` | Target has no approved constant-time implementation |
 
 ### Machine-Readable Report
 
@@ -241,13 +241,13 @@ hsm → provider operation → ProtectedSecret<T> or KeyHandle<T> → audited us
 
 | Code | Meaning |
 |---|---|
-| `SPORE-SECURITY-HSM-001` | HSM source requires explicit provider policy |
-| `SPORE-SECURITY-HSM-002` | HSM secret cannot be downgraded to `String` |
-| `SPORE-SECURITY-HSM-003` | Non-exportable key cannot be revealed |
-| `SPORE-SECURITY-HSM-004` | HSM access requires `secret/kms` permission |
-| `SPORE-SECURITY-HSM-005` | HSM provider fallback to env is denied |
-| `SPORE-SECURITY-HSM-006` | Production profile must reject mock/local HSM providers |
-| `SPORE-SECURITY-HSM-007` | Secret source mismatch must appear in security reports |
+| `FUNGI-SECURITY-HSM-001` | HSM source requires explicit provider policy |
+| `FUNGI-SECURITY-HSM-002` | HSM secret cannot be downgraded to `String` |
+| `FUNGI-SECURITY-HSM-003` | Non-exportable key cannot be revealed |
+| `FUNGI-SECURITY-HSM-004` | HSM access requires `secret/kms` permission |
+| `FUNGI-SECURITY-HSM-005` | HSM provider fallback to env is denied |
+| `FUNGI-SECURITY-HSM-006` | Production profile must reject mock/local HSM providers |
+| `FUNGI-SECURITY-HSM-007` | Secret source mismatch must appear in security reports |
 
 ---
 

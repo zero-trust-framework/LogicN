@@ -5,7 +5,7 @@
 ```
 Phase 11B.1 — Implementation
 Extends: value-state-checker.ts
-New diagnostic: SPORE-VALUESTATE-005 (DERIVED_UNSAFE_VALUE_AT_SINK)
+New diagnostic: FUNGI-VALUESTATE-005 (DERIVED_UNSAFE_VALUE_AT_SINK)
 ```
 
 ## TL;DR
@@ -21,7 +21,7 @@ New diagnostic: SPORE-VALUESTATE-005 (DERIVED_UNSAFE_VALUE_AT_SINK)
 Currently (Phase 6), this fires:
 ```galerina
 unsafe let rawId: String = request.params.id
-UsersDB.find(rawId)   // SPORE-VALUESTATE-003: unsafe at sink ✓
+UsersDB.find(rawId)   // FUNGI-VALUESTATE-003: unsafe at sink ✓
 ```
 
 But this does NOT fire (Phase 6 miss):
@@ -60,10 +60,10 @@ let literal: String = "constant"          // literal value → never tainted
 
 ---
 
-## New Diagnostic: SPORE-VALUESTATE-005
+## New Diagnostic: FUNGI-VALUESTATE-005
 
 ```text
-Code:     SPORE-VALUESTATE-005
+Code:     FUNGI-VALUESTATE-005
 Name:     DERIVED_UNSAFE_VALUE_AT_SINK
 Severity: error
 
@@ -83,7 +83,7 @@ safe/validated type before using it at a governed sink.
 
 ## Examples
 
-### Caught by 11B.1 (SPORE-VALUESTATE-005)
+### Caught by 11B.1 (FUNGI-VALUESTATE-005)
 
 ```galerina
 // Direct SQL injection via laundered value
@@ -91,7 +91,7 @@ guarded flow search(readonly request: Request) -> String
 effects [database.read] {
   unsafe let rawQuery: String = request.params.query
   let cleaned: String = rawQuery.trim()       // still tainted
-  let data = UsersDB.query(cleaned)            // SPORE-VALUESTATE-005
+  let data = UsersDB.query(cleaned)            // FUNGI-VALUESTATE-005
   return "ok"
 }
 ```
@@ -101,7 +101,7 @@ effects [database.read] {
 unsafe let raw: String = request.body.value
 let step1: String = raw.trim()
 let step2: String = step1.toLower()
-UsersDB.insert(step2)   // SPORE-VALUESTATE-005 — taint propagated 2 hops
+UsersDB.insert(step2)   // FUNGI-VALUESTATE-005 — taint propagated 2 hops
 ```
 
 ### NOT caught (correct behaviour — gate breaks chain)
@@ -133,9 +133,9 @@ let data = UsersDB.query(safeQuery)                      // no error ✓
 
 | Code | Description | Phase |
 |---|---|---|
-| SPORE-VALUESTATE-003 | Direct unsafe binding at governed sink | Phase 6 ✅ |
-| SPORE-VALUESTATE-004 | Tainted string concatenation | Phase 6 ✅ |
-| SPORE-VALUESTATE-005 | Derived/laundered unsafe value at sink | Phase 11B.1 |
+| FUNGI-VALUESTATE-003 | Direct unsafe binding at governed sink | Phase 6 ✅ |
+| FUNGI-VALUESTATE-004 | Tainted string concatenation | Phase 6 ✅ |
+| FUNGI-VALUESTATE-005 | Derived/laundered unsafe value at sink | Phase 11B.1 |
 
 ---
 

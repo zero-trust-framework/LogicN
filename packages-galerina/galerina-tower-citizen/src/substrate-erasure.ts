@@ -1,5 +1,5 @@
 /**
- * substrate-erasure.ts — SPORE-RETAIN-001 sound-erasure admission gate (R&D 0116 / 0118).
+ * substrate-erasure.ts — FUNGI-RETAIN-001 sound-erasure admission gate (R&D 0116 / 0118).
  *
  * R&D 0116 found a silent fail-open: Galerina's secret-erasure is OVERWRITE-based (zero the arena
  * page / derived-secret buffer; B2/B2b in wat-emitter.ts). That is silently FALSE on write-once /
@@ -9,7 +9,7 @@
  * exactly such media: seal before write, keep the DEK on overwritable silicon, "delete" = destroy
  * the key.
  *
- * This is the RUNTIME DEFENSE (stage 2) of the SPORE-RETAIN-001 Hardware Protection Directive — the
+ * This is the RUNTIME DEFENSE (stage 2) of the FUNGI-RETAIN-001 Hardware Protection Directive — the
  * Substrate Dispatch Gateway's fail-closed K3 admission check on every write to a governed substrate.
  *
  * ZERO-TRUST DISCOVERY RULE (the crux): an eraseModel is NEVER taken from a drive's self-report.
@@ -53,7 +53,7 @@ export interface SubstrateDescriptor {
 
 /** A value about to be written to a substrate. */
 export interface WritePayload {
-  /** True IFF the value is — or derives from — a secret (SealTaint; SPORE-SECRET-002 / SPORE-PRIVACY-002). */
+  /** True IFF the value is — or derives from — a secret (SealTaint; FUNGI-SECRET-002 / FUNGI-PRIVACY-002). */
   readonly isSecretTainted: boolean;
   /** True IFF the value is KEM-DEM ciphertext (sealed) — erasable by destroying its DEK. */
   readonly isSealed: boolean;
@@ -79,14 +79,14 @@ export function effectiveEraseModel(s: SubstrateDescriptor | undefined): EraseMo
 }
 
 /**
- * The Substrate Dispatch Gateway's K3 admission check (SPORE-RETAIN-001). Fail-closed, deny-by-default.
+ * The Substrate Dispatch Gateway's K3 admission check (FUNGI-RETAIN-001). Fail-closed, deny-by-default.
  * The hardware dispatch seam MUST call this BEFORE writing and route ONLY if `admitted`.
  *
  * Truth table (effectiveEraseModel × payload):
  *   overwrite                              → ALLOW  (overwrite-erase is sound; the retain gate passes)
  *   crypto-only · ¬secret                  → ALLOW  (public data carries no erasure obligation)
  *   crypto-only · secret · sealed          → ALLOW  (KEM-DEM ciphertext — crypto-erasable by DEK destruction)
- *   crypto-only · secret · ¬sealed         → DENY   (cleartext secret is UNERASABLE here — SPORE-RETAIN-001)
+ *   crypto-only · secret · ¬sealed         → DENY   (cleartext secret is UNERASABLE here — FUNGI-RETAIN-001)
  * A malformed/absent payload is treated as a secret (fail-closed): unknown taint ⇒ assume secret.
  */
 export function admitSubstrateWrite(
@@ -101,7 +101,7 @@ export function admitSubstrateWrite(
   };
 
   // Overwrite media (attested): overwrite-erasure is sound, so the RETAIN obligation is discharged.
-  // (Other rules — SPORE-SECRET sink discipline — still apply elsewhere; this gate is erasure-only.)
+  // (Other rules — FUNGI-SECRET sink discipline — still apply elsewhere; this gate is erasure-only.)
   if (model === "overwrite") return at(Verdict.ALLOW, "attested overwrite-erasable substrate — RETAIN obligation N/A");
 
   // Crypto-only media. Fail-closed on a malformed payload: unknown taint ⇒ assume secret.
@@ -109,10 +109,10 @@ export function admitSubstrateWrite(
   const sealed = payload?.isSealed === true;
 
   if (!tainted) return at(Verdict.ALLOW, "non-secret payload — no erasure obligation on crypto-only media");
-  if (sealed) return at(Verdict.ALLOW, "secret is KEM-DEM-sealed — crypto-erasable by DEK destruction (SPORE-RETAIN-001)");
+  if (sealed) return at(Verdict.ALLOW, "secret is KEM-DEM-sealed — crypto-erasable by DEK destruction (FUNGI-RETAIN-001)");
   return at(
     Verdict.DENY,
-    "SPORE-RETAIN-001: cleartext secret to a crypto-only substrate is UNERASABLE (overwrite-erase impossible) — seal with KEM-DEM before write; deletion = destroy the DEK + mint a crypto-erase witness",
+    "FUNGI-RETAIN-001: cleartext secret to a crypto-only substrate is UNERASABLE (overwrite-erase impossible) — seal with KEM-DEM before write; deletion = destroy the DEK + mint a crypto-erase witness",
   );
 }
 

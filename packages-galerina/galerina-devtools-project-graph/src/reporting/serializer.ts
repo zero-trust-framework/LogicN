@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — Graph serialization helpers
+// fungi-graph — Graph serialization helpers
 //
 // graphToJSON / graphFromJSON with schema validation.
 // These wrap the toJSON() method and GraphBuilder.fromJSON() with runtime
@@ -23,7 +23,7 @@ export function graphToJSON<N, E>(graph: Graph<N, E>): GraphJSON<N, E> {
 
 /**
  * Deserialise a GraphJSON back to an immutable Graph.
- * Validates schemaVersion and throws if it does not match "spore.graph.v1".
+ * Validates schemaVersion and throws if it does not match "fungi.graph.v1".
  */
 export function graphFromJSON<N, E>(json: unknown): Graph<N, E> {
   if (
@@ -32,14 +32,14 @@ export function graphFromJSON<N, E>(json: unknown): Graph<N, E> {
     !("schemaVersion" in json)
   ) {
     throw new Error(
-      'lln-graph: graphFromJSON received a value that is not a GraphJSON object (missing "schemaVersion" field).',
+      'fungi-graph: graphFromJSON received a value that is not a GraphJSON object (missing "schemaVersion" field).',
     );
   }
 
   const typed = json as { schemaVersion: unknown };
-  if (typed.schemaVersion !== "spore.graph.v1") {
+  if (typed.schemaVersion !== "fungi.graph.v1") {
     throw new Error(
-      `lln-graph: unsupported graph schemaVersion "${String(typed.schemaVersion)}". Expected "spore.graph.v1".`,
+      `fungi-graph: unsupported graph schemaVersion "${String(typed.schemaVersion)}". Expected "fungi.graph.v1".`,
     );
   }
 

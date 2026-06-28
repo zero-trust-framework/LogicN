@@ -16,7 +16,7 @@ const ROOT = process.cwd();
 const soft = process.argv.includes("--soft");
 const asJson = process.argv.includes("--json");
 const SKIP = new Set(["node_modules", "dist", ".git", "build"]);
-const EXT = /\.(ts|mjs|cjs|spore|md|json)$/;
+const EXT = /\.(ts|mjs|cjs|fungi|md|json)$/;
 
 // Registered generated artifacts → the source trees/files they derive from.
 const ARTIFACTS = [

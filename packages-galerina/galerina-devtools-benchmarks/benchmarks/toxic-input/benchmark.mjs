@@ -7,14 +7,14 @@ export async function runDiagnostic() {
   // Run 100 toxic inputs — all should trap
   const toxicStart = Date.now();
   for (let i = 0; i < 100; i++) {
-    await runGalerinaBenchmark("benchmarks/toxic-input/benchmark.spore", "processPayment", [-1, "USD"]);
+    await runGalerinaBenchmark("benchmarks/toxic-input/benchmark.fungi", "processPayment", [-1, "USD"]);
   }
   const toxicMs = Date.now() - toxicStart;
 
   // Run 100 valid inputs — none should trap
   const validStart = Date.now();
   for (let i = 0; i < 100; i++) {
-    await runGalerinaBenchmark("benchmarks/toxic-input/benchmark.spore", "processPaymentValid", [500, "USD"]);
+    await runGalerinaBenchmark("benchmarks/toxic-input/benchmark.fungi", "processPaymentValid", [500, "USD"]);
   }
   const validMs = Date.now() - validStart;
 

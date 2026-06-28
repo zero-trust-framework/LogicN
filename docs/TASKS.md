@@ -146,7 +146,7 @@
 - [ ] Reconcile coverage-driven documentation conflicts before implementing the
   affected public package contracts
   - [ ] Choose one canonical `OpticalTransportMode` enum and one
-    `SPORE-PHOTONIC-001` through `SPORE-PHOTONIC-006` diagnostic table
+    `FUNGI-PHOTONIC-001` through `FUNGI-PHOTONIC-006` diagnostic table
   - [ ] Confirm photonic ownership between `galerina-core-photonic`,
     `galerina-core-vector`, `galerina-core-compute` and `galerina-target-photonic`
   - [ ] Align API-server webhook/replay/idempotency adapter docs with
@@ -298,9 +298,9 @@
 - [x] Add Machine Profile Bridge direction for local capability detection and
   runtime setup without low-level application syntax
 - [x] Add a compact Galerina syntax and logic status table
-- [x] Write at least 20 real `.spore` examples covering basic, intermediate and
+- [x] Write at least 20 real `.fungi` examples covering basic, intermediate and
   advanced v1 syntax
-  - [x] Add the 20th core example, `logic-review-scale.spore`
+  - [x] Add the 20th core example, `logic-review-scale.fungi`
 - [ ] Build a parser that accepts the v1 examples and rejects post-v1 syntax
   with clear diagnostics
 - [ ] Define `galerina-core-compiler` compiler pipeline contracts

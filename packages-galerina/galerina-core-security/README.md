@@ -13,7 +13,7 @@ private revealUnsafeForRuntimeOnly()              ← internal runtime use only
 ```
 
 `unwrapForApprovedSink(sink)` is the only public unwrap path. It validates the
-sink before releasing the value and emits `SPORE-SECRET-001` on an unapproved sink.
+sink before releasing the value and emits `FUNGI-SECRET-001` on an unapproved sink.
 `revealUnsafeForRuntimeOnly()` must not appear in public APIs, framework
 adapters, diagnostics, reports, or AI context. The `galerina-core-security-v02.md`
 KB has been updated to reflect this decision.
@@ -162,12 +162,12 @@ function canSendSecretToSink(secret: SecretReference, sink: SecretSafeSink): boo
 function redactSecretValue(value: string): RedactionResult
 ```
 
-### Diagnostic Codes (SPORE-SECRET series)
+### Diagnostic Codes (FUNGI-SECRET series)
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-SECRET-001` | required secret unavailable |
-| `SPORE-SECRET-002` | secret value attempted to flow to unsafe sink |
+| `FUNGI-SECRET-001` | required secret unavailable |
+| `FUNGI-SECRET-002` | secret value attempted to flow to unsafe sink |
 
 See `docs/Knowledge-Bases/galerina-core-config-environment-secrets.md` for the
 full secret reference model specification.
@@ -292,7 +292,7 @@ export class ProtectedSecret<T> {
 
     unwrapForApprovedSink(sink: SecretSafeSink): T {
         if (!canSendSecretToSink(this.reference, sink)) {
-            throw new SecretPolicyError("SPORE-SECRET-001",
+            throw new SecretPolicyError("FUNGI-SECRET-001",
                 `Secret ${this.reference.name} cannot be sent to sink ${sink.id}`)
         }
         return this.revealUnsafeForRuntimeOnly()
@@ -345,7 +345,7 @@ export const STRIPE_AUTH_HEADER_SINK: SecretSafeSink  // productionSafe: true, r
 
 ```ts
 export interface SecretDiagnostic {
-    code: "SPORE-SECRET-001" | "SPORE-SECRET-002"
+    code: "FUNGI-SECRET-001" | "FUNGI-SECRET-002"
     severity: "error" | "warning"
     message: string
     secretName?: string
@@ -366,12 +366,12 @@ export type SecretTaint =
 
 export function combineTaint(left: SecretTaint, right: SecretTaint): SecretTaint
 
-// Emits SPORE-SECRET-002 on tainted string concatenation
+// Emits FUNGI-SECRET-002 on tainted string concatenation
 export function checkStringConcat(input: {
     left: ExpressionInfo; right: ExpressionInfo; location: SourceLocation
 }): SecretDiagnostic[]
 
-// Emits SPORE-SECRET-001 on unsafe sink
+// Emits FUNGI-SECRET-001 on unsafe sink
 export function checkSecretSink(input: {
     secret: SecretReference; sink: SecretSafeSink; location: SourceLocation
 }): SecretDiagnostic[]
@@ -406,7 +406,7 @@ packages-galerina/galerina-core-security/src/
     secret-safe-sink.ts        ← SecretSafeSink, LOG_SINK, API_RESPONSE_SINK
     secret-policy.ts           ← canSendSecretToSink()
     secret-redaction.ts        ← redactSecretValue(), createSecretFingerprint()
-    secret-diagnostics.ts      ← SecretDiagnostic, SPORE-SECRET-001, SPORE-SECRET-002
+    secret-diagnostics.ts      ← SecretDiagnostic, FUNGI-SECRET-001, FUNGI-SECRET-002
     secret-report.ts           ← galerina.secret.report.v1
   checks/
     check-secret-sink.ts       ← checkSecretSink()

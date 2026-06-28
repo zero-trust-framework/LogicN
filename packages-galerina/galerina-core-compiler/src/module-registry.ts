@@ -1,7 +1,7 @@
 // =============================================================================
 // Galerina Module Registry — File-based import resolution (DAG merge)
 //
-// Resolves `import "./path.spore"` declarations by loading and parsing the
+// Resolves `import "./path.fungi"` declarations by loading and parsing the
 // referenced file, extracting its exported symbols (flows, types, records,
 // guards, statics, bitfields), and making them available in the importing
 // file's scope.
@@ -11,17 +11,17 @@
 // pipeline in cli.ts.
 //
 // DAG merge semantics:
-//   - Imported files share the project's governance ceiling (boot.spore)
+//   - Imported files share the project's governance ceiling (boot.fungi)
 //   - Each file's flows carry their own contract {}
-//   - Circular imports: detected via in-progress Set, produce SPORE-IMPORT-003
+//   - Circular imports: detected via in-progress Set, produce FUNGI-IMPORT-003
 //
-// SPORE diagnostic codes:
-//   SPORE-IMPORT-001  File not found at the resolved path
-//   SPORE-IMPORT-002  Imported file has parse errors (cannot merge)
-//   SPORE-IMPORT-003  Circular import detected
-//   SPORE-IMPORT-004  Symbol collision — imported name conflicts with local definition
-//   SPORE-IMPORT-005  Import path escapes the allowed project root (pre-governance path traversal)
-//   SPORE-IMPORT-006  Imported file exceeds the maximum size (compile-time DoS guard)
+// FUNGI diagnostic codes:
+//   FUNGI-IMPORT-001  File not found at the resolved path
+//   FUNGI-IMPORT-002  Imported file has parse errors (cannot merge)
+//   FUNGI-IMPORT-003  Circular import detected
+//   FUNGI-IMPORT-004  Symbol collision — imported name conflicts with local definition
+//   FUNGI-IMPORT-005  Import path escapes the allowed project root (pre-governance path traversal)
+//   FUNGI-IMPORT-006  Imported file exceeds the maximum size (compile-time DoS guard)
 // =============================================================================
 
 import { readFileSync, existsSync, statSync, realpathSync } from "node:fs";
@@ -71,7 +71,7 @@ export interface ResolvedFileModule {
  * Extract the raw file path from an importDecl.value.
  *
  * The parser stores the full import clause as a space-joined token string.
- * For `import "./path.spore"` the value is `"./path.spore"` (quotes included
+ * For `import "./path.fungi"` the value is `"./path.fungi"` (quotes included
  * because the lexer keeps the surrounding quote characters in string tokens).
  *
  * Returns null if the value does not look like a relative file path.
@@ -82,8 +82,8 @@ function extractFilePath(importDeclValue: string): string | null {
   const unquoted = trimmed.replace(/^["']|["']$/g, "");
   // Only handle explicit relative paths (./ or ../)
   if (!unquoted.startsWith("./") && !unquoted.startsWith("../")) return null;
-  // Must end with .spore
-  if (!unquoted.endsWith(".spore")) return null;
+  // Must end with .fungi
+  if (!unquoted.endsWith(".fungi")) return null;
   return unquoted;
 }
 
@@ -161,11 +161,11 @@ function extractSymbols(
 }
 
 // ---------------------------------------------------------------------------
-// Pre-governance read safety (SPORE-IMPORT-005 / -006)
+// Pre-governance read safety (FUNGI-IMPORT-005 / -006)
 //
 // Import resolution reads files from disk DURING COMPILATION, before any governance
 // applies. Two abuses are closed here:
-//   • Path traversal — a malicious `import "../../../../etc/secret.spore"` would, with
+//   • Path traversal — a malicious `import "../../../../etc/secret.fungi"` would, with
 //     no containment, read an arbitrary host file (its content is then parsed and can
 //     surface via diagnostics / merged symbols). The resolved path MUST stay within the
 //     allowed root (GALERINA_FS_ROOT, else cwd), checked segment-safe (path.relative) AND
@@ -176,7 +176,7 @@ function extractSymbols(
 //     size is stat-checked BEFORE the read so an oversize import fails fast.
 // ---------------------------------------------------------------------------
 
-/** Max bytes for a single imported .spore — matches the lexer's 10 MB source ceiling (SPORE-LEX-004). */
+/** Max bytes for a single imported .fungi — matches the lexer's 10 MB source ceiling (FUNGI-LEX-004). */
 export const MAX_IMPORT_BYTES = 10 * 1024 * 1024;
 
 /** The compile-time filesystem root that imports may not escape (same convention as the runtime sandbox). */
@@ -215,7 +215,7 @@ export function isWithinRoot(target: string, root: string): boolean {
 // ---------------------------------------------------------------------------
 
 /**
- * Resolve all `import "./path.spore"` declarations in a source file.
+ * Resolve all `import "./path.fungi"` declarations in a source file.
  *
  * Uses synchronous I/O so it fits into the existing synchronous
  * compileFile() pipeline without requiring async/await restructuring.
@@ -243,10 +243,10 @@ export function resolveFileImports(
 
     const resolvedPath = resolve(sourceDir, relPath);
 
-    // SPORE-IMPORT-005: path-traversal guard. The resolved path is checked for containment BEFORE any fs
+    // FUNGI-IMPORT-005: path-traversal guard. The resolved path is checked for containment BEFORE any fs
     // access — a pre-governance import must never read a file outside its allowed scope. Allowed scope =
     // the project root (GALERINA_FS_ROOT, else cwd) OR the importing file's OWN directory subtree. The
-    // second clause lets a file import its neighbours (`./sibling.spore`) even when the file itself lives
+    // second clause lets a file import its neighbours (`./sibling.fungi`) even when the file itself lives
     // outside cwd (e.g. compiling a one-off file, or a fixture under a temp dir) — importing a neighbour
     // is always legitimate. Escaping BOTH (a project file's `../../../etc/passwd`) still fails closed: a
     // `../` chain that climbs above the project AND above the source dir is denied.
@@ -255,7 +255,7 @@ export function resolveFileImports(
         filePath: resolvedPath,
         symbols: [],
         diagnostics: [{
-          code: "SPORE-IMPORT-005",
+          code: "FUNGI-IMPORT-005",
           severity: "error",
           message:
             `Import path '${relPath}' escapes the allowed project root. Imports may only reference ` +
@@ -267,13 +267,13 @@ export function resolveFileImports(
       continue;
     }
 
-    // SPORE-IMPORT-001: File not found
+    // FUNGI-IMPORT-001: File not found
     if (!existsSync(resolvedPath)) {
       results.push({
         filePath: resolvedPath,
         symbols: [],
         diagnostics: [{
-          code: "SPORE-IMPORT-001",
+          code: "FUNGI-IMPORT-001",
           severity: "error",
           message:
             `Cannot resolve import: file not found at '${resolvedPath}'. ` +
@@ -285,13 +285,13 @@ export function resolveFileImports(
       continue;
     }
 
-    // SPORE-IMPORT-003: Circular import
+    // FUNGI-IMPORT-003: Circular import
     if (inProgress.has(resolvedPath)) {
       results.push({
         filePath: resolvedPath,
         symbols: [],
         diagnostics: [{
-          code: "SPORE-IMPORT-003",
+          code: "FUNGI-IMPORT-003",
           severity: "error",
           message:
             `Circular import detected: '${relative(process.cwd(), resolvedPath)}' ` +
@@ -303,7 +303,7 @@ export function resolveFileImports(
       continue;
     }
 
-    // SPORE-IMPORT-006: size guard — stat BEFORE the read so an oversize import fails fast instead of
+    // FUNGI-IMPORT-006: size guard — stat BEFORE the read so an oversize import fails fast instead of
     // being slurped whole into memory (compile-time OOM/DoS). The lexer's own 10 MB ceiling runs only
     // AFTER the bytes are already resident, so this pre-read check is the one that prevents the spike.
     try {
@@ -313,7 +313,7 @@ export function resolveFileImports(
           filePath: resolvedPath,
           symbols: [],
           diagnostics: [{
-            code: "SPORE-IMPORT-006",
+            code: "FUNGI-IMPORT-006",
             severity: "error",
             message:
               `Imported file '${relative(process.cwd(), resolvedPath)}' is ${bytes} bytes, exceeding ` +
@@ -325,7 +325,7 @@ export function resolveFileImports(
         continue;
       }
     } catch {
-      // stat failed (vanished/permission) — fall through; the read below yields the canonical SPORE-IMPORT-001.
+      // stat failed (vanished/permission) — fall through; the read below yields the canonical FUNGI-IMPORT-001.
     }
 
     // Read the imported file
@@ -337,7 +337,7 @@ export function resolveFileImports(
         filePath: resolvedPath,
         symbols: [],
         diagnostics: [{
-          code: "SPORE-IMPORT-001",
+          code: "FUNGI-IMPORT-001",
           severity: "error",
           message: `Cannot read file '${resolvedPath}': ${String(e)}`,
           file: sourceFile,
@@ -350,13 +350,13 @@ export function resolveFileImports(
     // Parse the imported file (parseProgram lexes internally)
     const parseResult = parseProgram(importedSource, resolvedPath);
 
-    // SPORE-IMPORT-002: Parse errors
+    // FUNGI-IMPORT-002: Parse errors
     if (parseResult.diagnostics.some(d => d.severity === "error")) {
       results.push({
         filePath: resolvedPath,
         symbols: [],
         diagnostics: [{
-          code: "SPORE-IMPORT-002",
+          code: "FUNGI-IMPORT-002",
           severity: "error",
           message:
             `Imported file '${relative(process.cwd(), resolvedPath)}' has parse errors ` +
@@ -405,7 +405,7 @@ export function resolveFileImports(
 /**
  * Check for symbol name collisions between imported symbols and local definitions.
  *
- * Returns SPORE-IMPORT-004 diagnostics (warnings) for any conflicts.
+ * Returns FUNGI-IMPORT-004 diagnostics (warnings) for any conflicts.
  * Local definitions always take precedence — the warning is informational.
  *
  * @param importedSymbols   Symbols gathered from all resolved imports
@@ -423,7 +423,7 @@ export function checkFileSymbolCollisions(
   for (const sym of importedSymbols) {
     if (localSymbolNames.has(sym.name)) {
       diagnostics.push({
-        code: "SPORE-IMPORT-004",
+        code: "FUNGI-IMPORT-004",
         severity: "warning",
         message:
           `Imported symbol '${sym.name}' from '${relative(process.cwd(), sym.sourceFile)}' ` +
@@ -434,7 +434,7 @@ export function checkFileSymbolCollisions(
     } else if (seen.has(sym.name)) {
       const prev = seen.get(sym.name)!;
       diagnostics.push({
-        code: "SPORE-IMPORT-004",
+        code: "FUNGI-IMPORT-004",
         severity: "warning",
         message:
           `Symbol '${sym.name}' imported from multiple files. ` +
@@ -457,7 +457,7 @@ export function checkFileSymbolCollisions(
 
 /**
  * High-level helper: given a parsed AST and the absolute path to its source
- * file, resolve all `import "./path.spore"` declarations and return a flat list
+ * file, resolve all `import "./path.fungi"` declarations and return a flat list
  * of all imported symbols plus any diagnostics.
  *
  * This is the primary entry point used by cli.ts.

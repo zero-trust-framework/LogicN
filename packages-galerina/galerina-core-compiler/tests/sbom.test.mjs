@@ -1,4 +1,4 @@
-// sbom.test.mjs — CycloneDX SBOM emitter, fail-closed on missing integrity (R&D 0120-F3, SPORE-SBOM-001).
+// sbom.test.mjs — CycloneDX SBOM emitter, fail-closed on missing integrity (R&D 0120-F3, FUNGI-SBOM-001).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { generateCycloneDxSbom } from "../dist/index.js";
@@ -17,11 +17,11 @@ test("emits a well-formed CycloneDX 1.5 BOM with SHA-256 hashes for verified com
   assert.ok(r.bom.metadata.properties.some((p) => p.name === "galerina:complete" && p.value === "true"));
 });
 
-test("FAIL-CLOSED: a component without a valid sha256 is UNVERIFIED + SPORE-SBOM-001 + complete:false", () => {
+test("FAIL-CLOSED: a component without a valid sha256 is UNVERIFIED + FUNGI-SBOM-001 + complete:false", () => {
   const r = generateCycloneDxSbom([pkg("@galerina/core"), pkg("@galerina/bad", { hash: undefined })]);
   assert.equal(r.complete, false, "an unverifiable component must make the BOM incomplete");
   assert.equal(r.diagnostics.length, 1);
-  assert.equal(r.diagnostics[0].code, "SPORE-SBOM-001");
+  assert.equal(r.diagnostics[0].code, "FUNGI-SBOM-001");
   assert.equal(r.diagnostics[0].component, "@galerina/bad@1.0.0");
   const bad = r.bom.components.find((c) => c.name === "@galerina/bad");
   assert.equal(bad.hashes, undefined, "no hashes entry for an unverifiable component (never fake integrity)");
@@ -33,7 +33,7 @@ test("FAIL-CLOSED: a malformed hash (sha256:pending / wrong length) is rejected,
   for (const bad of ["sha256:pending", "sha256:abc", "deadbeef", "sha256:" + "z".repeat(64)]) {
     const r = generateCycloneDxSbom([pkg("@galerina/x", { hash: bad })]);
     assert.equal(r.complete, false, `'${bad}' must be rejected`);
-    assert.equal(r.diagnostics[0].code, "SPORE-SBOM-001");
+    assert.equal(r.diagnostics[0].code, "FUNGI-SBOM-001");
   }
 });
 

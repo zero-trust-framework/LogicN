@@ -18,7 +18,7 @@ enforces them as part of execution — **governance is part of execution, not a 
 Two execution tiers, one source:
 - **Stage-A governed tree-walker** — a diagnostic/reference interpreter (the byte-parity oracle). Slow
   by design; not what ships.
-- **Stage-B WASM** — the **production** path. The compiler lowers `.spore` → WAT → one signed
+- **Stage-B WASM** — the **production** path. The compiler lowers `.fungi` → WAT → one signed
   `.wasm` with governance (capability bitmasks, contract gates, audit) **compiled in**.
 
 ```galerina
@@ -87,7 +87,7 @@ authorize(v) ⇔ v == +1
 So a flow authorizes **iff every clause is +1**; a single `0` (proof undischarged / evidence
 incomplete) or `−1` collapses the whole verdict to deny. An **empty clause set is `0` (deny-by-default,
 not vacuous allow)**, and `permitted_effects {}` is a hard **deny-all**. Every collapse to deny under a
-`0` emits a never-silent `SPORE-GOV-3VL-001` audit.
+`0` emits a never-silent `FUNGI-GOV-3VL-001` audit.
 
 **Why it cannot fail open (monotonicity).** Because `vAnd = min`:
 
@@ -226,7 +226,7 @@ Substrate noise spends **availability**, never **safety**.
 
 ---
 
-## 7. The precision wall — why crypto/governance is Binary-only (SPORE-SUBSTRATE-001)
+## 7. The precision wall — why crypto/governance is Binary-only (FUNGI-SUBSTRATE-001)
 
 Any analog/noisy lane has a per-operation error `ε = pBad > 0`. Crypto/hashing/signatures require
 **bit-exactness** — one flipped bit breaks the digest. Over `m` operations:
@@ -246,7 +246,7 @@ fully pinned: a finite `tolerance` + `pinnedEnvHash` + `backendArtifactHash` + a
 ## 8. Other stability mechanisms
 
 - **DRCM containment** — the DSS supervisor on a minimal **Wasmtime TCB**; **fuel exhaustion as a
-  trap**, V_DPM **monotonic** capability revocation (bits only *clear*, never set — SPORE-MONO-001),
+  trap**, V_DPM **monotonic** capability revocation (bits only *clear*, never set — FUNGI-MONO-001),
   on-tamper zeroize. *(Real `DSS.wasm` is DRCM Phase 5, gated on #102-106 — see §9.)*
 - **The Sentinels** (`galerina-core-sentinel-{memory,io,time,power,state,egress}`) — deterministic
   governors: fixed-block pool, HMAC integrity gate, logical clock + drift monitor, thermal
@@ -274,7 +274,7 @@ fully pinned: a finite `tolerance` + `pinnedEnvHash` + `backendArtifactHash` + a
   2. ✅ **BUILT (2026-06-22)** — split the receipt's truth channels: analog photonic values no longer fold
      into the bit-exact `ternaryChecksum`; a new `valuesReproducible` receipt flag goes false when one
      contributed (`hybrid-engine.ts`; tower-citizen 206/206; suite 53/53 · 4989).
-  3. ✅ **BUILT (2026-06-22)** — Pin **SPORE-MONO-001** at the parser: `parseEmergencyBlock` surfaces an
+  3. ✅ **BUILT (2026-06-22)** — Pin **FUNGI-MONO-001** at the parser: `parseEmergencyBlock` surfaces an
      emergency-block `allow`/`grant` as an `allow:` node so the verifier's `EMERGENCY_EXPANDS_CAPABILITY`
      error fires (was silently swallowed → fail-silent permission widening). +5 tests; suite 53/53 · 4989.
   4. ✅ **BUILT (2026-06-22)** — both fail-open holes shut: certified-mode photonic admission bound to a
@@ -282,15 +282,15 @@ fully pinned: a finite `tolerance` + `pinnedEnvHash` + `backendArtifactHash` + a
      **`N_MAX` vote-count clamp** now built (`tmacVoted` bounds N to `[1, 1024]` via `clampVotes` — a
      non-finite/enormous caller N was an infinite-loop / resource-exhaustion fail-open). suite 53/53 · 4993.
 
-**Recovery & the invariant gate (`SPORE-FAULT-005`, designed — enforcement gated).** Fault recovery is the
+**Recovery & the invariant gate (`FUNGI-FAULT-005`, designed — enforcement gated).** Fault recovery is the
 shipped `resilience { on_*_fault <action> }` block (R&D 0017, core `621fbda`) — *not* a new `recover {}`
 block. The rule **`recover ⊨ invariant`**: a recovered result (a retry that succeeds, a `fallback` flow's
 return) must still satisfy the flow's `invariant { ensure result }` post-condition, else `halt` (fail-closed).
 Recovery is thus sandwiched — bounded **below** by `effects {}` (the capability floor: idempotency-gated
-retry, `SPORE-FAULT-001` no-retry-past-deny, `SPORE-FAULT-002` fallback-effects-⊆-parent, monotone) and **above**
+retry, `FUNGI-FAULT-001` no-retry-past-deny, `FUNGI-FAULT-002` fallback-effects-⊆-parent, monotone) and **above**
 by `invariant {}` (the output gate). *Honest status:* the **retry** case is already structurally safe (the
 single-exit `ensure result` gate gates every return); the **fallback** case is gated on the deferred
-fallback-resolution (0017). So `SPORE-FAULT-005` enforcement ships **with** the fault-handler runtime / the
+fallback-resolution (0017). So `FUNGI-FAULT-005` enforcement ships **with** the fault-handler runtime / the
 interim crash-containment harness — it is documented here, not claimed as a standalone shipped rule. Full
 design: R&D 0059.
 
@@ -309,7 +309,7 @@ design: R&D 0059.
 | dispatch totality | Hybrid | fail-SAFE | throw → decline/trap, no escape | `hybrid-engine.ts` |
 | NMR redundancy | Photonic | fail-SAFE | `Σ C(N,k)pBad^k(1−pBad)^{N−k}` | `substrate-math/index.ts` |
 | K3 dead-zone | Photonic | fail-SAFE | `vAnd(+1,0)=0` → deny | `substrate-model.ts` |
-| Precision wall | — (invariant) | — | `(1−ε)^m → 0` ⇒ Binary-only crypto | `SPORE-SUBSTRATE-001` |
+| Precision wall | — (invariant) | — | `(1−ε)^m → 0` ⇒ Binary-only crypto | `FUNGI-SUBSTRATE-001` |
 
 **Bottom line:** uncertainty in the Binary core **denies/traps** (fail-closed); a fault in an offloaded
 kernel **falls back to the exact digital result** (fail-safe). The only path *up* — fabricating an

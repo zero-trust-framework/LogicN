@@ -31,12 +31,12 @@ test("previewAdmission(ALLOW) → authorized, decision allow, no diagnostic", ()
   assert.equal(d.diagnostic, null);
 });
 
-test("previewAdmission(INDETERMINATE) → deny + SPORE-GOV-3VL-001 diagnostic", () => {
+test("previewAdmission(INDETERMINATE) → deny + FUNGI-GOV-3VL-001 diagnostic", () => {
   const seen = [];
   const d = previewAdmission(Verdict.INDETERMINATE, (x) => seen.push(x));
   assert.equal(d.authorized, false);
   assert.equal(d.decision, "deny");
-  assert.equal(d.diagnostic?.code, "SPORE-GOV-3VL-001");
+  assert.equal(d.diagnostic?.code, "FUNGI-GOV-3VL-001");
   assert.equal(seen.length, 1);
 });
 

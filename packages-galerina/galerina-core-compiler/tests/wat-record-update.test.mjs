@@ -41,7 +41,7 @@ pure flow baseUnchanged(a: Int, b: Int, c: Int, nx: Int) -> Int {
 `;
 
 async function instantiate() {
-  const prog = L.parseProgram(PROGRAM, "record-update.spore");
+  const prog = L.parseProgram(PROGRAM, "record-update.fungi");
   const fx = L.checkEffects(prog.flows, prog.ast);
   const { gir } = L.emitGIR(prog.ast, prog.flows, fx);
   const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "record-update", prog.ast, true));

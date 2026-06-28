@@ -1,8 +1,8 @@
 {
-  "schemaVersion": "spore.manifest.v1",
+  "schemaVersion": "fungi.manifest.v1",
   "flowCount": 1,
   "fuse": {
-    "schemaVersion": "spore.fuse.v1",
+    "schemaVersion": "fungi.fuse.v1",
     "version": "0.0.0",
     "kind": "capability",
     "seam": null,

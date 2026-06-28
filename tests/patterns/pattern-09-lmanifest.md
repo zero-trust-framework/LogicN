@@ -17,7 +17,7 @@ A QSA (Qualified Security Assessor) verifies this file without reading source co
 
 ```json
 {
-  "schemaVersion": "spore.manifest.v1",
+  "schemaVersion": "fungi.manifest.v1",
   "sourceHash": "sha256:3f4a9c...",
   "derivedConstraints": [
     "CardholderData never_touches TelemetryLog",
@@ -63,7 +63,7 @@ A QSA (Qualified Security Assessor) verifies this file without reading source co
 ## How to produce it (Phase 3)
 
 ```
-galerina build --manifest payment-service.spore
+galerina build --manifest payment-service.fungi
 # Outputs: build/payment-service.wasm
 #           build/payment-service.lmanifest
 ```
@@ -76,7 +76,7 @@ Before loading any DWI guest module, the DSS verifies:
 1. `SHA-256(payment-service.wasm)` == `manifest.sourceHash`
 2. ML-DSA-65 signature verifies with the compiler signing key
 
-If either check fails: `SPORE-ID-001` — the module is rejected, never instantiated.
+If either check fails: `FUNGI-ID-001` — the module is rejected, never instantiated.
 
 ---
 

@@ -14,16 +14,16 @@ belong in `packages-galerina/galerina-ai/`, with low-bit and ternary AI backend 
 Galerina, short for **Galerina**, is a strict, memory-safe, security-first
 programming language and compiler/toolchain.
 
-Galerina source files use the `.spore` extension.
+Galerina source files use the `.fungi` extension.
 
 Example files:
 
 ```text
-boot.spore
-main.spore
-routes.spore
-models.spore
-compute-policy.spore
+boot.fungi
+main.fungi
+routes.fungi
+models.fungi
+compute-policy.fungi
 ```
 
 ---
@@ -547,7 +547,7 @@ Documentation status: `docs/COVERAGE.md` records unresolved photonic conflicts
 between `galerina-core-photonic`, `galerina-core-vector` and governance KB files.
 Until reconciled, this document may describe broad target planning only. Do not
 derive implementation contracts for `OpticalTransportMode`,
-`PhotonicRuntimeTarget`, `PhotonicExecutionPlan` or `SPORE-PHOTONIC-*` diagnostics
+`PhotonicRuntimeTarget`, `PhotonicExecutionPlan` or `FUNGI-PHOTONIC-*` diagnostics
 from this language-core compute overview.
 
 Galerina may support broad photonic target planning:
@@ -994,7 +994,7 @@ Before `main()` runs, Galerina should validate compute capabilities.
 Startup order:
 
 ```text
-1. Read boot.spore
+1. Read boot.fungi
 2. Validate compute policy
 3. Detect CPU features
 4. Detect CPU vector support
@@ -1159,7 +1159,7 @@ Example target report:
 {
   "computeTargetSelection": {
     "flow": "scoreFraud",
-    "source": "src/risk/fraud.spore:8",
+    "source": "src/risk/fraud.fungi:8",
     "computeMode": "auto",
     "selectedTarget": "gpu",
     "selectedPlugin": "gpu_cuda",
@@ -1213,7 +1213,7 @@ Flow:
 `scoreFraud`
 
 Source:
-`src/risk/fraud.spore`
+`src/risk/fraud.fungi`
 
 Developer code:
 `compute auto`

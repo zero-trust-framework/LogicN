@@ -134,17 +134,17 @@ let banner: String = format("Order {ref} total: {amount}", { ref: orderId, amoun
 
 | Code | Name | Description |
 |---|---|---|
-| `SPORE-STRING-001` | `INVALID_UTF8_DECODE` | Attempted decode produced invalid UTF-8 |
-| `SPORE-STRING-002` | `SECRET_STORED_AS_STRING` | Secret value assigned to plain `String` |
-| `SPORE-STRING-003` | `IMPLICIT_STRING_BYTE_CONVERSION` | `Bytes` assigned to `String` without explicit decode |
-| `SPORE-STRING-004` | `AMBIGUOUS_STRING_LENGTH` | `.length` used without specifying chars vs bytes |
+| `FUNGI-STRING-001` | `INVALID_UTF8_DECODE` | Attempted decode produced invalid UTF-8 |
+| `FUNGI-STRING-002` | `SECRET_STORED_AS_STRING` | Secret value assigned to plain `String` |
+| `FUNGI-STRING-003` | `IMPLICIT_STRING_BYTE_CONVERSION` | `Bytes` assigned to `String` without explicit decode |
+| `FUNGI-STRING-004` | `AMBIGUOUS_STRING_LENGTH` | `.length` used without specifying chars vs bytes |
 
 Example:
 
 ```galerina
 let raw: Bytes = File.read("data.bin")
 let text: String = raw
-// ^ SPORE-STRING-003: Bytes cannot become String without explicit decode.
+// ^ FUNGI-STRING-003: Bytes cannot become String without explicit decode.
 ```
 
 ---
@@ -187,7 +187,7 @@ let b: Byte = 65
 
 // Bad: Char is not Byte.
 let wrong: Byte = c
-// ^ SPORE-CHAR-001: Char cannot be assigned to Byte.
+// ^ FUNGI-CHAR-001: Char cannot be assigned to Byte.
 
 // Good: encode explicitly.
 let encoded: Bytes = c.toString().encode(Encoding.UTF8)
@@ -201,16 +201,16 @@ let encoded: Bytes = c.toString().encode(Encoding.UTF8)
 
 | Code | Name | Description |
 |---|---|---|
-| `SPORE-CHAR-001` | `CHAR_BYTE_CONFUSION` | `Char` assigned to or compared with `Byte` without conversion |
-| `SPORE-CHAR-002` | `INVALID_CHAR_LITERAL` | Character literal contains an invalid Unicode scalar value |
-| `SPORE-CHAR-003` | `MULTI_CHAR_LITERAL` | Character literal contains more than one character unit |
-| `SPORE-CHAR-004` | `IMPLICIT_CHAR_NUMBER_CONVERSION` | `Char` used as integer without `.codePoint()` |
+| `FUNGI-CHAR-001` | `CHAR_BYTE_CONFUSION` | `Char` assigned to or compared with `Byte` without conversion |
+| `FUNGI-CHAR-002` | `INVALID_CHAR_LITERAL` | Character literal contains an invalid Unicode scalar value |
+| `FUNGI-CHAR-003` | `MULTI_CHAR_LITERAL` | Character literal contains more than one character unit |
+| `FUNGI-CHAR-004` | `IMPLICIT_CHAR_NUMBER_CONVERSION` | `Char` used as integer without `.codePoint()` |
 
 Example:
 
 ```galerina
 let c: Char = 'AB'
-// ^ SPORE-CHAR-003: Char literal must contain exactly one character unit.
+// ^ FUNGI-CHAR-003: Char literal must contain exactly one character unit.
 ```
 
 ---
@@ -292,17 +292,17 @@ security {
 
 | Code | Name | Description |
 |---|---|---|
-| `SPORE-BYTE-001` | `BYTE_OUT_OF_RANGE` | Byte literal value is outside 0–255 |
-| `SPORE-BYTE-002` | `BYTE_OVERFLOW` | Byte arithmetic result exceeds 255 without explicit handling |
-| `SPORE-BYTE-003` | `IMPLICIT_BYTE_STRING_CONVERSION` | `Bytes` assigned to `String` without explicit decode |
-| `SPORE-BYTE-004` | `RAW_BYTES_LOGGED` | Raw `Bytes` value passed to a log sink without redaction |
-| `SPORE-BYTE-005` | `UNBOUNDED_BYTES_READ` | `Bytes` read without a declared memory limit or streaming path |
+| `FUNGI-BYTE-001` | `BYTE_OUT_OF_RANGE` | Byte literal value is outside 0–255 |
+| `FUNGI-BYTE-002` | `BYTE_OVERFLOW` | Byte arithmetic result exceeds 255 without explicit handling |
+| `FUNGI-BYTE-003` | `IMPLICIT_BYTE_STRING_CONVERSION` | `Bytes` assigned to `String` without explicit decode |
+| `FUNGI-BYTE-004` | `RAW_BYTES_LOGGED` | Raw `Bytes` value passed to a log sink without redaction |
+| `FUNGI-BYTE-005` | `UNBOUNDED_BYTES_READ` | `Bytes` read without a declared memory limit or streaming path |
 
 Example:
 
 ```galerina
 let b: Byte = 300
-// ^ SPORE-BYTE-001: Byte value must be between 0 and 255.
+// ^ FUNGI-BYTE-001: Byte value must be between 0 and 255.
 ```
 
 ---
@@ -375,9 +375,9 @@ These sit alongside `stringLiteral`, `numberLiteral`, and `boolLiteral` in the l
 [ ] std.text module: String, Char, Encoding, DecodeError
 [ ] std.bytes module: Byte, Bytes, ReadOnlyView<T>
 [ ] std.security module: SecureString boundary rule
-[x] SPORE-STRING-001..004 in compiler diagnostics (@galerina/core-compiler src/index.ts)
-[x] SPORE-CHAR-001..004 in compiler diagnostics (@galerina/core-compiler src/index.ts)
-[x] SPORE-BYTE-001..005 in compiler diagnostics (@galerina/core-compiler src/index.ts)
+[x] FUNGI-STRING-001..004 in compiler diagnostics (@galerina/core-compiler src/index.ts)
+[x] FUNGI-CHAR-001..004 in compiler diagnostics (@galerina/core-compiler src/index.ts)
+[x] FUNGI-BYTE-001..005 in compiler diagnostics (@galerina/core-compiler src/index.ts)
 [x] charLiteral added to AstNodeKind (@galerina/core)
 [x] byteLiteral added to AstNodeKind (@galerina/core)
 ```

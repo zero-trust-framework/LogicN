@@ -10,7 +10,7 @@
  * NOT re-proved here):
  *  - **Deny-by-default.** A malformed or absent lease (null/undefined, missing fields,
  *    a non-finite or non-numeric `notAfter`, or a non-finite `now`) folds to
- *    INDETERMINATE → denied (audited SPORE-GOV-3VL-001). There is no path by which a
+ *    INDETERMINATE → denied (audited FUNGI-GOV-3VL-001). There is no path by which a
  *    bad lease authorizes.
  *  - **Hard expiry.** Once `now >= notAfter` the verdict is DENY. The window is
  *    HALF-OPEN: ALLOW holds iff `now < notAfter` (a lease never outlives, nor is it
@@ -18,7 +18,7 @@
  *  - **No wall-clock.** `now` is supplied by the caller (a logical tick or ms). This
  *    module reads no clock, so `checkLease` is pure and deterministic — the same
  *    (lease, now) always yields the same decision.
- *  - **Never silent.** An INDETERMINATE collapse carries SPORE-GOV-3VL-001 in the
+ *  - **Never silent.** An INDETERMINATE collapse carries FUNGI-GOV-3VL-001 in the
  *    decision and to the optional `onDiagnostic` sink. This shapes GOVERNANCE only; it
  *    never touches crypto (lease integrity, if signed, is verified upstream on binary
  *    silicon — out of scope here).
@@ -89,7 +89,7 @@ export function leaseVerdict(lease: CapabilityLease | null | undefined, now: num
  * Returns a `LeaseDecision` whose `authorized` is `true` ONLY for a well-formed,
  * unexpired lease at the supplied `now`. Expiry yields an ordinary DENY (no
  * diagnostic); a malformed/absent lease yields an INDETERMINATE collapse carrying
- * SPORE-GOV-3VL-001 (also forwarded to `onDiagnostic` if provided). Pure: it reads no
+ * FUNGI-GOV-3VL-001 (also forwarded to `onDiagnostic` if provided). Pure: it reads no
  * clock — the caller owns `now`.
  */
 export function checkLease<C>(

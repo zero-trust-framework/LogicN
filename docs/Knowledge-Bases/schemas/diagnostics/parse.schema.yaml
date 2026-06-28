@@ -1,19 +1,19 @@
-family: SPORE-PARSE
+family: FUNGI-PARSE
 description: "Parser diagnostics"
 diagnostics:
-  - code: SPORE-PARSE-001
+  - code: FUNGI-PARSE-001
     name: UNEXPECTED_TOKEN
     severity: error
     phase: parser
     message: "Unexpected token '{token}'."
     implemented: true
-  - code: SPORE-PARSE-002
+  - code: FUNGI-PARSE-002
     name: EXPECTED_FLOW_KEYWORD
     severity: error
     phase: parser
     message: "Expected 'flow' keyword after qualifier."
     implemented: true
-  - code: SPORE-PARSE-003
+  - code: FUNGI-PARSE-003
     name: UNTERMINATED_STRING
     severity: error
     phase: parser

@@ -1,6 +1,6 @@
 // H7 (threat-model) regression: `constantTimeEquals` must route through node:crypto timingSafeEqual,
 // never a short-circuiting `===`. This matters more than a normal crypto-hygiene nit because
-// SPORE-TYPE-013 actively tells authors to "Use constantTimeEquals() for equality" on secrets — so
+// FUNGI-TYPE-013 actively tells authors to "Use constantTimeEquals() for equality" on secrets — so
 // the compiler-recommended secret-equality path MUST actually be constant-time, or the advice is a
 // trap. Two runtime dispatch paths (stdlib bare + cryptoModule) + the interpreter all share one
 // helper now; this pins the helper's correctness and guards against a `===` regression.

@@ -88,13 +88,13 @@ flow deleteUser(id: UserId) -> Result<Unit, ApiError>
 
 | Rule | Diagnostic |
 |------|-----------|
-| A flow implementing `resource.X.create` must declare `database.write` | SPORE-EFFECT-003 |
-| A flow implementing `resource.X.update` must declare `database.write` | SPORE-EFFECT-003 |
-| A flow implementing `resource.X.delete` must declare `database.write` | SPORE-EFFECT-003 |
-| A flow implementing `resource.X.read` must NOT declare `database.write` | SPORE-EFFECT-004 |
-| `validation.run` must precede `database.write` in create/update flows | SPORE-VALIDATE-001 |
-| `protected` fields must appear in `response.denies` or the flow must hold the declared capability | SPORE-PROTECTED-001 |
-| `require audit` in policy means audit.write must appear in every matching operation | SPORE-AUDIT-001 |
+| A flow implementing `resource.X.create` must declare `database.write` | FUNGI-EFFECT-003 |
+| A flow implementing `resource.X.update` must declare `database.write` | FUNGI-EFFECT-003 |
+| A flow implementing `resource.X.delete` must declare `database.write` | FUNGI-EFFECT-003 |
+| A flow implementing `resource.X.read` must NOT declare `database.write` | FUNGI-EFFECT-004 |
+| `validation.run` must precede `database.write` in create/update flows | FUNGI-VALIDATE-001 |
+| `protected` fields must appear in `response.denies` or the flow must hold the declared capability | FUNGI-PROTECTED-001 |
+| `require audit` in policy means audit.write must appear in every matching operation | FUNGI-AUDIT-001 |
 
 ---
 

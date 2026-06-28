@@ -4,8 +4,8 @@ This example correctly declares process.spawn in the effects block.
 All spawn calls are therefore governed. No diagnostics expected.
 
 Governance invariants satisfied:
-- SPORE-EFFECT-001: process.spawn declared before Process.spawn() call
-- SPORE-GOV-010: intent declared on secure flow
-- SPORE-CONTEXT-001: actor and trace_id required and accessed in body
-- SPORE-VALUE-STATE-001: unsafe inputs validated before use
+- FUNGI-EFFECT-001: process.spawn declared before Process.spawn() call
+- FUNGI-GOV-010: intent declared on secure flow
+- FUNGI-CONTEXT-001: actor and trace_id required and accessed in body
+- FUNGI-VALUE-STATE-001: unsafe inputs validated before use
 - Audit trail: pre-spawn and post-spawn audit events recorded

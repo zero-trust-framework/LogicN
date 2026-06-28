@@ -2,13 +2,13 @@
 //
 // `governed floor_N flow …` (a Tower-floor entry boundary) was OMITTED from the value-state
 // checker's flow-kind switch, so a governed flow's tainted/boundary params reached governed sinks
-// with ZERO SPORE-VALUESTATE diagnostics — exactly the omission 0093 fixed for guardedFlowDecl.
+// with ZERO FUNGI-VALUESTATE diagnostics — exactly the omission 0093 fixed for guardedFlowDecl.
 // A governed flow is a posture-gated boundary, so it now registers params + is treated like secure/guarded.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { parseProgram, checkValueStates } from "../dist/index.js";
 
-const check = (src) => checkValueStates(parseProgram(src, "t.spore").ast);
+const check = (src) => checkValueStates(parseProgram(src, "t.fungi").ast);
 const diags = (r, code) => r.diagnostics.filter((d) => d.code === code);
 const has = (r, code) => diags(r, code).length > 0;
 
@@ -22,9 +22,9 @@ contract { effects { database.write } }
 }
 `;
 
-test("FAIL-OPEN CLOSED: a governed-flow bare param at a governed sink fires SPORE-VALUESTATE-008 (was silent)", () => {
+test("FAIL-OPEN CLOSED: a governed-flow bare param at a governed sink fires FUNGI-VALUESTATE-008 (was silent)", () => {
   const r = check(governedSinkBody);
-  const d = diags(r, "SPORE-VALUESTATE-008");
+  const d = diags(r, "FUNGI-VALUESTATE-008");
   assert.equal(d.length, 1, `expected one VS-008 for the governed flow, got: ${r.diagnostics.map((x) => x.code).join(",") || "none"}`);
   assert.equal(d[0].severity, "warning");
 });
@@ -40,7 +40,7 @@ contract { effects { database.write } }
 `);
   // The key proof: the governed flow's params are now REGISTERED, so the 34A tainted qualifier is
   // tracked and the unsafe value reaching a governed sink is flagged (VS-003), not silently ignored.
-  assert.ok(has(r, "SPORE-VALUESTATE-003") || has(r, "SPORE-VALUESTATE-008"), `governed tainted param must be flagged; got ${r.diagnostics.map((x) => x.code).join(",") || "none"}`);
+  assert.ok(has(r, "FUNGI-VALUESTATE-003") || has(r, "FUNGI-VALUESTATE-008"), `governed tainted param must be flagged; got ${r.diagnostics.map((x) => x.code).join(",") || "none"}`);
 });
 
 test("non-breaking: a governed flow with NO secret/boundary risk (string-only, no governed sink) does not over-fire", () => {
@@ -51,5 +51,5 @@ contract { effects {} }
   return "hello " + name
 }
 `);
-  assert.ok(!has(r, "SPORE-VALUESTATE-003"), "no taint sink → no VS-003");
+  assert.ok(!has(r, "FUNGI-VALUESTATE-003"), "no taint sink → no VS-003");
 });

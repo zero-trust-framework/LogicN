@@ -56,13 +56,13 @@ node packages-galerina\galerina-core-cli\dist\index.js graph --out build\graph
 1. Inspect task definitions.
 
 ```powershell
-node packages-galerina\galerina-core-cli\dist\index.js task --file packages-galerina\galerina-core-tasks\examples\tasks.spore
+node packages-galerina\galerina-core-cli\dist\index.js task --file packages-galerina\galerina-core-tasks\examples\tasks.fungi
 ```
 
 2. Dry-run a task before execution.
 
 ```powershell
-node packages-galerina\galerina-core-cli\dist\index.js task buildApi --file packages-galerina\galerina-core-tasks\examples\tasks.spore --dry-run
+node packages-galerina\galerina-core-cli\dist\index.js task buildApi --file packages-galerina\galerina-core-tasks\examples\tasks.fungi --dry-run
 ```
 
 3. Review the task report at `build/reports/task-report.json` unless a custom
@@ -137,7 +137,7 @@ Graph report: build\graph\Galerina_GRAPH_REPORT.md
 
 ```text
 Task buildApi dry-run planned.
-Task file: packages-galerina\galerina-core-tasks\examples\tasks.spore
+Task file: packages-galerina\galerina-core-tasks\examples\tasks.fungi
 Dependency order: generateReports -> buildApi
 Task report: build\reports\task-report.json
 ```

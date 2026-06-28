@@ -96,7 +96,7 @@ class BytecodeCompiler {
     // unlowerable 64-bit scalar — including an INTERNAL `let y: Int64` in an int-param flow, which the
     // per-param check below does NOT catch and which would compile to a silently-truncating i32
     // STORE_LOCAL — must bail to the faithful tree-walker (which carries int64 as a bigint). Same
-    // BACKEND_UNLOWERABLE_SCALAR the SPORE-NUMERIC-001 gate uses, so the tiers can't disagree.
+    // BACKEND_UNLOWERABLE_SCALAR the FUNGI-NUMERIC-001 gate uses, so the tiers can't disagree.
     if (flowDeclaresUnlowerable64(flowNode)) {
       throw new BytecodeUnsupported("flow declares a 64-bit scalar (Int64/UInt64) — defer to the tree-walker");
     }

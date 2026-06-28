@@ -7,7 +7,7 @@
 // the caller's, in signature-custody). A proof alone is membership, never authenticity.
 //
 // Spec (frozen): spec/inclusion-proof-v0.md. Verified byte-for-byte against the published golden root
-// 43386e64… (tests/inclusion.test.mjs). Crypto-on-core (SPORE-SUBSTRATE-001): bit-exact SHAKE256 over the
+// 43386e64… (tests/inclusion.test.mjs). Crypto-on-core (FUNGI-SUBSTRATE-001): bit-exact SHAKE256 over the
 // SAME tree shape as tmx256.topNode, fail-closed on any mismatch.
 import { ABSENT, ARITY, H, leafHash, nodeHash, rootFromTopNode } from "./tmx256.js";
 

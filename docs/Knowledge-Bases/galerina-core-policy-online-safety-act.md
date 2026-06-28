@@ -146,10 +146,10 @@ age_check provider "trusted-age-provider" {
 
 | Code | Meaning |
 | ---------------------- | ----------------------------------------- |
-| `SPORE-SAFETY-AGE-001` | Age-restricted route missing age assurance policy |
-| `SPORE-SAFETY-AGE-002` | Unknown age state cannot grant access |
-| `SPORE-SAFETY-AGE-003` | Self-declared age is not sufficient for this content category |
-| `SPORE-SAFETY-AUDIT-001` | Age-gated access decision missing audit evidence |
+| `FUNGI-SAFETY-AGE-001` | Age-restricted route missing age assurance policy |
+| `FUNGI-SAFETY-AGE-002` | Unknown age state cannot grant access |
+| `FUNGI-SAFETY-AGE-003` | Self-declared age is not sufficient for this content category |
+| `FUNGI-SAFETY-AUDIT-001` | Age-gated access decision missing audit evidence |
 
 ---
 

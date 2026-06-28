@@ -10,7 +10,7 @@ describe("Galerina core command integrations", () => {
   it("runs check and run through galerina-core", async () => {
     const cwd = await createProject();
     const check = await runCli(["check", "src"], cwd);
-    const run = await runCli(["run", "src/hello.spore"], cwd);
+    const run = await runCli(["run", "src/hello.fungi"], cwd);
 
     assert.equal(check.ok, true);
     assert.match(check.details?.join("\n") ?? "", /Core command: Galerina check/);
@@ -40,7 +40,7 @@ describe("Galerina core command integrations", () => {
 
   it("runs routes and security checks through galerina-core", async () => {
     const cwd = await createProject();
-    const routes = await runCli(["routes", "src/api.spore"], cwd);
+    const routes = await runCli(["routes", "src/api.fungi"], cwd);
     const security = await runCli(["security:check", "src"], cwd);
 
     assert.equal(routes.ok, true);
@@ -62,7 +62,7 @@ async function createProject() {
     await mkdir(join(cwd, "src"), { recursive: true });
   });
   await writeFile(
-    join(cwd, "src", "hello.spore"),
+    join(cwd, "src", "hello.fungi"),
     `secure flow main() -> Result<Void, Error> {
   print("hello from Galerina")
   return Ok()
@@ -71,7 +71,7 @@ async function createProject() {
     "utf8",
   );
   await writeFile(
-    join(cwd, "src", "api.spore"),
+    join(cwd, "src", "api.fungi"),
     `type CreateOrderRequest {
   customerId: String
 }

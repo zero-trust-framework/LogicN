@@ -66,7 +66,7 @@ export function resolveGovernanceMode(input: GovernanceModeInputs): GovernanceMo
     optDownRejected = true;
     effectiveMode = projectDefault;
     diagnostics.push(
-      `SPORE-CONFIG-GOV-001: flow requested governance:${flowRequest} but the project ceiling is ${projectDefault}; opt-down past the ceiling is rejected — using ${projectDefault}.`
+      `FUNGI-CONFIG-GOV-001: flow requested governance:${flowRequest} but the project ceiling is ${projectDefault}; opt-down past the ceiling is rejected — using ${projectDefault}.`
     );
   }
 
@@ -95,7 +95,7 @@ export function resolveGovernanceMode(input: GovernanceModeInputs): GovernanceMo
       tier = "full";
       reason = "lean requested but flow is not EffectFree/taint-clean — safety override to full.";
       diagnostics.push(
-        `SPORE-CONFIG-GOV-002: flow requested governance:lean but has a declared/inferred effect or taint-to-sink; forced to full (lean cannot relax a gate that exists).`
+        `FUNGI-CONFIG-GOV-002: flow requested governance:lean but has a declared/inferred effect or taint-to-sink; forced to full (lean cannot relax a gate that exists).`
       );
     }
   }

@@ -32,7 +32,7 @@ Summary:
    - Parser dual-syntax support (: and -> return types)
    - Match guard arms with boolean conditions (pattern matching alternative to else-if)
    - WASM-ready execution architecture
-   - Stage B self-hosted compiler (parser.spore, lexer.spore)
+   - Stage B self-hosted compiler (parser.fungi, lexer.fungi)
    - Bytecode VM for performance optimization
    - Runtime-in-Galerina percentage tracking (currently 25%, target 100%)
    - Security audit integration (OWASP findings, taint tracking)
@@ -57,11 +57,11 @@ Summary:
 
    **Legacy Qualifier Warnings (parser.ts, lines 360-385)**:
    - Added case for "safe" and "guard" keywords at top-level
-   - Emits SPORE-SYNTAX-LEGACY-002 warning when detected
+   - Emits FUNGI-SYNTAX-LEGACY-002 warning when detected
    - Falls through to continue parsing as valid flow
 
    **else if Hard Error (parser.ts, lines 1213-1221)**:
-   - Changed from advisory warning to hard parse error SPORE-SYNTAX-010
+   - Changed from advisory warning to hard parse error FUNGI-SYNTAX-010
    - Emits: "'else if' is not allowed in Galerina. Use 'match' for multi-branch logic"
    - Non-breaking: parse still continues to recover
 
@@ -72,14 +72,14 @@ Summary:
    - Key milestones: Phase 50 (Stage B first compilation), Phase 54 (route dispatcher in Galerina), Phase 57 (effect checker in Galerina), Phase 59 (capability host complete)
 
 4. Errors and fixes:
-   - **Initial else-if approach was wrong**: User corrected me—else if must be a HARD ERROR (SPORE-SYNTAX-010), not an advisory warning. I was treating it as "allowed with advisory" but user stated definitively "Do not allow else if". Fixed by changing emitWarning to emit (error not warning) and updating all Stage B files to remove else if usage.
+   - **Initial else-if approach was wrong**: User corrected me—else if must be a HARD ERROR (FUNGI-SYNTAX-010), not an advisory warning. I was treating it as "allowed with advisory" but user stated definitively "Do not allow else if". Fixed by changing emitWarning to emit (error not warning) and updating all Stage B files to remove else if usage.
    - **Benchmark table accuracy**: I initially misrepresented winners in my summary (said Rust won six-digit-guess, Galerina won fibonacci). Actually WASM wins six-digit-guess at 86.99M/s, and fibonacci has incomparable workloads (Galerina passive runs fib(20) while Node.js runs fib(30)). Corrected in final summary.
-   - **Lexer.spore and parser.spore parsing failures**: Both files had 30+ parse errors after removing else if chains. Fixed by replacing nested if-else-if with sequential if blocks without else clauses, or using if (handled == false) guards.
-   - **Parser brace balance in lexer.spore**: Multiple mismatched braces from my restructuring. Fixed by carefully counting braces through the Some(c) dispatch block and adding proper closing braces.
+   - **Lexer.fungi and parser.fungi parsing failures**: Both files had 30+ parse errors after removing else if chains. Fixed by replacing nested if-else-if with sequential if blocks without else clauses, or using if (handled == false) guards.
+   - **Parser brace balance in lexer.fungi**: Multiple mismatched braces from my restructuring. Fixed by carefully counting braces through the Some(c) dispatch block and adding proper closing braces.
 
 5. Problem Solving:
    - **Syntax unification at scale**: Implemented 4 parser features simultaneously (: return type, legacy qualifiers, else if hard error, with effects hard error) affecting 2,791 tests. All passed after fixes.
-   - **Stage B self-hosted compiler updates**: Fixed 16 test files and 2 benchmark files to remove else if. Key insight: Stage B parser.spore must follow same rules as Stage A to bootstrap correctly.
+   - **Stage B self-hosted compiler updates**: Fixed 16 test files and 2 benchmark files to remove else if. Key insight: Stage B parser.fungi must follow same rules as Stage A to bootstrap correctly.
    - **Governance path overhead vs WASM speed gap**: Identified that governed flows are 500-900× slower than WASM on pure arithmetic. Phase 45 bytecode VM expansion targets closing this by adding Bool/Branch opcodes and record field operations.
    - **Benchmark fidelity**: Clarified that GPU-compute throughput numbers are CPU-bound (setup overhead) not GPU-bound, since actual GPU dispatch isn't live yet. Real CUDA in Phase 58 will show actual GPU performance.
 
@@ -165,7 +165,7 @@ Summary:
    - Parser dual-syntax support (: and -> return types)
    - Match guard arms with boolean conditions (pattern matching alternative to else-if)
    - WASM-ready execution architecture
-   - Stage B self-hosted compiler (parser.spore, lexer.spore)
+   - Stage B self-hosted compiler (parser.fungi, lexer.fungi)
    - Bytecode VM for performance optimization
    - Runtime-in-Galerina percentage tracking (currently 25%, target 100%)
    - Security audit integration (OWASP findings, taint tracking)
@@ -190,11 +190,11 @@ Summary:
 
    **Legacy Qualifier Warnings (parser.ts, lines 360-385)**:
    - Added case for "safe" and "guard" keywords at top-level
-   - Emits SPORE-SYNTAX-LEGACY-002 warning when detected
+   - Emits FUNGI-SYNTAX-LEGACY-002 warning when detected
    - Falls through to continue parsing as valid flow
 
    **else if Hard Error (parser.ts, lines 1213-1221)**:
-   - Changed from advisory warning to hard parse error SPORE-SYNTAX-010
+   - Changed from advisory warning to hard parse error FUNGI-SYNTAX-010
    - Emits: "'else if' is not allowed in Galerina. Use 'match' for multi-branch logic"
    - Non-breaking: parse still continues to recover
 
@@ -205,14 +205,14 @@ Summary:
    - Key milestones: Phase 50 (Stage B first compilation), Phase 54 (route dispatcher in Galerina), Phase 57 (effect checker in Galerina), Phase 59 (capability host complete)
 
 4. Errors and fixes:
-   - **Initial else-if approach was wrong**: User corrected me—else if must be a HARD ERROR (SPORE-SYNTAX-010), not an advisory warning. I was treating it as "allowed with advisory" but user stated definitively "Do not allow else if". Fixed by changing emitWarning to emit (error not warning) and updating all Stage B files to remove else if usage.
+   - **Initial else-if approach was wrong**: User corrected me—else if must be a HARD ERROR (FUNGI-SYNTAX-010), not an advisory warning. I was treating it as "allowed with advisory" but user stated definitively "Do not allow else if". Fixed by changing emitWarning to emit (error not warning) and updating all Stage B files to remove else if usage.
    - **Benchmark table accuracy**: I initially misrepresented winners in my summary (said Rust won six-digit-guess, Galerina won fibonacci). Actually WASM wins six-digit-guess at 86.99M/s, and fibonacci has incomparable workloads (Galerina passive runs fib(20) while Node.js runs fib(30)). Corrected in final summary.
-   - **Lexer.spore and parser.spore parsing failures**: Both files had 30+ parse errors after removing else if chains. Fixed by replacing nested if-else-if with sequential if blocks without else clauses, or using if (handled == false) guards.
-   - **Parser brace balance in lexer.spore**: Multiple mismatched braces from my restructuring. Fixed by carefully counting braces through the Some(c) dispatch block and adding proper closing braces.
+   - **Lexer.fungi and parser.fungi parsing failures**: Both files had 30+ parse errors after removing else if chains. Fixed by replacing nested if-else-if with sequential if blocks without else clauses, or using if (handled == false) guards.
+   - **Parser brace balance in lexer.fungi**: Multiple mismatched braces from my restructuring. Fixed by carefully counting braces through the Some(c) dispatch block and adding proper closing braces.
 
 5. Problem Solving:
    - **Syntax unification at scale**: Implemented 4 parser features simultaneously (: return type, legacy qualifiers, else if hard error, with effects hard error) affecting 2,791 tests. All passed after fixes.
-   - **Stage B self-hosted compiler updates**: Fixed 16 test files and 2 benchmark files to remove else if. Key insight: Stage B parser.spore must follow same rules as Stage A to bootstrap correctly.
+   - **Stage B self-hosted compiler updates**: Fixed 16 test files and 2 benchmark files to remove else if. Key insight: Stage B parser.fungi must follow same rules as Stage A to bootstrap correctly.
    - **Governance path overhead vs WASM speed gap**: Identified that governed flows are 500-900× slower than WASM on pure arithmetic. Phase 45 bytecode VM expansion targets closing this by adding Bool/Branch opcodes and record field operations.
    - **Benchmark fidelity**: Clarified that GPU-compute throughput numbers are CPU-bound (setup overhead) not GPU-bound, since actual GPU dispatch isn't live yet. Real CUDA in Phase 58 will show actual GPU performance.
 

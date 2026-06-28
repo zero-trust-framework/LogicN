@@ -133,7 +133,7 @@ Comment says effects [database.read].
 Flow declares effects [database.write].
 
 Original source:
-  src/services/order-service.spore:12:1
+  src/services/order-service.fungi:12:1
 
 Suggestion:
   Update the strict comment or correct the effect declaration.
@@ -512,7 +512,7 @@ Strict comment mismatch:
 Flow declares [database.write].
 
 Original source:
-  src/services/order-service.spore:8:1
+  src/services/order-service.fungi:8:1
 ```
 
 ---
@@ -540,7 +540,7 @@ Strict comment mismatch:
 API route declares OrderResponse.
 
 Original source:
-  src/routes.spore:3:1
+  src/routes.fungi:3:1
 ```
 
 ---
@@ -566,7 +566,7 @@ Strict comment security mismatch:
 Comment requires HMAC verification, but webhook has no HMAC security block.
 
 Original source:
-  src/webhooks/payment-webhook.spore:1:1
+  src/webhooks/payment-webhook.fungi:1:1
 
 Suggestion:
   Add security.hmac_header and secret env.secret(...).
@@ -632,7 +632,7 @@ Example AI context:
   "effects": ["network.inbound", "database.write"],
   "idempotency": "Required using $.id",
   "aiRisk": "Never process the webhook before signature verification.",
-  "source": "src/webhooks/payment-webhook.spore:1"
+  "source": "src/webhooks/payment-webhook.fungi:1"
 }
 ```
 
@@ -668,7 +668,7 @@ where the source is
 
 ## Strict Comments and Source Maps
 
-Strict comment checks should map back to original `.spore` files.
+Strict comment checks should map back to original `.fungi` files.
 
 Example:
 
@@ -678,7 +678,7 @@ Strict comment mismatch:
 Flow returns Result<CreateOrderResponse, OrderError>.
 
 Original source:
-  src/services/order-service.spore:14:1
+  src/services/order-service.fungi:14:1
 ```
 
 This is important when working with compiled output.
@@ -736,7 +736,7 @@ If mismatches exist:
   "strictComments": {
     "mismatches": [
       {
-        "file": "src/webhooks/payment-webhook.spore",
+        "file": "src/webhooks/payment-webhook.fungi",
         "line": 1,
         "tag": "@security",
         "problem": "HMAC required by comment but missing from webhook declaration."
@@ -945,7 +945,7 @@ Example:
 ```json
 {
   "errorType": "SecurityError",
-  "file": "src/webhooks/payment-webhook.spore",
+  "file": "src/webhooks/payment-webhook.fungi",
   "line": 22,
   "problem": "Webhook JSON decoded before HMAC verification.",
   "strictComment": {

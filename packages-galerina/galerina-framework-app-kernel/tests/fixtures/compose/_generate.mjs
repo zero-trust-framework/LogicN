@@ -38,10 +38,10 @@ function manifest(fuse) {
   // Minimal signed-shape manifest: only the embedded fuse block + (absent) signature matter
   // to the loader. No governanceSignature => treated as unsigned (tests pass allowUnsigned).
   return {
-    schemaVersion: "spore.manifest.v1",
+    schemaVersion: "fungi.manifest.v1",
     flowCount: 1,
     fuse: {
-      schemaVersion: "spore.fuse.v1",
+      schemaVersion: "fungi.fuse.v1",
       version: "0.0.0",
       kind: "capability",
       seam: null,
@@ -58,7 +58,7 @@ async function emit(name, wat, fuse) {
   const dir = join(here, name);
   const dist = join(dir, "dist");
   mkdirSync(dist, { recursive: true });
-  writeFileSync(join(dir, "package.spore.json"), JSON.stringify({ name }, null, 2) + "\n");
+  writeFileSync(join(dir, "package.fungi.json"), JSON.stringify({ name }, null, 2) + "\n");
   writeFileSync(join(dist, `${name}.wasm`), Buffer.from(wasm));
   writeFileSync(
     join(dist, `${name}.lmanifest.json`),

@@ -248,11 +248,11 @@ These are not replacements; they are complementary layers.
 
 | Code | Meaning |
 |---|---|
-| `SPORE-GPU-SYNC-001` | Shared memory written without barrier before read |
-| `SPORE-GPU-SYNC-002` | Atomic operation on non-atomic memory region |
-| `SPORE-GPU-SYNC-003` | Stream awaited after stream was already completed |
-| `SPORE-GPU-SYNC-004` | Concurrent kernels on same stream must be sequential |
-| `SPORE-GPU-SYNC-005` | Memory fence required before cross-stream visibility |
+| `FUNGI-GPU-SYNC-001` | Shared memory written without barrier before read |
+| `FUNGI-GPU-SYNC-002` | Atomic operation on non-atomic memory region |
+| `FUNGI-GPU-SYNC-003` | Stream awaited after stream was already completed |
+| `FUNGI-GPU-SYNC-004` | Concurrent kernels on same stream must be sequential |
+| `FUNGI-GPU-SYNC-005` | Memory fence required before cross-stream visibility |
 
 ---
 

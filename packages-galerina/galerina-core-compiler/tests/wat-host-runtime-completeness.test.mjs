@@ -25,7 +25,7 @@ pure flow di(c: Char) -> Bool contract { effects {} } { return c.isDigit() }
 `;
 
 test("createHostRuntime provides every host import the emitter declares for a multi-method module", () => {
-  const prog = L.parseProgram(SRC, "completeness.spore");
+  const prog = L.parseProgram(SRC, "completeness.fungi");
   const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, `parse errors: ${errs.map((d) => d.message).join("; ")}`);
   const fx = L.checkEffects(prog.flows, prog.ast);

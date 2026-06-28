@@ -48,7 +48,7 @@ const PASSING_TEST = `import { test } from "node:test"; test("ok", () => {});\n`
 
 /** A tmp workspace with every fake target present + a built "compiler dist". */
 function fullWorkspace() {
-  const root = mkdtempSync(join(tmpdir(), "spore-test-full-"));
+  const root = mkdtempSync(join(tmpdir(), "fungi-test-full-"));
   after(() => { try { rmSync(root, { recursive: true, force: true }); } catch { /* best effort */ } });
   w(root, "galerina.workspace.json", JSON.stringify({ name: "fixture", packages: [] }));
   w(root, "scripts/run-all-tests.cjs", FAKE_UNIT);
@@ -56,14 +56,14 @@ function fullWorkspace() {
   w(root, "tests/r6-corpus/r6-parity.test.mjs", PASSING_TEST);
   w(root, "packages-galerina/galerina-core-compiler/tests/fidelity-differential.test.mjs", PASSING_TEST);
   w(root, "packages-galerina/galerina-core-compiler/dist/index.js", "export {};\n");
-  w(root, "examples/good.spore", "pure flow main() -> Int { return 0 }\n");
-  w(root, "examples/bad.spore", "pure flow main() -> Int { return 0 }\n");
+  w(root, "examples/good.fungi", "pure flow main() -> Int { return 0 }\n");
+  w(root, "examples/bad.fungi", "pure flow main() -> Int { return 0 }\n");
   return root;
 }
 
 /** A tmp workspace with ONLY the marker — every target is absent. */
 function bareWorkspace() {
-  const root = mkdtempSync(join(tmpdir(), "spore-test-bare-"));
+  const root = mkdtempSync(join(tmpdir(), "fungi-test-bare-"));
   after(() => { try { rmSync(root, { recursive: true, force: true }); } catch { /* best effort */ } });
   w(root, "galerina.workspace.json", JSON.stringify({ name: "bare", packages: [] }));
   return root;
@@ -116,7 +116,7 @@ test("runUnit: fail-closed when the runner script is absent", async () => {
 
 test("runE2e: passes when every example compiles clean", async () => {
   const root = fullWorkspace();
-  const res = await runE2e({ rootDir: root, examples: ["examples/good.spore"] });
+  const res = await runE2e({ rootDir: root, examples: ["examples/good.fungi"] });
   assert.equal(res.ok, true);
   assert.match(res.detail, /1\/1 examples checked clean/);
 });
@@ -125,7 +125,7 @@ test("runE2e: one failing example fails the whole check", async () => {
   const root = fullWorkspace();
   const res = await runE2e({
     rootDir: root,
-    examples: ["examples/good.spore", "examples/bad.spore"],
+    examples: ["examples/good.fungi", "examples/bad.fungi"],
   });
   assert.equal(res.ok, false);
   assert.equal(res.exitCode, 1);
@@ -134,7 +134,7 @@ test("runE2e: one failing example fails the whole check", async () => {
 
 test("runE2e: a missing example file fails closed (not skipped)", async () => {
   const root = fullWorkspace();
-  const res = await runE2e({ rootDir: root, examples: ["examples/nope.spore"] });
+  const res = await runE2e({ rootDir: root, examples: ["examples/nope.fungi"] });
   assert.equal(res.ok, false);
 });
 
@@ -147,7 +147,7 @@ test("runE2e: an empty corpus is a failure, not a vacuous pass", async () => {
 
 test("runE2e: --build uses the build verb", async () => {
   const root = fullWorkspace();
-  const res = await runE2e({ rootDir: root, examples: ["examples/good.spore"], build: true });
+  const res = await runE2e({ rootDir: root, examples: ["examples/good.fungi"], build: true });
   assert.equal(res.ok, true);
   assert.match(res.detail, /builded clean|build/);
 });
@@ -213,7 +213,7 @@ test("runAll: aggregates green children into a single pass", async () => {
   const root = fullWorkspace();
   // Point e2e at the fixture's own example (the default corpus targets the real
   // repo's examples/, which don't exist in this tmp workspace).
-  const res = await runAll({ rootDir: root, examples: ["examples/good.spore"] });
+  const res = await runAll({ rootDir: root, examples: ["examples/good.fungi"] });
   assert.equal(res.kind, "all");
   assert.equal(res.ok, true);
   assert.equal(res.exitCode, 0);
@@ -226,7 +226,7 @@ test("runAll: a failing child fails the aggregate (exit 1)", async () => {
   // unit fails (plain-node child → reliable under nesting); everything else green.
   const res = await runAll({
     rootDir: root,
-    examples: ["examples/good.spore"],
+    examples: ["examples/good.fungi"],
     packages: ["boom"],
   });
   assert.equal(res.ok, false);

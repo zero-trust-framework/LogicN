@@ -2,7 +2,7 @@
 
 **Primary goal: Runtime written in Galerina at 100%**
 **Current: Phase 69 complete. 2,952 tests passing (2810 compiler + 15 economics + 95 graph + 32 security).**
-**Status: Phases 28–45 complete. Phase 41 syntax (when guards, integer match, inline contract, SPORE-SYNTAX-010) canonical.**
+**Status: Phases 28–45 complete. Phase 41 syntax (when guards, integer match, inline contract, FUNGI-SYNTAX-010) canonical.**
 
 ---
 
@@ -26,21 +26,21 @@ The 10 phases below take the runtime from 0% to ~50% (first governed HTTP servic
 
 | Phase | Status | Delivered |
 |---|---|---|
-| **28** | ✅ DONE | `checkProfiles` (SPORE-PROFILE-001/002/006), `checkTaint` (SPORE-TAINT-001/003/004), OWASP catalogue |
+| **28** | ✅ DONE | `checkProfiles` (FUNGI-PROFILE-001/002/006), `checkTaint` (FUNGI-TAINT-001/003/004), OWASP catalogue |
 | **29** | ✅ DONE | `@galerina/core-economics` package — CostGraph, ValueGraph, IBM risk matrix, RouteDecision (governanceApproved literal) |
 | **30** | ✅ DONE | `buildProofGraphCached` — ExecutionSignature-keyed proof shape cache (67% hit rate on same-shape flows) |
 | **31** | ✅ DONE | Bytecode VM — Int32Array opcodes, 14.3× over sync tree-walker, ~300× over async governed |
 | **32** | ✅ DONE | `galerina diff` governance delta CLI (exit 2 on authority widening) + governance-diff module |
 | **33A** | ✅ DONE | Tier telemetry — executionTier + fallbackReason on FlowExecutionResult. All 5 tiers tagged: cache/bytecode/sync/egraph/tree |
-| **34** | ✅ **DONE** | **`verifyPasswordService.spore` IS a live governed HTTP service** — `POST /auth/verify` → governance → `BCrypt.verify` (real bcrypt) → audit → governed JSON. **Runtime-in-Galerina = 25%.** +13 tests. |
+| **34** | ✅ **DONE** | **`verifyPasswordService.fungi` IS a live governed HTTP service** — `POST /auth/verify` → governance → `BCrypt.verify` (real bcrypt) → audit → governed JSON. **Runtime-in-Galerina = 25%.** +13 tests. |
 | **35** | ✅ DONE | Password.verify/hash/needsMigration — stable API facade over bcrypt/Argon2 |
 | **36** | ✅ DONE | Argon2.hash/verify (Argon2id, OWASP preferred). Password.verify auto-routes by hash prefix |
 | **37** | ✅ DONE | Password.migrate — verify+rehash bcrypt→Argon2id on successful verify |
 | **38** | ✅ DONE | Deno WebGPU GPU benchmark live — RTX 3050 Ti, 3.99M ops/sec, result=1,000,000,000 |
 | **39** | ✅ DONE | GovernanceSignature Ed25519 — signProofGraph/verifyGovernanceSignature, tamper-detection verified |
-| **40** | ✅ DONE | Stage B executable — compiler.capabilities.spore (8 flows), lexer.spore (makeKeywordTable=40kw, scanWord works). 20 bootstrap tests. |
+| **40** | ✅ DONE | Stage B executable — compiler.capabilities.fungi (8 flows), lexer.fungi (makeKeywordTable=40kw, scanWord works). 20 bootstrap tests. |
 
-| **41** | ✅ DONE | Phase 41 syntax: `when` guard match arms, integer/string literal match, inline contract (contract first in flow body), `:` return type canonical, `else if` → SPORE-SYNTAX-010 hard error. 13 new tests. |
+| **41** | ✅ DONE | Phase 41 syntax: `when` guard match arms, integer/string literal match, inline contract (contract first in flow body), `:` return type canonical, `else if` → FUNGI-SYNTAX-010 hard error. 13 new tests. |
 | **45** | ✅ DONE (partial) | Bytecode VM Phase 45: `callExpr` support added, callee AST threaded through compiler, subPrograms map in BytecodeProgram. Integer-only restriction maintained; call VM path deferred to Phase 45B. |
 
 **Test count: 2,810 compiler + 15 economics + 95 graph + 32 security = 2,952 total, 0 failures.**
@@ -60,9 +60,9 @@ hash-migration + ValueGraph routing (37).
 **Theme: Governance completeness**
 **Runtime %: 0% (foundation)**
 
-1. `profile strict` / `profile high_integrity` → real compiler errors (SPORE-PROFILE-001..007)
+1. `profile strict` / `profile high_integrity` → real compiler errors (FUNGI-PROFILE-001..007)
 2. `Tainted<T>` — external input cannot reach a sink (`database.query`, `html.render`, `shell.exec`) without an explicit sanitiser boundary
-3. Constant-time comparison — `ProtectedSecret<T> ==` → SPORE-SECURITY-001 (force `.constantTimeEquals()`)
+3. Constant-time comparison — `ProtectedSecret<T> ==` → FUNGI-SECURITY-001 (force `.constantTimeEquals()`)
 
 **Why now:** Before the runtime accepts external HTTP requests, the security type system must prevent injection at compile time.
 
@@ -210,7 +210,7 @@ contract {
 route POST "/auth/verify" { verifyPassword }
 ```
 
-The first `.spore` file that IS the runtime service. HTTP request → governance check → WASM execution → response.
+The first `.fungi` file that IS the runtime service. HTTP request → governance check → WASM execution → response.
 
 **Decided (2026-06-01):** Node.js `http` substrate (locked). bcrypt hashing via `BCrypt.verify`
 (already in stdlib allowlist + taint boundary). **In-memory fixture** hash store for the
@@ -235,7 +235,7 @@ demo — proves the governed HTTP → execution → response path with zero infr
 **Runtime %: 30%**
 
 ```bash
-galerina build --target wasm-wasi -o auth.wasm auth/verifyPassword.spore
+galerina build --target wasm-wasi -o auth.wasm auth/verifyPassword.fungi
 wasmtime run auth.wasm
 ```
 
@@ -312,8 +312,8 @@ and v1.0 (100%).
   stdlib sanitiser: `Sql.escape`, `Html.escape`, `Shell.quote`. Only these convert
   `Tainted<T>` → `T` at an injection boundary.
 - **Business-logic sinks** accept any `Validated<T>` (integrates with existing value-state).
-- Two diagnostic series: `SPORE-TAINT-001` (injection sink, raw tainted) and
-  `SPORE-TAINT-002` (logic sink, unvalidated).
+- Two diagnostic series: `FUNGI-TAINT-001` (injection sink, raw tainted) and
+  `FUNGI-TAINT-002` (logic sink, unvalidated).
 
 ### Hardware Detection (Phase 33): Hybrid Two-Tier Design
 - **Tier 1 — WASM workspace (portable core):** the application engine runs entirely

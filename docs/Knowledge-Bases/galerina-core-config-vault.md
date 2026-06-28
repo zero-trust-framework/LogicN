@@ -128,12 +128,12 @@ The compiler enforces this with pattern detection:
 
 ```galerina
 vault global {
-  stripe.key: String = "sk_live_abc123"  // SPORE-VAULT-001
+  stripe.key: String = "sk_live_abc123"  // FUNGI-VAULT-001
 }
 ```
 
 ```text
-SPORE-VAULT-001: Secret-like value found in config vault.
+FUNGI-VAULT-001: Secret-like value found in config vault.
 Use a secret reference instead:
   secret STRIPE_API_KEY {
     from vault "vault://payments/stripe"
@@ -211,15 +211,15 @@ export function getVaultEntry<T>(
 
 ---
 
-## Diagnostic Codes (SPORE-VAULT series)
+## Diagnostic Codes (FUNGI-VAULT series)
 
 | Code | Name | Meaning |
 | --- | --- | --- |
-| `SPORE-VAULT-001` | SECRET_IN_VAULT | Secret-like value found in config vault — use `secret {}` reference instead |
-| `SPORE-VAULT-002` | VAULT_KEY_INVALID | Config vault key does not match `segment.segment` dot-path format |
-| `SPORE-VAULT-003` | VAULT_TYPE_MISMATCH | Config vault value cannot be coerced to declared type |
-| `SPORE-VAULT-004` | VAULT_KEY_MISSING | Required vault key is not present in vault global block |
-| `SPORE-VAULT-005` | VAULT_MUTATION_DENIED | Attempt to write to config vault at runtime (config vault is read-only) |
+| `FUNGI-VAULT-001` | SECRET_IN_VAULT | Secret-like value found in config vault — use `secret {}` reference instead |
+| `FUNGI-VAULT-002` | VAULT_KEY_INVALID | Config vault key does not match `segment.segment` dot-path format |
+| `FUNGI-VAULT-003` | VAULT_TYPE_MISMATCH | Config vault value cannot be coerced to declared type |
+| `FUNGI-VAULT-004` | VAULT_KEY_MISSING | Required vault key is not present in vault global block |
+| `FUNGI-VAULT-005` | VAULT_MUTATION_DENIED | Attempt to write to config vault at runtime (config vault is read-only) |
 
 ---
 
@@ -228,15 +228,15 @@ export function getVaultEntry<T>(
 The compiler checks config vault values at compile time:
 
 ```text
-Detects secret-pattern strings (SPORE-VAULT-001):
+Detects secret-pattern strings (FUNGI-VAULT-001):
   Heuristics: "sk_live_", "sk_test_", "_KEY", "_SECRET", "_PASSWORD",
               "-----BEGIN", base64-looking high-entropy values
 
-Validates type declarations against value kinds (SPORE-VAULT-003)
+Validates type declarations against value kinds (FUNGI-VAULT-003)
 
-Validates dot-path key format (SPORE-VAULT-002)
+Validates dot-path key format (FUNGI-VAULT-002)
 
-Rejects vault.set() calls at runtime (SPORE-VAULT-005)
+Rejects vault.set() calls at runtime (FUNGI-VAULT-005)
 ```
 
 ---
@@ -244,7 +244,7 @@ Rejects vault.set() calls at runtime (SPORE-VAULT-005)
 ## Package Ownership
 
 ```text
-galerina-core-config   → ConfigVaultEntry, ConfigVaultSchema, ConfigVaultResult, SPORE-VAULT-001–005
+galerina-core-config   → ConfigVaultEntry, ConfigVaultSchema, ConfigVaultResult, FUNGI-VAULT-001–005
 galerina-core-compiler → vault global block parsing; secret-pattern detection; type checking
 galerina-core          → vault.get<T>() runtime accessor
 ```

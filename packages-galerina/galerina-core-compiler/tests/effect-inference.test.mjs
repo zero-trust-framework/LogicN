@@ -38,13 +38,13 @@ function makeMeta(name, declaredEffects) {
     params: [],
     returnType: "Result",
     declaredEffects,
-    location: { file: "test.spore", line: 1, column: 1 },
+    location: { file: "test.fungi", line: 1, column: 1 },
   };
 }
 
 /** Parse source and return effect results. */
 function parseAndCheck(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effectResults = checkEffects(parsed.flows, parsed.ast ?? { kind: "program" });
   return { parsed, effectResults };
 }
@@ -156,7 +156,7 @@ describe("inferEffectsForOperation", () => {
   });
 });
 
-describe("SPORE-EFFECT-001 suggestedCode completeness", () => {
+describe("FUNGI-EFFECT-001 suggestedCode completeness", () => {
   it("EFFECT-001 diagnostic has suggestedCode field when effects are missing", () => {
     // A guarded flow that uses AuditLog.write (audit.write) but only declares database.read
     const { effectResults } = parseAndCheck(`
@@ -167,11 +167,11 @@ effects [database.read] {
 }
 `);
     const allDiags = effectResults.flatMap((r) => r.diagnostics);
-    const effect001 = allDiags.find((d) => d.code === "SPORE-EFFECT-001");
+    const effect001 = allDiags.find((d) => d.code === "FUNGI-EFFECT-001");
     if (effect001 !== undefined) {
       assert.ok(
         effect001.suggestedCode !== undefined && effect001.suggestedCode.length > 0,
-        `Expected non-empty suggestedCode on SPORE-EFFECT-001, got: ${JSON.stringify(effect001.suggestedCode)}`,
+        `Expected non-empty suggestedCode on FUNGI-EFFECT-001, got: ${JSON.stringify(effect001.suggestedCode)}`,
       );
     } else {
       // The parser may not produce callExpr for this syntax form; skip gracefully

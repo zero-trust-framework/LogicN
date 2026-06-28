@@ -7,7 +7,7 @@
 // Key protections:
 //   process.spawn as a declared effect (ungoverned background workers → blocked)
 //   network destination policy (allowlist + deny private_ranges)
-//   SPORE-NET-001/002 (destination denied, SSRF/private-range access)
+//   FUNGI-NET-001/002 (destination denied, SSRF/private-range access)
 //
 // Phase 25D: constants and types.
 // Phase 26: wiring enforcement into capability host + interpreter.
@@ -53,18 +53,18 @@ export const PRIVATE_IP_RANGES = [
 ] as const;
 
 // ---------------------------------------------------------------------------
-// SPORE-NET-001: Network destination not in declared allowlist
+// FUNGI-NET-001: Network destination not in declared allowlist
 // ---------------------------------------------------------------------------
 
 /**
- * SPORE-NET-001: A network call was made to a host not in the flow's declared
+ * FUNGI-NET-001: A network call was made to a host not in the flow's declared
  * network allowlist (contract.network { allow host "..." }).
  *
  * Fired at compile time when the destination can be statically determined.
  * Fired at runtime (as a governance violation) when dynamic.
  */
-export const SPORE_NET_001 = {
-  code: "SPORE-NET-001",
+export const FUNGI_NET_001 = {
+  code: "FUNGI-NET-001",
   name: "NetworkDestinationDenied",
   severity: "error" as const,
   message: "Network call target is not in the flow's declared network allowlist.",
@@ -73,11 +73,11 @@ export const SPORE_NET_001 = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// SPORE-NET-002: Network call resolved to a private/reserved IP range (SSRF)
+// FUNGI-NET-002: Network call resolved to a private/reserved IP range (SSRF)
 // ---------------------------------------------------------------------------
 
 /**
- * SPORE-NET-002: A network call resolved to a private or reserved IP address.
+ * FUNGI-NET-002: A network call resolved to a private or reserved IP address.
  *
  * This indicates a Server-Side Request Forgery (SSRF) attempt or misconfiguration.
  * The deny private_ranges rule applies to the RESOLVED IP, not just the hostname
@@ -85,8 +85,8 @@ export const SPORE_NET_001 = {
  *
  * Fired at runtime by the capability host when IP resolution is checked.
  */
-export const SPORE_NET_002 = {
-  code: "SPORE-NET-002",
+export const FUNGI_NET_002 = {
+  code: "FUNGI-NET-002",
   name: "PrivateRangeAccess",
   severity: "error" as const,
   message: "Network call resolved to a private or reserved IP address. This is blocked to prevent SSRF attacks.",
@@ -95,11 +95,11 @@ export const SPORE_NET_002 = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// SPORE-RUNTIME-006: Rate limit exceeded at runtime
+// FUNGI-RUNTIME-006: Rate limit exceeded at runtime
 // ---------------------------------------------------------------------------
 
 /**
- * SPORE-RUNTIME-006: A declared contract limit was exceeded during execution.
+ * FUNGI-RUNTIME-006: A declared contract limit was exceeded during execution.
  *
  * Fired at runtime by the capability host / limit policy.
  * Phase 11C wiring: timeoutPolicy.ts, retryPolicy.ts, limitPolicy.ts are the
@@ -111,8 +111,8 @@ export const SPORE_NET_002 = {
  *   - memory > hard_limit
  *   - concurrent_tasks > declared limit
  */
-export const SPORE_RUNTIME_006 = {
-  code: "SPORE-RUNTIME-006",
+export const FUNGI_RUNTIME_006 = {
+  code: "FUNGI-RUNTIME-006",
   name: "RateLimitExceeded",
   severity: "error" as const,
   message: "A declared contract limit was exceeded. The flow has been aborted.",
@@ -143,19 +143,19 @@ export interface NetworkDestinationPolicy {
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-ANTI-ABUSE-001: Ungoverned background execution attempt
+// FUNGI-ANTI-ABUSE-001: Ungoverned background execution attempt
 // ---------------------------------------------------------------------------
 
 /**
- * SPORE-ANTI-ABUSE-001: A flow attempted to spawn a background process, worker,
+ * FUNGI-ANTI-ABUSE-001: A flow attempted to spawn a background process, worker,
  * or scheduled task without declaring the required effect.
  *
  * process.spawn, worker.spawn, and event.schedule must be declared in the
  * flow's contract. Without the declaration, the compiler blocks the attempt.
  * This prevents covert background execution that bypasses governance and audit.
  */
-export const SPORE_ANTI_ABUSE_001 = {
-  code: "SPORE-ANTI-ABUSE-001",
+export const FUNGI_ANTI_ABUSE_001 = {
+  code: "FUNGI-ANTI-ABUSE-001",
   name: "UngovernesBackgroundExecution",
   severity: "error" as const,
   message: "Background execution (process.spawn, worker.spawn, event.schedule) requires an explicit effect declaration. Undeclared background execution bypasses governance.",

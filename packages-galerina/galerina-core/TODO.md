@@ -17,7 +17,7 @@ Use this file as a practical checklist while the project moves from concept to d
 [ ] Work actively on core syntax, grammar and logic semantics
 [ ] Commit the hybrid ownership memory-safety model
 [ ] Finalise Bool, Tri, Decision, Option and Result semantics
-[x] Add at least 20 real .spore examples for the v1 syntax subset
+[x] Add at least 20 real .fungi examples for the v1 syntax subset
 [ ] Build parser coverage for those examples
 [ ] Reject post-v1 syntax with clear diagnostics
 [ ] Use docs/language-core-maturity-roadmap.md as the maturity checklist before
@@ -117,7 +117,7 @@ Current syntax/target documentation additions:
 [ ] Implement Pigeon-style typed platform API generation or equivalent schema output
 [ ] Implement permission metadata reports for Flutter package/plugin targets
 [ ] Implement flutter-ffi target planning and unsupported-platform diagnostics
-[ ] Implement source maps from generated Dart/native bindings back to .spore files
+[ ] Implement source maps from generated Dart/native bindings back to .fungi files
 [ ] Defer Flutter UI component syntax until Dart package, FFI and platform-channel layers are stable
 [x] Add docs/javascript-typescript-framework-targets.md
 [x] Add docs/sytax/js-ts-framework-targets.md
@@ -249,10 +249,10 @@ Reason for additions:
 ```text
 [x] Decide language short name: Galerina
 [x] Decide full meaning: Galerina
-[x] Decide file extension: .spore
-[?] Decide whether the entry file should always be boot.spore
-[?] Decide whether main.spore should be aLOwed as an alternative entry file
-[?] Decide whether project config should live inside boot.spore or Galerina.config
+[x] Decide file extension: .fungi
+[?] Decide whether the entry file should always be boot.fungi
+[?] Decide whether main.fungi should be aLOwed as an alternative entry file
+[?] Decide whether project config should live inside boot.fungi or Galerina.config
 [?] Decide whether command name should be Galerina
 [?] Decide whether package namespace should be Galerina/*
 [x] Decide that flow remains the function-like behaviour keyword
@@ -1015,10 +1015,10 @@ Reason for additions:
 
 ```text
 [ ] Define app.source-map.json format
-[ ] Map binary errors to .spore files
-[x] Map WASM errors to .spore files
-[x] Map GPU plan errors to .spore files
-[x] Map photonic plan errors to .spore files
+[ ] Map binary errors to .fungi files
+[x] Map WASM errors to .fungi files
+[x] Map GPU plan errors to .fungi files
+[x] Map photonic plan errors to .fungi files
 [x] Include original file
 [x] Include original line
 [x] Include original column
@@ -1074,24 +1074,24 @@ Reason for additions:
 ## Example TODO
 
 ```text
-[x] examples/hello.spore
-[x] examples/strict-types.spore
-[x] examples/option.spore
-[x] examples/result.spore
-[x] examples/decision.spore
-[x] examples/json-decode.spore
-[x] examples/api-orders.spore
-[x] examples/payment-webhook.spore
-[x] examples/parallel-api-calls.spore
-[x] examples/workers.spore
-[x] examples/rollback.spore
-[x] examples/compute-block.spore
-[x] examples/gpu-plan.spore
-[x] examples/photonic-plan.spore
-[x] examples/ternary-sim.spore
-[x] examples/source-map-error.spore
-[x] examples/ai-context.spore
-[x] examples/logic-review-scale.spore
+[x] examples/hello.fungi
+[x] examples/strict-types.fungi
+[x] examples/option.fungi
+[x] examples/result.fungi
+[x] examples/decision.fungi
+[x] examples/json-decode.fungi
+[x] examples/api-orders.fungi
+[x] examples/payment-webhook.fungi
+[x] examples/parallel-api-calls.fungi
+[x] examples/workers.fungi
+[x] examples/rollback.fungi
+[x] examples/compute-block.fungi
+[x] examples/gpu-plan.fungi
+[x] examples/photonic-plan.fungi
+[x] examples/ternary-sim.fungi
+[x] examples/source-map-error.fungi
+[x] examples/ai-context.fungi
+[x] examples/logic-review-scale.fungi
 ```
 
 ---
@@ -1142,8 +1142,8 @@ Reason for additions:
 [x] Add .gitignore
 [x] Add .env.example
 [x] Create examples folder
-[x] Add hello.spore example
-[x] Add boot.spore example
+[x] Add hello.fungi example
+[x] Add boot.fungi example
 [x] Draft grammar
 [x] Draft AST schema
 [x] Draft source-map schema
@@ -1160,8 +1160,8 @@ Reason for additions:
 [x] Choose prototype language
 [x] Build lexer prototype
 [x] Build parser prototype
-[x] Parse hello.spore
-[x] Parse boot.spore
+[x] Parse hello.fungi
+[x] Parse boot.fungi
 [x] Output AST JSON
 [x] Output syntax errors with file and line
 [x] Add basic formatter prototype

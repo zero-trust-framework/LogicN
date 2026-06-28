@@ -9,7 +9,7 @@
       "expectTrap": true,
       "expectedTrapKind": "ERR_GUEST_WRITE_DENIED",
       "expectedRollbackStatus": "clean",
-      "auditEventCode": "SPORE-INV-000",
+      "auditEventCode": "FUNGI-INV-000",
       "note": "Simulates V_DPM capability denial for guest role"
     },
     "anonymous write (denied)": {
@@ -18,7 +18,7 @@
       "expectTrap": true,
       "expectedTrapKind": "ERR_ANONYMOUS_DENIED",
       "expectedRollbackStatus": "clean",
-      "auditEventCode": "SPORE-INV-000",
+      "auditEventCode": "FUNGI-INV-000",
       "note": "Simulates V_DPM capability denial for anonymous role"
     },
     "authorised write (ok)": {

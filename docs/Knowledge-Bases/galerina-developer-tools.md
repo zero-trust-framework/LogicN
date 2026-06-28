@@ -110,14 +110,14 @@ auth policy
 The LSP surfaces the same diagnostic family as the compiler:
 
 ```text
-SPORE-TYPE-001            type mismatch
-SPORE-EFFECT-001          undeclared effect
-SPORE-CAP-001             missing capability
-SPORE-SECURITY-001        secret leaked to log
-SPORE-TAINT-001           tainted value reached sink
-SPORE-SUPPLY-001          dependency content hash mismatch
-SPORE-CRYPTO-001          runtime crypto algorithm selection forbidden
-SPORE-MEMORY-SCOPE-001    request-scoped value escapes request
+FUNGI-TYPE-001            type mismatch
+FUNGI-EFFECT-001          undeclared effect
+FUNGI-CAP-001             missing capability
+FUNGI-SECURITY-001        secret leaked to log
+FUNGI-TAINT-001           tainted value reached sink
+FUNGI-SUPPLY-001          dependency content hash mismatch
+FUNGI-CRYPTO-001          runtime crypto algorithm selection forbidden
+FUNGI-MEMORY-SCOPE-001    request-scoped value escapes request
 ```
 
 ### Safe Quick Fixes
@@ -219,18 +219,18 @@ Compiler diagnostics include structured JSON repair metadata:
 
 ```json
 {
-  "code": "SPORE-MEMORY-001",
+  "code": "FUNGI-MEMORY-001",
   "message": "moved value used after move",
-  "primary_span": "orders.spore:12:7",
+  "primary_span": "orders.fungi:12:7",
   "related_spans": [
-    { "span": "orders.spore:11:3", "label": "value moved here" }
+    { "span": "orders.fungi:11:3", "label": "value moved here" }
   ],
   "fixes": [
     {
       "title": "Borrow order instead of moving it",
       "applicability": "machine-applicable",
       "edits": [
-        { "file": "orders.spore", "range": "11:11-11:16", "replacement": "&order" }
+        { "file": "orders.fungi", "range": "11:11-11:16", "replacement": "&order" }
       ]
     }
   ]
@@ -315,12 +315,12 @@ galerina fix --review-security     # preview security-sensitive fixes
 
 | Diagnostic | Suggested fixes |
 |---|---|
-| `SPORE-MEMORY-001` moved value | borrow, clone, reorder |
-| `SPORE-EFFECT-001` undeclared effect | add effect (review required), move call to allowed flow |
-| `SPORE-TAINT-001` tainted sink | add sanitizer call |
-| `SPORE-SECURITY-001` secret printed | replace with `redact(secret)` |
-| `SPORE-ERROR-001` unhandled Result | add `?` propagation or `match` |
-| `SPORE-MATCH-001` missing variant | add match arm |
+| `FUNGI-MEMORY-001` moved value | borrow, clone, reorder |
+| `FUNGI-EFFECT-001` undeclared effect | add effect (review required), move call to allowed flow |
+| `FUNGI-TAINT-001` tainted sink | add sanitizer call |
+| `FUNGI-SECURITY-001` secret printed | replace with `redact(secret)` |
+| `FUNGI-ERROR-001` unhandled Result | add `?` propagation or `match` |
+| `FUNGI-MATCH-001` missing variant | add match arm |
 
 ---
 
@@ -472,7 +472,7 @@ The REPL is designed for debugging policy failures:
 
 ```galerina
 > sendInvoice(order)
-Denied: SPORE-CAP-001
+Denied: FUNGI-CAP-001
 
 Missing capability:
   network.external
@@ -508,14 +508,14 @@ test "creates order with paid item" {
 
 | Code | Meaning |
 |---|---|
-| `SPORE-REPL-001` | Capability not granted for session |
-| `SPORE-REPL-002` | Secret reveal denied in REPL |
-| `SPORE-REPL-003` | Production profile requires audited session |
-| `SPORE-REPL-004` | Destructive effect requires confirmation |
-| `SPORE-REPL-005` | Project manifest could not be loaded |
-| `SPORE-REPL-006` | Flow cannot be evaluated because module is invalid |
-| `SPORE-REPL-007` | Target fallback occurred during REPL execution |
-| `SPORE-REPL-008` | Expression exceeded REPL resource limit |
+| `FUNGI-REPL-001` | Capability not granted for session |
+| `FUNGI-REPL-002` | Secret reveal denied in REPL |
+| `FUNGI-REPL-003` | Production profile requires audited session |
+| `FUNGI-REPL-004` | Destructive effect requires confirmation |
+| `FUNGI-REPL-005` | Project manifest could not be loaded |
+| `FUNGI-REPL-006` | Flow cannot be evaluated because module is invalid |
+| `FUNGI-REPL-007` | Target fallback occurred during REPL execution |
+| `FUNGI-REPL-008` | Expression exceeded REPL resource limit |
 
 ---
 

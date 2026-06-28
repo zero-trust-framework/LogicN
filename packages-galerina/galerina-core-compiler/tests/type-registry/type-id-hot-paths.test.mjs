@@ -3,7 +3,7 @@
 //
 // Tests for Phase R5:
 //   R5A: isBuiltInType helper via resolveTypeId
-//   R5B/R5C: type inference on binary expressions (Int + Int → no SPORE-TYPE-002)
+//   R5B/R5C: type inference on binary expressions (Int + Int → no FUNGI-TYPE-002)
 //   R5 complete: TypeId migration — all four R5 acceptance tests
 // =============================================================================
 
@@ -24,7 +24,7 @@ function isBuiltInType(typeName) {
 }
 
 function parseAndCheck(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   return checkTypes(parsed.ast);
 }
 
@@ -61,26 +61,26 @@ describe("R5: TypeId hot path", () => {
     );
   });
 
-  // Test 3: type check on Int + Int binary expr → no SPORE-TYPE-002 error
-  it("Int + Int binary expression produces no SPORE-TYPE-002 error", () => {
+  // Test 3: type check on Int + Int binary expr → no FUNGI-TYPE-002 error
+  it("Int + Int binary expression produces no FUNGI-TYPE-002 error", () => {
     const result = parseAndCheck(`
 flow addInts(a: Int, b: Int) -> Int {
   let sum: Int = a + b
   return sum
 }
 `);
-    const type002Diags = result.diagnostics.filter((d) => d.code === "SPORE-TYPE-002");
+    const type002Diags = result.diagnostics.filter((d) => d.code === "FUNGI-TYPE-002");
     assert.equal(
       type002Diags.length,
       0,
-      `Int + Int should not produce SPORE-TYPE-002 errors. Got: ${type002Diags.map((d) => d.message).join("; ")}`,
+      `Int + Int should not produce FUNGI-TYPE-002 errors. Got: ${type002Diags.map((d) => d.message).join("; ")}`,
     );
-    // Also confirm no SPORE-TYPE-004 (invalid binary operation)
-    const type004Diags = result.diagnostics.filter((d) => d.code === "SPORE-TYPE-004");
+    // Also confirm no FUNGI-TYPE-004 (invalid binary operation)
+    const type004Diags = result.diagnostics.filter((d) => d.code === "FUNGI-TYPE-004");
     assert.equal(
       type004Diags.length,
       0,
-      `Int + Int should not produce SPORE-TYPE-004 errors. Got: ${type004Diags.map((d) => d.message).join("; ")}`,
+      `Int + Int should not produce FUNGI-TYPE-004 errors. Got: ${type004Diags.map((d) => d.message).join("; ")}`,
     );
   });
 });
@@ -102,10 +102,10 @@ describe("R5 complete: TypeId migration", () => {
     assert.equal(resolveTypeId("Void"), TypeId.Void);
   });
 
-  // R5 Test 2: type checker does not fire SPORE-TYPE-001 for locally declared type aliases.
+  // R5 Test 2: type checker does not fire FUNGI-TYPE-001 for locally declared type aliases.
   // collectDeclarations() (Pass 1) adds typeDecl/recordDecl/enumDecl names to userDefinedTypes
-  // before the validation walk (Pass 2), so locally declared types must never produce SPORE-TYPE-001.
-  it("type checker does not fire SPORE-TYPE-001 for locally declared type aliases", () => {
+  // before the validation walk (Pass 2), so locally declared types must never produce FUNGI-TYPE-001.
+  it("type checker does not fire FUNGI-TYPE-001 for locally declared type aliases", () => {
     const result = parseAndCheck(`
 type PatientError {
   code: String
@@ -118,18 +118,18 @@ flow lookupPatient(id: String) -> GetPatientResult {
   return Ok("patient-data")
 }
 `);
-    const type001Diags = result.diagnostics.filter((d) => d.code === "SPORE-TYPE-001");
+    const type001Diags = result.diagnostics.filter((d) => d.code === "FUNGI-TYPE-001");
     assert.equal(
       type001Diags.length,
       0,
-      `Locally declared type aliases must not fire SPORE-TYPE-001. Got: ${type001Diags.map((d) => d.message).join("; ")}`,
+      `Locally declared type aliases must not fire FUNGI-TYPE-001. Got: ${type001Diags.map((d) => d.message).join("; ")}`,
     );
   });
 
   // R5 Test 3: record literal { x: 1 } does not fire spurious type errors.
   // A record literal bound without an explicit type annotation infers "Record" internally.
-  // No SPORE-TYPE-001 (Record is not validated as a type ref when unannotated) and
-  // no SPORE-TYPE-002 (no declared type to mismatch against) must be produced.
+  // No FUNGI-TYPE-001 (Record is not validated as a type ref when unannotated) and
+  // no FUNGI-TYPE-002 (no declared type to mismatch against) must be produced.
   it("record literal bound without annotation does not fire spurious type errors", () => {
     const result = parseAndCheck(`
 flow makePoint() -> String {
@@ -137,42 +137,42 @@ flow makePoint() -> String {
   return "ok"
 }
 `);
-    const type001Diags = result.diagnostics.filter((d) => d.code === "SPORE-TYPE-001");
-    const type002Diags = result.diagnostics.filter((d) => d.code === "SPORE-TYPE-002");
+    const type001Diags = result.diagnostics.filter((d) => d.code === "FUNGI-TYPE-001");
+    const type002Diags = result.diagnostics.filter((d) => d.code === "FUNGI-TYPE-002");
     assert.equal(
       type001Diags.length,
       0,
-      `Record literal must not fire SPORE-TYPE-001. Got: ${type001Diags.map((d) => d.message).join("; ")}`,
+      `Record literal must not fire FUNGI-TYPE-001. Got: ${type001Diags.map((d) => d.message).join("; ")}`,
     );
     assert.equal(
       type002Diags.length,
       0,
-      `Record literal must not fire SPORE-TYPE-002. Got: ${type002Diags.map((d) => d.message).join("; ")}`,
+      `Record literal must not fire FUNGI-TYPE-002. Got: ${type002Diags.map((d) => d.message).join("; ")}`,
     );
   });
 
-  // R5 Test 4: Int + Int binary expression does not fire SPORE-TYPE-002.
+  // R5 Test 4: Int + Int binary expression does not fire FUNGI-TYPE-002.
   // Two Int operands added together must produce Int; isAssignmentCompatible("Int", "Int")
   // must return true and no type-mismatch diagnostic must be emitted.
-  it('"Int" + "Int" binary expression does not fire SPORE-TYPE-002', () => {
+  it('"Int" + "Int" binary expression does not fire FUNGI-TYPE-002', () => {
     const result = parseAndCheck(`
 pure flow addTwo(a: Int, b: Int) -> Int {
   let result: Int = a + b
   return result
 }
 `);
-    const type002Diags = result.diagnostics.filter((d) => d.code === "SPORE-TYPE-002");
+    const type002Diags = result.diagnostics.filter((d) => d.code === "FUNGI-TYPE-002");
     assert.equal(
       type002Diags.length,
       0,
-      `Int + Int must not fire SPORE-TYPE-002. Got: ${type002Diags.map((d) => d.message).join("; ")}`,
+      `Int + Int must not fire FUNGI-TYPE-002. Got: ${type002Diags.map((d) => d.message).join("; ")}`,
     );
-    // Also verify no SPORE-TYPE-004 on the binary expression
-    const type004Diags = result.diagnostics.filter((d) => d.code === "SPORE-TYPE-004");
+    // Also verify no FUNGI-TYPE-004 on the binary expression
+    const type004Diags = result.diagnostics.filter((d) => d.code === "FUNGI-TYPE-004");
     assert.equal(
       type004Diags.length,
       0,
-      `Int + Int must not fire SPORE-TYPE-004. Got: ${type004Diags.map((d) => d.message).join("; ")}`,
+      `Int + Int must not fire FUNGI-TYPE-004. Got: ${type004Diags.map((d) => d.message).join("; ")}`,
     );
   });
 });

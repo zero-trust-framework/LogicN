@@ -22,8 +22,8 @@ Knowledge-Bases.
 [external-repos analysis](external-repos-analysis.md).
 
 > **Ratified architecture decisions (2026-06-15).** Engine = capability-bounded **wrapped backend**
-> (*govern, don't absorb*), TS/`.spore` governance in `packages-galerina/`, declared **`lane: digital`** so the
-> *already-shipped* `verifySubstrate()` / `SPORE-SUBSTRATE-001` enforces §6 for free. **Confidentiality
+> (*govern, don't absorb*), TS/`.fungi` governance in `packages-galerina/`, declared **`lane: digital`** so the
+> *already-shipped* `verifySubstrate()` / `FUNGI-SUBSTRATE-001` enforces §6 for free. **Confidentiality
 > (ML-KEM + Ascon) is DEFERRED** — Integrity + Authenticity ship first (TMX-256 root +
 > `BridgeManifest` Ed25519→ML-DSA-65, one shared attestation idiom). The §6 "hard line" below is therefore
 > *existing machinery*, not a proposal; and **provenance integrity ≠ value reproducibility** (the signature
@@ -122,7 +122,7 @@ Applied across the encryption stack:
 | TMX root vs. recomputed | match | path incomplete / not yet computed | mismatch |
 | ML-DSA-65 signature | verified valid | not yet verified / stale attestation | verified invalid |
 | ML-KEM decapsulation | key established | peer offered unknown alg / negotiation incomplete | dec*aps* failure |
-| Authorization (`query-access.spore`) | clearance+region OK | cross-region / touches protected | clearance too low |
+| Authorization (`query-access.fungi`) | clearance+region OK | cross-region / touches protected | clearance too low |
 
 The **No-Coercion** and **substrate-cannot-fail-open** theorems (see
 [ternary-in-crypto §2](ternary-in-cryptography.md)) guarantee that "unknown" can never be
@@ -135,7 +135,7 @@ on fast/approximate hardware while the *gate* stays safe (§6).
 
 ```
                           ┌───────────────────────────────────────────────┐
-  GOVERN (.spore)           │ 3-valued authz · egress redaction · audit      │  allow/deny/unknown→deny
+  GOVERN (.fungi)           │ 3-valued authz · egress redaction · audit      │  allow/deny/unknown→deny
                           └───────────────────────┬───────────────────────┘
                                                   │ governed effect calls
   PRIVATE QUERY (opt.)    ┌───────────────────────▼───────────────────────┐
@@ -192,7 +192,7 @@ This is the standard, safe **KEM-DEM** pattern; don't invent a new one:
   TLS + cert + identity. Use these — don't hand-roll transport crypto.
 - **Trust Capsule / signed attestation:** compiler-generated identity + hashes + signature
   (SPIFFE/SPIRE + Sigstore/Cosign-inspired). Bind the `.tmf` root and the public keys into it.
-- **Compile-time crypto policy (`SPORE-CRYPTO-001..008`):** algorithm choices are compile-time
+- **Compile-time crypto policy (`FUNGI-CRYPTO-001..008`):** algorithm choices are compile-time
   constants, not runtime strings — so a config tweak can't downgrade you to a weak cipher.
 - **SecureRandom vs Random:** keys/nonces/tokens must come from `SecureRandom`, never `Random`.
 
@@ -208,7 +208,7 @@ This is the standard, safe **KEM-DEM** pattern; don't invent a new one:
 | **Replay** a ciphertext elsewhere | move a valid encrypted cell | coord∥modality as AEAD AAD + TMX binding | cross-file replay needs per-file key + context in KDF |
 | **Downgrade** crypto | force weak alg / drop PQC half | compile-time const policy; hybrid requires *both* | negotiation must treat unknown alg as `0 → deny` |
 | **Side channel** (timing) | observe verify/decrypt timing | constant-time ML-DSA/ML-KEM/Ascon impls; Ascon is side-channel-friendly | requires vetted libraries, not hand-rolled |
-| **Info leak** via results | egress of protected fields | `.spore` egress redaction; 3-valued authz | needs the Galerina gaps closed (bytes/closures) |
+| **Info leak** via results | egress of protected fields | `.fungi` egress redaction; 3-valued authz | needs the Galerina gaps closed (bytes/closures) |
 | **Self-heal abuse** | reconstruction path inside the gate | **forbidden**: repair is out-of-gate, must re-verify vs. signed root | availability-only feature |
 
 ---
@@ -216,7 +216,7 @@ This is the standard, safe **KEM-DEM** pattern; don't invent a new one:
 ## 6. The hard line: crypto on a deterministic core (photonic stays out)
 
 The one durable engineering insight to carry forward from the whole photonic/ternary thread,
-stated as an enforceable rule (Galerina `SPORE-SUBSTRATE-001`):
+stated as an enforceable rule (Galerina `FUNGI-SUBSTRATE-001`):
 
 > **Bulk compute may be photonic/ternary/approximate; integrity and crypto must stay on a
 > deterministic, bit-exact core.**

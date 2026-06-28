@@ -24,7 +24,7 @@ Galerina is a **flow-first language**. The primary governed execution unit is `f
 
 ## TL;DR
 - route → flow → fn: expose, govern, compute
-- fn may only appear inside a flow body — top-level fn is SPORE-SYNTAX-005
+- fn may only appear inside a flow body — top-level fn is FUNGI-SYNTAX-005
 - fn cannot declare effects, authority, or await — it is always synchronous
 
 ---
@@ -140,9 +140,9 @@ pure flow calculateTotal(price: Money<GBP>) -> Money<GBP> {
 ## fn Scope Rules
 
 - `fn` may only appear inside a `flow` body.
-- Top-level `fn` is a compiler error: `SPORE-SYNTAX-005`.
+- Top-level `fn` is a compiler error: `FUNGI-SYNTAX-005`.
 - `fn` may not declare `effects [...]` or `with effects [...]`; this is
-  `SPORE-SEC-014`.
+  `FUNGI-SEC-014`.
 - `fn` may not request authority, capabilities, permissions, or `uses`.
 - `fn` may use effects only when the containing flow declares those effects.
 - Effects used inside a `fn` count as observed effects of the containing flow.
@@ -278,7 +278,7 @@ fn get_secret(user_id: Id) -> Secret
 Compiler error:
 
 ```text
-SPORE-SEC-014:
+FUNGI-SEC-014:
 fn declarations cannot request runtime authority.
 Move this operation into a flow or pass the required value as an argument.
 ```
@@ -345,7 +345,7 @@ flow build_report(user_id: safe Id) -> Report
 
 // Compiler error — fn cannot use task
 fn bad_helper(id: safe Id) -> safe User {
-  let t = task database.users.get(id)  // ERROR: SPORE-SEC-014
+  let t = task database.users.get(id)  // ERROR: FUNGI-SEC-014
   return wait t
 }
 ```

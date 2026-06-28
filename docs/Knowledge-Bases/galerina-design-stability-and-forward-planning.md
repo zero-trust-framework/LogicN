@@ -2,7 +2,7 @@
 
 **Status:** binding conventions (2026-06-16). **Purpose:** keep Galerina ahead of the well-known
 language/crypto mistakes, and stop today's pragmatic stopgaps from ossifying into legacy. Written
-after a security/PQ cycle (SPORE-SECRET-002 fix, SPORE-PRIVACY-002, #34 hybrid attestation, SPORE-CRYPTO-PQ-001)
+after a security/PQ cycle (FUNGI-SECRET-002 fix, FUNGI-PRIVACY-002, #34 hybrid attestation, FUNGI-CRYPTO-PQ-001)
 flagged a few "decide-now-or-regret-later" items. Cross-refs: [[galerina-quantum-resistance-posture]],
 [[galerina-privacy-embedding-egress]], [[galerina-governance-rules]].
 
@@ -16,10 +16,10 @@ flagged a few "decide-now-or-regret-later" items. Cross-refs: [[galerina-quantum
 | Silent coercion (JS `==`; CLI `"true"→false`) | Fail-loud, never silently coerce |
 | One-hop taint (classic taint bug) | Taint propagates through transforms (slice/concat/spread/interp/member) |
 | Roll-your-own-crypto | Crypto-on-core; vetted libs only; **no invented crypto** |
-| Harvest-now-decrypt-later | PQ/hybrid signatures, machine-enforced (SPORE-CRYPTO-PQ-001) |
+| Harvest-now-decrypt-later | PQ/hybrid signatures, machine-enforced (FUNGI-CRYPTO-PQ-001) |
 | Downgrade attacks | No silent downgrade; per-surface FIPS-204 domain separation |
 | Non-exhaustive `match` | Mandatory wildcard arm |
-| C bitwise footguns | Bitwise intentionally absent from `.spore` (engine layer only) |
+| C bitwise footguns | Bitwise intentionally absent from `.fungi` (engine layer only) |
 
 **Rule:** a new feature must not regress any row above. A reviewer should check the relevant rows.
 
@@ -28,7 +28,7 @@ flagged a few "decide-now-or-regret-later" items. Cross-refs: [[galerina-quantum
 **Every signed or serialized format carries an explicit version, and ANY format change bumps it.**
 Adding a field, a domain-separation context, or changing an encoding is a format change.
 
-- Current self-describing tags: ProofGraph governance signature `algorithm: spore.gov.sig.v1|v2`;
+- Current self-describing tags: ProofGraph governance signature `algorithm: fungi.gov.sig.v1|v2`;
   audit attestation `signature.algorithm` + `schemaVersion`. Bridge attestation is distinguished by the
   presence of `mlDsaSignature` (acceptable while there is no persisted-signature migration concern).
 - **Known in-place change (allowed only because keys are ephemeral / nothing persisted):** the #34
@@ -43,7 +43,7 @@ Adding a field, a domain-separation context, or changing an encoding is a format
 These are pragmatic-now and may be superseded — do not build deeply on them without revisiting:
 
 - **Marker-effect pattern (`effects { crypto.sign crypto.sign.hybrid }`) — PROVISIONAL v0.** Chosen to
-  enforce SPORE-CRYPTO-PQ-001 without parser surgery (dotted effects already parse). A first-class
+  enforce FUNGI-CRYPTO-PQ-001 without parser surgery (dotted effects already parse). A first-class
   "effect-with-attributes" syntax may replace it. Until then it is the documented way; if it spreads
   widely, decide whether to formalize or migrate BEFORE a large corpus depends on it. Risk avoided:
   stringly-typed config sprawl.
@@ -64,7 +64,7 @@ These are pragmatic-now and may be superseded — do not build deeply on them wi
 
 ## 5. Diagnostic-namespace ownership (avoid semantic drift)
 
-- `SPORE-PRIVACY-001` = the declarative `privacy {}` block `deny protected X to Y` clause (parsed, Phase 10C+,
-  not yet enforced). `SPORE-PRIVACY-002` = the dataflow embedding-egress rule (enforced). **Distinct mechanisms
+- `FUNGI-PRIVACY-001` = the declarative `privacy {}` block `deny protected X to Y` clause (parsed, Phase 10C+,
+  not yet enforced). `FUNGI-PRIVACY-002` = the dataflow embedding-egress rule (enforced). **Distinct mechanisms
   under one family — keep them distinct; do not merge.** New privacy rules take the next free number and state
   their mechanism (declarative-clause vs dataflow-taint) in `governance-rules.md`.

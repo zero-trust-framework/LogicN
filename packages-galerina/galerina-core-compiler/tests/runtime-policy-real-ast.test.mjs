@@ -1,7 +1,7 @@
 // =============================================================================
 // Faithful real-AST regression tests for the runtime policy parsers.
 //
-// These parse REAL .spore source — the AST shape the parser actually emits — and assert
+// These parse REAL .fungi source — the AST shape the parser actually emits — and assert
 // that parseLimitConfig / parseTimeoutConfig / parseRetryPolicy extract the DECLARED
 // values rather than silently falling back to defaults.
 //
@@ -26,7 +26,7 @@ import { parseTimeoutConfig } from "../dist/runtime/timeoutPolicy.js";
 import { parseRetryPolicy } from "../dist/runtime/retryPolicy.js";
 
 function contractOf(source) {
-  const { ast } = parseProgram(source, "policy.spore");
+  const { ast } = parseProgram(source, "policy.fungi");
   let found;
   (function walk(n) {
     if (!n || found) return;

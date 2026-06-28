@@ -10,7 +10,7 @@ import assert from "node:assert/strict";
 import * as L from "../dist/index.js";
 
 function compileWAT(src) {
-  const p = L.parseProgram(src, "dec.spore");
+  const p = L.parseProgram(src, "dec.fungi");
   const errs = p.diagnostics.filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "parse: " + errs.map((e) => e.message).join("; "));
   const fx = L.checkEffects(p.flows, p.ast);

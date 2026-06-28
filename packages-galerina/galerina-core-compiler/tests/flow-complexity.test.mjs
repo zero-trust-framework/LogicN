@@ -1,5 +1,5 @@
 // =============================================================================
-// Cyclomatic complexity — //spore: COMPLEXITY (R&D 0045)
+// Cyclomatic complexity — //fungi: COMPLEXITY (R&D 0045)
 // complexity = 1 + decision points (if / while / for-each / match arm / && / ||); silent if trivial.
 // =============================================================================
 
@@ -9,7 +9,7 @@ import assert from "node:assert/strict";
 import { parseProgram, cyclomaticComplexity, renderComplexityComment } from "../dist/index.js";
 
 function flowNode(src) {
-  const p = parseProgram(src, "cx.spore");
+  const p = parseProgram(src, "cx.fungi");
   const errs = p.diagnostics.filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "parse: " + errs.map((e) => e.message).join("; "));
   const FK = new Set(["pureFlowDecl", "flowDecl", "secureFlowDecl", "guardedFlowDecl"]);
@@ -48,10 +48,10 @@ describe("renderComplexityComment — silent when trivial", () => {
     assert.deepEqual(renderComplexityComment(flowNode("pure flow f(x: Int) -> Int { return x }")), []);
   });
 
-  it("emits //spore: COMPLEXITY for a branchy flow", () => {
+  it("emits //fungi: COMPLEXITY for a branchy flow", () => {
     const lines = renderComplexityComment(flowNode(
       "pure flow f(x: Int) -> Int { if x > 0 { return 1 } return 0 }",
     ));
-    assert.deepEqual(lines, ["//spore: COMPLEXITY: 2"]);
+    assert.deepEqual(lines, ["//fungi: COMPLEXITY: 2"]);
   });
 });

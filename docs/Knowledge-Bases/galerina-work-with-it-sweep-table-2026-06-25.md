@@ -37,8 +37,8 @@
 | R1 | `resolve … at boundary` construct | No device/noisy-output to govern (pure CPU parser surface); the safe form already ships as K3. | No | 92 |
 | R2 | "-1 = recheck-later" construct | The unsafe reading is the `deliverAsync` fail-open; the safe form is shipped K3. | No | 92 |
 | R3 | Bespoke Type-1 hypervisor / core-pinning | TCB growth, can't beat Spectre; delegate to WASM/Wasmtime. | No | 95 |
-| R4 | Crypto-on-noisy substrate (photonic SHA-256 as the digest) | A hash needs zero-error strings; analog noise ⇒ broken integrity (SPORE-SUBSTRATE-001). | No | 98 |
-| R5 | QBER fed into the KDF as key material | Crosses SPORE-SUBSTRATE-001 (keying stays binary). | No | 97 |
+| R4 | Crypto-on-noisy substrate (photonic SHA-256 as the digest) | A hash needs zero-error strings; analog noise ⇒ broken integrity (FUNGI-SUBSTRATE-001). | No | 98 |
+| R5 | QBER fed into the KDF as key material | Crosses FUNGI-SUBSTRATE-001 (keying stays binary). | No | 97 |
 | R6 | MBQC as instantaneous / FTL logic | No-signaling is a theorem (`ρ_B=Tr_A(ρ_AB)` invariant). | No | 96 |
 | R7 | 3D free-space beam-crossing as a logic gate | Photons are bosons — beams superpose linearly and pass through; need an MZI. | No | 94 |
 | R8 | Ternary "exponentially fewer gates" | Radix-3 saves only the constant `log2(3)≈1.58`, not an asymptotic factor. | No | 93 |

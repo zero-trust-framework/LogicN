@@ -12,7 +12,7 @@ Severity = the reviewer's + verifier's assessment. Status = what this session di
 |---|---|---|
 | signing-key | `.env.galerina-signing` (private key `8eecf4187ebc9341`) was tracked in git (commit `cb5036d`). | ✅ untracked + git-ignored + **rotated** → `ab46f4c7e2797b9b`. ⚠️ **history still contains it** → scrub = **#149** (destructive, user-driven). Old key COMPROMISED. |
 | plugin-pending-hash | `groq-inference-v1` manifest had `sourceHash: "sha256:pending-galerina-promote"` while requesting `ai.inference`+`network.outbound`+`audit.write`. | ✅ `border-check` now **DENIES** it (fail-closed). Plugin needs real promotion (compute+sign hash) before admission. |
-| deploy-execsync | `galerina deploy` interpolated the user `sporeFile` into `execSync` shell strings (injection). | ✅ argv `spawnSync(shell:false)` + path validation. |
+| deploy-execsync | `galerina deploy` interpolated the user `fungiFile` into `execSync` shell strings (injection). | ✅ argv `spawnSync(shell:false)` + path validation. |
 
 ## High
 | ID | Finding | Evidence | Status / decision |

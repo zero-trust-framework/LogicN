@@ -55,7 +55,7 @@ Galerina source code explicitly names a parameter `headers`, `request`, or `req`
    Log.write(ua)   // <-- not checked: Log.write is not in INJECTION_SINKS
    ```
 
-   will not fire `SPORE-TAINT-001`. An attacker can inject CRLF sequences, ANSI escape
+   will not fire `FUNGI-TAINT-001`. An attacker can inject CRLF sequences, ANSI escape
    codes, or log-forging payloads into the audit trail.
 
 2. **`network.inbound` effect does NOT automatically taint header values at the runtime
@@ -309,14 +309,14 @@ will not receive any diagnostic. The taint checker tracks `SafeFor<Context>` but
 not track value-state tags (`secure`, `protected`) as requiring a specific comparison
 function.
 
-The `SPORE-BLOCK-004` diagnostic for `ProtectedSecret` in content blocks exists
+The `FUNGI-BLOCK-004` diagnostic for `ProtectedSecret` in content blocks exists
 (index.ts, line 1316) but is marked as a TODO and is not implemented:
 
 ```typescript
-// TODO SPORE-BLOCK-004: detect ProtectedSecret references interpolated into script blocks.
+// TODO FUNGI-BLOCK-004: detect ProtectedSecret references interpolated into script blocks.
 ```
 
-There is no `SPORE-SECURITY-001` diagnostic in the verifier or taint checker that fires
+There is no `FUNGI-SECURITY-001` diagnostic in the verifier or taint checker that fires
 when a `ProtectedSecret<T>` or `secure`-tagged value is compared with `==` or `!=`.
 
 ### Gap
@@ -331,12 +331,12 @@ differing byte. An attacker making repeated requests can distinguish "wrong at b
 
 **File: `src/taint-checker.ts` or a new `src/secret-checker.ts`**
 
-Add a new diagnostic `SPORE-SECURITY-001` and a checker that fires when a `secure` or
+Add a new diagnostic `FUNGI-SECURITY-001` and a checker that fires when a `secure` or
 `protected` binding is the operand of a `binaryExpr` with operator `==` or `!=`:
 
 ```typescript
-export const SPORE_SECURITY_001 = {
-  code: "SPORE-SECURITY-001",
+export const FUNGI_SECURITY_001 = {
+  code: "FUNGI-SECURITY-001",
   name: "PlainEqualityOnProtectedSecret",
   severity: "error" as const,
   message: "Plain equality (==) used on a ProtectedSecret or secure value. " +
@@ -346,7 +346,7 @@ export const SPORE_SECURITY_001 = {
 
 The checker must walk the flow body. When it encounters a `binaryExpr` with `op == "=="
 or op == "!="`, it checks whether either operand's taint/value-state is `secure` or
-`protected`. If so, emit `SPORE-SECURITY-001` as an error.
+`protected`. If so, emit `FUNGI-SECURITY-001` as an error.
 
 This requires the taint checker to be aware of value-state tags from the value-state
 checker (`value-state-checker.ts`). The two passes can be combined in `fused-pass.ts`
@@ -356,7 +356,7 @@ or the secret checker can run as a separate post-taint pass.
 that any flow handling password comparison calls `Crypto.timingSafeEqual`. This can be
 implemented as a structural pattern check on the flow body — if the flow's name contains
 `password`, `secret`, `token`, `hmac`, or `hash` AND it contains a `binaryExpr` with `==`,
-raise `SPORE-SECURITY-001`.
+raise `FUNGI-SECURITY-001`.
 
 **Phase: 34A (must land before verifyPassword endpoint ships)**
 
@@ -372,7 +372,7 @@ raise `SPORE-SECURITY-001`.
 
 ```typescript
 readonly governanceSignature?: {
-  readonly algorithm: "spore.gov.sig.v1";
+  readonly algorithm: "fungi.gov.sig.v1";
   readonly signerKeyId: string;
   readonly signature: string;
   readonly signedAt: string;
@@ -643,7 +643,7 @@ const requestId = randomUUID();
 
 **For cache thrashing:** apply a minimum TTL of 100ms per unique `flowName:argsHash`
 pair to rate-limit the rate at which an attacker can fill the cache, and add a maximum
-per-IP entry rate using the existing `SPORE-RUNTIME-006` rate-limiting infrastructure.
+per-IP entry rate using the existing `FUNGI-RUNTIME-006` rate-limiting infrastructure.
 
 **Phase: 34A (PII guard + requestId scoping); governance annotation in 34B**
 
@@ -656,7 +656,7 @@ per-IP entry rate using the existing `SPORE-RUNTIME-006` rate-limiting infrastru
 | 1 | HTTP header injection — `Log.write` not in `INJECTION_SINKS`; runtime taint not stamped | High | 34A |
 | 2 | SSRF — `looksLikePrivateIp` is string-prefix only; DNS rebinding; `Url.parseAndAllowlist` has no runtime implementation | **Critical** | 34A |
 | 3 | Body size — limit fires after first oversized chunk; 404/405 path does not destroy socket | High | 34A |
-| 4 | Timing side-channel — no `SPORE-SECURITY-001` diagnostic for `==` on `secure`/`ProtectedSecret` values | High | 34A |
+| 4 | Timing side-channel — no `FUNGI-SECURITY-001` diagnostic for `==` on `secure`/`ProtectedSecret` values | High | 34A |
 | 5 | ProofGraph integrity — `GovernanceSignature` is Phase 39; PROOF_SHAPE_CACHE has no integrity check; vacuous-truth in `verified` | Medium | 34A (vacuous fix) + 34B (HMAC tag) |
 | 6 | Input taint — only opt-in by parameter name; typed request params with custom names are clean by default | High | 34A |
 | 7 | Cache poisoning — SESSION_CACHE is process-wide; PII flows can leak timing; cache thrashing DoS | Medium | 34A (PII guard) + 34B (request scoping) |
@@ -672,7 +672,7 @@ Before Phase 34 ships (first external HTTP request accepted):
 - [ ] Body size check reordered to fire BEFORE `chunks.push(chunk)` (Finding 3)
 - [ ] DNS resolution + CIDR check implemented in `capabilityHost.ts` (Finding 2)
 - [ ] `Url.parseAndAllowlist` has a real runtime implementation with private-IP guard (Finding 2)
-- [ ] `SPORE-SECURITY-001` diagnostic fires on `==` with `secure`/`protected` operands (Finding 4)
+- [ ] `FUNGI-SECURITY-001` diagnostic fires on `==` with `secure`/`protected` operands (Finding 4)
 - [ ] `buildProofGraph()` vacuous-truth invariant hardened (Finding 5)
 - [ ] PROOF_SHAPE_CACHE poison-cache integrity check added (Finding 5)
 - [ ] HTTP handler flows auto-taint all parameters in `strict`/`high_integrity` profile (Finding 6)

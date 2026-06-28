@@ -39,7 +39,7 @@ A flow calls a function that uses `database.write`, but the flow does not declar
 ### Diagnostic
 
 ```
-SPORE-EFFECT-002  orders.spore:18
+FUNGI-EFFECT-002  orders.fungi:18
 
 What:   Call to db.insert uses effect database.write, which is not declared in this flow's contract.
 Why:    Undeclared effects bypass governance. Callers cannot know what this flow will do.
@@ -83,7 +83,7 @@ A flow returns a `UserRecord` that contains a field typed `protected Email`. The
 ### Diagnostic
 
 ```
-SPORE-PRIVACY-003  users.spore:31
+FUNGI-PRIVACY-003  users.fungi:31
 
 What:   protected Email is present in the return value crossing a public trust boundary.
 Why:    Protected values must not be exposed to untrusted callers without redaction.
@@ -121,7 +121,7 @@ An UNVALIDATED input value flows directly to a governed database sink without pa
 ### Diagnostic
 
 ```
-SPORE-TAINT-001  registrations.spore:22
+FUNGI-TAINT-001  registrations.fungi:22
 
 What:   UNVALIDATED value email is passed to db.insert, which requires VALIDATED state.
 Why:    Inserting unvalidated data creates injection and data quality risks.
@@ -159,7 +159,7 @@ A flow calls `getUser`, which requires context key `trace_id`. The calling flow 
 ### Diagnostic
 
 ```
-SPORE-CONTEXT-001  checkout.spore:45
+FUNGI-CONTEXT-001  checkout.fungi:45
 
 What:   getUser requires context key trace_id. The calling flow does not declare it.
 Why:    Distributed tracing requires trace_id on every call so requests can be correlated.
@@ -206,7 +206,7 @@ A flow performs `payment.charge` on an external target. The governance rules for
 ### Diagnostic
 
 ```
-SPORE-AUDIT-002  payments.spore:12
+FUNGI-AUDIT-002  payments.fungi:12
 
 What:   Flow uses payment.charge on an external target without declaring a runtime audit requirement.
 Why:    External payment operations are irreversible and must be auditable.
@@ -252,7 +252,7 @@ A flow returns a complex type inline without a declared type alias in the contra
 ### Diagnostic
 
 ```
-SPORE-CONTRACT-005  users.spore:8
+FUNGI-CONTRACT-005  users.fungi:8
 
 What:   Flow returns an unnamed inline type. Contract style requires a named type alias.
 Why:    Named types make contracts readable and enable governance tools to reason about
@@ -292,7 +292,7 @@ A flow emits an `OrderCreated` event in its body but does not declare it in the 
 ### Diagnostic
 
 ```
-SPORE-EVENT-001  orders.spore:27
+FUNGI-EVENT-001  orders.fungi:27
 
 What:   Flow emits event OrderCreated but does not declare it in contract.events.
 Why:    Event consumers depend on declared events to establish subscriptions.
@@ -344,7 +344,7 @@ A flow writes to an audit log but does not declare a privacy rule requiring reda
 ### Diagnostic
 
 ```
-SPORE-PRIVACY-005  registrations.spore:34
+FUNGI-PRIVACY-005  registrations.fungi:34
 
 What:   protected Email reaches audit.write without a declared redaction requirement.
 Why:    Audit logs are often accessible to more actors than the flow that writes them.
@@ -395,7 +395,7 @@ A flow makes an outbound network call but does not declare a timeout constraint.
 ### Diagnostic
 
 ```
-SPORE-NETWORK-003  payments.spore:19
+FUNGI-NETWORK-003  payments.fungi:19
 
 What:   Outbound network call to payment gateway has no declared timeout.
 Why:    Undeclared timeouts allow calls to block indefinitely, causing resource exhaustion
@@ -445,7 +445,7 @@ A flow makes outbound network calls to an external service but has no declared r
 ### Diagnostic
 
 ```
-SPORE-NETWORK-007  notifications.spore:14
+FUNGI-NETWORK-007  notifications.fungi:14
 
 What:   Flow uses network.external effect but declares no retry policy.
 Why:    External network calls fail transiently. Without a declared retry policy, failures
@@ -496,11 +496,11 @@ The IDE provides a project-wide Governance Quick Fix Panel — a dedicated view 
 ```
 Governance Quick Fixes                          12 issues
 
-  orders.spore:18     SPORE-EFFECT-002    Add database.write to contract.effects        [Fix]
-  users.spore:31      SPORE-PRIVACY-003   Redact email before returning                 [Fix]
-  checkout.spore:45   SPORE-CONTEXT-001   Add trace_id to context.requires              [Fix]
-  payments.spore:12   SPORE-AUDIT-002     Add audit { require runtime report }          [Fix]
-  payments.spore:19   SPORE-NETWORK-003   Add timeout 5 seconds to network.outbound     [Fix]
+  orders.fungi:18     FUNGI-EFFECT-002    Add database.write to contract.effects        [Fix]
+  users.fungi:31      FUNGI-PRIVACY-003   Redact email before returning                 [Fix]
+  checkout.fungi:45   FUNGI-CONTEXT-001   Add trace_id to context.requires              [Fix]
+  payments.fungi:12   FUNGI-AUDIT-002     Add audit { require runtime report }          [Fix]
+  payments.fungi:19   FUNGI-NETWORK-003   Add timeout 5 seconds to network.outbound     [Fix]
   ...
 
   [Fix All Safe]    [Fix All — Review Required]

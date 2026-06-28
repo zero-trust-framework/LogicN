@@ -40,7 +40,7 @@ the AST reliably without reverse-engineering the parser.
 ### `importDecl`
 ```
 .value   → the full import path as a single string
-           e.g. "std.text"  or  "orders from ./orders.spore"
+           e.g. "std.text"  or  "orders from ./orders.fungi"
 .children → undefined
 ```
 

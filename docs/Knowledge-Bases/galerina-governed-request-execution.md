@@ -191,8 +191,8 @@ contract {
 | Contract section | Enforcement |
 |---|---|
 | `effects { database.read }` | capabilityHost denies network.outbound |
-| `response { denies { email } }` | SPORE-GOV-003 if email appears in response body |
-| `context { require actor }` | SPORE-CONTEXT-001 if actor not accessed |
+| `response { denies { email } }` | FUNGI-GOV-003 if email appears in response body |
+| `context { require actor }` | FUNGI-CONTEXT-001 if actor not accessed |
 | `limits { max request size 64 KB }` | contractEnforcer.checkRequestSize() at request entry |
 | `timeouts { deadline 200ms }` | contractEnforcer.checkDeadline() aborts if exceeded |
 | `privacy { require redaction }` | governance verifier checks redact() is called |

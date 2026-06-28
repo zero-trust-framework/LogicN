@@ -47,21 +47,21 @@ export interface PackageGraph {
 // Conventional entry-point basenames (matched case-insensitively). Entry points are
 // never orphans: nothing in a package is required to import its top-level runnable. This
 // covers the TS host entries (index/cli/server/main) AND the Galerina composition roots
-// (index.spore, main.spore, App.spore) so scanning host/ + .spore does not flag them as orphans.
+// (index.fungi, main.fungi, App.fungi) so scanning host/ + .fungi does not flag them as orphans.
 const ENTRY_BASENAMES = new Set([
   "index.ts", "cli.ts", "server.ts", "main.ts",
-  "index.spore", "main.spore", "app.spore",
+  "index.fungi", "main.fungi", "app.fungi",
 ]);
 
 /** Resolve a relative import specifier to a package-relative source path (best effort). */
 function resolveInternal(fromFile: string, specifier: string): string | null {
   const baseDir = dirname(fromFile);
   let target = normalize(join(baseDir, specifier)).split(sep).join("/");
-  // TS imports use ".js" (ESM/NodeNext) but the source is ".ts". Galerina ".spore" imports
+  // TS imports use ".js" (ESM/NodeNext) but the source is ".ts". Galerina ".fungi" imports
   // already name the source file, so they are left as-is; an extensionless TS import
   // (rare) falls back to ".ts".
   if (target.endsWith(".js")) target = target.slice(0, -3) + ".ts";
-  else if (!target.endsWith(".ts") && !target.endsWith(".spore")) target = target + ".ts";
+  else if (!target.endsWith(".ts") && !target.endsWith(".fungi")) target = target + ".ts";
   return target;
 }
 

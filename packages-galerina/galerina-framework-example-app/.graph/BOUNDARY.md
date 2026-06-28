@@ -5,7 +5,7 @@
 
 **Status:** ✅ PASS
 
-**Scanned scope:** roots [`src`, `host`] · extensions [`.ts`, `.spore`]
+**Scanned scope:** roots [`src`, `host`] · extensions [`.ts`, `.fungi`]
 
 ## Summary
 
@@ -37,8 +37,8 @@ _none_
 No boundary violations. All external imports are within the allowlist.
 
 ## Orphaned Files
-- `src/flows/greeting.spore`
+- `src/flows/greeting.fungi`
 
 ## Entry Points
 - `host/server.ts`
-- `src/App.spore`
+- `src/App.fungi`

@@ -123,13 +123,13 @@ where a verdict becomes an authorization decision — it collapses to a binary o
 
 ```
 collapse(+1) = allow
-collapse( 0) = deny      ← audited: SPORE-GOV-3VL-001
+collapse( 0) = deny      ← audited: FUNGI-GOV-3VL-001
 collapse(-1) = deny
 authorize(v) ⇔ v = +1
 ```
 
 Only `ALLOW (+1)` authorizes. `INDETERMINATE (0)` and `DENY (-1)` both deny. The collapse of an
-`INDETERMINATE` is **never silent**: it emits diagnostic `SPORE-GOV-3VL-001` (§7) so an auditor can
+`INDETERMINATE` is **never silent**: it emits diagnostic `FUNGI-GOV-3VL-001` (§7) so an auditor can
 distinguish "denied by policy" from "denied because undecided".
 
 ---
@@ -180,25 +180,25 @@ So there is no path — boundary or compositional — by which "we don't know" b
 
 ---
 
-## 7. Diagnostic — `SPORE-GOV-3VL-001`
+## 7. Diagnostic — `FUNGI-GOV-3VL-001`
 
 | Field | Value |
 |---|---|
-| **code** | `SPORE-GOV-3VL-001` |
+| **code** | `FUNGI-GOV-3VL-001` |
 | **name** | `INDETERMINATE_COLLAPSED_TO_DENY` |
 | **severity** | `warning` (fail-*safe*: the system denied correctly; the warning flags that a decision was *undecidable*, which an operator/auditor should see) |
 | **message** | `indeterminate governance verdict reached a trust boundary → collapsed to deny` |
-| **family** | `SPORE-GOV-*` (alongside `SPORE-GOV-SUMMARY-*`, `SPORE-GOV-004`) |
+| **family** | `FUNGI-GOV-*` (alongside `FUNGI-GOV-SUMMARY-*`, `FUNGI-GOV-004`) |
 
 **Never silent.** `decideAtBoundary` returns the diagnostic record *in the result* whenever it
 collapses an `INDETERMINATE` — it is structurally impossible to collapse a `0` without producing the
 record. An optional `onDiagnostic` sink lets callers route it to the `AuditLogger` egress. A `DENY
-(-1)` at the boundary is an ordinary policy denial and does **not** emit `SPORE-GOV-3VL-001` (it is not
+(-1)` at the boundary is an ordinary policy denial and does **not** emit `FUNGI-GOV-3VL-001` (it is not
 indeterminate). Registered in `docs/Knowledge-Bases/compiler-diagnostics.md` → "Governance Summary"
 neighbourhood, new "Three-Valued Governance" subsection.
 
-**Relationship to existing Tri-safety codes.** `SPORE-SAFETY-003 TRI_UNKNOWN_AS_TRUE` (compiler) bans
-mapping `Tri.unknown → true` *without a policy* in source. `SPORE-GOV-3VL-001` is the **runtime**
+**Relationship to existing Tri-safety codes.** `FUNGI-SAFETY-003 TRI_UNKNOWN_AS_TRUE` (compiler) bans
+mapping `Tri.unknown → true` *without a policy* in source. `FUNGI-GOV-3VL-001` is the **runtime**
 counterpart at the governance trust boundary: the policy here is "unknown → deny, audited". They are
 complementary, same fail-closed spirit at two layers.
 
@@ -215,13 +215,13 @@ Mapping to the agenda §3 acceptance list (`1`–`4`) plus the two soundness enc
 3. **Boundary soundness (agenda #2, Theorem 1).** `authorize(v) ⇔ v = +1`, exhaustive over `{-1,0,+1}`;
    and for `allOf`, authorization ⇔ **every** clause is `+1` (exhaustive over all assignments, `n≤4`).
 4. **Undischarged obligation (agenda #3).** A clause set containing an `INDETERMINATE` denies, and
-   `decideAtBoundary` produces `SPORE-GOV-3VL-001` (audited, non-null), exactly once, for the `0` case.
+   `decideAtBoundary` produces `FUNGI-GOV-3VL-001` (audited, non-null), exactly once, for the `0` case.
 5. **No-coercion property (Theorem 2).** Over **all** expression trees to depth 4: `eval(E)=+1 ⟹
    eval(E[0→-1])=+1` and `eval(E)=-1 ⟹ eval(E[0→-1])=-1`. Zeros never load-bearing for a definite
    verdict ⇒ `0` cannot be coerced to `+1`.
 6. **Differential / no regression (agenda #4).** Restricted to leaves `{-1,+1}` (no `0` ever arises),
    the calculus is *exactly* two-valued Boolean: `vAnd`=AND, `vOr`=OR, `vNot`=NOT, `authorize∘collapse`
-   = classical "allow iff true", and **zero** `SPORE-GOV-3VL-001` diagnostics are emitted across every
+   = classical "allow iff true", and **zero** `FUNGI-GOV-3VL-001` diagnostics are emitted across every
    Boolean-only composition. Existing two-valued policies behave identically.
 7. **Out-of-set trap.** Non-trit inputs throw `SecurityTrap` (inherited from the `assertTrit` guard in
    the underlying gates) — no silent coercion of toxic input.
@@ -246,12 +246,12 @@ export function anyOf(vs: readonly Verdict[]): Verdict;   // disjunctive; [] →
 export function collapse(v: Verdict): "allow" | "deny";   // 0,-1 → deny ; +1 → allow
 export function authorize(v: Verdict): boolean;           // ⇔ v === ALLOW
 
-export const GOV_3VL_DIAGNOSTIC = "SPORE-GOV-3VL-001";
+export const GOV_3VL_DIAGNOSTIC = "FUNGI-GOV-3VL-001";
 export interface GovernanceDiagnostic { code; name; severity; message; }
 export interface BoundaryDecision { verdict; decision; authorized; diagnostic; }
 export function decideAtBoundary(
   v: Verdict, onDiagnostic?: (d: GovernanceDiagnostic) => void,
-): BoundaryDecision;   // emits SPORE-GOV-3VL-001 iff v === INDETERMINATE
+): BoundaryDecision;   // emits FUNGI-GOV-3VL-001 iff v === INDETERMINATE
 ```
 
 ---
@@ -259,9 +259,9 @@ export function decideAtBoundary(
 ## 10. Follow-ups (explicitly NOT in this spike)
 
 - **Direction B — substrate/tolerance contracts.** `substrate{}`/`tolerance{}` blocks; the
-  crypto-on-deterministic-core invariant (`SPORE-SUBSTRATE-CRYPTO-ON-NOISY`). Reuses these verdicts.
+  crypto-on-deterministic-core invariant (`FUNGI-SUBSTRATE-CRYPTO-ON-NOISY`). Reuses these verdicts.
 - **Direction C — substrate noise model.** Seeded phase-drift/crosstalk model extending
-  `tpl-simulator`; `SPORE-SUBSTRATE-*` diagnostics. Direction B's B2 obligation checks against it.
+  `tpl-simulator`; `FUNGI-SUBSTRATE-*` diagnostics. Direction B's B2 obligation checks against it.
 - **Open question (K3 vs Belnap).** If an audit ever needs to distinguish *conflicting* evidence
   (`both`) from *no* evidence (`neither`), revisit with Belnap four-valued. Start K3; the verdict
   type is the natural extension point.
@@ -271,5 +271,5 @@ export function decideAtBoundary(
 `galerina-photonic-tri-substrate-rd-agenda.md` (parent, §3) · `notes/31–33` (TMX boundary) ·
 `tpl-simulator.ts` (`#173/#196` gates) · `tests/ternary-ops.test.mjs` (gate truth tables) ·
 `wat-host-stdlib-oracle.test.mjs` (`#166/#185` oracle pattern) · `compiler-diagnostics.md`
-(`SPORE-GOV-3VL-001` registry) · `galerina-core/docs/tri-logic.md` (`Tri`/`unknown` vs `null`) ·
+(`FUNGI-GOV-3VL-001` registry) · `galerina-core/docs/tri-logic.md` (`Tri`/`unknown` vs `null`) ·
 `galerina-core-logic` (`Tri`/`Decision` types — same `-1/0/+1` encoding).

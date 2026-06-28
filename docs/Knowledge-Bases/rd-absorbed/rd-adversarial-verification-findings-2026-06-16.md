@@ -80,7 +80,7 @@ The golden was verified **three independent ways**, not just trusted from the wo
   — in *all* cases the semantic field stayed in the post-Gate residual; `leaksBeforeGate == 0`. Egress redaction
   of semantic fields to untrusted destinations also held (incl. `SELECT *`).
 - **minor:** §4.4(3) said semantic emit "iff `authorizeRead == ALLOW`" but the reference only checks
-  destination-trust → wording softened (the reference *abstracts* the `k3-policy.spore` policy call).
+  destination-trust → wording softened (the reference *abstracts* the `k3-policy.fungi` policy call).
 
 ### 2C. CMT-1 / CTX — sound, with an untested claim
 - **MAJOR — the anti-downgrade claim was real but untested.** The reference used a bare random AAD, never the

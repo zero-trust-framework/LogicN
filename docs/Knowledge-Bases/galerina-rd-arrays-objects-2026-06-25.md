@@ -3,7 +3,7 @@
 Owner asked to R&D arrays/objects against 7 axes (works / typos / latency / memory / I-O / stability / compiler
 intelligence). Workflow `wf_85896b20-ac0`. **3 of 6 probes completed** (record-grammar, governance-latency,
 memory); **array-grammar, array-ops, and I/O probes were rate-limited out** — RESUME the workflow to finish them.
-Completed findings below were reproduced by actually compiling + running `.spore` (not assumed).
+Completed findings below were reproduced by actually compiling + running `.fungi` (not assumed).
 
 > **One HIGH bug already FIXED this session:** record-update spread `{ ...base, f: v }` was dead on the
 > interpreter path (parsed/checked/WAT-emitted but no tree-walker case) — a walker≠WASM divergence. Fixed +
@@ -30,7 +30,7 @@ finding below that rests on `galerina.mjs` host-runtime drift **must be confirme
 
 | Finding | Behavior today | Fix |
 |---|---|---|
-| Missing colon `{ age 30 }` | **0 diagnostics** — silently re-parsed as a *block*; surfaces later as a confusing `SPORE-NAME-001 'age' not declared` | targeted `SPORE-PARSE` "expected ':' after field name" in the `{`-disambiguation (parser.ts:2103-2131) |
+| Missing colon `{ age 30 }` | **0 diagnostics** — silently re-parsed as a *block*; surfaces later as a confusing `FUNGI-NAME-001 'age' not declared` | targeted `FUNGI-PARSE` "expected ':' after field name" in the `{`-disambiguation (parser.ts:2103-2131) |
 | Missing comma `{ name:"a" age:30 }` | **0 diagnostics** — silently accepted (comma is optional by design) | keep permissive cross-line, but add an opt-in lint: two fields on the SAME line with no comma → warn |
 | Duplicate key `{ age:30, age:99 }` | **0 diagnostics** — last-wins | track seen field names; warn "duplicate field 'age' — later value wins" |
 | Anonymous-record field access on WASM | `u.age` on an anonymous (non-`type`) record emits `unreachable` (only named records have slot layouts) | fail-closed today (not silently wrong) — give a clean diagnostic, or assign anonymous layouts |

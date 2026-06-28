@@ -23,7 +23,7 @@ galerina-intelligence — Hybrid BM25 + structural code search for Galerina work
 
 COMMANDS
   index <directory>
-      Walk all .spore files in <directory>, build/update workspace.lindex.
+      Walk all .fungi files in <directory>, build/update workspace.lindex.
 
   search "<query>" [options]
       Search the workspace index in the current directory (or --dir <path>).

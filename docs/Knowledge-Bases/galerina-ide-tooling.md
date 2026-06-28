@@ -115,7 +115,7 @@ The IDE tracks contract declarations in real time. If a flow body uses an effect
 flow processPayment(input: PaymentRequest) -> Result<PaymentResult, PaymentError>
 effects [database.read] {          // ← only database.read declared
     charge(input.card, input.amount)    // ← uses payment.charge (undeclared)
-    // ⚠ SPORE-EFFECT-002: flow uses effect payment.charge not declared in contract
+    // ⚠ FUNGI-EFFECT-002: flow uses effect payment.charge not declared in contract
     //   Add payment.charge to effects, or remove this call.
 }
 ```
@@ -137,7 +137,7 @@ Galerina diagnostics follow a consistent format:
 ### Example: Protected value returned without redaction
 
 ```
-SPORE-PRIVACY-003
+FUNGI-PRIVACY-003
 
 What:   protected Email cannot be returned from a flow with public trust boundary.
 Why:    Returning protected values across a public boundary exposes personal data
@@ -151,7 +151,7 @@ Fix:    Redact the email before returning, or restrict this flow to internal bou
 ### Example: Effect not declared
 
 ```
-SPORE-EFFECT-002
+FUNGI-EFFECT-002
 
 What:   Call to db.query uses effect database.read, which is not declared in this flow's contract.
 Why:    Undeclared effects bypass the governance model. All effects must be declared so callers
@@ -165,7 +165,7 @@ Fix:    Add database.read to this flow's effects declaration.
 ### Example: Missing capability
 
 ```
-SPORE-CAPABILITY-003
+FUNGI-CAPABILITY-003
 
 What:   This flow calls createOrder, which requires capability orders.create.
         orders.create is not declared in this flow's capabilities.
@@ -208,7 +208,7 @@ The badge colour follows a consistent scheme across themes: red for UNVALIDATED,
 If a protected value reaches a sink that requires REDACTED state, the IDE marks the transition point with a warning before compilation:
 
 ```
-⚠ SPORE-PRIVACY-005: protected Email passed to audit.write — redact() required first.
+⚠ FUNGI-PRIVACY-005: protected Email passed to audit.write — redact() required first.
 ```
 
 ---
@@ -240,7 +240,7 @@ This view answers the question "what will this flow actually do?" immediately, w
 ```bash
 galerina explain getUser
 galerina explain processPayment --detail effects
-galerina explain users.spore
+galerina explain users.fungi
 ```
 
 The `explain` command produces a plain-language summary of a flow, module, or file:
@@ -334,7 +334,7 @@ Error messages never say "operation not permitted" or "invalid declaration". The
 ### Example: Missing context requirement
 
 ```
-SPORE-CONTEXT-001  users.spore:24
+FUNGI-CONTEXT-001  users.fungi:24
 
 What:   getUser requires context key trace_id, but the calling flow does not pass it.
 Why:    Distributed tracing requires trace_id to be propagated on every call. Without it,

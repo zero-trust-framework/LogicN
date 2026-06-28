@@ -25,7 +25,7 @@ effects {
 
 Compiler proves legality. Runtime executes.
 
-**Status:** `capabilityHost.ts`, `contractEnforcer.ts`, `SPORE-EFFECT-*` series implemented.
+**Status:** `capabilityHost.ts`, `contractEnforcer.ts`, `FUNGI-EFFECT-*` series implemented.
 Effects declared in contract are verified against capability registry before execution.
 
 ---
@@ -288,7 +288,7 @@ NodeFlags.HasCompute set when `compute { }` block present.
 | — | Node Flags | ✅ |
 | — | Better Error Recovery | ✅ |
 | — | STDLIB_CAPABILITY_MAP | ✅ Phase 18H |
-| — | SPORE-STDLIB-001 enforcement | ✅ Phase 19A |
+| — | FUNGI-STDLIB-001 enforcement | ✅ Phase 19A |
 | — | WAT emitter skeleton | ✅ Phase 19B |
 | — | BoundaryGraph types | ✅ Phase 20B |
 | — | TypedArray lowering plan | ✅ Phase 21A stub |

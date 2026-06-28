@@ -85,15 +85,15 @@ private async evalExpr(node: AstNode): Promise<GalerinaValue> { ... }
 private evalExprSync(node: AstNode): GalerinaValue {
   switch (node.kind) {
     case "numberLiteral": return intVal(parseInt(node.value ?? "0", 10));
-    case "identifier":    return this.scope.get(node.value ?? "") ?? SPORE_VOID;
+    case "identifier":    return this.scope.get(node.value ?? "") ?? FUNGI_VOID;
     case "binaryExpr": {
       const left  = this.evalExprSync(node.children![0]!);
       const right = this.evalExprSync(node.children![1]!);
       const fn    = BINARY_DISPATCH.get(dispatchKey(left.__tag, node.value!, right.__tag));
-      return fn ? fn(left, right) : SPORE_VOID;
+      return fn ? fn(left, right) : FUNGI_VOID;
     }
     case "ifStmt":   return this.evalIfSync(node);
-    case "letDecl":  { this.scope.set(node.value!, this.evalExprSync(node.children![0]!)); return SPORE_VOID; }
+    case "letDecl":  { this.scope.set(node.value!, this.evalExprSync(node.children![0]!)); return FUNGI_VOID; }
     case "returnStmt": throw new SyncReturn(this.evalExprSync(node.children![0]!));
     // ...
   }
@@ -198,7 +198,7 @@ Add `bench-wasm.mjs` for each pure-flow benchmark:
 ```javascript
 // benchmarks/record-allocation/bench-wasm.mjs
 export async function runWasmBenchmark() {
-  // compile benchmark.spore → WAT → binary → WebAssembly.instantiate
+  // compile benchmark.fungi → WAT → binary → WebAssembly.instantiate
   // run main() N times inside the WASM instance
   // report iterationsPerSecond
 }

@@ -1,7 +1,7 @@
 # The Third Logic-Delivery Paradigm & the Governed Photonic/Quantum Substrate
 
-**A consolidated, maths-complete R&D synthesis.** Sources: `RD-0122` (the third-paradigm study) + the photonic/quantum corpus `RD-0106` (sync/async tri-wavelength), `RD-0107` (volumetric tensor), `RD-0110` (latency≠work), `RD-0111` (28-claim ledger), `RD-0113` (T-MAC), `RD-0115`/`RD-0117` (Safe-Floor), `RD-0116` (holographic + `SPORE-RETAIN-001`), `RD-0118` (hardware-protection directive), `0042` (WDM ternary), Task #199 (quantum bridge), and owner notes `56-x1` (spatial/volumetric) + `57-x` (MBQC).
-**Posture:** trust-the-math · grounded-not-aspirational · most-secure zero-trust · honest `[SHIPPED]`/`[DESIGN]`/`[ASPIRATIONAL]`/`[REFUTED]` labels · `SPORE-SUBSTRATE-001` (Govern, Don't Absorb) · **no new science; defensive-pub only, 0 patents.**
+**A consolidated, maths-complete R&D synthesis.** Sources: `RD-0122` (the third-paradigm study) + the photonic/quantum corpus `RD-0106` (sync/async tri-wavelength), `RD-0107` (volumetric tensor), `RD-0110` (latency≠work), `RD-0111` (28-claim ledger), `RD-0113` (T-MAC), `RD-0115`/`RD-0117` (Safe-Floor), `RD-0116` (holographic + `FUNGI-RETAIN-001`), `RD-0118` (hardware-protection directive), `0042` (WDM ternary), Task #199 (quantum bridge), and owner notes `56-x1` (spatial/volumetric) + `57-x` (MBQC).
+**Posture:** trust-the-math · grounded-not-aspirational · most-secure zero-trust · honest `[SHIPPED]`/`[DESIGN]`/`[ASPIRATIONAL]`/`[REFUTED]` labels · `FUNGI-SUBSTRATE-001` (Govern, Don't Absorb) · **no new science; defensive-pub only, 0 patents.**
 
 ---
 
@@ -113,7 +113,7 @@ flow resolve_handler(inputs) {
 
 **The mapping to shipped K3 (the decisive, grounded bridge):**
 - **The held superposition = K3 `INDETERMINATE` (0)** — a value neither true nor false, consistent with multiple outcomes, carrying *no committed logical result*; it propagates *advisory* internally, committing nothing.
-- **The collapse = `decideAtBoundary`** — `INDETERMINATE → DENY` at a governed sink (`unknown → deny`), the K3 analogue of *measurement defaulting to the safe eigenstate*. Verified live: `proof-graph.ts` (`SPORE-HW-004`: off-sink INDETERMINATE is advisory-yellow, *at a governed sink it must fail closed*) and `photonic-admission.ts:18` ("Any failure collapses (decideAtBoundary) to DENY; no attestation is INDETERMINATE").
+- **The collapse = `decideAtBoundary`** — `INDETERMINATE → DENY` at a governed sink (`unknown → deny`), the K3 analogue of *measurement defaulting to the safe eigenstate*. Verified live: `proof-graph.ts` (`FUNGI-HW-004`: off-sink INDETERMINATE is advisory-yellow, *at a governed sink it must fail closed*) and `photonic-admission.ts:18` ("Any failure collapses (decideAtBoundary) to DENY; no attestation is INDETERMINATE").
 - **The control-flow primitive is `resolve / collapse-at-a-boundary`, not branch-over-time.**
 
 **Honest is-it-new split.** The *ordering/trigger* layer is **not** new (spatial = dataflow-as-circuit; MBQC control = async feed-forward DAG) — say so plainly; that is where hype dies. The genuinely-new software contribution is the **K3-as-resolution-boundary framing**: a possibility-valued, un-ordered interior **collapsed once, fail-closed, at a declared governed boundary**, ordered by constraint/probability instead of time. It is **not** dataflow (which commits at every node), **not** analog (it is exact/digital), and **not** plain constraint-solving (the collapse is *fail-closed and governed*, with a signed admission + tolerance-witness). **Galerina already executes its core as a governance discipline.**
@@ -124,7 +124,7 @@ The K3 algebra itself (`RD-0113`): `vAnd = min`, `vOr = max` over `{−1,0,+1}`;
 
 ## 5. Most-secure governance — Govern, Don't Absorb
 
-The third paradigm enters Galerina **only through governed boundaries**; the probabilistic/analog substrate is always **Tier-3 untrusted, degrade-only**, and crypto + bit-exact determinism stay **digital** (`SPORE-SUBSTRATE-001`). Four gates, all on **shipped seams**:
+The third paradigm enters Galerina **only through governed boundaries**; the probabilistic/analog substrate is always **Tier-3 untrusted, degrade-only**, and crypto + bit-exact determinism stay **digital** (`FUNGI-SUBSTRATE-001`). Four gates, all on **shipped seams**:
 
 1. **Signed-config passport — admit the transform / measurement-schedule as CODE, before it runs.** Because *the program is a structure* (the matrix `T` / the MBQC angle sequence), govern the **structure as a signed artifact**: `admitPhotonicConfig` (hash-pin + Ed25519 + capability `PHOTONIC_REPROGRAM_CAP` deny-by-default + revocation). Unsigned schedule ⇒ INDETERMINATE ⇒ DENY.
 2. **Tolerance-witness on readout — the collapse output is validated, never trusted raw.** The substrate returns a *distribution* `D_out`; admit a value only with a signed `toleranceWitness` proving the empirical statistics sit inside the contract's `substrate{}` tolerance:
@@ -174,7 +174,7 @@ Your instinct that "tri implies a third" is **correct as taxonomy**, and "is it 
 
 **Paper / defensive-pub:** measured-negative only — *"the 'third execution paradigm' for tri/photonic compute is a resolution/collapse model whose physical substrate (analog field computation, dataflow-as-circuit, MBQC) is decades-old prior art; the genuinely-new contribution is the fail-closed K3 resolution boundary that admits the transform/measurement-schedule as signed code and validates probabilistic readout against a signed tolerance-witness."* No patent, no flagship paper.
 
-**Key files:** `proof-graph.ts` (SPORE-HW-004 collapse), `photonic-admission.ts:18` (`admitPhotonicConfig` Tier-3 rail), `substrate-erasure.ts` (`effectiveEraseModel` fail-closed-to-stricter), `Galerina-R-AND-D/scripts/rd-0117-safe-floor-theorem-proof.mjs` (15/15) · notes `56-x1`, `57-x` · `galerina-rd-0110/0111/0116/0117/0118-*.md`, `galerina-three-valued-governance.md`, `galerina-substrate-failure-model.md`.
+**Key files:** `proof-graph.ts` (FUNGI-HW-004 collapse), `photonic-admission.ts:18` (`admitPhotonicConfig` Tier-3 rail), `substrate-erasure.ts` (`effectiveEraseModel` fail-closed-to-stricter), `Galerina-R-AND-D/scripts/rd-0117-safe-floor-theorem-proof.mjs` (15/15) · notes `56-x1`, `57-x` · `galerina-rd-0110/0111/0116/0117/0118-*.md`, `galerina-three-valued-governance.md`, `galerina-substrate-failure-model.md`.
 
 ---
 
@@ -187,7 +187,7 @@ zero-trust choice (minimise unproven attack surface; Govern, Don't Absorb).
 | Piece | Status | Decision | Why |
 |---|---|---|---|
 | Third paradigm = resolution/collapse delivery | **Ships in core** | nothing to do | `K3 INDETERMINATE (0)` = the held possibility-space; `decideAtBoundary` (`unknown→deny`) = the fail-closed collapse. Galerina already *executes* the third paradigm as a governance discipline on every governed sink. |
-| `resolve … at boundary` source construct | **Track, don't build** | build only when a real `.spore` flow needs an explicit, first-class collapse point | New syntax = new parser + verifier surface. The discipline is *already enforced* without it; adding sugar with no consumer is attack surface for zero benefit. |
+| `resolve … at boundary` source construct | **Track, don't build** | build only when a real `.fungi` flow needs an explicit, first-class collapse point | New syntax = new parser + verifier surface. The discipline is *already enforced* without it; adding sugar with no consumer is attack surface for zero benefit. |
 | signed `toleranceWitness` | **Hold the spec; build on-demand** | build when a concrete probabilistic Tier-3 co-processor exists to govern (hardware-gated) | Only meaningful once a probabilistic device must be admitted. The design (signed-witness, fail-closed admission, validate readout against a signed tolerance attestation) mirrors the shipped `admitPhotonicConfig` / `admitStorageSubstrate` rails and is ready when needed. Crypto + bit-exact determinism stay digital. |
 
 **Trigger to revisit:** a real Tier-3 probabilistic substrate (analog/photonic/MBQC co-processor) entering

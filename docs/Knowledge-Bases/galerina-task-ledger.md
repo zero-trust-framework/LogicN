@@ -23,25 +23,25 @@ which flows/packages depend on the changed node. Status legend: ✅ done · 🔶
 | # | Title (abbrev) | Status | Subsystem |
 |---|---|---|---|
 | 1–3 | Graph generator: place / build / wire+run | ✅ | devtools-project-graph |
-| 4–10 | SPORE-GOV-010 intent cleanup + auditor minimal-example rule | ✅ | examples · devtools-security |
-| 11–13 | call-chain benchmark (.spore + mirrors + runner) | ✅ | devtools-benchmarks |
+| 4–10 | FUNGI-GOV-010 intent cleanup + auditor minimal-example rule | ✅ | examples · devtools-security |
+| 11–13 | call-chain benchmark (.fungi + mirrors + runner) | ✅ | devtools-benchmarks |
 | 14 | Full benchmark suite + compare | ✅ | devtools-benchmarks |
 | 15–16 | Bytecode-VM CALL fix + compiler tests | ✅ | core-compiler (interpreter) |
 | 17–18 | Security audit sweep · examples up-to-date | ✅ | devtools-security · examples |
 | 19 | Roadmap to 100% Runtime-in-Galerina | ✅ | docs |
 | 20–22 | compare.mjs label fixes · http-throughput | ✅ | devtools-benchmarks |
 | 23 | Physics N-body benchmark | ✅ | devtools-benchmarks |
-| 24–27 | Self-hosting Stage B stubs · type-checker.spore subset | ✅ | core-compiler/self-hosted |
+| 24–27 | Self-hosting Stage B stubs · type-checker.fungi subset | ✅ | core-compiler/self-hosted |
 | 28 | ext-secrets-aws vault | ✅ | ext-secrets-vault |
 | 29 | ext-proof-snarkjs Groth16 | ✅ | ext-proof-snarkjs |
 | 30–35 | DRCM Phase 1: cap audit / scanner / CAS / CBOR / key custody / receipt sep | ✅ | core-compiler (manifest/proof/capability) |
 | 36 | DRCM P2: invariant{} parser + static proof + WAT gate | ✅ | core-compiler (parser, wat-emitter) |
 | 37 | DRCM P3: .lmanifest pipeline + admission gate | ✅ | core-compiler (manifest-generator, governance-verifier) |
 | 38–39 | DRCM P4: SystemCapabilityType · policy{} monotonicity | ✅ | core-compiler (capability-types, governance-verifier) |
-| 40–41 | DRCM P5: DWI step keyword + fuel · DSS supervisor .spore | ✅ | core-compiler · self-hosted/dss |
+| 40–41 | DRCM P5: DWI step keyword + fuel · DSS supervisor .fungi | ✅ | core-compiler · self-hosted/dss |
 | 42 | DRCM P6: Epilogue Receipt + ledger | ✅ | core-compiler (proof-chain, manifest) |
 | 43–44 | DRCM P7: OWASP negative suite · OCI/gVisor deploy | ✅ | tests · scripts (Dockerfile, deploy-linux) |
-| 45 | SPORE-GOV/EFFECT/CAP code wiring | ✅ | core-compiler (governance-verifier) |
+| 45 | FUNGI-GOV/EFFECT/CAP code wiring | ✅ | core-compiler (governance-verifier) |
 | 46–49 | Pattern examples + README + graph index | ✅ | tests/patterns · docs |
 | 50 | T/FG/EC/ID/AU/LC diagnostic categories | ✅ | core-compiler (diagnostics) |
 | 51 | @experimental_profile directive | ✅ | core-compiler (parser) |
@@ -66,7 +66,7 @@ which flows/packages depend on the changed node. Status legend: ✅ done · 🔶
 | 72 | parent_policy: inheritance + subset | ✅ | core-compiler (governance-verifier) |
 | 73–74 | assuming{} proof-tracing block + verify | ✅ | core-compiler (parser, governance-verifier) |
 | 75 | Governance-as-Evidence (CBOR Tag 410) | ✅ | core-compiler (manifest-generator) |
-| 76 | SPORE-INV-000 DSS trap handler + audit event | ✅ | core-compiler · self-hosted/dss |
+| 76 | FUNGI-INV-000 DSS trap handler + audit event | ✅ | core-compiler · self-hosted/dss |
 | 77 | Execution DAG (Tag 414) | ✅ | core-compiler (execution-graph) |
 | 78 | MMCP typed memory views (Tag 415) | ✅ | core-compiler |
 | 79 | Pre-resolved Policy DAG (Tag 416) | ✅ | core-compiler (governance-verifier) |
@@ -74,24 +74,24 @@ which flows/packages depend on the changed node. Status legend: ✅ done · 🔶
 | 81 | `trap` keyword | ✅ | core-compiler (parser, wat-emitter) |
 | 82 | `governed` flow qualifier | ✅ | core-compiler |
 | 83 | `view(cap)` MMCP annotation | ✅ | core-compiler |
-| 84 | Match exhaustiveness (SPORE-MATCH-001) | ✅ | core-compiler (type-checker) |
-| 85 | DSS.spore V_DPM bit layout + bitmask | ✅ | self-hosted/dss · capability-types |
+| 84 | Match exhaustiveness (FUNGI-MATCH-001) | ✅ | core-compiler (type-checker) |
+| 85 | DSS.fungi V_DPM bit layout + bitmask | ✅ | self-hosted/dss · capability-types |
 | 86 | `static` compile-time constants | ✅ | core-compiler (interpreter, governance-verifier) |
 | 87 | `bitfield` V_DPM register | ✅ | core-compiler (parser, wat-emitter) |
 | 88 | `gate {}` admission guard | ✅ | core-compiler (governance-verifier) |
 | 89 | `access {}` enforcement | ✅ | core-compiler (governance-verifier) |
 | 90 | `policy {}` state mutation governance — **RESERVED/future** (parser accepts `policy{}` as a silent alias, `parser.ts:2672`; only emergency-transition MONO #39 is live, NOT mut-var governance — corrected 2026-06-22) | 🔲 | core-compiler (governance-verifier) |
-| 91 | vdpm.spore → `bitfield V_DPM` | ✅ | self-hosted/dss |
+| 91 | vdpm.fungi → `bitfield V_DPM` | ✅ | self-hosted/dss |
 | 92 | import plugin assimilate/evict | ✅ | core-compiler (module-registry) |
 | 93 | `;;` govComment manifest collection | ✅ | core-compiler (lexer, manifest) |
-| 94 | import ./path.spore DAG merge | ✅ | core-compiler (module-registry) |
+| 94 | import ./path.fungi DAG merge | ✅ | core-compiler (module-registry) |
 | 95–96 | Tower execution log + test gate | ✅ | scripts · tests |
-| 97 | Stage B lexer.spore functional | ✅ | self-hosted/lexer.spore |
-| 98 | Stage B parser.spore functional | ✅ | self-hosted/parser.spore |
-| 99 | Stage B type-checker.spore functional | ✅ | self-hosted/type-checker.spore |
-| 100 | Stage B governance-verifier.spore functional | ✅ | self-hosted/governance-verifier.spore |
+| 97 | Stage B lexer.fungi functional | ✅ | self-hosted/lexer.fungi |
+| 98 | Stage B parser.fungi functional | ✅ | self-hosted/parser.fungi |
+| 99 | Stage B type-checker.fungi functional | ✅ | self-hosted/type-checker.fungi |
+| 100 | Stage B governance-verifier.fungi functional | ✅ | self-hosted/governance-verifier.fungi |
 | 101 | R6 corpus 100% Stage-A==Stage-B | ✅ | tests/r6-corpus |
-| 102 | **dss/index.spore → build/dss.wasm** | 🔲 | self-hosted/dss · wat pipeline |
+| 102 | **dss/index.fungi → build/dss.wasm** | 🔲 | self-hosted/dss · wat pipeline |
 | 103 | **Wasmtime component supervises DWI** | 🔲 | runtime (Post-P9) |
 | 104 | **Real Wasmtime fuel per DWI** | 🔲 | runtime (Post-P9) |
 | 105 | **WASM admission-gate harness** (security core ✅; tokenize byte-parity ✅ via #144/#145 — `wat-p9-tokenize-parity` 21/21; real-DSS `galerina run` gated on #102/#103) | 🔶 | core-compiler/wasm-runtime.ts |
@@ -124,7 +124,7 @@ which flows/packages depend on the changed node. Status legend: ✅ done · 🔶
 ---
 
 ## 3. P9 tokenize byte-parity — ✅ DONE (2026-06-06)
-- **#143 / #145 / #160 — ACHIEVED.** `lexer.spore` `tokenize` produces a byte-for-byte
+- **#143 / #145 / #160 — ACHIEVED.** `lexer.fungi` `tokenize` produces a byte-for-byte
   identical token stream in the Stage-A interpreter AND in real WASM through the #105
   admission gate (12-input corpus; `tests/wat-p9-tokenize-parity.test.mjs`). 3,295/3,295
   compiler tests green. Type-directed emitter lowering (Option<Char> sentinel dispatch,
@@ -239,7 +239,7 @@ seam only as tensor kernels, a separate path).
 | **ZTF** | **Zero Trust Framework** — umbrella project over Galerina + siblings; a governing SECURITY BAR (deny-by-default, no ambient authority, explicit capability, fail-closed, actor-aware audit, OS/HW-as-compromised). Every component must warrant the badge. See checkpoint §8.7. | — | principle |
 | — | **CLEANUP (done 2026-06-06):** removed stale `scripts/run-all-tests.js`; fixed the 2 broken `.claude/settings.json` refs (`test-core`/`test-all` → `.cjs`); renamed `scripts/{mark-core-change,run-core-tests}.js` → `.cjs` (were broken by root `type:module`). | — | done |
 | — | **NOTE: `notes/30-notes*.md` are DISCUSSION ONLY.** AI-written code examples may not reflect real Galerina. Do NOT build from them; Galerina stays `flow`+`contract`. | — | — |
-| 199 | **`@galerina/ext-bridge-quantum` — governed out-of-process bridge for IBM `ffsim`** (fermionic quantum-chemistry sim, Apache-2.0). DESIGN COMPLETE, build not started. *Govern it, don't absorb it:* ffsim's Python/Rust stays out-of-process (Tier-3 untrusted, Toxic Border); no math reimplemented in core. **⚠️ STATUS CORRECTED 2026-06-15: Phase 0 + Phase 1 SHIPPED & TESTED** (`tolerance` manifest schema in `inference-bridge-contract` + pure-TS governance core in `galerina-ext-bridge-quantum`, 12 tests). FFSM `SESSION-HANDOFF.md` "nothing built / start at Phase 0" is STALE — resume at **Phase 1.5** (AuditLogger + Ed25519 attestation) → **Phase 2** (real `ffsim_worker.py` + child_process, external-infra-gated on a pinned Linux venv). New job-oriented `QuantumSimBackend` contract (NOT the ternary `InferenceBridge`); `quantum {}` contract sub-block (analog of `ai {}`); pre-spawn **subspace-dim gate** `C(norb,nα)·C(norb,nβ)` as the real memory governor; **tolerance-determinism** (never bit-exact) → needs additive `manifest.ts` extension (`DeterminismMode+="tolerance"`, `pinnedEnvHash`, `backendArtifactHash`); reuses CF-3/CF-7 attestation (#137/#138). **All 7 design decisions RATIFIED 2026-06-15:** tolerance-certified admissible iff 3 pins present (pinnedEnvHash+tolerance+backendArtifactHash), fail-closed; crypto-exclusion = **`SPORE-SUBSTRATE-001`** (declare ffsim path `lane: noisy`, reuse shipped `verifySubstrate` — no new machinery); receipt signs SHA-256 on the deterministic core; per-call spawn v1; OCI/gVisor sandbox Stage B. Full spec + skeleton + checklist + resolved decisions in **`docs/Knowledge-Bases/galerina-ext-bridge-quantum-design.md`**. Corrects `notes/33` ffsim↔ternary/NTT/BitNet/MeshQL conflations. **Phase 0 = additive `inference-bridge-contract` manifest schema change (decided, §9.1) gates everything.** | 🔲 | ext-bridge-quantum (new) · inference-bridge-contract · tower-citizen · substrate-model |
+| 199 | **`@galerina/ext-bridge-quantum` — governed out-of-process bridge for IBM `ffsim`** (fermionic quantum-chemistry sim, Apache-2.0). DESIGN COMPLETE, build not started. *Govern it, don't absorb it:* ffsim's Python/Rust stays out-of-process (Tier-3 untrusted, Toxic Border); no math reimplemented in core. **⚠️ STATUS CORRECTED 2026-06-15: Phase 0 + Phase 1 SHIPPED & TESTED** (`tolerance` manifest schema in `inference-bridge-contract` + pure-TS governance core in `galerina-ext-bridge-quantum`, 12 tests). FFSM `SESSION-HANDOFF.md` "nothing built / start at Phase 0" is STALE — resume at **Phase 1.5** (AuditLogger + Ed25519 attestation) → **Phase 2** (real `ffsim_worker.py` + child_process, external-infra-gated on a pinned Linux venv). New job-oriented `QuantumSimBackend` contract (NOT the ternary `InferenceBridge`); `quantum {}` contract sub-block (analog of `ai {}`); pre-spawn **subspace-dim gate** `C(norb,nα)·C(norb,nβ)` as the real memory governor; **tolerance-determinism** (never bit-exact) → needs additive `manifest.ts` extension (`DeterminismMode+="tolerance"`, `pinnedEnvHash`, `backendArtifactHash`); reuses CF-3/CF-7 attestation (#137/#138). **All 7 design decisions RATIFIED 2026-06-15:** tolerance-certified admissible iff 3 pins present (pinnedEnvHash+tolerance+backendArtifactHash), fail-closed; crypto-exclusion = **`FUNGI-SUBSTRATE-001`** (declare ffsim path `lane: noisy`, reuse shipped `verifySubstrate` — no new machinery); receipt signs SHA-256 on the deterministic core; per-call spawn v1; OCI/gVisor sandbox Stage B. Full spec + skeleton + checklist + resolved decisions in **`docs/Knowledge-Bases/galerina-ext-bridge-quantum-design.md`**. Corrects `notes/33` ffsim↔ternary/NTT/BitNet/MeshQL conflations. **Phase 0 = additive `inference-bridge-contract` manifest schema change (decided, §9.1) gates everything.** | 🔲 | ext-bridge-quantum (new) · inference-bridge-contract · tower-citizen · substrate-model |
 | 200 | **Lower member access on a NON-IDENTIFIER receiver to WASM.** Currently FAIL-CLOSED → walker: `memberExpr` lowering (`wat-emitter.ts:1026-1066`) handles only an *identifier* receiver; any non-identifier receiver falls through to `(unreachable) ;; unresolved member` → walker fallback (correct, no WASM). **Confirmed 2026-06-21 by probe:** nested `a.b.c.v` AND flow-call result `mkP().x` both fail (TRAP / invalid module). Record *construction*, 1-level `o.tag`, record params, and **bind-then-access (`let p = mkP() … p.x`) all work — so the WORKAROUND today is to bind the receiver to a local first.** **Fix:** build a record field-TYPE map (the `Type` half of each `name: Type` paramDecl — already parsed in `buildRecordLayouts:397`) threaded like `recordLayouts`, + make `memberExpr` lowering RECURSIVE on the receiver (resolve receiver record-type + pointer via a helper, then `i32.load` the field at its offset). Additive — only the currently-fail-closed nested path changes; **verify the WASM result matches the walker EXACTLY** (a wrong offset would be worse than the current fallback). Found by probe 2026-06-21. | medium | M |
 
 ---
@@ -257,9 +257,9 @@ seam only as tensor kernels, a separate path).
 | `core-compiler/interpreter.ts` | 15, 55, 62, 86 |
 | `core-compiler/attestation.ts` | 34, 35, 107, 108, 109, 137 (Ed25519 pattern reused) |
 | `core-compiler/capability-types.ts` | 38, 85 |
-| `core-compiler/self-hosted/lexer.spore` | 97, 101, **143**, **145** |
-| `core-compiler/self-hosted/{parser,type-checker,govern}.spore` | 98, 99, 100, 101 |
-| `core-compiler/self-hosted/dss/*.spore` | 41, 76, 85, 91, 102 |
+| `core-compiler/self-hosted/lexer.fungi` | 97, 101, **143**, **145** |
+| `core-compiler/self-hosted/{parser,type-checker,govern}.fungi` | 98, 99, 100, 101 |
+| `core-compiler/self-hosted/dss/*.fungi` | 41, 76, 85, 91, 102 |
 | `tower-citizen/hybrid-engine.ts` | 121, 122, 138, 139, 140 |
 | `tower-citizen/bridge-attestation.ts` | 137, 138 |
 | `tower-citizen/compiled-policy.ts` | 140 |
@@ -333,19 +333,19 @@ over the #1–#200 register above. Convergent #1 = **#201** (least-privilege min
 
 | # | Task (abbrev) | Status | Source | Subsystem |
 |---|---|---|---|---|
-| 201 | Escalate `SPORE-EFFECT-002 OVERDECLARED_EFFECT` warning → profile-gated fail-closed error + port to Stage-B | 🔲 | 0062§2 ∧ 0063§3 | core-compiler (effect-checker) |
+| 201 | Escalate `FUNGI-EFFECT-002 OVERDECLARED_EFFECT` warning → profile-gated fail-closed error + port to Stage-B | 🔲 | 0062§2 ∧ 0063§3 | core-compiler (effect-checker) |
 | 202 | Transitive capability-mask `⊆` proof across the signed-package dep graph | 🔲 | 0062§3 | core-compiler · framework-app-kernel |
 | 203 | Full contract digest — extend effects-only `behavioralFingerprint` to limits/substrate/invariant | 🔲 | 0062§5 | core-compiler (manifest-generator) |
 | 204 | Signed-package audit graph: `galerina graph --package` + central auditor over the admission surface | 🔲 | 0064 | core-cli · devtools-graph-project |
 | 205 | Unify `TypeId.Unknown` with the governance K3 algebra (one Kleene lattice) — the 0061 headline | 🔲 | 0061§2 | core-compiler (type-checker · governance-verifier) |
 | 206 | Package-standard profile + basic-rules checker + `@galerina-core/*` verified tier + level-1-only deep deps | 🔲 | 0062§2/§4 | core-compiler (package-resolver) |
-| 207 | Idempotency effect-annotation → `resilience{}` retry-legality (unblocks `SPORE-FAULT-005` fallback-half) | 🔲 | 0059§6 | core-compiler (resilience-inference) |
+| 207 | Idempotency effect-annotation → `resilience{}` retry-legality (unblocks `FUNGI-FAULT-005` fallback-half) | 🔲 | 0059§6 | core-compiler (resilience-inference) |
 | 208 | Per-granted-capability egress-policy binding | 🔲 | 0063§3 | core-network |
 | 209 | Key-custody hardening — name-similarity / expected-key check at grant/sign | 🔲 | 0063§3 · 0057 | governance · secrets |
 | 210 | TS7-native `tsc` host build + 53-pkg parallelism + watch (NOT a compiler rewrite) | 🔲 | 0060 | toolchain (#155-adjacent) |
 
 *Already tracked elsewhere (no new task):* 0059 Global Safety Theorem SMT obligations → 0024/0040 Z3 track;
-`SPORE-FAULT-005` → fault-tolerance doc §9; per-block differential → formal-verification-direction.md.
+`FUNGI-FAULT-005` → fault-tolerance doc §9; per-block differential → formal-verification-direction.md.
 **Owner-gated steers:** #201 (breaking-in-prod), #205 (architecture), #210 (toolchain commitment).
 
 ---
@@ -368,7 +368,7 @@ headers across build-roadmap / this ledger / SOT / KB-INDEX / roadmap-2026-06-17
 absorption-catalog staleness flagged; key-custody `bridge-attest` wiring marked done.
 
 **build-roadmap "🟡 Open" tables are stale** (DONE but still listed open — verified against source; fix when
-that doc is next edited): #68 (CBOR secure parser), #72 (`parent_policy` ⊆), #76 (SPORE-INV-000), #91 (`bitfield
+that doc is next edited): #68 (CBOR secure parser), #72 (`parent_policy` ⊆), #76 (FUNGI-INV-000), #91 (`bitfield
 V_DPM`), #125 (`run --governed`), #126 (bitwise hint — doc self-contradicts), #128 (for-in WASM — doc
 self-contradicts). Correctly open: #69, #147, #148, #171, #172, #192, #193, #200, CF-4, CF-5. **REFUTED** (leave
 open, only half-done): #177 (deprecation advisory not emitted), #119 (native BitNet runtime absent).
@@ -446,7 +446,7 @@ aspirational (#102-106). **#211 listener hardening is now in-scope too.** Memory
     now uses native `operationsPerSecond` (reliable) + Galerina raw rates separately; clean Galerina-vs-native ×slower
     needs workload-equivalence (R&D 0039). See [[galerina-benchmark-suite]]. **All outstanding documents committed**
     (generated reports CODE_INDEX/REGISTRY/coverage/graph + `results/latest.json` + owner edits to
-    `workspace.lindex`/`api-protocol-rest/index.spore`). Excluded by design: `_scratch-effect006.mjs` (WIP scratch),
+    `workspace.lindex`/`api-protocol-rest/index.fungi`). Excluded by design: `_scratch-effect006.mjs` (WIP scratch),
     nested `galerina-devtools-project-graph/` repo, generated build JSON + test temp dirs.
   - **✅ CLOSURE CLUSTER 0071-0077 DONE + ABSORBED 2026-06-22** → `docs/Knowledge-Bases/rd-absorbed/rd-tlstp-closure-0071-0077-2026-06-22.md`.
     Worker completed the ENTIRE closure/verification queue. **0071** capsule signing-spec reconciled to one method
@@ -468,18 +468,18 @@ aspirational (#102-106). **#211 listener hardening is now in-scope too.** Memory
     (`3e69b23`, branch main, README + 3 defensive-pub notes now version-controlled; **no remote** configured yet).
 
 **Filed / decided 2026-06-22 (owner session):**
-- **#201 → built as a NEW code `SPORE-EFFECT-006 OVERDECLARED_EFFECT`** (error, ALL profiles), NOT an escalation
-  of the overloaded `SPORE-EFFECT-002` (owner-directed de-overload). `002` now carries ONLY the transitive-missing
+- **#201 → built as a NEW code `FUNGI-EFFECT-006 OVERDECLARED_EFFECT`** (error, ALL profiles), NOT an escalation
+  of the overloaded `FUNGI-EFFECT-002` (owner-directed de-overload). `002` now carries ONLY the transitive-missing
   (soundness) case. Owner chose strict-all-profiles, so the build must also fix every over-declared fixture/example.
-- **#213 — SPORE-* diagnostic taxonomy audit** ✅ **AUDIT DONE 2026-06-22** (build paused for it). Full report:
+- **#213 — FUNGI-* diagnostic taxonomy audit** ✅ **AUDIT DONE 2026-06-22** (build paused for it). Full report:
   **[galerina-diagnostic-code-taxonomy-audit-2026-06-22.md](galerina-diagnostic-code-taxonomy-audit-2026-06-22.md)**.
-  All 336 `SPORE-*` codes / ~90 families swept (7 auditors + adversarial verify); **~30 confirmed diseased** via
+  All 336 `FUNGI-*` codes / ~90 families swept (7 auditors + adversarial verify); **~30 confirmed diseased** via
   5 recurring root causes (R1 overloaded · R2 split-across-codes · R3 divergent duplicate defs across packages
-  · R4 inline-no-constant · R5 dead/unregistered). **Most alarming:** `SPORE-MEMORY-001..007` are dead yet wired
+  · R4 inline-no-constant · R5 dead/unregistered). **Most alarming:** `FUNGI-MEMORY-001..007` are dead yet wired
   as production-BLOCKING gates (false enforcement). P0 security overloads: SECRET-002, PRIVACY-002, GOV-004,
   MONO-001, INV-002, ASSIMILATE-002, NET-001/002. The #201 `EFFECT-006` split aligns with the policy; devtools
   `effect-graph.ts` still has the old inverted EFFECT-002 (must re-sync). **Remediation 🔲 gated on owner.**
-  Non-`SPORE-*` namespaces ✅ DONE (`wdjnqlw27`, §6): **`ERR_*` is diseased too — 2 security HIGHs**
+  Non-`FUNGI-*` namespaces ✅ DONE (`wdjnqlw27`, §6): **`ERR_*` is diseased too — 2 security HIGHs**
   (`ERR_BRIDGE_UNATTESTED` collapses ~5 attestation failures incl. misconfig-vs-forgery; `ERR_BRIDGE_DISPATCH_FAULT`
   conflates bridge-crash vs determinism-integrity breach) + a 3rd unused naming scheme (`Galerina-ERR-*`). **CBOR
   tags + HTTP `KernelErrorCode` are CLEAN** (single-source helpers — the target shape). HTTP §6b: 2 minor
@@ -492,11 +492,11 @@ aspirational (#102-106). **#211 listener hardening is now in-scope too.** Memory
   cross-ref, the `MEMORY-*` dead-production-gate check, then flip to CI-enforce. Remediation stages then clean
   families until each category → 0. (Remediation being done in token-staged increments at owner's "next".)
 - **Code-index dev tool** (`scripts/code-index.mjs`, owner-requested 2026-06-22): re-runnable map of EVERY
-  code (`SPORE-*`/`ERR_*`) → definition site + names + severity + every emit/test/doc location. **Query
+  code (`FUNGI-*`/`ERR_*`) → definition site + names + severity + every emit/test/doc location. **Query
   `build/code-index/CODE_INDEX.md` instead of grepping** (token-saver); `node scripts/code-index.mjs`
   regenerates (+ a full-location `code-index.json`). Quantified the disease: **268 codes emitted with NO
   exported constant** (R4), **462 doc-only/phantom mentions** (R5 / doc-drift), 3 dead-defined — across 444
-  src-real codes (364 SPORE + 80 ERR, 157 families). Complements the #215 scanner (scanner = gate; index = map).
+  src-real codes (364 FUNGI + 80 ERR, 157 families). Complements the #215 scanner (scanner = gate; index = map).
 - **#216 — WASM build-provenance metadata** (owner-requested 2026-06-22): every `build/*.wasm` (+ its
   `.lmanifest`) should carry build provenance — Galerina version (`version.json`), git commit / package version,
   repo URL, build timestamp, author (git config) — alongside the existing `sourceHash`/`governanceSignature`/
@@ -515,23 +515,23 @@ aspirational (#102-106). **#211 listener hardening is now in-scope too.** Memory
   🔲 scoped, build on go (broad/fuzzy extraction — wants a clean token budget).
 - **#218 — Coverage cross-check framework** (owner-directed 2026-06-22, motivated by the "codes" near-miss):
   for EACH governed dimension build a comprehensive index (codes ✅ `code-index`; capabilities/syntax = #217;
-  flows/deps ✅ project graph; governance rules; effects; non-SPORE namespaces), then **cross-check each audit
+  flows/deps ✅ project graph; governance rules; effects; non-FUNGI namespaces), then **cross-check each audit
   against its index bidirectionally** — (1) every index entry was audited (no blind spots), (2) every finding
   maps to an index entry (no phantoms), (3) the index ingests ALL sources incl. docs/README/registry (the
   Stage-D lesson, not just `src`). Output `coverage-<dimension>.md` reports; wire green ones into phase-close.
   **🔶 codes dimension BUILT + RUN 2026-06-22** (`scripts/audit-coverage.mjs codes` + phase-close `--soft`):
-  graph-the-audit, deterministic. First run: 930 indexed vs 67 registry → 317 src-real SPORE-* registry-uncovered
+  graph-the-audit, deterministic. First run: 930 indexed vs 67 registry → 317 src-real FUNGI-* registry-uncovered
   + 40 dead candidates (≥8 false-positive from a code-index result-object emit-detection gap) + 0 phantoms;
   report `build/coverage/coverage-codes.md`. Other dimensions (#217 capabilities, flows/deps) pending.
 - **code-index emit-fix (follow-up #1, 2026-06-22, adversarially verified `wwyui0w35`):** the indexer now
   counts result-object/constant emits (`code: ERR_X`) + multi-line `throw new XError(\n CODE,…)` windows, and
-  EXCLUDES comments + TS type positions (`readonly code: "SPORE-X"`, `"X"|"Y"` unions) — the verifier caught 7
+  EXCLUDES comments + TS type positions (`readonly code: "FUNGI-X"`, `"X"|"Y"` unions) — the verifier caught 7
   over-match false-emits (type-decls/comments incl. the indexer's own) which are now fixed. Cleared all 8
   ERR_REGISTRY_* false-"dead". **Two deferred follow-ups (verifier-specified):** (a) **const-id→code
-  resolution** — `code: SPORE_BOOL_BOUNDARY_001_FAILED_CLOSED` (unquoted SPORE *constant*, ≠ code string) is still
-  unrecognised, so `SPORE-BOOL-BOUNDARY-001/002` show as false-"dead" despite live production callers
+  resolution** — `code: FUNGI_BOOL_BOUNDARY_001_FAILED_CLOSED` (unquoted FUNGI *constant*, ≠ code string) is still
+  unrecognised, so `FUNGI-BOOL-BOUNDARY-001/002` show as false-"dead" despite live production callers
   (`bool-enforce.ts validateBoolBoundary`); needs a two-pass const-identifier→code map. (b) **CODE_RE
-  truncation** — `SPORE-PROFILE-005B` is truncated to `005` (the `[0-9]`-terminated pattern drops a trailing
+  truncation** — `FUNGI-PROFILE-005B` is truncated to `005` (the `[0-9]`-terminated pattern drops a trailing
   letter). Both are code-index accuracy fixes (dev-tool, not production). 🔲
 - **UNIVERSAL-COVERAGE REQUIREMENT (owner 2026-06-22, hard rule):** everything in Galerina must be indexed by
   ≥1 audit; an orphan (covered by NO index/audit) is a gap. End-state: `audit-coverage` shows 0 orphans + 0
@@ -632,8 +632,8 @@ aspirational (#102-106). **#211 listener hardening is now in-scope too.** Memory
   pii/phi inference (a write/read op on a protected PII/PHI-branded value → pii/phi.*; needs a brand→family map
   — likely a micro owner-decision on which brands = pii vs phi); ③remove the genuine over-declarations (C);
   ④update the 2 warning-asserting unit tests → EFFECT-006 error; ⑤port the over-declaration check to the
-  Stage-B `effect-checker.spore`; ⑥register `SPORE_EFFECT_006` metadata + diagnostics-spec doc. EFFECT-002 keeps
-  ONLY the transitive-missing case. Convergent #1 of 0062∧0063; folds into the #213 SPORE-* taxonomy audit.
+  Stage-B `effect-checker.fungi`; ⑥register `FUNGI_EFFECT_006` metadata + diagnostics-spec doc. EFFECT-002 keeps
+  ONLY the transitive-missing case. Convergent #1 of 0062∧0063; folds into the #213 FUNGI-* taxonomy audit.
 - **B5a DONE 2026-06-22:** signed central registry index built + wired (kernel `registry-index.ts` +
   `fusePackage` Gate 2c `registryCheck`; fail-closed; 8 `ERR_REGISTRY_*`; 80/80). Commits `65d8ac9` (module)
   + `1ecef1f` (wiring). The supply-chain layer of the certified-package-registry vision. Remaining greenlit:
@@ -665,9 +665,9 @@ R&D-only; the `.tmf` engine + confidentiality build are **gated on owner go**. C
 **Usable in Galerina NOW (govern-don't-absorb) — proposed:**
 | # | Task | From | Status |
 |---|---|---|---|
-| 203 | **Verify-before-decrypt key-release pattern** — `tests/patterns/pattern-10-verify-before-decrypt-gate.spore` (collapse/authorize/keyRelease, fail-closed). `galerina check` clean + runs on WASM (collapse(0)=-1; keyRelease(t,t,1)=1; keyRelease(f,t,1) & (t,t,0)=-1). Galerina governs confidentiality; crypto stays engine-side. | tri-enc U1 | ✅ **LANDED 2026-06-16** |
-| 204 | **"No cleartext semantic embedding across a trust boundary" rule** — candidate `SPORE-PRIVACY-*` data-exposure diagnostic (unencrypted embedding/attribute vector crossing egress/wire = violation). | tri-enc U2 (verdict 5) | 🔲 proposed (MED) |
-| — | Strengthen `SPORE-SUBSTRATE-001` substrate KB with the crypto-on-core evidence + extend wording to "encryption/hashing/signatures" (`future-substrates` contradiction already ✅ fixed). | U3 | 🔶 partial |
+| 203 | **Verify-before-decrypt key-release pattern** — `tests/patterns/pattern-10-verify-before-decrypt-gate.fungi` (collapse/authorize/keyRelease, fail-closed). `galerina check` clean + runs on WASM (collapse(0)=-1; keyRelease(t,t,1)=1; keyRelease(f,t,1) & (t,t,0)=-1). Galerina governs confidentiality; crypto stays engine-side. | tri-enc U1 | ✅ **LANDED 2026-06-16** |
+| 204 | **"No cleartext semantic embedding across a trust boundary" rule** — candidate `FUNGI-PRIVACY-*` data-exposure diagnostic (unencrypted embedding/attribute vector crossing egress/wire = violation). | tri-enc U2 (verdict 5) | 🔲 proposed (MED) |
+| — | Strengthen `FUNGI-SUBSTRATE-001` substrate KB with the crypto-on-core evidence + extend wording to "encryption/hashing/signatures" (`future-substrates` contradiction already ✅ fixed). | U3 | 🔶 partial |
 | — | Ground `fp4_block` `PrecisionTechnique` with the verified NVFP4 byte facts (16×E2M1 + 1-byte scale = 9 B/block, lossy, not-ternary). `TECHNIQUE_BITS fp4_block=4` already correct. | U4 | ✅ done (comment) |
 
 **NOT usable / gated:** `.tmf` Rust engine · KEM-DEM impl · TMX/container/NVFP4 specs · ML-DSA-65 hybrid spec (feeds #34 when it lands) · FFSM Phase 2 · MeshQL DB layer.
@@ -680,8 +680,8 @@ The complete, current catalog of everything outstanding — R&D gaps, designed-b
 - **R&D dispatched to the bridge:** `0078` OCSP-staple · `0079` framework-structure · `0080` memory-cleanup ·
   **`0081`** component photonic/tri gap verdicts · **`0082`** packages photonic/tri + **missing/incomplete/stub package status** ·
   **`0083`** closed-capabilities photonic/tri · **`0084`** security-standards × K3 (**PCI/DSS + full OWASP + CWE/NIST/MITRE/SLSA**) ·
-  **`0085`** **RAG-vulnerabilities rulebook-curator** (`E:\projects\RAG-vulnerabilities`) → reconcile `GALERINA_SECURITY_RULEBOOK` with the SPORE registry + RAG/LLM-retrieval threat class.
-- **R&D designed (build pending):** [`contract.permissions{}`](galerina-contract-permissions-design.md) (V_PERM + SPORE-PERM-001..006) ·
+  **`0085`** **RAG-vulnerabilities rulebook-curator** (`E:\projects\RAG-vulnerabilities`) → reconcile `GALERINA_SECURITY_RULEBOOK` with the FUNGI registry + RAG/LLM-retrieval threat class.
+- **R&D designed (build pending):** [`contract.permissions{}`](galerina-contract-permissions-design.md) (V_PERM + FUNGI-PERM-001..006) ·
   DRCM degrade-only operand · CBOR SubstrateAttestation Tag-418 · core-economics/core-security photonic lanes — see [galerina-architecture-rd-2026-06-23.md](galerina-architecture-rd-2026-06-23.md).
 - **Top build items:** ① wire S1 cert-gate into `kernel.ts:307` (closes the audit's only HIGH) · ② verify+fix WAT codegen fail-opens #163/#165 · ③ tainted-by-default entry params · ④ graph auto-discover.
 - **Missing/incomplete packages:** `framework-api-server`/`-example-app` have no `src/` (build); the `data-*/web-*/db-*/target-{js,wasm,native,gpu}` stubs need a build-vs-stay-stub + photonic/tri verdict (R&D 0082).

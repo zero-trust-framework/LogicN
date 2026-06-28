@@ -9,7 +9,7 @@
  *     digital core, or trap), it does not consume a maybe-wrong word. Silent miscorrection is the exact
  *     fail-open this code exists to avoid.
  *   • NOT for crypto / hashes / signatures / the K3 verdict. Those stay BIT-EXACT on the deterministic
- *     digital core (SPORE-SUBSTRATE-001 / crypto-on-core). FEC corrects a NOISY analog readout of a COMPUTE
+ *     digital core (FUNGI-SUBSTRATE-001 / crypto-on-core). FEC corrects a NOISY analog readout of a COMPUTE
  *     result; it does not manufacture integrity for a value that must be exact a priori.
  *   • Bounded power, stated plainly. Hamming SEC-DED corrects ≤1 and detects =2 bit errors PER codeword.
  *     ≥3 bit errors can alias to a wrong syndrome and be silently miscorrected — the fundamental limit of

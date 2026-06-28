@@ -2,7 +2,7 @@
 
 This document defines Galerina as a **security-first build system**, not only a compiler.
 
-Galerina should not silently translate `.spore` into JavaScript, WASM, native output or reports. It should check, test, explain and report before producing output.
+Galerina should not silently translate `.fungi` into JavaScript, WASM, native output or reports. It should check, test, explain and report before producing output.
 
 ---
 
@@ -17,7 +17,7 @@ Galerina build
 Internally, it should behave like a guardian pipeline:
 
 ```text
-1. Read boot.spore
+1. Read boot.fungi
 2. Run startup validation
 3. Parse code
 4. Type-check code
@@ -67,7 +67,7 @@ the project configuration.
 Startup validation should check:
 
 ```text
-boot.spore is valid
+boot.fungi is valid
 entry file exists
 main() exists
 required env variables exist
@@ -257,7 +257,7 @@ Suggestions should be reviewable. Galerina should not silently rewrite source fi
 
 ## Build Configuration
 
-Suggested `boot.spore` option:
+Suggested `boot.fungi` option:
 
 ```Galerina
 boot {

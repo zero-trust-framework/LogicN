@@ -28,7 +28,7 @@ Header injection allows an attacker to embed CRLF sequences to split an HTTP res
 1. Add `"HttpHeaderValue"` to the `SinkContext` union in `src/taint-checker.ts` alongside the existing closed set.
 2. Add an untaint boundary `Http.encodeHeaderValue(value)` that strips CR (`\r`), LF (`\n`), and null bytes and produces `SafeFor<HttpHeaderValue, String>`.
 3. Register `Http.setHeader` and any future `Response.header` stdlib call in `INJECTION_SINKS` in `src/taint-checker.ts`.
-4. Add `SPORE-TAINT-005` diagnostic for raw `Tainted<T>` reaching a header sink.
+4. Add `FUNGI-TAINT-005` diagnostic for raw `Tainted<T>` reaching a header sink.
 5. In `src/route-dispatcher.ts`, mark all values extracted from `req.headers` as taint sources (they already are via the `TAINT_SOURCES` set matching `"headers"`, but verify the hydrated record propagates this tag through `jsObjectToGalerina`).
 
 **Phase:** 33 (pre-HTTP endpoint hardening).
@@ -45,9 +45,9 @@ SSRF is the most consequential attack class for a governance platform. An attack
 
 **Implementation approach.**
 1. Define a `UrlAllowlistPolicy` record type in the stdlib that requires at minimum `{ schemes: string[], blockPrivateIp: boolean }`.
-2. In the taint checker, when `Url.parseAndAllowlist` is detected, extract the second argument. If it is a literal record, verify that `blockPrivateIp` is `true` and `schemes` does not contain `file`, `gopher`, or `dict`. Emit `SPORE-TAINT-006 SsrfPolicyInsufficient` as a warning if missing.
+2. In the taint checker, when `Url.parseAndAllowlist` is detected, extract the second argument. If it is a literal record, verify that `blockPrivateIp` is `true` and `schemes` does not contain `file`, `gopher`, or `dict`. Emit `FUNGI-TAINT-006 SsrfPolicyInsufficient` as a warning if missing.
 3. In the runtime stdlib implementation (`src/stdlib.ts`), enforce the policy at execution time — `Url.parseAndAllowlist` must reject private IP ranges regardless of what the policy declares, as defence-in-depth.
-4. Add `SPORE-NET-003 SsrfBlockPrivateIpRequired` as a compile-time governance diagnostic: any flow that declares `network.outbound` and calls user-controlled URL construction must prove `blockPrivateIp: true` is in the policy.
+4. Add `FUNGI-NET-003 SsrfBlockPrivateIpRequired` as a compile-time governance diagnostic: any flow that declares `network.outbound` and calls user-controlled URL construction must prove `blockPrivateIp: true` is in the policy.
 
 **Phase:** 33 (pre-HTTP endpoint).
 
@@ -56,7 +56,7 @@ SSRF is the most consequential attack class for a governance platform. An attack
 ### 1.3 Timing Attack Surface on `SecureString` Comparison
 
 **What is missing.**
-`SPORE-SECRET-002` (`SecretComparisonDenied`) blocks `==` comparisons on `SecureString` values. The value-state checker (`src/value-state-checker.ts`) enforces this. However, the check operates at the AST level and only catches direct `==` and `!=` operators. It does not prevent timing-unsafe comparisons through:
+`FUNGI-SECRET-002` (`SecretComparisonDenied`) blocks `==` comparisons on `SecureString` values. The value-state checker (`src/value-state-checker.ts`) enforces this. However, the check operates at the AST level and only catches direct `==` and `!=` operators. It does not prevent timing-unsafe comparisons through:
 - Stdlib string functions called on secure values (e.g. `String.startsWith`, `String.includes`, `String.indexOf`)
 - Custom gate functions that receive a `SecureString` and perform character-by-character equality internally
 - Record-literal equality checks where a secure field is inside a record compared with `==`
@@ -67,9 +67,9 @@ Additionally, there is no positive path: developers who need to compare a passwo
 Timing attacks against password comparison and HMAC verification are exploitable in ~microsecond resolution on local networks. In an aerospace or medical context, leaked authentication timing information is a governance breach even if no plaintext is revealed. The current system blocks the naive case but leaves the sophisticated cases open.
 
 **Implementation approach.**
-1. Extend `SPORE-SECRET-002` in `src/value-state-checker.ts` to also detect `SecureString` passed as an argument to any string intrinsic (pattern: call to `String.*` where an argument is of type `SecureString`). Emit the same diagnostic.
+1. Extend `FUNGI-SECRET-002` in `src/value-state-checker.ts` to also detect `SecureString` passed as an argument to any string intrinsic (pattern: call to `String.*` where an argument is of type `SecureString`). Emit the same diagnostic.
 2. Add `SecureString.timingSafeEqual(a, b)` to the stdlib registry (`src/stdlib-registry.ts`) as the one permitted comparison path. It must be implemented using Node.js `crypto.timingSafeEqual` in the host runtime.
-3. Add `SPORE-SECRET-004 SecureStringInRecordComparison`: if a record containing a `secure` field appears in a `==` expression, emit an error.
+3. Add `FUNGI-SECRET-004 SecureStringInRecordComparison`: if a record containing a `secure` field appears in a `==` expression, emit an error.
 4. Update the diagnostics documentation with the positive path so developers know what to use instead.
 
 **Phase:** 33.
@@ -87,7 +87,7 @@ This means if a developer names their parameter `incomingData` instead of `reque
 Parameter naming is not a security invariant. A refactor can silently remove taint coverage. For Phase 34, this is the primary inbound data surface.
 
 **Implementation approach.**
-1. Add a compile-time check in the governance verifier: any flow registered as a route handler via `route` declaration must have its first parameter in the `TAINT_SOURCES` set, or emit `SPORE-GOV-014 RouteHandlerParameterNotTaintSource` as a warning.
+1. Add a compile-time check in the governance verifier: any flow registered as a route handler via `route` declaration must have its first parameter in the `TAINT_SOURCES` set, or emit `FUNGI-GOV-014 RouteHandlerParameterNotTaintSource` as a warning.
 2. For longer-term correctness (Phase 35+), introduce a `RouteRequest` type alias in the stdlib that is structurally equivalent to the hydrated record but carries a type-level taint annotation, so the type checker enforces taint regardless of parameter name.
 3. In `src/route-dispatcher.ts`, add a header-count limit (recommend 100) and per-header-value length limit (recommend 8 KB) before hydration to prevent header-flooding attacks.
 
@@ -98,7 +98,7 @@ Parameter naming is not a security invariant. A refactor can silently remove tai
 ### 1.5 Missing: `contract.safety` Requirements Are Not Cross-Checked Against `contract.value`
 
 **What is missing.**
-`SPORE-VAL-001` requires `audit.write` for `safety_critical` flows. `SPORE-VAL-002` requires `deterministic_execution` in `contract.safety` for `safety_critical` flows. These two checks are implemented. However, the following cross-checks do not exist:
+`FUNGI-VAL-001` requires `audit.write` for `safety_critical` flows. `FUNGI-VAL-002` requires `deterministic_execution` in `contract.safety` for `safety_critical` flows. These two checks are implemented. However, the following cross-checks do not exist:
 
 - A flow with `classification medical` is not required to declare `contract.privacy { pii { ... } }`. It can have medical classification with no privacy protection.
 - A flow with `classification national_security` has no requirement for `contract.authority { require elevated_clearance }`.
@@ -110,10 +110,10 @@ Classification without enforcement is documentation. For aerospace and medical d
 
 **Implementation approach.**
 In `src/governance-verifier.ts`, extend the `verifyFlow` method (around line 734) with cross-classification checks using the existing `extractValueClassification` and `extractSafetyRequirements` helpers:
-1. If `classification === "medical"` and no `contract.privacy` block exists, emit `SPORE-VAL-004 MedicalClassificationMissingPrivacy` (error).
-2. If `classification === "national_security"` and no `contract.authority` block exists, emit `SPORE-VAL-005 NationalSecurityMissingAuthority` (error).
-3. If safety requirements include `bounded_runtime` but `extractArenaLimitMB` returns undefined and no `contract.limits { request_time }` is found, emit `SPORE-VAL-006 BoundedRuntimeRequirementNotEnforced` (warning).
-4. Add `SPORE-VAL-007 FinancialClassificationUnboundedCost` (warning) if `classification === "financial"` and no `contract.economics` block is present.
+1. If `classification === "medical"` and no `contract.privacy` block exists, emit `FUNGI-VAL-004 MedicalClassificationMissingPrivacy` (error).
+2. If `classification === "national_security"` and no `contract.authority` block exists, emit `FUNGI-VAL-005 NationalSecurityMissingAuthority` (error).
+3. If safety requirements include `bounded_runtime` but `extractArenaLimitMB` returns undefined and no `contract.limits { request_time }` is found, emit `FUNGI-VAL-006 BoundedRuntimeRequirementNotEnforced` (warning).
+4. Add `FUNGI-VAL-007 FinancialClassificationUnboundedCost` (warning) if `classification === "financial"` and no `contract.economics` block is present.
 
 **Phase:** 34.
 
@@ -143,13 +143,13 @@ Use NaN-boxing: represent `GalerinaValue` as a 64-bit float where integer values
 ### 2.2 Flow Compilation Caching: Disk-Persisted ExecutionGraph Is Not Invalidated on Policy Change
 
 **What is missing.**
-`src/execution-graph.ts` persists compiled ExecutionGraphs to `build/.spore-cache/<hash>.egraph.json`. The cache key is `flowName + ":" + sourceHash`. This invalidates correctly when source changes. It does not invalidate when:
+`src/execution-graph.ts` persists compiled ExecutionGraphs to `build/.fungi-cache/<hash>.egraph.json`. The cache key is `flowName + ":" + sourceHash`. This invalidates correctly when source changes. It does not invalidate when:
 - The runtime policy configuration changes (a flow compiled under `profile: dev` may be served from cache in `profile: production`)
 - The governance verifier produces different ProofGraph output for the same source (different deployment context)
 - A capability is revoked at the runtime policy level — the cached graph still contains the pre-revocation dispatch plan
 
 **Why it matters.**
-A cached ExecutionGraph for a flow compiled in `dev` profile (where `SPORE-GOV-002` is `info` severity rather than `warning`) could be loaded in a production server. Governance decisions that differ by profile would be silently skipped. This is the kind of bug that only appears in production.
+A cached ExecutionGraph for a flow compiled in `dev` profile (where `FUNGI-GOV-002` is `info` severity rather than `warning`) could be loaded in a production server. Governance decisions that differ by profile would be silently skipped. This is the kind of bug that only appears in production.
 
 **Implementation approach.**
 1. Change the disk cache key from `flowName:sourceHash` to `flowName:sourceHash:profileHash` where `profileHash = canonicalHash({ profile, runtimePolicyDigest })`.
@@ -191,7 +191,7 @@ When an AI tool (GitHub Copilot, Claude, a code review agent) reads a Galerina s
 Phase 34+ involves the runtime being partially written in Galerina. AI-assisted development of Galerina-in-Galerina code requires the AI to understand what contracts are valid, what effects are legal, and what capabilities are held. Without a structured output, AI tools hallucinate valid-looking contracts that fail compilation. The compliance document (`galerina-compliance.md`) shows the audit JSON format for runtime records, but there is no equivalent for pre-execution governance summaries.
 
 **Implementation approach.**
-1. Define a `GovernanceSummary` JSON schema at `docs/schemas/spore-governance-summary.v1.json`. Fields: `flowName`, `qualifier`, `effects`, `capabilities`, `privacyClasses`, `valueClassification`, `safetyRequirements`, `proofObligations`, `verified`, `proofLevel`, `hardwareTargets`, `auditRequired`. This is derivable directly from the existing `GovernanceVerifyResult` and `ProofGraph` structs.
+1. Define a `GovernanceSummary` JSON schema at `docs/schemas/fungi-governance-summary.v1.json`. Fields: `flowName`, `qualifier`, `effects`, `capabilities`, `privacyClasses`, `valueClassification`, `safetyRequirements`, `proofObligations`, `verified`, `proofLevel`, `hardwareTargets`, `auditRequired`. This is derivable directly from the existing `GovernanceVerifyResult` and `ProofGraph` structs.
 2. Add a `galerina governance-summary --json <file>` CLI command in `src/cli.ts` that compiles a file, runs the governance verifier, and outputs one `GovernanceSummary` object per flow as a JSON array.
 3. Add `galerina ast-export --json <file>` that outputs the AST as a JSON tree with node kinds, values, and source locations. This is the primary input an AI needs to reason about code structure.
 4. Add an `intent` field to the `GovernanceSummary` schema: the free-text intent string from the `intent { "..." }` declaration. This is the single most useful signal for an AI to understand *purpose*. It is already parsed and stored in `GovernanceVerifyResult.intentStatus` but not exported.
@@ -206,13 +206,13 @@ Phase 34+ involves the runtime being partially written in Galerina. AI-assisted 
 The `ProofGraph` interface (`src/proof-graph.ts`) stores `ProofEvidence` entries with `sourceHash`, `girHash`, and `checkerPassed: boolean`. The human- and AI-readable story of *why* a proof obligation was satisfied is a boolean (`checkerPassed`) — it does not include the checker name, the specific contract clause that satisfied it, or the diagnostic codes that were checked and passed. An AI reading a proof file cannot determine *which* contract clause satisfied the `capability` obligation without re-running the compiler.
 
 **Why it matters.**
-Phase 39 plans `galerina-verify proof.json --key spore-gov-2026-01` as a self-contained proof verifier. For this to be independently verifiable by AI tools and external auditors, the proof must be self-describing. A proof that says "checkerPassed: true" without naming the checker is a compliance gap: it satisfies the structure of a proof without containing the substance.
+Phase 39 plans `galerina-verify proof.json --key fungi-gov-2026-01` as a self-contained proof verifier. For this to be independently verifiable by AI tools and external auditors, the proof must be self-describing. A proof that says "checkerPassed: true" without naming the checker is a compliance gap: it satisfies the structure of a proof without containing the substance.
 
 **Implementation approach.**
 1. Extend `ProofEvidence` in `src/proof-graph.ts` with:
    - `checkerName: string` — e.g. `"EffectChecker"`, `"TaintChecker"`, `"ValueStateChecker"`
    - `contractClause: string` — the specific contract syntax that satisfied this obligation, e.g. `"contract.effects { audit.write }"`
-   - `satisfiedByDiagnosticCodes: readonly string[]` — the diagnostic codes that were verified as not-fired (e.g. `["SPORE-EFFECT-001", "SPORE-GOV-002"]`)
+   - `satisfiedByDiagnosticCodes: readonly string[]` — the diagnostic codes that were verified as not-fired (e.g. `["FUNGI-EFFECT-001", "FUNGI-GOV-002"]`)
 2. Populate these fields in `buildProofGraph` and `buildProofGraphCached` in `src/proof-graph.ts`. The information is available from the `obligations` array (`satisfiedBy` field) and from the effect checker result.
 3. Add a `narrative: string` field to `ProofObligation` — a one-sentence plain-English statement of what was proven (e.g. `"database.write is declared in effects and is permitted by runtime policy"`). This is the primary AI comprehension aid.
 
@@ -223,14 +223,14 @@ Phase 39 plans `galerina-verify proof.json --key spore-gov-2026-01` as a self-co
 ### 3.3 Intent System Is Not Linked to Effect Declarations
 
 **What is missing.**
-The `intent` declaration is parsed and stored. `SPORE-GOV-010` fires if a secure flow has no intent. But intent content is not currently checked against declared effects. A flow can declare `intent { "Read-only customer lookup" }` while also declaring `database.write` — this is a contradiction that no diagnostic catches. More importantly for AI understanding, the intent string is not used to generate suggested contract completions or to validate that the contract reflects the intent.
+The `intent` declaration is parsed and stored. `FUNGI-GOV-010` fires if a secure flow has no intent. But intent content is not currently checked against declared effects. A flow can declare `intent { "Read-only customer lookup" }` while also declaring `database.write` — this is a contradiction that no diagnostic catches. More importantly for AI understanding, the intent string is not used to generate suggested contract completions or to validate that the contract reflects the intent.
 
 **Why it matters.**
 The intent system's value proposition is that it makes Galerina codebases self-documenting for humans and AI alike. If intent and effects are not linked, the intent becomes a comment — not a governance artefact. For AI tools, a linked intent-effect model enables checking "does this intent imply capabilities the contract hasn't declared?" — a powerful AI-assisted review.
 
 **Implementation approach.**
 1. Define an intent vocabulary mapping in `src/governance-verifier.ts`: a map from intent keywords (e.g. `"read"`, `"lookup"`, `"fetch"`, `"query"`) to implied-read-only effects, and from keywords (e.g. `"create"`, `"write"`, `"update"`, `"delete"`, `"send"`) to implied-write effects. This is a simple `Map<string, EffectCategory>`.
-2. In `verifyFlow`, extract the intent string and tokenise it. If intent keywords imply read-only but `database.write` is declared, emit `SPORE-GOV-001 IntentBehaviourMismatch` — this diagnostic is currently deferred (listed as "deferred" in the governance-verifier header comment). This is the implementation.
+2. In `verifyFlow`, extract the intent string and tokenise it. If intent keywords imply read-only but `database.write` is declared, emit `FUNGI-GOV-001 IntentBehaviourMismatch` — this diagnostic is currently deferred (listed as "deferred" in the governance-verifier header comment). This is the implementation.
 3. Export the intent vocabulary map as part of the `GovernanceSummary` JSON schema so AI tools can use it for contract completion suggestions.
 
 **Phase:** 35.
@@ -310,7 +310,7 @@ For aerospace or financial deployments running Galerina on Blackwell clusters, i
 
 **Implementation approach.**
 1. Add a `multiTenantGpuDmaBreach` property to the `HardwareSealedDispatch` interface in `src/proof-graph.ts`: `readonly gpuDirectEnabled: boolean`. This is set by the host runtime when Blackwell NVLink Direct is in use.
-2. Add `SPORE-HW-004 GpuDirectRequiresEscalatedProof` diagnostic: if `contract.hardware { target gpu }` is declared and `gpuDirectEnabled: true` is signalled by the host runtime, escalate from `ProofLevel.Sealed` to `ProofLevel.Escalated` (equivalent to AcceleratorPlane requirements). Emit this as a warning so operators are aware the governance plane cannot observe inter-GPU DMA.
+2. Add `FUNGI-HW-004 GpuDirectRequiresEscalatedProof` diagnostic: if `contract.hardware { target gpu }` is declared and `gpuDirectEnabled: true` is signalled by the host runtime, escalate from `ProofLevel.Sealed` to `ProofLevel.Escalated` (equivalent to AcceleratorPlane requirements). Emit this as a warning so operators are aware the governance plane cannot observe inter-GPU DMA.
 3. Document that Galerina's invariant holds *for the workloads dispatched from the GovernancePlane* — inter-GPU DMA between pre-approved sealed buffers is still governed (the seals are applied before dispatch). The gap is only for *unsanctioned* DMA that a compromised GPU kernel could initiate.
 
 **Phase:** 40 (Blackwell support), but the diagnostic hook should be added in Phase 35 so it exists when Blackwell deployments appear.
@@ -350,7 +350,7 @@ The compliance document promises: "Here is the cryptographic proof." If `canonic
 1. In `src/runtime/canonicalHash.ts`, replace the existing implementation with a call to Node.js `crypto.createHash('sha256').update(JSON.stringify(input)).digest('hex')`. For WASM execution (no Node.js), add a `sha256` import from the host (`hashSha256(dataPtr, len): string` in `VectorHostImport`).
 2. Add a type alias `type CryptoHash = string & { readonly __cryptoHash: true }` and annotate `ProofEvidence.sourceHash` and `ProofEvidence.girHash` with this type to make it clear these are cryptographic hashes not arbitrary strings.
 3. For Phase 35 (pre-Phase 39), add a `GovernanceCertificate` struct (not a full ML-DSA signature yet) that includes `compilerId: string`, `compilerVersion: string`, and `certificateHash: CryptoHash` = SHA-256 of the full ProofGraph JSON. This provides integrity without requiring key infrastructure.
-4. Phase 39: replace `GovernanceCertificate` with full ML-DSA-44 (CRYSTALS-Dilithium) signature using the `spore-gov-sig.v1` algorithm already defined in the `governanceSignature` interface.
+4. Phase 39: replace `GovernanceCertificate` with full ML-DSA-44 (CRYSTALS-Dilithium) signature using the `fungi-gov-sig.v1` algorithm already defined in the `governanceSignature` interface.
 
 **Phase:** 33 (SHA-256 for `canonicalHash`), 35 (`GovernanceCertificate`), 39 (ML-DSA signing).
 
@@ -360,7 +360,7 @@ The compliance document promises: "Here is the cryptographic proof." If `canonic
 
 **What is missing.**
 `extractSafetyRequirements()` in `src/governance-verifier.ts` (around line 532) parses the `contract.safety` block and returns a `Set<string>`. Only two requirements have enforcement:
-- `deterministic_execution` — checked by `SPORE-VAL-002`
+- `deterministic_execution` — checked by `FUNGI-VAL-002`
 - (none others)
 
 The following requirements can be declared in a contract and are silently accepted without any verification:
@@ -376,13 +376,13 @@ For aerospace (DO-178C DAL A) and medical (IEC 62304 Class C), each safety requi
 **Implementation approach.**
 In `src/governance-verifier.ts`, after extracting safety requirements in `verifyFlow`, add enforcement for each named requirement:
 
-1. `bounded_runtime`: verify that `contract.limits { request_time }` is present (call `parseTimeoutConfig` from `src/runtime/timeoutPolicy.ts` on the contract node and check `deadlineMs !== undefined`). If missing, emit `SPORE-VAL-006` (error in production profile, warning in dev).
+1. `bounded_runtime`: verify that `contract.limits { request_time }` is present (call `parseTimeoutConfig` from `src/runtime/timeoutPolicy.ts` on the contract node and check `deadlineMs !== undefined`). If missing, emit `FUNGI-VAL-006` (error in production profile, warning in dev).
 
-2. `verified_arithmetic`: for `safety_critical` flows that declare this requirement, scan the flow body for any `float` literals or `Float.` stdlib calls. If found, emit `SPORE-VAL-008 VerifiedArithmeticViolation` (error) — safety-critical arithmetic must use the `decimal` type, not IEEE 754 float.
+2. `verified_arithmetic`: for `safety_critical` flows that declare this requirement, scan the flow body for any `float` literals or `Float.` stdlib calls. If found, emit `FUNGI-VAL-008 VerifiedArithmeticViolation` (error) — safety-critical arithmetic must use the `decimal` type, not IEEE 754 float.
 
-3. `no_dynamic_allocation`: verify that `contract.memory { arena }` is declared (call `extractArenaLimitMB`). If missing, emit `SPORE-VAL-009 NoDynamicAllocationRequiresArena` (error).
+3. `no_dynamic_allocation`: verify that `contract.memory { arena }` is declared (call `extractArenaLimitMB`). If missing, emit `FUNGI-VAL-009 NoDynamicAllocationRequiresArena` (error).
 
-4. `fault_tolerant` and `redundant_execution`: these require runtime infrastructure that does not yet exist. Emit `SPORE-VAL-010 SafetyRequirementNotYetEnforceable` (info) to document that the requirement was declared but enforcement is pending.
+4. `fault_tolerant` and `redundant_execution`: these require runtime infrastructure that does not yet exist. Emit `FUNGI-VAL-010 SafetyRequirementNotYetEnforceable` (info) to document that the requirement was declared but enforcement is pending.
 
 **Phase:** 34.
 
@@ -403,7 +403,7 @@ Implement a Phase 35 intermediate: `GovernanceCertificate` (distinct from the fu
 ```typescript
 export interface GovernanceCertificate {
   readonly algorithm: "sha256-hmac-v1";  // symmetric, not asymmetric — adequate for Phase 35
-  readonly compilerId: string;           // e.g. "spore-compiler-0.32.0"
+  readonly compilerId: string;           // e.g. "fungi-compiler-0.32.0"
   readonly certificateHash: string;      // SHA-256 of canonical ProofGraph JSON (excluding this field)
   readonly issuedAt: string;             // ISO timestamp
 }
@@ -419,7 +419,7 @@ export interface GovernanceCertificate {
 ### 5.4 `contract.value` Classification Does Not Drive Capability Requirements
 
 **What is missing.**
-The `contract.value { classification safety_critical }` block is checked for the presence of `audit.write` (SPORE-VAL-001) and `deterministic_execution` (SPORE-VAL-002). The `classification` field is validated against the `RECOGNISED_VALUE_CLASSIFICATIONS` set (SPORE-VAL-003). But classification does not currently drive *capability* requirements.
+The `contract.value { classification safety_critical }` block is checked for the presence of `audit.write` (FUNGI-VAL-001) and `deterministic_execution` (FUNGI-VAL-002). The `classification` field is validated against the `RECOGNISED_VALUE_CLASSIFICATIONS` set (FUNGI-VAL-003). But classification does not currently drive *capability* requirements.
 
 A flow can declare `classification: aerospace` (wait — `aerospace` is not even in `RECOGNISED_VALUE_CLASSIFICATIONS`, which is a separate gap) or `classification: safety_critical` and never declare a capability like `safety.write` or `flight_control.command`. The governance model allows `safety_critical` work to proceed with zero capability declarations.
 
@@ -439,7 +439,7 @@ const CLASSIFICATION_REQUIRED_CAPABILITIES: ReadonlyMap<string, readonly string[
   ["national_security",  ["authority.elevated"]],
 ]);
 ```
-2. In `verifyFlow`, after extracting the classification, check that each required capability appears in the flow's declared capabilities (from `CapabilityGraph` / effect declarations). Emit `SPORE-VAL-011 ClassificationRequiresCapability` (error in production, warning in dev) for each missing required capability.
+2. In `verifyFlow`, after extracting the classification, check that each required capability appears in the flow's declared capabilities (from `CapabilityGraph` / effect declarations). Emit `FUNGI-VAL-011 ClassificationRequiresCapability` (error in production, warning in dev) for each missing required capability.
 3. Add `"aerospace"` and `"defence"` to `RECOGNISED_VALUE_CLASSIFICATIONS` in `src/governance-verifier.ts` — these are obvious omissions given the master architecture document's target domains.
 
 **Phase:** 34.
@@ -459,8 +459,8 @@ For SEC Rule 17a-4 (financial records authenticity) and EU AI Act Article 12 (un
 **Implementation approach.**
 1. In `src/audit-writer.ts`, add a `chainHash` field to the audit record structure: `chainHash = sha256(previousChainHash || JSON.stringify(currentRecord))`. The first record uses a well-known genesis hash (all-zeros SHA-256).
 2. Add an `AuditChainVerifier` function that reads the audit log and verifies the chain in O(n). Expose as `galerina audit verify <logfile>` in `src/cli.ts`.
-3. For the compile-time side: add `SPORE-GOV-015 AuditEventMismatchesEffect` diagnostic. In `verifyFlow`, check that the `event` field of `AuditLog.write(...)` call arguments matches the declared effects. If a flow declares `database.write` but the audit event string does not contain any of `["write", "create", "update", "delete", "insert"]`, emit a warning. This prevents misleading audit trails.
-4. The value-state checker should also prevent `secure` values from appearing in audit event descriptions — `SPORE-SECRET-001` covers `AuditLog.write` for protected values, but should be extended to cover `audit.write` effect declarations that use `SecureString` as the event payload.
+3. For the compile-time side: add `FUNGI-GOV-015 AuditEventMismatchesEffect` diagnostic. In `verifyFlow`, check that the `event` field of `AuditLog.write(...)` call arguments matches the declared effects. If a flow declares `database.write` but the audit event string does not contain any of `["write", "create", "update", "delete", "insert"]`, emit a warning. This prevents misleading audit trails.
+4. The value-state checker should also prevent `secure` values from appearing in audit event descriptions — `FUNGI-SECRET-001` covers `AuditLog.write` for protected values, but should be extended to cover `audit.write` effect declarations that use `SecureString` as the event payload.
 
 **Phase:** 35.
 
@@ -480,7 +480,7 @@ For SEC Rule 17a-4 (financial records authenticity) and EU AI Act Article 12 (un
 | 2.3 | Record field access optimisation + stdlib fast dispatch | 34 |
 | 3.1 | GovernanceSummary JSON schema + CLI export | 34 |
 | 3.2 | ProofEvidence checkerName + contractClause + narrative | 34 |
-| 3.3 | Intent-to-effect linkage (SPORE-GOV-001 implementation) | 35 |
+| 3.3 | Intent-to-effect linkage (FUNGI-GOV-001 implementation) | 35 |
 | 4.1 | ARM SVE2 minimum host-import interface | 35 |
 | 4.2 | Apple Neural Engine ImmutableInputSeal protocol | 35 / 38 |
 | 4.3 | Nvidia Blackwell GPU-Direct governance diagnostic | 35 / 40 |

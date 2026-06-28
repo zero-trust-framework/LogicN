@@ -28,7 +28,7 @@ Adopted: all three — staged in priority order
 
 ### Problem
 
-`levenshtein()` runs on every `SPORE-TYPE-001` diagnostic. In files with many
+`levenshtein()` runs on every `FUNGI-TYPE-001` diagnostic. In files with many
 unknown types, this becomes expensive.
 
 ### Fix

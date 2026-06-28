@@ -203,15 +203,15 @@ build/
     diagnostics.json
 ```
 
-### Manifest Diagnostic Codes (SPORE-MANIFEST series)
+### Manifest Diagnostic Codes (FUNGI-MANIFEST series)
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-MANIFEST-001` | missing runtime manifest |
-| `SPORE-MANIFEST-002` | manifest integrity failure |
-| `SPORE-MANIFEST-003` | unsupported manifest version |
-| `SPORE-MANIFEST-004` | invalid capability reference |
-| `SPORE-MANIFEST-005` | runtime target mismatch |
+| `FUNGI-MANIFEST-001` | missing runtime manifest |
+| `FUNGI-MANIFEST-002` | manifest integrity failure |
+| `FUNGI-MANIFEST-003` | unsupported manifest version |
+| `FUNGI-MANIFEST-004` | invalid capability reference |
+| `FUNGI-MANIFEST-005` | runtime target mismatch |
 
 ## Effect Checker (Planned)
 
@@ -287,18 +287,18 @@ The propagation algorithm runs iteratively. Each pass updates every node's
 `inferredEffects` based on the effects of its callees. Iteration continues
 until no node's inferred set changes (fixpoint).
 
-### Effect Diagnostic Codes (SPORE-EFFECT series)
+### Effect Diagnostic Codes (FUNGI-EFFECT series)
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-EFFECT-001` | undeclared effect — function uses an effect not in its declaration |
-| `SPORE-EFFECT-002` | forbidden effect — effect is not permitted in this context |
-| `SPORE-EFFECT-003` | missing capability — effect requires a capability not granted |
-| `SPORE-EFFECT-004` | unsafe transitive — unsafe effect propagated from callee |
+| `FUNGI-EFFECT-001` | undeclared effect — function uses an effect not in its declaration |
+| `FUNGI-EFFECT-002` | forbidden effect — effect is not permitted in this context |
+| `FUNGI-EFFECT-003` | missing capability — effect requires a capability not granted |
+| `FUNGI-EFFECT-004` | unsafe transitive — unsafe effect propagated from callee |
 
-Legacy codes `SPORE-E4001` (undeclared effect), `SPORE-E4002` (undeclared propagated
-effect), `SPORE-E4003` (forbidden compile-time effect) remain active until the
-SPORE-EFFECT series fully replaces them.
+Legacy codes `FUNGI-E4001` (undeclared effect), `FUNGI-E4002` (undeclared propagated
+effect), `FUNGI-E4003` (forbidden compile-time effect) remain active until the
+FUNGI-EFFECT series fully replaces them.
 
 See `docs/Knowledge-Bases/effect-checker-and-boundary-checker.md` for the full
 specification including the 12-effect table, algorithm, and checker output schema.
@@ -376,17 +376,17 @@ export interface CheckedCallExpression {
 
 ### Boundary Diagnostic Codes
 
-**Compiler-specific (SPORE-BOUNDARY series):**
+**Compiler-specific (FUNGI-BOUNDARY series):**
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-BOUNDARY-001` | missing validation at untrusted boundary |
-| `SPORE-BOUNDARY-002` | missing replay protection on webhook boundary |
-| `SPORE-BOUNDARY-003` | unsafe effect crosses trust boundary |
-| `SPORE-BOUNDARY-004` | secret leaked across boundary |
+| `FUNGI-BOUNDARY-001` | missing validation at untrusted boundary |
+| `FUNGI-BOUNDARY-002` | missing replay protection on webhook boundary |
+| `FUNGI-BOUNDARY-003` | unsafe effect crosses trust boundary |
+| `FUNGI-BOUNDARY-004` | secret leaked across boundary |
 
-**Extended boundary checker codes (SPORE-BOUNDARY-001 through SPORE-BOUNDARY-009)
-and legacy codes SPORE-E4004 through SPORE-E4006** remain active. See
+**Extended boundary checker codes (FUNGI-BOUNDARY-001 through FUNGI-BOUNDARY-009)
+and legacy codes FUNGI-E4004 through FUNGI-E4006** remain active. See
 `docs/Knowledge-Bases/effect-checker-and-boundary-checker.md` for the
 full 16-item implementation checklist and all boundary violation examples.
 
@@ -434,12 +434,12 @@ packages-galerina/galerina-core-compiler/src/
     effect-interface.ts      ← Effect, EffectCategory
     effect-graph.ts          ← EffectGraph, EffectGraphNode
     effect-propagation.ts    ← propagateEffects(), inferExpressionEffects()
-    effect-diagnostics.ts    ← SPORE-EFFECT-001–004
+    effect-diagnostics.ts    ← FUNGI-EFFECT-001–004
   boundaries/
     boundary-interface.ts    ← Boundary, BoundaryType, TrustLevel
     boundary-graph.ts        ← BoundaryGraph, BoundaryEdge
     boundary-requirement.ts  ← BoundaryRequirement
-    boundary-diagnostics.ts  ← SPORE-BOUNDARY-001–004
+    boundary-diagnostics.ts  ← FUNGI-BOUNDARY-001–004
   manifests/
     manifest-builder.ts      ← buildManifest()
     manifest-schema.ts       ← RuntimeManifest, sub-types

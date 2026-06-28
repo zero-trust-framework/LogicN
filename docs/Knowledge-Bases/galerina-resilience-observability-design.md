@@ -29,11 +29,11 @@ From the research synthesis, three blocks answer three distinct questions:
 
 ### Proposed Syntax (Approved)
 
-```spore
+```fungi
 resilience {
   // Retry on transient failure (default: 0 retries)
   // ⚠️ Forbidden on flows with database.write or gateway.charge effects
-  //    unless idempotent: true is declared (SPORE-RES-001)
+  //    unless idempotent: true is declared (FUNGI-RES-001)
   retry    3 times  with_backoff exponential  max_delay 5s
   idempotent: true  // required when retry + database.write or gateway.charge
 
@@ -85,7 +85,7 @@ The runtime infers from the `effects {}` profile. Explicit declaration overrides
 
 ### Example
 
-```spore
+```fungi
 secure flow fetchPaymentStatus(orderId: String) -> Result<PaymentStatus, ApiError>
 contract {
   intent { "Fetch payment status from the external payment gateway." }
@@ -120,7 +120,7 @@ These MUST be kept separate because:
 
 ### Proposed Syntax
 
-```spore
+```fungi
 observability {
   // Distributed tracing (default: disabled for pure flows, enabled for secure governed flows)
   trace    enabled | disabled | sample_rate 0.1  // float 0.0–1.0 (IEEE 754)
@@ -155,7 +155,7 @@ When `observability {}` is omitted:
 
 ### Example
 
-```spore
+```fungi
 secure flow processPayment(readonly req: PaymentRequest) -> Result<Receipt, Error>
 contract {
   intent { "Process a payment transaction." }
@@ -178,7 +178,7 @@ contract {
 
 ## 3. Implementation Plan
 
-### Parser (Stage A TypeScript + governance-verifier.spore)
+### Parser (Stage A TypeScript + governance-verifier.fungi)
 
 Both blocks follow the **auto-by-default pattern** already established for `economics {}`:
 1. Parser recognises `resilience {}` and `observability {}` as `contractDecl` sub-blocks (same one-liner dispatch pattern as the ~18 existing sub-blocks)
@@ -188,13 +188,13 @@ Both blocks follow the **auto-by-default pattern** already established for `econ
 
 ### Governance Verifier
 
-Add SPORE codes:
-- `SPORE-RES-001` — conflicting resilience settings (retry + database.write without explicit `idempotent: true`)
-- `SPORE-OBS-001` — observability declared on `pure` flow (tracing a side-effect-free flow has no observable effects)
+Add FUNGI codes:
+- `FUNGI-RES-001` — conflicting resilience settings (retry + database.write without explicit `idempotent: true`)
+- `FUNGI-OBS-001` — observability declared on `pure` flow (tracing a side-effect-free flow has no observable effects)
 
-### Stage B .spore (canonical form)
+### Stage B .fungi (canonical form)
 
-After compiler acceptance, add `resilience` and `observability` sub-block parsing to `governance-verifier.spore` (incremental migration pattern).
+After compiler acceptance, add `resilience` and `observability` sub-block parsing to `governance-verifier.fungi` (incremental migration pattern).
 
 ---
 
@@ -203,7 +203,7 @@ After compiler acceptance, add `resilience` and `observability` sub-block parsin
 | Decision | Resolution |
 |---|---|
 | `circuit_breaker` fallback | ✅ Added — trips V_DPM via `on_quarantine set_posture_bit DPM_DEFENSIVE_MODE` |
-| retry + `database.write` | ✅ Forbidden without `idempotent: true` in `resilience {}` → `SPORE-RES-001` |
+| retry + `database.write` | ✅ Forbidden without `idempotent: true` in `resilience {}` → `FUNGI-RES-001` |
 | `observability` vs `telemetry` | ✅ Keep `observability {}` — operational accuracy, AI authoring clarity |
 | Sampling rate type | ✅ Float (0.0–1.0), IEEE 754 — consistent with `economics {}` primitives |
 | Alert destinations | ✅ Platform-agnostic — `alert_on` declares predicate only; routing is deployment config |

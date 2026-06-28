@@ -33,9 +33,9 @@
 - `HardwareObservabilityLevel` enum (FullyObservable → Probabilistic)
 - `ProofLevel` enum (Standard=0 → FormalRequired=4)
 - `HARDWARE_TRUST_PROFILES` — 37 hardware targets with full trust profiles
-- `SPORE-HW-001/002/003` — quantum/sealed/AcceleratorPlane enforcement
+- `FUNGI-HW-001/002/003` — quantum/sealed/AcceleratorPlane enforcement
 - `contract.hardware {}` parser block
-- +20 tests (spore-hw-enforcement.test.mjs)
+- +20 tests (fungi-hw-enforcement.test.mjs)
 
 ### Phase 27 — WASM Instantiation
 - `wabt` npm integration in `assembleWAT()`
@@ -141,7 +141,7 @@ The runtime can only be rewritten in Galerina once Galerina can express: network
 
 The most impactful next step is **Phase 28 — Profile Enforcement**. This is when:
 - `profile strict` and `profile high_integrity` become compiler errors (not just KB)
-- `SPORE-PROFILE-001..007` diagnostics fire for prohibited constructs
+- `FUNGI-PROFILE-001..007` diagnostics fire for prohibited constructs
 - Aerospace examples running under strict profile produce real compiler enforcement
 - The profile benchmark shows what the strict profile costs
 

@@ -20,10 +20,10 @@ Galerina supports exactly three binding forms:
 
 | Keyword | Rejected | Reason |
 |---|---|---|
-| `var` | `SPORE-SYNTAX-001` | Ambiguous across languages; encourages mutable-by-default style |
-| `const` | `SPORE-SYNTAX-002` | Overlaps with `let`/`readonly`; different languages disagree on its meaning |
+| `var` | `FUNGI-SYNTAX-001` | Ambiguous across languages; encourages mutable-by-default style |
+| `const` | `FUNGI-SYNTAX-002` | Overlaps with `let`/`readonly`; different languages disagree on its meaning |
 
-The compiler's `validateCoreSyntaxSafety()` detects `var` and `const` in `.spore` source files and emits errors immediately.
+The compiler's `validateCoreSyntaxSafety()` detects `var` and `const` in `.fungi` source files and emits errors immediately.
 
 ---
 
@@ -44,7 +44,7 @@ Reassignment is an error:
 ```galerina
 let count = 1
 count = count + 1
-// ^ SPORE-BINDING-001: Cannot reassign immutable let binding count.
+// ^ FUNGI-BINDING-001: Cannot reassign immutable let binding count.
 //   Use mut only if reassignment is required.
 ```
 
@@ -81,7 +81,7 @@ let total =
     .fold(0, (sum, order) => sum + order.amount)
 ```
 
-`mut` in a pure flow context emits `SPORE-BINDING-004`.
+`mut` in a pure flow context emits `FUNGI-BINDING-004`.
 
 ---
 
@@ -98,10 +98,10 @@ Mutation through a `readonly` binding is rejected:
 ```galerina
 readonly config = loadConfig()
 config.apiBaseUrl = "http://unsafe.example.com"
-// ^ SPORE-BINDING-002: Cannot reassign readonly binding config.
+// ^ FUNGI-BINDING-002: Cannot reassign readonly binding config.
 
 config.nested.value = 1
-// ^ SPORE-BINDING-003: Cannot mutate property nested.value through readonly binding config.
+// ^ FUNGI-BINDING-003: Cannot mutate property nested.value through readonly binding config.
 ```
 
 ---
@@ -127,7 +127,7 @@ readonly safeUser = user
 
 ```galerina
 var count = 0
-// ^ SPORE-SYNTAX-001: Galerina does not support var.
+// ^ FUNGI-SYNTAX-001: Galerina does not support var.
 //   Use let for immutable bindings or mut for mutable bindings.
 ```
 
@@ -142,7 +142,7 @@ var count = 0
 
 ```galerina
 const API_VERSION = "1.0.0"
-// ^ SPORE-SYNTAX-002: Galerina does not support const.
+// ^ FUNGI-SYNTAX-002: Galerina does not support const.
 //   Use let for immutable bindings or readonly for read-only values.
 ```
 
@@ -203,7 +203,7 @@ match input.validate() {
 }
 ```
 
-Unhandled `Result` in a pipeline emits `SPORE-PIPELINE-003`.
+Unhandled `Result` in a pipeline emits `FUNGI-PIPELINE-003`.
 
 ---
 
@@ -242,7 +242,7 @@ guarded flow createOrder(input: CreateOrderRequest)
 }
 ```
 
-An undeclared effect in a pipeline stage emits `SPORE-PIPELINE-004`.
+An undeclared effect in a pipeline stage emits `FUNGI-PIPELINE-004`.
 
 ---
 
@@ -277,7 +277,7 @@ readonly headers = request.headers
 // Bad: pipeline stage mutates readonly receiver.
 headers
   .setAuthorization("Bearer xyz")
-// ^ SPORE-PIPELINE-005: Pipeline stage attempts to mutate a readonly receiver.
+// ^ FUNGI-PIPELINE-005: Pipeline stage attempts to mutate a readonly receiver.
 ```
 
 ---
@@ -313,31 +313,31 @@ The runtime may plan:
 
 ## 15. Diagnostic Codes
 
-### Syntax diagnostics (SPORE-SYNTAX-*)
+### Syntax diagnostics (FUNGI-SYNTAX-*)
 
 | Code | Name | Trigger |
 |---|---|---|
-| `SPORE-SYNTAX-001` | `VAR_NOT_SUPPORTED` | `var` used as a binding keyword |
-| `SPORE-SYNTAX-002` | `CONST_NOT_SUPPORTED` | `const` used as a binding keyword |
+| `FUNGI-SYNTAX-001` | `VAR_NOT_SUPPORTED` | `var` used as a binding keyword |
+| `FUNGI-SYNTAX-002` | `CONST_NOT_SUPPORTED` | `const` used as a binding keyword |
 
-### Binding diagnostics (SPORE-BINDING-*)
-
-| Code | Name | Trigger |
-|---|---|---|
-| `SPORE-BINDING-001` | `IMMUTABLE_LET_REASSIGNMENT` | Reassignment of a `let` binding |
-| `SPORE-BINDING-002` | `READONLY_REASSIGNMENT` | Reassignment of a `readonly` binding |
-| `SPORE-BINDING-003` | `READONLY_PROPERTY_MUTATION` | Property mutation through a `readonly` binding |
-| `SPORE-BINDING-004` | `MUT_IN_PURE_CONTEXT` | `mut` used in a pure or safe context |
-
-### Pipeline diagnostics (SPORE-PIPELINE-*)
+### Binding diagnostics (FUNGI-BINDING-*)
 
 | Code | Name | Trigger |
 |---|---|---|
-| `SPORE-PIPELINE-001` | `UNKNOWN_PIPELINE_METHOD` | Method does not exist on current type |
-| `SPORE-PIPELINE-002` | `PIPELINE_TYPE_MISMATCH` | Stage output type ≠ next stage input type |
-| `SPORE-PIPELINE-003` | `UNHANDLED_FALLIBLE_PIPELINE` | `Result`-returning stage with no error handling |
-| `SPORE-PIPELINE-004` | `PIPELINE_UNDECLARED_EFFECT` | Stage uses an effect not declared on the flow |
-| `SPORE-PIPELINE-005` | `PIPELINE_READONLY_MUTATION` | Stage mutates a `readonly` receiver |
+| `FUNGI-BINDING-001` | `IMMUTABLE_LET_REASSIGNMENT` | Reassignment of a `let` binding |
+| `FUNGI-BINDING-002` | `READONLY_REASSIGNMENT` | Reassignment of a `readonly` binding |
+| `FUNGI-BINDING-003` | `READONLY_PROPERTY_MUTATION` | Property mutation through a `readonly` binding |
+| `FUNGI-BINDING-004` | `MUT_IN_PURE_CONTEXT` | `mut` used in a pure or safe context |
+
+### Pipeline diagnostics (FUNGI-PIPELINE-*)
+
+| Code | Name | Trigger |
+|---|---|---|
+| `FUNGI-PIPELINE-001` | `UNKNOWN_PIPELINE_METHOD` | Method does not exist on current type |
+| `FUNGI-PIPELINE-002` | `PIPELINE_TYPE_MISMATCH` | Stage output type ≠ next stage input type |
+| `FUNGI-PIPELINE-003` | `UNHANDLED_FALLIBLE_PIPELINE` | `Result`-returning stage with no error handling |
+| `FUNGI-PIPELINE-004` | `PIPELINE_UNDECLARED_EFFECT` | Stage uses an effect not declared on the flow |
+| `FUNGI-PIPELINE-005` | `PIPELINE_READONLY_MUTATION` | Stage mutates a `readonly` receiver |
 
 ---
 
@@ -380,14 +380,14 @@ New `AstNodeKind` values:
 | `BindingKind`, `BindingDeclaration` types | ✅ | `@galerina/core/src/index.ts` |
 | `MethodChainExpression`, `MethodChainCall` types | ✅ | `@galerina/core/src/index.ts` |
 | `readonlyDecl`, `methodChainExpr` AstNodeKind | ✅ | `@galerina/core/src/index.ts` |
-| `SPORE-SYNTAX-001..002` constants | ✅ | `@galerina/core-compiler` |
-| `SPORE-BINDING-001..004` constants | ✅ | `@galerina/core-compiler` |
-| `SPORE-PIPELINE-001..005` constants | ✅ | `@galerina/core-compiler` |
+| `FUNGI-SYNTAX-001..002` constants | ✅ | `@galerina/core-compiler` |
+| `FUNGI-BINDING-001..004` constants | ✅ | `@galerina/core-compiler` |
+| `FUNGI-PIPELINE-001..005` constants | ✅ | `@galerina/core-compiler` |
 | `var`/`const` detection in `validateCoreSyntaxSafety()` | ✅ | Real check; comment lines excluded |
 | `checkBindingReassignment()` | ✅ | Typed stub; emits correct diagnostics |
 | `checkReadonlyMutation()` | ✅ | Typed stub; emits correct diagnostics |
 | `checkMethodChain()` | ✅ | Typed stub; empty result pending type scope |
-| `boot.spore` `const` → `readonly` | ✅ | Fixed 2026-05-26 |
+| `boot.fungi` `const` → `readonly` | ✅ | Fixed 2026-05-26 |
 | `compile-time-vs-runtime-authority.md` `const` → `readonly` | ✅ | Fixed 2026-05-26 |
 | Tests: var/const detection | ✅ | 6 new tests; 12/12 passing |
 | Binding reassignment parser (Stage 2) | ⏳ | Blocked on AST binding scope |

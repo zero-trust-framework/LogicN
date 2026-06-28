@@ -79,7 +79,7 @@ Release builds must be stricter than debug builds.
 
 ```text
  1. Load project          → project graph, source file list, package graph
- 2. Resolve entry         → entry point (boot.spore / main.spore)
+ 2. Resolve entry         → entry point (boot.fungi / main.fungi)
  3. Parse source          → AST, tokens, source map base, syntax diagnostics
  4. Check types           → unknown types, generic arity, Option/Result usage,
                             enum exhaustiveness, safe/unsafe state transitions,

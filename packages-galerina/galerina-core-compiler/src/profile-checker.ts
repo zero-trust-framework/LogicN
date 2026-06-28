@@ -31,66 +31,66 @@ export interface ProfileDiagnostic {
   readonly flowName?: string;
 }
 
-/** SPORE-PROFILE-001: Recursion is prohibited in strict / high_integrity profiles. */
-export const SPORE_PROFILE_001 = {
-  code: "SPORE-PROFILE-001",
+/** FUNGI-PROFILE-001: Recursion is prohibited in strict / high_integrity profiles. */
+export const FUNGI_PROFILE_001 = {
+  code: "FUNGI-PROFILE-001",
   name: "RecursionInRestrictedProfile",
   severity: "error" as const,
   message: "Recursion is prohibited in this profile. Restricted profiles require bounded, analyzable execution. Rewrite using a bounded loop.",
 } as const;
 
-/** SPORE-PROFILE-002: Unbounded loops are prohibited in strict profiles. */
-export const SPORE_PROFILE_002 = {
-  code: "SPORE-PROFILE-002",
+/** FUNGI-PROFILE-002: Unbounded loops are prohibited in strict profiles. */
+export const FUNGI_PROFILE_002 = {
+  code: "FUNGI-PROFILE-002",
   name: "UnboundedLoopInStrictProfile",
   severity: "error" as const,
   message: "Unbounded loop in strict profile. Strict profiles require loops with a provable bound (compile-time-known iteration limit or contract.limits).",
 } as const;
 
-/** SPORE-PROFILE-003: try/catch/throw used (reserved — should never appear in Galerina). */
-export const SPORE_PROFILE_003 = {
-  code: "SPORE-PROFILE-003",
+/** FUNGI-PROFILE-003: try/catch/throw used (reserved — should never appear in Galerina). */
+export const FUNGI_PROFILE_003 = {
+  code: "FUNGI-PROFILE-003",
   name: "ExceptionControlFlowProhibited",
   severity: "error" as const,
   message: "Exception control flow (try/catch/throw) is prohibited. Galerina uses Result<T, Error>. This is enforced by construction — these are not Galerina keywords.",
 } as const;
 
-/** SPORE-PROFILE-004: JIT / dynamic code target in strict profile. */
-export const SPORE_PROFILE_004 = {
-  code: "SPORE-PROFILE-004",
+/** FUNGI-PROFILE-004: JIT / dynamic code target in strict profile. */
+export const FUNGI_PROFILE_004 = {
+  code: "FUNGI-PROFILE-004",
   name: "JitProhibitedInStrictProfile",
   severity: "error" as const,
   message: "JIT / dynamic code execution target is prohibited in strict profile. Use ahead-of-time compilation (WASM or native).",
 } as const;
 
-/** SPORE-PROFILE-005: Dynamic package load in strict profile. */
-export const SPORE_PROFILE_005 = {
-  code: "SPORE-PROFILE-005",
+/** FUNGI-PROFILE-005: Dynamic package load in strict profile. */
+export const FUNGI_PROFILE_005 = {
+  code: "FUNGI-PROFILE-005",
   name: "DynamicPackageLoadProhibited",
   severity: "error" as const,
   message: "Dynamic package loading is prohibited in strict profile. All imports must resolve at compile time.",
 } as const;
 
-/** SPORE-PROFILE-005B: Dynamic regex from user input in strict / high_integrity profile. */
-export const SPORE_PROFILE_005B = {
-  code: "SPORE-PROFILE-005B",
+/** FUNGI-PROFILE-005B: Dynamic regex from user input in strict / high_integrity profile. */
+export const FUNGI_PROFILE_005B = {
+  code: "FUNGI-PROFILE-005B",
   name: "DynamicRegexInStrictProfile",
   severity: "error" as const,
   message: "Dynamic regex from runtime input is prohibited in strict/high_integrity profiles (ReDoS risk). Use Regex.escapeLiteral() for literal matching, or a compile-time constant pattern.",
   suggestedFix: "Replace String.matchesPattern(userInput) with String.contains() / String.startsWith() / a compile-time constant regex.",
 } as const;
 
-/** SPORE-PROFILE-006: Missing runtime_budget in high_integrity profile. */
-export const SPORE_PROFILE_006 = {
-  code: "SPORE-PROFILE-006",
+/** FUNGI-PROFILE-006: Missing runtime_budget in high_integrity profile. */
+export const FUNGI_PROFILE_006 = {
+  code: "FUNGI-PROFILE-006",
   name: "MissingRuntimeBudget",
   severity: "warning" as const,
   message: "high_integrity profile recommends a runtime budget. Add contract.limits { request_time ... } to declare a bounded execution budget.",
 } as const;
 
-/** SPORE-PROFILE-007: Dynamic runtime mutation in high_integrity profile. */
-export const SPORE_PROFILE_007 = {
-  code: "SPORE-PROFILE-007",
+/** FUNGI-PROFILE-007: Dynamic runtime mutation in high_integrity profile. */
+export const FUNGI_PROFILE_007 = {
+  code: "FUNGI-PROFILE-007",
   name: "DynamicRuntimeMutationProhibited",
   severity: "error" as const,
   message: "Dynamic runtime mutation is prohibited in high_integrity profile. State transitions must be deterministic and declared.",
@@ -310,24 +310,24 @@ export function checkProfiles(
     if (flowNode === undefined) continue;
 
     if (merged.denyRecursion && isRecursive(ast, flow.name)) {
-      diagnostics.push({ ...SPORE_PROFILE_001, flowName: flow.name,
-        message: `Flow '${flow.name}': ${SPORE_PROFILE_001.message}` });
+      diagnostics.push({ ...FUNGI_PROFILE_001, flowName: flow.name,
+        message: `Flow '${flow.name}': ${FUNGI_PROFILE_001.message}` });
     }
 
     if (merged.denyUnboundedLoop && hasUnboundedLoop(flowNode)) {
-      diagnostics.push({ ...SPORE_PROFILE_002, flowName: flow.name,
-        message: `Flow '${flow.name}': ${SPORE_PROFILE_002.message}` });
+      diagnostics.push({ ...FUNGI_PROFILE_002, flowName: flow.name,
+        message: `Flow '${flow.name}': ${FUNGI_PROFILE_002.message}` });
     }
 
     if (merged.requireRuntimeBudget && !hasRuntimeBudget(flowNode)) {
-      diagnostics.push({ ...SPORE_PROFILE_006, flowName: flow.name,
-        message: `Flow '${flow.name}': ${SPORE_PROFILE_006.message}` });
+      diagnostics.push({ ...FUNGI_PROFILE_006, flowName: flow.name,
+        message: `Flow '${flow.name}': ${FUNGI_PROFILE_006.message}` });
     }
 
     // F8: dynamic regex in strict/high_integrity profile → ReDoS risk
     if (merged.denyDynamicRegex && hasDynamicRegexCall(flowNode)) {
-      diagnostics.push({ ...SPORE_PROFILE_005B, flowName: flow.name,
-        message: `Flow '${flow.name}': ${SPORE_PROFILE_005B.message}` });
+      diagnostics.push({ ...FUNGI_PROFILE_005B, flowName: flow.name,
+        message: `Flow '${flow.name}': ${FUNGI_PROFILE_005B.message}` });
     }
   }
 
@@ -336,6 +336,6 @@ export function checkProfiles(
 
 /** Profile diagnostic constants for external reference. */
 export const PROFILE_DIAGNOSTICS = [
-  SPORE_PROFILE_001, SPORE_PROFILE_002, SPORE_PROFILE_003, SPORE_PROFILE_004,
-  SPORE_PROFILE_005, SPORE_PROFILE_006, SPORE_PROFILE_007,
+  FUNGI_PROFILE_001, FUNGI_PROFILE_002, FUNGI_PROFILE_003, FUNGI_PROFILE_004,
+  FUNGI_PROFILE_005, FUNGI_PROFILE_006, FUNGI_PROFILE_007,
 ] as const;

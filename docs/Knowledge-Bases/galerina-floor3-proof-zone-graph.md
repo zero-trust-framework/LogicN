@@ -21,10 +21,10 @@ flowchart TD
         C["Governance Verifier\n• scan invariant:block\n• build paramNames set"]
 
         C --> D{"Symbol\nResolution"}
-        D -- "name NOT in params" --> E["SPORE-INV-004\nSymbolUnresolved\n❌ HARD ERROR"]
+        D -- "name NOT in params" --> E["FUNGI-INV-004\nSymbolUnresolved\n❌ HARD ERROR"]
         D -- "name in params or builtin" --> F{"Constant-Fold\nEvaluation"}
 
-        F -- "expr = literal false\ne.g. ensure false;\nensure 1 > 5;" --> G["SPORE-INV-001\nStatically FALSE\n❌ HARD ERROR\n(dead contract)"]
+        F -- "expr = literal false\ne.g. ensure false;\nensure 1 > 5;" --> G["FUNGI-INV-001\nStatically FALSE\n❌ HARD ERROR\n(dead contract)"]
         F -- "expr = literal true\ne.g. ensure 5 > 0;\nensure true;" --> H["statically_verified\n✅ ZERO WAT OVERHEAD\nGoal A confirmed\nProofObligation Tag 403"]
         F -- "expr unknown\ne.g. ensure amount > 0;\n(runtime parameter)" --> I["runtime-precheck\n⚡ WAT GATE PENDING\nProofObligation Tag 403"]
 
@@ -75,10 +75,10 @@ graph LR
         LEX["Lexer\nTokenKind enum\nSymbol/Keyword/Identifier\nOperator/Number/String"]
         PAR["Parser\nAstNode tree\nensureDecl nodes\ncontractDecl dispatch"]
         SYM["Symbol Resolver\nname → scope binding\nparamDecl extraction"]
-        TYP["Type Checker\nSPORE-TYPE-001..023\nAuto deferral (TYPE-023)\nGeneric type skip"]
-        VST["Value-State Checker\nSecureString taint\nSPORE-SECRET-001/002/003\nRedact() escape valve"]
-        EFF["Effect Checker\nDeny-by-default\nSPORE-EFFECT-001..005\nSPORE-CAP-001 wildcard ban"]
-        GOV["Governance Verifier\n37+ SPORE codes\nProofGraph\nDomain Guard Differential Proof\nInvariant static eval"]
+        TYP["Type Checker\nFUNGI-TYPE-001..023\nAuto deferral (TYPE-023)\nGeneric type skip"]
+        VST["Value-State Checker\nSecureString taint\nFUNGI-SECRET-001/002/003\nRedact() escape valve"]
+        EFF["Effect Checker\nDeny-by-default\nFUNGI-EFFECT-001..005\nFUNGI-CAP-001 wildcard ban"]
+        GOV["Governance Verifier\n37+ FUNGI codes\nProofGraph\nDomain Guard Differential Proof\nInvariant static eval"]
         GIR["GIR Emitter\nGoverned IR\nreclit/matche/arm ops\nWAT module builder"]
         WAT["WAT Emitter\ninvariant gates\nSingle-exit bodies\ni32.eqz + unreachable"]
 
@@ -86,7 +86,7 @@ graph LR
     end
 
     subgraph PENTHOUSE["Penthouse"]
-        SRC[".spore source\ncontract {}\ninvariant {}\nensure expr"]
+        SRC[".fungi source\ncontract {}\ninvariant {}\nensure expr"]
     end
 
     subgraph FLOOR4["Floor 4 Attestation"]
@@ -113,14 +113,14 @@ ensure expr;  in  invariant {}  inside  contract {}
 Governance Verifier checks in order:
         │
         ├─ [1] invariant:block has no ensure children?
-        │      → SPORE-INV-003 ⚠️ WARNING (empty block)
+        │      → FUNGI-INV-003 ⚠️ WARNING (empty block)
         │
         ├─ [2] any identifier in expr not in paramNames?
-        │      → SPORE-INV-004 ❌ ERROR (symbol unresolved)
+        │      → FUNGI-INV-004 ❌ ERROR (symbol unresolved)
         │        prevents silent (i32.const 0) in WAT
         │
         ├─ [3] constant-fold expr = false?
-        │      → SPORE-INV-001 ❌ ERROR (dead contract)
+        │      → FUNGI-INV-001 ❌ ERROR (dead contract)
         │        binary never produced
         │
         └─ [4] constant-fold expr = true?

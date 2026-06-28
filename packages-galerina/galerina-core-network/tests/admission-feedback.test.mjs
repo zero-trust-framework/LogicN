@@ -75,7 +75,7 @@ test("health DOWN throttles a healthy channel (ALLOW → INDETERMINATE → deny)
   assert.equal(telemetryToSideSignal({ health: "DOWN" }), INDETERMINATE);
   const d = certGateWithTelemetry(HEALTHY_CERT, { health: "DOWN" });
   assert.equal(d.authorized, false);
-  assert.ok(d.diagnostic, "an INDETERMINATE collapse must surface SPORE-GOV-3VL-001");
+  assert.ok(d.diagnostic, "an INDETERMINATE collapse must surface FUNGI-GOV-3VL-001");
 });
 
 test("an anomaly score at/above the throttle threshold degrades to INDETERMINATE", () => {

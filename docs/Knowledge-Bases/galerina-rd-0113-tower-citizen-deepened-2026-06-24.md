@@ -1,7 +1,7 @@
 # R&D 0113 — Tower-citizen, deepened: K3 maths recheck, compliance, and the 0110 cross-compare
 
 **Date:** 2026-06-24 · **Workflow:** `wkmyodj4u` · **Status:** R&D record (no build; one rename recommendation — see §5)
-**Posture:** verify-before-build · trust the math · fail-closed (unknown→deny) · No-Coercion · crypto-on-core (SPORE-SUBSTRATE-001)
+**Posture:** verify-before-build · trust the math · fail-closed (unknown→deny) · No-Coercion · crypto-on-core (FUNGI-SUBSTRATE-001)
 **Companion docs:** [`galerina-three-valued-governance.md`](galerina-three-valued-governance.md) · [`galerina-substrate-failure-model.md`](galerina-substrate-failure-model.md) · [`galerina-tree-walker-speed-and-photonic-governance.md`](galerina-tree-walker-speed-and-photonic-governance.md) · [`galerina-rd-0110-photonic-matmul-refutation-deepened-2026-06-24.md`](galerina-rd-0110-photonic-matmul-refutation-deepened-2026-06-24.md) · [`galerina-formal-verification-direction.md`](galerina-formal-verification-direction.md)
 
 > Owner ask: "do the same with tower-citizen and the TritMesh O(1)-matmul refutation (0110) — recheck maths/compliance, deep research, extend, cross-compare."
@@ -12,7 +12,7 @@
 
 - **Genuine strong-Kleene K3.** Verdict ∈ {−1 DENY, 0 INDETERMINATE, +1 ALLOW}; `vAnd = minTrit`, `vOr = maxTrit`, delegated to one shared trit algebra (`galerina-substrate-math`). This is Kleene 1952, cited in-code, not reinvented.
 - **The one deliberate divergence from pure lattice algebra is in the SAFE direction and test-pinned:** `allOf([]) = INDETERMINATE` (deny-by-default), overriding the lattice empty-meet = ⊤ = ALLOW. Intentional fail-safe; correct for an admission gate.
-- **`decideAtBoundary`** collapses INDETERMINATE → deny and **always** emits `SPORE-GOV-3VL-001` — never silent (meets the posture's "never-silent" standard).
+- **`decideAtBoundary`** collapses INDETERMINATE → deny and **always** emits `FUNGI-GOV-3VL-001` — never silent (meets the posture's "never-silent" standard).
 - **G-gap primitives sound:** quorum (distinct-signer M-of-N → K3, anti-Sybil de-dup, equivocation→INDETERMINATE, clean-shortfall→DENY); lease (TTL/caveat, macaroons-style); partial-return (per-field K3); the 4-gate signed-config admission rail (`admitPhotonicConfig`: hash-pin + Ed25519 + revocation + capability, deny-by-default).
 - **Substrate fold = exact von Neumann residual** with the correct `pBad < 0.5` guard (NMR closed form); `vAnd` makes the substrate operand **degrade-only** (availability-not-safety) — a *proved* monotonicity theorem, not a standard library construction.
 

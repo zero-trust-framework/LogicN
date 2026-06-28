@@ -4,7 +4,7 @@ import { writeTmf } from "../../../galerina-ext-tmf/dist/index.js";
 // tmf-container — ".tmf trust-container CREATION" throughput.
 //
 // THE NODE.JS COLUMN IS LITERALLY GALERINA'S SHIPPED ENGINE. `@galerina/ext-tmf` is
-// pure TypeScript-on-Node (no `.spore` execution path exists), so its creation
+// pure TypeScript-on-Node (no `.fungi` execution path exists), so its creation
 // throughput *is* the Node.js row. python.py and bench.rs are independent,
 // byte-identical reference implementations of the same v0 format — that is the
 // honest "can other languages create a .tmf, and how fast?" comparison.

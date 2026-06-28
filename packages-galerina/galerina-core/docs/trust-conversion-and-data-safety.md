@@ -26,21 +26,21 @@ An `unsafe` variable cannot be used by normal runtime logic. It cannot be:
 
 Invalid:
 
-```spore
+```fungi
 let raw_price: unsafe Decimal = request.price
 let total = raw_price + 1
 ```
 
 Invalid:
 
-```spore
+```fungi
 let raw_name: unsafe String = request.name
 let clean_name = raw_name.trim()
 ```
 
 Allowed:
 
-```spore
+```fungi
 let raw_price: unsafe Decimal = request.price
 let price: safe Decimal = validate.decimal(raw_price)
 let total: safe Decimal = price + 1
@@ -74,7 +74,7 @@ External boundaries produce unsafe values by default:
 
 Example:
 
-```spore
+```fungi
 let body: unsafe Json = request.body
 ```
 
@@ -84,7 +84,7 @@ let body: unsafe Json = request.body
 
 Validation proves that data matches a required structure or rule:
 
-```spore
+```fungi
 let email: safe Email = validate.email(raw_email)
 ```
 
@@ -96,7 +96,7 @@ values and runtime policy.
 Guard inspects data for dangerous patterns or payloads and rejects suspicious
 values instead of rewriting them:
 
-```spore
+```fungi
 let checked: safe String = guard(raw_comment)
 ```
 
@@ -104,7 +104,7 @@ let checked: safe String = guard(raw_comment)
 
 Sanitize cleans and normalises generic untrusted data:
 
-```spore
+```fungi
 let cleaned: safe String = sanitize.data(raw)
 ```
 
@@ -117,7 +117,7 @@ execution or XML.
 
 Encode converts a safe value into a destination-specific safe value:
 
-```spore
+```fungi
 let html: safe Html = encode.html(cleaned)
 let url_part: safe UrlPart = encode.url(cleaned)
 let css: safe Css = encode.css(cleaned)
@@ -151,7 +151,7 @@ conversion point.
 
 Galerina should prefer parameterized typed queries:
 
-```spore
+```fungi
 let q: Query = sql {
     SELECT id, email
     FROM users
@@ -165,7 +165,7 @@ database.main.run(q, {
 
 Unsafe interpolation is invalid:
 
-```spore
+```fungi
 let q: Query = sql {
     SELECT * FROM users WHERE id = ${raw_id}
 }

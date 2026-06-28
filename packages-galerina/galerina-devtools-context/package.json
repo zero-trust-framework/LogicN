@@ -1,7 +1,7 @@
 {
   "name": "@galerina/devtools-context",
   "version": "1.0.0-beta.2",
-  "description": "Context Receipt generator for Galerina: produces minimal AI-consumable structural summaries from .spore source. 98% token reduction vs raw source while preserving full architectural intent.",
+  "description": "Context Receipt generator for Galerina: produces minimal AI-consumable structural summaries from .fungi source. 98% token reduction vs raw source while preserving full architectural intent.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

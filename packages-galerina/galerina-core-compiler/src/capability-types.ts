@@ -5,9 +5,9 @@
  * The compiler uses these at compile time; DSS.wasm uses the bitmasks at runtime.
  *
  * MONOTONICITY RULE: capability bits can ONLY be CLEARED during emergency transitions.
- * The emergency state machine verifier (SPORE-MONO-001/002) enforces this.
+ * The emergency state machine verifier (FUNGI-MONO-001/002) enforces this.
  *
- * Bit layout matches V_DPM register in DSS.wasm (vdpm.spore):
+ * Bit layout matches V_DPM register in DSS.wasm (vdpm.fungi):
  *   0 = network.outbound   4 = database.write
  *   1 = storage.write      5 = ai.inference
  *   2 = secret.access      6 = shell.execute
@@ -82,7 +82,7 @@ export const KNOWN_CAPABILITIES = new Set<string>([
   SystemCapabilityType.NativeCall,
   SystemCapabilityType.LedgerMutate,
   SystemCapabilityType.DatabaseRead,
-  // Wildcard roots (banned by SPORE-CAP-001 but known)
+  // Wildcard roots (banned by FUNGI-CAP-001 but known)
   "network.*", "storage.*", "database.*",
 ]);
 
@@ -99,7 +99,7 @@ export const KNOWN_CAPABILITIES = new Set<string>([
  * capabilities — a SUPERSET of the ontology that never renames or drops one.
  *
  * Purely additive: this does NOT touch KNOWN_CAPABILITIES, the V_DPM bit map, or
- * effect recognition in .spore source. It only gives the border + fusion gates a
+ * effect recognition in .fungi source. It only gives the border + fusion gates a
  * single, alias-aware allow-list to deny against.
  */
 
@@ -147,7 +147,7 @@ export function isAdmissibleCapability(name: string): boolean {
 
 /** Emergency signal types — what can trigger an emergency {} transition. */
 export const enum EmergencySignalType {
-  InvariantFailure   = "invariant_failure",   // SPORE-INV-000 trap fired
+  InvariantFailure   = "invariant_failure",   // FUNGI-INV-000 trap fired
   CapabilityDenied   = "capability_denied",   // V_DPM & mask === 0
   FuelExhausted      = "fuel_exhausted",      // Wasmtime fuel ran out
   ManifestTampered   = "manifest_tampered",   // sourceHash mismatch
@@ -200,7 +200,7 @@ export function normaliseFloor(name: string): string {
 }
 
 /**
- * Validate an EmergencyTransition for SPORE-MONO-001 (monotonicity).
+ * Validate an EmergencyTransition for FUNGI-MONO-001 (monotonicity).
  * Returns error messages; empty array = valid.
  *
  * Rule: transitions may ONLY clear capability bits (deny) or set mode flags.
@@ -216,7 +216,7 @@ export function validateTransitionMonotonicity(t: EmergencyTransition): string[]
         `Known capabilities: ${[...KNOWN_CAPABILITIES].filter(c => !c.includes("*")).join(", ")}`
       );
     }
-    // No "allow" actions in emergency transitions — that would expand permissions (SPORE-MONO-001)
+    // No "allow" actions in emergency transitions — that would expand permissions (FUNGI-MONO-001)
   }
   return errors;
 }

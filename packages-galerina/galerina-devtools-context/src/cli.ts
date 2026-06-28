@@ -2,7 +2,7 @@
 // =============================================================================
 // @galerina/devtools-context — CLI
 //
-// galerina-context receipt <file.spore> [--flow <flowName>] [--json] [--markdown] [--summary]
+// galerina-context receipt <file.fungi> [--flow <flowName>] [--json] [--markdown] [--summary]
 //
 // Without --flow: generates receipts for ALL flows in the file.
 // With --flow:    generates receipt for just that one flow.
@@ -48,7 +48,7 @@ async function main(): Promise<number> {
       const filePath = args[1];
       if (!filePath) {
         process.stderr.write(
-          "Usage: galerina-context receipt <file.spore> [--flow <flowName>] [--json] [--markdown] [--summary]\n",
+          "Usage: galerina-context receipt <file.fungi> [--flow <flowName>] [--json] [--markdown] [--summary]\n",
         );
         return 1;
       }
@@ -121,7 +121,7 @@ async function main(): Promise<number> {
       process.stdout.write(`galerina-context — Galerina Context Receipt Generator\n\n`);
       process.stdout.write(`Commands:\n`);
       process.stdout.write(
-        `  receipt <file.spore> [--flow <name>] [--json] [--markdown] [--summary]   Generate context receipt(s)\n\n`,
+        `  receipt <file.fungi> [--flow <name>] [--json] [--markdown] [--summary]   Generate context receipt(s)\n\n`,
       );
       process.stdout.write(`Options:\n`);
       process.stdout.write(`  --flow <name>   Generate receipt for a specific flow only\n`);

@@ -60,11 +60,11 @@ The `after 90 days` clause declares a time-based automatic transition. The runti
 
 The compiler builds a transition graph from the `transitions` block and verifies:
 
-1. Every state referenced in a transition exists in the `states` block — SPORE-WORKFLOW-001 if not
-2. No transition is declared more than once with the same source and target — SPORE-WORKFLOW-002
-3. Every `requires role.X` clause is resolvable to a declared capability — SPORE-CAP-001
-4. No flow implementing a workflow transition may skip `audit.write` when `require audit on every transition` is declared — SPORE-AUDIT-001
-5. Time-based transitions (`after N days`) cannot declare `requires actor` — they are system-initiated — SPORE-WORKFLOW-003
+1. Every state referenced in a transition exists in the `states` block — FUNGI-WORKFLOW-001 if not
+2. No transition is declared more than once with the same source and target — FUNGI-WORKFLOW-002
+3. Every `requires role.X` clause is resolvable to a declared capability — FUNGI-CAP-001
+4. No flow implementing a workflow transition may skip `audit.write` when `require audit on every transition` is declared — FUNGI-AUDIT-001
+5. Time-based transitions (`after N days`) cannot declare `requires actor` — they are system-initiated — FUNGI-WORKFLOW-003
 
 Invalid state jumps are caught at compile time. A flow that attempts to set `Approved -> Draft` on an `ExpenseClaim` will fail unless that transition is declared.
 
@@ -81,7 +81,7 @@ Each transition compiles to an implicit effect profile:
 | Submitted -> Rejected | `database.write`, `audit.write`, `event.emit`, `capability:role.approver` |
 | Approved -> Archived | `database.write`, `audit.write` (system-initiated, no actor required) |
 
-The flow implementing the transition must declare at least these effects. Undeclared effects that are used at runtime produce SPORE-EFFECT-002.
+The flow implementing the transition must declare at least these effects. Undeclared effects that are used at runtime produce FUNGI-EFFECT-002.
 
 ```galerina
 flow submitClaim(id: ClaimId) -> Result<ExpenseClaim, ApiError>

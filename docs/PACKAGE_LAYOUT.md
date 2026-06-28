@@ -15,8 +15,8 @@ my-galerina-app/
 |-- package.json
 |-- package-galerina.json
 |-- galerina.lock.json
-|-- boot.spore
-|-- main.spore
+|-- boot.fungi
+|-- main.fungi
 |-- packages/
 |   `-- normal app/vendor packages
 `-- packages-galerina/
@@ -128,7 +128,7 @@ galerina-tools-benchmark
 galerina-devtools-*
 ```
 
-If a production build includes a default-disabled package, `boot.spore` or
+If a production build includes a default-disabled package, `boot.fungi` or
 `package-galerina.json` must declare an explicit production package override with a
 reason, and preferably an expiry. The override must be reported. Without the
 override, startup/build validation must fail.

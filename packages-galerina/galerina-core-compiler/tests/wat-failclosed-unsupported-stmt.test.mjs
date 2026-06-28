@@ -32,7 +32,7 @@ import {
 import { assembleWAT } from "../dist/wat-assembler.js";
 
 function compileToWAT(src) {
-  const prog = parseProgram(src, "test.spore");
+  const prog = parseProgram(src, "test.fungi");
   const errs = (prog.diagnostics ?? []).filter(d => d.severity === "error");
   if (errs.length > 0) throw new Error("Parse error: " + errs.map(d => d.message).join("; "));
   const fx = checkEffects(prog.flows, prog.ast);
@@ -120,7 +120,7 @@ describe("Task #128: supported statements are unaffected by the guard", () => {
       "  }",
       "  return result }",
     ].join("\n"));
-    // owner Fork A=TRAP: the `+` arithmetic now lowers through $spore_checked_add_i32,
+    // owner Fork A=TRAP: the `+` arithmetic now lowers through $fungi_checked_add_i32,
     // whose body legitimately contains `unreachable` (the overflow trap). Pin the
     // original intent — "no #128 unsupported-statement stub" — against that marker
     // instead of the bare `unreachable`.

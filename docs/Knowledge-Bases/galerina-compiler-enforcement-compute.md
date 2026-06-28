@@ -50,7 +50,7 @@ process.spawn()
 Compile error:
 
 ```text
-SPORE-TARGET-CAP-001: database.write is forbidden inside GPU-targeted flow
+FUNGI-TARGET-CAP-001: database.write is forbidden inside GPU-targeted flow
 
 Flow:  inference
 Target: gpu
@@ -253,14 +253,14 @@ prevent accelerator starvation
 
 | Code | Meaning |
 |---|---|
-| `SPORE-TARGET-CAP-001` | Effect forbidden inside this compute target |
-| `SPORE-TARGET-CAP-002` | Deterministic flow cannot use nondeterministic effect |
-| `SPORE-VERIFY-001` | Cross-target verification failed within tolerance |
-| `SPORE-VERIFY-002` | Verification tolerance not declared for this target |
-| `SPORE-BUDGET-001` | Flow exceeds declared VRAM budget |
-| `SPORE-BUDGET-002` | Register usage exceeds declared limit |
-| `SPORE-BUDGET-003` | Occupancy constraint cannot be met for this kernel |
-| `SPORE-BUDGET-004` | Timeout budget exceeded |
+| `FUNGI-TARGET-CAP-001` | Effect forbidden inside this compute target |
+| `FUNGI-TARGET-CAP-002` | Deterministic flow cannot use nondeterministic effect |
+| `FUNGI-VERIFY-001` | Cross-target verification failed within tolerance |
+| `FUNGI-VERIFY-002` | Verification tolerance not declared for this target |
+| `FUNGI-BUDGET-001` | Flow exceeds declared VRAM budget |
+| `FUNGI-BUDGET-002` | Register usage exceeds declared limit |
+| `FUNGI-BUDGET-003` | Occupancy constraint cannot be met for this kernel |
+| `FUNGI-BUDGET-004` | Timeout budget exceeded |
 
 ---
 

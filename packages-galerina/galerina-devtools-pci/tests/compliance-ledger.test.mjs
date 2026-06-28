@@ -28,7 +28,7 @@ import {
 import { AuditEgress } from "../../galerina-core-sentinel-egress/dist/index.js";
 
 function freshDir(tag) {
-  return mkdtempSync(join(tmpdir(), `spore-compliance-${tag}-`));
+  return mkdtempSync(join(tmpdir(), `fungi-compliance-${tag}-`));
 }
 
 const FIXED_TS = "2026-06-14T00:00:00.000Z";
@@ -49,7 +49,7 @@ describe("end-to-end: consumes a real audit-egress ledger", () => {
     assert.ok(batches.length >= 1, "expected at least one egress batch");
 
     const report = buildComplianceReportFromDir(dir, FIXED_TS);
-    assert.equal(report.schemaVersion, "spore.compliance-ledger.v1");
+    assert.equal(report.schemaVersion, "fungi.compliance-ledger.v1");
     assert.equal(report.entries.length, 3, "one compliance entry per audit record");
 
     const [e0, e1, e2] = report.entries;
@@ -209,7 +209,7 @@ describe("append-only persistence", () => {
 // ---------------------------------------------------------------------------
 describe("empty ledger handling", () => {
   it("a missing egress dir yields an empty report with genesis chain head", () => {
-    const report = buildComplianceReportFromDir(join(tmpdir(), `spore-compliance-missing-${process.pid}-${Date.now()}`), FIXED_TS);
+    const report = buildComplianceReportFromDir(join(tmpdir(), `fungi-compliance-missing-${process.pid}-${Date.now()}`), FIXED_TS);
     assert.equal(report.entries.length, 0);
     assert.equal(report.batchCount, 0);
     assert.equal(report.allowCount, 0);
@@ -232,7 +232,7 @@ describe("auditor-consumable JSON", () => {
     const report = buildComplianceReport(batches, "/tmp/x", FIXED_TS);
     const json = JSON.stringify(report);
     const parsed = JSON.parse(json);
-    assert.equal(parsed.schemaVersion, "spore.compliance-ledger.v1");
+    assert.equal(parsed.schemaVersion, "fungi.compliance-ledger.v1");
     assert.ok(Array.isArray(parsed.entries));
     const e = parsed.entries[0];
     for (const field of ["who", "what", "effect", "decision", "timestamp", "entryHash", "prevHash", "seq"]) {

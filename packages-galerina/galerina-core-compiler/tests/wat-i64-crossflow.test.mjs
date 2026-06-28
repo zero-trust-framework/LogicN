@@ -9,7 +9,7 @@
  * WRONG module. This test pins the fix (thread the callee's Int64 param type as the arg's expectedType) and
  * guards the regression with the STRICT gate `valid && diagnostics.length === 0`.
  *
- * Bypasses SPORE-NUMERIC-001 (the raw WASM-emit path does not run checkValueStates) — the gate stays closed
+ * Bypasses FUNGI-NUMERIC-001 (the raw WASM-emit path does not run checkValueStates) — the gate stays closed
  * for real `run`/build; this proves the *lowering* is faithful so the owner-gated lift has no cross-flow hole.
  */
 import { test } from "node:test";
@@ -26,7 +26,7 @@ pure flow callerConstExpr(x: Int64) -> Int64 contract { effects {} } { return ca
 pure flow callerNegLit(x: Int64) -> Int64 contract { effects {} } { return callee(x, -5000000000) }`;
 
 test("0115: cross-flow Int64 literal/const/neg args lower to i64 — module validates strictly + runs exact", async () => {
-  const prog = parseProgram(SRC, "i64-crossflow.spore");
+  const prog = parseProgram(SRC, "i64-crossflow.fungi");
   const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, `parse error: ${errs.map((d) => d.message).join("; ")}`);
 

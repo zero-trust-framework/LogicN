@@ -21,7 +21,7 @@ Implementation: src/attestation.ts (Phase 10A)
 Signed attestation is produced at the end of a complete build and execution cycle. Each stage produces an artifact; the final attestation binds them all with a cryptographic signature.
 
 ```
-Galerina Source (.spore)
+Galerina Source (.fungi)
        │
        ▼
    Compiler
@@ -55,7 +55,7 @@ produced. Together these hashes form the signed record of the build.
 
 | Field | Description |
 |---|---|
-| `source` | SHA-256 of the `.spore` source file |
+| `source` | SHA-256 of the `.fungi` source file |
 | `gir` | SHA-256 of the compiled Governed IR output |
 | `contract` | SHA-256 of the flow contract block (extracted separately) |
 | `target_plan` | SHA-256 of the compute target selection record |
@@ -190,7 +190,7 @@ PQ downgrade). `signAttestationHybrid` / `verifyAttestationHybrid` in
 surface uses `signProofGraphHybrid` / `verifyGovernanceSignatureHybrid` over the
 `makeManifestEnvelope` shape.
 
-See `galerina-governance-signature.md` for the ProofGraph-layer `spore.gov.sig.v2`
+See `galerina-governance-signature.md` for the ProofGraph-layer `fungi.gov.sig.v2`
 type and `galerina-cbor-manifest-spec.md` for the persisted `.lmanifest` v2 schema
 and diagnostics.
 

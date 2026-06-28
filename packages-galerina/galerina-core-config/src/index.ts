@@ -37,7 +37,7 @@ export type ConfigDiagnosticSeverity = "info" | "warning" | "error";
  * Additional fields: path (config key), suggestedFix (human-readable fix hint).
  */
 export interface ConfigDiagnostic {
-  /** Structured diagnostic code in SPORE-SERIES-NNN format. */
+  /** Structured diagnostic code in FUNGI-SERIES-NNN format. */
   readonly code: string;
   /** Screaming-snake-case name. Example: "REQUIRED_ENVIRONMENT_VARIABLE_MISSING". */
   readonly name: string;
@@ -230,7 +230,7 @@ export function resolveEnvironmentMode(
       mode: fallback,
       diagnostics: [
         createConfigDiagnostic(
-          "SPORE-CONFIG-001",
+          "FUNGI-CONFIG-001",
           "INVALID_ENVIRONMENT_MODE",
           "error",
           `Unsupported environment mode "${value}".`,
@@ -245,7 +245,7 @@ export function resolveEnvironmentMode(
     mode: fallback,
     diagnostics: [
       createConfigDiagnostic(
-        "SPORE-CONFIG-002",
+        "FUNGI-CONFIG-002",
         "MISSING_ENVIRONMENT_MODE",
         "warning",
         `Environment mode was not set; using "${fallback}".`,
@@ -291,7 +291,7 @@ export function parseProjectConfig(
     return {
       diagnostics: [
         createConfigDiagnostic(
-          "SPORE-CONFIG-003",
+          "FUNGI-CONFIG-003",
           "PROJECT_NOT_OBJECT",
           "error",
           "Project config must be an object.",
@@ -311,7 +311,7 @@ export function parseProjectConfig(
   if (governanceResolved.invalid) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-GOV-003",
+        "FUNGI-CONFIG-GOV-003",
         "INVALID_GOVERNANCE_MODE",
         "error",
         `Unsupported governance mode "${String(governanceResolved.requested)}" — forcing 'full' (fail-closed).`,
@@ -434,7 +434,7 @@ export function validateRuntimeEnvironment(
           : "warning";
       diagnostics.push(
         createConfigDiagnostic(
-          "SPORE-CONFIG-004",
+          "FUNGI-CONFIG-004",
           "REQUIRED_ENVIRONMENT_VARIABLE_MISSING",
           severity,
           `Required environment variable "${reference.name}" is missing.`,
@@ -470,7 +470,7 @@ export function createRuntimeConfigHandoff(
   ) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-005",
+        "FUNGI-CONFIG-005",
         "PRODUCTION_REQUIRES_ENVIRONMENT_VALIDATION",
         "error",
         "Production config handoff requires environment variable presence validation.",
@@ -567,7 +567,7 @@ export function validateHostPackageManifestBoundary(
   if (!isRecord(input)) {
     return [
       createConfigDiagnostic(
-        "SPORE-CONFIG-006",
+        "FUNGI-CONFIG-006",
         "HOST_PACKAGE_MANIFEST_NOT_OBJECT",
         "error",
         "Host package manifest must be an object.",
@@ -582,7 +582,7 @@ export function validateHostPackageManifestBoundary(
     if (Object.hasOwn(input, key)) {
       diagnostics.push(
         createConfigDiagnostic(
-          "SPORE-CONFIG-007",
+          "FUNGI-CONFIG-007",
           "GALERINA_KEY_IN_HOST_MANIFEST",
           "error",
           `Host package manifest must not define Galerina package graph key "${key}". Use package-galerina.json and Galerina.lock.json for Galerina packages.`,
@@ -602,7 +602,7 @@ export function validateHostPackageManifestBoundary(
     if (!isRecord(dependencies)) {
       diagnostics.push(
         createConfigDiagnostic(
-          "SPORE-CONFIG-008",
+          "FUNGI-CONFIG-008",
           "HOST_DEPENDENCIES_NOT_OBJECT",
           "error",
           `Host package manifest field "${field}" must be an object.`,
@@ -616,7 +616,7 @@ export function validateHostPackageManifestBoundary(
       if (isLoPackageGraphAlias(packageName)) {
         diagnostics.push(
           createConfigDiagnostic(
-            "SPORE-CONFIG-009",
+            "FUNGI-CONFIG-009",
             "GALERINA_ALIAS_IN_HOST_DEPENDENCIES",
             "error",
             `Host package dependency "${packageName}" looks like a Galerina package graph alias. Use package-galerina.json for Galerina package resolution.`,
@@ -644,7 +644,7 @@ function validateProductionStrictness(
   if (policy.requireStrictProject && !project.strict) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-010",
+        "FUNGI-CONFIG-010",
         "PRODUCTION_REQUIRES_STRICT_PROJECT",
         "error",
         "Production mode requires strict project configuration.",
@@ -658,7 +658,7 @@ function validateProductionStrictness(
       if (secret.defaultValue !== undefined) {
         diagnostics.push(
           createConfigDiagnostic(
-            "SPORE-CONFIG-011",
+            "FUNGI-CONFIG-011",
             "SECRET_DEFAULT_NOT_ALLOWED",
             "error",
             `Secret environment variable "${secret.name}" must not define a default value.`,
@@ -685,7 +685,7 @@ function validateProductionStrictness(
     if (!overridePaths.has(packageRef.path)) {
       diagnostics.push(
         createConfigDiagnostic(
-          "SPORE-CONFIG-012",
+          "FUNGI-CONFIG-012",
           "PRODUCTION_PACKAGE_DISABLED",
           "error",
           `Production mode disables package "${packageRef.path}" by default.`,
@@ -699,7 +699,7 @@ function validateProductionStrictness(
     if (!policy.allowProductionPackageOverrides) {
       diagnostics.push(
         createConfigDiagnostic(
-          "SPORE-CONFIG-013",
+          "FUNGI-CONFIG-013",
           "PRODUCTION_PACKAGE_OVERRIDE_NOT_ALLOWED",
           "error",
           `Production package override is not allowed for "${packageRef.path}".`,
@@ -724,7 +724,7 @@ function readProductionPackageOverrides(
   if (!isRecord(input)) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-014",
+        "FUNGI-CONFIG-014",
         "PRODUCTION_POLICY_INVALID",
         "error",
         "Production package policy must be an object.",
@@ -742,7 +742,7 @@ function readProductionPackageOverrides(
   if (!Array.isArray(overrides)) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-015",
+        "FUNGI-CONFIG-015",
         "PRODUCTION_PACKAGE_OVERRIDES_INVALID",
         "error",
         "Production package overrides must be an array.",
@@ -759,7 +759,7 @@ function readProductionPackageOverrides(
     if (!isRecord(override)) {
       diagnostics.push(
         createConfigDiagnostic(
-          "SPORE-CONFIG-016",
+          "FUNGI-CONFIG-016",
           "PRODUCTION_PACKAGE_OVERRIDE_INVALID",
           "error",
           "Production package override must be an object.",
@@ -808,7 +808,7 @@ function readEnvironmentVariableReferences(
   if (!Array.isArray(input)) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-017",
+        "FUNGI-CONFIG-017",
         "ENVIRONMENT_REFERENCES_NOT_ARRAY",
         "error",
         "Environment variable references must be an array.",
@@ -853,7 +853,7 @@ function parseEnvironmentVariableReference(
   if (!isRecord(input)) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-018",
+        "FUNGI-CONFIG-018",
         "ENVIRONMENT_REFERENCE_INVALID",
         "error",
         "Environment variable reference must be a string or object.",
@@ -878,7 +878,7 @@ function parseEnvironmentVariableReference(
   if (scopeInput !== undefined && scopeInput !== scope) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-019",
+        "FUNGI-CONFIG-019",
         "ENVIRONMENT_REFERENCE_SCOPE_INVALID",
         "error",
         `Unsupported environment variable scope "${String(scopeInput)}".`,
@@ -912,7 +912,7 @@ function checkedEnvironmentVariableReference(
   if (!ENVIRONMENT_VARIABLE_NAME_PATTERN.test(reference.name)) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-020",
+        "FUNGI-CONFIG-020",
         "ENVIRONMENT_REFERENCE_NAME_INVALID",
         "error",
         `Environment variable "${reference.name}" must be uppercase snake case.`,
@@ -938,7 +938,7 @@ function readRequiredString(
 
   diagnostics.push(
     createConfigDiagnostic(
-      "SPORE-CONFIG-021",
+      "FUNGI-CONFIG-021",
       "REQUIRED_STRING_MISSING",
       "error",
       `Required string "${key}" is missing.`,
@@ -980,7 +980,7 @@ function readStringArray(
   if (!Array.isArray(value)) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-022",
+        "FUNGI-CONFIG-022",
         "STRING_ARRAY_INVALID",
         "error",
         `"${key}" must be an array of strings.`,
@@ -996,7 +996,7 @@ function readStringArray(
   if (strings.length !== value.length) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-023",
+        "FUNGI-CONFIG-023",
         "STRING_ARRAY_ITEM_INVALID",
         "error",
         `"${key}" contains a non-string value.`,
@@ -1022,7 +1022,7 @@ function readPackageReferences(
   if (!Array.isArray(value)) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-024",
+        "FUNGI-CONFIG-024",
         "PACKAGE_REFERENCES_INVALID",
         "error",
         `"${key}" must be an array of package references.`,
@@ -1059,7 +1059,7 @@ function readPackageReferences(
 
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-025",
+        "FUNGI-CONFIG-025",
         "PACKAGE_REFERENCE_INVALID",
         "error",
         "Package reference must be a string or object.",
@@ -1085,7 +1085,7 @@ function readStringMap(
   if (!isRecord(value)) {
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-026",
+        "FUNGI-CONFIG-026",
         "STRING_MAP_INVALID",
         "error",
         `"${key}" must be an object whose values are strings.`,
@@ -1105,7 +1105,7 @@ function readStringMap(
 
     diagnostics.push(
       createConfigDiagnostic(
-        "SPORE-CONFIG-027",
+        "FUNGI-CONFIG-027",
         "STRING_MAP_VALUE_INVALID",
         "error",
         `"${key}.${entryKey}" must be a string.`,
@@ -1276,7 +1276,7 @@ export type ConfigValueKind = ConfigValue["kind"];
 // Config Vault types
 //
 // The Config Vault holds typed, non-secret, read-only application config.
-// Secrets must NEVER appear in the Config Vault (SPORE-VAULT-001).
+// Secrets must NEVER appear in the Config Vault (FUNGI-VAULT-001).
 // ---------------------------------------------------------------------------
 
 export interface ConfigVaultEntry<T> {
@@ -1310,20 +1310,20 @@ export function getVaultEntry<T>(
 // Config Vault diagnostic codes — LN-VAULT series
 // ---------------------------------------------------------------------------
 
-/** SPORE-VAULT-001: Secret-like value found in config vault — use secret {} reference instead. */
-export const SPORE_VAULT_001 = "SPORE-VAULT-001";
-/** SPORE-VAULT-002: Config vault key does not match segment.segment dot-path format. */
-export const SPORE_VAULT_002 = "SPORE-VAULT-002";
-/** SPORE-VAULT-003: Config vault value cannot be coerced to declared type. */
-export const SPORE_VAULT_003 = "SPORE-VAULT-003";
-/** SPORE-VAULT-004: Required vault key is not present in vault global block. */
-export const SPORE_VAULT_004 = "SPORE-VAULT-004";
-/** SPORE-VAULT-005: Attempt to write to config vault at runtime (config vault is read-only). */
-export const SPORE_VAULT_005 = "SPORE-VAULT-005";
+/** FUNGI-VAULT-001: Secret-like value found in config vault — use secret {} reference instead. */
+export const FUNGI_VAULT_001 = "FUNGI-VAULT-001";
+/** FUNGI-VAULT-002: Config vault key does not match segment.segment dot-path format. */
+export const FUNGI_VAULT_002 = "FUNGI-VAULT-002";
+/** FUNGI-VAULT-003: Config vault value cannot be coerced to declared type. */
+export const FUNGI_VAULT_003 = "FUNGI-VAULT-003";
+/** FUNGI-VAULT-004: Required vault key is not present in vault global block. */
+export const FUNGI_VAULT_004 = "FUNGI-VAULT-004";
+/** FUNGI-VAULT-005: Attempt to write to config vault at runtime (config vault is read-only). */
+export const FUNGI_VAULT_005 = "FUNGI-VAULT-005";
 
 export function vaultDiagnosticSecretInVault(key: string): ConfigDiagnostic {
   return createConfigDiagnostic(
-    SPORE_VAULT_001,
+    FUNGI_VAULT_001,
     "SECRET_IN_VAULT",
     "error",
     `Config vault key "${key}" contains a secret-like value. Use a secret {} reference instead.`,
@@ -1334,7 +1334,7 @@ export function vaultDiagnosticSecretInVault(key: string): ConfigDiagnostic {
 
 export function vaultDiagnosticKeyInvalid(key: string): ConfigDiagnostic {
   return createConfigDiagnostic(
-    SPORE_VAULT_002,
+    FUNGI_VAULT_002,
     "VAULT_KEY_INVALID",
     "error",
     `Config vault key "${key}" does not match the required segment.segment dot-path format.`,
@@ -1349,7 +1349,7 @@ export function vaultDiagnosticTypeMismatch(
   actual: string,
 ): ConfigDiagnostic {
   return createConfigDiagnostic(
-    SPORE_VAULT_003,
+    FUNGI_VAULT_003,
     "VAULT_TYPE_MISMATCH",
     "error",
     `Config vault key "${key}" declares type "${declared}" but value is "${actual}".`,
@@ -1359,7 +1359,7 @@ export function vaultDiagnosticTypeMismatch(
 
 export function vaultDiagnosticKeyMissing(key: string): ConfigDiagnostic {
   return createConfigDiagnostic(
-    SPORE_VAULT_004,
+    FUNGI_VAULT_004,
     "VAULT_KEY_MISSING",
     "error",
     `Required vault key "${key}" is not present in the vault global block.`,
@@ -1369,7 +1369,7 @@ export function vaultDiagnosticKeyMissing(key: string): ConfigDiagnostic {
 
 export function vaultDiagnosticMutationDenied(key: string): ConfigDiagnostic {
   return createConfigDiagnostic(
-    SPORE_VAULT_005,
+    FUNGI_VAULT_005,
     "VAULT_MUTATION_DENIED",
     "error",
     `Config vault key "${key}" cannot be written at runtime. The config vault is read-only after boot.`,

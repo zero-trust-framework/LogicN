@@ -21,7 +21,7 @@ import { parseProgram, resolveSymbols, checkTypes, assignSlots, SlottedScope, tr
  * passed directly to assignSlots().
  */
 function parseFlow(source, flowName) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   resolveSymbols(parsed.ast);
   checkTypes(parsed.ast);
   // Walk the top-level children to find the flow declaration node.

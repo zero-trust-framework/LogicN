@@ -2,7 +2,7 @@
 // =============================================================================
 // @galerina/devtools-security — CLI
 //
-// galerina-security audit <file.spore> [--profile strict,high_integrity] [--json]
+// galerina-security audit <file.fungi> [--profile strict,high_integrity] [--json]
 // galerina-security risk <classification> <records> <probability>
 // galerina-security path-check <root> <path>
 //
@@ -29,7 +29,7 @@ async function main(): Promise<number> {
     case "audit": {
       const filePath = args[1];
       if (!filePath) {
-        process.stderr.write("Usage: galerina-security audit <file.spore> [--profile strict,...] [--governance dev|production|deterministic|check-only] [--json] [--strict] [--pci]\n");
+        process.stderr.write("Usage: galerina-security audit <file.fungi> [--profile strict,...] [--governance dev|production|deterministic|check-only] [--json] [--strict] [--pci]\n");
         return 1;
       }
       const wantJson    = args.includes("--json");
@@ -151,7 +151,7 @@ async function main(): Promise<number> {
     default:
       process.stdout.write(`galerina-security — Galerina Security Devtools\n\n`);
       process.stdout.write(`Commands:\n`);
-      process.stdout.write(`  audit <file.spore> [--profile strict,...] [--json] [--strict] [--pci]   Run security audit (add --pci for PCI DSS 4.0.1 checks)\n`);
+      process.stdout.write(`  audit <file.fungi> [--profile strict,...] [--json] [--strict] [--pci]   Run security audit (add --pci for PCI DSS 4.0.1 checks)\n`);
       process.stdout.write(`  path-check <root> <path>                                      Check path confinement\n`);
       process.stdout.write(`  regex-check <pattern>                                         Check regex for ReDoS\n`);
       process.stdout.write(`  risk <classification> <records> <probability>                 Calculate breach risk\n\n`);

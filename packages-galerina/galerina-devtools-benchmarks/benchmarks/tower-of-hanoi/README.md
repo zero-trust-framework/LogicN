@@ -18,4 +18,4 @@ Why this design:
   checksum is chosen to be exact under fail-closed integer semantics, not to rely on silent wraparound).
 
 Run: `--n <disks>` (default 16 = 65,535 moves/call), `--iterations <k>`. Files: `python.py`, `node.mjs`,
-`bench.rs`, `bench.cpp`, `benchmark.spore`. Native: `rustc -O bench.rs`. Metric: **moves/sec**; oracle: `result`.
+`bench.rs`, `bench.cpp`, `benchmark.fungi`. Native: `rustc -O bench.rs`. Metric: **moves/sec**; oracle: `result`.

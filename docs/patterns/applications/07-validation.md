@@ -107,8 +107,8 @@ String transformations preserve the taint state of their input. A value that was
 
 | Code | Trigger |
 |------|---------|
-| `SPORE-VALUESTATE-003` | `unsafe` value passed to a function that requires `protected` |
-| `SPORE-VALUESTATE-005` | `unsafe` value written to a `protected`-typed binding |
+| `FUNGI-VALUESTATE-003` | `unsafe` value passed to a function that requires `protected` |
+| `FUNGI-VALUESTATE-005` | `unsafe` value written to a `protected`-typed binding |
 
 The compiler emits these errors at the point of misuse, not at the gate. The error message names the nearest upstream gate that would resolve the issue.
 

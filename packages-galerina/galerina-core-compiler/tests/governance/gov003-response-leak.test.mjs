@@ -7,7 +7,7 @@ import { describe, it } from "node:test";
 import { parseProgram, checkEffects, verifyGovernance } from "../../dist/index.js";
 
 function gov(source, profile = "dev") {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effects = checkEffects(parsed.flows, parsed.ast);
   return verifyGovernance(parsed.ast, parsed.flows, effects, profile);
 }
@@ -27,44 +27,44 @@ ${body}
 }`;
 
 describe("GOV-003: a denied response field cannot leak via member/positional returns", () => {
-  it("denied field via member access (return Ok(user.email)) emits SPORE-GOV-003", () => {
+  it("denied field via member access (return Ok(user.email)) emits FUNGI-GOV-003", () => {
     const g = gov(flow("  let user = UsersDB.read(id)?\n  return Ok(user.email)"));
-    assert.ok(has(g, "SPORE-GOV-003"), codes(g));
+    assert.ok(has(g, "FUNGI-GOV-003"), codes(g));
   });
 
-  it("redact(user.email) discharges the denied field — no SPORE-GOV-003", () => {
+  it("redact(user.email) discharges the denied field — no FUNGI-GOV-003", () => {
     const g = gov(flow("  let user = UsersDB.read(id)?\n  return Ok(redact(user.email))"));
-    assert.ok(!has(g, "SPORE-GOV-003"), codes(g));
+    assert.ok(!has(g, "FUNGI-GOV-003"), codes(g));
   });
 
-  it("positional return of a denied field name (return Ok(email)) emits SPORE-GOV-003", () => {
+  it("positional return of a denied field name (return Ok(email)) emits FUNGI-GOV-003", () => {
     const g = gov(flow("  let email = UsersDB.read(id)?\n  return Ok(email)"));
-    assert.ok(has(g, "SPORE-GOV-003"), codes(g));
+    assert.ok(has(g, "FUNGI-GOV-003"), codes(g));
   });
 
   it("a non-denied field (user.name) is clean — no false positive", () => {
     const g = gov(flow("  let user = UsersDB.read(id)?\n  return Ok(user.name)"));
-    assert.ok(!has(g, "SPORE-GOV-003"), codes(g));
+    assert.ok(!has(g, "FUNGI-GOV-003"), codes(g));
   });
 
   // GOV-003 residual fix (2026-06-20): a denied field laundered through an intermediate binding RENAME.
-  it("denied field via an intermediate binding rename (let e = user.email; return e) emits SPORE-GOV-003", () => {
+  it("denied field via an intermediate binding rename (let e = user.email; return e) emits FUNGI-GOV-003", () => {
     const g = gov(flow("  let user = UsersDB.read(id)?\n  let e = user.email\n  return Ok(e)"));
-    assert.ok(has(g, "SPORE-GOV-003"), codes(g));
+    assert.ok(has(g, "FUNGI-GOV-003"), codes(g));
   });
 
-  it("rename of a redacted denied field (let e = redact(user.email); return e) — no SPORE-GOV-003", () => {
+  it("rename of a redacted denied field (let e = redact(user.email); return e) — no FUNGI-GOV-003", () => {
     const g = gov(flow("  let user = UsersDB.read(id)?\n  let e = redact(user.email)\n  return Ok(e)"));
-    assert.ok(!has(g, "SPORE-GOV-003"), codes(g));
+    assert.ok(!has(g, "FUNGI-GOV-003"), codes(g));
   });
 
-  it("alias-of-alias rename (let e = user.email; let f = e; return f) emits SPORE-GOV-003", () => {
+  it("alias-of-alias rename (let e = user.email; let f = e; return f) emits FUNGI-GOV-003", () => {
     const g = gov(flow("  let user = UsersDB.read(id)?\n  let e = user.email\n  let f = e\n  return Ok(f)"));
-    assert.ok(has(g, "SPORE-GOV-003"), codes(g));
+    assert.ok(has(g, "FUNGI-GOV-003"), codes(g));
   });
 
   it("rename of a non-denied field (let n = user.name; return n) stays clean — no false positive", () => {
     const g = gov(flow("  let user = UsersDB.read(id)?\n  let n = user.name\n  return Ok(n)"));
-    assert.ok(!has(g, "SPORE-GOV-003"), codes(g));
+    assert.ok(!has(g, "FUNGI-GOV-003"), codes(g));
   });
 });

@@ -146,7 +146,7 @@ packages-galerina/galerina-core-photonic
   logic-to-light vocabulary
   photonic runtime target semantics
   photonic execution plan semantics
-  SPORE-PHOTONIC diagnostics after reconciliation
+  FUNGI-PHOTONIC diagnostics after reconciliation
 
 packages-galerina/galerina-target-cpu
   CPU architecture metadata

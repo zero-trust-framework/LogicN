@@ -88,10 +88,10 @@ flow createUser(input: UserInput) -> Result<User, ApiError>
 ```
 
 The compiler enforces:
-- `event.emit` must be declared in the flow's `effects` block — SPORE-EVENT-001 if missing
-- The event name must match a globally declared event — SPORE-EVENT-002 if not found
-- All required fields of the event must be provided in the emit expression — SPORE-EVENT-003
-- `emit` must not appear before the `database.write` that justifies it — SPORE-EVENT-004 (ordering constraint, Phase 17+)
+- `event.emit` must be declared in the flow's `effects` block — FUNGI-EVENT-001 if missing
+- The event name must match a globally declared event — FUNGI-EVENT-002 if not found
+- All required fields of the event must be provided in the emit expression — FUNGI-EVENT-003
+- `emit` must not appear before the `database.write` that justifies it — FUNGI-EVENT-004 (ordering constraint, Phase 17+)
 
 ---
 
@@ -125,7 +125,7 @@ contract UserService {
 }
 ```
 
-A service that emits an event not listed in its `contract.events` block will fail validation — SPORE-CONTRACT-003. A service that lists an event in `contract.events` but never emits it in any flow will produce a warning — SPORE-CONTRACT-004.
+A service that emits an event not listed in its `contract.events` block will fail validation — FUNGI-CONTRACT-003. A service that lists an event in `contract.events` but never emits it in any flow will produce a warning — FUNGI-CONTRACT-004.
 
 ---
 
@@ -133,12 +133,12 @@ A service that emits an event not listed in its `contract.events` block will fai
 
 | Rule | Diagnostic |
 |------|-----------|
-| `emit X` where X is not globally declared | SPORE-EVENT-001 |
-| `emit X` without `event.emit` in flow effects | SPORE-EVENT-002 |
-| `emit X { ... }` missing required field | SPORE-EVENT-003 |
-| `emit` before causal `database.write` (Phase 17+) | SPORE-EVENT-004 |
-| Service emits event not listed in contract | SPORE-CONTRACT-003 |
-| Contract lists event never emitted in any flow | SPORE-CONTRACT-004 (warning) |
+| `emit X` where X is not globally declared | FUNGI-EVENT-001 |
+| `emit X` without `event.emit` in flow effects | FUNGI-EVENT-002 |
+| `emit X { ... }` missing required field | FUNGI-EVENT-003 |
+| `emit` before causal `database.write` (Phase 17+) | FUNGI-EVENT-004 |
+| Service emits event not listed in contract | FUNGI-CONTRACT-003 |
+| Contract lists event never emitted in any flow | FUNGI-CONTRACT-004 (warning) |
 
 ---
 

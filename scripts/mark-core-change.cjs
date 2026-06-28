@@ -3,8 +3,8 @@
 // file is edited during a Claude turn. Watched paths:
 //
 //   packages-galerina/galerina-core*           — all galerina-core packages
-//   packages-galerina/galerina-devtools-graph-project — now depends on spore-graph
-//   SPORE-Graph/src                          — the standalone library itself
+//   packages-galerina/galerina-devtools-graph-project — now depends on fungi-graph
+//   FUNGI-Graph/src                          — the standalone library itself
 //
 // The Stop hook reads this sentinel to decide whether to run tests.
 
@@ -26,7 +26,7 @@ process.stdin.on('end', () => {
     const isRelevant =
       /packages-galerina\/galerina-core/.test(filePath) ||
       /packages-galerina\/galerina-devtools-graph-project/.test(filePath) ||
-      /SPORE-Graph[\\/]src/.test(filePath);
+      /FUNGI-Graph[\\/]src/.test(filePath);
 
     if (isRelevant) {
       fs.writeFileSync(SENTINEL, new Date().toISOString(), 'utf8');

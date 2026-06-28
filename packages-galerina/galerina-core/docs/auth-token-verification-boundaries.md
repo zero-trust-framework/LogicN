@@ -580,7 +580,7 @@ nonce/replay cache policy
 capability token constraints
 hardware proof status and fallback
 post-quantum/hybrid crypto policy
-source-map links back to .spore files
+source-map links back to .fungi files
 ```
 
 ---

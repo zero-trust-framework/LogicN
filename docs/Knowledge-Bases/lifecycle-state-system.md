@@ -196,7 +196,7 @@ effects [state.write, audit.write] {
 }
 ```
 
-Pure flows cannot mutate state (`SPORE-STATE-001`).
+Pure flows cannot mutate state (`FUNGI-STATE-001`).
 
 ---
 
@@ -284,16 +284,16 @@ preserving auditability and provenance.
 
 ---
 
-## 15. Diagnostics (SPORE-STATE-* series)
+## 15. Diagnostics (FUNGI-STATE-* series)
 
 | Code | Name | Description |
 |---|---|---|
-| `SPORE-STATE-001` | `IllegalStateMutation` | Pure flow cannot mutate runtime state |
-| `SPORE-STATE-002` | `MissingStateCapability` | Mutation of session state requires `session.write` |
-| `SPORE-STATE-003` | `IllegalStateSerialization` | Protected secret state cannot be serialised |
-| `SPORE-STATE-004` | `ReactiveCycleDetected` | Reactive state dependency cycle detected (a → b → a) |
-| `SPORE-STATE-005` | `InvalidStateTarget` | Type X cannot exist in state category Y |
-| `SPORE-STATE-006` | `StateLifecycleViolation` | State accessed after destruction |
+| `FUNGI-STATE-001` | `IllegalStateMutation` | Pure flow cannot mutate runtime state |
+| `FUNGI-STATE-002` | `MissingStateCapability` | Mutation of session state requires `session.write` |
+| `FUNGI-STATE-003` | `IllegalStateSerialization` | Protected secret state cannot be serialised |
+| `FUNGI-STATE-004` | `ReactiveCycleDetected` | Reactive state dependency cycle detected (a → b → a) |
+| `FUNGI-STATE-005` | `InvalidStateTarget` | Type X cannot exist in state category Y |
+| `FUNGI-STATE-006` | `StateLifecycleViolation` | State accessed after destruction |
 
 ---
 

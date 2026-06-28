@@ -33,12 +33,12 @@ strip-checks / **silent value change** ⇒ LOW. 10 = pure ZT win · 5 = neutral/
   (identical values), zero new trusted surface. Galerina's stdlib `map`/`filter` are *eager* today, so this is a
   genuine net-new honest win (a constant ~3× + alloc elimination, no overclaim). Tracked as a follow-up build.
 - **Track (real but gated):** C1 (contiguous runtime rep — a real perf gap, but the *governance* asset already
-  ships: SPORE-SUBSTRATE-005 compute-only fence + SPORE-TYPE-016/030 rank/shape), C5 (advisory crossover lint —
+  ships: FUNGI-SUBSTRATE-005 compute-only fence + FUNGI-TYPE-016/030 rank/shape), C5 (advisory crossover lint —
   needs a substrate `size` field; **not** a safety control — PartitionDecider already defaults-digital
   fail-safe), C8 (compaction only behind an attested ToleranceWitness, never silent).
 - **Position (true-but-not-a-build):** C2 — the framework-shrink *direction* is real, but moving a multi-target
   ASSEMBLER into the compiler is the TCB trap; Galerina's shipped **delegate + attest + fence** seam
-  (`inference-bridge-contract`, `BridgeAttestation`, SPORE-SUBSTRATE-005) is the deliberate alternative.
+  (`inference-bridge-contract`, `BridgeAttestation`, FUNGI-SUBSTRATE-005) is the deliberate alternative.
 - **Refuse (fail-open / refused):** C3 (layout types — TCB-bloat-for-zero-value-safety; owner already NO), C6
   ("zero-byte/0-cycle" overclaim — licenses trusting an analog lane as exact memory), **C7 (Ghost Runtime
   strip-governance — the canonical strip-checks fail-open, ZT floor)**.

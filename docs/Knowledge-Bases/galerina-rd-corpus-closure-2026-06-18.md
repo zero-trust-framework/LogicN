@@ -3,9 +3,9 @@
 ## ▶ RESUME POINTER — 2026-06-19 session close v2 (read FIRST after a /clear)
 **▶ CORE ROADMAP — ACTIVE (2026-06-20).** R&D queue 0036–0052 fully DRAINED + absorbed (nothing left to absorb;
 only `_TEMPLATE` remains in R&D tasks). Now working `galerina-build-roadmap.md`. **DONE: #126 parser-level bitwise
-hint** (`890afed`) — `& | << >>` get the clear crypto-on-core `SPORE-PARSE-001` hint in `parseExpression` (value
+hint** (`890afed`) — `& | << >>` get the clear crypto-on-core `FUNGI-PARSE-001` hint in `parseExpression` (value
 context; never flags generics/match-arms); +5 tests, SOT 3710. **⚠ DESIGN NOTE for future me:** bitwise ops are
-*intentionally excluded* from `.spore` (crypto-on-core boundary) — do NOT "add" them; #126 was the HINT.
+*intentionally excluded* from `.fungi` (crypto-on-core boundary) — do NOT "add" them; #126 was the HINT.
 **Core-roadmap frontier (ordered, from build-roadmap "Next up"):** **#145 type-aware STRING semantics** = the big one
 (WASM execution byte-parity; `__char_to_string`/`__str_concat` host fns + type-aware lowering + String/Char var-type
 tracking — large, deserves a dedicated session) · #102–104 DSS.wasm (externally blocked) · CF-4 extract
@@ -19,20 +19,20 @@ graph 3676/4069; both Galerina + Galerina-R-AND-D git trees CLEAN.
   + gap-fix `d9316c2` + WASM single-exit `71ec537`). The done-record's "fail-OPEN" was REFUTED (a fail-SAFE
   capability gap); follow-up = early-return `br` rewrite + Z3 discharge (0024 track).
 - **AOT #1 const-fold (`dc76ed4`) + AOT #2 branch-fold/DCE (`056ac70`).** Next = AOT #3 trap-tail simplify.
-- **Structured-engineering metadata (R&D 0045) — Phases 1-3 SHIPPED:** `//spore:` generated-comment tier
-  (`1804557`); `SPORE-HW-004` hardware uncertainty (`5d8d611`); **`galerina deps [--write]`** = `//spore: USES/
-  USEDBY/IMPACT/COMPLEXITY` (`1a57761`/`45bc0a5`/`2fb7ac1`); `contract.architecture{}` + `SPORE-ARCH-001`
-  (`c04fac0`) + Stable-Deps `SPORE-ARCH-002` always-hard-error (`f8468a4`); token renamed `//@`→`//spore:`
+- **Structured-engineering metadata (R&D 0045) — Phases 1-3 SHIPPED:** `//fungi:` generated-comment tier
+  (`1804557`); `FUNGI-HW-004` hardware uncertainty (`5d8d611`); **`galerina deps [--write]`** = `//fungi: USES/
+  USEDBY/IMPACT/COMPLEXITY` (`1a57761`/`45bc0a5`/`2fb7ac1`); `contract.architecture{}` + `FUNGI-ARCH-001`
+  (`c04fac0`) + Stable-Deps `FUNGI-ARCH-002` always-hard-error (`f8468a4`); token renamed `//@`→`//fungi:`
   (`b2b1c6e`, owner-final, no `@generated`). **+ `0bbf39f`:** `galerina deps --all [dir] [--write]` whole-app
   refresh via a NEW cross-file analyzer `analyzeProgramFlowDependencies` (USES/USEDBY/IMPACT span files —
-  closes the per-file "safe to delete" fail-open); `galerina build --package` auto-refreshes `//spore:` by default
-  (`--no-refresh` opts out, single-file build stays pure); `spore` short bin alias. Remaining: 2c/3d volatility
+  closes the per-file "safe to delete" fail-open); `galerina build --package` auto-refreshes `//fungi:` by default
+  (`--no-refresh` opts out, single-file build stays pure); `fungi` short bin alias. Remaining: 2c/3d volatility
   (0045 proved the churn+depth formula), 3a per-flow graph edges, Phase 4 polish. See [[galerina-structured-engineering-metadata]].
 - **git/build hygiene:** untracked ~501 ephemeral `build/*` artifacts + the 2.1MB `build/graph/*.json`/html
   (gitignored; kept the small nav `.md`s). `build/` now tracks 4 intentional files.
 
 **R&D queue 0036–0052 filed.** Worker closed 0045–0049 (done-records committed; 0045 re-grounded to
-owner decisions `215aab0`). NEW filed this session for the worker: **0047** (marker→keep `//spore:`, DONE),
+owner decisions `215aab0`). NEW filed this session for the worker: **0047** (marker→keep `//fungi:`, DONE),
 **0048** (testing strategy — top adds = wire 0014 fuzz live + 0016 contract-test generator), **0049** (USES/
 USEDBY runtime → incremental recompute = real win), **0050** (cloud-native blind-observability telemetry
 sidecar — build the exporter, state already exists), **0051** (ecosystem-language positioning + verified
@@ -112,7 +112,7 @@ WASM handles/WasmGC · the **"Mesh" → ? rename** (owner picks the name; TritMe
 | **0036** | which classical AOT tricks Galerina should adopt; the tower-citizen tensor-precompute pitch | const-fold + propagation + branch-fold + DCE = the real adoptable set (**1.64× wall-clock, 7.1× code-size**, byte-identical 50k inputs); tensor-precompute is the classic precompute trade **NOT O(1)** (apply O(N²); fusion densifies 40.9×; ntt_mul≠matmul) | **BUILT** → AOT #1 const-fold (`dc76ed4`) + AOT #2 branch-fold/DCE (`056ac70`); next AOT #3–6 |
 | **0037** | for/where branchless filter; trit-0-as-mask correctness | filter is **MODEST** (~1.0×); the real win is a CORRECTNESS fix — trit-0 aliases 0=INDETERMINATE → needs a separate presence channel | **`for…where` GUARD form SHIPPED** (`2c27e14`); presence-channel = **no production target** (guard form already avoids the aliasing) |
 | **0038** | a checked i32 trap assigned to a non-returned binding silently discarded | CONFIRMED **fail-OPEN** (11/11), tree+sync tiers; fix-spec = trap-at-op | **FIXED in production** (`3596fb5`+`490c492`); R&D detector flips RED = fix present; throw-at-op = recommended cleanup |
-| **0039** | make the 3 excluded benchmarks comparable (matrix-multiply / tri-logic / data-query) | one unit per runtime (mul-adds/s n=32 · trit-ops/s · record-scans/s); **no nbody-class false win** | **Spec ready**; production re-author owner-gated (SPORE-MANIFEST-TAMPER blocks in-place `.spore`) |
+| **0039** | make the 3 excluded benchmarks comparable (matrix-multiply / tri-logic / data-query) | one unit per runtime (mul-adds/s n=32 · trit-ops/s · record-scans/s); **no nbody-class false win** | **Spec ready**; production re-author owner-gated (FUNGI-MANIFEST-TAMPER blocks in-place `.fungi`) |
 | **0040** | output post-conditions (`ensure result …`) + Z3 discharge | the "fail-OPEN" was **REFUTED** (a fail-SAFE compile-reject **capability gap**); single-exit fail-closed gate + Z3 discharge design | **BUILT** → output post-conditions fail-closed across every tier (`fa9fae5` + gap-fix `d9316c2`); WASM single-exit + Z3 = follow-ups |
 | **0041** | sub-expression memoization + content-addressed store | same **amortize envelope** as 0036: 5.27× on repeated/pure, **1.77× SLOWER** on unique; whole-flow LRU already captures most | **DON'T-build-by-default**; the shipped LRU suffices |
 | **0042** | governance over WDM wavelength channels (tri-photonic) | **vocabulary over the proven governance-as-T-MAC fold** (per-channel = `decideAtBoundary`; bank = `allOf`+K3 annihilator, exhaustive 1092 + 200k banks 0 violations); genuine new bit = `.tmf`-category→wavelength-lane partition | **OWNER-AUTHORISED for future photonic compatibility** (2026-06-19) — forward-compat design; projected photonic envelopes now allowed (lenient perf rule) |
@@ -178,7 +178,7 @@ Citation verifiers exit 0 (the content-assert caught + fixed a real mis-cite in 
 - **0033** — `5c1f846` (crypto hygiene: `timingSafeEqual` + `fill(0)` derived keys in `galerina-ext-tmf/kemdem.ts`) + `692e62d` (`static-memory-pool` per-allocation **generation tag** → `LSM-UAF-001` use-after-free guard, +2 tests).
 - **0034** — `08d6905` (borrow-checker KB → non-goal banner on 3 docs).
 - **#128(b)/GAP-4** — `c6c2896` (forEachStmt → real WASM counted loop over the host array bridge; was a fail-closed `unreachable` trap. Executes + interpreter-fidelity tested. **Item 4 clear deliverable.**)
-- **0031 / Phase-34A** — `0ccdc80` (the `tainted` PARAMETER qualifier: opt-in, marks the param `unsafe`, reuses SPORE-VALUESTATE-003/004/005 → closes the param-trusted-by-default fail-OPEN. Non-breaking — bare params unchanged. 34B route-handler auto-taint, the breaking strict-gated half, stays parked.)
+- **0031 / Phase-34A** — `0ccdc80` (the `tainted` PARAMETER qualifier: opt-in, marks the param `unsafe`, reuses FUNGI-VALUESTATE-003/004/005 → closes the param-trusted-by-default fail-OPEN. Non-breaking — bare params unchanged. 34B route-handler auto-taint, the breaking strict-gated half, stays parked.)
 - **`for…where` filtered iteration** — `2c27e14` (`where` promoted to active keyword; guard form, interp + WASM, fidelity-matched; the genuine for/where kernel, guard form — no K3 0-aliasing).
 - **Global fail-closed-invariant guard** — `b403639` (a checked-op trap must fail the flow closed regardless of result placement; surfaced div0 also fails open when discarded) + **§7 benchmark scoreboard** (winner→slowest, ×vs both, ⚠️cache-flagged).
 - **0038 FIXED** — `3596fb5` + `490c492` (the confirmed i32-overflow fail-OPEN: a checked trap assigned to / nested past a non-returned binding was silently discarded → flow completed with a wrong result, e.g. arithmetic-threshold int:63248 while WASM trapped. Fix: `isCheckedTrap` (IntegerOverflow/DivisionByZero) propagates out of binding/expr statements + through binary operands; soft runtimeErrors keep value semantics. arithmetic-threshold + compute-mix now fail closed fast (0–4ms, clean IntegerOverflow). R&D 0038 stays open for the worker: cross-tier verify + distinct trap tag + other hard-trap kinds. ⚠️ `full-suite-2026-06-19.json` PREDATES this — arithmetic-threshold now fails closed.)
@@ -246,14 +246,14 @@ bit-exact; photonics only at the calibrated T-MAC offload behind 0028's SNR gate
 
 - **0040 — DbC OUTPUT post-conditions → BUILT (`fa9fae5`), NOT owner-gated.** **Don't-trust-check correction
   (5-agent verify + adversarial refute):** the done-record's "fail-OPEN leak" framing is **REFUTED**. A
-  `result`-referencing `ensure` was HARD-REJECTED at compile time (SPORE-NAME-001 symbol resolver + SPORE-INV-004
+  `result`-referencing `ensure` was HARD-REJECTED at compile time (FUNGI-NAME-001 symbol resolver + FUNGI-INV-004
   governance verifier) → never reached the emitter → no leak. The dead stubs `extractPostConditionEnsures`/
   `wrapInSingleExit` (#70) have ZERO callers; the live gate is `extractInvariantEnsures`, whose tail post-gate
   the early-return path bypasses — but that only affects PARAMETER ensures (immutable → entry gate proves them).
   So the real state was a **fail-SAFE capability gap**, not a leak. **Built the capability + enforced it
   fail-closed across every tier:** symbol-resolver scopes `result` to the ensure expr; verifier classifies it
   as an `invariant_postcondition`; interpreter `checkOutputPostconditions` traps a violating result at the
-  single exit (SPORE-INV-002, value never escapes); post-condition flows are EXCLUDED from the bytecode/sync/
+  single exit (FUNGI-INV-002, value never escapes); post-condition flows are EXCLUDED from the bytecode/sync/
   ExecutionGraph/cache fast tiers (three-tier fidelity — they bypass the gate) and DECLINED on WASM (→ the
   governed interpreter). +9 tests incl. a fast-path fidelity check. **Follow-ups (now AskUserQuestion items,
   not parked):** WASM single-exit `$galerina_result` lowering · Z3 discharge of decidable bounds (0024 track) ·
@@ -263,7 +263,7 @@ bit-exact; photonics only at the calibrated T-MAC offload behind 0028's SNR gate
   (exhaustive 1092 vectors; 200k random banks, 0 violations). **WDM is vocabulary over the already-proven
   governance-as-T-MAC fold (0025/0035) — no new calculus, no perf claim, no bench number.** Genuine new bit =
   `.tmf`-category→wavelength-lane governance partition (per-lane isolation; crypto-on-core fence
-  `SPORE-SUBSTRATE-001`; fail-closed unknown). HW speed/energy/light-drop EXCLUDED-until-silicon (0028 SNR gate).
+  `FUNGI-SUBSTRATE-001`; fail-closed unknown). HW speed/energy/light-drop EXCLUDED-until-silicon (0028 SNR gate).
   Forward line: one wavelength = one category lane = one trust trit. **No build** (vocabulary; partition is a
   design).
 - **0043 — golden-standard decision re-audit.** Per-decision KEEP/REVISE/RETIRE + sequencing (flags/profiles

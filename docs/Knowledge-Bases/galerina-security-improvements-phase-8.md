@@ -15,17 +15,17 @@ Priority: Very High
 
 ---
 
-## 1. String Taint Propagation (SPORE-VALUESTATE-004)
+## 1. String Taint Propagation (FUNGI-VALUESTATE-004)
 
 String concatenation must propagate unsafe taint. If either operand is `unsafe`,
 the result is `unsafe`. This is the SQL injection pattern.
 
-### Tainted (must emit SPORE-VALUESTATE-004 at sink)
+### Tainted (must emit FUNGI-VALUESTATE-004 at sink)
 
 ```galerina
 unsafe let rawEmail: String = request.body.email
 let query: String = "SELECT * FROM users WHERE email = '" + rawEmail + "'"
-Database.query(query)?   // SPORE-VALUESTATE-004
+Database.query(query)?   // FUNGI-VALUESTATE-004
 ```
 
 ### Safe
@@ -49,11 +49,11 @@ Database.queryParameterized("SELECT * FROM users WHERE email = ?", [email])?
 ### Phase 8B implementation
 
 Update operator type checker to track unsafe state through binary `+` on strings.
-If result flows to a governed sink, emit SPORE-VALUESTATE-004.
+If result flows to a governed sink, emit FUNGI-VALUESTATE-004.
 
 ---
 
-## 2. Constant-Time Comparison for Secret Bytes (SPORE-SECRET-002)
+## 2. Constant-Time Comparison for Secret Bytes (FUNGI-SECRET-002)
 
 Secret values are not always strings. HMAC digests, API token bytes, and signature
 bytes are `Bytes` type. Normal equality comparison is vulnerable to timing attacks.
@@ -63,7 +63,7 @@ bytes are `Bytes` type. Normal equality comparison is vulnerable to timing attac
 ```galerina
 let expected: Bytes = Hmac.sign(secretKey, payload)
 let supplied: Bytes = request.headers.signature
-if expected == supplied {   // SPORE-SECRET-002
+if expected == supplied {   // FUNGI-SECRET-002
   return Ok()
 }
 ```
@@ -80,13 +80,13 @@ if constantTimeEquals(expected, supplied) {
 
 ### Phase 8B implementation
 
-Extend SPORE-SECRET-002 to cover Bytes values that are provenance-tracked as
+Extend FUNGI-SECRET-002 to cover Bytes values that are provenance-tracked as
 secret-derived. The value-state checker must track `secret.read` provenance
 through assignments, not only through nominal type `SecureString`.
 
 ---
 
-## 3. Protected Values in Response Bodies (SPORE-GOV-003)
+## 3. Protected Values in Response Bodies (FUNGI-GOV-003)
 
 A protected binding returned in `Response.ok(...)` is an outward-facing exposure.
 Valid ≠ shareable. The compiler must require explicit policy authorization.
@@ -94,7 +94,7 @@ Valid ≠ shareable. The compiler must require explicit policy authorization.
 ### Tainted
 
 ```galerina
-// No policy block — SPORE-GOV-003
+// No policy block — FUNGI-GOV-003
 return Ok(Response.ok({ email: email }))
 ```
 

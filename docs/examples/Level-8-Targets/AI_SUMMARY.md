@@ -9,12 +9,12 @@
 - Quantum target: `prefer [quantum]` with simulation fallback (`prefer [quantum_simulation, cpu]`)
 - Deterministic runtime vs adaptive runtime — when each applies
 - `target plan` blocks for multi-stage compute pipelines
-- `SPORE-TARGET-001` — missing fallback when targeting non-CPU hardware
-- `SPORE-HINT-COMPUTE-001` — informational nudge for AI flows without a target preference
+- `FUNGI-TARGET-001` — missing fallback when targeting non-CPU hardware
+- `FUNGI-HINT-COMPUTE-001` — informational nudge for AI flows without a target preference
 
 ## Canonical patterns
 
-```spore
+```fungi
 // Explicit CPU: latency-sensitive deterministic workload
 compute target cpu { fallback cpu }
 
@@ -22,7 +22,7 @@ compute target cpu { fallback cpu }
 compute target best { prefer [photonic, npu, gpu, cpu] fallback cpu }
 ```
 
-```spore
+```fungi
 // Photonic preference with complete classical fallback
 guarded flow runOptical(input: Tensor<Float32, [Batch, 1024]>) -> RunOpticalResult
 contract {
@@ -39,7 +39,7 @@ contract {
 ## Do not use in this level
 
 - `result of X else Y` (proposal only — use `Result<T, E>`)
-- Declaring a compute target with no `fallback` for non-CPU targets — triggers `SPORE-TARGET-001`
+- Declaring a compute target with no `fallback` for non-CPU targets — triggers `FUNGI-TARGET-001`
 - `authority` blocks (Level 9)
 - `contract set` as a multi-flow governance template (Level 5)
 - Omitting `ai.inference` from the effects block when calling a model under a compute target
@@ -48,9 +48,9 @@ contract {
 
 | Code | Meaning |
 |------|---------|
-| `SPORE-TARGET-001` | Non-CPU compute target declared without a `fallback` |
-| `SPORE-HINT-COMPUTE-001` | Flow uses `ai.inference` but declares no compute target preference |
-| `SPORE-EFFECT-001` | Model call made without `ai.inference` in `effects` |
+| `FUNGI-TARGET-001` | Non-CPU compute target declared without a `fallback` |
+| `FUNGI-HINT-COMPUTE-001` | Flow uses `ai.inference` but declares no compute target preference |
+| `FUNGI-EFFECT-001` | Model call made without `ai.inference` in `effects` |
 
 ## Example IDs at this level
 

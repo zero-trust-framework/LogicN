@@ -1,8 +1,8 @@
 // =============================================================================
-// SPORE-VALUESTATE-006 — redact() discharge inside a record literal (docs-review)
+// FUNGI-VALUESTATE-006 — redact() discharge inside a record literal (docs-review)
 //
 // AuditLog.write({ email: redact(email) }) is THE canonical PII-redaction pattern
-// in .spore. The check used to look up the record FIELD NAME ("email") as a binding
+// in .fungi. The check used to look up the record FIELD NAME ("email") as a binding
 // and ignore the field VALUE, which produced:
 //   • a FALSE POSITIVE — the redact()-wrapped field was rejected (broke ~35 example
 //     files using the recommended pattern), and
@@ -18,8 +18,8 @@ import { parseProgram, checkValueStates } from "../../dist/index.js";
 
 const v6count = (body) => {
   const src = `secure flow f(email: protected String) -> Result<Int, ApiError> contract { effects { audit.write } } { ${body}  return Ok(1) }`;
-  const p = parseProgram(src, "v6.spore");
-  return (checkValueStates(p.ast).diagnostics ?? []).filter((d) => d.code === "SPORE-VALUESTATE-006").length;
+  const p = parseProgram(src, "v6.fungi");
+  return (checkValueStates(p.ast).diagnostics ?? []).filter((d) => d.code === "FUNGI-VALUESTATE-006").length;
 };
 
 test("redact() inside a record-literal field discharges (canonical pattern admitted)", () => {

@@ -239,7 +239,7 @@ describe("fixpoint", () => {
 
     assert.equal(result.ok, false);
     assert.ok("diagnostic" in result);
-    assert.equal(result.diagnostic.code, "SPORE-PGRAPH-004");
+    assert.equal(result.diagnostic.code, "FUNGI-PGRAPH-004");
   });
 });
 

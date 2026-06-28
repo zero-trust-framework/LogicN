@@ -98,10 +98,10 @@ The recent extensions overwhelmingly **confirmed** settled decisions (SHA-256-ke
 
 | # | Gap | Evidence | Blocks |
 |---|---|---|---|
-| B1 | **Recursive `record` types have no leaf terminator** (no `null` / `Option<Record>` lowering / payload-carrying enum variant) | binary-trees `.spore` had to fall back to a count-only fused recursion — it cannot allocate a real tree | binary-trees (real nodes), any linked/tree data structure, honest allocation benchmarks |
+| B1 | **Recursive `record` types have no leaf terminator** (no `null` / `Option<Record>` lowering / payload-carrying enum variant) | binary-trees `.fungi` had to fall back to a count-only fused recursion — it cannot allocate a real tree | binary-trees (real nodes), any linked/tree data structure, honest allocation benchmarks |
 | B2 | **No mutable indexed arrays** (lists are immutable; `push` returns a new list; tree-walker-only) | spectral-norm excluded (power iteration needs a mutable vector); fannkuch deferred | spectral-norm, fannkuch-redux, in-place sort, sieve, any array kernel |
 | B3 | **No native floats on the fast path** (bytecode VM rejects float literals → drops to slow tree-walker; cross-runtime FP also diverges) | every numeric benchmark uses scaled-int ×1000 (nbody, matrix, mandelbrot) | clean float numerics; forces scaled-int workarounds |
 
-(Bitwise `& | ^ << >>` are engine-side **by design** — permanent — which also blocks base64/hashing in `.spore`; not a gap to fix, just a constraint to note.)
+(Bitwise `& | ^ << >>` are engine-side **by design** — permanent — which also blocks base64/hashing in `.fungi`; not a gap to fix, just a constraint to note.)
 
 Suggested R&D job: *"Make Galerina able to express standard data-structure/array benchmarks"* — prioritise B1 (recursive-record leaf terminator, e.g. `Option<Record>` lowering or a nil node) and B2 (a fixed-size mutable integer array on the bytecode path). B3 (fast-path floats) is lower priority — scaled-int is an acceptable workaround and the honest answer is "route to WASM."

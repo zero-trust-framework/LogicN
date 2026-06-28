@@ -1,6 +1,6 @@
 <svg width="100%" viewBox="0 0 720 720" xmlns="http://www.w3.org/2000/svg" role="img" font-family="ui-sans-serif, system-ui, sans-serif">
 <title>Galerina full stack — authoring to low-level substrate, governance-first</title>
-<desc>The whole Galerina stack top to bottom: (1) .spore authoring with flow and contract blocks; (2) the Stage-A compiler lexer, parser, type/effect/value-state checkers, K3 governance verifier and GIR emitter; (3) compile targets WASM/bytecode/native plus Stage-B self-hosting at byte parity; (4) the application framework — scaffolder, deny-by-default fuse border of three gates, App Kernel admission, Capability Host and governed HTTP transport; (5) the low-level substrate — Tri-Pipe Binary/Hybrid/Photonic, tower-citizen, DRCM containment as a Stage-A simulation, and governance sentinels; and (6) a cross-cutting crypto-on-core invariant with K3 fail-closed and ProofGraph audit running down the right side. Aspirational items (real DSS.wasm, photonic silicon, in-sandbox isolation) are marked honestly.</desc>
+<desc>The whole Galerina stack top to bottom: (1) .fungi authoring with flow and contract blocks; (2) the Stage-A compiler lexer, parser, type/effect/value-state checkers, K3 governance verifier and GIR emitter; (3) compile targets WASM/bytecode/native plus Stage-B self-hosting at byte parity; (4) the application framework — scaffolder, deny-by-default fuse border of three gates, App Kernel admission, Capability Host and governed HTTP transport; (5) the low-level substrate — Tri-Pipe Binary/Hybrid/Photonic, tower-citizen, DRCM containment as a Stage-A simulation, and governance sentinels; and (6) a cross-cutting crypto-on-core invariant with K3 fail-closed and ProofGraph audit running down the right side. Aspirational items (real DSS.wasm, photonic silicon, in-sandbox isolation) are marked honestly.</desc>
 <defs>
 <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
 </defs>
@@ -40,7 +40,7 @@
 <text x="658" y="636" text-anchor="middle" font-size="9" font-style="italic" fill="#7c5cd0">applies to all bands</text>
 
 <!-- BAND 1 — Authoring (blue) -->
-<text x="24" y="76" font-size="11" font-weight="600" fill="#5a6470">① Authoring — .spore source</text>
+<text x="24" y="76" font-size="11" font-weight="600" fill="#5a6470">① Authoring — .fungi source</text>
 <rect x="24" y="82" width="572" height="58" rx="8" fill="#e8effb" stroke="#3b6fd4" stroke-width="1.5"/>
 <text x="40" y="104" font-size="13" font-weight="600" fill="#1f3a6b">flow + contract { … }</text>
 <text x="40" y="122" font-size="10.5" fill="#1f3a6b">intent · effects · authority/capabilities · access · privacy · invariant · policy{} overlay</text>
@@ -59,7 +59,7 @@
 <text x="201" y="225" text-anchor="middle" font-size="8.5" fill="#3a5285">taint · secret · gate</text>
 <rect x="268" y="186" width="148" height="42" rx="6" fill="#efe9fb" stroke="#7c5cd0" stroke-width="1.4"/>
 <text x="342" y="201" text-anchor="middle" font-size="11" font-weight="600" fill="#3f2d73">governance verifier</text>
-<text x="342" y="215" text-anchor="middle" font-size="9.5" fill="#52407e">K3 · SPORE-GOV/SECRET</text>
+<text x="342" y="215" text-anchor="middle" font-size="9.5" fill="#52407e">K3 · FUNGI-GOV/SECRET</text>
 <text x="342" y="225" text-anchor="middle" font-size="8.5" fill="#52407e">ProofGraph obligations</text>
 <rect x="424" y="186" width="162" height="42" rx="6" fill="#e8effb" stroke="#5b85dd" stroke-width="1.2"/>
 <text x="505" y="205" text-anchor="middle" font-size="11" font-weight="600" fill="#1f3a6b">GIR emitter</text>

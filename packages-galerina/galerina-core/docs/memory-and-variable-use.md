@@ -703,7 +703,7 @@ Example:
       {
         "name": "payload",
         "type": "Json",
-        "source": "src/webhooks/payment-webhook.spore:8",
+        "source": "src/webhooks/payment-webhook.fungi:8",
         "size": "500kb",
         "owner": "handleWebhook",
         "borrowCount": 3,
@@ -725,7 +725,7 @@ Example:
     {
       "type": "LargeClone",
       "value": "payload",
-      "source": "src/webhooks/payment-webhook.spore:14",
+      "source": "src/webhooks/payment-webhook.fungi:14",
       "size": "500kb",
       "message": "Large Json value cloned explicitly.",
       "suggestion": "Use read-only reference, JSON view, copy-on-write or Lazy Compact JSON if a full copy is not required."
@@ -753,7 +753,7 @@ Flow:
 Large values:
 
 - `payload: Json`
-  - source: `src/webhooks/payment-webhook.spore:8`
+  - source: `src/webhooks/payment-webhook.fungi:8`
   - owner: `handleWebhook`
   - borrow count: 3
   - clone count: 0
@@ -826,7 +826,7 @@ Estimated size:
   500kb
 
 Original source:
-  src/webhooks/payment-webhook.spore:18:21
+  src/webhooks/payment-webhook.fungi:18:21
 
 Suggestion:
   Use &payload for read-only access or json.redact(&payload) for copy-on-write redaction.
@@ -844,7 +844,7 @@ Owner:
   payload in handleWebhook
 
 Original source:
-  src/webhooks/payment-webhook.spore:22:3
+  src/webhooks/payment-webhook.fungi:22:3
 
 Suggestion:
   Return an owned value, clone explicitly, or keep the reference inside the owning flow.
@@ -859,7 +859,7 @@ Mutation error:
 Cannot mutate read-only borrowed Json.
 
 Original source:
-  src/webhooks/payment-webhook.spore:16:5
+  src/webhooks/payment-webhook.fungi:16:5
 
 Suggestion:
   Use copy-on-write or request a mutable borrow.

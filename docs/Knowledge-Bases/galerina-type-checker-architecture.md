@@ -3,10 +3,10 @@
 ## Status
 
 ```
-Phase 6 baseline:   SPORE-TYPE-001..009, SPORE-TYPE-020..022 ✅
-Phase 9A-2:         SPORE-TYPE-003 branded types ✅
-Phase 11:           SPORE-TYPE-010..019 formal spec canonical mapping ✅
-Phase 18D:          TypeId, EffectFlags, ComputeCompatibilityFlags, SPORE-TYPE-030/031 ✅
+Phase 6 baseline:   FUNGI-TYPE-001..009, FUNGI-TYPE-020..022 ✅
+Phase 9A-2:         FUNGI-TYPE-003 branded types ✅
+Phase 11:           FUNGI-TYPE-010..019 formal spec canonical mapping ✅
+Phase 18D:          TypeId, EffectFlags, ComputeCompatibilityFlags, FUNGI-TYPE-030/031 ✅
 Phase 19+:          Stop regex re-parsing, TypeRegistry, full inference
 Phase 21+:          Iterative graph checking, structural fingerprints
 ```
@@ -42,8 +42,8 @@ Lexer → Parser → AST
 1. Stop regex re-parsing (Phase 19)
 2. TypeId registry (Phase 18D stub → Phase 19 full)
 3. Practical bidirectional inference (already done ✅)
-4. Protected/redacted as type qualifiers (partially done ✅, SPORE-VALUESTATE-006/007)
-5. Tensor shape checking (Phase 18D: SPORE-TYPE-030/031 → Phase 21A full)
+4. Protected/redacted as type qualifiers (partially done ✅, FUNGI-VALUESTATE-006/007)
+5. Tensor shape checking (Phase 18D: FUNGI-TYPE-030/031 → Phase 21A full)
 6. Effect/capability bitsets (Phase 18D: EffectFlags ✅)
 ```
 
@@ -152,7 +152,7 @@ The type checker proves these properties. The SemanticGraph and ExecutionPlanner
 
 ## 6. Tensor Shape Checking
 
-**Phase 18D (constants):** SPORE-TYPE-030 (TensorElementTypeMismatch), SPORE-TYPE-031 (TensorDimensionMismatch)
+**Phase 18D (constants):** FUNGI-TYPE-030 (TensorElementTypeMismatch), FUNGI-TYPE-031 (TensorDimensionMismatch)
 
 **Phase 21A (full):** Verify for `Tensor<ElementType, [d1, d2, ...]>`:
 - Element type compatibility (Float32 ≠ Int8 without explicit conversion)
@@ -161,8 +161,8 @@ The type checker proves these properties. The SemanticGraph and ExecutionPlanner
 
 ```text
 Tensor<Float32, [768]>   ✓  compatible with  Tensor<Float32, [768]>
-Tensor<Float32, [768]>   ✗  incompatible with Tensor<Int8, [768]>  → SPORE-TYPE-030
-Tensor<Float32, [768]>   ✗  incompatible with Tensor<Float32, [Batch, 768]>  → SPORE-TYPE-031
+Tensor<Float32, [768]>   ✗  incompatible with Tensor<Int8, [768]>  → FUNGI-TYPE-030
+Tensor<Float32, [768]>   ✗  incompatible with Tensor<Float32, [Batch, 768]>  → FUNGI-TYPE-031
 ```
 
 ---
@@ -175,12 +175,12 @@ redacted Email
 secret protected SecureString
 ```
 
-This is already a static type error (SPORE-VALUESTATE-006/007 in the value-state checker):
+This is already a static type error (FUNGI-VALUESTATE-006/007 in the value-state checker):
 ```galerina
-let plain: Email = protectedEmail  // → SPORE-VALUESTATE-006
+let plain: Email = protectedEmail  // → FUNGI-VALUESTATE-006
 ```
 
-Phase 19: migrate to type checker as `SPORE-TYPE-018b` variant, keeping value-state for taint propagation.
+Phase 19: migrate to type checker as `FUNGI-TYPE-018b` variant, keeping value-state for taint propagation.
 
 ---
 
@@ -214,7 +214,7 @@ Not in the core type checker. Use:
 type TriState = enum { Negative Neutral Positive }
 ```
 
-Type checker enforces exhaustive match (SPORE-TYPE-021 already handles this).
+Type checker enforces exhaustive match (FUNGI-TYPE-021 already handles this).
 The semanatic/backend layer interprets TriState for photonic/ternary targets.
 
 ---
@@ -223,20 +223,20 @@ The semanatic/backend layer interprets TriState for photonic/ternary targets.
 
 | Code | Name | Rule |
 |---|---|---|
-| `SPORE-TYPE-001` | `UnknownType` | Type name not in scope |
-| `SPORE-TYPE-003` | `InvalidNominalConversion` | raw String → branded type without gate |
-| `SPORE-TYPE-004` | `InvalidBinaryOperation` | operator not valid for types |
-| `SPORE-TYPE-008` | `SilentNullDenied` | null/undefined as value |
-| `SPORE-TYPE-009` | `InvalidGenericInstantiation` | wrong generic arity |
-| `SPORE-TYPE-010` | `UnsatisfiedGenericConstraint` | type does not satisfy constraint |
-| `SPORE-TYPE-011` | `InvalidCollectionElement` | Array<T> element type mismatch |
-| `SPORE-TYPE-016` | `TensorShapeMismatch` | tensor shapes incompatible |
-| `SPORE-TYPE-017` | `QuantizedPrecisionMismatch` | Int8/Float32 mix without dequantize |
-| `SPORE-TYPE-020` | `ShadowedBinding` | binding shadows outer scope (warning) |
-| `SPORE-TYPE-021` | `NonExhaustiveMatch` | match missing arm |
-| `SPORE-TYPE-022` | `UnreachablePattern` | arm after wildcard |
-| `SPORE-TYPE-030` | `TensorElementTypeMismatch` | wrong element type for tensor operation |
-| `SPORE-TYPE-031` | `TensorDimensionMismatch` | dimension count mismatch |
+| `FUNGI-TYPE-001` | `UnknownType` | Type name not in scope |
+| `FUNGI-TYPE-003` | `InvalidNominalConversion` | raw String → branded type without gate |
+| `FUNGI-TYPE-004` | `InvalidBinaryOperation` | operator not valid for types |
+| `FUNGI-TYPE-008` | `SilentNullDenied` | null/undefined as value |
+| `FUNGI-TYPE-009` | `InvalidGenericInstantiation` | wrong generic arity |
+| `FUNGI-TYPE-010` | `UnsatisfiedGenericConstraint` | type does not satisfy constraint |
+| `FUNGI-TYPE-011` | `InvalidCollectionElement` | Array<T> element type mismatch |
+| `FUNGI-TYPE-016` | `TensorShapeMismatch` | tensor shapes incompatible |
+| `FUNGI-TYPE-017` | `QuantizedPrecisionMismatch` | Int8/Float32 mix without dequantize |
+| `FUNGI-TYPE-020` | `ShadowedBinding` | binding shadows outer scope (warning) |
+| `FUNGI-TYPE-021` | `NonExhaustiveMatch` | match missing arm |
+| `FUNGI-TYPE-022` | `UnreachablePattern` | arm after wildcard |
+| `FUNGI-TYPE-030` | `TensorElementTypeMismatch` | wrong element type for tensor operation |
+| `FUNGI-TYPE-031` | `TensorDimensionMismatch` | dimension count mismatch |
 
 ---
 
@@ -244,13 +244,13 @@ The semanatic/backend layer interprets TriState for photonic/ternary targets.
 
 | Feature | Status |
 |---|---|
-| SPORE-TYPE-001..009 | ✅ Phase 6 |
-| SPORE-TYPE-010..019 (formal spec) | ✅ Phase 11 |
-| SPORE-TYPE-020..022 (shadow/match/unreachable) | ✅ Phase 11 |
+| FUNGI-TYPE-001..009 | ✅ Phase 6 |
+| FUNGI-TYPE-010..019 (formal spec) | ✅ Phase 11 |
+| FUNGI-TYPE-020..022 (shadow/match/unreachable) | ✅ Phase 11 |
 | TypeId numeric registry (stub) | ✅ Phase 18D |
 | EffectFlags bitset | ✅ Phase 18D |
 | ComputeCompatibilityFlags bitset | ✅ Phase 18D |
-| SPORE-TYPE-030/031 (tensor element/dimension) | ✅ Phase 18D |
+| FUNGI-TYPE-030/031 (tensor element/dimension) | ✅ Phase 18D |
 | Stop regex re-parsing | 📋 Phase 19 |
 | Full TypeRegistry | 📋 Phase 19 |
 | Bidirectional inference | ✅ practical form done |

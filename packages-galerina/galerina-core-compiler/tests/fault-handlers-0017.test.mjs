@@ -1,13 +1,13 @@
 // 0017 — first-class fault handlers (on_*_fault). The `on_<signal>_fault <action>` lines inside
 // resilience {} get typed, fail-closed semantics: every fault class resolves to a handler (declared or
 // the secure `halt` default), the matrix is surfaced on GIRFlow.faultHandlers for 0016's generator, and
-// fail-open / monotonicity-violating declarations are rejected (SPORE-FAULT-003 / SPORE-FAULT-001).
+// fail-open / monotonicity-violating declarations are rejected (FUNGI-FAULT-003 / FUNGI-FAULT-001).
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { parseProgram, checkEffects, verifyGovernance, emitGIR } from "../dist/index.js";
 
 function pipeline(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effects = checkEffects(parsed.flows, parsed.ast);
   return { parsed, effects };
 }
@@ -76,31 +76,31 @@ describe("0017: fault-handler matrix surfaces on GIRFlow.faultHandlers", () => {
 describe("0017: fail-closed default + monotonicity diagnostics", () => {
   it("undeclared faults never fail open — secure default is halt (no diagnostic, clean)", () => {
     const g = gov(withResilience("    on_timeout_fault halt"));
-    assert.ok(!has(g, "SPORE-FAULT-003"), codes(g));
-    assert.ok(!has(g, "SPORE-FAULT-001"), codes(g));
+    assert.ok(!has(g, "FUNGI-FAULT-003"), codes(g));
+    assert.ok(!has(g, "FUNGI-FAULT-001"), codes(g));
   });
 
-  it("SPORE-FAULT-003: a fail-OPEN `log` outside on_rotation_fault is rejected", () => {
+  it("FUNGI-FAULT-003: a fail-OPEN `log` outside on_rotation_fault is rejected", () => {
     const g = gov(withResilience("    on_timeout_fault log"));
-    assert.ok(has(g, "SPORE-FAULT-003"), codes(g));
+    assert.ok(has(g, "FUNGI-FAULT-003"), codes(g));
   });
 
-  it("`log` IS allowed on on_rotation_fault (back-compat opt-in) — no SPORE-FAULT-003", () => {
+  it("`log` IS allowed on on_rotation_fault (back-compat opt-in) — no FUNGI-FAULT-003", () => {
     const g = gov(withResilience("    on_rotation_fault log"));
-    assert.ok(!has(g, "SPORE-FAULT-003"), codes(g));
+    assert.ok(!has(g, "FUNGI-FAULT-003"), codes(g));
     // and the matrix records it as the declared log action (the one fail-open exception)
     const f = girFlow(withResilience("    on_rotation_fault log"));
     assert.equal(f.faultHandlers.find((h) => h.signal === "on_rotation_fault").action, "log");
   });
 
-  it("SPORE-FAULT-001: on_denial_fault retry is rejected (deny-only monotonicity)", () => {
+  it("FUNGI-FAULT-001: on_denial_fault retry is rejected (deny-only monotonicity)", () => {
     const g = gov(withResilience("    on_denial_fault retry"));
-    assert.ok(has(g, "SPORE-FAULT-001"), codes(g));
+    assert.ok(has(g, "FUNGI-FAULT-001"), codes(g));
   });
 
   it("a disallowed/fail-open action is COERCED to halt in the matrix (fail-closed by construction)", () => {
     const f = girFlow(withResilience("    on_timeout_fault log"));
-    // even though SPORE-FAULT-003 fires, the materialised handler is the safe halt, never log
+    // even though FUNGI-FAULT-003 fires, the materialised handler is the safe halt, never log
     assert.equal(f.faultHandlers.find((h) => h.signal === "on_timeout_fault").action, "halt");
   });
 });

@@ -5,7 +5,7 @@ import gc
 import tracemalloc
 
 # Mandelbrot escape-time (Computer Language Benchmarks Game) — scaled-integer kernel.
-# Mirrors benchmark.spore, node.mjs and bench.rs EXACTLY. The only negative division
+# Mirrors benchmark.fungi, node.mjs and bench.rs EXACTLY. The only negative division
 # numerator (2*zr*zi) is split into sign+magnitude so EVERY numerator is non-negative
 # and every denominator is positive → Python `//` (floor) == trunc == Rust / == Galerina /,
 # so the checksum is identical across all runtimes.

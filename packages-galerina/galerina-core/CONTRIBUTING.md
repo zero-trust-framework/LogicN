@@ -48,7 +48,7 @@ improving webhook examples
 improving compiler architecture
 drafting source-map schemas
 drafting report schemas
-drafting example .spore files
+drafting example .fungi files
 reviewing licence and attribution files
 improving Git/deployment guidance
 ```
@@ -100,17 +100,17 @@ No requirement for photonic hardware.
 Galerina source files must use:
 
 ```text
-.spore
+.fungi
 ```
 
 Use:
 
 ```text
-boot.spore
-main.spore
-hello.spore
-order-service.spore
-payment-webhook.spore
+boot.fungi
+main.fungi
+hello.fungi
+order-service.fungi
+payment-webhook.fungi
 ```
 
 ## Good First Contributions
@@ -371,7 +371,7 @@ AI output must not include secrets.
 
 Source maps are essential to Galerina.
 
-Contributions should preserve the ability to map compiled output errors back to original `.spore` source.
+Contributions should preserve the ability to map compiled output errors back to original `.fungi` source.
 
 Source-map examples should include:
 
@@ -454,7 +454,7 @@ docs: update JSON-native design
 design: add source-map schema notes
 security: add SecureString rules
 todo: add compiler report tasks
-fix: correct .spore filename examples
+fix: correct .fungi filename examples
 ```
 
 Suggested types:
@@ -478,7 +478,7 @@ Before opening a pull request, check:
 
 ```text
 [ ] The change supports the Galerina project goals.
-[ ] `.spore` is used for source examples.
+[ ] `.fungi` is used for source examples.
 [ ] No undefined or silent null behaviour was introduced.
 [ ] Strict typing was preserved.
 [ ] Security defaults were preserved.

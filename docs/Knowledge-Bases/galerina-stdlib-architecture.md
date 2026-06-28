@@ -18,7 +18,7 @@ All stdlib API decisions should consider WASM compatibility.
 
 ```
 Stage A baseline:  callStdlib(), String/Array/Math/Decimal/Json/File/Http/Crypto stubs ✅
-Phase 18H:         STDLIB_CAPABILITY_MAP, STDLIB_MODULE_KIND, SPORE-STDLIB-001,
+Phase 18H:         STDLIB_CAPABILITY_MAP, STDLIB_MODULE_KIND, FUNGI-STDLIB-001,
                    TriState stdlib, Tensor stdlib ops registry ✅
 Phase R4:          Map<K,V> operations, String extended ops, Math extended ops ✅
                    Tensor.relu, Tensor.dot, Crypto.constantTimeEquals now real (not stubs) ✅
@@ -106,7 +106,7 @@ These are the ONLY safe upgrade paths from `unsafe String` to governed values.
 Stdlib APIs understand value-state qualifiers:
 
 ```galerina
-AuditLog.write({ email: protectedEmail })  → SPORE-VALUESTATE-006 ❌
+AuditLog.write({ email: protectedEmail })  → FUNGI-VALUESTATE-006 ❌
 AuditLog.write({ email: redact(email) })   → ✅ passes value-state check
 ```
 
@@ -234,21 +234,21 @@ Runtime policy config already defines these limits. Stdlib must report consumpti
 
 | Code | Name | Rule |
 |---|---|---|
-| `SPORE-STDLIB-001` | `StdlibEffectNotDeclared` | effectful stdlib function called without declaring required effect |
+| `FUNGI-STDLIB-001` | `StdlibEffectNotDeclared` | effectful stdlib function called without declaring required effect |
 
 ---
 
 ## Legacy to Avoid
 
 ```
-global mutable state          → SPORE-SEC-020/021
+global mutable state          → FUNGI-SEC-020/021
 magic singletons              → hidden state
 implicit process/env reads    → must declare secret.read
 throw-heavy APIs              → use Result<T,E>
 stringly-typed permissions    → use EffectFlags
 hidden allocations in hot path → document via Arena
-prototype extension           → SPORE-SEC-021
-dynamic package loading       → SPORE-BACKEND-001
+prototype extension           → FUNGI-SEC-021
+dynamic package loading       → FUNGI-BACKEND-001
 ```
 
 ---
@@ -262,12 +262,12 @@ dynamic package loading       → SPORE-BACKEND-001
 | Effectful stdlib (File/Http/Database/AuditLog/Crypto) | ✅ Stage A stubs |
 | EFFECT_REGISTRY (effect → capability mapping) | ✅ Phase 5 |
 | GATE_PREFIXES (validate.*/sanitize.*) | ✅ Phase 6 |
-| Protected/redacted-aware SPORE-VALUESTATE-006/007 | ✅ Phase 11B |
+| Protected/redacted-aware FUNGI-VALUESTATE-006/007 | ✅ Phase 11B |
 | STDLIB_CAPABILITY_MAP | ✅ Phase 18H |
 | STDLIB_MODULE_KIND (pure/effectful classification) | ✅ Phase 18H |
 | TENSOR_STDLIB_OPS registry | ✅ Phase 18H |
 | TRI_STDLIB_OPS registry | ✅ Phase 18H |
-| SPORE-STDLIB-001 constant | ✅ Phase 18H |
+| FUNGI-STDLIB-001 constant | ✅ Phase 18H |
 | Map<K,V> operations | ✅ Phase R4 |
 | String extended ops (trim/split/contains/pad/repeat/case) | ✅ Phase R4 |
 | Math extended ops (floor/ceil/round/log/sign/trunc) | ✅ Phase R4 |

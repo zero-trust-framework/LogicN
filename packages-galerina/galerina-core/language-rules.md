@@ -30,44 +30,44 @@ No photonic-only requirement.
 
 ---
 
-## Rule 1: Use `.spore` Files
+## Rule 1: Use `.fungi` Files
 
 Galerina source files must use:
 
 ```text
-.spore
+.fungi
 ```
 
 Examples:
 
 ```text
-boot.spore
-main.spore
-hello.spore
-order-service.spore
-payment-webhook.spore
-fraud-check.spore
+boot.fungi
+main.fungi
+hello.fungi
+order-service.fungi
+payment-webhook.fungi
+fraud-check.fungi
 ```
 
-## Rule 2: Prefer `boot.spore` for Project Entry
+## Rule 2: Prefer `boot.fungi` for Project Entry
 
 Full Galerina projects should use:
 
 ```text
-boot.spore
+boot.fungi
 ```
 
 Example:
 
 ```text
 my-app/
-├── boot.spore
+├── boot.fungi
 ├── src/
-│   └── main.spore
+│   └── main.fungi
 └── build/
 ```
 
-`boot.spore` should define:
+`boot.fungi` should define:
 
 ```text
 project name
@@ -80,10 +80,10 @@ build settings
 imports
 ```
 
-Small scripts may use a single `.spore` file:
+Small scripts may use a single `.fungi` file:
 
 ```text
-hello.spore
+hello.fungi
 ```
 
 ---
@@ -486,7 +486,7 @@ Unsafe memory features should be denied by default.
 
 ## Rule 16: Runtime Memory Pressure Must Be Explicit
 
-Galerina projects may declare runtime memory pressure behaviour in `boot.spore`.
+Galerina projects may declare runtime memory pressure behaviour in `boot.fungi`.
 
 ```Galerina
 runtime {
@@ -1067,7 +1067,7 @@ explicit, reported and source-mapped.
 
 ## Rule 32: Source Maps Are Required
 
-Compiled errors must map back to original `.spore` source files.
+Compiled errors must map back to original `.fungi` source files.
 
 Example error:
 
@@ -1075,7 +1075,7 @@ Example error:
 Runtime error: PaymentStatus.Unknown was not handled.
 
 Original source:
-  app/services/order-service.spore:42:7
+  app/services/order-service.fungi:42:7
 
 Suggestion:
   Add a map branch for Unknown.
@@ -1171,7 +1171,7 @@ Example:
 {
   "errorType": "TargetCompatibilityError",
   "target": "photonic",
-  "file": "src/fraud-check.spore",
+  "file": "src/fraud-check.fungi",
   "line": 18,
   "problem": "readFile cannot run inside a photonic compute block.",
   "suggestedFix": "Move readFile outside the compute block."
@@ -1255,7 +1255,7 @@ docs/docs-manifest.json
 app.ai-context.json
 ```
 
-`boot.spore` may declare these as required build outputs. If required generated
+`boot.fungi` may declare these as required build outputs. If required generated
 documentation, source maps or map manifests cannot be produced, the build should
 fail.
 

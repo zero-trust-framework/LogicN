@@ -15,10 +15,10 @@ through the architecture, to a worked build.
 
 ## 0. The one-paragraph mental model
 
-A Galerina plugin is **governed `.spore` logic + a `contract{}` that declares its authority + a signed
+A Galerina plugin is **governed `.fungi` logic + a `contract{}` that declares its authority + a signed
 `.lmanifest`**, compiled to **one signed `.wasm`**, and **fused at a declared seam** into a host app. It is
 **not** runtime middleware — nothing "flows through" it; governance is part of execution, not a layer around
-it. You, the author, write **only** governed `.spore` and a contract. The substrate does the rest: it admits
+it. You, the author, write **only** governed `.fungi` and a contract. The substrate does the rest: it admits
 your package at a fail-closed border, confers exactly the capabilities your contract declares (and no more),
 and picks the execution tier (binary/hybrid/photonic) for you. **You cannot acquire authority you weren't
 granted — by construction, not by convention.**
@@ -29,7 +29,7 @@ granted — by construction, not by convention.**
 
 | A Galerina plugin IS | A Galerina plugin is NOT |
 |---|---|
-| Governed `.spore` source + a `contract{}` | A runtime middleware/interceptor |
+| Governed `.fungi` source + a `contract{}` | A runtime middleware/interceptor |
 | Compiled to **one signed `.wasm`** | A pile of ambient-authority scripts |
 | Admitted at a **fail-closed fuse border** | "Trusted because it's installed" |
 | Granted only its **declared `effects{}`** | Free to reach any host capability |
@@ -66,22 +66,22 @@ structural; key custody is the human control that matters. So: minimize what you
 
 ```
 my-plugin/
-  package.spore.json        # descriptor: name, kind, provides, entry, capabilities
-  src/<name>.spore          # your governed logic + contract{}
+  package.fungi.json        # descriptor: name, kind, provides, entry, capabilities
+  src/<name>.fungi          # your governed logic + contract{}
   tests/                  # YOUR hand-written tests (kept separate from generated ones)   [IN-FLIGHT: B1 scaffolder]
   dist/<name>.wasm        # ONE signed wasm (output of `galerina build`)
   dist/<name>.lmanifest   # the SIGNED admission contract (CBOR, Ed25519)
 ```
 
-1. **`package.spore.json`** — the descriptor the resolver reads: `name`, `kind`, `provides` (the exports a
+1. **`package.fungi.json`** — the descriptor the resolver reads: `name`, `kind`, `provides` (the exports a
    consumer may fuse), `entry`, and the declared `capabilities`. **[SHIPPED]** via the governed
    `package-resolver` (`galerina-core-compiler/src/package-resolver.ts`).
-2. **`.spore` source** — your logic, wrapped in a `secure flow` / `guarded flow` with a `contract{}` (see §4).
+2. **`.fungi` source** — your logic, wrapped in a `secure flow` / `guarded flow` with a `contract{}` (see §4).
 3. **The signed `.lmanifest`** — the **authoritative** admission contract: `wasmSha256` (hash pin) + a
    **`fuse{}`** block (the capability grant: `capabilities` / `provides` / `seam` / `wasmSha256`) +
    `governanceSignature` (real Ed25519). Parsed by `extractFuse` (`galerina-framework-app-kernel/src/fuse-loader.ts:263-291`),
    generated *before signing* by `galerina build`. **Capability binding lives HERE — never in `.tmf`.** **[SHIPPED]**
-4. **One signed `.wasm`** — your `.spore` compiled `.spore → GIR → WAT → .wasm`, with the manifest's behavioral
+4. **One signed `.wasm`** — your `.fungi` compiled `.fungi → GIR → WAT → .wasm`, with the manifest's behavioral
    fingerprint + source hash bound under the signature.
 
 > **Why one `.wasm`?** The default is **AOT-fuse**: intra-package flows merge into a single signed module
@@ -95,7 +95,7 @@ my-plugin/
 
 The contract is the single source of truth for what your plugin may do. Authoring rules:
 
-```spore
+```fungi
 secure flow chargeOrder(req: PaymentRequest) -> Result<Receipt, PayError>
 contract {
   intent  { "Charge an approved merchant and audit the result." }   // human + AI readable
@@ -111,14 +111,14 @@ contract {
   isn't one, deliberately (0062 §2: a second surface would drift from `effects{}`). The fuse border enforces
   `effects{}` directly.
 - **Declare exactly what you use — least-privilege.** Declaring an effect you never exercise is an
-  **over-privilege error** (`SPORE-EFFECT-006 OVERDECLARED_EFFECT`, **[IN-FLIGHT #201]** — strict, all profiles).
-  Using an effect you didn't declare is `SPORE-EFFECT-001` **[SHIPPED]**. Effects are **operation-inferred**: the
+  **over-privilege error** (`FUNGI-EFFECT-006 OVERDECLARED_EFFECT`, **[IN-FLIGHT #201]** — strict, all profiles).
+  Using an effect you didn't declare is `FUNGI-EFFECT-001` **[SHIPPED]**. Effects are **operation-inferred**: the
   compiler learns them from your calls (a DB insert ⇒ `database.write`, a model call ⇒ `ai.inference`, a write
   of a PII-typed value ⇒ `pii.write`). Declare precisely; the checker will tell you if you're off in either
   direction.
-- **Use canonical dot-path effect names** (`network.outbound`, not `network`) — a broad alias is `SPORE-EFFECT-005`.
+- **Use canonical dot-path effect names** (`network.outbound`, not `network`) — a broad alias is `FUNGI-EFFECT-005`.
 - **`invariant { ensure result }`** is your output gate — the recovered/returned value is trapped at the single
-  exit if it violates the post-condition (`SPORE-INV-*`, fail-closed across every tier). **[SHIPPED]**
+  exit if it violates the post-condition (`FUNGI-INV-*`, fail-closed across every tier). **[SHIPPED]**
 - **`limits{}`** binds a committed arena (no `memory.grow`) — an over-budget allocation traps. **[SHIPPED]**
 
 ---
@@ -128,12 +128,12 @@ contract {
 Every package crosses **three fail-closed gates** at fusion (`fuse-loader.ts`), deny-by-default:
 
 1. **Hash pin** — the `.wasm` sha256 must equal the signed descriptor (`fuse-loader.ts:483-489`,
-   `SPORE-FUSE-HASH-MISMATCH`).
+   `FUNGI-FUSE-HASH-MISMATCH`).
 2. **Signature + revocation** — a valid Ed25519 signature from a **non-revoked** key
    (`fuse-loader.ts:308-361` + `516-526`; revocation via `governance/revocation-registry.mjs` `isKeyRevoked` /
    `assertRegistryTrustworthy`, fail-closed). A throwing revocation check itself denies.
 3. **Closed capabilities** — only your declared caps get a host import; an undeclared capability has no import
-   (`buildCapabilityImports`, `fuse-loader.ts:419-439`, `SPORE-FUSE-UNKNOWN-CAP`), and the runtime turns an
+   (`buildCapabilityImports`, `fuse-loader.ts:419-439`, `FUNGI-FUSE-UNKNOWN-CAP`), and the runtime turns an
    unauthorized import into `CRITICAL_SECURITY_VIOLATION` (`wasm-runtime.ts:353-366`).
 
 All **[SHIPPED]**. **The package-standard profile** every package must satisfy (`effects{}` present + closed,
@@ -151,10 +151,10 @@ write to it now so you're ready when the checker lands.
   enforces this per-module at load; the compile-time transitive proof is the in-flight piece.
 - **The verified tier.** Deep/untrusted deps may resolve only to the curated **`@galerina-core/*`** verified
   namespace (signed by the pinned root) or carry their own signed + masked admission — they cannot pull
-  arbitrary unverified deep deps (0062 §4, enforced at `package-resolver` `SPORE-PKG-006`). **[SHIPPED resolver]
+  arbitrary unverified deep deps (0062 §4, enforced at `package-resolver` `FUNGI-PKG-006`). **[SHIPPED resolver]
   / [DESIGN tier rule]**
 - **Egress governance.** Data leaving via a granted `network.send` is still governed (raw-secret →
-  `SPORE-SECRET-002`, cleartext semantic embedding → `SPORE-PRIVACY-002`; only `seal()`/`redact()` declassify —
+  `FUNGI-SECRET-002`, cleartext semantic embedding → `FUNGI-PRIVACY-002`; only `seal()`/`redact()` declassify —
   `value-state-checker.ts`). **[SHIPPED]** Binding an egress policy to a *specific* granted capability is
   **[DESIGN #208]**.
 
@@ -197,7 +197,7 @@ gives stronger visibility *and* stronger security than a flat 1-level rule ever 
 
 ---
 
-## 7. Tri-Pipe transparency — you write governed `.spore`, the substrate picks the tier
+## 7. Tri-Pipe transparency — you write governed `.fungi`, the substrate picks the tier
 
 You **never** write binary/hybrid/photonic. The router (`ExecutionRouter` + `PartitionDecider` +
 `hardware()` directive) chooses the tier per-kernel and **fails closed to Binary**. **[SHIPPED]**
@@ -217,8 +217,8 @@ You **never** write binary/hybrid/photonic. The router (`ExecutionRouter` + `Par
 
 A minimal governed plugin: a slug normaliser with audit.
 
-**1) `src/slugify.spore`**
-```spore
+**1) `src/slugify.fungi`**
+```fungi
 secure flow slugify(readonly raw: String) -> Result<String, SlugError>
 contract {
   intent  { "Normalise user text to a URL slug and audit the call." }
@@ -233,15 +233,15 @@ contract {
 }
 ```
 *(Declares only `audit.write` — the one effect the body exercises. Declaring `network.outbound` here would be
-an `SPORE-EFFECT-006` over-privilege error; omitting `audit.write` would be `SPORE-EFFECT-001`.)*
+an `FUNGI-EFFECT-006` over-privilege error; omitting `audit.write` would be `FUNGI-EFFECT-001`.)*
 
-**2) Check** — `node galerina.mjs check src/slugify.spore` → type-check + governance verify must be clean. **[SHIPPED]**
+**2) Check** — `node galerina.mjs check src/slugify.fungi` → type-check + governance verify must be clean. **[SHIPPED]**
 
-**3) Build + sign** — `node galerina.mjs build src/slugify.spore` → emits `dist/slugify.wasm` + a **signed** CBOR
+**3) Build + sign** — `node galerina.mjs build src/slugify.fungi` → emits `dist/slugify.wasm` + a **signed** CBOR
 `dist/slugify.lmanifest` (real Ed25519 when a signing key is present; the `fuse{}` block carries your
 capability grant + `wasmSha256`). **[SHIPPED]**
 
-**4) Run it governed** — `node galerina.mjs run src/slugify.spore --governed` executes via the governed interpreter
+**4) Run it governed** — `node galerina.mjs run src/slugify.fungi --governed` executes via the governed interpreter
 enforcing the manifest's allowed effects (deny-by-default; no ambient `console`/capabilities). **[SHIPPED]**
 
 **5) Publish** — to the signed registry index so consumers can resolve + verify it (hash + sig + revocation
@@ -255,7 +255,7 @@ three gates (§5) and your `provides` are host-linked into the app's signed comp
 ## 9. Distribution — resolver, registry, signing, revocation
 
 - **`package-galerina.json` + lock** + the **governed resolver**: verifies hash + Ed25519 signature + registry
-  origin + `installScript: deny` (no install-time code execution) before admission — `SPORE-PKG-001..006`
+  origin + `installScript: deny` (no install-time code execution) before admission — `FUNGI-PKG-001..006`
   (`package-resolver.ts`). **[SHIPPED]**
 - **Signed central registry index** — resolve a name → a signed `.wasm` + verify before admit. **[IN-FLIGHT B5a]**
 - **Signing** — real Ed25519 over RFC-8785 canonical bytes, self-verifiable from the CBOR (#67/#180). ML-DSA-65
@@ -297,26 +297,26 @@ A plugin is read by an AI in **two roles**, both served by the same signed artif
 ## 12. Forbidden / anti-patterns (these fail closed or fail to compile)
 
 - **Ambient authority** — reaching a capability you didn't declare. (No host import → LinkError → CRITICAL.)
-- **Over-declaration** — declaring an effect you don't use. (`SPORE-EFFECT-006`, **[IN-FLIGHT]**.)
-- **Crypto/bitwise in `.spore`** — `& | ^ << >>` are *not* Galerina operators (crypto-on-core boundary); crypto
-  is engine-side, Binary, bit-exact. (`SPORE-PARSE-001` hint.)
+- **Over-declaration** — declaring an effect you don't use. (`FUNGI-EFFECT-006`, **[IN-FLIGHT]**.)
+- **Crypto/bitwise in `.fungi`** — `& | ^ << >>` are *not* Galerina operators (crypto-on-core boundary); crypto
+  is engine-side, Binary, bit-exact. (`FUNGI-PARSE-001` hint.)
 - **Capability binding in `.tmf`** — capability binding lives in the signed `.lmanifest fuse{}`, full stop.
 - **A package that graphs/attests *itself*** as a trust input — the audit graph must be trusted + derived from
   verified artifacts, never the package's self-declaration.
 - **Photonic/hybrid for crypto/governance/secrets/control** — Binary-only by invariant; you can't opt out.
-- **Unsealed secret/PII to a network sink** — `SPORE-SECRET-002` / `SPORE-PRIVACY-002`; declassify via
+- **Unsealed secret/PII to a network sink** — `FUNGI-SECRET-002` / `FUNGI-PRIVACY-002`; declassify via
   `seal()`/`redact()` only.
 
 ---
 
 ## 13. The package-standard checklist (write to this today)
 
-- [ ] `package.spore.json` with `name` / `kind` / `provides` / `entry` / `capabilities`.
+- [ ] `package.fungi.json` with `name` / `kind` / `provides` / `entry` / `capabilities`.
 - [ ] Every flow is `secure`/`guarded` with a `contract{}`.
 - [ ] `effects{}` present, **closed**, canonical dot-paths, **least-privilege** (declared == used).
 - [ ] `invariant { ensure result }` present (output gate).
 - [ ] `limits{}` present (arena + time ceiling).
-- [ ] No ambient authority; no bitwise/crypto in `.spore`; secrets via `seal()`/`redact()` before any sink.
+- [ ] No ambient authority; no bitwise/crypto in `.fungi`; secrets via `seal()`/`redact()` before any sink.
 - [ ] `galerina check` clean (type + governance), `galerina build` produces a **signed** `.wasm` + `.lmanifest`.
 - [ ] Capability binding in the `.lmanifest fuse{}` (never `.tmf`).
 - [ ] Deps resolve to the verified tier or carry their own signed + masked admission.

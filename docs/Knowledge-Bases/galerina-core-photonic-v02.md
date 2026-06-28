@@ -13,7 +13,7 @@ This document is the v0.2 canonical specification for `galerina-core-photonic`.
 Update status: `docs/COVERAGE.md` records unresolved conflicts between this
 formal v0.2 spec, the governance overlay and the vector photonic proposal. This
 file is not implementation-ready for `OpticalTransportMode` or
-`SPORE-PHOTONIC-*` until the owner package reconciles one canonical enum and one
+`FUNGI-PHOTONIC-*` until the owner package reconciles one canonical enum and one
 diagnostic table.
 
 See also: `galerina-core-photonic-backend-architecture.md` (prior KB),
@@ -311,12 +311,12 @@ ExperimentalRouting is blocked by default. Requires explicit override.
 
 | Code            | Meaning                            |
 | --------------- | ---------------------------------- |
-| SPORE-PHOTONIC-001 | Isolation guarantee missing        |
-| SPORE-PHOTONIC-002 | Propagation depth exceeded         |
-| SPORE-PHOTONIC-003 | Experimental runtime prohibited    |
-| SPORE-PHOTONIC-004 | Invalid optical topology           |
-| SPORE-PHOTONIC-005 | Non-deterministic runtime detected |
-| SPORE-PHOTONIC-006 | Unsafe hybrid transition           |
+| FUNGI-PHOTONIC-001 | Isolation guarantee missing        |
+| FUNGI-PHOTONIC-002 | Propagation depth exceeded         |
+| FUNGI-PHOTONIC-003 | Experimental runtime prohibited    |
+| FUNGI-PHOTONIC-004 | Invalid optical topology           |
+| FUNGI-PHOTONIC-005 | Non-deterministic runtime detected |
+| FUNGI-PHOTONIC-006 | Unsafe hybrid transition           |
 
 Note: The prior KB had different meanings for these codes:
 - Prior 001: optical runtime unavailable
@@ -352,7 +352,7 @@ galerina-core-photonic/
 
   diagnostics/
     PhotonicDiagnostic.ts
-    codes.ts                (SPORE-PHOTONIC-001–006)
+    codes.ts                (FUNGI-PHOTONIC-001–006)
 
   targets/
     runtimeTargets.ts       (PhotonicRuntimeTarget)

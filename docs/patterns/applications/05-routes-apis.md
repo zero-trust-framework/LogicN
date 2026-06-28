@@ -138,9 +138,9 @@ The compiler emits a `routes.json` manifest alongside each service. This manifes
 Non-routed flows are not publicly callable. This is a hard compiler guarantee: if a flow has no `route` binding, it cannot be reached via HTTP regardless of how the service is deployed.
 
 The compiler also enforces:
-- A route may not bind to a flow declared in another service's contract — SPORE-ROUTE-001
-- A route's `params` types must match the triggered flow's parameter types — SPORE-ROUTE-002
-- A route's `body` type must match the triggered flow's input type — SPORE-ROUTE-003
+- A route may not bind to a flow declared in another service's contract — FUNGI-ROUTE-001
+- A route's `params` types must match the triggered flow's parameter types — FUNGI-ROUTE-002
+- A route's `body` type must match the triggered flow's input type — FUNGI-ROUTE-003
 
 ---
 

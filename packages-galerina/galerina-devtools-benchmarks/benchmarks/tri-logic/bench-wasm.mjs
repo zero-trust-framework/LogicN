@@ -12,7 +12,7 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 
 export async function runWasmBenchmark() {
   // runBulkTri(100000) = 100K iterations of triAnd+triOr+triNot per call
-  const base = await runWASMBenchmark(join(__dir, "benchmark.spore"), 100000);
+  const base = await runWASMBenchmark(join(__dir, "benchmark.fungi"), 100000);
   if (base.error) return base;
   return {
     ...base,

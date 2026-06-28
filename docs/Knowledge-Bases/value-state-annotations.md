@@ -12,8 +12,8 @@ Phase 5 prerequisite
 ## Rules at a Glance
 
 - `unsafe let` marks a boundary-origin binding — it cannot reach governed sinks without a gate upgrade
-- `safe mut` upgrade requires a recognised gate on the RHS (`validate.*`, `sanitize.*`, `json.decode`, `parse.*`) — emits `SPORE-VALUESTATE-001` if missing
-- Unsafe binding passed directly to a governed sink emits `SPORE-VALUESTATE-003`
+- `safe mut` upgrade requires a recognised gate on the RHS (`validate.*`, `sanitize.*`, `json.decode`, `parse.*`) — emits `FUNGI-VALUESTATE-001` if missing
+- Unsafe binding passed directly to a governed sink emits `FUNGI-VALUESTATE-003`
 - `SecureString` must not be passed to `print`, `log.*`, `Logger.*`, `console.*` — use `redact()` instead
 - `SecureString` must not be compared with `==` or `!=` — use `constantTimeEquals()` instead
 - Gate and sink registry: `docs/Knowledge-Bases/stdlib-gates.yaml`
@@ -214,7 +214,7 @@ AST:
   "value": "rawEmail",
   "typeAnnotation": "String",
   "safetyPrefix": "unsafe",
-  "location": { "file": "forms.spore", "line": 3, "column": 3 }
+  "location": { "file": "forms.fungi", "line": 3, "column": 3 }
 }
 ```
 
@@ -240,7 +240,7 @@ payment.charge
 
 without first passing through a `safe mut` upgrade.
 
-Diagnostic: `SPORE-VALUESTATE-001`
+Diagnostic: `FUNGI-VALUESTATE-001`
 
 ### Rule 2 — `safe mut` requires an approved gate
 
@@ -251,7 +251,7 @@ Invalid:
 
 ```galerina
 unsafe let rawEmail: String = input.email
-safe   mut rawEmail = rawEmail   // no gate — SPORE-VALUESTATE-002
+safe   mut rawEmail = rawEmail   // no gate — FUNGI-VALUESTATE-002
 ```
 
 Valid:
@@ -261,7 +261,7 @@ unsafe let rawEmail: String = input.email
 safe   mut rawEmail = validate.email(rawEmail)?   // gate present
 ```
 
-Diagnostic: `SPORE-VALUESTATE-002`
+Diagnostic: `FUNGI-VALUESTATE-002`
 
 ### Rule 3 — `SecureString` bindings have restricted operations
 
@@ -272,15 +272,15 @@ Diagnostic: `SPORE-VALUESTATE-002`
 - Included in an API response body
 - Stored in a plain `String` binding
 
-Diagnostic: `SPORE-SECRET-001` (print/log), `SPORE-SECRET-002` (equality comparison),
-`SPORE-SECRET-003` (API response)
+Diagnostic: `FUNGI-SECRET-001` (print/log), `FUNGI-SECRET-002` (equality comparison),
+`FUNGI-SECRET-003` (API response)
 
 ### Rule 4 — Tainted bindings require sanitisation
 
 A binding tainted by an `unsafe` operand in an expression must pass through a
 `sanitize.*` gate before it can be used at a governed sink.
 
-Diagnostic: `SPORE-VALUESTATE-004`
+Diagnostic: `FUNGI-VALUESTATE-004`
 
 ### Rule 5 — Boundary values must be declared `unsafe`
 
@@ -288,7 +288,7 @@ Values arriving from HTTP bodies, file reads, environment, or external APIs
 must be declared with `unsafe let` or `unsafe mut`. Assigning them to a plain
 `let` without the prefix is a state contradiction.
 
-Diagnostic: `SPORE-VALUESTATE-005`
+Diagnostic: `FUNGI-VALUESTATE-005`
 
 ---
 
@@ -320,35 +320,35 @@ full type-system gate registry is a Phase 6+ addition.
 
 ## Diagnostic Codes
 
-All codes follow the `SPORE-SERIES-NNN` format.
+All codes follow the `FUNGI-SERIES-NNN` format.
 
-### SPORE-VALUESTATE series
-
-| Code | Name | Severity | Description |
-|---|---|---|---|
-| `SPORE-VALUESTATE-001` | `UNSAFE_VALUE_AT_SINK` | error | `unsafe` or `unvalidated` value reached a governed sink |
-| `SPORE-VALUESTATE-002` | `IMPLICIT_STATE_UPGRADE` | error | Cannot assign `unsafe unvalidated` to `safe validated` without a gate |
-| `SPORE-VALUESTATE-003` | `MISSING_VALIDATION_GATE` | error | A validation gate is required but not present |
-| `SPORE-VALUESTATE-004` | `TAINTED_VALUE_UNSANITISED` | error | `tainted` value used without a sanitiser |
-| `SPORE-VALUESTATE-005` | `STATE_ANNOTATION_CONFLICT` | error | Value-state annotation conflicts with inferred source state |
-
-### SPORE-SECRET series
+### FUNGI-VALUESTATE series
 
 | Code | Name | Severity | Description |
 |---|---|---|---|
-| `SPORE-SECRET-001` | `SECRET_LOGGED_RAW` | error | `secret protected` value passed to a print or log function |
-| `SPORE-SECRET-002` | `SECRET_EQUALITY_COMPARISON` | error | `secret protected` value compared with `==` (use `constantTimeEquals()`) |
-| `SPORE-SECRET-003` | `SECRET_IN_API_RESPONSE` | error | `secret protected` value included in an API response |
+| `FUNGI-VALUESTATE-001` | `UNSAFE_VALUE_AT_SINK` | error | `unsafe` or `unvalidated` value reached a governed sink |
+| `FUNGI-VALUESTATE-002` | `IMPLICIT_STATE_UPGRADE` | error | Cannot assign `unsafe unvalidated` to `safe validated` without a gate |
+| `FUNGI-VALUESTATE-003` | `MISSING_VALIDATION_GATE` | error | A validation gate is required but not present |
+| `FUNGI-VALUESTATE-004` | `TAINTED_VALUE_UNSANITISED` | error | `tainted` value used without a sanitiser |
+| `FUNGI-VALUESTATE-005` | `STATE_ANNOTATION_CONFLICT` | error | Value-state annotation conflicts with inferred source state |
+
+### FUNGI-SECRET series
+
+| Code | Name | Severity | Description |
+|---|---|---|---|
+| `FUNGI-SECRET-001` | `SECRET_LOGGED_RAW` | error | `secret protected` value passed to a print or log function |
+| `FUNGI-SECRET-002` | `SECRET_EQUALITY_COMPARISON` | error | `secret protected` value compared with `==` (use `constantTimeEquals()`) |
+| `FUNGI-SECRET-003` | `SECRET_IN_API_RESPONSE` | error | `secret protected` value included in an API response |
 
 ### Diagnostic shape
 
 ```typescript
 {
-  code: "SPORE-VALUESTATE-001",
+  code: "FUNGI-VALUESTATE-001",
   name: "UNSAFE_VALUE_AT_SINK",
   severity: "error",
   message: "Unsafe unvalidated value 'rawMessage' cannot flow into database.write.",
-  location: { file: "forms.spore", line: 14, column: 7 },
+  location: { file: "forms.fungi", line: 14, column: 7 },
   suggestedFix: "Pass rawMessage through validate.* or sanitize.* before writing to the database."
 }
 ```
@@ -395,7 +395,7 @@ contract {
 {
   unsafe let rawMessage: String = request.message
 
-  // SPORE-VALUESTATE-001: unsafe binding cannot flow into database.write
+  // FUNGI-VALUESTATE-001: unsafe binding cannot flow into database.write
   let saved: ContactForm = ContactFormsDB.insert({ message: rawMessage })?
 
   return Ok(saved)
@@ -417,7 +417,7 @@ contract {
 {
   let apiKey: SecureString = env.secret("API_KEY")
 
-  // SPORE-SECRET-001 would fire here — do NOT uncomment:
+  // FUNGI-SECRET-001 would fire here — do NOT uncomment:
   // print(apiKey)
 
   log.info("API key loaded", { key: redact(apiKey) })
@@ -442,7 +442,7 @@ contract {
 {
   let expected: SecureString = env.secret("EXPECTED_TOKEN")
 
-  // SPORE-SECRET-002 would fire here — do NOT uncomment:
+  // FUNGI-SECRET-002 would fire here — do NOT uncomment:
   // if provided == expected { ... }
 
   let valid: Bool = constantTimeEquals(provided, expected)
@@ -473,9 +473,9 @@ qualifiers apply to bindings (`let`, `mut`), not flows.
 
 The value-state checker and the effect checker are separate passes.
 
-- The **effect checker** (`SPORE-EFFECT-*`) validates that declared effects match
+- The **effect checker** (`FUNGI-EFFECT-*`) validates that declared effects match
   flow qualifiers (e.g. `pure flow` must declare no effects).
-- The **value-state checker** (`SPORE-VALUESTATE-*`, `SPORE-SECRET-*`) validates
+- The **value-state checker** (`FUNGI-VALUESTATE-*`, `FUNGI-SECRET-*`) validates
   that annotated values do not reach sinks incompatible with their state.
 
 A future joint pass may correlate effect sinks with value states (e.g.

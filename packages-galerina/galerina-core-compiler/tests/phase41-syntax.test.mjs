@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { parseProgram, executeFlow } from "../dist/index.js";
 
 async function run(src, flowName, args = new Map()) {
-  const prog = parseProgram(src, "test.spore");
+  const prog = parseProgram(src, "test.fungi");
   const errs = prog.diagnostics.filter(d => d.severity === "error");
   if (errs.length > 0) throw new Error("Parse errors: " + errs.map(d => d.message).join(", "));
   const r = await executeFlow(flowName, args, prog.ast, prog.flows);
@@ -63,7 +63,7 @@ pure flow httpStatus(code: Int): String {
 describe("Phase 41: colon return type syntax", () => {
   it("accepts : as return type separator", () => {
     const src = "pure flow f(x: Int): Int { contract { effects {} } return x }";
-    const prog = parseProgram(src, "t.spore");
+    const prog = parseProgram(src, "t.fungi");
     const errs = prog.diagnostics.filter(d => d.severity === "error");
     assert.equal(errs.length, 0, "Colon return type should parse without errors");
     assert.equal(prog.flows[0]?.returnType, "Int");
@@ -72,7 +72,7 @@ describe("Phase 41: colon return type syntax", () => {
     const src = `
 pure flow add(a: Int, b: Int) -> Int { contract { effects {} } return a }
 pure flow mul(a: Int, b: Int): Int { contract { effects {} } return a }`;
-    const prog = parseProgram(src, "t.spore");
+    const prog = parseProgram(src, "t.fungi");
     const errs = prog.diagnostics.filter(d => d.severity === "error");
     assert.equal(errs.length, 0);
     assert.equal(prog.flows.length, 2);
@@ -88,7 +88,7 @@ describe("Phase 41: inline contract (contract first in flow body)", () => {
   }
   return x
 }`;
-    const prog = parseProgram(src, "t.spore");
+    const prog = parseProgram(src, "t.fungi");
     const errs = prog.diagnostics.filter(d => d.severity === "error");
     assert.equal(errs.length, 0, "Inline contract should parse without errors: " + errs.map(d=>d.message).join(", "));
     assert.equal(prog.flows[0]?.name, "f");
@@ -98,7 +98,7 @@ describe("Phase 41: inline contract (contract first in flow body)", () => {
   contract { effects { database.write audit.write } }
   return true
 }`;
-    const prog = parseProgram(src, "t.spore");
+    const prog = parseProgram(src, "t.fungi");
     const errs = prog.diagnostics.filter(d => d.severity === "error");
     assert.equal(errs.length, 0);
     const effects = prog.flows[0]?.declaredEffects ?? [];
@@ -116,7 +116,7 @@ pure flow classify(score: Int): String {
   contract { effects {} }
   return "ok"
 }`;
-    const prog = parseProgram(src, "t.spore");
+    const prog = parseProgram(src, "t.fungi");
     const errs = prog.diagnostics.filter(d => d.severity === "error");
     assert.equal(errs.length, 0);
   });

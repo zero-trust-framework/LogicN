@@ -12,7 +12,7 @@ import {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function parseAndCheck(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   return checkTypes(parsed.ast);
 }
 
@@ -25,7 +25,7 @@ function diagsWithCode(result, code) {
 }
 
 async function parseAndRun(source, flowName, args = new Map()) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   resolveSymbols(parsed.ast);
   checkTypes(parsed.ast);
   return await executeFlow(flowName, args, parsed.ast);
@@ -41,7 +41,7 @@ flow test() -> Void {
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-011"), "Unexpected SPORE-TYPE-011 for valid Array<String>");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-011"), "Unexpected FUNGI-TYPE-011 for valid Array<String>");
   });
 
   it("accepts Array<Int> with all integer elements", () => {
@@ -51,7 +51,7 @@ flow test() -> Void {
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-011"), "Unexpected SPORE-TYPE-011 for valid Array<Int>");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-011"), "Unexpected FUNGI-TYPE-011 for valid Array<Int>");
   });
 
   it("accepts Array<Bool> with all boolean elements", () => {
@@ -61,7 +61,7 @@ flow test() -> Void {
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-011"), "Unexpected SPORE-TYPE-011 for valid Array<Bool>");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-011"), "Unexpected FUNGI-TYPE-011 for valid Array<Bool>");
   });
 
   it("rejects Array<String> with a mixed Int element", () => {
@@ -71,7 +71,7 @@ flow test() -> Void {
   return
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-011"), "Expected SPORE-TYPE-011 for Array<String> with Int element");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-011"), "Expected FUNGI-TYPE-011 for Array<String> with Int element");
   });
 
   it("rejects Array<Bool> with a String element", () => {
@@ -81,7 +81,7 @@ flow test() -> Void {
   return
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-011"), "Expected SPORE-TYPE-011 for Array<Bool> with String element");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-011"), "Expected FUNGI-TYPE-011 for Array<Bool> with String element");
   });
 });
 
@@ -98,10 +98,10 @@ flow test() -> Void {
 }
 `);
     // An empty list assigned to Array<Email> should produce no element mismatch
-    assert.ok(!hasDiag(result, "SPORE-TYPE-011"), "Unexpected SPORE-TYPE-011 for empty Array<Email>");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-011"), "Unexpected FUNGI-TYPE-011 for empty Array<Email>");
   });
 
-  it("does not emit SPORE-TYPE-001 for the Array type itself when Email is declared", () => {
+  it("does not emit FUNGI-TYPE-001 for the Array type itself when Email is declared", () => {
     const result = parseAndCheck(`
 type Email = Brand<String, "Email">
 
@@ -111,13 +111,13 @@ flow test() -> Void {
 }
 `);
     // Array is a built-in — no unknown-type error for Array itself
-    const arrayErrors = diagsWithCode(result, "SPORE-TYPE-001").filter((d) =>
+    const arrayErrors = diagsWithCode(result, "FUNGI-TYPE-001").filter((d) =>
       d.message.includes("Array"),
     );
-    assert.equal(arrayErrors.length, 0, "Unexpected SPORE-TYPE-001 for built-in Array type");
+    assert.equal(arrayErrors.length, 0, "Unexpected FUNGI-TYPE-001 for built-in Array type");
   });
 
-  it("does not emit SPORE-TYPE-011 when an Array<String> holds all string elements", () => {
+  it("does not emit FUNGI-TYPE-011 when an Array<String> holds all string elements", () => {
     // Even though Email is a domain type, a valid Array<String> must not trigger 010
     const result = parseAndCheck(`
 flow test() -> Void {
@@ -125,51 +125,51 @@ flow test() -> Void {
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-011"), "Unexpected SPORE-TYPE-011 for valid Array<String>");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-011"), "Unexpected FUNGI-TYPE-011 for valid Array<String>");
   });
 
-  it("emits SPORE-TYPE-011 when an Array<String> contains a non-String element", () => {
+  it("emits FUNGI-TYPE-011 when an Array<String> contains a non-String element", () => {
     const result = parseAndCheck(`
 flow test() -> Void {
   let addresses: Array<String> = ["good@example.com", 42]
   return
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-011"), "Expected SPORE-TYPE-011 for Array<String> with Int element");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-011"), "Expected FUNGI-TYPE-011 for Array<String> with Int element");
   });
 });
 
 // ── 3. protected Array<Email> — protected collection (value-state-checker) ────
 
 describe("Collections — protected Array<Email> (value-state-checker)", () => {
-  it("does not emit SPORE-VALUESTATE-006 when protected value is assigned to protected binding", () => {
+  it("does not emit FUNGI-VALUESTATE-006 when protected value is assigned to protected binding", () => {
     const parsed = parseProgram(`
 flow test() -> String {
   let emails: protected String = protect("raw")
   return "ok"
 }
-`, "test.spore");
+`, "test.fungi");
     const result = checkValueStates(parsed.ast);
     // protect("raw") assigned to protected String — no violation
-    assert.ok(!hasDiag(result, "SPORE-VALUESTATE-006"), "Unexpected SPORE-VALUESTATE-006 when protected qualifier matches");
+    assert.ok(!hasDiag(result, "FUNGI-VALUESTATE-006"), "Unexpected FUNGI-VALUESTATE-006 when protected qualifier matches");
   });
 
-  it("emits SPORE-VALUESTATE-006 when protect() result is assigned to plain String", () => {
+  it("emits FUNGI-VALUESTATE-006 when protect() result is assigned to plain String", () => {
     const parsed = parseProgram(`
 flow test() -> String {
   let x: String = protect("raw")
   return "ok"
 }
-`, "test.spore");
+`, "test.fungi");
     const result = checkValueStates(parsed.ast);
-    assert.ok(hasDiag(result, "SPORE-VALUESTATE-006"), "Expected SPORE-VALUESTATE-006 for unprotected assignment of protect() result");
+    assert.ok(hasDiag(result, "FUNGI-VALUESTATE-006"), "Expected FUNGI-VALUESTATE-006 for unprotected assignment of protect() result");
   });
 });
 
-// ── 4. SPORE-TYPE-011: Array<Int> with String element ──────────────────────────
+// ── 4. FUNGI-TYPE-011: Array<Int> with String element ──────────────────────────
 
-describe("Collections — SPORE-TYPE-011 Array<Int> with String element", () => {
-  it("emits SPORE-TYPE-011 for Array<Int> = [1, 'two']", () => {
+describe("Collections — FUNGI-TYPE-011 Array<Int> with String element", () => {
+  it("emits FUNGI-TYPE-011 for Array<Int> = [1, 'two']", () => {
     const result = parseAndCheck(`
 flow test() -> Void {
   let xs: Array<Int> = [1, "two"]
@@ -177,44 +177,44 @@ flow test() -> Void {
 }
 `);
     assert.ok(
-      hasDiag(result, "SPORE-TYPE-011"),
-      `Expected SPORE-TYPE-011, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-TYPE-011"),
+      `Expected FUNGI-TYPE-011, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("SPORE-TYPE-011 message mentions the actual element type (String)", () => {
+  it("FUNGI-TYPE-011 message mentions the actual element type (String)", () => {
     const result = parseAndCheck(`
 flow test() -> Void {
   let xs: Array<Int> = [1, "two"]
   return
 }
 `);
-    const diags = diagsWithCode(result, "SPORE-TYPE-011");
-    assert.ok(diags.length > 0, "Expected at least one SPORE-TYPE-011 diagnostic");
+    const diags = diagsWithCode(result, "FUNGI-TYPE-011");
+    assert.ok(diags.length > 0, "Expected at least one FUNGI-TYPE-011 diagnostic");
     assert.ok(
       diags.some((d) => d.message.includes("String")),
       `Expected message to mention 'String', got: ${diags.map((d) => d.message).join("; ")}`,
     );
   });
 
-  it("does not emit SPORE-TYPE-011 for correct Array<Int> = [1, 2, 3]", () => {
+  it("does not emit FUNGI-TYPE-011 for correct Array<Int> = [1, 2, 3]", () => {
     const result = parseAndCheck(`
 flow test() -> Void {
   let xs: Array<Int> = [1, 2, 3]
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-011"), "Unexpected SPORE-TYPE-011 for valid Array<Int>");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-011"), "Unexpected FUNGI-TYPE-011 for valid Array<Int>");
   });
 
-  it("emits SPORE-TYPE-011 for Array<Bool> = [true, 42]", () => {
+  it("emits FUNGI-TYPE-011 for Array<Bool> = [true, 42]", () => {
     const result = parseAndCheck(`
 flow test() -> Void {
   let flags: Array<Bool> = [true, 42]
   return
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-011"), "Expected SPORE-TYPE-011 for Array<Bool> containing Int");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-011"), "Expected FUNGI-TYPE-011 for Array<Bool> containing Int");
   });
 });
 
@@ -522,14 +522,14 @@ pure flow test() -> Int {
   });
 
   it("type-checker accepts Set<String> without element mismatch", () => {
-    // Set<String> is a valid generic instantiation — no SPORE-TYPE-009 or SPORE-TYPE-001 expected
+    // Set<String> is a valid generic instantiation — no FUNGI-TYPE-009 or FUNGI-TYPE-001 expected
     const result = parseAndCheck(`
 flow test() -> Void {
   let ids: Set<String> = Set.empty()
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-009"), "Unexpected SPORE-TYPE-009 for Set<String>");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-009"), "Unexpected FUNGI-TYPE-009 for Set<String>");
   });
 });
 
@@ -838,54 +838,54 @@ pure flow test() -> Int {
 // ── 15. Type inference for list literals: [1, 2, 3] infers Array<Int> ────────
 
 describe("Collections — type inference for list literals (type-checker)", () => {
-  it("infers Array<Int> for [1, 2, 3] — no SPORE-TYPE-011 when assigned to Array<Int>", () => {
+  it("infers Array<Int> for [1, 2, 3] — no FUNGI-TYPE-011 when assigned to Array<Int>", () => {
     const result = parseAndCheck(`
 flow test() -> Void {
   let xs: Array<Int> = [1, 2, 3]
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-011"), "Unexpected element mismatch for inferred Array<Int>");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-011"), "Unexpected element mismatch for inferred Array<Int>");
   });
 
-  it("infers Array<String> for ['a','b','c'] — no SPORE-TYPE-011 when assigned to Array<String>", () => {
+  it("infers Array<String> for ['a','b','c'] — no FUNGI-TYPE-011 when assigned to Array<String>", () => {
     const result = parseAndCheck(`
 flow test() -> Void {
   let words: Array<String> = ["hello", "world"]
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-011"), "Unexpected element mismatch for inferred Array<String>");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-011"), "Unexpected element mismatch for inferred Array<String>");
   });
 
-  it("infers Array<Bool> for [true, false] — no SPORE-TYPE-011", () => {
+  it("infers Array<Bool> for [true, false] — no FUNGI-TYPE-011", () => {
     const result = parseAndCheck(`
 flow test() -> Void {
   let flags: Array<Bool> = [true, false]
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-011"), "Unexpected element mismatch for inferred Array<Bool>");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-011"), "Unexpected element mismatch for inferred Array<Bool>");
   });
 
-  it("[1,'two'] — mismatched list literal triggers SPORE-TYPE-011 on Array<Int>", () => {
+  it("[1,'two'] — mismatched list literal triggers FUNGI-TYPE-011 on Array<Int>", () => {
     const result = parseAndCheck(`
 flow test() -> Void {
   let xs: Array<Int> = [1, "two", 3]
   return
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-TYPE-011"), "Expected SPORE-TYPE-011 for heterogeneous list on Array<Int>");
+    assert.ok(hasDiag(result, "FUNGI-TYPE-011"), "Expected FUNGI-TYPE-011 for heterogeneous list on Array<Int>");
   });
 
   it("bare list literal without annotation is accepted (no arity error)", () => {
-    // A list literal assigned to an untyped binding should not trigger SPORE-TYPE-011
+    // A list literal assigned to an untyped binding should not trigger FUNGI-TYPE-011
     const result = parseAndCheck(`
 flow test() -> Void {
   let xs = [1, 2, 3]
   return
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-TYPE-011"), "Unexpected SPORE-TYPE-011 for untyped list literal");
+    assert.ok(!hasDiag(result, "FUNGI-TYPE-011"), "Unexpected FUNGI-TYPE-011 for untyped list literal");
   });
 });

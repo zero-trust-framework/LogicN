@@ -44,14 +44,14 @@ passes immediately. A fresh copy created with `galerina new app` builds it in st
 ## Layout
 
 ```text
-src/App.spore                 composition-root flow main() — the entry the App Kernel boots
-src/flows/greeting.spore      the app's governed greeting flow (human-authored source)
+src/App.fungi                 composition-root flow main() — the entry the App Kernel boots
+src/flows/greeting.fungi      the app's governed greeting flow (human-authored source)
 App.manifest                declarative descriptor: entry, capabilities [], deps[] (hash+signer pin)
 config/app.config.json      typed runtime config: env, posture, http host/port, greeting
 host/config.ts              fail-closed loader/validator for config/app.config.json
 host/server.ts              fuse greeting → createAppKernel(route) → createApiServer → listen
 packages/greeting/          the app's OWN governed, fusable package (the compiled compute)
-  src/index.spore               pure flow main() -> Int (returns 200)
+  src/index.fungi               pure flow main() -> Int (returns 200)
   dist/                        signed greeting.wasm + greeting.lmanifest.json (committed here)
 deps/README.md              where THIRD-PARTY signed components are vendored
 proofs/README.md            contract-driven test obligations (generate tests)
@@ -60,7 +60,7 @@ tests/e2e.test.mjs          the scaffold→fuse→kernel→serve proof
 
 ## Where the governance is
 
-- **Deny-by-default.** `App.manifest` and `packages/greeting/package.spore.json` both
+- **Deny-by-default.** `App.manifest` and `packages/greeting/package.fungi.json` both
   declare `"capabilities": []`. The greeting is `pure` — it needs no network, storage,
   secrets, database, or inference. That is the strongest posture a useful endpoint can
   have: a working route that grants nothing.
@@ -68,7 +68,7 @@ tests/e2e.test.mjs          the scaffold→fuse→kernel→serve proof
   clause to its contract **and** the matching name to `App.manifest`'s `capabilities` —
   never one without the other. The build folds the grant into the **signed `.lmanifest`
   fuse{} block** (never a `.tmf`, which carries integrity/confidentiality only).
-- **Fail-closed.** Every `match` keeps its mandatory `_ =>` wildcard (SPORE-TYPE-023). The
+- **Fail-closed.** Every `match` keeps its mandatory `_ =>` wildcard (FUNGI-TYPE-023). The
   kernel's secure defaults 404 an unknown path and 401 an auth-required route that has no
   channel/identity verdict — the `GET /hello` route is `public` only as an **explicit,
   audited** relaxation (recorded as `auth:public`), appropriate for a hello-world.

@@ -21,7 +21,7 @@ import {
 const __dir = dirname(fileURLToPath(import.meta.url));
 
 async function compileToWAT(src) {
-  const prog = parseProgram(src, "t.spore");
+  const prog = parseProgram(src, "t.fungi");
   const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
   if (errs.length) throw new Error("parse: " + errs.map((d) => d.message).join("; "));
   const fx = checkEffects(prog.flows, prog.ast);
@@ -36,7 +36,7 @@ const ENUM_SRC =
 
 describe("#144 enum-variant lowering", () => {
   it("buildEnumVariants reads declaration order", () => {
-    const prog = parseProgram(ENUM_SRC, "t.spore");
+    const prog = parseProgram(ENUM_SRC, "t.fungi");
     const enums = buildEnumVariants(prog.ast);
     assert.deepEqual(enums.get("Color"), ["Red", "Green", "Blue"]);
   });
@@ -65,12 +65,12 @@ describe("#144 enum-variant lowering", () => {
   });
 
   it("the self-hosted lexer has ZERO unresolved-member placeholders", async () => {
-    let src = readFileSync(join(__dir, "../src/self-hosted/lexer.spore"), "utf8");
+    let src = readFileSync(join(__dir, "../src/self-hosted/lexer.fungi"), "utf8");
     if (src.charCodeAt(0) === 0xFEFF) src = src.slice(1);
     const wat = await compileToWAT(src);
     assert.doesNotMatch(wat, /unresolved member/, "no enum-variant placeholders remain in the lexer");
-    // sanity: TokenKind.Eof is variant index 11 in lexer.spore
-    const enums = buildEnumVariants(parseProgram(src, "lexer.spore").ast);
+    // sanity: TokenKind.Eof is variant index 11 in lexer.fungi
+    const enums = buildEnumVariants(parseProgram(src, "lexer.fungi").ast);
     assert.equal(enums.get("TokenKind").indexOf("Eof"), 11);
   });
 });

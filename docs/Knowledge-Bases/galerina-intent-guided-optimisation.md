@@ -247,7 +247,7 @@ all runs.
 - Flow-level workload classification from declared effects and intent
 - Per-target performance tracking (latency, throughput, accuracy)
 - Confidence scoring with `evidence_count` tracking
-- Auto-suggestion of `compute target` blocks when `SPORE-HINT-COMPUTE-001` fires
+- Auto-suggestion of `compute target` blocks when `FUNGI-HINT-COMPUTE-001` fires
 
 ### Phase 10 — Full IGO
 

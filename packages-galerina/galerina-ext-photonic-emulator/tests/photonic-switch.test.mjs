@@ -24,19 +24,19 @@ test("default + mode=emulator → the software emulator (real hardware is never 
 test("mode=hardware with no hardware backend FAILS CLOSED to the emulator", () => {
   const d = selectPhotonicBackend({ mode: "hardware" });
   assert.equal(d.selected, "emulator");
-  assert.equal(d.code, "SPORE_PHOTONIC_NO_HARDWARE");
+  assert.equal(d.code, "FUNGI_PHOTONIC_NO_HARDWARE");
 });
 
 test("mode=hardware with an UNAVAILABLE backend (nativeAvailable=false) fails closed", () => {
   const d = selectPhotonicBackend({ mode: "hardware", hardware: fakeHardware({ nativeAvailable: false, attested: true }) });
   assert.equal(d.selected, "emulator");
-  assert.equal(d.code, "SPORE_PHOTONIC_HW_UNAVAILABLE");
+  assert.equal(d.code, "FUNGI_PHOTONIC_HW_UNAVAILABLE");
 });
 
 test("mode=hardware with an UNATTESTED backend fails closed (never run an unverified PIC)", () => {
   const d = selectPhotonicBackend({ mode: "hardware", hardware: fakeHardware({ nativeAvailable: true, attested: false }) });
   assert.equal(d.selected, "emulator");
-  assert.equal(d.code, "SPORE_PHOTONIC_HW_UNATTESTED");
+  assert.equal(d.code, "FUNGI_PHOTONIC_HW_UNATTESTED");
 });
 
 test("mode=hardware with a present + native + ATTESTED backend selects the hardware", () => {

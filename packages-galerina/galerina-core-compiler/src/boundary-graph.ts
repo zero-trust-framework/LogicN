@@ -98,7 +98,7 @@ export interface BoundaryCheckResult {
  *   1. Assign each flow a BoundaryKind based on qualifier and contract annotations.
  *   2. Assign trust levels based on capability declarations.
  *   3. Build edges for every cross-flow call detected in the AST.
- *   4. Run violation checks across edges (SPORE-GOV-013 and future boundary rules).
+ *   4. Run violation checks across edges (FUNGI-GOV-013 and future boundary rules).
  *
  * @param flows         Flow metadata from parseProgram().
  * @param effectResults Effect checker results per flow.

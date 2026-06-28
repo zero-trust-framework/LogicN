@@ -1,16 +1,16 @@
 #!/usr/bin/env node
-// audit-syntax.mjs — BAD-SYNTAX / PARSE-ERROR tracker for BOTH `.spore` AND `.ts` (owner 2026-06-28).
+// audit-syntax.mjs — BAD-SYNTAX / PARSE-ERROR tracker for BOTH `.fungi` AND `.ts` (owner 2026-06-28).
 // Surfaces parse/lex errors EARLY — the kind that today only bite late in the fuse pipeline (e.g. an
-// "Unexpected token }" SPORE-PARSE-001 that escaped review in an ext-bridge package, or a stray brace in a
+// "Unexpected token }" FUNGI-PARSE-001 that escaped review in an ext-bridge package, or a stray brace in a
 // .ts that only blows up at tsc time). Implements the owner's "every error ⇒ a dev-tool detector" rule.
 //
 //   node scripts/audit-syntax.mjs            -> grouped report (by language) of every file with a parse error
 //   node scripts/audit-syntax.mjs --summary   -> one-line heartbeat for the periodic Stop hook
 //   node scripts/audit-syntax.mjs --json      -> machine-readable JSON
 //
-// HOW IT WORKS (a re-runnable TOKEN-SAVER — never spawns `galerina build`; there are 400+ .spore):
-//   .spore : parsed IN-PROCESS via the SHIPPED core-compiler parser (parseProgram), per-file try/catch.
-//            A finding = a thrown error, OR a SPORE-PARSE-* / SPORE-LEX-* diagnostic of severity "error".
+// HOW IT WORKS (a re-runnable TOKEN-SAVER — never spawns `galerina build`; there are 400+ .fungi):
+//   .fungi : parsed IN-PROCESS via the SHIPPED core-compiler parser (parseProgram), per-file try/catch.
+//            A finding = a thrown error, OR a FUNGI-PARSE-* / FUNGI-LEX-* diagnostic of severity "error".
 //            (Syntax/lex layer only — semantic-checker diagnostics live in other passes, not parseProgram.)
 //   .ts    : parsed IN-PROCESS via the TypeScript compiler API (createSourceFile -> parseDiagnostics).
 //            SYNTAX errors ONLY — no typecheck, so it stays fast. Degrades gracefully (skips .ts with a
@@ -66,44 +66,44 @@ function isExpectedCorpus(r) {
   return false;
 }
 
-// ── .spore : SHIPPED core-compiler parser, resolved relative to THIS script (works from any checkout) ──
+// ── .fungi : SHIPPED core-compiler parser, resolved relative to THIS script (works from any checkout) ──
 const DIST = join(HERE, "..", "packages-galerina", "galerina-core-compiler", "dist", "index.js");
 let parseProgram = null;
-let sporeLoadError = null;
+let fungiLoadError = null;
 try {
   const mod = await import(pathToFileURL(DIST).href);
   parseProgram = mod.parseProgram;
   if (typeof parseProgram !== "function") throw new Error("dist did not export parseProgram");
 } catch (e) {
-  sporeLoadError = e.message; // degrade gracefully — .spore section reports it could not load the parser
+  fungiLoadError = e.message; // degrade gracefully — .fungi section reports it could not load the parser
 }
 
-const sporeFiles = walk(ROOT, (n) => n.endsWith(".spore"), []).filter((abs) => includeAll || !isExpectedCorpus(rel(abs)));
-const sporeFindings = []; // { rel, line, code, message }
-let sporeScanned = 0;
+const fungiFiles = walk(ROOT, (n) => n.endsWith(".fungi"), []).filter((abs) => includeAll || !isExpectedCorpus(rel(abs)));
+const fungiFindings = []; // { rel, line, code, message }
+let fungiScanned = 0;
 if (parseProgram) {
-  for (const abs of sporeFiles) {
-    sporeScanned++;
+  for (const abs of fungiFiles) {
+    fungiScanned++;
     const r = rel(abs);
     let text;
     try { text = readFileSync(abs, "utf8"); } catch (e) {
-      sporeFindings.push({ rel: r, line: 0, code: "READ", message: `could not read file: ${e.message}` });
+      fungiFindings.push({ rel: r, line: 0, code: "READ", message: `could not read file: ${e.message}` });
       continue;
     }
     try {
       const result = parseProgram(text, r);
-      // A SYNTAX finding = a SPORE-PARSE-* / SPORE-LEX-* diagnostic of severity "error".
+      // A SYNTAX finding = a FUNGI-PARSE-* / FUNGI-LEX-* diagnostic of severity "error".
       // (Other "error" diagnostics, if any, belong to later semantic passes — out of scope for a SYNTAX audit.)
       for (const d of result?.diagnostics ?? []) {
         if (d?.severity !== "error") continue;
         const code = String(d.code ?? "");
-        if (!(code.startsWith("SPORE-PARSE") || code.startsWith("SPORE-LEX"))) continue;
-        sporeFindings.push({ rel: r, line: d.location?.line ?? 0, code, message: d.message ?? "(no message)" });
+        if (!(code.startsWith("FUNGI-PARSE") || code.startsWith("FUNGI-LEX"))) continue;
+        fungiFindings.push({ rel: r, line: d.location?.line ?? 0, code, message: d.message ?? "(no message)" });
       }
     } catch (e) {
       // The parser is fail-closed but a never-before-seen input could still throw (e.g. depth RangeError) —
       // that IS a finding: a file the parser cannot handle would crash the fuse pipeline.
-      sporeFindings.push({ rel: r, line: 0, code: "SPORE-THROW", message: (e && e.message) ? e.message : String(e) });
+      fungiFindings.push({ rel: r, line: 0, code: "FUNGI-THROW", message: (e && e.message) ? e.message : String(e) });
     }
   }
 }
@@ -162,19 +162,19 @@ if (ts) {
 }
 
 // ── tallies (files with ≥1 finding, not raw finding count) ─────────────────────────
-const sporeBadFiles = new Set(sporeFindings.map((f) => f.rel)).size;
+const fungiBadFiles = new Set(fungiFindings.map((f) => f.rel)).size;
 const tsBadFiles = new Set(tsFindings.map((f) => f.rel)).size;
 
 // ── JSON ───────────────────────────────────────────────────────────────────────────
 if (asJson) {
   console.log(JSON.stringify({
     generated: "audit-syntax",
-    spore: {
-      scanned: sporeScanned,
+    fungi: {
+      scanned: fungiScanned,
       parserLoaded: parseProgram != null,
-      loadError: sporeLoadError,
-      badFiles: sporeBadFiles,
-      findings: sporeFindings,
+      loadError: fungiLoadError,
+      badFiles: fungiBadFiles,
+      findings: fungiFindings,
     },
     ts: {
       scanned: tsScanned,
@@ -188,10 +188,10 @@ if (asJson) {
 }
 
 // ── one-line summary (the required heartbeat shape) ─────────────────────────────────
-const totalScanned = sporeScanned + tsScanned;
-const summary = `syntax-audit: ${sporeBadFiles} .spore + ${tsBadFiles} .ts file(s) with parse errors (of ${totalScanned} scanned)`;
+const totalScanned = fungiScanned + tsScanned;
+const summary = `syntax-audit: ${fungiBadFiles} .fungi + ${tsBadFiles} .ts file(s) with parse errors (of ${totalScanned} scanned)`;
 const notes = [];
-if (!parseProgram) notes.push(`.spore parser NOT loaded (${sporeLoadError}) — build Galerina first; .spore skipped`);
+if (!parseProgram) notes.push(`.fungi parser NOT loaded (${fungiLoadError}) — build Galerina first; .fungi skipped`);
 if (!ts) notes.push(`typescript NOT resolved (${tsLoadError}) — .ts skipped`);
 if (!includeAll) notes.push("non-prod corpora (examples/tests/drafts) excluded — use --all to include");
 
@@ -233,7 +233,7 @@ function emitSection(out, label, scanned, loaded, loadErr, badFiles, findings, h
 
 const out = [];
 out.push(summary + (notes.length ? `  [${notes.join(" · ")}]` : ""));
-emitSection(out, "(a) .spore — Galerina source (core-compiler parseProgram)", sporeScanned, parseProgram != null, sporeLoadError, sporeBadFiles, sporeFindings, "could not import the shipped parser dist");
+emitSection(out, "(a) .fungi — Galerina source (core-compiler parseProgram)", fungiScanned, parseProgram != null, fungiLoadError, fungiBadFiles, fungiFindings, "could not import the shipped parser dist");
 emitSection(out, "(b) .ts — TypeScript implementation (createSourceFile, syntax-only)", tsScanned, ts != null, tsLoadError, tsBadFiles, tsFindings, "could not resolve the typescript compiler API");
 
 console.log(out.join("\n"));

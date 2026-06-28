@@ -18,11 +18,11 @@ import {
   triStateNor,
   combineUnknownReasons,
   deduplicateUnknownReasons,
-  SPORE_TRI_001_INVALID_TRISTATE,
-  SPORE_TRI_002_EMPTY_UNKNOWN_REASONS,
-  SPORE_TRI_003_INVALID_OPERAND,
-  SPORE_TRI_004_UNKNOWN_LEAKED,
-  SPORE_TRI_005_MALFORMED_UNKNOWN_REASON,
+  FUNGI_TRI_001_INVALID_TRISTATE,
+  FUNGI_TRI_002_EMPTY_UNKNOWN_REASONS,
+  FUNGI_TRI_003_INVALID_OPERAND,
+  FUNGI_TRI_004_UNKNOWN_LEAKED,
+  FUNGI_TRI_005_MALFORMED_UNKNOWN_REASON,
   triDiagnosticInvalidTriState,
   triDiagnosticEmptyUnknownReasons,
   triDiagnosticInvalidOperand,
@@ -45,11 +45,11 @@ import {
   decisionToRuntimeBool,
   combineDecisions,
   evaluateCapability,
-  SPORE_DECISION_001_INVALID_DECISION,
-  SPORE_DECISION_002_EMPTY_REASON,
-  SPORE_DECISION_003_EMPTY_UNKNOWN_REASONS,
-  SPORE_DECISION_004_FAILED_CLOSED,
-  SPORE_DECISION_005_EMPTY_COMBINE,
+  FUNGI_DECISION_001_INVALID_DECISION,
+  FUNGI_DECISION_002_EMPTY_REASON,
+  FUNGI_DECISION_003_EMPTY_UNKNOWN_REASONS,
+  FUNGI_DECISION_004_FAILED_CLOSED,
+  FUNGI_DECISION_005_EMPTY_COMBINE,
   decisionDiagnosticInvalid,
   decisionDiagnosticEmptyReason,
   decisionDiagnosticEmptyUnknownReasons,
@@ -62,11 +62,11 @@ import {
 // ---------------------------------------------------------------------------
 import {
   validateBoolBoundary,
-  SPORE_BOOL_BOUNDARY_001_FAILED_CLOSED,
-  SPORE_BOOL_BOUNDARY_002_UNKNOWN_REASON,
-  SPORE_BOOL_BOUNDARY_003_INVALID_INPUT,
-  SPORE_BOOL_BOUNDARY_004_MISSING_BOUNDARY_NAME,
-  SPORE_BOOL_BOUNDARY_005_RESULT_MISUSED,
+  FUNGI_BOOL_BOUNDARY_001_FAILED_CLOSED,
+  FUNGI_BOOL_BOUNDARY_002_UNKNOWN_REASON,
+  FUNGI_BOOL_BOUNDARY_003_INVALID_INPUT,
+  FUNGI_BOOL_BOUNDARY_004_MISSING_BOUNDARY_NAME,
+  FUNGI_BOOL_BOUNDARY_005_RESULT_MISUSED,
   boolDiagnosticFailedClosed,
   boolDiagnosticUnknownReason,
   boolDiagnosticInvalidInput,
@@ -84,11 +84,11 @@ import {
   isOmniUncertain,
   OMNI_MIN_ALLOW_CONFIDENCE,
   omniToDecision,
-  SPORE_OMNI_001_DIRECT_BOUNDARY_USE,
-  SPORE_OMNI_002_ADVISORY_ONLY_VIOLATED,
-  SPORE_OMNI_003_CONFIDENCE_OUT_OF_RANGE,
-  SPORE_OMNI_004_MALFORMED_EVIDENCE,
-  SPORE_OMNI_005_INVALID_STATE,
+  FUNGI_OMNI_001_DIRECT_BOUNDARY_USE,
+  FUNGI_OMNI_002_ADVISORY_ONLY_VIOLATED,
+  FUNGI_OMNI_003_CONFIDENCE_OUT_OF_RANGE,
+  FUNGI_OMNI_004_MALFORMED_EVIDENCE,
+  FUNGI_OMNI_005_INVALID_STATE,
   omniDiagnosticDirectBoundaryUse,
   omniDiagnosticAdvisoryOnlyViolated,
   omniDiagnosticConfidenceOutOfRange,
@@ -228,18 +228,18 @@ describe("@galerina/core-logic/tri — TriState v0.2", () => {
     assert.equal(combined[1]?.code, "P2");
   });
 
-  it("tri diagnostic constructors emit correct SPORE-TRI codes", () => {
-    assert.equal(SPORE_TRI_001_INVALID_TRISTATE, "SPORE-TRI-001");
-    assert.equal(SPORE_TRI_002_EMPTY_UNKNOWN_REASONS, "SPORE-TRI-002");
-    assert.equal(SPORE_TRI_003_INVALID_OPERAND, "SPORE-TRI-003");
-    assert.equal(SPORE_TRI_004_UNKNOWN_LEAKED, "SPORE-TRI-004");
-    assert.equal(SPORE_TRI_005_MALFORMED_UNKNOWN_REASON, "SPORE-TRI-005");
+  it("tri diagnostic constructors emit correct FUNGI-TRI codes", () => {
+    assert.equal(FUNGI_TRI_001_INVALID_TRISTATE, "FUNGI-TRI-001");
+    assert.equal(FUNGI_TRI_002_EMPTY_UNKNOWN_REASONS, "FUNGI-TRI-002");
+    assert.equal(FUNGI_TRI_003_INVALID_OPERAND, "FUNGI-TRI-003");
+    assert.equal(FUNGI_TRI_004_UNKNOWN_LEAKED, "FUNGI-TRI-004");
+    assert.equal(FUNGI_TRI_005_MALFORMED_UNKNOWN_REASON, "FUNGI-TRI-005");
 
-    assert.equal(triDiagnosticInvalidTriState().code, SPORE_TRI_001_INVALID_TRISTATE);
-    assert.equal(triDiagnosticEmptyUnknownReasons().code, SPORE_TRI_002_EMPTY_UNKNOWN_REASONS);
-    assert.equal(triDiagnosticInvalidOperand().code, SPORE_TRI_003_INVALID_OPERAND);
-    assert.equal(triDiagnosticUnknownLeaked().code, SPORE_TRI_004_UNKNOWN_LEAKED);
-    assert.equal(triDiagnosticMalformedUnknownReason().code, SPORE_TRI_005_MALFORMED_UNKNOWN_REASON);
+    assert.equal(triDiagnosticInvalidTriState().code, FUNGI_TRI_001_INVALID_TRISTATE);
+    assert.equal(triDiagnosticEmptyUnknownReasons().code, FUNGI_TRI_002_EMPTY_UNKNOWN_REASONS);
+    assert.equal(triDiagnosticInvalidOperand().code, FUNGI_TRI_003_INVALID_OPERAND);
+    assert.equal(triDiagnosticUnknownLeaked().code, FUNGI_TRI_004_UNKNOWN_LEAKED);
+    assert.equal(triDiagnosticMalformedUnknownReason().code, FUNGI_TRI_005_MALFORMED_UNKNOWN_REASON);
 
     // All diagnostics are errors
     const all = [
@@ -428,18 +428,18 @@ describe("@galerina/core-logic/decision — Decision v0.2", () => {
     }
   });
 
-  it("decision diagnostic constructors emit correct SPORE-DECISION codes", () => {
-    assert.equal(SPORE_DECISION_001_INVALID_DECISION, "SPORE-DECISION-001");
-    assert.equal(SPORE_DECISION_002_EMPTY_REASON, "SPORE-DECISION-002");
-    assert.equal(SPORE_DECISION_003_EMPTY_UNKNOWN_REASONS, "SPORE-DECISION-003");
-    assert.equal(SPORE_DECISION_004_FAILED_CLOSED, "SPORE-DECISION-004");
-    assert.equal(SPORE_DECISION_005_EMPTY_COMBINE, "SPORE-DECISION-005");
+  it("decision diagnostic constructors emit correct FUNGI-DECISION codes", () => {
+    assert.equal(FUNGI_DECISION_001_INVALID_DECISION, "FUNGI-DECISION-001");
+    assert.equal(FUNGI_DECISION_002_EMPTY_REASON, "FUNGI-DECISION-002");
+    assert.equal(FUNGI_DECISION_003_EMPTY_UNKNOWN_REASONS, "FUNGI-DECISION-003");
+    assert.equal(FUNGI_DECISION_004_FAILED_CLOSED, "FUNGI-DECISION-004");
+    assert.equal(FUNGI_DECISION_005_EMPTY_COMBINE, "FUNGI-DECISION-005");
 
-    assert.equal(decisionDiagnosticInvalid().code, SPORE_DECISION_001_INVALID_DECISION);
-    assert.equal(decisionDiagnosticEmptyReason().code, SPORE_DECISION_002_EMPTY_REASON);
-    assert.equal(decisionDiagnosticEmptyUnknownReasons().code, SPORE_DECISION_003_EMPTY_UNKNOWN_REASONS);
-    assert.equal(decisionDiagnosticFailedClosed().code, SPORE_DECISION_004_FAILED_CLOSED);
-    assert.equal(decisionDiagnosticEmptyCombine().code, SPORE_DECISION_005_EMPTY_COMBINE);
+    assert.equal(decisionDiagnosticInvalid().code, FUNGI_DECISION_001_INVALID_DECISION);
+    assert.equal(decisionDiagnosticEmptyReason().code, FUNGI_DECISION_002_EMPTY_REASON);
+    assert.equal(decisionDiagnosticEmptyUnknownReasons().code, FUNGI_DECISION_003_EMPTY_UNKNOWN_REASONS);
+    assert.equal(decisionDiagnosticFailedClosed().code, FUNGI_DECISION_004_FAILED_CLOSED);
+    assert.equal(decisionDiagnosticEmptyCombine().code, FUNGI_DECISION_005_EMPTY_COMBINE);
   });
 });
 
@@ -474,10 +474,10 @@ describe("@galerina/core-logic/bool-boundary — BoolBoundary enforcement", () =
     assert.equal(result.value, false);
     assert.ok(result.diagnostics.length >= 1);
     assert.ok(
-      result.diagnostics.some((d) => d.code === SPORE_BOOL_BOUNDARY_001_FAILED_CLOSED),
+      result.diagnostics.some((d) => d.code === FUNGI_BOOL_BOUNDARY_001_FAILED_CLOSED),
     );
     assert.ok(
-      result.diagnostics.some((d) => d.code === SPORE_BOOL_BOUNDARY_002_UNKNOWN_REASON),
+      result.diagnostics.some((d) => d.code === FUNGI_BOOL_BOUNDARY_002_UNKNOWN_REASON),
     );
   });
 
@@ -502,7 +502,7 @@ describe("@galerina/core-logic/bool-boundary — BoolBoundary enforcement", () =
 
     assert.equal(result.allowed, false);
     assert.equal(result.value, false);
-    assert.ok(result.diagnostics.some((d) => d.code === SPORE_BOOL_BOUNDARY_001_FAILED_CLOSED));
+    assert.ok(result.diagnostics.some((d) => d.code === FUNGI_BOOL_BOUNDARY_001_FAILED_CLOSED));
   });
 
   it("Decision unknown fails closed with reason codes", () => {
@@ -514,22 +514,22 @@ describe("@galerina/core-logic/bool-boundary — BoolBoundary enforcement", () =
 
     assert.equal(result.allowed, false);
     assert.equal(result.value, false);
-    assert.ok(result.diagnostics.some((d) => d.code === SPORE_BOOL_BOUNDARY_001_FAILED_CLOSED));
-    assert.ok(result.diagnostics.some((d) => d.code === SPORE_BOOL_BOUNDARY_002_UNKNOWN_REASON));
+    assert.ok(result.diagnostics.some((d) => d.code === FUNGI_BOOL_BOUNDARY_001_FAILED_CLOSED));
+    assert.ok(result.diagnostics.some((d) => d.code === FUNGI_BOOL_BOUNDARY_002_UNKNOWN_REASON));
   });
 
-  it("bool-boundary diagnostic constants have correct SPORE-BOOL-BOUNDARY codes", () => {
-    assert.equal(SPORE_BOOL_BOUNDARY_001_FAILED_CLOSED, "SPORE-BOOL-BOUNDARY-001");
-    assert.equal(SPORE_BOOL_BOUNDARY_002_UNKNOWN_REASON, "SPORE-BOOL-BOUNDARY-002");
-    assert.equal(SPORE_BOOL_BOUNDARY_003_INVALID_INPUT, "SPORE-BOOL-BOUNDARY-003");
-    assert.equal(SPORE_BOOL_BOUNDARY_004_MISSING_BOUNDARY_NAME, "SPORE-BOOL-BOUNDARY-004");
-    assert.equal(SPORE_BOOL_BOUNDARY_005_RESULT_MISUSED, "SPORE-BOOL-BOUNDARY-005");
+  it("bool-boundary diagnostic constants have correct FUNGI-BOOL-BOUNDARY codes", () => {
+    assert.equal(FUNGI_BOOL_BOUNDARY_001_FAILED_CLOSED, "FUNGI-BOOL-BOUNDARY-001");
+    assert.equal(FUNGI_BOOL_BOUNDARY_002_UNKNOWN_REASON, "FUNGI-BOOL-BOUNDARY-002");
+    assert.equal(FUNGI_BOOL_BOUNDARY_003_INVALID_INPUT, "FUNGI-BOOL-BOUNDARY-003");
+    assert.equal(FUNGI_BOOL_BOUNDARY_004_MISSING_BOUNDARY_NAME, "FUNGI-BOOL-BOUNDARY-004");
+    assert.equal(FUNGI_BOOL_BOUNDARY_005_RESULT_MISUSED, "FUNGI-BOOL-BOUNDARY-005");
 
-    assert.equal(boolDiagnosticFailedClosed("unknown", "test").code, SPORE_BOOL_BOUNDARY_001_FAILED_CLOSED);
-    assert.equal(boolDiagnosticUnknownReason("X", "x").code, SPORE_BOOL_BOUNDARY_002_UNKNOWN_REASON);
-    assert.equal(boolDiagnosticInvalidInput().code, SPORE_BOOL_BOUNDARY_003_INVALID_INPUT);
-    assert.equal(boolDiagnosticMissingBoundaryName().code, SPORE_BOOL_BOUNDARY_004_MISSING_BOUNDARY_NAME);
-    assert.equal(boolDiagnosticResultMisused().code, SPORE_BOOL_BOUNDARY_005_RESULT_MISUSED);
+    assert.equal(boolDiagnosticFailedClosed("unknown", "test").code, FUNGI_BOOL_BOUNDARY_001_FAILED_CLOSED);
+    assert.equal(boolDiagnosticUnknownReason("X", "x").code, FUNGI_BOOL_BOUNDARY_002_UNKNOWN_REASON);
+    assert.equal(boolDiagnosticInvalidInput().code, FUNGI_BOOL_BOUNDARY_003_INVALID_INPUT);
+    assert.equal(boolDiagnosticMissingBoundaryName().code, FUNGI_BOOL_BOUNDARY_004_MISSING_BOUNDARY_NAME);
+    assert.equal(boolDiagnosticResultMisused().code, FUNGI_BOOL_BOUNDARY_005_RESULT_MISUSED);
   });
 });
 
@@ -640,17 +640,17 @@ describe("@galerina/core-logic/omni — OmniState advisory reasoning", () => {
     assert.equal(result.evidence[0]?.source, "scanner-v2");
   });
 
-  it("omni diagnostic constants have correct SPORE-OMNI codes", () => {
-    assert.equal(SPORE_OMNI_001_DIRECT_BOUNDARY_USE, "SPORE-OMNI-001");
-    assert.equal(SPORE_OMNI_002_ADVISORY_ONLY_VIOLATED, "SPORE-OMNI-002");
-    assert.equal(SPORE_OMNI_003_CONFIDENCE_OUT_OF_RANGE, "SPORE-OMNI-003");
-    assert.equal(SPORE_OMNI_004_MALFORMED_EVIDENCE, "SPORE-OMNI-004");
-    assert.equal(SPORE_OMNI_005_INVALID_STATE, "SPORE-OMNI-005");
+  it("omni diagnostic constants have correct FUNGI-OMNI codes", () => {
+    assert.equal(FUNGI_OMNI_001_DIRECT_BOUNDARY_USE, "FUNGI-OMNI-001");
+    assert.equal(FUNGI_OMNI_002_ADVISORY_ONLY_VIOLATED, "FUNGI-OMNI-002");
+    assert.equal(FUNGI_OMNI_003_CONFIDENCE_OUT_OF_RANGE, "FUNGI-OMNI-003");
+    assert.equal(FUNGI_OMNI_004_MALFORMED_EVIDENCE, "FUNGI-OMNI-004");
+    assert.equal(FUNGI_OMNI_005_INVALID_STATE, "FUNGI-OMNI-005");
 
-    assert.equal(omniDiagnosticDirectBoundaryUse().code, SPORE_OMNI_001_DIRECT_BOUNDARY_USE);
-    assert.equal(omniDiagnosticAdvisoryOnlyViolated().code, SPORE_OMNI_002_ADVISORY_ONLY_VIOLATED);
-    assert.equal(omniDiagnosticConfidenceOutOfRange(1.5).code, SPORE_OMNI_003_CONFIDENCE_OUT_OF_RANGE);
-    assert.equal(omniDiagnosticMalformedEvidence().code, SPORE_OMNI_004_MALFORMED_EVIDENCE);
-    assert.equal(omniDiagnosticInvalidState("bad").code, SPORE_OMNI_005_INVALID_STATE);
+    assert.equal(omniDiagnosticDirectBoundaryUse().code, FUNGI_OMNI_001_DIRECT_BOUNDARY_USE);
+    assert.equal(omniDiagnosticAdvisoryOnlyViolated().code, FUNGI_OMNI_002_ADVISORY_ONLY_VIOLATED);
+    assert.equal(omniDiagnosticConfidenceOutOfRange(1.5).code, FUNGI_OMNI_003_CONFIDENCE_OUT_OF_RANGE);
+    assert.equal(omniDiagnosticMalformedEvidence().code, FUNGI_OMNI_004_MALFORMED_EVIDENCE);
+    assert.equal(omniDiagnosticInvalidState("bad").code, FUNGI_OMNI_005_INVALID_STATE);
   });
 });

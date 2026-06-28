@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — ResourceLifecycleGraph
+// fungi-graph — ResourceLifecycleGraph
 //
 // State machine graph for LogicN runtime resource lifecycle.
 // States: declared → planned → initializing → ready → failed → shutting_down → closed
@@ -7,7 +7,7 @@
 
 import { GraphBuilder } from "../core/builder.js";
 import type { Graph, LlnDiagnostic, NodeId } from "../core/types.js";
-import { LLN_PGRAPH_002, LLN_PGRAPH_005 } from "../core/types.js";
+import { FUNGI_PGRAPH_002, FUNGI_PGRAPH_005 } from "../core/types.js";
 import { updateNode } from "../algorithms/fixpoint.js";
 
 // ---------------------------------------------------------------------------
@@ -121,7 +121,7 @@ export function advanceState(
     return {
       ok: false,
       diagnostic: {
-        ...LLN_PGRAPH_002,
+        ...FUNGI_PGRAPH_002,
         message: `Resource "${resourceName}" not found in the lifecycle graph.`,
       },
     };
@@ -131,7 +131,7 @@ export function advanceState(
     return {
       ok: false,
       diagnostic: {
-        ...LLN_PGRAPH_005,
+        ...FUNGI_PGRAPH_005,
         message: `Cannot transition resource "${resourceName}" from "${node.data.state}" to "${nextState}".`,
       },
     };

@@ -31,7 +31,7 @@ WebAssembly-powered heavy compute
 
 ## Main Idea
 
-A browser cannot directly run `.spore` files unless a Galerina runtime or interpreter is written in JavaScript.
+A browser cannot directly run `.fungi` files unless a Galerina runtime or interpreter is written in JavaScript.
 
 So Galerina needs one of these approaches:
 
@@ -86,18 +86,18 @@ Detailed framework-facing target planning lives in
 The simplest frontend target is:
 
 ```text
-app.spore -> app.js
+app.fungi -> app.js
 ```
 
-The Galerina compiler reads `.spore` files and generates JavaScript modules.
+The Galerina compiler reads `.fungi` files and generates JavaScript modules.
 
 For modern browser and Node targets, ESM should be the preferred module format.
 
 Example output:
 
 ```text
-src/main.spore
-src/forms/contact-form.spore
+src/main.fungi
+src/forms/contact-form.fungi
 
 dist/app.js
 dist/app.d.ts
@@ -198,7 +198,7 @@ This should be the first frontend target because it is easier to build and debug
 The second frontend target is:
 
 ```text
-app.spore -> app.wasm
+app.fungi -> app.wasm
 ```
 
 WebAssembly is best for low-level, performance-sensitive workloads.
@@ -378,7 +378,7 @@ JavaScript fallback can be provided when WebAssembly is unavailable
 
 ## Browser Target Configuration
 
-Galerina should support browser compilation inside `boot.spore` or `main.spore`.
+Galerina should support browser compilation inside `boot.fungi` or `main.fungi`.
 
 Example:
 
@@ -485,29 +485,29 @@ A frontend Galerina app could use:
 
 ```text
 src/
-  boot.spore
-  main.spore
+  boot.fungi
+  main.fungi
 
   pages/
-    home.spore
-    contact.spore
+    home.fungi
+    contact.fungi
 
   forms/
-    contact-form.spore
-    login-form.spore
+    contact-form.fungi
+    login-form.fungi
 
   components/
-    button.spore
-    modal.spore
-    error-message.spore
+    button.fungi
+    modal.fungi
+    error-message.fungi
 
   compute/
-    quote-risk.spore
-    image-resize.spore
+    quote-risk.fungi
+    image-resize.fungi
 
   browser/
-    routes.spore
-    storage.spore
+    routes.fungi
+    storage.fungi
 
 dist/
   app.js
@@ -662,7 +662,7 @@ public calculation rules where secrecy is not required
 
 ## Source Maps and Debugging
 
-Galerina should generate source maps so browser errors point back to original `.spore` files.
+Galerina should generate source maps so browser errors point back to original `.fungi` files.
 
 Example:
 
@@ -680,7 +680,7 @@ Compiled file:
 dist/app.js:245
 
 Original source:
-src/forms/contact-form.spore:12
+src/forms/contact-form.fungi:12
 ```
 
 Developers should not have to debug only generated JavaScript or WebAssembly.
@@ -791,7 +791,7 @@ compiler automatically separates browser UI code from compute code
 ## Suggested Roadmap
 
 ```text
-1. Define browser target in boot.spore.
+1. Define browser target in boot.fungi.
 2. Define browser-safe imports.
 3. Compile simple Galerina functions to JavaScript.
 4. Add DOM event support.

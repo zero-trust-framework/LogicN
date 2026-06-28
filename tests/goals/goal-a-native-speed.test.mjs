@@ -1,7 +1,7 @@
 /**
  * T-006: Goal A — Native Hardware Speed Execution
  *
- * Validates that a compiled .spore flow with all invariants statically proved
+ * Validates that a compiled .fungi flow with all invariants statically proved
  * executes with ≤ 5% overhead compared to equivalent hand-written WAT.
  *
  * Reference: docs/Knowledge-Bases/galerina-engineering-goals.md Goal A
@@ -29,7 +29,7 @@ contract { intent { "Compute the sum of integers 1 through n using Gauss formula
 describe("T-006: Goal A — Native Hardware Speed Execution", () => {
 
   it("T-006-prerequisite: governed flow compiles with 0 errors (static proof pass)", () => {
-    const parsed = parseProgram(GAUSS_SOURCE, "gauss.spore");
+    const parsed = parseProgram(GAUSS_SOURCE, "gauss.fungi");
     resolveSymbols(parsed.ast);
     checkTypes(parsed.ast);
     const errors = parsed.diagnostics.filter(d => d.severity === "error");
@@ -37,7 +37,7 @@ describe("T-006: Goal A — Native Hardware Speed Execution", () => {
   });
 
   it("T-006-prerequisite: governed flow produces correct result at runtime", async () => {
-    const parsed = parseProgram(GAUSS_SOURCE, "gauss.spore");
+    const parsed = parseProgram(GAUSS_SOURCE, "gauss.fungi");
     resolveSymbols(parsed.ast);
     checkTypes(parsed.ast);
     const r = await executeFlow("gaussSum", new Map([["n", { __tag: "int", value: 100 }]]), parsed.ast);
@@ -48,7 +48,7 @@ describe("T-006: Goal A — Native Hardware Speed Execution", () => {
 
   it("T-006-benchmark: governed flow performance vs raw arithmetic baseline", async () => {
     // Warm up
-    const parsed = parseProgram(GAUSS_SOURCE, "gauss.spore");
+    const parsed = parseProgram(GAUSS_SOURCE, "gauss.fungi");
     resolveSymbols(parsed.ast);
     checkTypes(parsed.ast);
     const warmArgs = new Map([["n", { __tag: "int", value: 1000 }]]);

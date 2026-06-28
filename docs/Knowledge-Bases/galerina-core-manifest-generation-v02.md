@@ -273,15 +273,15 @@ function buildBoundaries(
 
 ---
 
-## SPORE-MANIFEST Diagnostic Codes (v0.2)
+## FUNGI-MANIFEST Diagnostic Codes (v0.2)
 
 | Code             | Meaning                    |
 | ---------------- | -------------------------- |
-| SPORE-MANIFEST-001  | Unsafe route detected      |
-| SPORE-MANIFEST-002  | Unsafe export detected     |
-| SPORE-MANIFEST-003  | Invalid boundary           |
-| SPORE-MANIFEST-004  | Capability conflict        |
-| SPORE-MANIFEST-005  | Serialization failure      |
+| FUNGI-MANIFEST-001  | Unsafe route detected      |
+| FUNGI-MANIFEST-002  | Unsafe export detected     |
+| FUNGI-MANIFEST-003  | Invalid boundary           |
+| FUNGI-MANIFEST-004  | Capability conflict        |
+| FUNGI-MANIFEST-005  | Serialization failure      |
 
 Note: These meanings differ significantly from the prior KB:
 - Prior 001: missing runtime manifest

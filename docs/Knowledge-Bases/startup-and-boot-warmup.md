@@ -29,7 +29,7 @@ The boot profile contains deterministic startup facts:
 {
   "schema": "galerina.boot-profile.v1",
   "profile": "production",
-  "entry": "boot.spore",
+  "entry": "boot.fungi",
   "targets": ["cpu", "wasm"],
   "routeGraphHash": "sha256:...",
   "policyGraphHash": "sha256:...",

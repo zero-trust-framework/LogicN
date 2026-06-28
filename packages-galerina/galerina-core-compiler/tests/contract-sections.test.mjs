@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import { parseProgram } from "../dist/index.js";
 
 function parse(source) {
-  return parseProgram(source, "test.spore");
+  return parseProgram(source, "test.fungi");
 }
 
 function hasNoDiags(result) {

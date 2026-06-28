@@ -54,7 +54,7 @@ computeHashes(source: string, gir: GirNode, contract: ContractNode, ...): Attest
 
 **Hash inputs:**
 
-- `source`: `.spore` file content (UTF-8 bytes)
+- `source`: `.fungi` file content (UTF-8 bytes)
 - `gir`: canonical JSON serialization of the GIR node
 - `contract`: canonical JSON serialization of the contract block
 - `target_plan`: compute target selection record
@@ -98,7 +98,7 @@ All 426 existing tests must continue to pass unchanged.
 **Goal:** Wire the new contract sections into the compiler's governance pass
 and enforce them at compile time.
 
-### 10B-1: SPORE-GOV-003 — protected data in response without exposes
+### 10B-1: FUNGI-GOV-003 — protected data in response without exposes
 
 The governance verifier checks that every `protected` or `secret` field in the
 response body is listed in `response.exposes`. A field in `response.denies`
@@ -107,11 +107,11 @@ that appears in the response body is also rejected.
 ```
 Trigger: protected or secret value assigned to response body field
 Missing: response.exposes declaration for that field
-Diagnostic: SPORE-GOV-003
+Diagnostic: FUNGI-GOV-003
 Severity: error
 ```
 
-### 10B-2: SPORE-CONTEXT-001 — required context field not accessed
+### 10B-2: FUNGI-CONTEXT-001 — required context field not accessed
 
 The governance verifier checks that every field declared in `context.require`
 is accessed in the flow body before the first operation that touches a
@@ -120,7 +120,7 @@ is accessed in the flow body before the first operation that touches a
 ```
 Trigger: context.require declares a field
 Missing: that field is not read before the first protected operation
-Diagnostic: SPORE-CONTEXT-001
+Diagnostic: FUNGI-CONTEXT-001
 Severity: error
 ```
 
@@ -129,10 +129,10 @@ Severity: error
 Extend the value-state checker to recognise `response.denies` declarations
 and treat listed fields as forbidden sinks inside the response expression.
 
-### 10B-4: SPORE-CONTRACT-001 — section order violation (formatter)
+### 10B-4: FUNGI-CONTRACT-001 — section order violation (formatter)
 
 The formatter (`galerina fmt`) reorders contract sections to canonical order and
-emits `SPORE-CONTRACT-001` as an informational note when it does so. The compiler
+emits `FUNGI-CONTRACT-001` as an informational note when it does so. The compiler
 does not error on order violations; the formatter fixes them.
 
 ---
@@ -184,8 +184,8 @@ This report section feeds the attestation hash for `runtime_report`.
 These items are stable across all of Phase 10.
 
 - `with effects [...]` at the flow signature remains valid and is not deprecated
-- Phase 9 diagnostics (`SPORE-VALUESTATE-*`, `SPORE-SECRET-*`, `SPORE-EFFECT-*`,
-  `SPORE-GOV-001/002`) are unchanged
+- Phase 9 diagnostics (`FUNGI-VALUESTATE-*`, `FUNGI-SECRET-*`, `FUNGI-EFFECT-*`,
+  `FUNGI-GOV-001/002`) are unchanged
 - All 426 existing tests must continue to pass after every phase milestone
 - The proof chain format from `galerina-proof-chain-spec.md` is not changed
 - The JSONL audit writer format from `galerina-audit-writer-spec.md` is not changed
@@ -205,8 +205,8 @@ These items are stable across all of Phase 10.
 
 ### Phase 10B complete when:
 
-- `SPORE-GOV-003` fires on protected fields in response body without `exposes`
-- `SPORE-CONTEXT-001` fires on required context fields not accessed before protected work
+- `FUNGI-GOV-003` fires on protected fields in response body without `exposes`
+- `FUNGI-CONTEXT-001` fires on required context fields not accessed before protected work
 - `response.denies` fields are blocked by the value-state checker
 - Formatter reorders contract sections to canonical order
 
@@ -226,8 +226,8 @@ These items are stable across all of Phase 10.
 | 10A-1: Parser contract sections | Medium |
 | 10A-2: src/attestation.ts | Medium |
 | 10A-3: RuntimeResult attestation | Low |
-| 10B-1: SPORE-GOV-003 | Medium |
-| 10B-2: SPORE-CONTEXT-001 | Medium |
+| 10B-1: FUNGI-GOV-003 | Medium |
+| 10B-2: FUNGI-CONTEXT-001 | Medium |
 | 10B-3: response.denies in value-state checker | Low |
 | 10C-1: Runtime value tagging | High |
 | 10C-2: Capability-checked access | High |

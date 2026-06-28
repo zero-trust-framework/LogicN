@@ -1,6 +1,6 @@
 # Galerina KB index (609 docs)
 
-Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.mjs --code SPORE-...`
+Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.mjs --code FUNGI-...`
 
 ## AGENTS.md
 `AGENTS.md`
@@ -9,12 +9,12 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Knowledge Base — Index
 `docs/Knowledge-Bases/00-KB-INDEX.md`
-- codes: SPORE-TYPE-004, SPORE-TYPE-005, SPORE-BACKEND-001, SPORE-SUPPLY-001, SPORE-STDLIB-001, SPORE-GATE-001, SPORE-NET-001
+- codes: FUNGI-TYPE-004, FUNGI-TYPE-005, FUNGI-BACKEND-001, FUNGI-SUPPLY-001, FUNGI-STDLIB-001, FUNGI-GATE-001, FUNGI-NET-001
 - terms: phase, runtime, spec, governance, type, architecture, stage, governed, superseded, docs, model, execution, canonical, future
 
 ## Galerina — AI Canonical Index
 `docs/Knowledge-Bases/AI_INDEX.md`
-- codes: SPORE-SEC-014, SPORE-TYPE-031, SPORE-PHOTONIC-001, SPORE-SYNTAX-010, SPORE-SYNTAX-LEGACY-001, SPORE-HW-101
+- codes: FUNGI-SEC-014, FUNGI-TYPE-031, FUNGI-PHOTONIC-001, FUNGI-SYNTAX-010, FUNGI-SYNTAX-LEGACY-001, FUNGI-HW-101
 - terms: canonical, flow, docs, effects, generation, syntax, model, security, language, type, galerina, alias, yaml, types
 
 ## AI As Untrusted Reasoning Worker
@@ -43,7 +43,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Architecture Charter
 `docs/Knowledge-Bases/architecture-charter.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - tasks: #195
 - terms: execution, galerina, security, binary, photonic, governed, memory, runtime, tri-pipe, compute, hardware, hybrid, architecture, authority
 
@@ -137,12 +137,12 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Compile-Time vs Runtime Authority
 `docs/Knowledge-Bases/compile-time-vs-runtime-authority.md`
-- codes: SPORE-SYNTAX-002
+- codes: FUNGI-SYNTAX-002
 - terms: runtime, compile-time, authority, execution, capability, example, compiler, effect, checker, interaction, text, galerina, time, model
 
 ## Compiler Diagnostics
 `docs/Knowledge-Bases/compiler-diagnostics.md`
-- codes: SPORE-GOV-3V, SPORE-PARSE-001, SPORE-PARSE-002, SPORE-PARSE-003, SPORE-PARSE-004, SPORE-PARSE-005, SPORE-PARSE-006, SPORE-PARSE-007, SPORE-PARSE-008, SPORE-PARSE-009, SPORE-PARSE-010, SPORE-PARSE-011, SPORE-PARSE-012, SPORE-PARSE-013, SPORE-PARSE-014, SPORE-AST-001, SPORE-AST-002, SPORE-AST-003, SPORE-AST-004, SPORE-AST-005, SPORE-AST-006, SPORE-INTENT-GRAPH-001, SPORE-INTENT-GRAPH-002, SPORE-INTENT-GRAPH-003
+- codes: FUNGI-GOV-3V, FUNGI-PARSE-001, FUNGI-PARSE-002, FUNGI-PARSE-003, FUNGI-PARSE-004, FUNGI-PARSE-005, FUNGI-PARSE-006, FUNGI-PARSE-007, FUNGI-PARSE-008, FUNGI-PARSE-009, FUNGI-PARSE-010, FUNGI-PARSE-011, FUNGI-PARSE-012, FUNGI-PARSE-013, FUNGI-PARSE-014, FUNGI-AST-001, FUNGI-AST-002, FUNGI-AST-003, FUNGI-AST-004, FUNGI-AST-005, FUNGI-AST-006, FUNGI-INTENT-GRAPH-001, FUNGI-INTENT-GRAPH-002, FUNGI-INTENT-GRAPH-003
 - tasks: #174, #103, #104
 - terms: canonical, series, text, flow, type, codes, value, effect, runtime, profile, errors, compiler, required, declared
 
@@ -200,12 +200,12 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Effect Checker and Boundary Checker
 `docs/Knowledge-Bases/effect-checker-and-boundary-checker.md`
-- codes: SPORE-EFFECT-001, SPORE-EFFECT-004, SPORE-BOUNDARY-001, SPORE-BOUNDARY-004, SPORE-EFFECT-002, SPORE-EFFECT-003, SPORE-BOUNDARY-002, SPORE-BOUNDARY-003
+- codes: FUNGI-EFFECT-001, FUNGI-EFFECT-004, FUNGI-BOUNDARY-001, FUNGI-BOUNDARY-004, FUNGI-EFFECT-002, FUNGI-EFFECT-003, FUNGI-BOUNDARY-002, FUNGI-BOUNDARY-003
 - terms: effect, boundary, interface, string, checker, effects, network, secret, name, example, runtime, target, sourcelocation, canonical
 
 ## Encapsulation Model
 `docs/Knowledge-Bases/encapsulation-model.md`
-- codes: SPORE-ENCAP-001
+- codes: FUNGI-ENCAP-001
 - terms: data, public, classification, model, flow, encapsulation, galerina, internal, secure, effects, response, user, core, safe
 
 ## Error Propagation Through Call Chains
@@ -238,7 +238,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Flow vs fn Security Model
 `docs/Knowledge-Bases/flow-vs-fn-security-model.md`
-- codes: SPORE-SYNTAX-005, SPORE-SEC-014
+- codes: FUNGI-SYNTAX-005, FUNGI-SEC-014
 - terms: flow, route, effects, return, galerina, gbp, rule, money, compiler, text, local, order, task, user
 
 ## Formal Proof System
@@ -247,7 +247,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Formal Type System Specification
 `docs/Knowledge-Bases/formal-type-system-spec.md`
-- codes: SPORE-TYPE-001, SPORE-TYPE-009, SPORE-TYPE-004, SPORE-SECRET-001, SPORE-TYPE-008, SPORE-TYPE-003, SPORE-TYPE-002, SPORE-MATCH-001, SPORE-SECRET-002, SPORE-SECRET-003, SPORE-TYPE-005, SPORE-TYPE-006, SPORE-TYPE-007, SPORE-TYPE-010, SPORE-TYPE-011, SPORE-TYPE-012, SPORE-TYPE-013, SPORE-TYPE-014, SPORE-TYPE-015, SPORE-TYPE-016, SPORE-TYPE-017, SPORE-TYPE-018, SPORE-TYPE-019, SPORE-TYPE-020
+- codes: FUNGI-TYPE-001, FUNGI-TYPE-009, FUNGI-TYPE-004, FUNGI-SECRET-001, FUNGI-TYPE-008, FUNGI-TYPE-003, FUNGI-TYPE-002, FUNGI-MATCH-001, FUNGI-SECRET-002, FUNGI-SECRET-003, FUNGI-TYPE-005, FUNGI-TYPE-006, FUNGI-TYPE-007, FUNGI-TYPE-010, FUNGI-TYPE-011, FUNGI-TYPE-012, FUNGI-TYPE-013, FUNGI-TYPE-014, FUNGI-TYPE-015, FUNGI-TYPE-016, FUNGI-TYPE-017, FUNGI-TYPE-018, FUNGI-TYPE-019, FUNGI-TYPE-020
 - tasks: #174
 - terms: type, types, rules, option, numeric, result, galerina, arity, string, securestring, checker, description, json, value
 
@@ -272,7 +272,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — AI Ergonomics Log
 `docs/Knowledge-Bases/galerina-ai-ergonomics.md`
-- codes: SPORE-LEX-001, SPORE-PARSE-001, SPORE-SYNTAX-010
+- codes: FUNGI-LEX-001, FUNGI-PARSE-001, FUNGI-SYNTAX-010
 - terms: match, hazard, silently, fixed, string, correctness, fix, mut, reserved, log, while, stage-b, interpreter, literals
 
 ## galerina-ai-memory-efficiency.md
@@ -281,7 +281,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — AI Neural IR, Quantization and NPU Compute Targets
 `docs/Knowledge-Bases/galerina-ai-neural-npu-targets.md`
-- codes: SPORE-TENSOR-001, SPORE-TENSOR-002, SPORE-TENSOR-003, SPORE-TENSOR-004, SPORE-TENSOR-005, SPORE-TENSOR-006, SPORE-TENSOR-007, SPORE-TENSOR-008, SPORE-TENSOR-009, SPORE-TENSOR-010, SPORE-QUANT-001, SPORE-QUANT-002, SPORE-QUANT-003, SPORE-QUANT-004, SPORE-QUANT-005, SPORE-QUANT-006, SPORE-QUANT-007, SPORE-QUANT-008, SPORE-QUANT-009, SPORE-QUANT-010, SPORE-NPU-001, SPORE-NPU-002, SPORE-NPU-003, SPORE-NPU-004
+- codes: FUNGI-TENSOR-001, FUNGI-TENSOR-002, FUNGI-TENSOR-003, FUNGI-TENSOR-004, FUNGI-TENSOR-005, FUNGI-TENSOR-006, FUNGI-TENSOR-007, FUNGI-TENSOR-008, FUNGI-TENSOR-009, FUNGI-TENSOR-010, FUNGI-QUANT-001, FUNGI-QUANT-002, FUNGI-QUANT-003, FUNGI-QUANT-004, FUNGI-QUANT-005, FUNGI-QUANT-006, FUNGI-QUANT-007, FUNGI-QUANT-008, FUNGI-QUANT-009, FUNGI-QUANT-010, FUNGI-NPU-001, FUNGI-NPU-002, FUNGI-NPU-003, FUNGI-NPU-004
 - terms: npu, neural, target, quantization, provider, galerina, policy, compute, precision, shape, first-class, operator, float32, int8
 
 ## Galerina — AI Semantic Graph Output (--emit-ai-graph)
@@ -299,33 +299,33 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## App-Framework Build (B1–B6) — outcome 2026-06-21
 `docs/Knowledge-Bases/galerina-app-framework-build-2026-06-21.md`
-- codes: SPORE-PKG-001, SPORE-PKG-006
+- codes: FUNGI-PKG-001, FUNGI-PKG-006
 - tasks: #102
 - terms: built, verified, build, outcome, app, shipped, item, registry, revocation, residual, app-framework, decisions, work, genuinely-new
 
 ## Galerina Architecture Review & Future Direction
 `docs/Knowledge-Bases/galerina-architecture-direction-v2.md`
-- codes: SPORE-TAINT-001, SPORE-PROFILE-001, SPORE-PROFILE-002, SPORE-PROFILE-006
+- codes: FUNGI-TAINT-001, FUNGI-PROFILE-001, FUNGI-PROFILE-002, FUNGI-PROFILE-006
 - terms: galerina, hardware, data, architecture, flow, safety, future, governance, core, wasm, host, risk, principle, compiler
 
 ## Galerina — High-ROI Architecture Ideas (Reviewed 2026-05-31)
 `docs/Knowledge-Bases/galerina-architecture-high-roi-ideas.md`
-- codes: SPORE-STDLIB-001
+- codes: FUNGI-STDLIB-001
 - terms: phase, status, parser, ast, token, galerina, graph, nodeflags, hardware, capability, tensor, semanticgraph, arena, ideas
 
 ## Galerina Architecture Layers
 `docs/Knowledge-Bases/galerina-architecture-layers.md`
-- codes: SPORE-SYNTAX-005, SPORE-TYPE-002
+- codes: FUNGI-SYNTAX-005, FUNGI-TYPE-002
 - terms: layer, stage, runtime, galerina, phase, execution, gir, audit, source, backend, flow, layers, proof, governance
 
 ## Galerina — Architecture Patterns
 `docs/Knowledge-Bases/galerina-architecture-patterns.md`
-- codes: SPORE-EFFECT-003, SPORE-EFFECT-001, SPORE-INV-001, SPORE-SECRET-001, SPORE-GOV-018, SPORE-RESOURCE-001, SPORE-SECRET-002, SPORE-SECRET-003, SPORE-MONO-001
+- codes: FUNGI-EFFECT-003, FUNGI-EFFECT-001, FUNGI-INV-001, FUNGI-SECRET-001, FUNGI-GOV-018, FUNGI-RESOURCE-001, FUNGI-SECRET-002, FUNGI-SECRET-003, FUNGI-MONO-001
 - terms: pattern, drcm, flow, api, step, governed, payload, profile, write, pure, phase, audit, let, core
 
 ## Galerina — Forward Architecture R&D (2026-06-23)
 `docs/Knowledge-Bases/galerina-architecture-rd-2026-06-23.md`
-- codes: SPORE-PERM-001
+- codes: FUNGI-PERM-001
 - tasks: #163, #165, #34, #102, #13, #14, #15, #16
 - terms: net-new, degrade-only, cert-gate, photonic, build, architecture, vand, everywhere, galerina, forward, design, tower-citizen, unifying, theme
 
@@ -335,7 +335,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Stable Published AST JSON Schema
 `docs/Knowledge-Bases/galerina-ast-published-schema.md`
-- codes: SPORE-AST-001, SPORE-AST-002, SPORE-AST-003, SPORE-AST-004, SPORE-AST-005, SPORE-AST-006
+- codes: FUNGI-AST-001, FUNGI-AST-002, FUNGI-AST-003, FUNGI-AST-004, FUNGI-AST-005, FUNGI-AST-006
 - terms: schema, ast, json, galerina, stable, node, public, text, resolved, graph, kind, internal, comments, published
 
 ## Galerina AST to GIR Transformation
@@ -344,17 +344,17 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Full Audit 2026-06-01
 `docs/Knowledge-Bases/galerina-audit-2026-06-01.md`
-- codes: SPORE-HW-001
+- codes: FUNGI-HW-001
 - terms: phase, galerina, metrics, hardware, wasm, matrix, bytecode, sec, phases, verify, capability, audit, pass, governance
 
 ## Galerina — Full Audit 2026-06-02
 `docs/Knowledge-Bases/galerina-audit-2026-06-02.md`
-- codes: SPORE-HW-001, SPORE-SYNTAX-010, SPORE-HW-101, SPORE-SYNTAX-006, SPORE-SYNTAX-LEGACY-001, SPORE-STYLE-001, SPORE-TAINT-001, SPORE-PROFILE-001
-- terms: phase, audit, galerina, spore, tests, status, documented, files, stage, grammar, counts, security, self-hosting, runtime
+- codes: FUNGI-HW-001, FUNGI-SYNTAX-010, FUNGI-HW-101, FUNGI-SYNTAX-006, FUNGI-SYNTAX-LEGACY-001, FUNGI-STYLE-001, FUNGI-TAINT-001, FUNGI-PROFILE-001
+- terms: phase, audit, galerina, fungi, tests, status, documented, files, stage, grammar, counts, security, self-hosting, runtime
 
 ## Galerina — Audit Coverage & R&D Standards (#219)
 `docs/Knowledge-Bases/galerina-audit-coverage-and-rd-standards.md`
-- codes: SPORE-PRIVACY-002
+- codes: FUNGI-PRIVACY-002
 - tasks: #219, #215, #218, #216
 - terms: basis, coverage, standards, every, gate, code, rule, must, never, registry, audit, provenance, sec-002, tests
 
@@ -364,7 +364,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## B8 — governed HTTP transport adapter (build guide)
 `docs/Knowledge-Bases/galerina-b8-governed-transport.md`
-- codes: SPORE-GOV-3VL-001, SPORE-PRIVACY-002
+- codes: FUNGI-GOV-3VL-001, FUNGI-PRIVACY-002
 - tasks: #102, #12
 - terms: verdict, deny, gate, vand, shipped, step, key, admission, allow, cert, tls, shim, example, path
 
@@ -392,21 +392,21 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Blind-observability governance exporter (R&D 0050)
 `docs/Knowledge-Bases/galerina-blind-observability-exporter.md`
-- codes: SPORE-SYNTAX-008, SPORE-SUBSTRATE-001
+- codes: FUNGI-SYNTAX-008, FUNGI-SUBSTRATE-001
 - tasks: #34, #145
 - links: [[feedback-owner-gated-means-ask]] [[galerina-social-ecosystem-cloud-native]] [[galerina-wasm-compilation-granularity]] [[galerina-rd-corpus-closure-2026-06-18]]
 - terms: galerina, exporter, governance, owner, never, metrics, shipped, egress, inbound, total, network, gate, read-only, kernel
 
 ## How a Galerina App Builds Today — Artifacts, the Single-`.wasm` Question, and Environment Secrets
 `docs/Knowledge-Bases/galerina-build-output-and-env-secrets.md`
-- codes: SPORE-SECRET-001, SPORE-SECRET-002, SPORE-SECRET-HTTP-004, SPORE-SECRET-HARDCODED-001, SPORE-CONFIG-WARN-001, SPORE-CONFIG-WARN-002, SPORE-SECRET-003, SPORE-CONFIG-010
+- codes: FUNGI-SECRET-001, FUNGI-SECRET-002, FUNGI-SECRET-HTTP-004, FUNGI-SECRET-HARDCODED-001, FUNGI-CONFIG-WARN-001, FUNGI-CONFIG-WARN-002, FUNGI-SECRET-003, FUNGI-CONFIG-010
 - tasks: #102, #149
 - links: [[galerina-key-custody-rotation-decision]] [[feedback-keys-rotate-automatically]] [[galerina-wasm-compilation-granularity]]
 - terms: env, wasm, galerina, app, build, secrets, secret, today, json, never, signed, name, trust, source
 
 ## Galerina — Build Roadmap
 `docs/Knowledge-Bases/galerina-build-roadmap.md`
-- codes: SPORE-EFFECT-002, SPORE-HW-004, SPORE-SUBSTRATE-003, ERR_CERTIFIED_NO_PQ_KEY, ERR_QUANTUM_PQ_REQUIRED, SPORE-SECRET-002, SPORE-PARSE-001, ERR_BRIDGE_UNATTESTED, ERR_CERTIFIED_NO_ATTESTATION, ERR_CAPABILITY_DENIED, SPORE-CAP-001, SPORE-INV-001, SPORE-MONO-001, SPORE-OBS-002, SPORE-TRAP-001, SPORE-MATCH-001, SPORE-GATE-001, SPORE-ACCESS-001, SPORE-INV-000
+- codes: FUNGI-EFFECT-002, FUNGI-HW-004, FUNGI-SUBSTRATE-003, ERR_CERTIFIED_NO_PQ_KEY, ERR_QUANTUM_PQ_REQUIRED, FUNGI-SECRET-002, FUNGI-PARSE-001, ERR_BRIDGE_UNATTESTED, ERR_CERTIFIED_NO_ATTESTATION, ERR_CAPABILITY_DENIED, FUNGI-CAP-001, FUNGI-INV-001, FUNGI-MONO-001, FUNGI-OBS-002, FUNGI-TRAP-001, FUNGI-MATCH-001, FUNGI-GATE-001, FUNGI-ACCESS-001, FUNGI-INV-000
 - tasks: #201, #210, #202, #203, #204, #205, #206, #207, #208, #209, #165, #180, #67, #194, #128, #102, #149, #34, #178, #108, #199, #12, #10, #11
 - terms: phase, wasm, gate, galerina, tests, real, photonic, cbor, drcm, audit, test, dss, build, security
 
@@ -420,13 +420,13 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — CBOR .lmanifest Specification
 `docs/Knowledge-Bases/galerina-cbor-manifest-spec.md`
-- codes: SPORE-INV-000
+- codes: FUNGI-INV-000
 - tasks: #102, #104, #77, #78, #79, #80, #34
-- terms: cbor, tag, manifest, hybrid, lmanifest, signature, type, ed25519, implementation, key, spore, galerina, binary, encoding
+- terms: cbor, tag, manifest, hybrid, lmanifest, signature, type, ed25519, implementation, key, fungi, galerina, binary, encoding
 
 ## Galerina Check Configuration — `galerina.check.json`
 `docs/Knowledge-Bases/galerina-check-config.md`
-- codes: SPORE-TAINT-001, SPORE-STYLE-001, SPORE-PROFILE-006, SPORE-SYNTAX-010, SPORE-GRAPH-001, SPORE-TAINT-003, SPORE-TAINT-005, SPORE-VAL-001, SPORE-VAL-002, SPORE-SYNTAX-LEGACY-001, SPORE-TAINT-006, SPORE-GRAPH-005
+- codes: FUNGI-TAINT-001, FUNGI-STYLE-001, FUNGI-PROFILE-006, FUNGI-SYNTAX-010, FUNGI-GRAPH-001, FUNGI-TAINT-003, FUNGI-TAINT-005, FUNGI-VAL-001, FUNGI-VAL-002, FUNGI-SYNTAX-LEGACY-001, FUNGI-TAINT-006, FUNGI-GRAPH-005
 - terms: error, galerina, check, json, rules, config, example, file, profile, minseverity, security, flowgraph, off, warning
 
 ## Galerina Checkpoint — Full Audit / Tests / Benchmarks / %-Audit / Roadmap (2026-06-06)
@@ -436,33 +436,33 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina CLI — Current Specification (Phase 19+)
 `docs/Knowledge-Bases/galerina-cli-current.md`
-- codes: SPORE-BUILD-001, SPORE-EFFECT-001, SPORE-STDLIB-001, SPORE-GOV-010, SPORE-SYNTAX-LEGACY-001, SPORE-SYNTAX-LEGACY-002, SPORE-STYLE-001
+- codes: FUNGI-BUILD-001, FUNGI-EFFECT-001, FUNGI-STDLIB-001, FUNGI-GOV-010, FUNGI-SYNTAX-LEGACY-001, FUNGI-SYNTAX-LEGACY-002, FUNGI-STYLE-001
 - terms: galerina, path, wasm, error, build, target, phase, wat, diagnostic, emit, effects, effect, warning, output
 
 ## Galerina — Full Flow Code Examples
 `docs/Knowledge-Bases/galerina-code-examples-full-flow.md`
-- codes: SPORE-INTENT-001
+- codes: FUNGI-INTENT-001
 - terms: flow, write, let, unsafe, read, audit, effects, user, safe, intent, governance, filesystem, galerina, database
 
 ## Galerina — Compiler Enforcement Gaps for Compute Targets
 `docs/Knowledge-Bases/galerina-compiler-enforcement-compute.md`
-- codes: SPORE-TARGET-CAP-001, SPORE-TARGET-CAP-002, SPORE-VERIFY-001, SPORE-VERIFY-002, SPORE-BUDGET-001, SPORE-BUDGET-002, SPORE-BUDGET-003, SPORE-BUDGET-004
+- codes: FUNGI-TARGET-CAP-001, FUNGI-TARGET-CAP-002, FUNGI-VERIFY-001, FUNGI-VERIFY-002, FUNGI-BUDGET-001, FUNGI-BUDGET-002, FUNGI-BUDGET-003, FUNGI-BUDGET-004
 - terms: required, compiler, compute, critical, gap, gpu, problem, capability, galerina, resource, target, targets, runtime, flow
 
 ## Galerina — Deterministic Compiler Intelligence & Tri-Pipe Routing (R&D)
 `docs/Knowledge-Bases/galerina-compiler-intelligence-deterministic-foresight.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-INV-001, SPORE-GDCE-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-INV-001, FUNGI-GDCE-001
 - links: [[feedback-tri-pipe-coverage-rule]]
 - terms: net-new, routing, photonic, agency, owner, compiler, substrate, deterministic, tri-pipe, governance, blueprint, binary, crypto, auto-resilience
 
 ## Galerina — Compiler Optimizations and Backend Architecture
 `docs/Knowledge-Bases/galerina-compiler-optimizations.md`
-- codes: SPORE-COMPTIME-001, SPORE-COMPTIME-002, SPORE-COMPTIME-003, SPORE-COMPTIME-004, SPORE-COMPTIME-005, SPORE-COMPTIME-006, SPORE-COMPTIME-007, SPORE-COMPTIME-008, SPORE-PIPELINE-001, SPORE-PIPELINE-002, SPORE-PIPELINE-003, SPORE-PIPELINE-004, SPORE-PIPELINE-005, SPORE-PIPELINE-006, SPORE-BOUNDS-001, SPORE-BOUNDS-002, SPORE-BOUNDS-003, SPORE-BOUNDS-004, SPORE-BOUNDS-005, SPORE-BOUNDS-006, SPORE-PGO-001, SPORE-PGO-002, SPORE-PGO-003, SPORE-PGO-004
+- codes: FUNGI-COMPTIME-001, FUNGI-COMPTIME-002, FUNGI-COMPTIME-003, FUNGI-COMPTIME-004, FUNGI-COMPTIME-005, FUNGI-COMPTIME-006, FUNGI-COMPTIME-007, FUNGI-COMPTIME-008, FUNGI-PIPELINE-001, FUNGI-PIPELINE-002, FUNGI-PIPELINE-003, FUNGI-PIPELINE-004, FUNGI-PIPELINE-005, FUNGI-PIPELINE-006, FUNGI-BOUNDS-001, FUNGI-BOUNDS-002, FUNGI-BOUNDS-003, FUNGI-BOUNDS-004, FUNGI-BOUNDS-005, FUNGI-BOUNDS-006, FUNGI-PGO-001, FUNGI-PGO-002, FUNGI-PGO-003, FUNGI-PGO-004
 - terms: comptime, galerina, backend, diagnostics, part, llvm, pipeline, fusion, concept, mlir, profile, compile-time, evidence, proof
 
 ## Galerina — Compiler Phase Memory Boundaries
 `docs/Knowledge-Bases/galerina-compiler-phase-memory-boundaries.md`
-- codes: SPORE-MEMORY-001, SPORE-MEMORY-002, SPORE-MEMORY-003
+- codes: FUNGI-MEMORY-001, FUNGI-MEMORY-002, FUNGI-MEMORY-003
 - terms: phase, memory, arena, compiler, boundary, stage, output, galerina, ast, boundaries, arenas, destroyed, diagnostic, allocation
 
 ## Galerina Compiler Pipeline
@@ -471,12 +471,12 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Completion Roadmap (2026-06-03)
 `docs/Knowledge-Bases/galerina-completion-roadmap-2026-06-03.md`
-- codes: SPORE-GOV-003, SPORE-GOV-007, SPORE-GOV-006, SPORE-TERM-001, SPORE-GOV-001
+- codes: FUNGI-GOV-003, FUNGI-GOV-007, FUNGI-GOV-006, FUNGI-TERM-001, FUNGI-GOV-001
 - terms: phase, pending, wasm, governance, taint, baseline, contract, verifier, galerina, goal, task, status, blocks, flow
 
 ## Galerina — Compliance Governance
 `docs/Knowledge-Bases/galerina-compliance-governance.md`
-- codes: SPORE-PII-001, SPORE-SUPPLY-001, SPORE-PHI-001, SPORE-PII-002, SPORE-PII-003, SPORE-PHI-002, SPORE-PCI-001, SPORE-PCI-002, SPORE-AUDIT-001, SPORE-AUDIT-002, SPORE-CONSENT-001, SPORE-RETENTION-001
+- codes: FUNGI-PII-001, FUNGI-SUPPLY-001, FUNGI-PHI-001, FUNGI-PII-002, FUNGI-PII-003, FUNGI-PHI-002, FUNGI-PCI-001, FUNGI-PCI-002, FUNGI-AUDIT-001, FUNGI-AUDIT-002, FUNGI-CONSENT-001, FUNGI-RETENTION-001
 - terms: data, compliance, pii, audit, access, phi, galerina, cannot, features, pci, write, effects, capability, immutable
 
 ## Galerina — Compliance Package Architecture
@@ -489,27 +489,27 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Compute Target Optimisation
 `docs/Knowledge-Bases/galerina-compute-target-optimisation.md`
-- codes: SPORE-HINT-COMPUTE-001
+- codes: FUNGI-HINT-COMPUTE-001
 - terms: target, photonic, gir, source, implemented, compute, tensor, galerina, hint, phase, shape, inference, compatibility, affinity
 
 ## Galerina — Audit Proof
 `docs/Knowledge-Bases/galerina-concept-audit-proof.md`
-- codes: SPORE-AUDIT-001
+- codes: FUNGI-AUDIT-001
 - terms: audit, proof, evidence, execution, runtime, governed, governance, text, plan, verification, pipeline, intent, yaml, boundary
 
 ## Galerina — Coordinated Compute
 `docs/Knowledge-Bases/galerina-concept-coordinated-compute.md`
-- codes: SPORE-RUNTIME-201
+- codes: FUNGI-RUNTIME-201
 - terms: execution, runtime, coordination, compute, coordinated, governed, plan, target, memory, fallback, verification, true, gpu, photonic
 
 ## Galerina — Governed Execution Plan
 `docs/Knowledge-Bases/galerina-concept-governed-execution-plan.md`
-- codes: SPORE-RUNTIME-001, SPORE-INTENT-001
+- codes: FUNGI-RUNTIME-001, FUNGI-INTENT-001
 - terms: execution, plan, governed, runtime, proof, compute, coordinated, audit, galerina, intent, relationship, source, governance, unsafe
 
 ## Galerina — Intent
 `docs/Knowledge-Bases/galerina-concept-intent.md`
-- codes: SPORE-INTENT-001, SPORE-INTENT-002, SPORE-INTENT-003, SPORE-INTENT-004, SPORE-INTENT-005
+- codes: FUNGI-INTENT-001, FUNGI-INTENT-002, FUNGI-INTENT-003, FUNGI-INTENT-004, FUNGI-INTENT-005
 - terms: intent, graph, galerina, payment, write, governance, effects, createorder, purpose, flow, charge, database, audit, semantic
 
 ## Galerina Concept Map
@@ -518,31 +518,31 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Concurrency and Synchronisation for Heterogeneous Compute
 `docs/Knowledge-Bases/galerina-concurrency-synchronisation-compute.md`
-- codes: SPORE-GPU-SYNC-001, SPORE-GPU-SYNC-002, SPORE-GPU-SYNC-003, SPORE-GPU-SYNC-004, SPORE-GPU-SYNC-005
+- codes: FUNGI-GPU-SYNC-001, FUNGI-GPU-SYNC-002, FUNGI-GPU-SYNC-003, FUNGI-GPU-SYNC-004, FUNGI-GPU-SYNC-005
 - terms: gpu, concurrency, memory, stream, syntax, required, synchronisation, gap, problem, desired, ast, additions, compute, critical
 
 ## Galerina — Continuation / Handoff Brief (2026-06-15)
 `docs/Knowledge-Bases/galerina-continuation-brief-2026-06-15.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-CRYPTO-PQ-001, SPORE-GOV-3VL-001, SPORE-TYPE-023, SPORE-TYPE-021, SPORE-STDLIB-002
+- codes: FUNGI-SUBSTRATE-001, FUNGI-CRYPTO-PQ-001, FUNGI-GOV-3VL-001, FUNGI-TYPE-023, FUNGI-TYPE-021, FUNGI-STDLIB-002
 - tasks: #200, #177, #201, #202, #204, #149, #34, #199, #105, #148, #110, #179, #146, #195, #176, #174, #172, #175, #168, #194, #167, #196, #173, #153
 - links: [[galerina-tmf-tri-encryption-rd]]
 - terms: session, galerina, tests, audit, test, mjs, src, graph, node, json, gatecache, verified, build, start
 
 ## Galerina — Contract Authoring Guide (the canonical reference for AI + humans)
 `docs/Knowledge-Bases/galerina-contract-authoring-guide.md`
-- codes: SPORE-INV-001, SPORE-INV-002, SPORE-GOV-017, SPORE-GOV-018
+- codes: FUNGI-INV-001, FUNGI-INV-002, FUNGI-GOV-017, FUNGI-GOV-018
 - tasks: #56
 - terms: contract, flow, policy, body, effects, galerina, intent, string, block, never, step, pure, runtime, api
 
 ## Galerina — Contract Clause Reference Card
 `docs/Knowledge-Bases/galerina-contract-clause-reference.md`
-- codes: SPORE-SYNTAX-LEGACY-003, SPORE-GOV-010, SPORE-GOV-003, SPORE-EFFECT-001, SPORE-EFFECT-002, SPORE-EFFECT-003, SPORE-CAP-001, SPORE-CAP-002, SPORE-MONO-002, SPORE-SECRET-001, SPORE-SECRET-002, SPORE-SECRET-003, SPORE-EC-001, SPORE-RESOURCE-001, SPORE-EC-002, SPORE-AU-001, SPORE-GOV-005, SPORE-RES-001, SPORE-OBS-001, SPORE-INV-001, SPORE-INV-002, SPORE-INV-003, SPORE-GOV-004, SPORE-LIMIT-001
+- codes: FUNGI-SYNTAX-LEGACY-003, FUNGI-GOV-010, FUNGI-GOV-003, FUNGI-EFFECT-001, FUNGI-EFFECT-002, FUNGI-EFFECT-003, FUNGI-CAP-001, FUNGI-CAP-002, FUNGI-MONO-002, FUNGI-SECRET-001, FUNGI-SECRET-002, FUNGI-SECRET-003, FUNGI-EC-001, FUNGI-RESOURCE-001, FUNGI-EC-002, FUNGI-AU-001, FUNGI-GOV-005, FUNGI-RES-001, FUNGI-OBS-001, FUNGI-INV-001, FUNGI-INV-002, FUNGI-INV-003, FUNGI-GOV-004, FUNGI-LIMIT-001
 - tasks: #57, #56
 - terms: required, optional, common, mistakes, flow, accepts, example, policy, minimal, working, contract, effects, block, audit
 
 ## Contract-Driven Generation — tests, compliance, audit, manifests (design + grounded gap map)
 `docs/Knowledge-Bases/galerina-contract-driven-generation.md`
-- codes: SPORE-GEN-TEST-001, SPORE-GEN-TEST-005, SPORE-SUBSTRATE-001
+- codes: FUNGI-GEN-TEST-001, FUNGI-GEN-TEST-005, FUNGI-SUBSTRATE-001
 - tasks: #102, #125, #58
 - terms: contract, generator, tests, design, grounded, test, map, galerina, audit, owner, shipped, compliance, gap, build
 
@@ -552,40 +552,40 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Contract — errors {} Section
 `docs/Knowledge-Bases/galerina-contract-errors.md`
-- codes: SPORE-GOV-ERROR-001
+- codes: FUNGI-GOV-ERROR-001
 - terms: apierror, errors, internal, map, flow, redact, audit, expose, unauthorised, galerina, must, error, returns, contract
 
 ## Galerina Flow Contract — Full Reference Model
 `docs/Knowledge-Bases/galerina-contract-full-model.md`
-- codes: SPORE-CONTEXT-001, SPORE-GOV-003, SPORE-SYNTAX-LEGACY-001, SPORE-CONTRACT-001, SPORE-SYNTAX-010
+- codes: FUNGI-CONTEXT-001, FUNGI-GOV-003, FUNGI-SYNTAX-LEGACY-001, FUNGI-CONTRACT-001, FUNGI-SYNTAX-010
 - terms: section, flow, contract, effects, phase, model, type, return, audit, response, body, score, galerina, types
 
 ## R&D — module-wide `contract.invariant{}` (note 45), intuition verdict
 `docs/Knowledge-Bases/galerina-contract-invariant-module-wide-rd.md`
-- codes: SPORE-INV-001, SPORE-MONO-001, SPORE-PRIVACY-002, SPORE-INV-MODULE-001
+- codes: FUNGI-INV-001, FUNGI-MONO-001, FUNGI-PRIVACY-002, FUNGI-INV-MODULE-001
 - tasks: #102
 - terms: invariant, part, module-wide, contract, note, runtime, never, verdict, system, already, intuition, self-healing, tier, auto
 
 ## Galerina Contract — timeouts {}, retries {}, and limits {} Sections
 `docs/Knowledge-Bases/galerina-contract-operational-constraints.md`
-- codes: SPORE-TIMEOUT-001, SPORE-RETRY-001, SPORE-LIMIT-001
+- codes: FUNGI-TIMEOUT-001, FUNGI-RETRY-001, FUNGI-LIMIT-001
 - terms: deadline, timeouts, retries, limits, max, rules, flow, retry, size, section, network, purpose, galerina, database
 
 ## Galerina — `contract.permissions {}` device-permission clause (DESIGN, net-new)
 `docs/Knowledge-Bases/galerina-contract-permissions-design.md`
-- codes: SPORE-PERM-001, SPORE-ACCESS-001, SPORE-PERM-002, SPORE-CAP-001, SPORE-PERM-005, SPORE-PERM-003, SPORE-PERM-004, SPORE-PERM-006, SPORE-ASSIMILATE-001
+- codes: FUNGI-PERM-001, FUNGI-ACCESS-001, FUNGI-PERM-002, FUNGI-CAP-001, FUNGI-PERM-005, FUNGI-PERM-003, FUNGI-PERM-004, FUNGI-PERM-006, FUNGI-ASSIMILATE-001
 - tasks: #219, #202
-- terms: permissions, device, effects, camera, grant, contract, access, hardware, third-party, spore, flow, audit, plugin, deny
+- terms: permissions, device, effects, camera, grant, contract, access, hardware, third-party, fungi, flow, audit, plugin, deny
 
 ## Galerina Contract — privacy {} and observability {} Sections
 `docs/Knowledge-Bases/galerina-contract-privacy-observability.md`
-- codes: SPORE-PRIVACY-001, SPORE-OBSERVE-001, SPORE-PRIVACY-002
+- codes: FUNGI-PRIVACY-001, FUNGI-OBSERVE-001, FUNGI-PRIVACY-002
 - links: [[galerina-privacy-embedding-egress]]
 - terms: observability, protected, privacy, deny, data, values, pii, rules, flow, example, require, must, galerina, section
 
 ## galerina-contract-sets.md
 `docs/Knowledge-Bases/galerina-contract-sets.md`
-- codes: SPORE-GOV-011, SPORE-GOV-012
+- codes: FUNGI-GOV-011, FUNGI-GOV-012
 - terms: audit, contract, write, require, rules, set, galerina, events, sets, effects, flow, authority, emits, status
 
 ## galerina-contracts-as-meaning-layer.md
@@ -594,7 +594,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## galerina-core-cli: build, verify, deploy, explain, and plan
 `docs/Knowledge-Bases/galerina-core-cli-deploy-explain-plan.md`
-- codes: SPORE-EFFECT-002, SPORE-MANIFEST-002
+- codes: FUNGI-EFFECT-002, FUNGI-MANIFEST-002
 - terms: galerina, json, reports, cli, deployment, target, flags, build, purpose, supported, syntax, example, text, verification
 
 ## Galerina Core CLI v0.2
@@ -603,42 +603,42 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Core Compiler: Manifest Generation (Pass 14)
 `docs/Knowledge-Bases/galerina-core-compiler-manifest-generation-pass-14.md`
-- codes: SPORE-MANIFEST-001, SPORE-MANIFEST-005, SPORE-MANIFEST-003, SPORE-MANIFEST-004, SPORE-MANIFEST-002
+- codes: FUNGI-MANIFEST-001, FUNGI-MANIFEST-005, FUNGI-MANIFEST-003, FUNGI-MANIFEST-004, FUNGI-MANIFEST-002
 - terms: manifest, galerina, pass, json, string, runtime, build, diagnostics, effects, effect, compiler, target, route, capability
 
 ## Galerina Core Compute: GPU, Photonic, WASM, and Target Compatibility
 `docs/Knowledge-Bases/galerina-core-compute-gpu-and-photonic-backends.md`
-- codes: SPORE-COMPUTE-001, SPORE-COMPUTE-005, SPORE-WASM-001, SPORE-WASM-005, SPORE-COMPAT-001, SPORE-COMPAT-005, SPORE-COMPAT-002, SPORE-COMPAT-003, SPORE-COMPAT-004, SPORE-COMPUTE-002, SPORE-COMPUTE-003, SPORE-COMPUTE-004, SPORE-WASM-002, SPORE-WASM-003, SPORE-WASM-004
+- codes: FUNGI-COMPUTE-001, FUNGI-COMPUTE-005, FUNGI-WASM-001, FUNGI-WASM-005, FUNGI-COMPAT-001, FUNGI-COMPAT-005, FUNGI-COMPAT-002, FUNGI-COMPAT-003, FUNGI-COMPAT-004, FUNGI-COMPUTE-002, FUNGI-COMPUTE-003, FUNGI-COMPUTE-004, FUNGI-WASM-002, FUNGI-WASM-003, FUNGI-WASM-004
 - terms: target, string, wasm, workload, effects, gpu, export, runtimetarget, forbidden, profile, compute, photonic, compatibility, blockers
 
 ## Galerina Core Compute v0.2
 `docs/Knowledge-Bases/galerina-core-compute-v02.md`
-- codes: SPORE-COMPUTE-001, SPORE-COMPUTE-002, SPORE-COMPUTE-003, SPORE-WASM-001, SPORE-WASM-002, SPORE-WASM-003, SPORE-COMPAT-001, SPORE-COMPAT-002, SPORE-COMPAT-003
+- codes: FUNGI-COMPUTE-001, FUNGI-COMPUTE-002, FUNGI-COMPUTE-003, FUNGI-WASM-001, FUNGI-WASM-002, FUNGI-WASM-003, FUNGI-COMPAT-001, FUNGI-COMPAT-002, FUNGI-COMPAT-003
 - terms: target, gpu, wasm, string, effects, photonic, compatibility, runtime, compute, backend, forbidden, interface, browser, number
 
 ## Galerina Core Concepts Review — 2026
 `docs/Knowledge-Bases/galerina-core-concepts-review-2026.md`
-- codes: SPORE-TAINT-005, SPORE-TAINT-006, SPORE-NET-003, SPORE-SECRET-002, SPORE-SECRET-004, SPORE-GOV-014, SPORE-VAL-001, SPORE-VAL-002, SPORE-VAL-004, SPORE-VAL-005, SPORE-VAL-006, SPORE-VAL-007, SPORE-GOV-002, SPORE-EFFECT-001, SPORE-GOV-010, SPORE-GOV-001, SPORE-HW-004, SPORE-VAL-008, SPORE-VAL-009, SPORE-VAL-010, SPORE-VAL-003, SPORE-VAL-011, SPORE-GOV-015, SPORE-SECRET-001
+- codes: FUNGI-TAINT-005, FUNGI-TAINT-006, FUNGI-NET-003, FUNGI-SECRET-002, FUNGI-SECRET-004, FUNGI-GOV-014, FUNGI-VAL-001, FUNGI-VAL-002, FUNGI-VAL-004, FUNGI-VAL-005, FUNGI-VAL-006, FUNGI-VAL-007, FUNGI-GOV-002, FUNGI-EFFECT-001, FUNGI-GOV-010, FUNGI-GOV-001, FUNGI-HW-004, FUNGI-VAL-008, FUNGI-VAL-009, FUNGI-VAL-010, FUNGI-VAL-003, FUNGI-VAL-011, FUNGI-GOV-015, FUNGI-SECRET-001
 - terms: phase, contract, governance, src, string, safety, add, http, taint, implementation, record, missing, flow, classification
 
 ## Galerina: .env Trust Model
 `docs/Knowledge-Bases/galerina-core-config-dotenv-trust-model.md`
-- codes: SPORE-CONFIG-WARN-001, SPORE-CONFIG-WARN-002, SPORE-SECRET-003
+- codes: FUNGI-CONFIG-WARN-001, FUNGI-CONFIG-WARN-002, FUNGI-SECRET-003
 - terms: env, production, secret, development, level, galerina, secrets, trust, text, staging, vault, acceptable, false, source
 
 ## Galerina Core Config: Environment Config Model and Secret Reference Model
 `docs/Knowledge-Bases/galerina-core-config-environment-secrets.md`
-- codes: SPORE-CONFIG-001, SPORE-CONFIG-002, SPORE-CONFIG-010, SPORE-CONFIG-003, SPORE-CONFIG-004, SPORE-CONFIG-005, SPORE-CONFIG-006, SPORE-BOUNDARY-006, SPORE-SECRET-001, SPORE-SECRET-002
+- codes: FUNGI-CONFIG-001, FUNGI-CONFIG-002, FUNGI-CONFIG-010, FUNGI-CONFIG-003, FUNGI-CONFIG-004, FUNGI-CONFIG-005, FUNGI-CONFIG-006, FUNGI-BOUNDARY-006, FUNGI-SECRET-001, FUNGI-SECRET-002
 - terms: secret, type, string, config, environment, package, model, value, production, export, true, runtime, text, values
 
 ## Galerina Core Config v0.2
 `docs/Knowledge-Bases/galerina-core-config-v02.md`
-- codes: SPORE-CONFIG-001, SPORE-CONFIG-002, SPORE-CONFIG-003, SPORE-SECRET-001, SPORE-SECRET-002, SPORE-SECRET-003, SPORE-SECRET-004
+- codes: FUNGI-CONFIG-001, FUNGI-CONFIG-002, FUNGI-CONFIG-003, FUNGI-SECRET-001, FUNGI-SECRET-002, FUNGI-SECRET-003, FUNGI-SECRET-004
 - terms: secret, environment, type, config, value, reference, string, sandbox, environmentpolicy, model, environmentmode, configvalue, secretenvironmentreference, mode
 
 ## Galerina Config Vault
 `docs/Knowledge-Bases/galerina-core-config-vault.md`
-- codes: SPORE-VAULT-001, SPORE-VAULT-002, SPORE-VAULT-003, SPORE-VAULT-004, SPORE-VAULT-005
+- codes: FUNGI-VAULT-001, FUNGI-VAULT-002, FUNGI-VAULT-003, FUNGI-VAULT-004, FUNGI-VAULT-005
 - terms: vault, config, key, global, secret, galerina, values, access, typed, app, string, text, env, globalvault
 
 ## `galerina-core-economics` — Package Design
@@ -647,58 +647,58 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Core Compiler: Effect Checker and Boundary Checker v0.2
 `docs/Knowledge-Bases/galerina-core-effect-checker-v02.md`
-- codes: SPORE-SEC-014, SPORE-EFFECT-001, SPORE-EFFECT-002, SPORE-EFFECT-003, SPORE-EFFECT-004, SPORE-BOUNDARY-002, SPORE-BOUNDARY-001, SPORE-BOUNDARY-003, SPORE-BOUNDARY-004
+- codes: FUNGI-SEC-014, FUNGI-EFFECT-001, FUNGI-EFFECT-002, FUNGI-EFFECT-003, FUNGI-EFFECT-004, FUNGI-BOUNDARY-002, FUNGI-BOUNDARY-001, FUNGI-BOUNDARY-003, FUNGI-BOUNDARY-004
 - terms: effect, boundary, enum, algorithm, unsafe, external, validation, diagnostic, items, effects, checker, codes, checkedfunction, compiler
 
 ## Galerina Flow Trace API
 `docs/Knowledge-Bases/galerina-core-flow-trace.md`
-- codes: SPORE-TRACE-001, SPORE-TRACE-002, SPORE-TRACE-003, SPORE-TRACE-004, SPORE-TRACE-005
+- codes: FUNGI-TRACE-001, FUNGI-TRACE-002, FUNGI-TRACE-003, FUNGI-TRACE-004, FUNGI-TRACE-005
 - terms: trace, request, flow, galerina, denied, capture, stage, output, policy, status, example, writer, traceid, body
 
 ## Galerina Intent, Safety Levels, Effects, and Flow Tracing
 `docs/Knowledge-Bases/galerina-core-intent-safety-effects.md`
-- codes: SPORE-SYNTAX-LEGACY-002, SPORE-INTENT-001, SPORE-INTENT-002, SPORE-INTENT-003, SPORE-INTENT-004, SPORE-INTENT-005
+- codes: FUNGI-SYNTAX-LEGACY-002, FUNGI-INTENT-001, FUNGI-INTENT-002, FUNGI-INTENT-003, FUNGI-INTENT-004, FUNGI-INTENT-005
 - terms: intent, readonly, flow, galerina, effects, order, unsafe, governed, effect, core, string, safety, pure, trace
 
 ## Galerina Core Logic: Omni Logic
 `docs/Knowledge-Bases/galerina-core-logic-omni-logic.md`
-- codes: SPORE-OMNI-001, SPORE-OMNI-005, SPORE-OMNI-002, SPORE-OMNI-003, SPORE-OMNI-004
+- codes: FUNGI-OMNI-001, FUNGI-OMNI-005, FUNGI-OMNI-002, FUNGI-OMNI-003, FUNGI-OMNI-004
 - terms: omni, logic, runtime, evidence, text, advisory, state, true, reasoning, omnidecision, case, deterministic, policy, false
 
 ## Galerina Core Logic: Tri Logic, Decision Logic, and Bool Boundary Rules
 `docs/Knowledge-Bases/galerina-core-logic-tri-decision-bool.md`
-- codes: SPORE-TRI-001, SPORE-TRI-005, SPORE-DECISION-001, SPORE-DECISION-005, SPORE-BOOL-BOUNDARY-001, SPORE-BOOL-BOUNDARY-005, SPORE-BOOL-BOUNDARY-002, SPORE-TRI-002, SPORE-TRI-003, SPORE-TRI-004, SPORE-DECISION-002, SPORE-DECISION-003, SPORE-DECISION-004, SPORE-BOOL-BOUNDARY-003, SPORE-BOOL-BOUNDARY-004
+- codes: FUNGI-TRI-001, FUNGI-TRI-005, FUNGI-DECISION-001, FUNGI-DECISION-005, FUNGI-BOOL-BOUNDARY-001, FUNGI-BOOL-BOUNDARY-005, FUNGI-BOOL-BOUNDARY-002, FUNGI-TRI-002, FUNGI-TRI-003, FUNGI-TRI-004, FUNGI-DECISION-002, FUNGI-DECISION-003, FUNGI-DECISION-004, FUNGI-BOOL-BOUNDARY-003, FUNGI-BOOL-BOUNDARY-004
 - terms: decision, kind, tri, return, unknown, bool, true, false, logic, evidence, export, tristate, string, reason
 
 ## Galerina Core Logic v0.2
 `docs/Knowledge-Bases/galerina-core-logic-tristate-developer-guide.md`
-- codes: SPORE-BOOL-BOUNDARY-001, SPORE-TRI-001, SPORE-BOOL-BOUNDARY-002, SPORE-TRI-002, SPORE-DECISION-002, SPORE-BOOL-BOUNDARY-003
+- codes: FUNGI-BOOL-BOUNDARY-001, FUNGI-TRI-001, FUNGI-BOOL-BOUNDARY-002, FUNGI-TRI-002, FUNGI-DECISION-002, FUNGI-BOOL-BOUNDARY-003
 - terms: unknown, true, false, decision, kind, reasons, const, return, tri, example, match, tristate, reason, galerina
 
 ## Galerina Core Logic v0.2
 `docs/Knowledge-Bases/galerina-core-logic-v02.md`
-- codes: SPORE-TRI-001, SPORE-TRI-002, SPORE-TRI-003, SPORE-DECISION-001, SPORE-DECISION-002, SPORE-DECISION-003, SPORE-BOOL-BOUNDARY-001, SPORE-BOOL-BOUNDARY-002, SPORE-BOOL-BOUNDARY-003, SPORE-OMNI-001, SPORE-OMNI-002, SPORE-OMNI-003, SPORE-OMNI-004
+- codes: FUNGI-TRI-001, FUNGI-TRI-002, FUNGI-TRI-003, FUNGI-DECISION-001, FUNGI-DECISION-002, FUNGI-DECISION-003, FUNGI-BOOL-BOUNDARY-001, FUNGI-BOOL-BOUNDARY-002, FUNGI-BOOL-BOUNDARY-003, FUNGI-OMNI-001, FUNGI-OMNI-002, FUNGI-OMNI-003, FUNGI-OMNI-004
 - terms: decision, tri, logic, type, unknown, form, diagnostics, return, omni, true, bool, boundary, false, string
 
 ## Galerina Core Compiler: Manifest Generation v0.2
 `docs/Knowledge-Bases/galerina-core-manifest-generation-v02.md`
-- codes: SPORE-MANIFEST-001, SPORE-MANIFEST-002, SPORE-MANIFEST-003, SPORE-MANIFEST-004, SPORE-MANIFEST-005
+- codes: FUNGI-MANIFEST-001, FUNGI-MANIFEST-002, FUNGI-MANIFEST-003, FUNGI-MANIFEST-004, FUNGI-MANIFEST-005
 - terms: string, input, manifest, effects, runtime, runtimemanifest, compiler, prior, buildmanifestinput, pass, effect, functions, boundarymanifest, boundary
 
 ## Galerina v1 Memory Model
 `docs/Knowledge-Bases/galerina-core-memory-model.md`
-- codes: SPORE-MEMORY-001, SPORE-AFFINE-001, SPORE-SYNTAX-001, SPORE-SYNTAX-002, SPORE-MEMORY-003, SPORE-MEMORY-002, SPORE-MEMORY-004, SPORE-MEMORY-005, SPORE-MEMORY-006, SPORE-MEMORY-007, SPORE-MEMORY-008, SPORE-BINDING-001
+- codes: FUNGI-MEMORY-001, FUNGI-AFFINE-001, FUNGI-SYNTAX-001, FUNGI-SYNTAX-002, FUNGI-MEMORY-003, FUNGI-MEMORY-002, FUNGI-MEMORY-004, FUNGI-MEMORY-005, FUNGI-MEMORY-006, FUNGI-MEMORY-007, FUNGI-MEMORY-008, FUNGI-BINDING-001
 - tasks: #65
 - terms: borrow, unsafe, move, block, memory, galerina, rules, readonly, required, mutable, bounds, decision, cannot, copy
 
 ## Galerina Core Network: Governance Model
 `docs/Knowledge-Bases/galerina-core-network-governance.md`
-- codes: SPORE-NETWORK-001, SPORE-NETWORK-002, SPORE-NETWORK-003, SPORE-NETWORK-004, SPORE-NETWORK-005, SPORE-NETWORK-006, SPORE-NETWORK-007, SPORE-NETWORK-008
+- codes: FUNGI-NETWORK-001, FUNGI-NETWORK-002, FUNGI-NETWORK-003, FUNGI-NETWORK-004, FUNGI-NETWORK-005, FUNGI-NETWORK-006, FUNGI-NETWORK-007, FUNGI-NETWORK-008
 - terms: string, network, policy, export, boolean, destination, networkdiagnostic, must, networkdestinationreference, request, governance, text, capability, networkpolicy
 
 ## Galerina Core Network v0.2
 `docs/Knowledge-Bases/galerina-core-network-v02.md`
-- codes: SPORE-NETWORK-001, SPORE-NETWORK-002, SPORE-NETWORK-003, SPORE-NETWORK-004, SPORE-NETWORK-005, SPORE-NETWORK-006, SPORE-NETWORK-007, SPORE-NETWORK-008
+- codes: FUNGI-NETWORK-001, FUNGI-NETWORK-002, FUNGI-NETWORK-003, FUNGI-NETWORK-004, FUNGI-NETWORK-005, FUNGI-NETWORK-006, FUNGI-NETWORK-007, FUNGI-NETWORK-008
 - terms: policy, capability, string, protection, governance, tlsrequirement, enum, networkpolicy, core, openai, interface, safehttprequest, network, networkprotocol
 
 ## Galerina Core Network: Webhook Security Specification
@@ -707,72 +707,72 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Core Package Architecture
 `docs/Knowledge-Bases/galerina-core-package-architecture.md`
-- codes: SPORE-SECURITY-001, SPORE-VAULT-001, SPORE-INTENT-001, SPORE-PIPELINE-001
+- codes: FUNGI-SECURITY-001, FUNGI-VAULT-001, FUNGI-INTENT-001, FUNGI-PIPELINE-001
 - terms: galerina, implemented, runtime, compiler, core-compiler, package, core, specified, flow, security, pass, passing, config, pipeline
 
 ## Galerina Core Photonic: Backend Architecture and Governance Model
 `docs/Knowledge-Bases/galerina-core-photonic-backend-architecture.md`
-- codes: SPORE-PHOTONIC-001, SPORE-PHOTONIC-002, SPORE-PHOTONIC-003, SPORE-PHOTONIC-004, SPORE-PHOTONIC-005, SPORE-PHOTONIC-006
+- codes: FUNGI-PHOTONIC-001, FUNGI-PHOTONIC-002, FUNGI-PHOTONIC-003, FUNGI-PHOTONIC-004, FUNGI-PHOTONIC-005, FUNGI-PHOTONIC-006
 - terms: photonic, runtime, optical, text, execution, transport, integration, example, distributed, fallback, audit, architecture, phase, galerina
 
 ## Galerina Core Photonic — Governance Architecture
 `docs/Knowledge-Bases/galerina-core-photonic-governance-architecture.md`
-- codes: SPORE-PHOTONIC-001, SPORE-PHOTONIC-006
+- codes: FUNGI-PHOTONIC-001, FUNGI-PHOTONIC-006
 - terms: governance, execution, validation, transport, runtime, topology, capability, must, deterministic, plan, policy, enforcement, semantics, architecture
 
 ## Galerina Core Photonic v0.2
 `docs/Knowledge-Bases/galerina-core-photonic-v02.md`
-- codes: SPORE-PHOTONIC-001, SPORE-PHOTONIC-002, SPORE-PHOTONIC-003, SPORE-PHOTONIC-004, SPORE-PHOTONIC-005, SPORE-PHOTONIC-006
+- codes: FUNGI-PHOTONIC-001, FUNGI-PHOTONIC-002, FUNGI-PHOTONIC-003, FUNGI-PHOTONIC-004, FUNGI-PHOTONIC-005, FUNGI-PHOTONIC-006
 - terms: optical, runtime, governance, enum, isolation, hybrid, propagation, photonicruntimetarget, target, opticaltransportmode, transport, core, photonic, prior
 
 ## Galerina Core — Online Safety Act Age Assurance Policy Model
 `docs/Knowledge-Bases/galerina-core-policy-online-safety-act.md`
-- codes: SPORE-SAFETY-AGE-001, SPORE-SAFETY-AGE-002, SPORE-SAFETY-AGE-003, SPORE-SAFETY-AUDIT-001
+- codes: FUNGI-SAFETY-AGE-001, FUNGI-SAFETY-AGE-002, FUNGI-SAFETY-AGE-003, FUNGI-SAFETY-AUDIT-001
 - terms: age, assurance, galerina, policy, unknown, logic, tri, core, model, syntax, result, online, safety, check
 
 ## Galerina Core Reports v0.2
 `docs/Knowledge-Bases/galerina-core-reports-v02.md`
-- codes: SPORE-AUDIT-001, SPORE-AUDIT-002, SPORE-AUDIT-003, SPORE-REPORT-001, SPORE-REPORT-002, SPORE-REPORT-003, SPORE-PROOF-001, SPORE-PROOF-002, SPORE-PROOF-003, SPORE-DENIAL-001, SPORE-DENIAL-002, SPORE-DENIAL-003, SPORE-EVIDENCE-001, SPORE-EVIDENCE-002, SPORE-EVIDENCE-003
+- codes: FUNGI-AUDIT-001, FUNGI-AUDIT-002, FUNGI-AUDIT-003, FUNGI-REPORT-001, FUNGI-REPORT-002, FUNGI-REPORT-003, FUNGI-PROOF-001, FUNGI-PROOF-002, FUNGI-PROOF-003, FUNGI-DENIAL-001, FUNGI-DENIAL-002, FUNGI-DENIAL-003, FUNGI-EVIDENCE-001, FUNGI-EVIDENCE-002, FUNGI-EVIDENCE-003
 - terms: evidence, execution, string, proof, audit, runtime, runtimeevidence, event, system, reports, interface, jsonl, hash, diagnostic
 
 ## Galerina Runtime-Owned Single-Instance Resources
 `docs/Knowledge-Bases/galerina-core-runtime-resources.md`
-- codes: SPORE-RESOURCE-001, SPORE-RESOURCE-002, SPORE-RESOURCE-003, SPORE-RESOURCE-004, SPORE-RESOURCE-005, SPORE-RESOURCE-006, SPORE-RESOURCE-007, SPORE-RESOURCE-008, SPORE-RESOURCE-009, SPORE-RESOURCE-010
+- codes: FUNGI-RESOURCE-001, FUNGI-RESOURCE-002, FUNGI-RESOURCE-003, FUNGI-RESOURCE-004, FUNGI-RESOURCE-005, FUNGI-RESOURCE-006, FUNGI-RESOURCE-007, FUNGI-RESOURCE-008, FUNGI-RESOURCE-009, FUNGI-RESOURCE-010
 - terms: resource, runtime, scope, galerina, database, resources, effects, uses, flow, readonly, string, name, text, request-scoped
 
 ## Galerina Core Security — Secret Reference Model with Taint Tracking
 `docs/Knowledge-Bases/galerina-core-security-secret-reference-model.md`
-- codes: SPORE-SECRET-001, SPORE-SECRET-002
+- codes: FUNGI-SECRET-001, FUNGI-SECRET-002
 - terms: string, secret, union, type, sink, discriminated, export, spec, architecture, runtime, values, interface, secrettaint, secretreference
 
 ## Galerina Core Security v0.2
 `docs/Knowledge-Bases/galerina-core-security-v02.md`
-- codes: SPORE-SECRET-001, SPORE-SECRET-002, SPORE-SECRET-003, SPORE-SECRET-004, SPORE-SECRET-005
+- codes: FUNGI-SECRET-001, FUNGI-SECRET-002, FUNGI-SECRET-003, FUNGI-SECRET-004, FUNGI-SECRET-005
 - terms: secret, taint, runtime, value, type, sink, tracking, string, buildauthorizationheader, secrettaint, protectedsecret, redaction, true, secretreference
 
 ## Galerina Standard Types: String, Char, Byte
 `docs/Knowledge-Bases/galerina-core-standard-types-string-char-byte.md`
-- codes: SPORE-STRING-001, SPORE-STRING-002, SPORE-STRING-003, SPORE-STRING-004, SPORE-CHAR-001, SPORE-CHAR-002, SPORE-CHAR-003, SPORE-CHAR-004, SPORE-BYTE-001, SPORE-BYTE-002, SPORE-BYTE-003, SPORE-BYTE-004, SPORE-BYTE-005
+- codes: FUNGI-STRING-001, FUNGI-STRING-002, FUNGI-STRING-003, FUNGI-STRING-004, FUNGI-CHAR-001, FUNGI-CHAR-002, FUNGI-CHAR-003, FUNGI-CHAR-004, FUNGI-BYTE-001, FUNGI-BYTE-002, FUNGI-BYTE-003, FUNGI-BYTE-004, FUNGI-BYTE-005
 - terms: string, byte, let, bytes, char, galerina, text, standard, compiler, rules, diagnostics, type, security, operations
 
 ## Galerina Standard Syntax: Bindings and Pipelines
 `docs/Knowledge-Bases/galerina-core-syntax-bindings-pipeline.md`
-- codes: SPORE-SYNTAX-001, SPORE-SYNTAX-002, SPORE-BINDING-001, SPORE-BINDING-004, SPORE-BINDING-002, SPORE-BINDING-003, SPORE-PIPELINE-003, SPORE-PIPELINE-004, SPORE-PIPELINE-005, SPORE-PIPELINE-001, SPORE-PIPELINE-002
+- codes: FUNGI-SYNTAX-001, FUNGI-SYNTAX-002, FUNGI-BINDING-001, FUNGI-BINDING-004, FUNGI-BINDING-002, FUNGI-BINDING-003, FUNGI-PIPELINE-003, FUNGI-PIPELINE-004, FUNGI-PIPELINE-005, FUNGI-PIPELINE-001, FUNGI-PIPELINE-002
 - terms: readonly, binding, galerina, pipelines, let, pipeline, const, immutable, var, mut, diagnostics, rejected, type, stage
 
 ## Galerina Standard Syntax: Typed Content Blocks
 `docs/Knowledge-Bases/galerina-core-syntax-typed-content-blocks.md`
-- codes: SPORE-BLOCK-001, SPORE-BLOCK-004, SPORE-BLOCK-002, SPORE-BLOCK-003
+- codes: FUNGI-BLOCK-001, FUNGI-BLOCK-004, FUNGI-BLOCK-002, FUNGI-BLOCK-003
 - terms: block, content, marker, galerina, html, script, dom, blocks, css, inside, syntax, closing, readonly, stage
 
 ## Galerina Core Vector: Photonic Governance Architecture
 `docs/Knowledge-Bases/galerina-core-vector-photonic-governance.md`
-- codes: SPORE-PHOTONIC-001, SPORE-PHOTONIC-006
+- codes: FUNGI-PHOTONIC-001, FUNGI-PHOTONIC-006
 - terms: photonic, prior, photonicruntimetarget, governance, export, photonicexecutionplan, opticaltransportmode, must, transport, string, add, execution, values, input
 
 ## Coverage audit — zero-trust + Tri-Pipe/photonic-Tri (2026-06-23)
 `docs/Knowledge-Bases/galerina-coverage-audit-zerotrust-tripipe-2026-06-23.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-GOV-3VL-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-GOV-3VL-001
 - tasks: #163, #165, #15
 - terms: photonic, never, gap, gaps, zero-trust, photonic-tri, fail-closed, audit, tri-pipe, covered, substrate, coverage, real, line
 
@@ -788,7 +788,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Cross-Layer Resilience Matrix (Physical + Mathematical + Economic)
 `docs/Knowledge-Bases/galerina-cross-layer-resilience.md`
-- codes: SPORE-UNIV-001
+- codes: FUNGI-UNIV-001
 - terms: flow, tier, physical, invariant, resilience, hardware, fault, mathematical, economic, tamper, governance, economics, layer, cross-layer
 
 ## Galerina — Data Layout Hints, Profiling and Nondeterministic Annotation
@@ -801,36 +801,36 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Design Proposal: `secrets {}` and `epilogue {}` Governed Contract Blocks
 `docs/Knowledge-Bases/galerina-design-secrets-epilogue-blocks.md`
-- codes: SPORE-SECRET-001, SPORE-SECRET-003, SPORE-SECRET-002
+- codes: FUNGI-SECRET-001, FUNGI-SECRET-003, FUNGI-SECRET-002
 - tasks: #110, #29
 - links: [[galerina-key-custody-and-rotation]]
 - terms: rotation, secrets, galerina, epilogue, host, contract, proof, blocks, taint, core, governed, economics, key, runtime
 
 ## Galerina — Design Stability & Forward-Planning Charter
 `docs/Knowledge-Bases/galerina-design-stability-and-forward-planning.md`
-- codes: SPORE-SECRET-002, SPORE-PRIVACY-002, SPORE-CRYPTO-PQ-001, SPORE-PRIVACY-001
+- codes: FUNGI-SECRET-002, FUNGI-PRIVACY-002, FUNGI-CRYPTO-PQ-001, FUNGI-PRIVACY-001
 - tasks: #34, #149
 - links: [[galerina-quantum-resistance-posture]] [[galerina-privacy-embedding-egress]] [[galerina-governance-rules]]
 - terms: avoid, crypto, galerina, keep, design, stopgaps, already, provisional, enforcement, escalation, stability, forward-planning, charter, anti-mistake
 
 ## Galerina — Deterministic Runtime Containment Model (DRCM)
 `docs/Knowledge-Bases/galerina-deterministic-runtime-containment.md`
-- codes: SPORE-SECRET-001, SPORE-TERM-001, SPORE-INV-001, SPORE-INV-002, SPORE-INV-003, SPORE-MONO-001
+- codes: FUNGI-SECRET-001, FUNGI-TERM-001, FUNGI-INV-001, FUNGI-INV-002, FUNGI-INV-003, FUNGI-MONO-001
 - terms: runtime, tier, galerina, wasi, drcm, monotonic, wasm, emergency, dss, invariant, lmanifest, capability, phase, policy
 
 ## Galerina — Deterministic Self-Host Verification
 `docs/Knowledge-Bases/galerina-deterministic-selfhost-verification.md`
-- codes: SPORE-BUILD-001
+- codes: FUNGI-BUILD-001
 - terms: compiler, build, same, output, source, verification, galerina, stage, deterministic, hash, proof, non-determinism, comparison, eliminate
 
 ## Galerina — Developer Tooling: Test Generation, Capability Warnings, Constraint Signatures
 `docs/Knowledge-Bases/galerina-developer-tooling-advanced.md`
-- codes: SPORE-GEN-TEST-001, SPORE-GEN-TEST-002, SPORE-GEN-TEST-003, SPORE-GEN-TEST-004, SPORE-GEN-TEST-005, SPORE-GEN-TEST-006, SPORE-GEN-TEST-007, SPORE-CAPABILITY-IMPORT-001, SPORE-CAPABILITY-IMPORT-002, SPORE-CAPABILITY-IMPORT-003, SPORE-CAPABILITY-IMPORT-004, SPORE-CAPABILITY-IMPORT-005, SPORE-CAPABILITY-IMPORT-006, SPORE-CAPABILITY-IMPORT-007, SPORE-CONSTRAINT-001, SPORE-CONSTRAINT-002, SPORE-CONSTRAINT-003, SPORE-CONSTRAINT-004, SPORE-CONSTRAINT-005
+- codes: FUNGI-GEN-TEST-001, FUNGI-GEN-TEST-002, FUNGI-GEN-TEST-003, FUNGI-GEN-TEST-004, FUNGI-GEN-TEST-005, FUNGI-GEN-TEST-006, FUNGI-GEN-TEST-007, FUNGI-CAPABILITY-IMPORT-001, FUNGI-CAPABILITY-IMPORT-002, FUNGI-CAPABILITY-IMPORT-003, FUNGI-CAPABILITY-IMPORT-004, FUNGI-CAPABILITY-IMPORT-005, FUNGI-CAPABILITY-IMPORT-006, FUNGI-CAPABILITY-IMPORT-007, FUNGI-CONSTRAINT-001, FUNGI-CONSTRAINT-002, FUNGI-CONSTRAINT-003, FUNGI-CONSTRAINT-004, FUNGI-CONSTRAINT-005
 - terms: galerina, capability, test, charge, signatures, effects, transitive, createorder, input, payment, generated, required, tests, authority
 
 ## Galerina Developer Tools — LSP, Diagnostics-with-Fixes, Governance REPL
 `docs/Knowledge-Bases/galerina-developer-tools.md`
-- codes: SPORE-TYPE-001, SPORE-EFFECT-001, SPORE-CAP-001, SPORE-SECURITY-001, SPORE-TAINT-001, SPORE-SUPPLY-001, SPORE-CRYPTO-001, SPORE-MEMORY-SCOPE-001, SPORE-MEMORY-001, SPORE-ERROR-001, SPORE-MATCH-001, SPORE-REPL-001, SPORE-REPL-002, SPORE-REPL-003, SPORE-REPL-004, SPORE-REPL-005, SPORE-REPL-006, SPORE-REPL-007, SPORE-REPL-008
+- codes: FUNGI-TYPE-001, FUNGI-EFFECT-001, FUNGI-CAP-001, FUNGI-SECURITY-001, FUNGI-TAINT-001, FUNGI-SUPPLY-001, FUNGI-CRYPTO-001, FUNGI-MEMORY-SCOPE-001, FUNGI-MEMORY-001, FUNGI-ERROR-001, FUNGI-MATCH-001, FUNGI-REPL-001, FUNGI-REPL-002, FUNGI-REPL-003, FUNGI-REPL-004, FUNGI-REPL-005, FUNGI-REPL-006, FUNGI-REPL-007, FUNGI-REPL-008
 - terms: repl, galerina, fixes, lsp, diagnostics, text, diagnostic, effect, secret, add, part, commands, editor, capability
 
 ## Galerina Developer Experience Improvements — Phase 8
@@ -839,36 +839,36 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Dev-Tools for Production — map + prioritized proposal (2026-06-24)
 `docs/Knowledge-Bases/galerina-devtools-for-production-2026-06-24.md`
-- codes: SPORE-TYPE-023, ERR_REGISTRY, SPORE-PKG-001, SPORE-EFFECT-006
+- codes: FUNGI-TYPE-023, ERR_REGISTRY, FUNGI-PKG-001, FUNGI-EFFECT-006
 - tasks: #202, #206
 - terms: galerina, production, shipped, prioritized, proposal, package, app, cli, plugin, real, graph, audit, in-flight, absent
 
 ## Galerina — Diagnostic Code Conventions (the rules)
 `docs/Knowledge-Bases/galerina-diagnostic-code-conventions.md`
-- codes: SPORE-RUNTIME-010, SPORE-CONFIG-GOV-003, SPORE-CONFIG-003, SPORE-EFFECT-003, ERR_X, ERR_QUANTUM_PQ_REQUIRED, ERR_ADDON_HASH_MISMATCH, ERR_BRIDGE_UNATTESTED
+- codes: FUNGI-RUNTIME-010, FUNGI-CONFIG-GOV-003, FUNGI-CONFIG-003, FUNGI-EFFECT-003, ERR_X, ERR_QUANTUM_PQ_REQUIRED, ERR_ADDON_HASH_MISMATCH, ERR_BRIDGE_UNATTESTED
 - tasks: #215, #213
 - terms: code, diagnostic, name, severity, prevents, codes, must, lowercase, rules, dead, family, err, axis, error
 
 ## Galerina — Diagnostic Code Taxonomy Audit (2026-06-22)
 `docs/Knowledge-Bases/galerina-diagnostic-code-taxonomy-audit-2026-06-22.md`
-- codes: SPORE-EFFECT-002, SPORE-EFFECT-006, SPORE-SECRET-002, SPORE-NET-001, SPORE-NET-002, SPORE-RUNTIME-002, SPORE-MEMORY-001, SPORE-PRIVACY-002, SPORE-GOV-004, SPORE-MONO-001, SPORE-INV-002, SPORE-ASSIMILATE-002, SPORE-INTENT-001, SPORE-MATCH-001, SPORE-GRAPH-002, SPORE-EFFECT-001, SPORE-EFFECT-003, SPORE-EFFECT-004, SPORE-VALUESTATE-006, SPORE-GOV-017, SPORE-ASSUME-002, SPORE-BINDING-001, SPORE-RUNTIME-003, SPORE-RUNTIME-006
+- codes: FUNGI-EFFECT-002, FUNGI-EFFECT-006, FUNGI-SECRET-002, FUNGI-NET-001, FUNGI-NET-002, FUNGI-RUNTIME-002, FUNGI-MEMORY-001, FUNGI-PRIVACY-002, FUNGI-GOV-004, FUNGI-MONO-001, FUNGI-INV-002, FUNGI-ASSIMILATE-002, FUNGI-INTENT-001, FUNGI-MATCH-001, FUNGI-GRAPH-002, FUNGI-EFFECT-001, FUNGI-EFFECT-003, FUNGI-EFFECT-004, FUNGI-VALUESTATE-006, FUNGI-GOV-017, FUNGI-ASSUME-002, FUNGI-BINDING-001, FUNGI-RUNTIME-003, FUNGI-RUNTIME-006
 - tasks: #213, #215, #201, #212, #211
-- terms: code, err, codes, split, audit, dead, security, error, namespaces, fix, remediation, severity, findings, spore-
+- terms: code, err, codes, split, audit, dead, security, error, namespaces, fix, remediation, severity, findings, fungi-
 
 ## Galerina — Diagnostic Namespace Ownership (a checked invariant)
 `docs/Knowledge-Bases/galerina-diagnostic-namespace-ownership.md`
-- codes: SPORE-PRIVACY-001, SPORE-PRIVACY-002, SPORE-TYPE-021, SPORE-TYPE-023, SPORE-CRYPTO-PQ-001
+- codes: FUNGI-PRIVACY-001, FUNGI-PRIVACY-002, FUNGI-TYPE-021, FUNGI-TYPE-023, FUNGI-CRYPTO-PQ-001
 - links: [[galerina-design-stability-and-forward-planning]] [[galerina-governance-rules]]
 - terms: code, diagnostic, ownership, checked, invariant, registry, mechanism, add, codes, canonical, rules, allowlist, baseline, galerina
 
 ## Galerina — Diagnostic Numbering Strategy
 `docs/Knowledge-Bases/galerina-diagnostic-numbering-strategy.md`
-- codes: SPORE-TYPE-001, SPORE-TYPE-002, SPORE-TYPE-003, SPORE-TYPE-009, SPORE-TYPE-004
+- codes: FUNGI-TYPE-001, FUNGI-TYPE-002, FUNGI-TYPE-003, FUNGI-TYPE-009, FUNGI-TYPE-004
 - terms: diagnostic, future, numbering, canonical, spec, compiler, implementation, formal-type-system-spec, codes, series, galerina, decision, recorded, compiler-diagnostics
 
 ## Diagnostics Spec — Forensic Observability for Galerina
 `docs/Knowledge-Bases/galerina-diagnostics-spec.md`
-- codes: SPORE-INV-000
+- codes: FUNGI-INV-000
 - tasks: #105, #75, #36, #76, #144
 - terms: observability, diagnostic, drift, differential, twin, harness, reasoning, why, runtime, performance-history, plugin, diagnostics, spec, forensic
 
@@ -882,42 +882,42 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Docs/examples review vs the current compiler — punch-list (2026-06-25)
 `docs/Knowledge-Bases/galerina-docs-examples-review-2026-06-25.md`
-- codes: SPORE-PARSE-001, SPORE-PARSE-003, SPORE-GOV-007, SPORE-TIER-001, SPORE-GOV-010
+- codes: FUNGI-PARSE-001, FUNGI-PARSE-003, FUNGI-GOV-007, FUNGI-TIER-001, FUNGI-GOV-010
 - tasks: #37, #33
 - terms: examples, example, compiler, stale, bom, valuestate-006, flow, bug, genuinely, pattern, decimal, docs, review, fixes
 
 ## Galerina — Domain Guard Policies (Static Manifest Clamping)
 `docs/Knowledge-Bases/galerina-domain-guard-policies.md`
-- codes: SPORE-GOV-004, SPORE-LIMIT-001, SPORE-GOV-019
+- codes: FUNGI-GOV-004, FUNGI-LIMIT-001, FUNGI-GOV-019
 - tasks: #56
-- terms: policy, contract, effects, ceiling, permitted, local, external, conforms, guard, spore, violation, manifest, governance, flow
+- terms: policy, contract, effects, ceiling, permitted, local, external, conforms, guard, fungi, violation, manifest, governance, flow
 
 ## Galerina — DRCM Phase 1 Remaining Specifications
 `docs/Knowledge-Bases/galerina-drcm-phase1-specs.md`
-- codes: SPORE-MONO-001, SPORE-ID-002, SPORE-ID-003, SPORE-AU-002
+- codes: FUNGI-MONO-001, FUNGI-ID-002, FUNGI-ID-003, FUNGI-AU-002
 - tasks: #32, #34, #35, #42, #33, #40, #41
 - terms: receipt, phase, key, task, specification, drcm, dss, atomic, implementation, field, cas, separator, length, gate
 
 ## Ecosystem / "social-computer" positioning + the verified-import model (R&D 0051)
 `docs/Knowledge-Bases/galerina-ecosystem-positioning-verified-imports.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - tasks: #94, #34, #105, #175
 - links: [[galerina-mesh-brand-rename]] [[galerina-social-ecosystem-cloud-native]] [[galerina-wasm-compilation-granularity]] [[reference-galerina-runtime-status-sot]] [[galerina-key-custody-rotation-decision]]
 - terms: shipped, verified-import, decision, already, core, mesh, positioning, hybrid, ecosystem, social-computer, model, reframe, fuse, stdlib
 
 ## Galerina — Effect Checker / Boundary Checker Architecture
 `docs/Knowledge-Bases/galerina-effect-checker-architecture.md`
-- codes: SPORE-EFFECT-001, SPORE-EFFECT-005, SPORE-EFFECT-002, SPORE-EFFECT-003, SPORE-EFFECT-004
+- codes: FUNGI-EFFECT-001, FUNGI-EFFECT-005, FUNGI-EFFECT-002, FUNGI-EFFECT-003, FUNGI-EFFECT-004
 - terms: effect, phase, checker, boundary, effects, pure, status, flow, architecture, regex, region, canonical, flags, depth
 
 ## Galerina — Effect Inference Tracking
 `docs/Knowledge-Bases/galerina-effect-inference-tracking.md`
-- codes: SPORE-EFFECT-001
+- codes: FUNGI-EFFECT-001
 - terms: database, effects, effect, flow, find, read, inference, inferredeffects, write, missingeffects, declaredeffects, contract, registry, audit
 
-## #201 — SPORE-EFFECT-006 strict over-declaration: build plan + classification (2026-06-22)
+## #201 — FUNGI-EFFECT-006 strict over-declaration: build plan + classification (2026-06-22)
 `docs/Knowledge-Bases/galerina-effect006-build-plan-2026-06-22.md`
-- codes: SPORE-EFFECT-006, SPORE-EFFECT-001, SPORE-EFFECT-002
+- codes: FUNGI-EFFECT-006, FUNGI-EFFECT-001, FUNGI-EFFECT-002
 - tasks: #201
 - terms: pii, phi, owner, category, write, classification, read, effect, map, brand, sub-step, audit, unlock, build
 
@@ -927,54 +927,54 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Engineering Goals & Master Plan
 `docs/Knowledge-Bases/galerina-engineering-goals.md`
-- codes: SPORE-RESOURCE-001, SPORE-CAP-003
+- codes: FUNGI-RESOURCE-001, FUNGI-CAP-003
 - terms: phase, verification, test, prerequisites, acceptance, goal, runtime, network, validation, hardware, dpm, dwi, layer, interim
 
 ## Galerina — Execution Graph Kernel Architecture
 `docs/Knowledge-Bases/galerina-execution-graph-kernel-architecture.md`
-- codes: SPORE-EFFECT-005
+- codes: FUNGI-EFFECT-005
 - tasks: #45
 - terms: graph, suggestion, governance, readonly, phase, intel, proofgraph, execution, capability, fabric, wasm, hardware, string, implementation
 
 ## Galerina — Explicitness Principles
 `docs/Knowledge-Bases/galerina-explicitness-principles.md`
-- codes: SPORE-STDLIB-001, SPORE-PKG-003
+- codes: FUNGI-STDLIB-001, FUNGI-PKG-003
 - terms: explicit, galerina, governance, performance, simple, hidden, build, compute, unsafe, stdlib, targets, allocation, error, rule
 
 ## Galerina External Bridge — Governed Quantum Simulation (`ffsim`)
 `docs/Knowledge-Bases/galerina-ext-bridge-quantum-design.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-SUBSTRATE-004, SPORE-SUBSTRATE-002, ERR_SUBSPACE_TOO_LARGE, SPORE-BORDER-001, SPORE-BORDER-005, ERR_INVALID_ORBITALS
+- codes: FUNGI-SUBSTRATE-001, FUNGI-SUBSTRATE-004, FUNGI-SUBSTRATE-002, ERR_SUBSPACE_TOO_LARGE, FUNGI-BORDER-001, FUNGI-BORDER-005, ERR_INVALID_ORBITALS
 - tasks: #34, #199, #137, #138, #85, #43, #111, #107, #195, #147, #91
 - links: [[b.backendId, b]]
 - terms: ffsim, tolerance, readonly, quantum, bridge, package, galerina, ratified, number, lane, flow, contract, json, out-of-process
 
 ## External Idea Mining — Governance Ideas for tower-citizen / Galerina (2026-06-15)
 `docs/Knowledge-Bases/galerina-external-idea-mining-2026-06-15.md`
-- codes: SPORE-SUBSTRATE-002, SPORE-SUBSTRATE-004, SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-002, FUNGI-SUBSTRATE-004, FUNGI-SUBSTRATE-001
 - tasks: #10, #11, #12
 - links: [[galerina-photonic-tri-rd]] [[galerina-substrate-contracts]] [[galerina-ext-bridge-quantum]] [[galerina-quantum-resistance-posture]]
 - terms: precision, tolerance, measured, gate, contract, declared, source, grounded, manifest, state, accuracy, deny-by-default, galerina, whole
 
 ## External Idea Mining — `C:\wwwprojects\x` (fresh pass, 2026-06-23)
 `docs/Knowledge-Bases/galerina-external-idea-mining-2026-06-23.md`
-- codes: SPORE-PRIVACY-002, SPORE-SUBSTRATE-001
+- codes: FUNGI-PRIVACY-002, FUNGI-SUBSTRATE-001
 - terms: net-new, med, degrade-only, pass, ideas, out-of-bounds, substrate, low, idea, wwwprojects, verify-before-build, binary, owner, picks
 
 ## Galerina Retrospective — 2026-06-23: Correctness + Zero-Trust Hardening
 `docs/Knowledge-Bases/galerina-fail-open-taxonomy.md`
-- codes: SPORE-VALUESTATE-003, SPORE-TIER-001, SPORE-EFFECT-001, SPORE-STDLIB-001
+- codes: FUNGI-VALUESTATE-003, FUNGI-TIER-001, FUNGI-EFFECT-001, FUNGI-STDLIB-001
 - tasks: #163, #218
 - terms: test, every, mjs, gate, class, must, flow, json, detector, tier, galerina, hardening, native, already
 
 ## Galerina — Fault Tolerance, Stability & the Tri-Pipe
 `docs/Knowledge-Bases/galerina-fault-tolerance-and-stability.md`
-- codes: SPORE-GOV-3VL-001, ERR_BRIDGE_DISPATCH_FAULT, SPORE-SUBSTRATE-001, SPORE-MONO-001, SPORE-FAULT-005, SPORE-FAULT-001, SPORE-FAULT-002
+- codes: FUNGI-GOV-3VL-001, ERR_BRIDGE_DISPATCH_FAULT, FUNGI-SUBSTRATE-001, FUNGI-MONO-001, FUNGI-FAULT-005, FUNGI-FAULT-001, FUNGI-FAULT-002
 - tasks: #102, #40, #41
 - terms: binary, galerina, tolerance, fault, fail-safe, freivalds, governance, photonic, fail-closed, tri-pipe, result, invariant, pipe, never
 
 ## Galerina — Floor 3: Proof Zone Graph
 `docs/Knowledge-Bases/galerina-floor3-proof-zone-graph.md`
-- codes: SPORE-INV-004, SPORE-INV-001, SPORE-TYPE-001, SPORE-SECRET-001, SPORE-EFFECT-001, SPORE-CAP-001, SPORE-INV-003
+- codes: FUNGI-INV-004, FUNGI-INV-001, FUNGI-TYPE-001, FUNGI-SECRET-001, FUNGI-EFFECT-001, FUNGI-CAP-001, FUNGI-INV-003
 - tasks: #69, #36
 - terms: floor, invariant, wat, zone, proof, expr, map, phase, ensure, single-exit, subgraph, end, runtime, emitter
 
@@ -984,7 +984,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Flow Entry Points and Access Control
 `docs/Knowledge-Bases/galerina-flow-entry-points.md`
-- codes: SPORE-ENTRY-001
+- codes: FUNGI-ENTRY-001
 - terms: entry, flow, route, galerina, point, event, flows, worker, contract, points, runtime, trigger, private, test
 
 ## R&D — `for`/`where` tree-walker overhead → ternary tensor-mask (predicated execution)
@@ -994,12 +994,12 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Formal verification as a "math compiler" — direction + fit assessment (2026-06-18)
 `docs/Knowledge-Bases/galerina-formal-verification-direction.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - terms: galerina, smt, fit, note, proof, leverage, see, formal, harness, verification, math, logic, wasm, i32
 
 ## Galerina — Fortified Typed Logic (Universe Stratification + Termination Proofs)
 `docs/Knowledge-Bases/galerina-fortified-typed-logic.md`
-- codes: SPORE-PROFILE-002, SPORE-UNIV-001, SPORE-TERM-001, SPORE-PROFILE-003, SPORE-UNIV-002, SPORE-TERM-002, SPORE-TERM-003, SPORE-TAINT-001, SPORE-TAINT-002
+- codes: FUNGI-PROFILE-002, FUNGI-UNIV-001, FUNGI-TERM-001, FUNGI-PROFILE-003, FUNGI-UNIV-002, FUNGI-TERM-002, FUNGI-TERM-003, FUNGI-TAINT-001, FUNGI-TAINT-002
 - terms: universe, type, taint, decreases, stratification, termination, relationship, galerina, contract, once, annotation, recursion, value, guard
 
 ## galerina-framework-api-server — Full Implementation Specification
@@ -1008,7 +1008,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Framework API Server v0.2
 `docs/Knowledge-Bases/galerina-framework-api-server-v02.md`
-- codes: SPORE-NETWORK-001, SPORE-NETWORK-006, SPORE-NETWORK-007, SPORE-BOUNDARY-001, SPORE-EFFECT-002
+- codes: FUNGI-NETWORK-001, FUNGI-NETWORK-006, FUNGI-NETWORK-007, FUNGI-BOUNDARY-001, FUNGI-EFFECT-002
 - terms: request, string, api, boundary, error, replay, governance, server, route, runtime, webhook, galerinaroutemanifest, authentication, replaystore
 
 ## Galerina Framework Layer — Design & Scope Decision
@@ -1018,13 +1018,13 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina application framework — detailed plan (2026-06-21)
 `docs/Knowledge-Bases/galerina-framework-plan-2026-06-21.md`
-- codes: SPORE-PKG-001, ERR_BRIDGE_DISPATCH_FAULT, SPORE-MONO-001, ERR_REGISTRY
+- codes: FUNGI-PKG-001, ERR_BRIDGE_DISPATCH_FAULT, FUNGI-MONO-001, ERR_REGISTRY
 - tasks: #214, #40, #41, #102
 - terms: admission, tri-pipe, fault, re-r, binary, build, never, signed, photonic, tests, galerina, framework, built, tolerance
 
 ## Galerina — GIR Emitter Architecture
 `docs/Knowledge-Bases/galerina-gir-emitter-architecture.md`
-- codes: SPORE-SYNTAX-LEGACY-001
+- codes: FUNGI-SYNTAX-LEGACY-001
 - terms: phase, gir, string, numeric, girflow, format, wasm, status, girprogram, structure, metadata, binary, canonical, galerina
 
 ## Galerina Governed Intermediate Representation (GIR) Schema
@@ -1033,12 +1033,12 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Glossary and Definition Index
 `docs/Knowledge-Bases/galerina-glossary.md`
-- codes: SPORE-SYNTAX-005, SPORE-SEC-014, SPORE-SYNTAX-LEGACY-001, SPORE-SYNTAX-010, SPORE-SAFETY-001, SPORE-TYPE-001, SPORE-SECRET-001, SPORE-SECRET-002, SPORE-TYPE-009, SPORE-TYPE-004, SPORE-VALUESTATE-001, SPORE-VALUESTATE-003, SPORE-MATCH-001, SPORE-NAME-001
+- codes: FUNGI-SYNTAX-005, FUNGI-SEC-014, FUNGI-SYNTAX-LEGACY-001, FUNGI-SYNTAX-010, FUNGI-SAFETY-001, FUNGI-TYPE-001, FUNGI-SECRET-001, FUNGI-SECRET-002, FUNGI-TYPE-009, FUNGI-TYPE-004, FUNGI-VALUESTATE-001, FUNGI-VALUESTATE-003, FUNGI-MATCH-001, FUNGI-NAME-001
 - terms: flow, type, value, aliases, governed, effects, galerina, execution, unsafe, match, safe, tensor, contract, gate
 
 ## Galerina — Broader Governance Architecture
 `docs/Knowledge-Bases/galerina-governance-architecture.md`
-- codes: SPORE-EFFECT-002, SPORE-INTENT-001, SPORE-RUNTIME-001, SPORE-RAWPTR-001, SPORE-MEMORY-008
+- codes: FUNGI-EFFECT-002, FUNGI-INTENT-001, FUNGI-RUNTIME-001, FUNGI-RAWPTR-001, FUNGI-MEMORY-008
 - terms: runtime, intent, governance, authority, text, system, flow, execution, graph, tracking, unsafe, capability, propagation, effect
 
 ## Galerina — Governance-First CI/CD Pipeline
@@ -1048,50 +1048,50 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Governance Diff in CI
 `docs/Knowledge-Bases/galerina-governance-diff-ci.md`
-- codes: SPORE-DIFF-001, SPORE-DIFF-002, SPORE-DIFF-003, SPORE-DIFF-004, SPORE-DIFF-005, SPORE-DIFF-006, SPORE-DIFF-007, SPORE-DIFF-008, SPORE-DIFF-009
+- codes: FUNGI-DIFF-001, FUNGI-DIFF-002, FUNGI-DIFF-003, FUNGI-DIFF-004, FUNGI-DIFF-005, FUNGI-DIFF-006, FUNGI-DIFF-007, FUNGI-DIFF-008, FUNGI-DIFF-009
 - terms: diff, changes, galerina, review, governance, authority, main, payment, policy, text, changed, semantic, build, branch
 
 ## Galerina — Governance Economics Platform
 `docs/Knowledge-Bases/galerina-governance-economics-platform.md`
-- codes: SPORE-ECON-001, SPORE-AI-003
+- codes: FUNGI-ECON-001, FUNGI-AI-003
 - terms: governance, cost, galerina, contract, economics, audit, lineage, phase, execution, costgraph, breach, data, risk, compliance
 
 ## Galerina — Governance Hierarchy: The Inviolable Stack
 `docs/Knowledge-Bases/galerina-governance-hierarchy.md`
-- codes: SPORE-EFFECT-001, SPORE-STDLIB-001, SPORE-VALUESTATE-006, SPORE-SOURCE-ESCAPE-001, SPORE-SEC-020, SPORE-GOV-002, SPORE-PKG-005, SPORE-NET-001, SPORE-ANTI-ABUSE-001
+- codes: FUNGI-EFFECT-001, FUNGI-STDLIB-001, FUNGI-VALUESTATE-006, FUNGI-SOURCE-ESCAPE-001, FUNGI-SEC-020, FUNGI-GOV-002, FUNGI-PKG-005, FUNGI-NET-001, FUNGI-ANTI-ABUSE-001
 - terms: layer, governance, economics, authority, never, performance, galerina, rule, execution, enforced, stack, security, audit, intent
 
 ## Governance Mode Ladder — `full` / `auto` / `lean` (JOB 0011)
 `docs/Knowledge-Bases/galerina-governance-mode-ladder.md`
-- codes: SPORE-CONFIG-GOV-001, SPORE-CONFIG-GOV-002, SPORE-SUBSTRATE-001, SPORE-SECRET-002, SPORE-PRIVACY-002
+- codes: FUNGI-CONFIG-GOV-001, FUNGI-CONFIG-GOV-002, FUNGI-SUBSTRATE-001, FUNGI-SECRET-002, FUNGI-PRIVACY-002
 - tasks: #194
 - terms: lean, full, auto, flow, never, governance, ladder, floors, invariant, mode, gate, effectfree, job, status
 
 ## Galerina — Governance Rules Registry
 `docs/Knowledge-Bases/galerina-governance-rules.md`
-- codes: SPORE-GOV-004, SPORE-LIMIT-001, SPORE-GOV-019, SPORE-SYNTAX-LEGACY-003, SPORE-MONO-001, SPORE-GOV-001, SPORE-GOV-005, SPORE-GOV-010, SPORE-EFFECT-001, SPORE-GOV-020, SPORE-INV-003, SPORE-STEP-001, SPORE-GOV-003, SPORE-GOV-018, SPORE-GOV-017, SPORE-EFFECT-002, SPORE-EFFECT-003, SPORE-CAP-001, SPORE-CAP-002, SPORE-CAP-003, SPORE-SECRET-001, SPORE-SECRET-002, SPORE-SECRET-003, SPORE-SECRET-004
+- codes: FUNGI-GOV-004, FUNGI-LIMIT-001, FUNGI-GOV-019, FUNGI-SYNTAX-LEGACY-003, FUNGI-MONO-001, FUNGI-GOV-001, FUNGI-GOV-005, FUNGI-GOV-010, FUNGI-EFFECT-001, FUNGI-GOV-020, FUNGI-INV-003, FUNGI-STEP-001, FUNGI-GOV-003, FUNGI-GOV-018, FUNGI-GOV-017, FUNGI-EFFECT-002, FUNGI-EFFECT-003, FUNGI-CAP-001, FUNGI-CAP-002, FUNGI-CAP-003, FUNGI-SECRET-001, FUNGI-SECRET-002, FUNGI-SECRET-003, FUNGI-SECRET-004
 - tasks: #61, #55, #30, #44, #46, #58, #76, #36, #73, #74, #102
 - links: [[galerina-privacy-embedding-egress]] [[galerina-tritmesh-feature-gap-analysis-2026-06-24]]
 - terms: must, rules, planned, status, contract, drcm, flow, enforced, phase, diagnostic, effects, block, gate, policy
 
 ## Galerina — Governance Scope: High Consequence Systems
 `docs/Knowledge-Bases/galerina-governance-scope.md`
-- codes: SPORE-VAL-001, SPORE-VAL-002, SPORE-VAL-003
+- codes: FUNGI-VAL-001, FUNGI-VAL-002, FUNGI-VAL-003
 - terms: governance, require, systems, aerospace, safety, consequence, mission, galerina, data, critical, classification, high, value, system
 
 ## Galerina — GovernanceSignature
 `docs/Knowledge-Bases/galerina-governance-signature.md`
-- codes: SPORE-GOV-SIG-001
-- terms: galerina, key, signature, spore, gov, governancesignature, proof, sig, phase, readonly, governance, hybrid, ed25519, string
+- codes: FUNGI-GOV-SIG-001
+- terms: galerina, key, signature, fungi, gov, governancesignature, proof, sig, phase, readonly, governance, hybrid, ed25519, string
 
 ## Galerina — Governance Verifier Architecture
 `docs/Knowledge-Bases/galerina-governance-verifier-architecture.md`
-- codes: SPORE-GOV-002, SPORE-CONTEXT-001, SPORE-GOV-003, SPORE-GOV-004, SPORE-GOV-005, SPORE-GOV-007, SPORE-GOV-008, SPORE-GOV-009, SPORE-GOV-010, SPORE-GOV-011, SPORE-GOV-012
+- codes: FUNGI-GOV-002, FUNGI-CONTEXT-001, FUNGI-GOV-003, FUNGI-GOV-004, FUNGI-GOV-005, FUNGI-GOV-007, FUNGI-GOV-008, FUNGI-GOV-009, FUNGI-GOV-010, FUNGI-GOV-011, FUNGI-GOV-012
 - terms: governance, phase, authority, response, flow, verifier, production, audit, status, runtimemanifest, write, privacy, stage, profiles
 
 ## Galerina Governance Verifier Specification
 `docs/Knowledge-Bases/galerina-governance-verifier-spec.md`
-- codes: SPORE-GOV-001, SPORE-INTENT-001, SPORE-GOV-002, SPORE-GOV-003, SPORE-GOV-004, SPORE-GOV-005, SPORE-GOV-006, SPORE-GOV-007, SPORE-GOV-008, SPORE-GOV-009, SPORE-GOV-010
+- codes: FUNGI-GOV-001, FUNGI-INTENT-001, FUNGI-GOV-002, FUNGI-GOV-003, FUNGI-GOV-004, FUNGI-GOV-005, FUNGI-GOV-006, FUNGI-GOV-007, FUNGI-GOV-008, FUNGI-GOV-009, FUNGI-GOV-010
 - terms: governance, intent, verifier, docs, policy, behaviour, purpose, authority, evidence, status, diagnostic, target, audit, examples
 
 ## Galerina — Governed Memory Boundaries and APU Memory Sharing
@@ -1111,31 +1111,31 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 `docs/Knowledge-Bases/galerina-governed-inference-tower.md`
 - codes: ERR_EMPTY_DOCUMENT, ERR_EMPTY_PROMPT, ERR_ZERO_TOKENS, ERR_TOKEN_LIMIT, ERR_AI_MODEL_NOT_APPROVED, ERR_AI_CALL_BUDGET
 - tasks: #118, #119, #120, #121, #122, #123, #124
-- terms: galerina, inference, bitnet, tier, infer, governance, cli, contract, audit, spore, governed, engine, wrap, tower
+- terms: galerina, inference, bitnet, tier, infer, governance, cli, contract, audit, fungi, governed, engine, wrap, tower
 
 ## Galerina Governed Memory Blocks
 `docs/Knowledge-Bases/galerina-governed-memory-blocks.md`
-- codes: SPORE-GOV-003
+- codes: FUNGI-GOV-003
 - terms: runtime, memory, block, governed, read, permissions, protected, galerina, access, flow, email, hardware, write, denied
 
 ## galerina-governed-request-execution.md
 `docs/Knowledge-Bases/galerina-governed-request-execution.md`
-- codes: SPORE-GOV-003, SPORE-CONTEXT-001
+- codes: FUNGI-GOV-003, FUNGI-CONTEXT-001
 - terms: request, route, response, contract, patientid, galerina, runtime, governed, security, secure, require, effects, boundary, audit
 
 ## galerina-governed-resource-contracts.md
 `docs/Knowledge-Bases/galerina-governed-resource-contracts.md`
-- codes: SPORE-EFFECT-001, SPORE-GOV-003, SPORE-VALUESTATE-003, SPORE-GOV-012
+- codes: FUNGI-EFFECT-001, FUNGI-GOV-003, FUNGI-VALUESTATE-003, FUNGI-GOV-012
 - terms: resource, user, write, galerina, email, effects, create, audit, operations, database, contract, name, delete, crud
 
 ## Galerina — Governed Runtime Architecture Research
 `docs/Knowledge-Bases/galerina-governed-runtime-research-2026-06-03.md`
-- codes: SPORE-SECRET-001
+- codes: FUNGI-SECRET-001
 - terms: high, difficulty, benefit, medium, galerina, governance, contract, types, effect, capability, cedar, in-toto, governed, runtime
 
 ## Galerina — The Governed Tower: Master Technical Specification
 `docs/Knowledge-Bases/galerina-governed-tower-specification.md`
-- codes: SPORE-INV-004, SPORE-INV-000, SPORE-INV-001
+- codes: FUNGI-INV-004, FUNGI-INV-000, FUNGI-INV-001
 - tasks: #70, #73, #74, #75, #36, #67, #56, #58, #76, #39, #40, #41, #42, #43
 - terms: floor, phase, dpm, task, capability, bit, cbor, drcm, emergency, invariant, tag, topology, dss, wasm
 
@@ -1145,13 +1145,13 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Granular Roadmap — sub-100% modules by child node (2026-06-24)
 `docs/Knowledge-Bases/galerina-granular-roadmap-2026-06-24.md`
-- codes: ERR_REGISTRY, SPORE-VALUESTATE-008, SPORE-TIER-001, SPORE-DAG-002, SPORE-CRYPTO-PQ-001, SPORE-GOV-3VL-001, SPORE-SUBSTRATE-001
+- codes: ERR_REGISTRY, FUNGI-VALUESTATE-008, FUNGI-TIER-001, FUNGI-DAG-002, FUNGI-CRYPTO-PQ-001, FUNGI-GOV-3VL-001, FUNGI-SUBSTRATE-001
 - tasks: #102, #34, #149, #0089, #128, #163, #165, #143, #624, #199, #105, #189
-- terms: real, module, wasm, tests, loc, parity, stage-a, path, spore, test, dss, gap, hybrid, child
+- terms: real, module, wasm, tests, loc, parity, stage-a, path, fungi, test, dss, gap, hybrid, child
 
 ## Galerina Hardened Border — Plugin DMZ Specification
 `docs/Knowledge-Bases/galerina-hardened-border.md`
-- codes: SPORE-BORDER-001, SPORE-BORDER-005, SPORE-BORDER-002, SPORE-BORDER-003, SPORE-BORDER-004
+- codes: FUNGI-BORDER-001, FUNGI-BORDER-005, FUNGI-BORDER-002, FUNGI-BORDER-003, FUNGI-BORDER-004
 - tasks: #104, #102
 - terms: plugin, stage, wasm, json, galerina, border, schema, dss, string, data, security, fields, status, blacklist
 
@@ -1173,7 +1173,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Hardware Compatibility Matrix
 `docs/Knowledge-Bases/galerina-hardware-compatibility-matrix.md`
-- codes: SPORE-HW-001, SPORE-HW-002, SPORE-HW-003, SPORE-HW-004
+- codes: FUNGI-HW-001, FUNGI-HW-002, FUNGI-HW-003, FUNGI-HW-004
 - terms: phase, wasm, host, target, hardware, avx2, sealed, architecture, runtime, intel, prooflevel, class, simdtier, inputseal
 
 ## Galerina — ComputeFabricGraph and Hardware Governance Classes
@@ -1182,7 +1182,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Future Substrates: Photonic, Neuromorphic, Quantum
 `docs/Knowledge-Bases/galerina-hardware-future-substrates.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - terms: governance, quantum, class, photonic, compute, neuromorphic, galerina, target, properties, cpu, pattern, hardware, acceleratorplane, cases
 
 ## Galerina — Google Silicon Support
@@ -1195,12 +1195,12 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Nvidia Hardware Support
 `docs/Knowledge-Bases/galerina-hardware-nvidia.md`
-- codes: SPORE-HW-004
+- codes: FUNGI-HW-004
 - terms: nvidia, hardware, blackwell, audit, fp4, engine, memory, target, galerina, b200, cuda, gpu, require, decompression
 
 ## Hardware protection in Galerina — what is BUILT vs R&D'd (2026-06-24)
 `docs/Knowledge-Bases/galerina-hardware-protection-summary-2026-06-24.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-HW-004, SPORE-RETAIN-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-HW-004, FUNGI-RETAIN-001
 - tasks: #102, #30, #44
 - terms: hardware, built, silicon, real, today, digital, photonic, protection, bit-exact, binary, design, never, signed, enforced
 
@@ -1210,13 +1210,13 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## High-value compute domains — can Galerina do anything? (2026-06-25)
 `docs/Knowledge-Bases/galerina-high-value-compute-domains-2026-06-25.md`
-- codes: SPORE-SUBSTRATE-003, SPORE-GOV-3VL-001, SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-003, FUNGI-GOV-3VL-001, FUNGI-SUBSTRATE-001
 - tasks: #44, #199
 - terms: lane, analog, bit-exact, digital, stays, never, domains, build, compute, galerina, cannot, high-value, fences, tolerant
 
 ## Galerina — Hybrid WASM Architecture
 `docs/Knowledge-Bases/galerina-hybrid-wasm-architecture.md`
-- codes: SPORE-PKG-005, SPORE-GOV-014, SPORE-NET-001
+- codes: FUNGI-PKG-005, FUNGI-GOV-014, FUNGI-NET-001
 - terms: wasm, native, host, phase, npu, galerina, memory, target, plane, inference, data, execution, capability, crash
 
 ## Galerina Hybrid WASM–Native Architecture for Snapdragon and Future Accelerators
@@ -1225,7 +1225,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Faithful Int64 lowering — exhaustive site map + phased plan (2026-06-25)
 `docs/Knowledge-Bases/galerina-i64-lowering-map-2026-06-25.md`
-- codes: SPORE-NUMERIC-001
+- codes: FUNGI-NUMERIC-001
 - terms: int64, i64, interpreter, faithful, increment, site, wat-emitter, gate, add, emitter, map, i32, lift, literal
 
 ## Faithful Int64 lowering — VERIFIED implementation plan (2026-06-25)
@@ -1234,12 +1234,12 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Excellent IDE Tooling
 `docs/Knowledge-Bases/galerina-ide-tooling.md`
-- codes: SPORE-EFFECT-002, SPORE-PRIVACY-003, SPORE-CAPABILITY-003, SPORE-PRIVACY-005, SPORE-CONTEXT-001
+- codes: FUNGI-EFFECT-002, FUNGI-PRIVACY-003, FUNGI-CAPABILITY-003, FUNGI-PRIVACY-005, FUNGI-CONTEXT-001
 - terms: flow, galerina, ide, email, effects, effect, contract, governance, example, code, protected, context, names, capability
 
 ## Galerina numeric types & integer lowering (i32 / i64) — reference + maths
 `docs/Knowledge-Bases/galerina-integer-types-and-lowering.md`
-- codes: SPORE-NUMERIC-001
+- codes: FUNGI-NUMERIC-001
 - terms: i64, i32, int64, overflow, wasm, value, packages-galerina, galerina-core-compiler, src, gate, type, min, galerina, exact
 
 ## Galerina Integrity Audit — #1–#197 / P1–P9 (2026-06-15)
@@ -1249,52 +1249,52 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Machine-Readable Intent Graph
 `docs/Knowledge-Bases/galerina-intent-graph.md`
-- codes: SPORE-INTENT-GRAPH-001, SPORE-INTENT-GRAPH-002, SPORE-INTENT-GRAPH-003, SPORE-INTENT-GRAPH-004, SPORE-INTENT-GRAPH-005, SPORE-INTENT-GRAPH-006
+- codes: FUNGI-INTENT-GRAPH-001, FUNGI-INTENT-GRAPH-002, FUNGI-INTENT-GRAPH-003, FUNGI-INTENT-GRAPH-004, FUNGI-INTENT-GRAPH-005, FUNGI-INTENT-GRAPH-006
 - terms: graph, intent, galerina, secret, createorder, text, effect, capability, source, flow, compliance, types, governance, uses
 
 ## Galerina — Intent-Guided Optimisation (IGO)
 `docs/Knowledge-Bases/galerina-intent-guided-optimisation.md`
-- codes: SPORE-HINT-COMPUTE-001
+- codes: FUNGI-HINT-COMPUTE-001
 - terms: runtime, igo, audit, intent, confidence, phase, learning, workload, quantum, target, targets, gpu, npu, profile
 
 ## Galerina — Interpreter (tree-walker) speedup + JSON performance R&D (2026-06-17)
 `docs/Knowledge-Bases/galerina-interpreter-speedup-and-json-rd.md`
-- codes: SPORE-PRIVACY-002, SPORE-GOV-3VL-001
+- codes: FUNGI-PRIVACY-002, FUNGI-GOV-3VL-001
 - terms: json, interpreter, tree-walker, speedup, governed, call, graph, path, ranked, tri-logic, already, strings, wasm, honest
 
 ## Galerina — The JavaScript Escape Hatch Problem
 `docs/Knowledge-Bases/galerina-javascript-escape-hatch.md`
-- codes: SPORE-BACKEND-001
+- codes: FUNGI-BACKEND-001
 - terms: module, galerina, capabilityhost, javascript, process, const, must, emitted, backend, generated, capability, runtime, rules, problem
 
 ## Design: Key Custody & Rotation — what belongs in core vs ext
 `docs/Knowledge-Bases/galerina-key-custody-and-rotation.md`
-- codes: SPORE-SECRET-002
+- codes: FUNGI-SECRET-002
 - tasks: #110, #34
 - links: [[galerina-design-secrets-epilogue-blocks]] [[galerina-zero-trust-engine]] [[galerina-quantum-resistance-posture]]
 - terms: core, key, rotation, registry, custody, ext, gap, policy, ed25519, revocation, revoked, verify, shipped, galerina
 
-## Key Lifecycle — Zero-Touch Signing & the `SPORE-KEY-*` Diagnostics
+## Key Lifecycle — Zero-Touch Signing & the `FUNGI-KEY-*` Diagnostics
 `docs/Knowledge-Bases/galerina-key-lifecycle-diagnostics.md`
-- codes: SPORE-KEY-002, SPORE-KEY-004, SPORE-KEY-010, SPORE-KEY-005, SPORE-KEY-001
+- codes: FUNGI-KEY-002, FUNGI-KEY-004, FUNGI-KEY-010, FUNGI-KEY-005, FUNGI-KEY-001
 - tasks: #149
 - links: [[feedback-keys-rotate-automatically]] [[galerina-key-custody-and-rotation]]
-- terms: key, signing, production, diagnostics, revoked, governance, galerina, never, dev, registry, codes, lifecycle, zero-touch, spore-key-
+- terms: key, signing, production, diagnostics, revoked, governance, galerina, never, dev, registry, codes, lifecycle, zero-touch, fungi-key-
 
 ## Galerina — Lessons From Other Languages
 `docs/Knowledge-Bases/galerina-language-lessons.md`
-- codes: SPORE-VALUESTATE-003, SPORE-SECRET-001, SPORE-TYPE-003, SPORE-TYPE-002, SPORE-TYPE-004
+- codes: FUNGI-VALUESTATE-003, FUNGI-SECRET-001, FUNGI-TYPE-003, FUNGI-TYPE-002, FUNGI-TYPE-004
 - terms: phase, structural, context, diagnostic, error, galerina, implementation, diagnostics, implemented, effect, typing, why, typescript, types
 
 ## Galerina — Lexer Optimization Roadmap
 `docs/Knowledge-Bases/galerina-lexer-optimizations.md`
-- codes: SPORE-LEX-001, SPORE-LEX-002, SPORE-LEX-003, SPORE-LEX-004, SPORE-LEX-005, SPORE-LEX-006, SPORE-SYNTAX-LEGACY-001
+- codes: FUNGI-LEX-001, FUNGI-LEX-002, FUNGI-LEX-003, FUNGI-LEX-004, FUNGI-LEX-005, FUNGI-LEX-006, FUNGI-SYNTAX-LEGACY-001
 - terms: lexer, replace, token, keyword, phase, current, improvements, add, cleanup, limits, enum, galerina, stream, regex
 
-## Galerina Lexer — `src/lexer.spore`
-`docs/Knowledge-Bases/galerina-lexer-spore.md`
-- codes: SPORE-LEX-004, SPORE-LEX-005, SPORE-LEX-006, SPORE-BINDING-005, SPORE-LEX-001, SPORE-LEX-002, SPORE-LEX-003
-- terms: line, token, lexer, string, source, pos, phase, col, end, int, scanning, galerina, tokens, spore
+## Galerina Lexer — `src/lexer.fungi`
+`docs/Knowledge-Bases/galerina-lexer-fungi.md`
+- codes: FUNGI-LEX-004, FUNGI-LEX-005, FUNGI-LEX-006, FUNGI-BINDING-005, FUNGI-LEX-001, FUNGI-LEX-002, FUNGI-LEX-003
+- terms: line, token, lexer, string, source, pos, phase, col, end, int, scanning, galerina, tokens, fungi
 
 ## Galerina — Separate Logical Planning From Target Emission
 `docs/Knowledge-Bases/galerina-logical-planning-target-emission.md`
@@ -1302,29 +1302,29 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Master Architecture Direction
 `docs/Knowledge-Bases/galerina-master-architecture.md`
-- codes: SPORE-EFFECT-001, SPORE-STDLIB-001, SPORE-VALUESTATE-006, SPORE-SOURCE-ESCAPE-001, SPORE-SEC-020, SPORE-GOV-002, SPORE-PKG-005, SPORE-NET-001, SPORE-VAL-001, SPORE-VAL-002
+- codes: FUNGI-EFFECT-001, FUNGI-STDLIB-001, FUNGI-VALUESTATE-006, FUNGI-SOURCE-ESCAPE-001, FUNGI-SEC-020, FUNGI-GOV-002, FUNGI-PKG-005, FUNGI-NET-001, FUNGI-VAL-001, FUNGI-VAL-002
 - terms: governance, galerina, hardware, execution, cost, economics, proof, rule, never, enforced, authority, proofgraph, data, systems
 
 ## Maths-application R&D sweeps — .tmf/db/TritMesh + expanded-scope (2026-06-25)
 `docs/Knowledge-Bases/galerina-maths-application-sweeps-2026-06-25.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - tasks: #40, #149
 - terms: tmf, re-derivation, tritmesh, expanded-scope, sweep, maths, sweeps, database, algebra, wb7dqawdt, build, net, wdpcnecx4, domain
 
 ## Galerina — Borrow, Move and Pinned Memory Semantics
 `docs/Knowledge-Bases/galerina-memory-borrow-move-pinned.md`
-- codes: SPORE-MEMORY-001, SPORE-AFFINE-001, SPORE-OWN-001, SPORE-MEMORY-002, SPORE-OWN-002, SPORE-MEMORY-003, SPORE-OWN-003, SPORE-MEMORY-004, SPORE-MEMORY-005, SPORE-MEMORY-006, SPORE-MEMORY-007, SPORE-OWN-004, SPORE-MEMORY-008, SPORE-OWN-005, SPORE-OWN-006
+- codes: FUNGI-MEMORY-001, FUNGI-AFFINE-001, FUNGI-OWN-001, FUNGI-MEMORY-002, FUNGI-OWN-002, FUNGI-MEMORY-003, FUNGI-OWN-003, FUNGI-MEMORY-004, FUNGI-MEMORY-005, FUNGI-MEMORY-006, FUNGI-MEMORY-007, FUNGI-OWN-004, FUNGI-MEMORY-008, FUNGI-OWN-005, FUNGI-OWN-006
 - tasks: #65
 - terms: ownership, borrow, memory, move, transfer, pinned, tensor, galerina, gpu, compiler, phase, shared, zero-copy, value
 
 ## Galerina Memory — Request-Scope Arenas
 `docs/Knowledge-Bases/galerina-memory-request-scope-arenas.md`
-- codes: SPORE-MEMORY-SCOPE-001, SPORE-MEMORY-SCOPE-002, SPORE-MEMORY-SCOPE-003, SPORE-MEMORY-SCOPE-004, SPORE-MEMORY-SCOPE-005, SPORE-MEMORY-SCOPE-006, SPORE-MEMORY-SCOPE-007
+- codes: FUNGI-MEMORY-SCOPE-001, FUNGI-MEMORY-SCOPE-002, FUNGI-MEMORY-SCOPE-003, FUNGI-MEMORY-SCOPE-004, FUNGI-MEMORY-SCOPE-005, FUNGI-MEMORY-SCOPE-006, FUNGI-MEMORY-SCOPE-007
 - terms: request, arena, memory, runtime, model, galerina, arenas, escape, policy, lifetime, without, async, email, request-scoped
 
 ## Galerina memory-safety model — the stance, the all-stances survey, the honest verdict (2026-06-18)
 `docs/Knowledge-Bases/galerina-memory-safety-model.md`
-- codes: SPORE-MEMORY-008, SPORE-RAWPTR-001, SPORE-SECRET-001, SPORE-PRIVACY-002, SPORE-MEMORY-001, SPORE-AFFINE-001
+- codes: FUNGI-MEMORY-008, FUNGI-RAWPTR-001, FUNGI-SECRET-001, FUNGI-PRIVACY-002, FUNGI-MEMORY-001, FUNGI-AFFINE-001
 - tasks: #65
 - terms: galerina, rust, honest, model, borrow, all-stances, verdict, checker, survey, safe, safer, free, memory, wasm
 
@@ -1338,13 +1338,13 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Missing Syntax Keywords and Parser Gaps
 `docs/Knowledge-Bases/galerina-missing-syntax-keywords.md`
-- codes: SPORE-OWN-001
+- codes: FUNGI-OWN-001
 - terms: parser, placement, ast, syntax, gap, problem, desired, required, additions, flow, gpu, compiler, galerina, tensor
 
-## Galerina — Naming Convention Enforcement (SPORE-STYLE-*)
+## Galerina — Naming Convention Enforcement (FUNGI-STYLE-*)
 `docs/Knowledge-Bases/galerina-naming-conventions-enforcement.md`
-- codes: SPORE-STYLE-001, SPORE-STYLE-002, SPORE-STYLE-003, SPORE-STYLE-004, SPORE-STYLE-SEC-001, SPORE-STYLE-SEC-002, SPORE-STYLE-SEC-003, SPORE-STYLE-SEC-004, SPORE-STYLE-SEC-005
-- terms: must, name, camelcase, naming, type, error, rules, suggestedfix, diagnostics, example, convention, security, pascalcase, spore
+- codes: FUNGI-STYLE-001, FUNGI-STYLE-002, FUNGI-STYLE-003, FUNGI-STYLE-004, FUNGI-STYLE-SEC-001, FUNGI-STYLE-SEC-002, FUNGI-STYLE-SEC-003, FUNGI-STYLE-SEC-004, FUNGI-STYLE-SEC-005
+- terms: must, name, camelcase, naming, type, error, rules, suggestedfix, diagnostics, example, convention, security, pascalcase, fungi
 
 ## Galerina Naming Conventions
 `docs/Knowledge-Bases/galerina-naming-conventions.md`
@@ -1356,32 +1356,32 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Native Module System
 `docs/Knowledge-Bases/galerina-native-module-system.md`
-- codes: SPORE-PAYMENTS-1000, SPORE-SUPPLY-001, SPORE-MODULE-001, SPORE-MODULE-002, SPORE-MODULE-003, SPORE-MODULE-004, SPORE-MODULE-005, SPORE-MODULE-006, SPORE-MODULE-007, SPORE-MODULE-008, SPORE-MODULE-009, SPORE-MODULE-010
+- codes: FUNGI-PAYMENTS-1000, FUNGI-SUPPLY-001, FUNGI-MODULE-001, FUNGI-MODULE-002, FUNGI-MODULE-003, FUNGI-MODULE-004, FUNGI-MODULE-005, FUNGI-MODULE-006, FUNGI-MODULE-007, FUNGI-MODULE-008, FUNGI-MODULE-009, FUNGI-MODULE-010
 - terms: package, galerina, authority, governance, npm, install-time, registry, build, payments, review, lockfile, module, system, text
 
 ## Galerina — Native Self-Hosted Runtime Roadmap
 `docs/Knowledge-Bases/galerina-native-runtime-roadmap.md`
-- codes: SPORE-RUNTIME-001, SPORE-RUNTIME-002, SPORE-RUNTIME-003, SPORE-RUNTIME-004, SPORE-RUNTIME-005, SPORE-RUNTIME-006, SPORE-RUNTIME-007
+- codes: FUNGI-RUNTIME-001, FUNGI-RUNTIME-002, FUNGI-RUNTIME-003, FUNGI-RUNTIME-004, FUNGI-RUNTIME-005, FUNGI-RUNTIME-006, FUNGI-RUNTIME-007
 - terms: native, runtime, stage, compiler, galerina, self-hosted, prototype, text, production, node, policy, architecture, schema, supply-chain
 
 ## Galerina — Natural-Language Governance Summary
 `docs/Knowledge-Bases/galerina-natural-language-governance-summary.md`
-- codes: SPORE-GOV-SUMMARY-001, SPORE-GOV-SUMMARY-002, SPORE-GOV-SUMMARY-003, SPORE-GOV-SUMMARY-004, SPORE-GOV-SUMMARY-005
+- codes: FUNGI-GOV-SUMMARY-001, FUNGI-GOV-SUMMARY-002, FUNGI-GOV-SUMMARY-003, FUNGI-GOV-SUMMARY-004, FUNGI-GOV-SUMMARY-005
 - terms: summary, governance, text, profile, access, network, application, production, facts, build, read, write, api, stripe
 
 ## TODO (FUTURE / parked) — Nested quantum simulation as an optional Galerina app module
 `docs/Knowledge-Bases/galerina-nested-quantum-future-module.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - terms: parked, quantum, future, galerina, module, real, nested, app, optional, future-use, production, use-case, todo, simulation
 
 ## Galerina — No Monkey Patching
 `docs/Knowledge-Bases/galerina-no-monkey-patching.md`
-- codes: SPORE-SEC-020, SPORE-SEC-021
+- codes: FUNGI-SEC-020, FUNGI-SEC-021
 - terms: prohibited, galerina, future, monkey, patching, runtime, diagnostics, status, principle, approved, alternatives, why, matters, governance
 
 ## galerina-no-variables-outside-flows.md
 `docs/Knowledge-Bases/galerina-no-variables-outside-flows.md`
-- codes: SPORE-SYNTAX-006, SPORE-SYNTAX-007, SPORE-SYNTAX-008, SPORE-SYNTAX-009
+- codes: FUNGI-SYNTAX-006, FUNGI-SYNTAX-007, FUNGI-SYNTAX-008, FUNGI-SYNTAX-009
 - terms: flow, let, declarations, shared, galerina, email, top, level, types, event, rule, unsafe, allowed, request
 
 ## galerina-nvidia-n1x-target.md
@@ -1390,18 +1390,18 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — One-Click Governance Fixes
 `docs/Knowledge-Bases/galerina-one-click-governance-fixes.md`
-- codes: SPORE-EFFECT-002, SPORE-PRIVACY-003, SPORE-TAINT-001, SPORE-CONTEXT-001, SPORE-AUDIT-002, SPORE-CONTRACT-005, SPORE-EVENT-001, SPORE-PRIVACY-005, SPORE-NETWORK-003, SPORE-NETWORK-007
+- codes: FUNGI-EFFECT-002, FUNGI-PRIVACY-003, FUNGI-TAINT-001, FUNGI-CONTEXT-001, FUNGI-AUDIT-002, FUNGI-CONTRACT-005, FUNGI-EVENT-001, FUNGI-PRIVACY-005, FUNGI-NETWORK-003, FUNGI-NETWORK-007
 - terms: fix, before, ide, code, diagnostic, problem, after, action, missing, flow, governance, email, contract, galerina
 
 ## Galerina — Outstanding R&D + To-Dos catalog (2026-06-23)
 `docs/Knowledge-Bases/galerina-outstanding-rd-and-todos-2026-06-23.md`
-- codes: SPORE-PERM-001, SPORE-GDCE-001
+- codes: FUNGI-PERM-001, FUNGI-GDCE-001
 - tasks: #13, #14, #15, #16, #102, #163, #165, #161, #128, #34, #11, #12, #149
 - terms: build, audit, arch-rd, galerina-architecture-rd-2026-06-23, todo, phase, status, photonic, missing, packages, design, doc, galerina, catalog
 
 ## Galerina Package Manifest Specification
 `docs/Knowledge-Bases/galerina-package-manifest-spec.md`
-- codes: SPORE-MODULE-001, SPORE-MODULE-002, SPORE-MODULE-003, SPORE-MODULE-004, SPORE-MODULE-005, SPORE-MODULE-006, SPORE-MODULE-007, SPORE-MODULE-008, SPORE-MODULE-009, SPORE-MODULE-010
+- codes: FUNGI-MODULE-001, FUNGI-MODULE-002, FUNGI-MODULE-003, FUNGI-MODULE-004, FUNGI-MODULE-005, FUNGI-MODULE-006, FUNGI-MODULE-007, FUNGI-MODULE-008, FUNGI-MODULE-009, FUNGI-MODULE-010
 - terms: package, manifest, effects, status, capabilities, rules, authority, packages, governance, install, effect, json, must, declare
 
 ## Galerina Package Naming
@@ -1410,7 +1410,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Package Resolver Architecture
 `docs/Knowledge-Bases/galerina-package-resolver-architecture.md`
-- codes: SPORE-PKG-001, SPORE-PKG-002, SPORE-PKG-003, SPORE-PKG-004, SPORE-PKG-005, SPORE-SEC-020
+- codes: FUNGI-PKG-001, FUNGI-PKG-002, FUNGI-PKG-003, FUNGI-PKG-004, FUNGI-PKG-005, FUNGI-SEC-020
 - terms: package, json, rule, galerina, resolver, phase, hash, graph, status, name, capabilities, signature, lockfile, registry
 
 ## Paper-Worthiness Assessment — R&D 0065–0070 (2026-06-22)
@@ -1429,7 +1429,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## PCI DSS v4.0 → Galerina compliance-evidence mapping (HONEST)
 `docs/Knowledge-Bases/galerina-pci-dss-evidence-mapping.md`
-- codes: SPORE-PRIVACY-002, SPORE-PRIVACY-001, SPORE-GOV-3VL-001, SPORE-PCI-001
+- codes: FUNGI-PRIVACY-002, FUNGI-PRIVACY-001, FUNGI-GOV-3VL-001, FUNGI-PCI-001
 - tasks: #34, #102
 - terms: pci, honest, enforced, galerina, dss, must, assessor, today, compliance-evidence, mapping, present, accuracy, gap, disclose
 
@@ -1440,25 +1440,25 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — % completion audit + roadmap (2026-06-24, v2, adversarially verified)
 `docs/Knowledge-Bases/galerina-percent-audit-roadmap-2026-06-24-v2.md`
-- codes: SPORE-MEMORY-001, SPORE-SECRET-002, SPORE-PRIVACY-002, SPORE-VALUESTATE-008, SPORE-TIER-001, SPORE-DAG-002
+- codes: FUNGI-MEMORY-001, FUNGI-SECRET-002, FUNGI-PRIVACY-002, FUNGI-VALUESTATE-008, FUNGI-TIER-001, FUNGI-DAG-002
 - tasks: #163, #102, #149, #34, #150, #170, #171
 - terms: real, fail-closed, roadmap, adversarially, honest, false, production, tmf, single, headline, wasm, important, zero-trust, audit
 
 ## Galerina Completion Audit & Roadmap — 2026-06-24
 `docs/Knowledge-Bases/galerina-percent-audit-roadmap-2026-06-24.md`
-- codes: SPORE-MEMORY-001, SPORE-TENANT-003
+- codes: FUNGI-MEMORY-001, FUNGI-TENANT-003
 - tasks: #167, #102, #34, #170, #171, #215, #150, #149
 - terms: effort, real, roadmap, blocked, galerina, audit, adversarial, headline, runtime, buildable, blocker, owner, without, completion
 
 ## Galerina — % completion audit + roadmap (2026-06-25 **v2**)
 `docs/Knowledge-Bases/galerina-percent-audit-roadmap-2026-06-25-v2.md`
-- codes: SPORE-NUMERIC-001
+- codes: FUNGI-NUMERIC-001
 - tasks: #34, #102
 - terms: galerina, roadmap, int64, benchmark, last, governed, rust, audit, wasm, honest, cross-language, headline, subsystem, completion
 
 ## Galerina — % completion audit + roadmap (2026-06-25)
 `docs/Knowledge-Bases/galerina-percent-audit-roadmap-2026-06-25.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-NUMERIC-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-NUMERIC-001
 - tasks: #34, #102
 - terms: roadmap, int64, audit, fail-closed, subsystem, live, fresh, caveats, results, galerina, shippable, crypto, i32, binding
 
@@ -1472,31 +1472,31 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Phase 10 Roadmap
 `docs/Knowledge-Bases/galerina-phase-10-roadmap.md`
-- codes: SPORE-GOV-003, SPORE-CONTEXT-001, SPORE-CONTRACT-001, SPORE-GOV-001
+- codes: FUNGI-GOV-003, FUNGI-CONTEXT-001, FUNGI-CONTRACT-001, FUNGI-GOV-001
 - terms: phase, attestation, contract, response, runtime, protected, complete, sections, field, src, governance, context, report, model
 
 ## galerina-phase-11-decisions.md
 `docs/Knowledge-Bases/galerina-phase-11-decisions.md`
-- terms: decision, phase, galerina, graph, runtime, result, contract, reassignment, mut, enforcement, package, spore-graph, order, test
+- terms: decision, phase, galerina, graph, runtime, result, contract, reassignment, mut, enforcement, package, fungi-graph, order, test
 
 ## galerina-phase-11-mut-reassignment.md
 `docs/Knowledge-Bases/galerina-phase-11-mut-reassignment.md`
-- codes: SPORE-BINDING-005, SPORE-BINDING-001, SPORE-BINDING-002, SPORE-BINDING-003, SPORE-BINDING-004, SPORE-TYPE-002
-- terms: mut, binding, spore-binding-005, reassignment, let, readonly, diagnostic, see, type-stable, status, immutable, cannot, rules, relationship
+- codes: FUNGI-BINDING-005, FUNGI-BINDING-001, FUNGI-BINDING-002, FUNGI-BINDING-003, FUNGI-BINDING-004, FUNGI-TYPE-002
+- terms: mut, binding, fungi-binding-005, reassignment, let, readonly, diagnostic, see, type-stable, status, immutable, cannot, rules, relationship
 
 ## galerina-phase-11-taint-propagation.md
 `docs/Knowledge-Bases/galerina-phase-11-taint-propagation.md`
-- codes: SPORE-VALUESTATE-005, SPORE-VALUESTATE-003, SPORE-VALUESTATE-004
-- terms: unsafe, let, tainted, taint, spore-valuestate-005, string, phase, derived, value, chain, caught, sink, gate, trim
+- codes: FUNGI-VALUESTATE-005, FUNGI-VALUESTATE-003, FUNGI-VALUESTATE-004
+- terms: unsafe, let, tainted, taint, fungi-valuestate-005, string, phase, derived, value, chain, caught, sink, gate, trim
 
 ## galerina-phase-13-decisions.md
 `docs/Knowledge-Bases/galerina-phase-13-decisions.md`
-- codes: SPORE-EFFECT-001
+- codes: FUNGI-EFFECT-001
 - terms: decision, uses, stage, hash, semanticgraph, canonical, compilergraph, galerina, compiler, graph, check, production, memory, verification
 
 ## Galerina — Phase 18–23 Comprehensive Summary
 `docs/Knowledge-Bases/galerina-phase-18-23-summary.md`
-- codes: SPORE-STDLIB-001, SPORE-EFFECT-005, SPORE-GOV-013, SPORE-PKG-001, SPORE-GATE-001, SPORE-TYPE-030, SPORE-COMPUTE-001, SPORE-SYNTAX-LEGACY-001, SPORE-PKG-002, SPORE-PKG-003, SPORE-PKG-004, SPORE-PKG-005, SPORE-TYPE-031, SPORE-SEC-020, SPORE-SEC-021, SPORE-LEX-004, SPORE-LEX-005, SPORE-LEX-006
+- codes: FUNGI-STDLIB-001, FUNGI-EFFECT-005, FUNGI-GOV-013, FUNGI-PKG-001, FUNGI-GATE-001, FUNGI-TYPE-030, FUNGI-COMPUTE-001, FUNGI-SYNTAX-LEGACY-001, FUNGI-PKG-002, FUNGI-PKG-003, FUNGI-PKG-004, FUNGI-PKG-005, FUNGI-TYPE-031, FUNGI-SEC-020, FUNGI-SEC-021, FUNGI-LEX-004, FUNGI-LEX-005, FUNGI-LEX-006
 - terms: phase, wasm, memory, added, stdlib, architecture, arena, wat, tests, type, contract, governance, package, tensor
 
 ## Phase 26 — Wasmtime Standalone Target + Healthcare Governance
@@ -1505,26 +1505,26 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Phase 27 — AI Native: Deno Deploy + Tensor.dot
 `docs/Knowledge-Bases/galerina-phase-27-ai-native.md`
-- codes: SPORE-PKG-005, SPORE-GOV-014, SPORE-TYPE-030, SPORE-TYPE-031, SPORE-VALUESTATE-006
+- codes: FUNGI-PKG-005, FUNGI-GOV-014, FUNGI-TYPE-030, FUNGI-TYPE-031, FUNGI-VALUESTATE-006
 - terms: native, phase, tensor, wasm, datahandle, deno, model, dot, eda, readonly, plugin, runtime, host, extension
 
 ## Galerina Phase 9 Roadmap
 `docs/Knowledge-Bases/galerina-phase-9-roadmap.md`
-- codes: SPORE-TYPE-003, SPORE-GOV-003, SPORE-GOV-005
+- codes: FUNGI-TYPE-003, FUNGI-GOV-003, FUNGI-GOV-005
 - terms: phase, stage, galerina, type, lexer, async, parser, typescript, runtime, complete, completion, route, full, inference
 
 ## Galerina Phase 13: Passive Execution Plans and Target Bridges
 `docs/Knowledge-Bases/galerina-phase13-passive-plans-target-bridges.md`
-- codes: SPORE-TARGET-101, SPORE-TARGET-103
+- codes: FUNGI-TARGET-101, FUNGI-TARGET-103
 - terms: bridge, readonly, target, phase, cpu, deterministic, bridges, gpu, wasm, photonic, npu, flow, host, required
 
 ## galerina-phase16-20-decisions.md
 `docs/Knowledge-Bases/galerina-phase16-20-decisions.md`
-- terms: stage, phase, decision, galerina, complete, package, registry, spore, flows, compiler, system, both, manifests, executeplan
+- terms: stage, phase, decision, galerina, complete, package, registry, fungi, flows, compiler, system, both, manifests, executeplan
 
 ## Galerina — Phase 40 Review Checkpoint
 `docs/Knowledge-Bases/galerina-phase40-review.md`
-- codes: SPORE-HW-001, SPORE-PROFILE-001
+- codes: FUNGI-HW-001, FUNGI-PROFILE-001
 - terms: phase, galerina, architecture, wat, hardware, runtime, wasm, written, target, real, photonic, profile, current, control
 
 ## Galerina 1.0 — Vision Statement
@@ -1533,7 +1533,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Phase 44 — ValueGraph Risk-Adjusted Routing
 `docs/Knowledge-Bases/galerina-phase44-economics-routing.md`
-- terms: phase, routing, cpu, audit, spore, flows, target, dispatch, write, healthcheck, ratestatus, inference, wasm, inferfloweconomics
+- terms: phase, routing, cpu, audit, fungi, flows, target, dispatch, write, healthcheck, ratestatus, inference, wasm, inferfloweconomics
 
 ## Galerina Phase 58 — CUDA GPU Backend
 `docs/Knowledge-Bases/galerina-phase58-cuda-gpu-backend.md`
@@ -1541,8 +1541,8 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Phase 59-60 RC Summary
 `docs/Knowledge-Bases/galerina-phase59-60-rc-summary.md`
-- codes: SPORE-TYPE-005
-- terms: spore, phase, stage, phases, services, post, galerina, self-hosting, parser, live, http, runtime, complete, service
+- codes: FUNGI-TYPE-005
+- terms: fungi, phase, stage, phases, services, post, galerina, self-hosting, parser, live, http, runtime, complete, service
 
 ## Galerina Photonic Compute Crossover Analysis
 `docs/Knowledge-Bases/galerina-photonic-crossover-analysis.md`
@@ -1550,80 +1550,80 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Photonic — Distinct Compute Model
 `docs/Knowledge-Bases/galerina-photonic-distinct-compute-model.md`
-- codes: SPORE-PHOTONIC-001, SPORE-PHOTONIC-002, SPORE-PHOTONIC-003, SPORE-PHOTONIC-004, SPORE-PHOTONIC-005, SPORE-PHOTONIC-006, SPORE-PHOTONIC-007, SPORE-PHOTONIC-008, SPORE-PHOTONIC-009, SPORE-PHOTONIC-010
+- codes: FUNGI-PHOTONIC-001, FUNGI-PHOTONIC-002, FUNGI-PHOTONIC-003, FUNGI-PHOTONIC-004, FUNGI-PHOTONIC-005, FUNGI-PHOTONIC-006, FUNGI-PHOTONIC-007, FUNGI-PHOTONIC-008, FUNGI-PHOTONIC-009, FUNGI-PHOTONIC-010
 - terms: photonic, target, phase, compute, optical, wavelength, gpu, galerina, model, text, delay, electrical, noise, conversion
 
 ## How Galerina guarantees the quality of maths run on `substrate { lane: photonic }`
 `docs/Knowledge-Bases/galerina-photonic-maths-quality-self-check.md`
-- codes: SPORE-SUBSTRATE-002
+- codes: FUNGI-SUBSTRATE-002
 - tasks: #102
 - terms: lane, photonic, maths, run, runs, result, digital, quality, real, exact, galerina, guarantees, substrate, never
 
 ## Photonic-noise countering + the 17-NOs solutions + a prevention-rule set (2026-06-25)
 `docs/Knowledge-Bases/galerina-photonic-noise-and-17-nos-2026-06-25.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-NO-COERCION-001, SPORE-GRAPH-BORDER-001, SPORE-QUORUM-001, SPORE-GOV-MONOTONE-MIN-001, SPORE-GOV-3VL-002, SPORE-TOLERANCE-MONOTONE-001, SPORE-GOV-DOMAIN-001, SPORE-FED-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-NO-COERCION-001, FUNGI-GRAPH-BORDER-001, FUNGI-QUORUM-001, FUNGI-GOV-MONOTONE-MIN-001, FUNGI-GOV-3VL-002, FUNGI-TOLERANCE-MONOTONE-001, FUNGI-GOV-DOMAIN-001, FUNGI-FED-001
 - tasks: #40, #149
 - links: [[galerina-rule-error-to-tooling]]
 - terms: counter, stream, noise, graph, rules, verdict, work-with, never, must, prevention, error, tooling, w33z54eq4, ships
 
 ## Beyond "maths in photonic" — what the photonic lane does in the real world, and which sectors use it
 `docs/Knowledge-Bases/galerina-photonic-real-world-applications.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - tasks: #102
 - terms: photonic, lane, sectors, maths, galerina, real, beyond, world, honest, thing, actually, very, well, part
 
 ## Galerina Photonic and Ternary Computing Spec
 `docs/Knowledge-Bases/galerina-photonic-ternary-bridge-spec.md`
-- codes: SPORE-TYPE-031, SPORE-TYPE-032, SPORE-TYPE-033, SPORE-PHOTONIC-001, SPORE-PHOTONIC-002, SPORE-PHOTONIC-003, SPORE-PHOTONIC-004
+- codes: FUNGI-TYPE-031, FUNGI-TYPE-032, FUNGI-TYPE-033, FUNGI-PHOTONIC-001, FUNGI-PHOTONIC-002, FUNGI-PHOTONIC-003, FUNGI-PHOTONIC-004
 - terms: tri, photonic, bridge, true, unknown, false, ternary, type, match, must, operations, compiler, test, galerina
 
 ## Galerina R&D Agenda — Governing Photonic / Ternary Substrates
 `docs/Knowledge-Bases/galerina-photonic-tri-substrate-rd-agenda.md`
-- codes: SPORE-GOV-3VL-001
+- codes: FUNGI-GOV-3VL-001
 - tasks: #173, #196, #130, #136, #166, #185, #58
 - terms: galerina, photonic, ternary, substrate, tests, direction, onto, acceptance, problem, prior, art, governance, redundancy, model
 
 ## galerina-pii-handling.md
 `docs/Knowledge-Bases/galerina-pii-handling.md`
-- codes: SPORE-VALUESTATE-003, SPORE-VALUESTATE-005, SPORE-GOV-003, SPORE-VALUESTATE-006, SPORE-GOV-002
+- codes: FUNGI-VALUESTATE-003, FUNGI-VALUESTATE-005, FUNGI-GOV-003, FUNGI-VALUESTATE-006, FUNGI-GOV-002
 - terms: email, pii, audit, response, protected, contract, unsafe, let, privacy, rawemail, step, write, galerina, redacted
 
 ## Compile-Pipeline Security Posture — math-secure / zero-trust / quantum-resilient (per stage)
 `docs/Knowledge-Bases/galerina-pipeline-security-posture.md`
-- codes: SPORE-PARSE-001, SPORE-CRYPTO-PQ-001
+- codes: FUNGI-PARSE-001, FUNGI-CRYPTO-PQ-001
 - tasks: #34, #128, #102
 - links: [[galerina-architecture-layers]] [[galerina-quantum-resistance-posture]]
 - terms: wasm, emitter, quantum-resilient, stage, zero-trust, math-secure, enhancements, security, audit, efficiency, sha-256, slice, axis, frontier
 
 ## Galerina — Platform Infographic Concept
 `docs/Knowledge-Bases/galerina-platform-infographic-concept.md`
-- codes: SPORE-TYPE-001, SPORE-SECRET-001, SPORE-EFFECT-001, SPORE-CAP-001
+- codes: FUNGI-TYPE-001, FUNGI-SECRET-001, FUNGI-EFFECT-001, FUNGI-CAP-001
 - tasks: #36, #67, #34, #41, #40, #42, #68
 - terms: floor, zone, governance, foundation, drcm, platform, concept, visual, galerina, execution, poster, floors, phase, trust
 
 ## Galerina Post-Quantum and Hardware Security Spec
 `docs/Knowledge-Bases/galerina-post-quantum-hardware-security.md`
-- codes: SPORE-HW-101, SPORE-HW-102, SPORE-HW-103, SPORE-HW-104, SPORE-HW-201, SPORE-HW-301, SPORE-HW-302, SPORE-HW-401, SPORE-HW-402, SPORE-HW-403
+- codes: FUNGI-HW-101, FUNGI-HW-102, FUNGI-HW-103, FUNGI-HW-104, FUNGI-HW-201, FUNGI-HW-301, FUNGI-HW-302, FUNGI-HW-401, FUNGI-HW-402, FUNGI-HW-403
 - terms: policy, hardware, trust, attestation, readonly, post-quantum, mte, profile, evidence, must, cheri, arm, proof, security
 
 ## Pre-governance threat-model — the trust gap before any governance runs (2026-06-25)
 `docs/Knowledge-Bases/galerina-pre-governance-threat-model-2026-06-25.md`
-- codes: SPORE-LEX-004, ERR_STRING_TOO_LONG, SPORE-BACKEND-001
+- codes: FUNGI-LEX-004, ERR_STRING_TOO_LONG, FUNGI-BACKEND-001
 - tasks: #38
-- terms: before, governance, spore, threat-model, trust, gap, runs, pre-governance, read, fail-closed, findings, posture, traversal, lexer
+- terms: before, governance, fungi, threat-model, trust, gap, runs, pre-governance, read, fail-closed, findings, posture, traversal, lexer
 
 ## #201 — Calibration-as-Attestation: the measured half of the tolerance/determinism model
 `docs/Knowledge-Bases/galerina-precision-attestation.md`
-- codes: SPORE-SUBSTRATE-004
+- codes: FUNGI-SUBSTRATE-004
 - tasks: #201, #12
 - terms: measured, tolerance, manifest, gap, increment, floor, enforcement, half, model, bridge, closes, witness, landed, wired
 
-## Galerina — No Cleartext Semantic Embedding Across a Trust Boundary (U2/#204, SPORE-PRIVACY-002)
+## Galerina — No Cleartext Semantic Embedding Across a Trust Boundary (U2/#204, FUNGI-PRIVACY-002)
 `docs/Knowledge-Bases/galerina-privacy-embedding-egress.md`
-- codes: SPORE-PRIVACY-002, SPORE-PRIVACY-001, SPORE-SUBSTRATE-001, SPORE-VALUESTATE-005, SPORE-SECRET-002
+- codes: FUNGI-PRIVACY-002, FUNGI-PRIVACY-001, FUNGI-SUBSTRATE-001, FUNGI-VALUESTATE-005, FUNGI-SECRET-002
 - tasks: #204
 - links: [[galerina-contract-privacy-observability]]
-- terms: embedding, cleartext, spore-privacy-002, tests, design, adversarial, semantic, vector, model, sealtaint, embeddingmodel, secret, galerina, trust
+- terms: embedding, cleartext, fungi-privacy-002, tests, design, adversarial, semantic, vector, model, sealtaint, embeddingmodel, secret, galerina, trust
 
 ## Galerina Execution Proof Chain Specification
 `docs/Knowledge-Bases/galerina-proof-chain-spec.md`
@@ -1631,13 +1631,13 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Proof-Tracing Design (`assuming {}` block)
 `docs/Knowledge-Bases/galerina-proof-tracing-design.md`
-- codes: SPORE-ASSUME-001, SPORE-ASSUME-002, SPORE-ASSUME-003, SPORE-ASSUME-004, SPORE-INV-000, SPORE-INV-001, SPORE-INV-002, SPORE-INV-003, SPORE-INV-004
+- codes: FUNGI-ASSUME-001, FUNGI-ASSUME-002, FUNGI-ASSUME-003, FUNGI-ASSUME-004, FUNGI-INV-000, FUNGI-INV-001, FUNGI-INV-002, FUNGI-INV-003, FUNGI-INV-004
 - tasks: #73, #74, #40, #41, #75, #76
-- terms: assuming, proof, manifest, audit, phase, block, flow, runtime, design, condition, spore-inv-000, galerina, proof-tracing, amount
+- terms: assuming, proof, manifest, audit, phase, block, flow, runtime, design, condition, fungi-inv-000, galerina, proof-tracing, amount
 
 ## Prove-Own-Maths — verification ledger + proof-closure roadmap (2026-06-18)
 `docs/Knowledge-Bases/galerina-prove-own-maths-roadmap.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - tasks: #0015, #128
 - terms: hub, bench, handoff, proof-closure, owed, re-derived, honest, proven, benches, erase, reports, shipped, already, queue
 
@@ -1648,18 +1648,18 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## QRNG Entropy Capability — governed interface design (Q1 / Lane D)
 `docs/Knowledge-Bases/galerina-qrng-entropy-capability-design.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-GOV-3VL-001, SPORE-ENTROPY-001, SPORE-ENTROPY-002
+- codes: FUNGI-SUBSTRATE-001, FUNGI-GOV-3VL-001, FUNGI-ENTROPY-001, FUNGI-ENTROPY-002
 - terms: capability, entropy, qrng, design, source, lane, governed, engine, key, fail-closed, drbg, health, gate, interface
 
 ## Quantum-Resilience Standard & Roadmap (L0–L4)
 `docs/Knowledge-Bases/galerina-quantum-resilience-roadmap.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-ENTROPY-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-ENTROPY-001
 - tasks: #34
 - terms: qkd, lane, pqc, key, otp, hybrid, interface, roadmap, tmf, qrng, gap, confidentiality, see, hardware
 
 ## Galerina Quantum-Resistance Posture (Zero-Trust)
 `docs/Knowledge-Bases/galerina-quantum-resistance-posture.md`
-- codes: SPORE-CRYPTO-PQ-001, SPORE-SUBSTRATE-001
+- codes: FUNGI-CRYPTO-PQ-001, FUNGI-SUBSTRATE-001
 - tasks: #34, #149, #107
 - terms: sha-256, posture, decision, crypto, hybrid, key, hash, signature, sign, cost, quantum, ml-dsa-65, galerina, threat
 
@@ -1669,12 +1669,12 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — R6 Bootstrap Conformance Corpus
 `docs/Knowledge-Bases/galerina-r6-bootstrap-corpus.md`
-- codes: SPORE-TYPE-002
-- terms: corpus, conformance, accept, stage-a, record, galerina, bootstrap, spore, flow, effects, string, int, array, definition
+- codes: FUNGI-TYPE-002
+- terms: corpus, conformance, accept, stage-a, record, galerina, bootstrap, fungi, flow, effects, string, int, array, definition
 
 ## R&D 0059–0064 triage + actionable ledger (2026-06-22)
 `docs/Knowledge-Bases/galerina-rd-0059-0064-triage-2026-06-22.md`
-- codes: SPORE-MONO-001, ERR_AI_CALL_BUDGET, SPORE-SECRET-002, SPORE-PRIVACY-002, SPORE-EFFECT-002, SPORE-FAULT-005, SPORE-RES-001, SPORE-INHERIT-001, SPORE-STDLIB-001, SPORE-FAULT-002
+- codes: FUNGI-MONO-001, ERR_AI_CALL_BUDGET, FUNGI-SECRET-002, FUNGI-PRIVACY-002, FUNGI-EFFECT-002, FUNGI-FAULT-005, FUNGI-RES-001, FUNGI-INHERIT-001, FUNGI-STDLIB-001, FUNGI-FAULT-002
 - tasks: #143, #155, #201, #202, #203, #204, #205, #206, #207, #208, #209, #210, #11
 - terms: galerina, shipped, graph, tracked, already, package, actionable, ledger, net-new, packages, delta, untracked, triage, proof
 
@@ -1685,70 +1685,70 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## R&D 0111 — The 52-3D Brief, Rechecked: A Rigorous, Referenced Treatment of Tri-Wavelength Photonic / Ternary / Quantum Computing Claims and the Galerina Governance Layer
 `docs/Knowledge-Bases/galerina-rd-0111-photonic-3d-brief-rigorous-2026-06-24.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-INV-001, SPORE-SUBSTRATE-003, SPORE-GOV-3VL-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-INV-001, FUNGI-SUBSTRATE-003, FUNGI-GOV-3VL-001
 - tasks: #16, #102
 - terms: claim, sound, overstated, doi, shipped, quantum, real, logic, brief, verdict, photonic, galerina, ternary, min
 
 ## R&D 0112 — Tree-walker, deepened: maths recheck, compliance, and the 0110 cross-compare
 `docs/Knowledge-Bases/galerina-rd-0112-treewalker-deepened-2026-06-24.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - terms: maths, refutation, fail-open, tree-walker, recheck, compliance, cross-compare, int, arithmetic, three, tiers, live, fallback, proof
 
 ## R&D 0113 — Tower-citizen, deepened: K3 maths recheck, compliance, and the 0110 cross-compare
 `docs/Knowledge-Bases/galerina-rd-0113-tower-citizen-deepened-2026-06-24.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-GOV-3VL-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-GOV-3VL-001
 - terms: maths, four, soundness, recheck, compliance, cross-compare, no-coercion, matmul, standard, fail-closed, verdict, reduction, build, sound
 
 ## R&D 0114 — What the photonic/quantum claims mean for the .tmf FORMAT vs the TritMesh DB — both outcomes, compared
 `docs/Knowledge-Bases/galerina-rd-0114-tmf-vs-db-comparison-2026-06-24.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-RETAIN-001, SPORE-SECRET-002, SPORE-PRIVACY-002
+- codes: FUNGI-SUBSTRATE-001, FUNGI-RETAIN-001, FUNGI-SECRET-002, FUNGI-PRIVACY-002
 - tasks: #102
 - terms: tmf, digital, substrate, never, photonic, quantum, integrity, index, classical, outcome, both, tritmesh, must, claims
 
 ## R&D 0115 — Optimal hybrid photonic/binary placement: joining 0110's cross-over math to the shipped ExecutionRouter
 `docs/Knowledge-Bases/galerina-rd-0115-hybrid-photonic-binary-placement-2026-06-24.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-HW-004, SPORE-SUBSTRATE-003
+- codes: FUNGI-SUBSTRATE-001, FUNGI-HW-004, FUNGI-SUBSTRATE-003
 - tasks: #10
 - terms: photonic, shipped, digital, reuse, real, gap, hybrid, binary, cross-over, router, fail-safe, conversion, pic, optimal
 
 ## R&D 0116 — Holographic "O(1)-read petabyte" storage: worth more R&D? + the sound-erasure finding
 `docs/Knowledge-Bases/galerina-rd-0116-holographic-storage-2026-06-24.md`
-- codes: SPORE-RETAIN-001, SPORE-SUBSTRATE-001, SPORE-PRIVACY-002, SPORE-SECRET-002
+- codes: FUNGI-RETAIN-001, FUNGI-SUBSTRATE-001, FUNGI-PRIVACY-002, FUNGI-SECRET-002
 - tasks: #102
-- terms: read, petabyte, spore-retain-001, storage, sound-erasure, finding, holographic, net-new, obligation, build, worth, demonstrated, optica, paper
+- terms: read, petabyte, fungi-retain-001, storage, sound-erasure, finding, holographic, net-new, obligation, build, worth, demonstrated, optica, paper
 
 ## R&D 0117 — The JOIN: 0110's reuse-crossover WHEN married to the shipped Tri-Pipe HOW, with a proved Safe-Floor Theorem
 `docs/Knowledge-Bases/galerina-rd-0117-hybrid-join-2026-06-24.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-SUBSTRATE-003
+- codes: FUNGI-SUBSTRATE-001, FUNGI-SUBSTRATE-003
 - tasks: #10
 - terms: shipped, photonic, reuse, safe-floor, digital, theorem, measured-negative, reuse-crossover, proved, headline, tdigital, wiring, step, cross-over
 
-## R&D 0118 — SPORE-RETAIN-001 Hardware Protection Directive (adversarially hardened)
+## R&D 0118 — FUNGI-RETAIN-001 Hardware Protection Directive (adversarially hardened)
 `docs/Knowledge-Bases/galerina-rd-0118-retain-hardware-directive-2026-06-24.md`
-- codes: SPORE-RETAIN-001, SPORE-SUBSTRATE-001, SPORE-PRIVACY-002, SPORE-SECRET-002, SPORE-GOV-3VL-001
+- codes: FUNGI-RETAIN-001, FUNGI-SUBSTRATE-001, FUNGI-PRIVACY-002, FUNGI-SECRET-002, FUNGI-GOV-3VL-001
 - tasks: #102
 - terms: hardware, crypto-only, signed, rd-0118-o3, erasemodel, hardened, built, overwrite, directive, adversarially, decision, core, hw-gated, true
 
 ## R&D 0119 / 0120 / 0121 — discovery, architecture-gap, and tooling-adequacy findings (2026-06-24)
 `docs/Knowledge-Bases/galerina-rd-0119-0121-findings-2026-06-24.md`
-- codes: SPORE-RUNTIME-006, SPORE-SBOM-001
+- codes: FUNGI-RUNTIME-006, FUNGI-SBOM-001
 - tasks: #34, #70, #103, #104, #67, #102
 - terms: tests, discovery, owner, rd-0120, unlock, rd-0121, build-now, still, graphs, genuine, architecture-gap, tooling-adequacy, findings, rd-0119
 
 ## RD-0125 — a working model of the third logic-delivery paradigm (resolution/collapse), with security + a hybrid benchmark
 `docs/Knowledge-Bases/galerina-rd-0125-resolution-delivery-working-model-2026-06-24.md`
-- codes: SPORE-GOV-3VL-001
+- codes: FUNGI-GOV-3VL-001
 - terms: collapse, resolution, body, security, deny, model, async, denied, third, benchmark, hybrid, independent, regular, honest
 
 ## RD-0126 — photonic-crypto bridge · alpha-sorting PDF · virtualized-binary-chip · "-1 = recheck later"
 `docs/Knowledge-Bases/galerina-rd-0126-photonic-crypto-virtualchip-minusone-2026-06-24.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-GOV-3VL-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-GOV-3VL-001
 - tasks: #102
 - terms: pdf, thread, recheck, binary, chip, build, later, bridge, crypto, photonic, virtual, galerina, photonic-crypto, alpha-sorting
 
 ## RD-0127 — Framework-Friendly Runtime (note 16) + retro proof/score of the contested notes 8–15 claims
 `docs/Knowledge-Bases/galerina-rd-0127-framework-friendly-runtime.md`
-- codes: SPORE-SUBSTRATE-005, SPORE-TYPE-016
+- codes: FUNGI-SUBSTRATE-005, FUNGI-TYPE-016
 - terms: runtime, honest, note, score, claims, gap, refuted, rd-0127, retro, proof, contested, notes, disposition, framework-friendly
 
 ## RD-0128 — CI/CD-native auto-test-generation (owner note 67)
@@ -1758,31 +1758,31 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## RD-0130 — Frontier-domains positioning sweep (notes/63-recap-1..8)
 `docs/Knowledge-Bases/galerina-rd-0130-frontier-domains-positioning-2026-06-26.md`
-- codes: SPORE-SUBSTRATE-005, SPORE-INV-001, SPORE-AFFINE-001, SPORE-MEMORY-001, SPORE-SECRET-004
+- codes: FUNGI-SUBSTRATE-005, FUNGI-INV-001, FUNGI-AFFINE-001, FUNGI-MEMORY-001, FUNGI-SECRET-004
 - tasks: #29, #18, #13, #17, #19, #36
 - terms: shipped, net-new, overclaim, buildable, notes, audit, standing, rd-0130, honest, positioning, hardware, real, runtime, move
 
-## RD-0131 — Rebrand Galerina→Galerina, .spore→.spore (R&D ONLY — DO NOT EXECUTE)
-`docs/Knowledge-Bases/galerina-rd-0131-rebrand-galerina-spore-2026-06-26.md`
-- codes: SPORE-GOV-019
-- terms: spore, galerina, owner, brand, rename, spore-, replace, codes, every, security, crypto, audit, keep, rebrand
+## RD-0131 — Rebrand Galerina→Galerina, .fungi→.fungi (R&D ONLY — DO NOT EXECUTE)
+`docs/Knowledge-Bases/galerina-rd-0131-rebrand-galerina-fungi-2026-06-26.md`
+- codes: FUNGI-GOV-019
+- terms: fungi, galerina, owner, brand, rename, fungi-, replace, codes, every, security, crypto, audit, keep, rebrand
 
 ## RD-0132 — Branding ecosystem follow-up (notes/68-branding-2, -3) — R&D ONLY, NO DEPLOY
 `docs/Knowledge-Bases/galerina-rd-0132-branding-ecosystem-2026-06-26.md`
 - tasks: #67
 - links: [[galerina-rd-0131-rebrand-galerina]]
-- terms: spore, tmf, galerina, notes, brand, source, owner, authorized, tritmesh, overclaim, branding-2, deploy, coherent, product
+- terms: fungi, tmf, galerina, notes, brand, source, owner, authorized, tritmesh, overclaim, branding-2, deploy, coherent, product
 
 ## RD-0133 — Galerina memory-safety: "as-safe-or-safer than Rust" positioning
 `docs/Knowledge-Bases/galerina-rd-0133-memory-safety-safer-than-rust-2026-06-26.md`
-- codes: SPORE-MEMORY-001, SPORE-AFFINE-001, SPORE-SECRET-001
+- codes: FUNGI-MEMORY-001, FUNGI-AFFINE-001, FUNGI-SECRET-001
 - tasks: #65
 - links: [[galerina-rd-0130-frontier-domains-positioning]]
 - terms: galerina, honesty, rust, fix, positioning, status, rd-0133, memory-safety, as-safe-or-safer, codes, thesis, verified, plan, un-deferred
 
 ## RD-0134 — "Beyond 1-bit": photonic ternary {−1,0,+1} AI compute
 `docs/Knowledge-Bases/galerina-rd-0134-beyond-1-bit-photonic-ternary-2026-06-26.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - links: [[galerina-rd-0130-frontier-domains-positioning]] [[galerina-substrate-failure-model]]
 - terms: ternary, bit, photonic, honesty, compute, status, fence, rd-0130, rd-0134, beyond, summary, apply, before, positioning
 
@@ -1798,7 +1798,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## RD-0138..0143 — "Automate the defence" with photonic / tri / Tower-Citizen / Tri-Pipe
 `docs/Knowledge-Bases/galerina-rd-0138-0143-photonic-security-automation.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-PRIVACY-002
+- codes: FUNGI-SUBSTRATE-001, FUNGI-PRIVACY-002
 - tasks: #110
 - links: [[feedback-rd-prove-own-maths]] [[feedback-rd-absorb-positive-and-negative]] [[feedback-rd-refusal-pairs-with-work-with-it]] [[logicn-fhe-encrypted-similarity-verdict]] [[logicn-owner-decisions-2026-06-26]] [[logicn-social-ecosystem-cloud-native]] [[logicn-notes-37-38-39-verdict]] [[logicn-auth-package]] [[logicn-secrets-management-rd-2026-06-23]]
 - terms: photonic, tower-citizen, tri-pipe, capability, auth, rd-0138, data, re-derives, lane, audit, refute, net-new, automate, defence
@@ -1810,7 +1810,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## RD-0150 — Graph as the standard data model for API / Database I/O (per-tenant zero-trust border)
 `docs/Knowledge-Bases/galerina-rd-0150-graph-as-data-io-border-concept.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-GOV-3VL-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-GOV-3VL-001
 - terms: graph, edge, data, honest, verdict, api, case, provenance, soa, reachability, flat, never, node, model
 
 ## RD-0151..0153 — Dynamic Assimilation · Tri-Logic Ambiguity · Governed AI (notes 13-15)
@@ -1821,18 +1821,18 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## R&D — Phase 34B boundary param auto-taint: verified state + build-ready spec
 `docs/Knowledge-Bases/galerina-rd-34b-paramtaint-buildspec-2026-06-24.md`
-- codes: SPORE-VALUESTATE-003, SPORE-VALUESTATE-008
+- codes: FUNGI-VALUESTATE-003, FUNGI-VALUESTATE-008
 - terms: flow, param, route, build-ready, shipped, verified, state, boundary, boundary-untrusted, gap, bare, warning, phase, auto-taint
 
 ## AZT Self-Certification & the Black-Hole Protocol (notes/53-blackhole) — Use/Don't-Use Ledger
 `docs/Knowledge-Bases/galerina-rd-53-azt-selfcert-and-blackhole-protocol-2026-06-23.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-MATCH-001, SPORE-GOV-3VL-001, SPORE-PCI-001, SPORE-PRIVACY-013
+- codes: FUNGI-SUBSTRATE-001, FUNGI-MATCH-001, FUNGI-GOV-3VL-001, FUNGI-PCI-001, FUNGI-PRIVACY-013
 - tasks: #102, #34, #103
 - terms: substrate, shipped, tri-pipe, net-new, items, don, azt, already-shipped, router, gateway, none, never, black-hole, dispatch
 
 ## R&D (notes/59) — the 10 classic JavaScript bad-design quirks vs Galerina (2026-06-25)
 `docs/Knowledge-Bases/galerina-rd-59-js-quirks-vs-galerina-2026-06-25.md`
-- codes: SPORE-TYPE-004, SPORE-TYPE-008, SPORE-NAME-001, SPORE-NAME-002, SPORE-FLOAT-NAN-001
+- codes: FUNGI-TYPE-004, FUNGI-TYPE-008, FUNGI-NAME-001, FUNGI-NAME-002, FUNGI-FLOAT-NAN-001
 - tasks: #10
 - terms: galerina, float, nan, real, build, int, no-by-design, already-safe, notes, classic, worth, devs, architecture, genuine
 
@@ -1842,37 +1842,37 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## R&D Absorption Catalog — the complete ledger
 `docs/Knowledge-Bases/galerina-rd-absorption-catalog.md`
-- codes: SPORE-ENTROPY-001, SPORE-AMD-024, SPORE-SUBSTRATE-001
+- codes: FUNGI-ENTROPY-001, FUNGI-AMD-024, FUNGI-SUBSTRATE-001
 - tasks: #125, #128, #126
 - terms: rd-absorbed, docs, tmf, research, curated, mirrored, galerina-tmf-engine, doc, tritmesh, spec, tri-encription, catalog, galerina-quantum-resilience-roadmap, facts
 
 ## What Galerina Adopts from the `.tmf` / tri-encryption R&D (2026-06-16)
 `docs/Knowledge-Bases/galerina-rd-adoption-2026-06-16.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-GOV-3VL-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-GOV-3VL-001
 - tasks: #203, #201, #34
 - links: [[galerina-tmf-tri-encryption-rd]]
 - terms: galerina, tmf, crypto, engine, usable, d-only, gated, boundary, tri-encryption, core, governance, govern-don, t-absorb, achievements
 
 ## Arrays & objects deep-dive (2026-06-25) — PARTIAL (3/6 probes; 3 rate-limited, to resume)
 `docs/Knowledge-Bases/galerina-rd-arrays-objects-2026-06-25.md`
-- codes: SPORE-NAME-001
+- codes: FUNGI-NAME-001
 - terms: findings, field, typos, verified, probes, age, rate-limited, resume, owner, high, wasm, arrays, objects, partial
 
 ## Galerina R&D write-up — benchmark truth + performance, and THE HARD PATH (2026-06-17)
 `docs/Knowledge-Bases/galerina-rd-benchmarks-and-performance-2026-06-17.md`
-- codes: SPORE-PRIVACY-002
+- codes: FUNGI-PRIVACY-002
 - terms: phase, hard, galerina, json, governance, real, graph, path, measured, tier, honest, benchmark, audit, interpreter
 
 ## Secrets / Data-in-Use Hardening — Three-Concept R&D Synthesis
 `docs/Knowledge-Bases/galerina-rd-confidential-compute-cheri-threshold-2026-06-23.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - tasks: #102
 - links: [[galerina-rd-ephemeral-secret-ingestion-2026-06-23]] [[galerina-rd-53-azt-selfcert-and-blackhole-protocol-2026-06-23]] [[galerina-key-custody-and-rotation]] [[galerina-memory-safety-model]] [[galerina-deterministic-runtime-containment]] [[galerina-quantum-resistance-posture]]
 - terms: cheri, galerina, concept, wasm, secret, verdict, https, attestation, revocation, shamir, fail-closed, kms, buildable-now, enclave
 
 ## R&D corpus closure + shipping-readiness ledger (2026-06-18)
 `docs/Knowledge-Bases/galerina-rd-corpus-closure-2026-06-18.md`
-- codes: SPORE-PARSE-001, SPORE-HW-004, SPORE-ARCH-001, SPORE-ARCH-002, SPORE-VALUESTATE-003, SPORE-NAME-001, SPORE-INV-004, SPORE-INV-002, SPORE-SUBSTRATE-001
+- codes: FUNGI-PARSE-001, FUNGI-HW-004, FUNGI-ARCH-001, FUNGI-ARCH-002, FUNGI-VALUESTATE-003, FUNGI-NAME-001, FUNGI-INV-004, FUNGI-INV-002, FUNGI-SUBSTRATE-001
 - tasks: #126, #145, #102, #110, #149, #128, #70, #34
 - links: [[galerina-structured-engineering-metadata]] [[galerina-social-ecosystem-cloud-native]] [[galerina-aot-tricks-verdict]]
 - terms: shipped, worker, owner, wasm, build, galerina, aot, session, proven, real, fail-closed, owner-gated, production, benchmark
@@ -1883,21 +1883,21 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## env.tmf — Sealed Secrets on the .tmf Container (R&D)
 `docs/Knowledge-Bases/galerina-rd-env-tmf-sealed-secrets-2026-06-23.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - tasks: #624, #1044, #110
 - terms: tmf, env, galerina, key, part, secret, sops, never, container, package, store, reuses, anchor, file
 
 ## Ephemeral Secret Ingestion — Use/Don't-Use Ledger
 `docs/Knowledge-Bases/galerina-rd-ephemeral-secret-ingestion-2026-06-23.md`
-- codes: SPORE-SECRET-001, SPORE-SECRET-DISK-00
+- codes: FUNGI-SECRET-001, FUNGI-SECRET-DISK-00
 - tasks: #110, #102
 - terms: verdict, net-new, already-shipped, fail-closed, shipped, rotation, honest, design, secret, ingestion, core, sealtaint, pillars, external
 
 ## Flow-Kind Tier Inference — Floor-Not-Ceiling for `pure` / `guarded` / `secure`
 `docs/Knowledge-Bases/galerina-rd-flow-kind-tier-inference-2026-06-23.md`
-- codes: SPORE-EFFECT-003, SPORE-EFFECT-001, SPORE-EFFECT-002, SPORE-INHERIT-001, SPORE-DAG-002, SPORE-TIER-001, SPORE-TIER-002, SPORE-VALUESTATE-003
+- codes: FUNGI-EFFECT-003, FUNGI-EFFECT-001, FUNGI-EFFECT-002, FUNGI-INHERIT-001, FUNGI-DAG-002, FUNGI-TIER-001, FUNGI-TIER-002, FUNGI-VALUESTATE-003
 - tasks: #0093, #0088
-- terms: tier, flow, floor, secure, effect, guarded, inference, pure, declared, effects, zero-trust, fail-closed, spore-tier-001, secret
+- terms: tier, flow, floor, secure, effect, guarded, inference, pure, declared, effects, zero-trust, fail-closed, fungi-tier-001, secret
 
 ## Boundary-Graph: per-component realization audit — is each component's graph an improvement lever + a ZT control? (2026-06-25)
 `docs/Knowledge-Bases/galerina-rd-graph-per-component-realization-2026-06-25.md`
@@ -1922,74 +1922,74 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 `docs/Knowledge-Bases/galerina-rd-honeypots-2026-06-25.md`
 - terms: canary, passive, deny-by-default, thin, decoy, form, must, honeypots, honest, line, respond, layer, deception, fit
 
-## R&D — notes 46/47/50/51 + blueprint + //spore: cache + api-server (2026-06-23)
-`docs/Knowledge-Bases/galerina-rd-notes-46-47-50-51-apiserver-spore-2026-06-23.md`
-- codes: SPORE-PRIVACY-002, SPORE-MONO-001, SPORE-GOV-3VL-001, SPORE-INV-002, SPORE-PRIVACY-001
+## R&D — notes 46/47/50/51 + blueprint + //fungi: cache + api-server (2026-06-23)
+`docs/Knowledge-Bases/galerina-rd-notes-46-47-50-51-apiserver-fungi-2026-06-23.md`
+- codes: FUNGI-PRIVACY-002, FUNGI-MONO-001, FUNGI-GOV-3VL-001, FUNGI-INV-002, FUNGI-PRIVACY-001
 - tasks: #194, #212, #102, #34
-- terms: notes, cache, spore, net-new, api-server, shipped, kernel, tls, hash, never, signed, digital, galerina, blueprint
+- terms: notes, cache, fungi, net-new, api-server, shipped, kernel, tls, hash, never, signed, digital, galerina, blueprint
 
 ## Galerina R&D — outcomes + science-paper check (2026-06-24 processing run)
 `docs/Knowledge-Bases/galerina-rd-outcomes-table-2026-06-24.md`
-- codes: SPORE-RETAIN-001, SPORE-CLI-REDACT-001
+- codes: FUNGI-RETAIN-001, FUNGI-CLI-REDACT-001
 - tasks: #10, #102
 - terms: paper, science-paper, run, eod, shipped, positive, photonic, check, d-driven, builds, negative, later, batch, open
 
 ## R&D Paper-Worthiness Ranking — 0100–0113 (2026-06-25)
 `docs/Knowledge-Bases/galerina-rd-paper-ranking-0100-0113-2026-06-25.md`
-- codes: SPORE-TIER-001, SPORE-AFFINE-001, SPORE-PASSPORT-002
+- codes: FUNGI-TIER-001, FUNGI-AFFINE-001, FUNGI-PASSPORT-002
 - tasks: #110
 - terms: defensive-pub, ranking, shipped, papers, bar, grounding, design-only, paper-worthiness, measured, table, why, applied, arm, hybrid
 
 ## Can the absorbed R&D improve Galerina performance, boundary, or memory?
 `docs/Knowledge-Bases/galerina-rd-performance-and-boundary-opportunities.md`
-- codes: SPORE-ENTROPY-001
+- codes: FUNGI-ENTROPY-001
 - tasks: #201, #128, #194, #127
 - terms: boundary, memory, security, galerina, performance, efficiency, runtime, real, model, cpu, gpu, trust, governance, crypto
 
 ## Honesty-bar grounding — photonic multiplexing · quantum threshold · "Secure Cryptographic Paging" · .graph hygiene (2026-06-25)
 `docs/Knowledge-Bases/galerina-rd-photonic-quantum-paging-graph-grounding-2026-06-25.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-RETAIN-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-RETAIN-001
 - tasks: #21, #149
 - terms: thread, quantum, photonic, cryptographic, graph, hygiene, multiplexing, threshold, secure, paging, overclaim, wave, public, policy
 
 ## Galerina R&D Reference Index — stable citation IDs for every study and outcome
 `docs/Knowledge-Bases/galerina-rd-reference-index.md`
-- codes: SPORE-RETAIN-001
+- codes: FUNGI-RETAIN-001
 - terms: photonic, doc, deepened, study, outcome, ledger, hardware, protection, third, claim, shipped, sweep, status, governance
 
 ## Galerina — R&D Results Log (quick-lookup verdict table)
 `docs/Knowledge-Bases/galerina-rd-results-log.md`
-- codes: SPORE-PERM-001, SPORE-GDCE-001, SPORE-PRIVACY-002
+- codes: FUNGI-PERM-001, FUNGI-GDCE-001, FUNGI-PRIVACY-002
 - tasks: #102, #34, #0089, #212, #110, #194, #205
 - links: [[feedback-rd-absorb-positive-and-negative]]
 - terms: photonic, refuted, verdict, adopted, mixed, galerina, bridge, why, shipped, notes, governed, designed, tri, governance
 
 ## Galerina syntax 7-axis sweep (2026-06-25) — PARTIAL (4/8 categories; 4 rate-limited, to resume)
 `docs/Knowledge-Bases/galerina-rd-syntax-7axis-sweep-2026-06-25.md`
-- codes: SPORE-EFFECT-001, SPORE-VALUESTATE-008, SPORE-FLOAT-NAN-001, SPORE-NUMERIC-001
+- codes: FUNGI-EFFECT-001, FUNGI-VALUESTATE-008, FUNGI-FLOAT-NAN-001, FUNGI-NUMERIC-001
 - terms: galerina, check, decimal, high, nan, gate, default, flow, fix, correctness, rate-limited, resume, wins, confirmed
 
 ## Galerina — Tenant Isolation (note 54) + MeshView (note 55): Governance-Buildable Subset
 `docs/Knowledge-Bases/galerina-rd-tenant-isolation-and-meshview-2026-06-24.md`
-- codes: SPORE-PRIVACY-002, SPORE-TENANT-001, SPORE-TENANT-002, SPORE-SUBSTRATE-001, SPORE-GOV-3VL-001
+- codes: FUNGI-PRIVACY-002, FUNGI-TENANT-001, FUNGI-TENANT-002, FUNGI-SUBSTRATE-001, FUNGI-GOV-3VL-001
 - tasks: #102
 - terms: note, tenant, capability, shipped, verdict, galerina, border, vault, governance, build, half, meshview, deny-by-default, tritmesh-product
 
 ## R&D — TritMesh notes 1-5 + 52-3D (for Galerina) (2026-06-23)
 `docs/Knowledge-Bases/galerina-rd-tritmesh-1-5-and-52-3d-2026-06-23.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-SUBSTRATE-004, SPORE-PRIVACY-002, SPORE-GOV-3VL-001, SPORE-SUBSTRATE-002, SPORE-GOV-019
+- codes: FUNGI-SUBSTRATE-001, FUNGI-SUBSTRATE-004, FUNGI-PRIVACY-002, FUNGI-GOV-3VL-001, FUNGI-SUBSTRATE-002, FUNGI-GOV-019
 - tasks: #102, #103, #199
 - terms: pass, already-shipped, photonic, tritmesh-only, galerina, governance, tmf, tm-1, shipped, combo, router, d-1, notes, meshql
 
 ## Galerina Language Proposal — Readable Logic Forms
 `docs/Knowledge-Bases/galerina-readable-logic-forms.md`
-- codes: SPORE-READABLE-001, SPORE-READABLE-002
+- codes: FUNGI-READABLE-001, FUNGI-READABLE-002
 - terms: readable, forms, logic, greater, amount, operator, canonical, design, limit, galerina, status, proposal, same, traditional
 
 ## Galerina rebrand — crypto wire-tag re-sign ceremony (operator runbook)
 `docs/Knowledge-Bases/galerina-rebrand-resign-ceremony-runbook.md`
 - links: [[galerina-rd-0131-rebrand-galerina]]
-- terms: spore, galerina, step, artifacts, app, key, old, root, manifest, re-sign, code, offline, gov, sig
+- terms: fungi, galerina, step, artifacts, app, key, old, root, manifest, re-sign, code, offline, gov, sig
 
 ## Galerina — Non-P9 Residual Risks (verified catalogue)
 `docs/Knowledge-Bases/galerina-residual-risks.md`
@@ -1998,13 +1998,13 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Resilience & Observability Contract Blocks (Design Proposal)
 `docs/Knowledge-Bases/galerina-resilience-observability-design.md`
-- codes: SPORE-RES-001, SPORE-OBS-001
+- codes: FUNGI-RES-001, FUNGI-OBS-001
 - tasks: #58
-- terms: resilience, quarantine, observability, design, retry, audit, flow, spore, default, blocks, fallback, auto-by-default, error, telemetry
+- terms: resilience, quarantine, observability, design, retry, audit, flow, fungi, default, blocks, fallback, auto-by-default, error, telemetry
 
 ## galerina-resource-governance.md
 `docs/Knowledge-Bases/galerina-resource-governance.md`
-- codes: SPORE-RUNTIME-RESOURCE-001, SPORE-RUNTIME-RESOURCE-002, SPORE-RUNTIME-RESOURCE-003, SPORE-RUNTIME-RESOURCE-004, SPORE-RUNTIME-RESOURCE-005, SPORE-RESOURCE-006, SPORE-RESOURCE-007
+- codes: FUNGI-RUNTIME-RESOURCE-001, FUNGI-RUNTIME-RESOURCE-002, FUNGI-RUNTIME-RESOURCE-003, FUNGI-RUNTIME-RESOURCE-004, FUNGI-RUNTIME-RESOURCE-005, FUNGI-RESOURCE-006, FUNGI-RESOURCE-007
 - terms: resource, galerina, memory, cpu, pressure, runtime, gpu, phase, fallback, disk, max, full, declare, budgets
 
 ## Galerina Roadmap — phase-close snapshot 2026-06-21
@@ -2014,13 +2014,13 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Roadmap (rebuilt 2026-06-23, SECURITY FIRST)
 `docs/Knowledge-Bases/galerina-roadmap-2026-06-23.md`
-- codes: SPORE-VALUESTATE-008, SPORE-TIER-001, SPORE-VALUESTATE-003, SPORE-GDCE-001, SPORE-PERM-001
+- codes: FUNGI-VALUESTATE-008, FUNGI-TIER-001, FUNGI-VALUESTATE-003, FUNGI-GDCE-001, FUNGI-PERM-001
 - tasks: #163, #165, #149, #34, #102, #0087, #110, #201, #202, #150, #105, #200, #171, #172, #216, #212, #218, #217
 - terms: security, first, owner, kernel, build, fail-closed, wasm, stub, fix, test, galerina, full, already, path
 
 ## Galerina roadmap (2026-06-25, post security-hardening session)
 `docs/Knowledge-Bases/galerina-roadmap-2026-06-25.md`
-- codes: SPORE-IMPORT-005, SPORE-IMPORT-006, SPORE-SUBSTRATE-005, SPORE-CRYPTO-PQ-001, SPORE-NO-COERCION-001, SPORE-QUORUM-001, SPORE-GRAPH-BORDER-001, SPORE-GOV-3VL-002
+- codes: FUNGI-IMPORT-005, FUNGI-IMPORT-006, FUNGI-SUBSTRATE-005, FUNGI-CRYPTO-PQ-001, FUNGI-NO-COERCION-001, FUNGI-QUORUM-001, FUNGI-GRAPH-BORDER-001, FUNGI-GOV-3VL-002
 - tasks: #149, #38, #50, #34, #36, #45, #37, #32, #33, #39, #35, #102
 - terms: session, next, owner-gated, galerina, roadmap, builds, build, verified, gated, post, security-hardening, fail-closed, manifest, signed
 
@@ -2031,7 +2031,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — roadmap + % audit (2026-06-21)
 `docs/Knowledge-Bases/galerina-roadmap-and-percent-audit-2026-06-21.md`
-- codes: SPORE-PKG-006
+- codes: FUNGI-PKG-006
 - tasks: #105, #200, #171, #172, #102, #34, #149, #150
 - terms: audit, session, roadmap, shipped, verified, galerina, model, wasm, subsystem, ranked, run, anchor, two-axis, honest
 
@@ -2042,7 +2042,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — % Completion Audit + Security-First Roadmap (2026-06-23, end of session)
 `docs/Knowledge-Bases/galerina-roadmap-and-percent-audit-2026-06-23-eod.md`
-- codes: SPORE-TIER-001, SPORE-VALUESTATE-008, SPORE-DAG-002
+- codes: FUNGI-TIER-001, FUNGI-VALUESTATE-008, FUNGI-DAG-002
 - tasks: #163, #165, #143, #0089, #34, #102, #149
 - terms: audit, roadmap, build, security-first, hardening, today, security, completion, dimension, approved, commit, galerina, end-of-session, test
 
@@ -2053,40 +2053,40 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Roadmap — Autonomous Build Queue (2026-06-17)
 `docs/Knowledge-Bases/galerina-roadmap-autonomous-queue-2026-06-17.md`
-- codes: SPORE-CONFIG-GOV-003, SPORE-ENTROPY-001, SPORE-GEN-TEST-001
+- codes: FUNGI-CONFIG-GOV-003, FUNGI-ENTROPY-001, FUNGI-GEN-TEST-001
 - tasks: #125, #149, #34, #58, #150
 - links: [[galerina-rd-queue-drained-2026-06-18]] [[galerina-tree-walker-speed-and-photonic-governance]]
 - terms: harness, queue, wasm, build, verify, autonomous, item, dispatched, never, async, galerina, bridge, fidelity, walker
 
 ## Galerina — Next 10 Phases Roadmap (Phase 28 → 37)
 `docs/Knowledge-Bases/galerina-roadmap-next10-phases.md`
-- codes: SPORE-SYNTAX-010, SPORE-PROFILE-001, SPORE-TAINT-001, SPORE-SECURITY-001, SPORE-TAINT-002
+- codes: FUNGI-SYNTAX-010, FUNGI-PROFILE-001, FUNGI-TAINT-001, FUNGI-SECURITY-001, FUNGI-TAINT-002
 - terms: phase, galerina, runtime, http, routing, first, wasm, governance, hardware, governed, cost, bytecode, flows, tier
 
 ## Galerina — Phase 16–20 Implementation Roadmap
 `docs/Knowledge-Bases/galerina-roadmap-phase16-20.md`
-- codes: SPORE-BUILD-001, SPORE-NAME-003, SPORE-PARSE-DEPTH-001, SPORE-TYPE-001, SPORE-TYPE-022, SPORE-CHERI-001
+- codes: FUNGI-BUILD-001, FUNGI-NAME-003, FUNGI-PARSE-DEPTH-001, FUNGI-TYPE-001, FUNGI-TYPE-022, FUNGI-CHERI-001
 - terms: phase, stage, galerina, target, execution, implementation, canonical, full, package, bridge, cheri, wasm, plan, capability
 
 ## Galerina — Roadmap: Phase 26 → Phase 41
 `docs/Knowledge-Bases/galerina-roadmap-phase26-41.md`
-- codes: SPORE-PROFILE-001, SPORE-PROFILE-002, SPORE-PROFILE-003, SPORE-PROFILE-004, SPORE-PROFILE-005, SPORE-PROFILE-006, SPORE-PROFILE-007
+- codes: FUNGI-PROFILE-001, FUNGI-PROFILE-002, FUNGI-PROFILE-003, FUNGI-PROFILE-004, FUNGI-PROFILE-005, FUNGI-PROFILE-006, FUNGI-PROFILE-007
 - terms: phase, governance, wasm, galerina, profile, focus, dependencies, strict, stage, intel, flow, hardware, governed, service
 
 ## Galerina — Roadmap: Phase 26 → Phase 50
 `docs/Knowledge-Bases/galerina-roadmap-phase26-50.md`
-- codes: SPORE-PROFILE-001, SPORE-PROFILE-002, SPORE-PROFILE-003, SPORE-PROFILE-004, SPORE-PROFILE-005, SPORE-PROFILE-006, SPORE-PROFILE-007
+- codes: FUNGI-PROFILE-001, FUNGI-PROFILE-002, FUNGI-PROFILE-003, FUNGI-PROFILE-004, FUNGI-PROFILE-005, FUNGI-PROFILE-006, FUNGI-PROFILE-007
 - terms: phase, governance, wasm, galerina, profile, focus, dependencies, strict, stage, intel, flow, hardware, governed, service
 
 ## Galerina — Phase 30–40 Roadmap
 `docs/Knowledge-Bases/galerina-roadmap-phase30-40.md`
-- codes: SPORE-PKG-001, SPORE-BUILD-001, SPORE-EFFECT-005, SPORE-NET-001, SPORE-GOV-013, SPORE-NET-002, SPORE-GOV-HIPAA-001, SPORE-GOV-PCI-001, SPORE-RUNTIME-005, SPORE-CHERI-001, SPORE-GOV-FEDERATED-001, SPORE-GOV-FEDERATED-002, SPORE-K8S-001
+- codes: FUNGI-PKG-001, FUNGI-BUILD-001, FUNGI-EFFECT-005, FUNGI-NET-001, FUNGI-GOV-013, FUNGI-NET-002, FUNGI-GOV-HIPAA-001, FUNGI-GOV-PCI-001, FUNGI-RUNTIME-005, FUNGI-CHERI-001, FUNGI-GOV-FEDERATED-001, FUNGI-GOV-FEDERATED-002, FUNGI-K8S-001
 - terms: galerina, phase, target, key, example, primary, milestone, count, test, delivers, proving, audit, governance, capability
 
 ## Galerina — Phases 41–60 Roadmap
 `docs/Knowledge-Bases/galerina-roadmap-phases-41-60.md`
-- codes: SPORE-SYNTAX-010, SPORE-TYPE-001, SPORE-TYPE-005, SPORE-TAINT-007, SPORE-HW-101, SPORE-HW-104, SPORE-SYNTAX-LEGACY-001
-- terms: phase, galerina, runtime, stage, flow, spore, request, http, string, complete, audit, int, first, stream
+- codes: FUNGI-SYNTAX-010, FUNGI-TYPE-001, FUNGI-TYPE-005, FUNGI-TAINT-007, FUNGI-HW-101, FUNGI-HW-104, FUNGI-SYNTAX-LEGACY-001
+- terms: phase, galerina, runtime, stage, flow, fungi, request, http, string, complete, audit, int, first, stream
 
 ## Galerina — Roadmap (authoritative forward view)
 `docs/Knowledge-Bases/galerina-roadmap.md`
@@ -2099,8 +2099,8 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Runtime and Component Structure
 `docs/Knowledge-Bases/galerina-runtime-component-structure.md`
-- codes: SPORE-NAMING-001, SPORE-LEX-001, SPORE-NAME-001, SPORE-TYPE-001, SPORE-SECRET-001, SPORE-EFFECT-001, SPORE-GOV-001, SPORE-TERM-001, SPORE-GOV-010, SPORE-GOV-017, SPORE-PCI-001
-- terms: style, fill, color, fff, subgraph, end, runtime, spore, flow, pipeline, stage, wasm, exec, sync
+- codes: FUNGI-NAMING-001, FUNGI-LEX-001, FUNGI-NAME-001, FUNGI-TYPE-001, FUNGI-SECRET-001, FUNGI-EFFECT-001, FUNGI-GOV-001, FUNGI-TERM-001, FUNGI-GOV-010, FUNGI-GOV-017, FUNGI-PCI-001
+- terms: style, fill, color, fff, subgraph, end, runtime, fungi, flow, pipeline, stage, wasm, exec, sync
 
 ## Galerina — Runtime Governance Actors (naming map + flow protocol)
 `docs/Knowledge-Bases/galerina-runtime-governance-actors.md`
@@ -2109,12 +2109,12 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Runtime in Galerina: Phased Roadmap
 `docs/Knowledge-Bases/galerina-runtime-in-galerina-roadmap.md`
-- codes: SPORE-PROFILE-001, SPORE-SECURITY-001
+- codes: FUNGI-PROFILE-001, FUNGI-SECURITY-001
 - terms: phase, galerina, runtime, governance, block, phases, flows, http, impact, audit, pure, stage, capability, first
 
 ## Galerina — Runtime / Interpreter Improvement Roadmap
 `docs/Knowledge-Bases/galerina-runtime-interpreter-roadmap.md`
-- codes: SPORE-SEC-021, SPORE-SEC-020, SPORE-TYPE-021
+- codes: FUNGI-SEC-021, FUNGI-SEC-020, FUNGI-TYPE-021
 - terms: galerina, phase, runtime, wasm, replace, bytecode, interpreter, current, pure, string, checks, borrow, flow, memory
 
 ## Galerina Runtime Lifecycle
@@ -2127,9 +2127,9 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Runtime Status: Single Source of Truth (SOT)
 `docs/Knowledge-Bases/galerina-runtime-status-SOT.md`
-- codes: SPORE-PKG-006, ERR_BRIDGE_UNATTESTED, ERR_CERTIFIED_NO_ATTESTATION, ERR_CAPABILITY_DENIED, ERR_ADDON_HASH_MISMATCH, SPORE-MATCH-001
+- codes: FUNGI-PKG-006, ERR_BRIDGE_UNATTESTED, ERR_CERTIFIED_NO_ATTESTATION, ERR_CAPABILITY_DENIED, ERR_ADDON_HASH_MISMATCH, FUNGI-MATCH-001
 - tasks: #150, #143, #105, #144, #145, #160, #113, #97, #98, #93, #89, #88, #86, #87, #82, #83, #81, #40, #92, #90, #102, #106, #112, #111
-- terms: stage, tests, status, galerina, spore, real, test, session, phase, wasm, governed, prior, gate, dss
+- terms: stage, tests, status, galerina, fungi, real, test, session, phase, wasm, governed, prior, gate, dss
 
 ## Galerina Runtime Value Model
 `docs/Knowledge-Bases/galerina-runtime-value-model.md`
@@ -2137,38 +2137,38 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Secret-hygiene audit — timing side-channels + secret-zeroing (2026-06-24)
 `docs/Knowledge-Bases/galerina-secret-hygiene-audit-2026-06-24.md`
-- codes: SPORE-BUILD-001
+- codes: FUNGI-BUILD-001
 - tasks: #70, #149
 - terms: secret-hygiene, constant-time, zero-on-exit, timing, side-channels, secret-zeroing, safe, audit, verdict, sound, single-exit, subset, secretzero, transform
 
 ## Galerina — Security: Anti-Abuse Architecture
 `docs/Knowledge-Bases/galerina-security-anti-abuse.md`
-- codes: SPORE-EFFECT-001, SPORE-SOURCE-ESCAPE-001, SPORE-SEC-020, SPORE-PKG-005, SPORE-STDLIB-001, SPORE-NET-001, SPORE-NET-002, SPORE-RUNTIME-006
+- codes: FUNGI-EFFECT-001, FUNGI-SOURCE-ESCAPE-001, FUNGI-SEC-020, FUNGI-PKG-005, FUNGI-STDLIB-001, FUNGI-NET-001, FUNGI-NET-002, FUNGI-RUNTIME-006
 - terms: network, phase, spawn, contract, process, deny, galerina, declared, anti-abuse, limits, gap, enforcement, effect, limit
 
 ## Galerina Security — Compile-Time Cryptographic Parameters
 `docs/Knowledge-Bases/galerina-security-compile-time-crypto.md`
-- codes: SPORE-CRYPTO-001, SPORE-CRYPTO-002, SPORE-CRYPTO-003, SPORE-CRYPTO-004, SPORE-CRYPTO-005, SPORE-CRYPTO-006, SPORE-CRYPTO-007, SPORE-CRYPTO-008
+- codes: FUNGI-CRYPTO-001, FUNGI-CRYPTO-002, FUNGI-CRYPTO-003, FUNGI-CRYPTO-004, FUNGI-CRYPTO-005, FUNGI-CRYPTO-006, FUNGI-CRYPTO-007, FUNGI-CRYPTO-008
 - terms: policy, security, compile-time, must, crypto, algorithm, cipher, key, galerina, runtime, cryptographic, boundary, sealed, const
 
 ## Galerina — Security Hardening: Phase 34 HTTP Endpoint
 `docs/Knowledge-Bases/galerina-security-hardening-phase34.md`
-- codes: SPORE-TAINT-001, SPORE-BLOCK-004, SPORE-SECURITY-001, SPORE-RUNTIME-006
+- codes: FUNGI-TAINT-001, FUNGI-BLOCK-004, FUNGI-SECURITY-001, FUNGI-RUNTIME-006
 - terms: phase, finding, cache, taint, current, fix, state, gap, concrete, flow, http, request, check, before
 
 ## Galerina Security Improvements — Phase 8
 `docs/Knowledge-Bases/galerina-security-improvements-phase-8.md`
-- codes: SPORE-VALUESTATE-004, SPORE-SECRET-002, SPORE-GOV-003
-- terms: safe, phase, email, implementation, tainted, string, taint, bytes, response, galerina, spore-valuestate-004, unsafe, protected, propagation
+- codes: FUNGI-VALUESTATE-004, FUNGI-SECRET-002, FUNGI-GOV-003
+- terms: safe, phase, email, implementation, tainted, string, taint, bytes, response, galerina, fungi-valuestate-004, unsafe, protected, propagation
 
 ## package.galerina.yaml — explicit package manifest
 `docs/Knowledge-Bases/galerina-security-model-layers.md`
-- codes: SPORE-TYPE-008, SPORE-VALUESTATE-003, SPORE-SYNTAX-006, SPORE-EFFECT-001, SPORE-BACKEND-001, SPORE-SOURCE-ESCAPE-001, SPORE-VALUESTATE-005, SPORE-GOV-003, SPORE-SECRET-001, SPORE-SECRET-002, SPORE-STYLE-SEC-001, SPORE-NETWORK-001, SPORE-NETWORK-002, SPORE-BUILD-001, SPORE-PACKAGE-001, SPORE-EFFECT-002, SPORE-GOV-002
+- codes: FUNGI-TYPE-008, FUNGI-VALUESTATE-003, FUNGI-SYNTAX-006, FUNGI-EFFECT-001, FUNGI-BACKEND-001, FUNGI-SOURCE-ESCAPE-001, FUNGI-VALUESTATE-005, FUNGI-GOV-003, FUNGI-SECRET-001, FUNGI-SECRET-002, FUNGI-STYLE-SEC-001, FUNGI-NETWORK-001, FUNGI-NETWORK-002, FUNGI-BUILD-001, FUNGI-PACKAGE-001, FUNGI-EFFECT-002, FUNGI-GOV-002
 - terms: security, layer, package, galerina, phase, capability, boundary, runtime, authority, network, build, explicit, status, effect
 
 ## Galerina Security — Secret Safety: Constant-Time, Codegen and HSM
 `docs/Knowledge-Bases/galerina-security-secret-safety.md`
-- codes: SPORE-SECURITY-HSM-001, SPORE-SECURITY-HSM-002, SPORE-SECURITY-HSM-003, SPORE-SECURITY-HSM-004, SPORE-SECURITY-HSM-005, SPORE-SECURITY-HSM-006, SPORE-SECURITY-HSM-007
+- codes: FUNGI-SECURITY-HSM-001, FUNGI-SECURITY-HSM-002, FUNGI-SECURITY-HSM-003, FUNGI-SECURITY-HSM-004, FUNGI-SECURITY-HSM-005, FUNGI-SECURITY-HSM-006, FUNGI-SECURITY-HSM-007
 - terms: secret, hsm, constant-time, key, comparison, problem, contract, diagnostics, compiler, galerina, codegen, must, protectedsecret, code
 
 ## Galerina Security — Input Taint Types
@@ -2177,22 +2177,22 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Self-Audit — 40-Issue TypeScript Toolchain Threat Sweep (2026-06-25)
 `docs/Knowledge-Bases/galerina-self-audit-ts-40-issues-2026-06-25.md`
-- codes: SPORE-SOURCE-ESCAPE-001, SPORE-PKG-002, SPORE-PKG-004
+- codes: FUNGI-SOURCE-ESCAPE-001, FUNGI-PKG-002, FUNGI-PKG-004
 - tasks: #174
 - terms: build, already-safe, partial, config, galerina, track, toolchain, lint, yes, npm, node, live, locks, issue
 
 ## Galerina — Self-Hosting Roadmap (Axis B → 100%)
 `docs/Knowledge-Bases/galerina-selfhosting-roadmap-axisB.md`
-- codes: SPORE-TYPE-001, SPORE-TYPE-002, SPORE-TYPE-004, SPORE-EFFECT-001, SPORE-LEX-001, SPORE-VAL-001
-- terms: partial, phase, runtime, spore, test, real, tests, subset, mjs, gir, flow, galerina, axis, body
+- codes: FUNGI-TYPE-001, FUNGI-TYPE-002, FUNGI-TYPE-004, FUNGI-EFFECT-001, FUNGI-LEX-001, FUNGI-VAL-001
+- terms: partial, phase, runtime, fungi, test, real, tests, subset, mjs, gir, flow, galerina, axis, body
 
-## Galerina — Semantic Graph System (SPORE-Graph Evolution)
+## Galerina — Semantic Graph System (FUNGI-Graph Evolution)
 `docs/Knowledge-Bases/galerina-semantic-graph-system.md`
-- terms: graph, compiler, semanticgraph, spore-graph, governance, type, semantic, phase, model, self-hosting, galerina, ast, types, resolved
+- terms: graph, compiler, semanticgraph, fungi-graph, governance, type, semantic, phase, model, self-hosting, galerina, ast, types, resolved
 
 ## Shipped-Code Defects Found by Adversarial R&D — hub-verified ledger (2026-06-18)
 `docs/Knowledge-Bases/galerina-shipped-defects-found-2026-06-18.md`
-- codes: SPORE-RUNTIME-005
+- codes: FUNGI-RUNTIME-005
 - links: [[galerina-pipeline-security-posture]] [[galerina-security-audit-2026-06-16]]
 - terms: real, ledger, fixed, verified, hub, interpreter, open, adversarial, hub-verified, gate, fail-open, shipped-code, defects, point
 
@@ -2202,7 +2202,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Speed Improvements — Phase 8
 `docs/Knowledge-Bases/galerina-speed-improvements-phase-8.md`
-- codes: SPORE-TYPE-001
+- codes: FUNGI-TYPE-001
 - terms: phase, implementation, parallel, checker, flow, type, incremental, cache, checking, passes, cached, string, worker, priority
 
 ## Galerina — Stage B Root Capability Provider
@@ -2211,12 +2211,12 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Static Capability Proofs
 `docs/Knowledge-Bases/galerina-static-capability-proofs.md`
-- codes: SPORE-STDLIB-001, SPORE-EFFECT-001, SPORE-EFFECT-002
+- codes: FUNGI-STDLIB-001, FUNGI-EFFECT-001, FUNGI-EFFECT-002
 - terms: capability, runtime, host, write, effects, database, audit, read, execution, effect, flow, static, contract, galerina
 
 ## Galerina — Standard Library Architecture
 `docs/Knowledge-Bases/galerina-stdlib-architecture.md`
-- codes: SPORE-STDLIB-001, SPORE-VALUESTATE-006, SPORE-SEC-020, SPORE-SEC-021, SPORE-BACKEND-001
+- codes: FUNGI-STDLIB-001, FUNGI-VALUESTATE-006, FUNGI-SEC-020, FUNGI-SEC-021, FUNGI-BACKEND-001
 - terms: stdlib, phase, tensor, wasm, apis, pure, effectful, galerina, string, arena, status, map, effects, tri
 
 ## Galerina Standard Library Reference
@@ -2225,46 +2225,46 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Structured-Engineering Metadata — Roadmap + %-Shipped Audit (2026-06-19)
 `docs/Knowledge-Bases/galerina-structured-engineering-metadata-roadmap.md`
-- codes: SPORE-HW-004, SPORE-GOV-013, SPORE-ARCH-001, SPORE-ARCH-002
+- codes: FUNGI-HW-004, FUNGI-GOV-013, FUNGI-ARCH-001, FUNGI-ARCH-002
 - tasks: #149
-- terms: spore, shipped, galerina, roadmap, audit, fail-closed, flow, volatility, owner, graph, first, enforcement, deps, metadata
+- terms: fungi, shipped, galerina, roadmap, audit, fail-closed, flow, volatility, owner, graph, first, enforcement, deps, metadata
 
 ## Galerina Substrate / Tolerance Contracts — Direction B sub-spec (KB-first, fail-closed)
 `docs/Knowledge-Bases/galerina-substrate-contracts.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-SYNTAX-009, SPORE-SYNTAX-LEGACY-001, SPORE-SYNTAX-LEGACY-002, SPORE-SUBSTRATE-002, SPORE-SUBSTRATE-003, SPORE-SUBSTRATE-004, SPORE-INV-001, SPORE-TRAP-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-SYNTAX-009, FUNGI-SYNTAX-LEGACY-001, FUNGI-SYNTAX-LEGACY-002, FUNGI-SUBSTRATE-002, FUNGI-SUBSTRATE-003, FUNGI-SUBSTRATE-004, FUNGI-INV-001, FUNGI-TRAP-001
 - tasks: #58, #173, #196
 - terms: substrate, lane, tolerance, redundancy, contract, direction, flow, photonic, block, error, noisy, const, deterministic, digital
 
 ## Substrate-clause ergonomics — infer the mechanism, declare the guarantee, never infer the spec
 `docs/Knowledge-Bases/galerina-substrate-ergonomics-infer-vs-declare.md`
-- codes: SPORE-SUBSTRATE-002
+- codes: FUNGI-SUBSTRATE-002
 - tasks: #58
 - terms: infer, tolerance, mechanism, declare, guarantee, never, spec, auto-infer, ergonomics, safe, substrate-clause, already, principle, decides
 
 ## Galerina Substrate Failure-Mode Model — Direction C sub-spec (seeded, fail-closed)
 `docs/Knowledge-Bases/galerina-substrate-failure-model.md`
-- codes: SPORE-SUBSTRATE-003, SPORE-PHOTONIC-001, SPORE-SUBSTRATE-001, SPORE-SUBSTRATE-002, SPORE-SUBSTRATE-004, SPORE-GOV-3VL-001
+- codes: FUNGI-SUBSTRATE-003, FUNGI-PHOTONIC-001, FUNGI-SUBSTRATE-001, FUNGI-SUBSTRATE-002, FUNGI-SUBSTRATE-004, FUNGI-GOV-3VL-001
 - tasks: #58, #173, #196
 - terms: direction, model, substrate, number, seeded, export, pbad, readonly, check, lane, noise, error, redundancy, parameters
 
 ## Substrate-lane fail-opens found + fixed (2026-06-25)
 `docs/Knowledge-Bases/galerina-substrate-lane-fail-opens-2026-06-25.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-CRYPTO-PQ-001, SPORE-SUBSTRATE-002
-- terms: lane, crypto, malformed, fix, sign, photonic, digital, early-return, check, fail-opens, fixed, spore-substrate-001, crypto-on-core, silently
+- codes: FUNGI-SUBSTRATE-001, FUNGI-CRYPTO-PQ-001, FUNGI-SUBSTRATE-002
+- terms: lane, crypto, malformed, fix, sign, photonic, digital, early-return, check, fail-opens, fixed, fungi-substrate-001, crypto-on-core, silently
 
 ## A real governed flow, clause by clause — `substrate {}` and the rest of the contract
 `docs/Knowledge-Bases/galerina-substrate-worked-example.md`
-- codes: SPORE-EFFECT-001, SPORE-TIER-001, SPORE-SUBSTRATE-001, SPORE-SUBSTRATE-002, SPORE-SUBSTRATE-003, SPORE-SUBSTRATE-004
+- codes: FUNGI-EFFECT-001, FUNGI-TIER-001, FUNGI-SUBSTRATE-001, FUNGI-SUBSTRATE-002, FUNGI-SUBSTRATE-003, FUNGI-SUBSTRATE-004
 - terms: lane, flow, substrate, clause, photonic, digital, result, contract, redundancy, why, effects, ensure, crypto, compile
 
 ## Galerina Supply Chain Attestation and Package Governance
 `docs/Knowledge-Bases/galerina-supply-chain-package-governance.md`
-- codes: SPORE-SUPPLY-001, SPORE-SUPPLY-002, SPORE-PAYMENTS-1000, SPORE-CORE-0000, SPORE-TYPE-1000, SPORE-EFFECT-2000, SPORE-SECURITY-3000, SPORE-PACKAGE-4000
+- codes: FUNGI-SUPPLY-001, FUNGI-SUPPLY-002, FUNGI-PAYMENTS-1000, FUNGI-CORE-0000, FUNGI-TYPE-1000, FUNGI-EFFECT-2000, FUNGI-SECURITY-3000, FUNGI-PACKAGE-4000
 - terms: galerina, package, hash, governance, part, lockfile, dependency, build, text, update, attestation, review, payments, install-time
 
 ## Galerina Symbol Resolver Specification
 `docs/Knowledge-Bases/galerina-symbol-resolver-spec.md`
-- codes: SPORE-NAME-001, SPORE-TYPE-020, SPORE-NAME-002, SPORE-SYNTAX-005, SPORE-NAME-003, SPORE-TYPE-001, SPORE-NAME-004, SPORE-NAME-005, SPORE-EFFECT-003, SPORE-EFFECT-001, SPORE-EFFECT-002
+- codes: FUNGI-NAME-001, FUNGI-TYPE-020, FUNGI-NAME-002, FUNGI-SYNTAX-005, FUNGI-NAME-003, FUNGI-TYPE-001, FUNGI-NAME-004, FUNGI-NAME-005, FUNGI-EFFECT-003, FUNGI-EFFECT-001, FUNGI-EFFECT-002
 - terms: scope, flow, resolver, name, symbol, type, checker, text, standard, names, galerina, binding, declaration, string
 
 ## Galerina Syntax: if, match, Optional and Type Checking
@@ -2277,15 +2277,15 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Taint System Catalogue (Phase 28)
 `docs/Knowledge-Bases/galerina-taint-catalogue.md`
-- codes: SPORE-TAINT-001, SPORE-TAINT-002, SPORE-TAINT-003, SPORE-TAINT-004
+- codes: FUNGI-TAINT-001, FUNGI-TAINT-002, FUNGI-TAINT-003, FUNGI-TAINT-004
 - terms: value, required, context, sql, system, safefor, shell, phase, html, owasp, type, injection, string, path
 
 ## Galerina — Task Ledger #1–#148 (graph-review checklist)
 `docs/Knowledge-Bases/galerina-task-ledger.md`
-- codes: SPORE-GOV-010, SPORE-INV-000, SPORE-MATCH-001, SPORE-SUBSTRATE-001, SPORE-EFFECT-002, SPORE-FAULT-005, SPORE-EFFECT-006, SPORE-MEMORY-001, ERR_BRIDGE_UNATTESTED, ERR_BRIDGE_DISPATCH_FAULT, ERR_X, ERR_REGISTRY, SPORE-BOOL-BOUNDARY-001, SPORE-PROFILE-005B, SPORE-PERM-001
+- codes: FUNGI-GOV-010, FUNGI-INV-000, FUNGI-MATCH-001, FUNGI-SUBSTRATE-001, FUNGI-EFFECT-002, FUNGI-FAULT-005, FUNGI-EFFECT-006, FUNGI-MEMORY-001, ERR_BRIDGE_UNATTESTED, ERR_BRIDGE_DISPATCH_FAULT, ERR_X, ERR_REGISTRY, FUNGI-BOOL-BOUNDARY-001, FUNGI-PROFILE-005B, FUNGI-PERM-001
 - tasks: #148, #105, #69, #110, #147, #177, #199, #146, #102, #103, #104, #106, #143, #145, #144, #39, #160, #161, #191, #169, #170, #174, #175, #185
 - links: [[feedback-http-transport-owner-locked]] [[galerina-ip-paper-strategy]] [[galerina-benchmark-suite]] [[feedback-tooled-engineering-processes]]
-- terms: core-compiler, tests, build, galerina, mjs, gate, owner, graph, wasm, test, spore, task, scripts, parser
+- terms: core-compiler, tests, build, galerina, mjs, gate, owner, graph, wasm, test, fungi, task, scripts, parser
 
 ## P9 Post-Parity Technical-Debt / Gaps Review (2026-06-06)
 `docs/Knowledge-Bases/galerina-techdebt-gaps-review.md`
@@ -2294,7 +2294,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Tensor Arity Decision
 `docs/Knowledge-Bases/galerina-tensor-arity-decision.md`
-- codes: SPORE-TYPE-009
+- codes: FUNGI-TYPE-009
 - terms: tensor, shape, type, galerina, phase, unknown, float32, decision, anytensor, bare, erased, why, arity, parameters
 
 ## galerina-tensor-numeric-performance.md
@@ -2303,110 +2303,110 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Termination guarantees — what stops a "death loop" (runaway computation) in Galerina
 `docs/Knowledge-Bases/galerina-termination-and-death-loop-guards.md`
-- codes: SPORE-TERM-001, SPORE-RUNTIME-006
+- codes: FUNGI-TERM-001, FUNGI-RUNTIME-006
 - tasks: #33
 - terms: loop, termination, photonic, lane, runtime, fail-closed, death, runaway, four, traps, cap, stops, there, compile-time
 
 ## Galerina — Testing Model
 `docs/Knowledge-Bases/galerina-testing-model.md`
-- codes: SPORE-TYPE-001
+- codes: FUNGI-TYPE-001
 - terms: principle, galerina, testing, model, status, core, test, tests, categories, final, prove, behaviour, governance, correct
 
 ## The Third Logic-Delivery Paradigm & the Governed Photonic/Quantum Substrate
 `docs/Knowledge-Bases/galerina-third-logic-delivery-and-governed-quantum-substrate-2026-06-24.md`
-- codes: SPORE-RETAIN-001, SPORE-SUBSTRATE-001, SPORE-HW-004
+- codes: FUNGI-RETAIN-001, FUNGI-SUBSTRATE-001, FUNGI-HW-004
 - tasks: #199, #0087, #102
 - terms: third, refuted, boundary, photonic, substrate, quantum, mbqc, time, collapse, async, classical, model, pass, paradigm
 
 ## Galerina — Third-Party Plugin Authoring Guide (concept → architecture → build)
 `docs/Knowledge-Bases/galerina-third-party-plugin-authoring-guide.md`
-- codes: SPORE-EFFECT-006, SPORE-EFFECT-001, SPORE-EFFECT-005, SPORE-PKG-006, SPORE-SECRET-002, SPORE-PRIVACY-002, SPORE-PKG-001, SPORE-PARSE-001
+- codes: FUNGI-EFFECT-006, FUNGI-EFFECT-001, FUNGI-EFFECT-005, FUNGI-PKG-006, FUNGI-SECRET-002, FUNGI-PRIVACY-002, FUNGI-PKG-001, FUNGI-PARSE-001
 - tasks: #201, #202, #102, #206, #208, #204, #67, #180, #34, #214, #203
-- terms: plugin, contract, signed, capability, package, galerina, shipped, spore, write, fuse, build, governed, audit, graph
+- terms: plugin, contract, signed, capability, package, galerina, shipped, fungi, write, fuse, build, governed, audit, graph
 
 ## Threat-model — "what has this box unleashed" (2026-06-25)
 `docs/Knowledge-Bases/galerina-threat-model-unleashed-2026-06-25.md`
-- codes: SPORE-TIER-001, SPORE-VALUESTATE-008, SPORE-STDLIB-002, SPORE-PARSE-DEPTH-001, SPORE-PARSE-001, SPORE-EFFECT-003, SPORE-IMPORT-005, SPORE-IMPORT-006
+- codes: FUNGI-TIER-001, FUNGI-VALUESTATE-008, FUNGI-STDLIB-002, FUNGI-PARSE-DEPTH-001, FUNGI-PARSE-001, FUNGI-EFFECT-003, FUNGI-IMPORT-005, FUNGI-IMPORT-006
 - tasks: #153, #49, #36, #38
 - terms: fix, fixed, galerina, photonic, coupon, verified, fail-closed, manifest, admission, gate, high, verifier, real, effect
 
 ## Galerina Three-Valued Governance — Direction A sub-spec (proved fail-closed)
 `docs/Knowledge-Bases/galerina-three-valued-governance.md`
-- codes: SPORE-GOV-3VL-001, SPORE-GOV-004, SPORE-SAFETY-003
+- codes: FUNGI-GOV-3VL-001, FUNGI-GOV-004, FUNGI-SAFETY-003
 - tasks: #173, #196, #185, #166
-- terms: verdict, deny, fail-closed, indeterminate, allow, boundary, collapse, gates, kleene, spore-gov-3vl-001, eval, export, governance, direction
+- terms: verdict, deny, fail-closed, indeterminate, allow, boundary, collapse, gates, kleene, fungi-gov-3vl-001, eval, export, governance, direction
 
 ## 0069 — Dynamic Trust Mesh as degrade-only K3 telemetry
 `docs/Knowledge-Bases/galerina-tlstp-0069-dtm-degrade-only.md`
-- codes: SPORE-GOV-3VL-001, SPORE-SUBSTRATE-001
+- codes: FUNGI-GOV-3VL-001, FUNGI-SUBSTRATE-001
 - terms: deny, vand, telemetry, dtm, step, never, exporter, codomain, min, example, hard, tau, allow, trust
 
 ## 0070 — Photonic/path-deviation TamperTrust resolver
 `docs/Knowledge-Bases/galerina-tlstp-0070-tampertrust.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-SUBSTRATE-004, SPORE-SUBSTRATE-003, SPORE-SUBSTRATE-002, SPORE-GOV-3VL-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-SUBSTRATE-004, FUNGI-SUBSTRATE-003, FUNGI-SUBSTRATE-002, FUNGI-GOV-3VL-001
 - tasks: #12
 - terms: deny, substrate-model, gate, step, vand, dead, verdict, example, never, tolerance, band, allow, lane, fold
 
 ## TLSTP + B8 Build Guide — Index & the Hard Path to Go Through
 `docs/Knowledge-Bases/galerina-tlstp-build-guide-index.md`
-- codes: SPORE-PRIVACY-002
+- codes: FUNGI-PRIVACY-002
 - tasks: #102, #211
 - terms: hard, build, path, through, part, never, tlstp, index, ordered, vand, phase, guide, digital, degrade-only
 
 ## TLSTP S1 — K3 cert/channel-validation gate
 `docs/Knowledge-Bases/galerina-tlstp-s1-cert-gate.md`
-- codes: SPORE-GOV-3VL-001
+- codes: FUNGI-GOV-3VL-001
 - tasks: #212
 - terms: verdict, deny, vand, revocation, cert, chain, pin, fresh, min, valid, allow, example, ocsp, match
 
 ## TLSTP S2 — asymmetric KEM-rekeying ratchet
 `docs/Knowledge-Bases/galerina-tlstp-s2-kem-ratchet.md`
-- codes: SPORE-GOV-3VL-001, SPORE-SUBSTRATE-001
+- codes: FUNGI-GOV-3VL-001, FUNGI-SUBSTRATE-001
 - tasks: #102
 - terms: rekey, epoch, kemdem, kdf, reseed, packet, kem, deny, ratchet, shipped, example, key, step, asymmetric
 
 ## TLSTP S3 — digital FEC over opaque AEAD ciphertext
 `docs/Knowledge-Bases/galerina-tlstp-s3-digital-fec.md`
-- codes: SPORE-PRIVACY-002, SPORE-GOV-3VL-001
+- codes: FUNGI-PRIVACY-002, FUNGI-GOV-3VL-001
 - tasks: #102
 - terms: symbols, aead, x40, ciphertext, deny, fec, x03, decode, example, open, never, erasure, symbol, x30
 
 ## TLSTP S4 — Recovering transport FSM above K3
 `docs/Knowledge-Bases/galerina-tlstp-s4-recovering-fsm.md`
-- codes: SPORE-GOV-3VL-001
+- codes: FUNGI-GOV-3VL-001
 - tasks: #102
 - terms: recovering, closed, established, reverify, fsm, erase, verdict, resume, trit, vand, never, deny, timeout, fault
 
 ## TLSTP S5 — opt-in transport.obfuscate morphing frames
 `docs/Knowledge-Bases/galerina-tlstp-s5-morphing-frames.md`
-- codes: SPORE-PRIVACY-002, SPORE-GOV-3VL-001
+- codes: FUNGI-PRIVACY-002, FUNGI-GOV-3VL-001
 - tasks: #102
 - terms: frame, size, morphed, capability, transport, example, obfuscate, bytes, sampler, aead, seed, padding, routing, leak
 
 ## Galerina — TLSTP Transport + Zero-Trust Auth: R&D Decision-Support (2026-06-22)
 `docs/Knowledge-Bases/galerina-tlstp-transport-auth-rnd-2026-06-22.md`
-- codes: SPORE-ENTROPY-002, SPORE-SUBSTRATE-001, SPORE-PRIVACY-002, SPORE-MONO-001, SPORE-GOV-3VL-001, SPORE-HW-004
+- codes: FUNGI-ENTROPY-002, FUNGI-SUBSTRATE-001, FUNGI-PRIVACY-002, FUNGI-MONO-001, FUNGI-GOV-3VL-001, FUNGI-HW-004
 - tasks: #102, #12, #212, #125, #34, #149
 - links: [[feedback-http-transport-owner-locked]] [[galerina-key-custody-rotation-decision]] [[feedback-owner-gated-means-ask]]
 - terms: transport, build, shipped, owner, key, gate, never, auth, net-new, decision-support, ternary, deny, doesn, galerina
 
 ## The `.tmf` Engine (`@galerina/ext-tmf`)
 `docs/Knowledge-Bases/galerina-tmf-engine.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-GOV-3VL-001, SPORE-CRYPTO-PQ-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-GOV-3VL-001, FUNGI-CRYPTO-PQ-001
 - tasks: #34, #204
 - terms: galerina, core, tmf, engine, ext, integrity, root, container, line, see, tmx-256, crypto, governs, hard
 
 ## Galerina — Topological Graph Engine
 `docs/Knowledge-Bases/galerina-topological-graph-engine.md`
-- codes: SPORE-INV-000, SPORE-GATE-001, SPORE-GATE-002
+- codes: FUNGI-INV-000, FUNGI-GATE-001, FUNGI-GATE-002
 - tasks: #41, #40, #79, #56, #67, #80, #78, #77
 - terms: floor, dag, cbor, mmcp, bit, tag, dpm, gate, component, capability, updated, wasm, execution, policy
 
 ## Galerina — Tower-Native Syntax
 `docs/Knowledge-Bases/galerina-tower-native-syntax.md`
-- codes: ERR_NEG, SPORE-INV-000, ERR_AMOUNT_EXCEEDS_LIMIT, SPORE-TRAP-001, SPORE-TRAP-002, ERR_INSUFFICIENT_FUNDS, ERR_NEGATIVE_AMOUNT, SPORE-DAG-001, SPORE-DAG-002, SPORE-MATCH-001, SPORE-STATIC-001, SPORE-STATIC-002, SPORE-BF-001, SPORE-BF-002, SPORE-GATE-001, SPORE-GATE-002, SPORE-SYNTAX-LEGACY-003, SPORE-ACCESS-001, SPORE-ACCESS-002, SPORE-IMPORT-001, SPORE-IMPORT-002, SPORE-IMPORT-003, SPORE-IMPORT-004, SPORE-ASSIMILATE-001
+- codes: ERR_NEG, FUNGI-INV-000, ERR_AMOUNT_EXCEEDS_LIMIT, FUNGI-TRAP-001, FUNGI-TRAP-002, ERR_INSUFFICIENT_FUNDS, ERR_NEGATIVE_AMOUNT, FUNGI-DAG-001, FUNGI-DAG-002, FUNGI-MATCH-001, FUNGI-STATIC-001, FUNGI-STATIC-002, FUNGI-BF-001, FUNGI-BF-002, FUNGI-GATE-001, FUNGI-GATE-002, FUNGI-SYNTAX-LEGACY-003, FUNGI-ACCESS-001, FUNGI-ACCESS-002, FUNGI-IMPORT-001, FUNGI-IMPORT-002, FUNGI-IMPORT-003, FUNGI-IMPORT-004, FUNGI-ASSIMILATE-001
 - tasks: #78, #81, #82, #83, #84, #86, #87, #88, #89, #92, #93, #94, #73, #74, #77, #75, #90, #91
-- terms: governance, syntax, semantics, access, rules, spore, floor, dpm, import, stage, example, bit, flow, manifest
+- terms: governance, syntax, semantics, access, rules, fungi, floor, dpm, import, stage, example, bit, flow, manifest
 
 ## Galerina TPL ↔ BitNet I2_S fidelity audit (verified in code, not asserted)
 `docs/Knowledge-Bases/galerina-tpl-bitnet-fidelity-audit.md`
@@ -2414,7 +2414,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Transport + Auth Research — Explained (2026-06-22)
 `docs/Knowledge-Bases/galerina-transport-auth-research-explained-2026-06-22.md`
-- codes: SPORE-PRIVACY-002
+- codes: FUNGI-PRIVACY-002
 - tasks: #102, #211
 - links: [[galerina-tlstp-transport-auth-rnd]] [[feedback-http-transport-owner-locked]]
 - terms: auth, each, digital, transport, buildable, galerina, build, both, rules, boundary, notes, key, refused, every
@@ -2425,13 +2425,13 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina ↔ TritMesh — boundary, governance seam, conformance
 `docs/Knowledge-Bases/galerina-tritmesh-boundary-and-seam.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-GOV-002, SPORE-GOV-3VL-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-GOV-002, FUNGI-GOV-3VL-001
 - tasks: #126, #128
-- terms: tritmesh, galerina, governance, seam, boundary, conformance, design-note, wasm, already, pdp, spore, decision, engine, pep
+- terms: tritmesh, galerina, governance, seam, boundary, conformance, design-note, wasm, already, pdp, fungi, decision, engine, pep
 
 ## R&D 0109 — TritMesh "AZT Database" feature-list gap analysis (2026-06-24)
 `docs/Knowledge-Bases/galerina-tritmesh-feature-gap-analysis-2026-06-24.md`
-- codes: SPORE-TENANT-001
+- codes: FUNGI-TENANT-001
 - tasks: #102, #110, #34, #107
 - links: [[galerina-rd-tritmesh-1-5-and-52-3d-2026-06-23]] [[galerina-tmf-engine]] [[galerina-b8-governed-transport]]
 - terms: shipped, galerina, gap, reusable, mechanics, substrate, tritmesh, pillar, building, crypto, build, claims, azt, worth
@@ -2442,24 +2442,24 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## TritMesh Monolith + Data Architecture — Build Guide (note 41)
 `docs/Knowledge-Bases/galerina-tritmesh-monolith-data-architecture.md`
-- codes: SPORE-PRIVACY-002
+- codes: FUNGI-PRIVACY-002
 - tasks: #102, #125
 - terms: shipped, tmf, arena, net-new, data, maths, tiers, monolith, note, cold, p2p, cid, worked, example
 
 ## galerina-trust-sensitivity-type-rules.md
 `docs/Knowledge-Bases/galerina-trust-sensitivity-type-rules.md`
-- codes: SPORE-TYPE-003
+- codes: FUNGI-TYPE-003
 - terms: email, protected, array, let, unsafe, sensitive, collection, type, domain, types, emails, trust, galerina, sensitivity
 
 ## Galerina — Type Checker Architecture
 `docs/Knowledge-Bases/galerina-type-checker-architecture.md`
-- codes: SPORE-TYPE-001, SPORE-TYPE-020, SPORE-TYPE-003, SPORE-TYPE-010, SPORE-TYPE-030, SPORE-VALUESTATE-006, SPORE-TYPE-031, SPORE-TYPE-018, SPORE-TYPE-021, SPORE-TYPE-004, SPORE-TYPE-008, SPORE-TYPE-009, SPORE-TYPE-011, SPORE-TYPE-016, SPORE-TYPE-017, SPORE-TYPE-022
+- codes: FUNGI-TYPE-001, FUNGI-TYPE-020, FUNGI-TYPE-003, FUNGI-TYPE-010, FUNGI-TYPE-030, FUNGI-VALUESTATE-006, FUNGI-TYPE-031, FUNGI-TYPE-018, FUNGI-TYPE-021, FUNGI-TYPE-004, FUNGI-TYPE-008, FUNGI-TYPE-009, FUNGI-TYPE-011, FUNGI-TYPE-016, FUNGI-TYPE-017, FUNGI-TYPE-022
 - terms: phase, type, checker, tensor, checking, typeid, registry, status, types, shape, galerina, regex, effect, protected
 
 ## Galerina Type System Improvements — Phase 8
 `docs/Knowledge-Bases/galerina-type-improvements-phase-8.md`
-- codes: SPORE-TYPE-003, SPORE-MATCH-003, SPORE-TYPE-004
-- terms: type, money, phase, implementation, spore-type-003, enum, variant, gbp, must, emit, currency, galerina, branded, match
+- codes: FUNGI-TYPE-003, FUNGI-MATCH-003, FUNGI-TYPE-004
+- terms: type, money, phase, implementation, fungi-type-003, enum, variant, gbp, must, emit, currency, galerina, branded, match
 
 ## Galerina — Type System Extensions for Heterogeneous Compute
 `docs/Knowledge-Bases/galerina-type-system-compute-extensions.md`
@@ -2471,13 +2471,13 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — V1 Memory Model Specification
 `docs/Knowledge-Bases/galerina-v1-memory-model.md`
-- codes: SPORE-MEMORY-001, SPORE-AFFINE-001, SPORE-BINDING-004, SPORE-MEMORY-005, SPORE-MEMORY-003, SPORE-MEMORY-006, SPORE-RAWPTR-001, SPORE-MEMORY-008, SPORE-BINDING-001, SPORE-BINDING-003
+- codes: FUNGI-MEMORY-001, FUNGI-AFFINE-001, FUNGI-BINDING-004, FUNGI-MEMORY-005, FUNGI-MEMORY-003, FUNGI-MEMORY-006, FUNGI-RAWPTR-001, FUNGI-MEMORY-008, FUNGI-BINDING-001, FUNGI-BINDING-003
 - tasks: #65
 - terms: phase, rule, borrow, move, ownership, unsafe, galerina, mutable, model, memory, borrows, enforcement, let, lifetime
 
 ## Galerina — Value-State Checker Architecture
 `docs/Knowledge-Bases/galerina-value-state-checker-architecture.md`
-- codes: SPORE-VALUESTATE-004, SPORE-VALUESTATE-005, SPORE-VALUESTATE-003, SPORE-VALUESTATE-001, SPORE-VALUESTATE-002, SPORE-VALUESTATE-006, SPORE-VALUESTATE-007, SPORE-SECRET-001, SPORE-SECRET-002, SPORE-SECRET-003, SPORE-GATE-001
+- codes: FUNGI-VALUESTATE-004, FUNGI-VALUESTATE-005, FUNGI-VALUESTATE-003, FUNGI-VALUESTATE-001, FUNGI-VALUESTATE-002, FUNGI-VALUESTATE-006, FUNGI-VALUESTATE-007, FUNGI-SECRET-001, FUNGI-SECRET-002, FUNGI-SECRET-003, FUNGI-GATE-001
 - terms: phase, state, gate, sink, unsafe, safe, checker, protected, redacted, value-state, validated, status, valuestateflags, audit
 
 ## WASM Compilation Granularity — single- vs multi-module, packages OUTSIDE the app (R&D 0052)
@@ -2492,32 +2492,32 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — wasmtime Compilation Roadmap
 `docs/Knowledge-Bases/galerina-wasmtime-roadmap.md`
-- terms: wasm, step, spore, wat, wasi, source, phase, emitter, galerina-runtime, wasmtime, run, roadmap, shim, docs
+- terms: wasm, step, fungi, wat, wasi, source, phase, emitter, galerina-runtime, wasmtime, run, roadmap, shim, docs
 
 ## Why we are NOT adding the `resolve … at boundary` construct (the maths in full)
 `docs/Knowledge-Bases/galerina-why-no-resolve-construct-the-maths-2026-06-24.md`
-- codes: SPORE-SUBSTRATE-001, SPORE-GOV-3VL-001
+- codes: FUNGI-SUBSTRATE-001, FUNGI-GOV-3VL-001
 - terms: substrate, maths, why, construct, adding, boundary, collapse, compute, core, capability, already, deny, surface, untrusted
 
 ## Work-with-it sweep — refused R&D reviewed for a govern-don't-absorb path (table)
 `docs/Knowledge-Bases/galerina-work-with-it-sweep-table-2026-06-25.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - tasks: #21
 - terms: buildable, work-with-it, govern-don, t-absorb, path, stays, governed, real, sweep, refused, cpu-side, consumer, reviewed, table
 
 ## Should we lower the zero-trust core to allow interesting new tech? — analysis
 `docs/Knowledge-Bases/galerina-zero-trust-core-relaxation-analysis-2026-06-24.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - terms: core, tech, line, lower, never, allow, get, lowering, interesting, untrusted, loss, already, strict, must
 
 ## Concept: Galerina as a Zero-Trust Engine
 `docs/Knowledge-Bases/galerina-zero-trust-engine.md`
-- codes: SPORE-GOV-3VL-001, SPORE-SUBSTRATE-001
+- codes: FUNGI-GOV-3VL-001, FUNGI-SUBSTRATE-001
 - terms: concept, engine, zero-trust, galerina, residuals, tmf, src, narrative, genuine, brawn, four, mandates, each, implemented
 
 ## Galerina — zk-SNARK Proof Receipt Integration Plan
 `docs/Knowledge-Bases/galerina-zk-proof-plan.md`
-- codes: SPORE-GOV-015
+- codes: FUNGI-GOV-015
 - tasks: #29
 - terms: snarkjs, phase, circuit, proverbackend, receipt, bellman, groth16, package, proof, zkproof, interface, sha256, verification, path
 
@@ -2527,7 +2527,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Generic Types
 `docs/Knowledge-Bases/generic-types.md`
-- codes: SPORE-TYPE-009
+- codes: FUNGI-TYPE-009
 - terms: type, generic, types, brand, string, let, result, galerina, array, brands, option, generics, order, tensor
 
 ## Governed Capability Modules
@@ -2536,7 +2536,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Governed Compute Chain
 `docs/Knowledge-Bases/governed-compute-chain.md`
-- codes: SPORE-TYPE-017, SPORE-COMPUTE-001
+- codes: FUNGI-TYPE-017, FUNGI-COMPUTE-001
 - terms: compute, target, cpu, gpu, let, galerina, inference, tensor, npu, stage, quantized, runtime, audit, request
 
 ## Governed Event-Driven Execution
@@ -2573,12 +2573,12 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — IHSA Governed Storage Policy
 `docs/Knowledge-Bases/ihsa-storage-policy.md`
-- codes: SPORE-STORAGE-001, SPORE-EFFECT-001, SPORE-VALUESTATE-003
+- codes: FUNGI-STORAGE-001, FUNGI-EFFECT-001, FUNGI-VALUESTATE-003
 - terms: ihsa, storage, policy, memory, effect, galerina, block, read, path, infrequent, disk, governance, streaming, flow
 
 ## Galerina Core Knowledge Base — Master Navigation Guide & TCB Map
 `docs/Knowledge-Bases/KNOWLEDGE-BASE-INDEX.md`
-- codes: SPORE-CAP-001, SPORE-RES-001, SPORE-OBS-001, SPORE-GOV-004, SPORE-BORDER-001, SPORE-CRYPTO-PQ-001, SPORE-GOV-3VL-001, SPORE-SUBSTRATE-001, SPORE-ENTROPY-001, SPORE-TIER-001, SPORE-DAG-002, SPORE-VALUESTATE-008, SPORE-SECRET-001, SPORE-PERM-001, SPORE-OBS-002
+- codes: FUNGI-CAP-001, FUNGI-RES-001, FUNGI-OBS-001, FUNGI-GOV-004, FUNGI-BORDER-001, FUNGI-CRYPTO-PQ-001, FUNGI-GOV-3VL-001, FUNGI-SUBSTRATE-001, FUNGI-ENTROPY-001, FUNGI-TIER-001, FUNGI-DAG-002, FUNGI-VALUESTATE-008, FUNGI-SECRET-001, FUNGI-PERM-001, FUNGI-OBS-002
 - tasks: #118, #124, #32, #34, #35, #149, #110, #127, #195, #194, #196, #197, #161, #193, #86, #94, #0087, #0088, #0089, #102, #163, #165, #30, #45
 - terms: drcm, galerina, core, layer, build, reference, syntax, phase, contract, governance, security, compiler, gate, model
 
@@ -2592,7 +2592,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — @state() Lifecycle System
 `docs/Knowledge-Bases/lifecycle-state-system.md`
-- codes: SPORE-STATE-001, SPORE-STATE-002, SPORE-STATE-003, SPORE-STATE-004, SPORE-STATE-005, SPORE-STATE-006
+- codes: FUNGI-STATE-001, FUNGI-STATE-002, FUNGI-STATE-003, FUNGI-STATE-004, FUNGI-STATE-005, FUNGI-STATE-006
 - terms: state, galerina, lifecycle, runtime, context, layer, future, mutation, gpu, let, distributed, audit, session, scope
 
 ## List Operations
@@ -2645,7 +2645,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Module System and Visibility
 `docs/Knowledge-Bases/module-system-and-visibility.md`
-- codes: SPORE-MODULE-001, SPORE-VIS-003, SPORE-MODULE-002, SPORE-MODULE-003, SPORE-MODULE-004, SPORE-MODULE-005, SPORE-MODULE-006, SPORE-VIS-001, SPORE-VIS-002, SPORE-VIS-004, SPORE-VIS-005, SPORE-CAP-001, SPORE-CAP-002
+- codes: FUNGI-MODULE-001, FUNGI-VIS-003, FUNGI-MODULE-002, FUNGI-MODULE-003, FUNGI-MODULE-004, FUNGI-MODULE-005, FUNGI-MODULE-006, FUNGI-VIS-001, FUNGI-VIS-002, FUNGI-VIS-004, FUNGI-VIS-005, FUNGI-CAP-001, FUNGI-CAP-002
 - terms: imports, module, import, visibility, public, package, galerina, private, users, runtime, app, symbol, compiler, text
 
 ## Multi-Actor Audit Events
@@ -2670,7 +2670,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## No Inheritance And Explicit Security
 `docs/Knowledge-Bases/no-inheritance-explicit-security.md`
-- codes: SPORE-INHERIT-001, SPORE-AUTH-003
+- codes: FUNGI-INHERIT-001, FUNGI-AUTH-003
 - terms: explicit, inheritance, galerina, security, inherited, authority, parent, disallowed, reports, until, hierarchy, behaviour, effects, allowed
 
 ## Node-Hosted Runtime Roadmap
@@ -2687,17 +2687,17 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Operator Precedence
 `docs/Knowledge-Bases/operator-precedence.md`
-- codes: SPORE-EXPR-001, SPORE-EXPR-002, SPORE-EXPR-003, SPORE-EXPR-004, SPORE-EXPR-005, SPORE-EXPR-006, SPORE-EXPR-007
+- codes: FUNGI-EXPR-001, FUNGI-EXPR-002, FUNGI-EXPR-003, FUNGI-EXPR-004, FUNGI-EXPR-005, FUNGI-EXPR-006, FUNGI-EXPR-007
 - terms: precedence, operator, left, parser, phase, associativity, galerina, tighter, binaryexpr, table, expression, operators, astkind, propagation
 
 ## Galerina — Operator Type Rules
 `docs/Knowledge-Bases/operator-type-rules.md`
-- codes: SPORE-TYPE-004, SPORE-TYPE-005, SPORE-SECRET-002, SPORE-SAFETY-001
-- terms: tri, operators, operator, bool, numeric, policy, same, string, money, rules, galerina, equality, spore-type-004, denied
+- codes: FUNGI-TYPE-004, FUNGI-TYPE-005, FUNGI-SECRET-002, FUNGI-SAFETY-001
+- terms: tri, operators, operator, bool, numeric, policy, same, string, money, rules, galerina, equality, fungi-type-004, denied
 
 ## Package Completion Status
 `docs/Knowledge-Bases/package-completion-status.md`
-- codes: SPORE-EFFECT-001, SPORE-BOUNDARY-001, SPORE-BOUNDARY-002
+- codes: FUNGI-EFFECT-001, FUNGI-BOUNDARY-001, FUNGI-BOUNDARY-002
 - terms: runtime, planned, text, galerina, execution, effect, checker, phase, audit, planning, package, logic, compute, governance
 
 ## Package Declaration Syntax
@@ -2710,7 +2710,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina — Parser Error Recovery Policy
 `docs/Knowledge-Bases/parser-error-recovery.md`
-- codes: SPORE-PARSE-001, SPORE-PARSE-002
+- codes: FUNGI-PARSE-001, FUNGI-PARSE-002
 - terms: errornode, parser, phase, flow, recovery, token, next, tokens, synchronisation, skip, diagnostic, galerina, error, secure
 
 ## Pattern Matching
@@ -2723,7 +2723,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina Phase 4 — Parser and AST: Plan, Flowchart and Suggestions
 `docs/Knowledge-Bases/phase-4-parser-ast-plan.md`
-- codes: SPORE-AST-001, SPORE-PARSE-001, SPORE-PARSE-002, SPORE-PARSE-003, SPORE-PARSE-004, SPORE-PARSE-005, SPORE-PARSE-006, SPORE-PARSE-007, SPORE-PARSE-008, SPORE-PARSE-009, SPORE-PARSE-010, SPORE-PARSE-011, SPORE-PARSE-012, SPORE-PARSE-013, SPORE-PARSE-014
+- codes: FUNGI-AST-001, FUNGI-PARSE-001, FUNGI-PARSE-002, FUNGI-PARSE-003, FUNGI-PARSE-004, FUNGI-PARSE-005, FUNGI-PARSE-006, FUNGI-PARSE-007, FUNGI-PARSE-008, FUNGI-PARSE-009, FUNGI-PARSE-010, FUNGI-PARSE-011, FUNGI-PARSE-012, FUNGI-PARSE-013, FUNGI-PARSE-014
 - terms: phase, ast, parser, suggestion, grammar, node, text, test, json, galerina, before, astnodekind, source, flow
 
 ## Photonic Resolution Boundary
@@ -2764,7 +2764,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Quantum Readiness
 `docs/Knowledge-Bases/quantum-readiness.md`
-- codes: SPORE-CRYPTO-001
+- codes: FUNGI-CRYPTO-001
 - terms: quantum, galerina, compute, crypto, future, post-quantum, secure, target, short, ready, text, random, status, planning
 
 ## Query Type and Database Access
@@ -2777,7 +2777,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Virtual 3D-Spatial Photonics ("Even 2 Waves") for High-Value Compute — the Honest Maths, the Buildable Line, and the Hard Walls
 `docs/Knowledge-Bases/rd-0114-virtual-3d-spatial-photonics-absorbed.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - terms: text, never, synthetic, lane, digital, honest, photonic, pmatrix, mesh, mac, cost, crypto, verdict, crossover
 
 ## release Keyword
@@ -2806,7 +2806,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Runtime Audit Log Format
 `docs/Knowledge-Bases/runtime-audit-log-format.md`
-- codes: SPORE-AUDIT-001, SPORE-AUDIT-005, SPORE-REPORT-001, SPORE-REPORT-005, SPORE-PROOF-001, SPORE-PROOF-005, SPORE-DENIAL-001, SPORE-DENIAL-005, SPORE-EVIDENCE-001, SPORE-EVIDENCE-005, SPORE-DENIAL-003, SPORE-AUDIT-002, SPORE-AUDIT-003, SPORE-AUDIT-004, SPORE-REPORT-002, SPORE-REPORT-003, SPORE-REPORT-004, SPORE-PROOF-002, SPORE-PROOF-003, SPORE-PROOF-004, SPORE-DENIAL-002, SPORE-DENIAL-004, SPORE-EVIDENCE-002, SPORE-EVIDENCE-003
+- codes: FUNGI-AUDIT-001, FUNGI-AUDIT-005, FUNGI-REPORT-001, FUNGI-REPORT-005, FUNGI-PROOF-001, FUNGI-PROOF-005, FUNGI-DENIAL-001, FUNGI-DENIAL-005, FUNGI-EVIDENCE-001, FUNGI-EVIDENCE-005, FUNGI-DENIAL-003, FUNGI-AUDIT-002, FUNGI-AUDIT-003, FUNGI-AUDIT-004, FUNGI-REPORT-002, FUNGI-REPORT-003, FUNGI-REPORT-004, FUNGI-PROOF-002, FUNGI-PROOF-003, FUNGI-PROOF-004, FUNGI-DENIAL-002, FUNGI-DENIAL-004, FUNGI-EVIDENCE-002, FUNGI-EVIDENCE-003
 - terms: string, audit, runtime, event, proof, export, evidence, denied, hashes, type, denial, interface, execution, allowed
 
 ## Runtime Boundary Declarations
@@ -2915,7 +2915,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Trust Conversion And Data Safety
 `docs/Knowledge-Bases/trust-conversion-and-data-safety.md`
-- terms: safe, let, trust, runtime, unsafe, safety, encode, query, conversion, data, rule, guard, value, spore
+- terms: safe, let, trust, runtime, unsafe, safety, encode, query, conversion, data, rule, guard, value, fungi
 
 ## Trust Conversion Model
 `docs/Knowledge-Bases/trust-conversion-model.md`
@@ -2935,7 +2935,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Type Qualifiers
 `docs/Knowledge-Bases/type-qualifiers.md`
-- codes: SPORE-TYPE-001, SPORE-TYPE-002
+- codes: FUNGI-TYPE-001, FUNGI-TYPE-002
 - terms: email, protected, type, redacted, qualifier, let, value, base, galerina, unsafe, binding, qualifiers, governance, auditemail
 
 ## Typed Error Model
@@ -2944,7 +2944,7 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Unified Syntax Architecture
 `docs/Knowledge-Bases/unified-syntax-architecture.md`
-- terms: layer, spore, runtime, security, file, unified, syntax, galerina, declarations, external, multiple, compile, domains, build
+- terms: layer, fungi, runtime, security, file, unified, syntax, galerina, declarations, external, multiple, compile, domains, build
 
 ## Untrusted File And Asset Processing
 `docs/Knowledge-Bases/untrusted-file-asset-processing.md`
@@ -2952,22 +2952,22 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## The Untrusted Governed Lane
 `docs/Knowledge-Bases/untrusted-governed-lane.md`
-- codes: SPORE-SUBSTRATE-001
+- codes: FUNGI-SUBSTRATE-001
 - terms: lane, untrusted, core, work, never, decision, photonic, fail-closed, exact, digital, admission, substrate, governed, verdict
 
 ## Galerina V1 Reserved Keyword Table
 `docs/Knowledge-Bases/v1-reserved-keywords.md`
-- codes: SPORE-SYNTAX-003, SPORE-SYNTAX-001, SPORE-SYNTAX-002, SPORE-SYNTAX-004
+- codes: FUNGI-SYNTAX-003, FUNGI-SYNTAX-001, FUNGI-SYNTAX-002, FUNGI-SYNTAX-004
 - terms: flow, declaration, keyword, keywords, active, reserved, lexer, contract, galerina, value-state, value, governance, block, binding
 
 ## Galerina — Value-State Annotations
 `docs/Knowledge-Bases/value-state-annotations.md`
-- codes: SPORE-VALUESTATE-001, SPORE-VALUESTATE-003, SPORE-VALUESTATE-002, SPORE-SECRET-001, SPORE-SECRET-002, SPORE-SECRET-003, SPORE-VALUESTATE-004, SPORE-VALUESTATE-005
+- codes: FUNGI-VALUESTATE-001, FUNGI-VALUESTATE-003, FUNGI-VALUESTATE-002, FUNGI-SECRET-001, FUNGI-SECRET-002, FUNGI-SECRET-003, FUNGI-VALUESTATE-004, FUNGI-VALUESTATE-005
 - terms: unsafe, safe, gate, binding, let, mut, flow, value, dimension, rule, state, secret, galerina, phase
 
 ## Galerina — Value-State Checker
 `docs/Knowledge-Bases/value-state-checker.md`
-- codes: SPORE-VALUESTATE-003, SPORE-VALUESTATE-001, SPORE-VALUESTATE-004, SPORE-SECRET-002, SPORE-SECRET-001, SPORE-SECRET-003, SPORE-BINDING-001, SPORE-BINDING-002, SPORE-VALUESTATE-002, SPORE-VALUESTATE-005
+- codes: FUNGI-VALUESTATE-003, FUNGI-VALUESTATE-001, FUNGI-VALUESTATE-004, FUNGI-SECRET-002, FUNGI-SECRET-001, FUNGI-SECRET-003, FUNGI-BINDING-001, FUNGI-BINDING-002, FUNGI-VALUESTATE-002, FUNGI-VALUESTATE-005
 - terms: safe, unsafe, gate, let, mut, rule, value, checker, binding, value-state, rawemail, string, email, galerina
 
 ## Variable Mutation Vault Design
@@ -2988,6 +2988,6 @@ Query: `node scripts/kb-index.mjs <terms>`  ·  by code: `node scripts/kb-index.
 
 ## Galerina
 `README.md`
-- codes: SPORE-SUBSTRATE-002, SPORE-SUBSTRATE-001, SPORE-FAULT-001, SPORE-NUMERIC-001, SPORE-TIER-001, SPORE-VALUESTATE-008, SPORE-PKG-006, SPORE-MATCH-001, SPORE-LEX-001, SPORE-NAME-001, SPORE-TYPE-001, SPORE-EFFECT-001, SPORE-GOV-001, SPORE-TERM-001, SPORE-PCI-001
+- codes: FUNGI-SUBSTRATE-002, FUNGI-SUBSTRATE-001, FUNGI-FAULT-001, FUNGI-NUMERIC-001, FUNGI-TIER-001, FUNGI-VALUESTATE-008, FUNGI-PKG-006, FUNGI-MATCH-001, FUNGI-LEX-001, FUNGI-NAME-001, FUNGI-TYPE-001, FUNGI-EFFECT-001, FUNGI-GOV-001, FUNGI-TERM-001, FUNGI-PCI-001
 - tasks: #102, #143, #128, #163, #165
 - terms: docs, galerina, governed, wasm, knowledge-bases, div, governance, core, shipped, runtime, audit, svg, width, real

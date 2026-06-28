@@ -1,5 +1,5 @@
 /**
- * naming-check benchmark — SPORE-NAMING diagnostic throughput.
+ * naming-check benchmark — FUNGI-NAMING diagnostic throughput.
  * Measures: files/sec over auth-service corpus (27 files, ~40 flows).
  */
 import { performance } from "node:perf_hooks";
@@ -10,7 +10,7 @@ import { runNamingAudit } from "../../../galerina-devtools-naming/dist/index.js"
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const corpusDir = join(__dir, "../../../../examples/auth-service");
-const files = readdirSync(corpusDir).filter(f => f.endsWith(".spore"));
+const files = readdirSync(corpusDir).filter(f => f.endsWith(".fungi"));
 const sources = files.map(f => ({ name: f, src: readFileSync(join(corpusDir, f), "utf8") }));
 
 // Warmup
@@ -33,7 +33,7 @@ const filesPerSec = Math.round(totalRuns / (elapsed / 1000));
 
 console.log(JSON.stringify({
   benchmark: "naming-check", runtime: "node",
-  description: "SPORE-NAMING checker over auth-service corpus (27 files)",
+  description: "FUNGI-NAMING checker over auth-service corpus (27 files)",
   iterations: ITERATIONS, filesPerIteration: sources.length,
   elapsedMs: Math.round(elapsed),
   filesPerSecond: filesPerSec,

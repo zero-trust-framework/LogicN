@@ -124,7 +124,7 @@ buffer and byte movement
 compute target selection
 hardware capability assumptions
 fallback decisions
-source-map links back to .spore files
+source-map links back to .fungi files
 ```
 
 ---

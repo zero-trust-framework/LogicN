@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "build": "tsc -p tsconfig.json",
     "test": "npm run typecheck && npm run build && node --test tests/*.test.mjs",
-    "test:fixtures": "node ../galerina-core/compiler/galerina.js run tests/hello-world.spore && node ../galerina-core/compiler/galerina.js run tests/vector-function.spore && node ../galerina-core/compiler/galerina.js run tests/sum.spore && node ../galerina-core/compiler/galerina.js run tests/decimal-sum.spore && node ../galerina-core/compiler/galerina.js run tests/json-return.spore"
+    "test:fixtures": "node ../galerina-core/compiler/galerina.js run tests/hello-world.fungi && node ../galerina-core/compiler/galerina.js run tests/vector-function.fungi && node ../galerina-core/compiler/galerina.js run tests/sum.fungi && node ../galerina-core/compiler/galerina.js run tests/decimal-sum.fungi && node ../galerina-core/compiler/galerina.js run tests/json-return.fungi"
   },
   "engines": {
     "node": ">=18"

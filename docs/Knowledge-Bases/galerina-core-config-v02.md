@@ -396,22 +396,22 @@ function validateSandboxConfig(
 
 ## Diagnostic Codes
 
-### SPORE-CONFIG
+### FUNGI-CONFIG
 
 | Code          | Meaning                   |
 | ------------- | ------------------------- |
-| SPORE-CONFIG-001 | Invalid config schema     |
-| SPORE-CONFIG-002 | Missing environment value |
-| SPORE-CONFIG-003 | Invalid environment mode  |
+| FUNGI-CONFIG-001 | Invalid config schema     |
+| FUNGI-CONFIG-002 | Missing environment value |
+| FUNGI-CONFIG-003 | Invalid environment mode  |
 
-### SPORE-SECRET
+### FUNGI-SECRET
 
 | Code          | Meaning                         |
 | ------------- | ------------------------------- |
-| SPORE-SECRET-001 | Unsafe secret sink              |
-| SPORE-SECRET-002 | Secret serialization prohibited |
-| SPORE-SECRET-003 | Invalid secret reference        |
-| SPORE-SECRET-004 | Secret exposure in report       |
+| FUNGI-SECRET-001 | Unsafe secret sink              |
+| FUNGI-SECRET-002 | Secret serialization prohibited |
+| FUNGI-SECRET-003 | Invalid secret reference        |
+| FUNGI-SECRET-004 | Secret exposure in report       |
 
 ---
 

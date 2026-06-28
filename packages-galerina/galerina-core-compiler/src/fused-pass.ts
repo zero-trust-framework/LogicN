@@ -157,7 +157,7 @@ export function fusedCompile(source: string): FusedPassResult {
     // ── Detect: secure/guarded flow ───────────────────────────────────────────
     if (matchKeyword("secure") || matchKeyword("guarded")) {
       skipWS();
-      if (!matchKeyword("flow")) { error("SPORE-PARSE-001", "Expected 'flow'"); break; }
+      if (!matchKeyword("flow")) { error("FUNGI-PARSE-001", "Expected 'flow'"); break; }
       skipWS();
       const _name = readIdentifier();
       emit(GIR_OP.FLOW_START, TypeId.Void, currentEffectMask, 0);

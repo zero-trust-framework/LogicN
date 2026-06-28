@@ -18,7 +18,7 @@ const FNS = `fn g(x: Int) -> Int { return x * 2 }
 `;
 async function run(body, ret = "Int") {
   const src = `pure flow f() -> ${ret}\ncontract { effects {} }\n{ ${FNS}  ${body} }`;
-  const p = parseProgram(src, "p.spore");
+  const p = parseProgram(src, "p.fungi");
   assert.equal(p.diagnostics.filter((d) => d.severity === "error").length, 0, "parse");
   try { resolveSymbols(p.ast); checkTypes(p.ast); } catch {}
   const r = await executeFlow("f", new Map(), p.ast);

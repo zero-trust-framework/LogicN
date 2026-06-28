@@ -343,7 +343,7 @@ Example:
       "memoryLimit": "64mb",
       "queueLimit": 500,
       "policy": "report_only",
-      "source": "src/webhooks/payment-webhook.spore:18",
+      "source": "src/webhooks/payment-webhook.fungi:18",
       "lastAction": "reported_and_continued"
     }
   ]

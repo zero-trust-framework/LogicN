@@ -311,7 +311,7 @@ Recommended rule:
 
 ## Global Vector Policy
 
-Most vector behaviour should be configured globally in `boot.spore`.
+Most vector behaviour should be configured globally in `boot.fungi`.
 
 ```Galerina
 vector {
@@ -502,7 +502,7 @@ Lazy Compact JSON integration
 {
   "vectorAnalysis": {
     "flow": "analyseCustomersFast",
-    "source": "src/analysis/customer-analysis.spore:12",
+    "source": "src/analysis/customer-analysis.fungi:12",
     "mode": "auto",
     "vectorizedBy": "vectorize rows",
     "columns": [
@@ -657,7 +657,7 @@ Vectorize error:
 CustomerDumpRow has no field missingField.
 
 Source:
-  src/analysis/customer-analysis.spore:8
+  src/analysis/customer-analysis.fungi:8
 ```
 
 ### Non-Numeric Vector Operation
@@ -775,7 +775,7 @@ Version 0.2:
 ```text
 add pure vector flow
 add pure vector required flow
-add global vector policy in boot.spore
+add global vector policy in boot.fungi
 add AI guide vector section
 ```
 

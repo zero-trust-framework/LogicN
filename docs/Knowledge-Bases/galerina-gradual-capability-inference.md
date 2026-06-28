@@ -138,7 +138,7 @@ Custom operations defined in library flows carry their own declared effects, whi
 
 ## Effect Propagation
 
-Inference works transitively. The compiler builds an **EffectGraph** within the SPORE-Graph and walks it to determine the complete effect footprint of any given flow.
+Inference works transitively. The compiler builds an **EffectGraph** within the FUNGI-Graph and walks it to determine the complete effect footprint of any given flow.
 
 If `dbQuery()` is declared with `effects [database.read]`, and `getUser()` calls `dbQuery()`, the compiler infers that `getUser()` also requires `database.read` — even if `getUser()` never directly calls a database operation itself.
 
@@ -235,6 +235,6 @@ Inference runs in dev and CI modes only. Production mode is strict and explicit.
 ## See Also
 
 - `capability-registry.yaml` — maps effects to host capabilities per deployment target
-- `galerina-semantic-graph-system` — SPORE-Graph and EffectGraph architecture
+- `galerina-semantic-graph-system` — FUNGI-Graph and EffectGraph architecture
 - `effect-checker` — the compiler pass that validates declared effects against usage
 - `galerina-roadmap` — Phase 13 and surrounding architectural proposals

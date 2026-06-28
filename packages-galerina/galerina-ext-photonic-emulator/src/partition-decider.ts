@@ -125,7 +125,7 @@ export class PartitionDecider {
     const declaresCrypto = (kernel.declaredEffects ?? []).some((e) => e.startsWith("crypto."));
     if (kernel.isCrypto || declaresCrypto || kernel.isControlFlow) {
       const derived = declaresCrypto && !kernel.isCrypto ? " (crypto derived from declared effects — caller flag not trusted alone)" : "";
-      return { target: "digital", reason: "INELIGIBLE: crypto/control-flow stays on the digital core (SPORE-SUBSTRATE-001)" + derived };
+      return { target: "digital", reason: "INELIGIBLE: crypto/control-flow stays on the digital core (FUNGI-SUBSTRATE-001)" + derived };
     }
     if (kernel.lane === "digital") {
       return { target: "digital", reason: "declared lane:digital — inert" };
@@ -140,16 +140,16 @@ export class PartitionDecider {
     // Required votes from D1's real variance (or supplied). Infeasible lane ⇒ refuse.
     const tol = kernel.tolerance ?? 0.05;
     const phys = kernel.phys ?? PHOTONIC;
-    // The systematic ADC-quantization floor (SPORE-SUBSTRATE-003) is a STRUCTURAL refusal the caller
+    // The systematic ADC-quantization floor (FUNGI-SUBSTRATE-003) is a STRUCTURAL refusal the caller
     // cannot switch off by supplying redundancyN: re-derive feasibility regardless. A supplied
     // redundancyN only overrides the random-variance vote count, never the systematic-floor refusal.
     const feasibleN = requiredRedundancy(n, phys, tol);
     if (!Number.isFinite(feasibleN)) {
-      return { target: "digital", reason: "FAIL-CLOSED: systematic ADC floor exceeds tolerance — lane infeasible regardless of redundancyN (SPORE-SUBSTRATE-003)" };
+      return { target: "digital", reason: "FAIL-CLOSED: systematic ADC floor exceeds tolerance — lane infeasible regardless of redundancyN (FUNGI-SUBSTRATE-003)" };
     }
     const N = kernel.redundancyN ?? feasibleN;
     if (!Number.isFinite(N) || N < 1) {
-      return { target: "digital", reason: `FAIL-CLOSED: lane cannot vote into tolerance (N=${N}) → digital (SPORE-SUBSTRATE-003)` };
+      return { target: "digital", reason: `FAIL-CLOSED: lane cannot vote into tolerance (N=${N}) → digital (FUNGI-SUBSTRATE-003)` };
     }
 
     const tdig = Tdigital(n), tphot = Tphotonic(n, N);

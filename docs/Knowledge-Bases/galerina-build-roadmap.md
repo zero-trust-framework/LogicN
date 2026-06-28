@@ -14,7 +14,7 @@ gap-check, and the proposed task table in
 **[galerina-rd-0059-0064-triage-2026-06-22.md](galerina-rd-0059-0064-triage-2026-06-22.md)**.
 
 **Net:** 0059 is mostly already absorbed (fault-tolerance doc); the supply-chain/package items are net-new.
-**Convergent #1 (0062 ∧ 0063):** least-privilege minimality is **partially shipped** — `SPORE-EFFECT-002
+**Convergent #1 (0062 ∧ 0063):** least-privilege minimality is **partially shipped** — `FUNGI-EFFECT-002
 OVERDECLARED_EFFECT` already detects declare-without-use but only as a **warning** and is **absent from
 Stage-B** → the delta is escalate-to-fail-closed-error + port (proposed **#201**). Other net-new: transitive
 mask-⊆ proof (**#202**), full contract digest (**#203**), signed-package audit graph (**#204**), Kleene-lattice
@@ -38,7 +38,7 @@ over 100k fuzzed requests, admission is total + deny-by-default over 20k fuzz). 
 `3138cfa`:** `galerina-ext-photonic-emulator/src/photonic-switch.ts` — `selectPhotonicBackend({mode, hardware})`
 picks among `PhotonicBackend` impls behind the existing seam. **FAIL-CLOSED + KEEP-DIGITAL:** default = emulator
 (software); real silicon admitted ONLY when present ∧ `nativeAvailable` ∧ `attested` (else fall back to the
-emulator with `SPORE_PHOTONIC_*` codes — never an unverified PIC); the switch only picks the photonic *compute*
+emulator with `FUNGI_PHOTONIC_*` codes — never an unverified PIC); the switch only picks the photonic *compute*
 backend (crypto/K3/control stay on the digital core). The runtime seam for the PPU-virtualisation ladder
 (Rung 2 emulator today → Rung 3+ attested silicon). +7 tests + prove-own-maths (exhaustive 15-row truth table 3/3).
 
@@ -99,7 +99,7 @@ cache it; packages per tier; clearly photonic if not hybrid if not binary."*
 - **`hardware()` directive** (`hardware-directive.ts`): cached, deployment-stable, **ATTESTED** — resolves
   the tier from the bridge manifest's `hardwareIdentity` behind a verifyAttestation result (injected; the
   package stays crypto-free and binds the **bridge** surface, not audit), **never** the gameable
-  `nativeAvailable` self-claim. Fail-closed: UNKNOWN/UNATTESTED ⇒ binary (K3→DENY, SPORE-HW-004). Tier MAP
+  `nativeAvailable` self-claim. Fail-closed: UNKNOWN/UNATTESTED ⇒ binary (K3→DENY, FUNGI-HW-004). Tier MAP
   mirrors `HARDWARE_TRUST_PROFILES` (`type-registry.ts:455-505`).
 - **Tier loader** (`tier-loader.ts`): selects the `BridgeRegistry` by cached tier with the
   photonic > hybrid > binary fall-through; binary is the unconditional floor; injected via
@@ -241,7 +241,7 @@ over the session's 9 commits returned **24 confirmed** findings (false positives
   digital) + a reserved **`photonic:` provenance namespace** so an injected port can never impersonate an
   attested registry bridge (e.g. claim `stub-ternary`) in the audit trail.
 - 🟡 `hardware-directive.ts`: strict `attestationVerified === true` (truthy non-boolean no longer coerce-passes
-  the tier gate); `partition-decider.ts`: the systematic-floor refusal (SPORE-SUBSTRATE-003) can't be skipped by
+  the tier gate); `partition-decider.ts`: the systematic-floor refusal (FUNGI-SUBSTRATE-003) can't be skipped by
   supplying `redundancyN`.
 - 🟠 `galerina verify`: **fail-OPEN → fail-CLOSED** — a manifest that *claims* a signature but can't be verified
   (crypto error / missing public key) now **denies** instead of warn-and-pass.
@@ -252,23 +252,23 @@ All affected suites green (core-network 97, tower-citizen 196, photonic-emulator
 - ✅ **CRITICAL FIXED 2026-06-20 (`fuse-loader.ts` revocation):** the runtime fuse admission gate now refuses a
   validly-signed but REVOKED key (the audited exploit: a forgery signed by the leaked in-repo key `8eecf4…`
   passed because the loader never checked revocation). Added a fail-closed `revocationCheck` to
-  `FusePackageOptions` + a `SPORE-FUSE-KEY-REVOKED` gate in `loadAndVerifyPackage` (a throwing check ⇒
-  `SPORE-FUSE-REVOCATION-UNVERIFIABLE`, also fail-closed); the kernel stays node-dep-free and the CLI
+  `FusePackageOptions` + a `FUNGI-FUSE-KEY-REVOKED` gate in `loadAndVerifyPackage` (a throwing check ⇒
+  `FUNGI-FUSE-REVOCATION-UNVERIFIABLE`, also fail-closed); the kernel stays node-dep-free and the CLI
   `galerina fuse` injects the real `governance/revocation-registry.mjs` check (`assertRegistryTrustworthy`
   once + per-key `isKeyRevoked`). +1 app-kernel test. app-kernel 58/58.
 
 **STILL OPEN (next):**
 - 🟢 **`galerina run` admission gate — FIXED (production-gated signature + revocation):** ✅ the swallowed-error
-  fail-open was FIXED first (a present-but-unreadable manifest denies `SPORE-MANIFEST-INVALID`). Now, under
+  fail-open was FIXED first (a present-but-unreadable manifest denies `FUNGI-MANIFEST-INVALID`). Now, under
   `GALERINA_PROFILE=production`, the run gate also verifies the manifest **signature + revocation** before executing:
   a present manifest that is unsigned/placeholder, has an incomplete signature, is signed by a **REVOKED** key,
-  is missing its public key, or whose signature fails to verify is refused (`SPORE-MANIFEST-UNSIGNED` /
-  `SPORE-MANIFEST-REVOKED-KEY` / `SPORE-MANIFEST-PUBKEY-MISSING` / `SPORE-MANIFEST-TAMPER`); any failure to complete
-  the check is itself fail-closed (`SPORE-MANIFEST-INVALID`). Rationale: the `sourceHash` check is self-referential
+  is missing its public key, or whose signature fails to verify is refused (`FUNGI-MANIFEST-UNSIGNED` /
+  `FUNGI-MANIFEST-REVOKED-KEY` / `FUNGI-MANIFEST-PUBKEY-MISSING` / `FUNGI-MANIFEST-TAMPER`); any failure to complete
+  the check is itself fail-closed (`FUNGI-MANIFEST-INVALID`). Rationale: the `sourceHash` check is self-referential
   (an attacker who edits the source AND rewrites `sourceHash` passes it) — only the signature binds the manifest
   to a trusted signer, only the registry catches a revoked key. Dev (default) profile keeps the sourceHash-only
   behaviour byte-for-byte. +1 cli-compatibility test (dev runs → 5050; production with a placeholder manifest →
-  `SPORE-MANIFEST-UNSIGNED`). **Posture left for owner opt-in:** this is "verify-if-present" — a flow with NO
+  `FUNGI-MANIFEST-UNSIGNED`). **Posture left for owner opt-in:** this is "verify-if-present" — a flow with NO
   manifest still raw-runs in production; the stricter "production requires a signed manifest to run at all" is a
   deliberate posture decision, not built. NB the audit's own refutation still bounds the residual (the governed
   runtime re-derives effects from the sourceHash-bound source; the WASM gate attests over the binary) — this is
@@ -277,8 +277,8 @@ All affected suites green (core-network 97, tower-citizen 196, photonic-emulator
   #67 entry below. A fuller `admitManifest` helper (the surrounding signature+revocation+pubkey orchestration,
   still inlined per-site) remains a tidy-up follow-up.
 - 🟢 **unsigned/placeholder manifest accepted by `verify` — FIXED (profile-gated):** under `GALERINA_PROFILE=production`
-  a placeholder / absent / incomplete-signature manifest now fails closed with `SPORE-MANIFEST-UNSIGNED` (and an
-  unreadable signature copy with `SPORE-MANIFEST-INVALID`); the default (dev) profile keeps the informational
+  a placeholder / absent / incomplete-signature manifest now fails closed with `FUNGI-MANIFEST-UNSIGNED` (and an
+  unreadable signature copy with `FUNGI-MANIFEST-INVALID`); the default (dev) profile keeps the informational
   behaviour byte-for-byte, so existing usage is unchanged. Mirrors `#178` fail-closed-in-prod. +1 cli-compatibility
   test (placeholder passes in dev, rejected in production).
 - 🟢 **RFC-8785 canonical signing + #67 CBOR self-verify — FIXED (owner-directed, versioned):** the CLI now signs
@@ -304,7 +304,7 @@ All affected suites green (core-network 97, tower-citizen 196, photonic-emulator
   `posture.ts` (unknown ⇒ fail-secure) — is routed through by all three reads (build key policy, `verify`,
   `run`). UNSET/empty + recognized dev tokens (`dev`/`test`/`local`/…) relax to dev (zero-touch local dev,
   byte-unchanged); the exact canonical `"production"` resolves strict cleanly; anything else set resolves
-  **strict (production) with an `SPORE-PROFILE-UNRECOGNIZED` warning** so a malformed value can never quietly
+  **strict (production) with an `FUNGI-PROFILE-UNRECOGNIZED` warning** so a malformed value can never quietly
   relax enforcement. +4 governance-step unit tests + 1 cli-compatibility behaviour test (a typo'd profile
   fail-secures and denies an unsigned run; explicit `dev` relaxes). Suite 53/53 · 4908; governance step 22/22.
   **The 2026-06-20 zero-trust audit is now FULLY CLOSED** (2 criticals + all highs + all 🟠/🟡 — only the
@@ -365,7 +365,7 @@ and binds the full tamper-evidence set under the signature.
 - **CRYPTO-004** (algo-label binding) — *Tracked.* Versioning-sensitive (crypto-format bump per the
   design-stability charter).
 - **Owner-gated** (#149 git-history scrub + first clean push · #199 Phase 2 engine landing · enc-rnd bridge
-  pings · SPORE-DP-* allocation) — *Blocked / Queued.* Awaiting owner-supervised execution.
+  pings · FUNGI-DP-* allocation) — *Blocked / Queued.* Awaiting owner-supervised execution.
 
 ---
 
@@ -397,18 +397,18 @@ Remaining enc-rnd hand-offs gated behind this: #7 (slice 4), #12 (slice 5); #9/#
 - ✅ **VSC-001 (CRITICAL) FIXED** (`915b16d`) — taint escape: `isGovernedSink` had diverged from the authoritative `SINK_REQUIREMENTS`, so unsafe/tainted values reached `response.body` / `ai.remoteInference` / `network.outbound` / `log.write` / bare `database.write` / `http(s).get` with **no diagnostic**. `isGovernedSink` now ⊇ `getSinkRequirement()` (single source of truth) + 4 regression tests.
 - **Full audit RE-VERIFIED (2026-06-16): 37 raised · 32 confirmed** (raw: `tasks/w6lqlqgck.output`). Closed: VSC-001, CRYPTO-001, CRYPTO-002. **Open HIGH backlog — deliberate, individually-tested (do NOT batch on auto):**
   - ✅ **VSC-002 FIXED** (owner decision A) — `trap` no longer declassifies (was: any identifier *mentioned* in a trap condition had its taint cleared, laundering unsafe values into injection sinks). `trap` is now value-state-neutral; declassification requires an explicit `validate.*`/`sanitize.*`/`redact()` gate. trap-decl tests rewritten to the fail-closed semantics. 48/48 · 4,466.
-  - ✅ **VSC-003 FIXED** — secret/network/log/serialization recognizers bailed on any non-identifier receiver, so a memberExpr receiver (`client.http.post`, `ctx.secrets.get`, `obj.log.info`, `app.json.encode`) bypassed every one (SPORE-SECRET-002/PRIVACY-002 silently skipped). Added a shared `receiverSegment()` (last dotted-path segment) routed through all four — fail-closed, additive. +3 tests. 48/48 · 4,469.
+  - ✅ **VSC-003 FIXED** — secret/network/log/serialization recognizers bailed on any non-identifier receiver, so a memberExpr receiver (`client.http.post`, `ctx.secrets.get`, `obj.log.info`, `app.json.encode`) bypassed every one (FUNGI-SECRET-002/PRIVACY-002 silently skipped). Added a shared `receiverSegment()` (last dotted-path segment) routed through all four — fail-closed, additive. +3 tests. 48/48 · 4,469.
   - ✅ **GOV-001 FIXED** (`00f387a`, owner-ratified) — `permitted_effects` K3 state machine (omitted=neutral/auto-inherit · empty `{}`=deny-all · populated=allow-listed) + unresolvable `conforms_to` = fatal in production/deterministic (was fail-open). KB §7a. +4 tests. · ✅ **GOV-003 FIXED** (`99f0025`) — denied response fields can't leak via member/positional returns (`collectBodyFieldNames` broadened + redact/seal discharge); **residual ✅ FIXED (2026-06-20):** the intermediate-binding RENAME (`let e = user.email; return e`, incl. alias-of-alias) is now caught — `collectBodyFieldNames` builds a precise alias-carry map (direct field-access / identifier renames only; opaque call results carry nothing → no false positives) + 4 regression tests in `gov003-response-leak.test.mjs`. · ✅ **CRYPTO-003 FIXED** (`f43dbf6`) — `hardwareSeal`/`epilogueReceipt`/`liabilityProfile`/`physicalHardeningTier` now bound under the gov signature (canonical sub-hashes; in-place pre-persistence per the VERSIONING charter).
   - 🔲 **CRYPTO-003** — the governance signature omits several security-relevant ProofGraph fields. **Versioning-sensitive** (crypto-format bump per the design-stability charter — handle deliberately).
   - **+10 medium · 10 low · 6 info** (QB-001 admission-not-structurally-enforced, VSC-004/005, GOV-002/004, CRYPTO-004/005/006, dead-code/style) — full triage list in `tasks/w6lqlqgck.output`.
-  - ✅ **Low cleanup done** (`cleanup` commit): DEAD-001 (TamperResponseStrategy → single source of truth for VALID_TAMPER), DEAD-002 (dead `hasNode` removed), DUP-001 (duplicate context extractor consolidated). 🔲 REDUN-001 (SPORE_SUBSTRATE_00x const consolidation across substrate-inference/-model) deferred — analogous to DEAD-001 but cross-file diagnostic construction.
+  - ✅ **Low cleanup done** (`cleanup` commit): DEAD-001 (TamperResponseStrategy → single source of truth for VALID_TAMPER), DEAD-002 (dead `hasNode` removed), DUP-001 (duplicate context extractor consolidated). 🔲 REDUN-001 (FUNGI_SUBSTRATE_00x const consolidation across substrate-inference/-model) deferred — analogous to DEAD-001 but cross-file diagnostic construction.
 
 **Benchmark — Gate 9 (`8273ad3`):** `crypto-ops` now measures **ML-DSA-65 + hybrid Ed25519+ML-DSA-65**. PQ-tax: hybrid verify ≈ 1.75 ms (~17× Ed25519), sign ≈ 6.7 ms (~84×); sigs/keys ~50× larger. governance-cost unchanged within noise. These rows are an **R4 regression gate** — PQ stays at amortized admission/build boundaries, never the per-decision hot path.
 
 **R&D adjudication:** `notes/35-hashing` (photonic "THA-162" ternary hash) **rejected** — contradicts crypto-on-core (analog optics can't compute a bit-exact hash; security-by-radix is an encoding illusion; IOTA's Curl ternary hash was broken → reverted to binary Keccak). Keep SHA-256; PQ the *signature* (ML-DSA-65, shipping).
 
 **Open CLI/DX (filed):** #125 `galerina run --governed` · ✅ **#126 parser-level bitwise hint** (`2026-06-20`) —
-`& | << >>` in expression position now get the clear `SPORE-PARSE-001` crypto-on-core hint (matching the lexer's
+`& | << >>` in expression position now get the clear `FUNGI-PARSE-001` crypto-on-core hint (matching the lexer's
 `^`/`~`), with recovery that suppresses the confusing follow-on. Done in the `parseExpression` binary loop (value
 context — so it never flags generic `<<`/`>>` in TYPE position or `|` match-arm patterns, which parse elsewhere).
 +5 tests; SOT 3710. **NB:** bitwise ops are *intentionally* NOT Galerina operators (crypto-on-core boundary) — #126 is
@@ -463,7 +463,7 @@ the HINT, not the feature.
      (`getInternedStrings`/`seedString`, `src/wat-emitter.ts:524` + `src/wasm-runtime.ts:297`); list/record
      output reader (`readArray`/`readResult`/`readRecordField`, `src/wasm-runtime.ts:299-305`). `tokenize.wasm`
      == interpreter byte-for-byte (golden: `wat-p9-tokenize-parity`, 21 cases). No `;; unresolved` markers remained.
-2. **#102–#104, #106 — real DSS.wasm (Post-P9, DRCM Phase 4):** `dss/index.spore` → `build/dss.wasm`; Wasmtime component supervises DWI guests; real per-DWI fuel; DSS.wasm signs epilogue receipts.
+2. **#102–#104, #106 — real DSS.wasm (Post-P9, DRCM Phase 4):** `dss/index.fungi` → `build/dss.wasm`; Wasmtime component supervises DWI guests; real per-DWI fuel; DSS.wasm signs epilogue receipts.
 3. **CF-4 — extract `@galerina/tpl-oracle`** so the Brawn (`ext-bridge-cpp`) imports NO Tower runtime (currently pulls `StubTernaryBridge`/`GovernanceEnforcer` from `tower-citizen`).
 4. **CF-5 / CF-9 / CF-10** — vector T-MAC commit gate · ECC/TMR · atomic failover.
 5. **Record follow-ons** — `#record-update` lowering + cross-flow return-type tracking (so `let r = someCall()` returning a record resolves field access).
@@ -474,7 +474,7 @@ the HINT, not the feature.
 ## ✅ Complete — All of Phases 1–3 + DRCM Phases 1–4
 
 ### Compiler Quality (Phase 1)
-`#57` Named record constructors · `#61` `::` module separator · `#55` Named arguments · `#62` Multi-variant match arms `A|B =>` · `#45` SPORE code wiring · `#50` EC/ID/AU/LC/T/FG codes
+`#57` Named record constructors · `#61` `::` module separator · `#55` Named arguments · `#62` Multi-variant match arms `A|B =>` · `#45` FUNGI code wiring · `#50` EC/ID/AU/LC/T/FG codes
 
 ### New Language Features (Phase 2)
 `#56` Domain Guard Policies `[conforms_to:]` · `#58` `resilience {}` + `observability {}` · `#52` `security::interim` real module · `#51` `@experimental_profile` directive
@@ -483,28 +483,28 @@ the HINT, not the feature.
 `#46–49` Pattern examples + README + examples migration + graph index · `#53` KB index · `#54` T-006/007/008 goal tests · `#59` Change-class CI + GitHub Action · `#60` Contract clause reference
 
 ### DRCM Phase 1 — Critical Security Fixes
-`#30` Wildcard ban SPORE-CAP-001 · `#31` Prefix-token scanner · `#32–35` CAS/CBOR/key custody/separator specs
+`#30` Wildcard ban FUNGI-CAP-001 · `#31` Prefix-token scanner · `#32–35` CAS/CBOR/key custody/separator specs
 
 ### DRCM Phase 2 — `invariant {}` Block
-`#36` Parser + static eval + WAT gate injection · SPORE-INV-001/003/004 enforced
+`#36` Parser + static eval + WAT gate injection · FUNGI-INV-001/003/004 enforced
 
 ### DRCM Phase 3 — .lmanifest + Admission Gate
 `#67` Binary CBOR RFC 8949 · `#37` `galerina verify` admission gate · `#63` governance-impact.json · `#64` `galerina check --diff` · `#65` `galerina init-env`
 
 ### DRCM Phase 4 — Structured Capabilities + `policy {}` Parser
-`#38` Structured SystemCapabilityType replacing string grants · `#39` `policy {}` block parser + monotonicity verifier (SPORE-MONO-001/002)
+`#38` Structured SystemCapabilityType replacing string grants · `#39` `policy {}` block parser + monotonicity verifier (FUNGI-MONO-001/002)
 
 ### CI/CD Enhancements
-`#66` SPORE-OBS-002 observability/privacy separation · `#71` `galerina check --what-if` shadow policy analysis · `#73` `assuming {}` parser (AST node assumingDecl) · `#74` `assuming {}` manifest-lookup proof verification
+`#66` FUNGI-OBS-002 observability/privacy separation · `#71` `galerina check --what-if` shadow policy analysis · `#73` `assuming {}` parser (AST node assumingDecl) · `#74` `assuming {}` manifest-lookup proof verification
 
 ### Topological Graph Engine (Foundation)
 `#79` Pre-resolved Policy DAG (CBOR Tag 416) · `#80` Behavioral Fingerprinting (CBOR Tag 417) · `galerina manifest-to-dot` DOT visualization · V_DPM extended to 32-bit topology layout
 
 ### Tower-Native Syntax (v1.0)
-`#81` `trap` keyword + WAT gate + SPORE-TRAP-001/002 · `#82` `governed` floor qualifier + manifest ProofObligation · `#83` `view()` MMCP capability-masked pointer type (Tag 415 stub) · `#84` match exhaustiveness SPORE-MATCH-001 · `#85` `DSS.spore` V_DPM foundation (Floor 2 bootstrap)
+`#81` `trap` keyword + WAT gate + FUNGI-TRAP-001/002 · `#82` `governed` floor qualifier + manifest ProofObligation · `#83` `view()` MMCP capability-masked pointer type (Tag 415 stub) · `#84` match exhaustiveness FUNGI-MATCH-001 · `#85` `DSS.fungi` V_DPM foundation (Floor 2 bootstrap)
 
 ### Tower-Native Syntax v2.1 — Foundations Complete (tasks #86–#94)
-`#86` `static` compile-time constants (WAT `(i32.const N)` folding) · `#87` `bitfield` governance registers + V_DPM rewrite (`NAME.field` bitmask + `NAME.BIT_field` position) · `#88` `gate {}` admission guard verifier (SPORE-GATE-001/002; `gateConstraints[]` manifest) · `#89` `access {}` Default Deny + `grant` enforcement (SPORE-ACCESS-001/002) · `#92` `guard Name {}` domain ceiling syntax (replaces `policy Name {}`) · `#93` `import "./path.spore"` DAG merge (SPORE-IMPORT-001-004) · `#94` `import plugin safe/assimilate` bridged plugins (`assimilatedPlugins[]` manifest; SPORE-ASSIMILATE-001-003) · `;;` govComment as first-class token → `governanceAnnotations[]` in manifest
+`#86` `static` compile-time constants (WAT `(i32.const N)` folding) · `#87` `bitfield` governance registers + V_DPM rewrite (`NAME.field` bitmask + `NAME.BIT_field` position) · `#88` `gate {}` admission guard verifier (FUNGI-GATE-001/002; `gateConstraints[]` manifest) · `#89` `access {}` Default Deny + `grant` enforcement (FUNGI-ACCESS-001/002) · `#92` `guard Name {}` domain ceiling syntax (replaces `policy Name {}`) · `#93` `import "./path.fungi"` DAG merge (FUNGI-IMPORT-001-004) · `#94` `import plugin safe/assimilate` bridged plugins (`assimilatedPlugins[]` manifest; FUNGI-ASSIMILATE-001-003) · `;;` govComment as first-class token → `governanceAnnotations[]` in manifest
 
 ### Agile Governance Patterns + Proof-Tracing (Design)
 `galerina-agile-governance-pattern.md` · `galerina-proof-tracing-design.md` · `galerina-topological-graph-engine.md`
@@ -516,7 +516,7 @@ the HINT, not the feature.
 > **⏩ RECONCILED 2026-06-22 (authoritative over the rows below until they're individually pruned):** several
 > rows in this section AND the "🟡 Open (Priority order)" table are STALE — DONE but still listed open (verified
 > vs live source; full detail in [galerina-task-ledger.md](galerina-task-ledger.md) §9). **Actually DONE:** #68
-> (CBOR secure parser), #72 (`parent_policy` ⊆), #76 (SPORE-INV-000), #91 (`bitfield V_DPM`), #125
+> (CBOR secure parser), #72 (`parent_policy` ⊆), #76 (FUNGI-INV-000), #91 (`bitfield V_DPM`), #125
 > (`run --governed`), #126 (bitwise hint), #128 (for-in WASM). **Genuinely open:** #69, #70, #75/#77/#78
 > (declared-only — Phase-5 serialization), #90 (RESERVED/future — not built), #110, #147, #148, #171, #172,
 > #192, #193, #200, CF-4, CF-5. The framework-plan §6 Tri-Pipe fault-tolerance hardenings (items 1–4) are all
@@ -531,7 +531,7 @@ the HINT, not the feature.
 | Task | What | Priority |
 |---|---|---|
 | **#75** | Governance-as-Evidence: AuditEvent CBOR Tag 410 schema | Phase 5 gate |
-| **#76** | SPORE-INV-000 DSS trap handler | Phase 5 gate |
+| **#76** | FUNGI-INV-000 DSS trap handler | Phase 5 gate |
 | **#77** | ExecutionDAG compile-time CFG → CBOR Tag 414 | DRCM Phase 6 |
 | **#78** | MMCP full enforcement (view() runtime gate) → CBOR Tag 415 | DRCM Phase 5 |
 
@@ -539,20 +539,20 @@ the HINT, not the feature.
 | Task | What | Priority |
 |---|---|---|
 | **#90** | `policy {}` State Mutation Governance — permitted transitions on `mut` variables | Phase 5 |
-| **#91** | Migrate `vdpm.spore` from verbose VDPM_BIT_* flows to `bitfield V_DPM { }` | After #87 ✅ |
+| **#91** | Migrate `vdpm.fungi` from verbose VDPM_BIT_* flows to `bitfield V_DPM { }` | After #87 ✅ |
 
 ### Phase 9B — Self-Hosting → WASM (in progress)
 The self-hosted compiler sources in `packages-galerina/galerina-core-compiler/src/self-hosted/`
-(`lexer.spore`, `parser.spore`, `type-checker.spore`, `governance-verifier.spore`, …) now
+(`lexer.fungi`, `parser.fungi`, `type-checker.fungi`, `governance-verifier.fungi`, …) now
 compile through the Stage-A toolchain. Progress on assembling them to WASM:
 
 | Sub-phase | What | Status |
 |---|---|---|
-| **P9.2** | `externref` lowering fix — host-handle values cross the WASM boundary | ✅ Done — `lexer.spore` now `galerina build`s to `build/lexer.wasm` |
+| **P9.2** | `externref` lowering fix — host-handle values cross the WASM boundary | ✅ Done — `lexer.fungi` now `galerina build`s to `build/lexer.wasm` |
 | **P9.3** | Stdlib host mapping — self-hosted sources resolve stdlib calls to host imports | ✅ Done — lexer + parser link against the host stdlib |
 | **P9.4** | Guarded flow bodies + record types fully lowered to WASM | ⬜ Remaining — `parser.wasm` builds but record/guarded-body lowering is still partial |
 
-**Verify:** `node galerina.mjs build packages-galerina/galerina-core-compiler/src/self-hosted/lexer.spore`
+**Verify:** `node galerina.mjs build packages-galerina/galerina-core-compiler/src/self-hosted/lexer.fungi`
 emits `build/lexer.wasm`; the parser builds too, pending P9.4 for full body lowering.
 See `galerina-phase-9-roadmap.md` (Phase 9B, Stage B1–B5) for the self-hosting plan.
 
@@ -562,7 +562,7 @@ See `galerina-phase-9-roadmap.md` (Phase 9B, Stage B1–B5) for the self-hosting
 
 ### Phase 5 — DSS.wasm Supervisor + Step Keyword
 ```
-V_DPM structure definition in DSS.spore  ← START HERE when ready
+V_DPM structure definition in DSS.fungi  ← START HERE when ready
     ↓
 Capability → bitmask mapping
     ↓
@@ -574,7 +574,7 @@ MMCP (#78) + topology bit validation (bits 8-15)
     ↓
 Governance-as-Evidence: AuditEvent CBOR Tag 410 (#75)
     ↓
-SPORE-INV-000 trap handler (#76)
+FUNGI-INV-000 trap handler (#76)
     ↓
 CBOR secure parser: depth/duplicate/overflow (#68)
 ```
@@ -627,7 +627,7 @@ Every `galerina build` now produces a binary CBOR `.lmanifest` containing:
 
 | Field | CBOR Tag | Status |
 |---|---|---|
-| `sourceHash` | — | ✅ SHA-256 of .spore source |
+| `sourceHash` | — | ✅ SHA-256 of .fungi source |
 | `proofObligations` | Tag 403 | ✅ invariant static/runtime classifications |
 | `derivedConstraints` | — | ✅ secret sink + taint rules |
 | `policyResolutionDag` | Tag 416 | ✅ pre-resolved effect bitmask |
@@ -652,23 +652,23 @@ Tasks #1–67 + #71 + #73 + #74 + #79–89 + #92–#94 (see task list for full d
 |---|---|---|
 | **#72** | Hierarchical policy inheritance | Medium |
 | **#75** | Governance-as-Evidence CBOR Tag 410 schema | Phase 5 gate |
-| **#76** | SPORE-INV-000 DSS trap handler | Phase 5 gate |
+| **#76** | FUNGI-INV-000 DSS trap handler | Phase 5 gate |
 | **#68** | CBOR secure parser DSS hardening | Phase 5 gate |
 | **#78** | MMCP full enforcement Tag 415 | Phase 5 gate |
 | **#70** | WAT single-exit body transform | Phase prereq |
 | **#77** | ExecutionDAG CFG → Tag 414 | Phase 6 gate |
 | **#69** | Floor-specific dev tools graphs | Phase 7 |
 | **#90** | `policy {}` State Mutation Governance | Phase 5 |
-| **#91** | Migrate `vdpm.spore` to `bitfield V_DPM {}` | After #87 ✅ |
+| **#91** | Migrate `vdpm.fungi` to `bitfield V_DPM {}` | After #87 ✅ |
 | **#118** | `galerina-ext-bridge-groq` GroqCloud HTTP wrapper | Track B |
 | **#119** | `galerina-ext-bridge-bitnet` BitNet CPU WASI-NN backend | Track A |
 | **#120** | `galerina wrap` C++ wrapper generator | CLI |
 | **#121** | `galerina promote` full promotion pipeline | CLI |
 | **#122** | `galerina-ext-bridge-nvfp4` NVFP4 TensorRT-LLM backend | Hardware-gated |
-| **#123** | `governance_tier` boot.spore mapping | Parser |
+| **#123** | `governance_tier` boot.fungi mapping | Parser |
 | **#124** | `audit_depth full` AuditEvent AI inference fields | Verifier |
 | **#125** | `galerina run --governed <flow>` — execute effectful/secure flows via the **governed interpreter** (`console.log` / `audit.write` / capability host) **enforcing the manifest's allowed effects**. Today `run` is WASM-`--invoke`-only (only pure, primitive-returning flows are exported), so a `secure flow main { console.log }` can be *checked* but not *executed* from the CLI — the error at `galerina.mjs:1300` correctly says so but offers no run path. Governance-sensitive: must honour deny-by-default (no ambient `console`/capabilities), reuse `interpreter.ts`'s `ContractEnforcer` + `CapabilityHost`, not bypass them. Dogfooding finding (.tmf R&D #2). | CLI |
-| **#126** | Extend the descriptive operator hint beyond `^`/`~` (`lexer.ts:790`). `&` `\|` `<<` `>>` and `&&` `\|\|` currently emit a generic `SPORE-PARSE-001`. Must be **parser-level, not lexer**: `\|` is overloaded for multi-variant match arms (`A\|B =>`, `parser.ts:1709`) and `<<`/`>>` are `<`/`>` pairs used in generics/comparison — none can be blanket-rejected in the lexer. In *expression* position, hint `&` `\|` `<<` `>>` → engine/extension (crypto-on-core) and `&&` `\|\|` → use the `and`/`or` keywords. From R&D conformance audit (DX only, low priority). | DX |
+| **#126** | Extend the descriptive operator hint beyond `^`/`~` (`lexer.ts:790`). `&` `\|` `<<` `>>` and `&&` `\|\|` currently emit a generic `FUNGI-PARSE-001`. Must be **parser-level, not lexer**: `\|` is overloaded for multi-variant match arms (`A\|B =>`, `parser.ts:1709`) and `<<`/`>>` are `<`/`>` pairs used in generics/comparison — none can be blanket-rejected in the lexer. In *expression* position, hint `&` `\|` `<<` `>>` → engine/extension (crypto-on-core) and `&&` `\|\|` → use the `and`/`or` keywords. From R&D conformance audit (DX only, low priority). | DX |
 | **#127** | **Shape-stable governance objects** (V8 hidden-class / inline-cache discipline). Keep hot-path governance objects (PolicySnapshot, GateDecisionInput, DecisionToken, ForensicEvent, and a future Passport/ModuleIdentity) **monomorphic** — fixed field order, no dynamic property add/delete — so the engine keeps a stable hidden class (faster validation, deterministic replay, stable cache keys); fixed structs in the future deterministic/WASM core. Rule: *optimize the path to the decision, not the decision* (consistent with GateCache #194 + the R4 PQ-tax gate). Profiling/design task — **partly already realised** (numeric policy table, V_DPM bitmask). | Perf/design |
 | **#128** | **GAP-4 (enc-rnd dogfooding): `for…in` not lowered to WASM — and SILENT.** `forEachStmt` parses + executes in the Stage-A interpreter, but `wat-emitter.ts` has **no case for it** (confirmed — zero `forEachStmt` handler), so under Stage-B the loop body silently never runs (no-op, no error). **Two parts:** (a) **safety (priority) — ✅ DONE 2026-06-17** — `emitBlockStatements` `default` branch no longer emits the silent `(i32.const 0) ;; unhandled stmt` fallthrough; it now emits an atomic `(unreachable) ;; unsupported-in-WASM: <kind>` fail-closed trap (mirrors the ensure/trapDecl gates + flow-stub discipline ~L413-435). Confirmed: the module still assembles (wabt-valid) but traps at runtime instead of returning a wrong result. Regression test `tests/wat-failclosed-unsupported-stmt.test.mjs` (4 cases: no silent no-op, fail-closed trap emitted, module well-formed/assembles, supported `while` unaffected). `test:core` green (compiler 3459). (b) **feature (follow-up, OPEN)** — implement real `forEachStmt` lowering (block+loop+iterator over the collection); when it lands, flip the for-in cases in the regression test from "traps" to "lowers correctly". | Stage-B / safety |
 
@@ -677,10 +677,10 @@ Tasks #1–67 + #71 + #73 + #74 + #79–89 + #92–#94 (see task list for full d
 |---|---|---|
 | **#118** | `galerina-ext-bridge-groq`: GroqCloud HTTP wrapper — governed `step()` via WASI-HTTP, `ai {}` enforcement (max_token_cost, max_latency_ms, approved_models), AuditEvent CBOR Tag 410 | Track B |
 | **#119** | `galerina-ext-bridge-bitnet`: BitNet CPU WASI-NN Wasmtime backend — `wasmtime-wasi-nn-bitnet` Rust crate, BitNet.cpp FFI, TL2/TL1 kernel selection, wired into `galerina-ai-lowbit` | Track A |
-| **#120** | `galerina wrap`: governance wrapper generator from C++ headers → `.spore` flow + `_host.rs` Wasmtime registration | CLI |
+| **#120** | `galerina wrap`: governance wrapper generator from C++ headers → `.fungi` flow + `_host.rs` Wasmtime registration | CLI |
 | **#121** | `galerina promote`: full promotion pipeline (wrap + static analysis + sign) → `build/engine.wasm` + signed `.lmanifest` with license/commit metadata | CLI |
 | **#122** | `galerina-ext-bridge-nvfp4`: NVFP4 TensorRT-LLM backend — Apache 2.0 + NOTICE; hardware-gated (Blackwell B200/RTX5090) | Hardware-gated |
-| **#123** | `governance_tier` mapping in `boot.spore`: `ai_tier_1/2/3` → assimilated plugin routing; no flow-code changes to switch backends | Parser |
+| **#123** | `governance_tier` mapping in `boot.fungi`: `ai_tier_1/2/3` → assimilated plugin routing; no flow-code changes to switch backends | Parser |
 | **#124** | `audit_depth full`: enhanced AuditEvent fields for AI inference — token_count, latency_ms, input_hash, output_hash, model_version, engine_id | Verifier |
 
 ### ⬜ DRCM (Gated)
@@ -709,8 +709,8 @@ Compile-time security primitives that map Galerina source directly onto the Gove
 | `gate(condition) { ... }` | Admission guard wrapping flows | `gateConstraints[]` in manifest; bit 8 WAT gate (Phase 5) |
 | `access { grant ... }` | Call-boundary Default Deny negotiation | `grant` lines verified against effects + capability registry |
 | `guard Name {}` | Top-level domain ceiling | Replaces `policy Name {}`; Differential Proof at compile time |
-| `import "./path.spore"` | DAG merge file import | Symbols enter scope; resolved path + hash in manifest |
-| `import plugin safe/assimilate` | Bridged plugin | `assimilatedPlugins[]` in manifest; SPORE-ASSIMILATE-001-003 |
+| `import "./path.fungi"` | DAG merge file import | Symbols enter scope; resolved path + hash in manifest |
+| `import plugin safe/assimilate` | Bridged plugin | `assimilatedPlugins[]` in manifest; FUNGI-ASSIMILATE-001-003 |
 | `;; text` | `govComment` token | `governanceAnnotations[]` in manifest narrative |
 
 See `galerina-tower-native-syntax.md` for full grammar, semantics, and cross-references.
@@ -720,7 +720,7 @@ See `galerina-tower-native-syntax.md` for full grammar, semantics, and cross-ref
 ## Knowledge Base (Current — 34 docs, v6.0 additions reflected in layer listing)
 
 **Layer 0:** `architecture-charter.md`  
-**Layer 1:** `galerina-governance-rules.md` (37+ SPORE codes)  
+**Layer 1:** `galerina-governance-rules.md` (37+ FUNGI codes)  
 **Layer 2A:** `galerina-architecture-patterns.md`  
 **Layer 2B:** `galerina-contract-authoring-guide.md` · `galerina-contract-clause-reference.md` · `galerina-resilience-observability-design.md` · `galerina-domain-guard-policies.md` · `galerina-governance-cicd-pipeline.md` · `galerina-cbor-manifest-spec.md` · `galerina-tower-native-syntax.md` · `galerina-governed-inference-tower.md` ← NEW  
 **Layer 3:** `galerina-deterministic-runtime-containment.md` · `galerina-drcm-phase1-specs.md`  
@@ -743,9 +743,9 @@ governed, and benchmarked. The single gate to P9 is self-hosting (Stage B).
   succeeds, else `unreachable` — protects the 3,259 compiler tests). Verified: a
   guarded flow emits real `i32.add` and the suite stays green.
 - **#120 P9.4b — record struct layout** ✅ CONSTRUCTION DONE (2026-06-06): a `#record`
-  literal now bump-allocates `fieldCount*4` bytes above `$__spore_heap` (base 1024),
+  literal now bump-allocates `fieldCount*4` bytes above `$__fungi_heap` (base 1024),
   stores each field at its slot offset, and evaluates to the base pointer — per-record
-  `$__spore_rec_N` locals make it safe under nesting + record-returning calls. Verified
+  `$__fungi_rec_N` locals make it safe under nesting + record-returning calls. Verified
   end-to-end: a record-returning flow assembles via wabt and executes in real WASM with
   the correct struct in linear memory (tests/wat-p9_4b-record-layout). **Field ACCESS
   also DONE** (2026-06-06): `r.field` → `i32.load` at the slot offset, resolved via a
@@ -759,7 +759,7 @@ governed, and benchmarked. The single gate to P9 is self-hosting (Stage B).
   `galerina run --invoke <guardedFlow>` reaches governed entry points. Verified: a guarded
   flow is exported and invocable in real WASM (tests/wat-p9_4c-export-gating, 2 tests).
 - **Ceremony — EMISSION half ✅ DONE (2026-06-06):** the self-hosted lexer
-  (`src/self-hosted/lexer.spore`) now compiles to a real, wabt-assembling WASM module —
+  (`src/self-hosted/lexer.fungi`) now compiles to a real, wabt-assembling WASM module —
   **all 9 flows have real bodies (0 `unreachable` stubs)**, `tokenize` (record-returning)
   included, using the P9.4b record heap (tests/wat-p9-ceremony-emission, 3 tests). This
   is the milestone "self-hosted `tokenize` emits real WASM". Interpreter-level Stage-A ==
@@ -771,7 +771,7 @@ governed, and benchmarked. The single gate to P9 is self-hosting (Stage B).
   (21/21, incl. string-heavy paths).
 
 ### Post-P9 — real DSS.wasm (DRCM Phase 4)
-- #102 dss/index.spore → build/dss.wasm via Stage B
+- #102 dss/index.fungi → build/dss.wasm via Stage B
 - #103 Wasmtime component supervises DWI guests · #104 real fuel · #105 `galerina run`
   on the real DSS component · #106 receipt signing in DSS.wasm
 
@@ -780,7 +780,7 @@ These are recorded, not started. Each line = **status + blocker**. Do NOT implem
 
 | Task | Status | Blocker |
 |---|---|---|
-| **#102** — compile `dss/index.spore` → `build/dss.wasm` via Stage B | 🔲 BLOCKED (pending) | P9 string-runtime (#145/#143) is **✅ DONE** — no longer a blocker. Remaining: drive the full self-hosted Stage-B pipeline (parser/type-checker/govern/emit `.spore`) to module-assembly + link parity for `dss/index.spore` (today only `lexer.spore` reaches WASM byte-parity), plus the Wasmtime component host (#103). |
+| **#102** — compile `dss/index.fungi` → `build/dss.wasm` via Stage B | 🔲 BLOCKED (pending) | P9 string-runtime (#145/#143) is **✅ DONE** — no longer a blocker. Remaining: drive the full self-hosted Stage-B pipeline (parser/type-checker/govern/emit `.fungi`) to module-assembly + link parity for `dss/index.fungi` (today only `lexer.fungi` reaches WASM byte-parity), plus the Wasmtime component host (#103). |
 | **#103/#104** — real Wasmtime component model + per-DWI fuel | 🔲 BLOCKED (pending) | Needs the **Wasmtime runtime** (component-model host + real per-isolate fuel metering); today fuel/supervision is simulated, not enforced by a real engine. |
 | **#106** — epilogue receipts signed by `DSS.wasm` | 🔲 BLOCKED (pending) | Depends on a real `dss.wasm` (#102) running under Wasmtime (#103); receipt-signing logic exists, but in-WASM signing by the supervisor can't land until #102/#103 do. |
 | **#110** — key rotation in `secrets {}` | 🔲 BLOCKED (pending) | Needs an external **KMS** (key-management service) to source/rotate keys; rotation semantics can't be enforced without a real key custodian. |
@@ -800,6 +800,6 @@ These are recorded, not started. Each line = **status + blocker**. Do NOT implem
 
 ### After P9: foundations to 100%
 Once the bootstrap ceremony passes, drive the remaining Stage B pipeline modules
-(parser/type-checker/effect/govern/emit/runtime `.spore`) from "partial" to "full"
+(parser/type-checker/effect/govern/emit/runtime `.fungi`) from "partial" to "full"
 so Galerina compiles and runs Galerina end-to-end — then port `galerina-tower-citizen`
-itself to `.spore:tri` (compiler can host it; oracle preserved).
+itself to `.fungi:tri` (compiler can host it; oracle preserved).

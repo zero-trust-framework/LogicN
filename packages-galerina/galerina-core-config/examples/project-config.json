@@ -3,7 +3,7 @@
     "name": "galerina-app",
     "version": "0.1.0",
     "root": ".",
-    "entryFiles": ["packages-galerina/galerina-framework-example-app/src/index.spore"],
+    "entryFiles": ["packages-galerina/galerina-framework-example-app/src/index.fungi"],
     "packages": [
       "packages-galerina/galerina-core",
       "packages-galerina/galerina-core-config",

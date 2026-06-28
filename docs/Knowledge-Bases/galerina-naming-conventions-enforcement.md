@@ -1,4 +1,4 @@
-# Galerina — Naming Convention Enforcement (SPORE-STYLE-*)
+# Galerina — Naming Convention Enforcement (FUNGI-STYLE-*)
 
 ## Status
 
@@ -6,7 +6,7 @@
 |---|---|
 | Phase | 16 — Design + implementation plan |
 | New checker | `namingPolicyChecker` (after name resolver, before type checker) |
-| New diagnostics | `SPORE-STYLE-001..004` |
+| New diagnostics | `FUNGI-STYLE-001..004` |
 | Configurable | project config severity (`warning` / `error`) |
 
 ---
@@ -33,19 +33,19 @@
 | effects | `dot.case` | `database.read`, `network.outbound` |
 | capabilities | `dot.case` | `host.database.read` |
 | packages | `kebab-case` | `@galerina/healthcare-types` |
-| files | `kebab-case` | `create-patient.spore` |
+| files | `kebab-case` | `create-patient.fungi` |
 
 ---
 
 ## Diagnostics
 
-### SPORE-STYLE-001: Flow name must be camelCase
+### FUNGI-STYLE-001: Flow name must be camelCase
 
 Emitted when a `flow` declaration does not follow camelCase.
 
 ```
-error SPORE-STYLE-001: flow name "Get_User" must be camelCase
-  --> create-patient.spore:4:6
+error FUNGI-STYLE-001: flow name "Get_User" must be camelCase
+  --> create-patient.fungi:4:6
   |
 4 | flow Get_User(id: UserId) -> Patient
   |      ^^^^^^^^
@@ -53,13 +53,13 @@ error SPORE-STYLE-001: flow name "Get_User" must be camelCase
   = suggestedFix: rename to "getUser"
 ```
 
-### SPORE-STYLE-002: Type / Record / Enum name must be PascalCase
+### FUNGI-STYLE-002: Type / Record / Enum name must be PascalCase
 
 Emitted when a `type`, `record`, or `enum` declaration does not follow PascalCase.
 
 ```
-error SPORE-STYLE-002: type name "patient_record" must be PascalCase
-  --> patient-types.spore:2:6
+error FUNGI-STYLE-002: type name "patient_record" must be PascalCase
+  --> patient-types.fungi:2:6
   |
 2 | type patient_record = { id: UserId, name: String }
   |      ^^^^^^^^^^^^^^
@@ -67,13 +67,13 @@ error SPORE-STYLE-002: type name "patient_record" must be PascalCase
   = suggestedFix: rename to "PatientRecord"
 ```
 
-### SPORE-STYLE-003: Variable binding must be camelCase
+### FUNGI-STYLE-003: Variable binding must be camelCase
 
 Emitted when a `let` or `mut` binding does not follow camelCase.
 
 ```
-warning SPORE-STYLE-003: variable "raw_email" must be camelCase
-  --> validate-email.spore:8:7
+warning FUNGI-STYLE-003: variable "raw_email" must be camelCase
+  --> validate-email.fungi:8:7
   |
 8 |   let raw_email = input.email
   |       ^^^^^^^^^
@@ -81,13 +81,13 @@ warning SPORE-STYLE-003: variable "raw_email" must be camelCase
   = suggestedFix: rename to "rawEmail"
 ```
 
-### SPORE-STYLE-004: Effect name must use dot.case
+### FUNGI-STYLE-004: Effect name must use dot.case
 
 Emitted when an effect declaration or reference does not use dot.case.
 
 ```
-error SPORE-STYLE-004: effect name "databaseRead" must be dot.case
-  --> effects.spore:1:8
+error FUNGI-STYLE-004: effect name "databaseRead" must be dot.case
+  --> effects.fungi:1:8
   |
 1 | effect databaseRead
   |        ^^^^^^^^^^^^
@@ -103,17 +103,17 @@ Security naming rules are checked regardless of the configured severity setting.
 
 | Pattern | Rule | Requirement |
 |---|---|---|
-| `*Secret` | `SPORE-STYLE-SEC-001` | must be `SecureString` or protected `String` |
-| `*Token` | `SPORE-STYLE-SEC-002` | must not be logged; logging any `*Token` binding is a compile error |
-| `*Id` | `SPORE-STYLE-SEC-003` | should be a typed identity, not plain `String` (warning by default) |
-| `raw*` | `SPORE-STYLE-SEC-004` | should be `unsafe let`; plain `let raw*` emits a warning |
-| `redacted*` | `SPORE-STYLE-SEC-005` | value must carry a `redacted` value-state annotation |
+| `*Secret` | `FUNGI-STYLE-SEC-001` | must be `SecureString` or protected `String` |
+| `*Token` | `FUNGI-STYLE-SEC-002` | must not be logged; logging any `*Token` binding is a compile error |
+| `*Id` | `FUNGI-STYLE-SEC-003` | should be a typed identity, not plain `String` (warning by default) |
+| `raw*` | `FUNGI-STYLE-SEC-004` | should be `unsafe let`; plain `let raw*` emits a warning |
+| `redacted*` | `FUNGI-STYLE-SEC-005` | value must carry a `redacted` value-state annotation |
 
-### Example — SPORE-STYLE-SEC-001
+### Example — FUNGI-STYLE-SEC-001
 
 ```
-error SPORE-STYLE-SEC-001: binding "apiSecret" must have type SecureString or protected String
-  --> auth-service.spore:12:7
+error FUNGI-STYLE-SEC-001: binding "apiSecret" must have type SecureString or protected String
+  --> auth-service.fungi:12:7
   |
 12|   let apiSecret = config.get("API_SECRET")
   |       ^^^^^^^^^
@@ -122,11 +122,11 @@ error SPORE-STYLE-SEC-001: binding "apiSecret" must have type SecureString or pr
   = suggestedFix: change type to SecureString
 ```
 
-### Example — SPORE-STYLE-SEC-002
+### Example — FUNGI-STYLE-SEC-002
 
 ```
-error SPORE-STYLE-SEC-002: "accessToken" must not appear in a log expression
-  --> request-handler.spore:34:16
+error FUNGI-STYLE-SEC-002: "accessToken" must not appear in a log expression
+  --> request-handler.fungi:34:16
   |
 34|   log.info("token={}", accessToken)
   |                        ^^^^^^^^^^^
@@ -138,7 +138,7 @@ error SPORE-STYLE-SEC-002: "accessToken" must not appear in a log expression
 
 ## Project Configuration
 
-Severity is configurable per project. Security rules (`SPORE-STYLE-SEC-*`) are always `error` and cannot be overridden.
+Severity is configurable per project. Security rules (`FUNGI-STYLE-SEC-*`) are always `error` and cannot be overridden.
 
 ```json
 {
@@ -154,7 +154,7 @@ Severity is configurable per project. Security rules (`SPORE-STYLE-SEC-*`) are a
 
 | `severity` value | Effect |
 |---|---|
-| `"error"` | All SPORE-STYLE-* violations block compilation |
+| `"error"` | All FUNGI-STYLE-* violations block compilation |
 | `"warning"` | Violations are reported but compilation continues |
 | `"off"` | Style diagnostics are suppressed (security rules still apply) |
 
@@ -180,7 +180,7 @@ Responsibilities:
 - Walk all declaration nodes (`FlowDecl`, `FnDecl`, `LetDecl`, `MutDecl`, `TypeDecl`, `RecordDecl`, `EnumDecl`, `EffectDecl`)
 - Apply the convention table for each node kind
 - Apply semantic security pattern matching on all binding names
-- Emit `SPORE-STYLE-*` diagnostics with `suggestedFix` attached
+- Emit `FUNGI-STYLE-*` diagnostics with `suggestedFix` attached
 
 ### 2. Check declarations only
 
@@ -214,7 +214,7 @@ const pipeline = [
 ## Compiler Pipeline Placement
 
 ```
-Source (.spore)
+Source (.fungi)
     |
     v
   Lexer / Parser
@@ -226,13 +226,13 @@ Source (.spore)
   Symbol Resolver       (binds names to declarations)
     |
     v
-  Naming Policy Checker (SPORE-STYLE-*)    <-- this document
+  Naming Policy Checker (FUNGI-STYLE-*)    <-- this document
     |
     v
-  Type Checker          (SPORE-TYPE-*)
+  Type Checker          (FUNGI-TYPE-*)
     |
     v
-  Effect Checker        (SPORE-EFFECT-*)
+  Effect Checker        (FUNGI-EFFECT-*)
     |
     v
   Manifest Generator
@@ -249,7 +249,7 @@ Placement after the symbol resolver ensures all names are fully resolved before 
 
 Given:
 
-```spore
+```fungi
 flow Get_User(id: user_id) -> Patient {
   let raw_patient_record = db.query(id)
   raw_patient_record
@@ -259,16 +259,16 @@ flow Get_User(id: user_id) -> Patient {
 Diagnostics emitted:
 
 ```
-error SPORE-STYLE-001: flow name "Get_User" must be camelCase
-  --> get-user.spore:1:6
+error FUNGI-STYLE-001: flow name "Get_User" must be camelCase
+  --> get-user.fungi:1:6
   = suggestedFix: "getUser"
 
-error SPORE-STYLE-002: type name "user_id" must be PascalCase
-  --> get-user.spore:1:16
+error FUNGI-STYLE-002: type name "user_id" must be PascalCase
+  --> get-user.fungi:1:16
   = suggestedFix: "UserId"
 
-warning SPORE-STYLE-003: variable "raw_patient_record" must be camelCase
-  --> get-user.spore:2:7
+warning FUNGI-STYLE-003: variable "raw_patient_record" must be camelCase
+  --> get-user.fungi:2:7
   = suggestedFix: "rawPatientRecord"
 ```
 
@@ -277,7 +277,7 @@ warning SPORE-STYLE-003: variable "raw_patient_record" must be camelCase
 ## Rules at a Glance
 
 - Enforcement is per-declaration, not per-use-site
-- Security naming rules (`SPORE-STYLE-SEC-*`) are always enforced regardless of severity setting
+- Security naming rules (`FUNGI-STYLE-SEC-*`) are always enforced regardless of severity setting
 - Every diagnostic includes a `suggestedFix`
 - `galerina fix --style` (planned future command) can auto-apply all suggested renames
 - Severity can be set to `warning`, `error`, or `off` per project; security rules cannot be set to `off`

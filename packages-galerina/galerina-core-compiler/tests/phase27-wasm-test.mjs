@@ -7,7 +7,7 @@ import { parseProgram, checkEffects, emitGIR, buildWATModuleFromGIR, renderWAT }
 import wabtInit from "wabt";
 
 async function compileAndRun(src, flowName, args) {
-  const prog = parseProgram(src, "test.spore");
+  const prog = parseProgram(src, "test.fungi");
   const errs = (prog.diagnostics ?? []).filter(d => d.severity === "error");
   if (errs.length > 0) throw new Error("Parse error: " + errs.map(d => d.message).join("; "));
 

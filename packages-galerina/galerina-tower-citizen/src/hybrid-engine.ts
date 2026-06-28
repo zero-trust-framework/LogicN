@@ -66,7 +66,7 @@ export interface HybridInferenceRequest {
 }
 
 /**
- * Governance constraints sourced from a `.spore` flow's `ai {}` contract block.
+ * Governance constraints sourced from a `.fungi` flow's `ai {}` contract block.
  * The engine enforces these as hard limits: a violation traps the inference
  * BEFORE any compute runs (Hold-First), so the trail proves the boundary held.
  */

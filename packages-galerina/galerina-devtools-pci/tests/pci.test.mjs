@@ -1,7 +1,7 @@
 /**
  * @galerina/devtools-pci — PCI DSS 4.0.1 Compliance Tests
  *
- * 12 tests covering all SPORE-PCI-001..010 diagnostic codes and report fields.
+ * 12 tests covering all FUNGI-PCI-001..010 diagnostic codes and report fields.
  */
 
 import { describe, it } from "node:test";
@@ -13,10 +13,10 @@ import { join } from "node:path";
 import { runPciAudit, ALL_PCI_REQUIREMENTS } from "../dist/index.js";
 
 // ---------------------------------------------------------------------------
-// Test 1: payment flow with no authority {} → SPORE-PCI-004 and SPORE-PCI-008
+// Test 1: payment flow with no authority {} → FUNGI-PCI-004 and FUNGI-PCI-008
 // ---------------------------------------------------------------------------
-describe("SPORE-PCI-004 + SPORE-PCI-008: payment flow missing authority", () => {
-  it("fires SPORE-PCI-004 and SPORE-PCI-008 when authority is absent", () => {
+describe("FUNGI-PCI-004 + FUNGI-PCI-008: payment flow missing authority", () => {
+  it("fires FUNGI-PCI-004 and FUNGI-PCI-008 when authority is absent", () => {
     const source = [
       "secure flow processPayment(req: Request) -> Result<PaymentId, PaymentError>",
       "contract {",
@@ -30,10 +30,10 @@ describe("SPORE-PCI-004 + SPORE-PCI-008: payment flow missing authority", () => 
       "}",
     ].join("\n");
 
-    const report = runPciAudit(source, "payment.spore");
+    const report = runPciAudit(source, "payment.fungi");
     const codes = report.findings.map(f => f.code);
-    assert.ok(codes.includes("SPORE-PCI-004"), `Expected SPORE-PCI-004, got: [${codes.join(", ")}]`);
-    assert.ok(codes.includes("SPORE-PCI-008"), `Expected SPORE-PCI-008, got: [${codes.join(", ")}]`);
+    assert.ok(codes.includes("FUNGI-PCI-004"), `Expected FUNGI-PCI-004, got: [${codes.join(", ")}]`);
+    assert.ok(codes.includes("FUNGI-PCI-008"), `Expected FUNGI-PCI-008, got: [${codes.join(", ")}]`);
     assert.ok(!report.passed, "Report should fail");
     assert.ok(report.failedRequirements.includes("7"), "Req 7 should be failed");
     assert.ok(report.failedRequirements.includes("8"), "Req 8 should be failed");
@@ -41,10 +41,10 @@ describe("SPORE-PCI-004 + SPORE-PCI-008: payment flow missing authority", () => 
 });
 
 // ---------------------------------------------------------------------------
-// Test 2: payment flow with no effects { audit.write } → SPORE-PCI-005
+// Test 2: payment flow with no effects { audit.write } → FUNGI-PCI-005
 // ---------------------------------------------------------------------------
-describe("SPORE-PCI-005: payment flow missing audit.write effect", () => {
-  it("fires SPORE-PCI-005 when audit.write is absent", () => {
+describe("FUNGI-PCI-005: payment flow missing audit.write effect", () => {
+  it("fires FUNGI-PCI-005 when audit.write is absent", () => {
     const source = [
       "secure flow chargeCustomer(req: Request) -> Result<ChargeId, ChargeError>",
       "contract {",
@@ -58,18 +58,18 @@ describe("SPORE-PCI-005: payment flow missing audit.write effect", () => {
       "}",
     ].join("\n");
 
-    const report = runPciAudit(source, "charge.spore");
+    const report = runPciAudit(source, "charge.fungi");
     const codes = report.findings.map(f => f.code);
-    assert.ok(codes.includes("SPORE-PCI-005"), `Expected SPORE-PCI-005, got: [${codes.join(", ")}]`);
+    assert.ok(codes.includes("FUNGI-PCI-005"), `Expected FUNGI-PCI-005, got: [${codes.join(", ")}]`);
     assert.ok(report.failedRequirements.includes("10.2"), "Req 10.2 should be failed");
   });
 });
 
 // ---------------------------------------------------------------------------
-// Test 3: binding named pan reaching AuditLog.write without redact → SPORE-PCI-006
+// Test 3: binding named pan reaching AuditLog.write without redact → FUNGI-PCI-006
 // ---------------------------------------------------------------------------
-describe("SPORE-PCI-006: card data at AuditLog.write without redact", () => {
-  it("fires SPORE-PCI-006 when pan reaches audit log unredacted", () => {
+describe("FUNGI-PCI-006: card data at AuditLog.write without redact", () => {
+  it("fires FUNGI-PCI-006 when pan reaches audit log unredacted", () => {
     const source = [
       "secure flow recordTransaction(req: Request) -> Result<TxnId, TxnError>",
       "contract {",
@@ -84,18 +84,18 @@ describe("SPORE-PCI-006: card data at AuditLog.write without redact", () => {
       "}",
     ].join("\n");
 
-    const report = runPciAudit(source, "txn.spore");
+    const report = runPciAudit(source, "txn.fungi");
     const codes = report.findings.map(f => f.code);
-    assert.ok(codes.includes("SPORE-PCI-006"), `Expected SPORE-PCI-006, got: [${codes.join(", ")}]`);
+    assert.ok(codes.includes("FUNGI-PCI-006"), `Expected FUNGI-PCI-006, got: [${codes.join(", ")}]`);
     assert.ok(report.failedRequirements.includes("10.3"), "Req 10.3 should be failed");
   });
 });
 
 // ---------------------------------------------------------------------------
-// Test 4: unsafe let binding named cvv without gating → SPORE-PCI-010
+// Test 4: unsafe let binding named cvv without gating → FUNGI-PCI-010
 // ---------------------------------------------------------------------------
-describe("SPORE-PCI-010: unsafe card-data binding not gated", () => {
-  it("fires SPORE-PCI-010 for ungated cvv binding", () => {
+describe("FUNGI-PCI-010: unsafe card-data binding not gated", () => {
+  it("fires FUNGI-PCI-010 for ungated cvv binding", () => {
     const source = [
       "secure flow validateCard(req: Request) -> Result<Bool, CardError>",
       "contract {",
@@ -110,9 +110,9 @@ describe("SPORE-PCI-010: unsafe card-data binding not gated", () => {
       "}",
     ].join("\n");
 
-    const report = runPciAudit(source, "card.spore");
+    const report = runPciAudit(source, "card.fungi");
     const codes = report.findings.map(f => f.code);
-    assert.ok(codes.includes("SPORE-PCI-010"), `Expected SPORE-PCI-010, got: [${codes.join(", ")}]`);
+    assert.ok(codes.includes("FUNGI-PCI-010"), `Expected FUNGI-PCI-010, got: [${codes.join(", ")}]`);
     assert.ok(report.failedRequirements.includes("6.3"), "Req 6.3 should be failed");
   });
 });
@@ -139,7 +139,7 @@ describe("Compliant payment flow: no findings", () => {
       "}",
     ].join("\n");
 
-    const report = runPciAudit(source, "compliant-payment.spore");
+    const report = runPciAudit(source, "compliant-payment.fungi");
     // Filter to only high/critical findings for the pass assertion
     const severe = report.findings.filter(f => f.severity === "critical" || f.severity === "high");
     assert.equal(severe.length, 0, `Expected 0 severe findings, got: [${severe.map(f => f.code).join(", ")}]`);
@@ -158,17 +158,17 @@ describe("Non-payment flow: no PCI findings", () => {
       "{ return a + b }",
     ].join("\n");
 
-    const report = runPciAudit(source, "math.spore");
+    const report = runPciAudit(source, "math.fungi");
     assert.equal(report.findings.length, 0, `Expected 0 findings, got: [${report.findings.map(f => f.code).join(", ")}]`);
     assert.ok(report.passed, "Non-payment flow should pass");
   });
 });
 
 // ---------------------------------------------------------------------------
-// Test 7: directory with 2+ payment flows all missing intent → SPORE-PCI-009
+// Test 7: directory with 2+ payment flows all missing intent → FUNGI-PCI-009
 // ---------------------------------------------------------------------------
-describe("SPORE-PCI-009: multiple payment flows, none have contract.intent", () => {
-  it("fires SPORE-PCI-009 for a file with 2+ payment flows and no intent", () => {
+describe("FUNGI-PCI-009: multiple payment flows, none have contract.intent", () => {
+  it("fires FUNGI-PCI-009 for a file with 2+ payment flows and no intent", () => {
     const source = [
       "secure flow processPayment(req: Request) -> Result<PaymentId, PaymentError>",
       "contract {",
@@ -193,9 +193,9 @@ describe("SPORE-PCI-009: multiple payment flows, none have contract.intent", () 
       "}",
     ].join("\n");
 
-    const report = runPciAudit(source, "multi-payment.spore");
+    const report = runPciAudit(source, "multi-payment.fungi");
     const codes = report.findings.map(f => f.code);
-    assert.ok(codes.includes("SPORE-PCI-009"), `Expected SPORE-PCI-009, got: [${codes.join(", ")}]`);
+    assert.ok(codes.includes("FUNGI-PCI-009"), `Expected FUNGI-PCI-009, got: [${codes.join(", ")}]`);
     assert.ok(report.failedRequirements.includes("12.6"), "Req 12.6 should be failed");
   });
 });
@@ -234,7 +234,7 @@ describe("failedRequirements accuracy", () => {
       "}",
     ].join("\n");
 
-    const report = runPciAudit(source, "checkout.spore");
+    const report = runPciAudit(source, "checkout.fungi");
     // checkout is a payment keyword → should trigger missing authority, intent, audit.write
     assert.ok(report.failedRequirements.includes("7"), `Req 7 expected in failedRequirements: ${JSON.stringify(report.failedRequirements)}`);
     assert.ok(report.failedRequirements.includes("10.2"), `Req 10.2 expected in failedRequirements`);
@@ -260,13 +260,13 @@ describe("requirementsCovered always has all 10 requirements", () => {
 // Test 11: JSON output format is valid and contains pciDssVersion: "4.0.1"
 // ---------------------------------------------------------------------------
 describe("JSON output format", () => {
-  it("produces valid JSON with pciDssVersion: 4.0.1 and schemaVersion: spore.pci-audit.v1", () => {
+  it("produces valid JSON with pciDssVersion: 4.0.1 and schemaVersion: fungi.pci-audit.v1", () => {
     const source = "pure flow f() -> Int contract { effects {} } { return 1 }";
-    const report = runPciAudit(source, "test.spore");
+    const report = runPciAudit(source, "test.fungi");
     const json = JSON.stringify(report);
     const parsed = JSON.parse(json);
     assert.equal(parsed.pciDssVersion, "4.0.1", "pciDssVersion must be 4.0.1");
-    assert.equal(parsed.schemaVersion, "spore.pci-audit.v1", "schemaVersion must be spore.pci-audit.v1");
+    assert.equal(parsed.schemaVersion, "fungi.pci-audit.v1", "schemaVersion must be fungi.pci-audit.v1");
     assert.ok(Array.isArray(parsed.findings), "findings must be an array");
     assert.ok(Array.isArray(parsed.requirementsCovered), "requirementsCovered must be an array");
     assert.ok(typeof parsed.auditedAt === "string", "auditedAt must be a string");
@@ -275,10 +275,10 @@ describe("JSON output format", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Test 12: card data in a comment (not a binding) → no SPORE-PCI-001
+// Test 12: card data in a comment (not a binding) → no FUNGI-PCI-001
 // ---------------------------------------------------------------------------
-describe("SPORE-PCI-001: comments do not trigger findings", () => {
-  it("does not fire SPORE-PCI-001 when card keyword appears only in a comment", () => {
+describe("FUNGI-PCI-001: comments do not trigger findings", () => {
+  it("does not fire FUNGI-PCI-001 when card keyword appears only in a comment", () => {
     // The word 'pan' and 'cvv' appear only in comments / non-binding positions.
     // The flow itself processes generic data with no card-data bindings.
     const source = [
@@ -288,9 +288,9 @@ describe("SPORE-PCI-001: comments do not trigger findings", () => {
       "{ return street }",
     ].join("\n");
 
-    const report = runPciAudit(source, "address.spore");
+    const report = runPciAudit(source, "address.fungi");
     const codes = report.findings.map(f => f.code);
-    assert.ok(!codes.includes("SPORE-PCI-001"), `SPORE-PCI-001 should NOT fire for comment-only card keywords, got: [${codes.join(", ")}]`);
+    assert.ok(!codes.includes("FUNGI-PCI-001"), `FUNGI-PCI-001 should NOT fire for comment-only card keywords, got: [${codes.join(", ")}]`);
     assert.ok(report.passed, "Should pass — no card-data in bindings or string literals");
   });
 });

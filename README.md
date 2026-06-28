@@ -30,9 +30,9 @@ Galerina optimises for **mathematical proof and absolute Zero-Trust containment*
 
 **Enforces at runtime via the Governed Tower.** The DSS supervisor tracks the V_DPM (Virtual Dynamic Posture Matrix) register — every capability use is a bitmask check, every trap produces a structured AuditEvent, and rollback is clean (`unreachable` fires before the next instruction). *Today this runs as the Stage-A TypeScript simulation; the real `DSS.wasm` component is Post-P9 (#102–106).*
 
-**Produces a cryptographic audit trail.** Every governed execution generates an Epilogue Receipt (sha256_seal or zk_snark). Every security trap appends to an append-only audit log (CBOR Tag 410 AuditEvent). **Hybrid Ed25519 + ML-DSA-65 (NIST FIPS 204) signing is shipped** on the attestation, proof-graph, and bridge surfaces (both halves required — no post-quantum downgrade; certified mode *mandates* the ML-DSA key). **Opt-in hybrid signing now extends to the `.lmanifest`** as well: the default stays **Ed25519** (unchanged), and setting `GALERINA_MANIFEST_PROFILE=certified` *mandates* the hybrid Ed25519+ML-DSA-65 manifest signature — both halves required, fail-closed (`SPORE-MANIFEST-PQ-REQUIRED` / `-PUBKEY-MISSING` / `-TAMPER`), with no post-quantum downgrade.
+**Produces a cryptographic audit trail.** Every governed execution generates an Epilogue Receipt (sha256_seal or zk_snark). Every security trap appends to an append-only audit log (CBOR Tag 410 AuditEvent). **Hybrid Ed25519 + ML-DSA-65 (NIST FIPS 204) signing is shipped** on the attestation, proof-graph, and bridge surfaces (both halves required — no post-quantum downgrade; certified mode *mandates* the ML-DSA key). **Opt-in hybrid signing now extends to the `.lmanifest`** as well: the default stays **Ed25519** (unchanged), and setting `GALERINA_MANIFEST_PROFILE=certified` *mandates* the hybrid Ed25519+ML-DSA-65 manifest signature — both halves required, fail-closed (`FUNGI-MANIFEST-PQ-REQUIRED` / `-PUBKEY-MISSING` / `-TAMPER`), with no post-quantum downgrade.
 
-**Compiles to WebAssembly.** Governance is verified by the compiler at build time and enforced on the Stage-A runtime today. **WASM is the production execution path** — independently benchmarked as native-class (see Benchmarks). Full in-WASM self-hosting (P9) is *in progress*: the self-hosted `lexer.spore` `tokenize` reaches **byte-for-byte Stage-A == Stage-B real-WASM parity** (#143); extending that to the parser/type-checker/governance-verifier flows is the remaining gate.
+**Compiles to WebAssembly.** Governance is verified by the compiler at build time and enforced on the Stage-A runtime today. **WASM is the production execution path** — independently benchmarked as native-class (see Benchmarks). Full in-WASM self-hosting (P9) is *in progress*: the self-hosted `lexer.fungi` `tokenize` reaches **byte-for-byte Stage-A == Stage-B real-WASM parity** (#143); extending that to the parser/type-checker/governance-verifier flows is the remaining gate.
 
 ---
 
@@ -67,13 +67,13 @@ Galerina can **govern a tolerant numeric sub-kernel** as a deny-by-default, untr
 | **Algebra** *(tolerant low-precision matrix)* | ternary/low-bit GEMM/MVM |
 | **K3 API routing** · **low-level quantum** | *already ship* (the admission spine · the ffsim governance gate — governs, does not execute) |
 
-> Honest fence: the optics is a **precision-limited analog accelerator (~8-bit)** — **latency ≠ work** (~1.9× emulated, never "instant / free / O(1)"), and the analog lane can only **False-DENY, never False-ALLOW**. The deliverable today is a worked-example `.spore` (see `examples/gaming-substrate/`) + a compute-only profile — **not a new math kernel, and not silicon.**
+> Honest fence: the optics is a **precision-limited analog accelerator (~8-bit)** — **latency ≠ work** (~1.9× emulated, never "instant / free / O(1)"), and the analog lane can only **False-DENY, never False-ALLOW**. The deliverable today is a worked-example `.fungi` (see `examples/gaming-substrate/`) + a compute-only profile — **not a new math kernel, and not silicon.**
 
 ### 3) What it cannot do *(the hard boundary — by design)*
 
 - **Bit-exact maths on the analog lane** — **number theory** (primes, factorization, modular arithmetic), **symbolic / high-precision algebra**, and the **DFT / quantum-chemistry core** need exact or fp64 results, so they stay on the digital lane (no analog win).
-- **`lane: gaming` (or any domain as a "lane")** — `lane` is a *hardware substrate* axis (`digital | noisy | photonic`), **not** an application domain. A game spans multiple lanes (approximate physics on `photonic`, anti-cheat signing on `digital`), so an unknown lane is **rejected** (`SPORE-SUBSTRATE-002`), not silently accepted.
-- **Crypto on a noisy/photonic lane** — integrity is never tolerance-bounded; `crypto.*` on a noisy lane is denied (`SPORE-SUBSTRATE-001`) no matter how much voting/averaging/ECC is stacked. **Crypto and any bit-exact result stay digital, always.**
+- **`lane: gaming` (or any domain as a "lane")** — `lane` is a *hardware substrate* axis (`digital | noisy | photonic`), **not** an application domain. A game spans multiple lanes (approximate physics on `photonic`, anti-cheat signing on `digital`), so an unknown lane is **rejected** (`FUNGI-SUBSTRATE-002`), not silently accepted.
+- **Crypto on a noisy/photonic lane** — integrity is never tolerance-bounded; `crypto.*` on a noisy lane is denied (`FUNGI-SUBSTRATE-001`) no matter how much voting/averaging/ECC is stacked. **Crypto and any bit-exact result stay digital, always.**
 - **AI as an in-path authorizer** — a model may *propose* (untrusted, degrade-only), but a probabilistic/self-reported score can never *lift* a security verdict.
 - **"Instant / free / O(1)" optical compute** — refuted; light transit is N-independent in *latency*, but the *work* is Θ(N²) load + Θ(N) I/O.
 - **Not yet (roadmap, not "cannot"):** real photonic hardware (emulated today), full in-WASM self-hosting (tokenize only so far), and real in-sandbox `DSS.wasm` isolation (#102–106).
@@ -174,26 +174,26 @@ Run on an **Intel i9-9900K (8C/16T) + NVIDIA RTX 2060**, across Rust (native, ge
 | **DRCM Phases 1–7 (Governed Tower — Stage-A simulation)** | 100% | real `DSS.wasm` is Post-P9 (#102–106) |
 | **CBOR Manifests (RFC 8949)** | 100% | |
 | **Tests — full suite** | 100% | **60/60 packages · 5,345 tests · 0 failures** |
-| **Resilience — first-class fault handlers (0017)** | shipped | `on_*_fault` → fail-closed `halt` default + SPORE-FAULT-001/003 + `GIRFlow.faultHandlers` |
+| **Resilience — first-class fault handlers (0017)** | shipped | `on_*_fault` → fail-closed `halt` default + FUNGI-FAULT-001/003 + `GIRFlow.faultHandlers` |
 | **Contract-driven test generation (0016)** | 5/5 vector dimensions | fault-injection · effect-egress · capability-denial · boundary/fuzz · substrate-violation (over GIR) |
 | **Type checker / Effect checker** | ~90% | |
 | **WAT emitter** | ~89% | #128(a) fail-closed fix landed (unhandled stmt → `unreachable` trap); #128(b)/GAP-4 `forEachStmt` lowering landed (for-in → counted loop over the host array bridge); `for…where` filtered iteration lowers as a guarded loop — all execution + interpreter-fidelity tested |
-| **Faithful Int64 (i64) lowering** | lift-ready | exact 64-bit integers end-to-end — interpreter `bigint` ≡ WASM `i64`, overflow **traps** (Fork-A, no silent wrap), the walker≡WASM differential passes non-vacuously over (2⁵³,2⁶³). The `SPORE-NUMERIC-001` gate stays **closed by design** (declaring a scalar `Int64` errors today); the lift is one owner-gated line + a final cross-flow check. `UInt64` still gated. Throughput i64 ≈ i32. See [integer-types](docs/Knowledge-Bases/galerina-integer-types-and-lowering.md) |
+| **Faithful Int64 (i64) lowering** | lift-ready | exact 64-bit integers end-to-end — interpreter `bigint` ≡ WASM `i64`, overflow **traps** (Fork-A, no silent wrap), the walker≡WASM differential passes non-vacuously over (2⁵³,2⁶³). The `FUNGI-NUMERIC-001` gate stays **closed by design** (declaring a scalar `Int64` errors today); the lift is one owner-gated line + a final cross-flow check. `UInt64` still gated. Throughput i64 ≈ i32. See [integer-types](docs/Knowledge-Bases/galerina-integer-types-and-lowering.md) |
 | **Runtime interpreter** | ~87% | diagnostic tier (see Benchmarks) |
 | **Stage-B self-hosting — interpreter parity** | 100% | R6 corpus: Stage-A == Stage-B |
 | **Stage-B self-hosting — WASM execution (P9)** | in progress | `tokenize` byte-parity achieved (#143); parser/checker/verifier flows remain |
-| **Post-Quantum & Hardware Security** | ~38% | hybrid Ed25519+ML-DSA-65 shipped on attestation/proof/bridge; **opt-in `.lmanifest` hybrid shipped** (default Ed25519; `GALERINA_MANIFEST_PROFILE=certified` mandates hybrid, both-halves fail-closed via `SPORE-MANIFEST-PQ-REQUIRED`) |
+| **Post-Quantum & Hardware Security** | ~38% | hybrid Ed25519+ML-DSA-65 shipped on attestation/proof/bridge; **opt-in `.lmanifest` hybrid shipped** (default Ed25519; `GALERINA_MANIFEST_PROFILE=certified` mandates hybrid, both-halves fail-closed via `FUNGI-MANIFEST-PQ-REQUIRED`) |
 | **`.tmf` trust-capsule format (`galerina-ext-tmf`)** | slices 1–3 done | A **quantum-resilient universal file & communications format** (not just a database): TMX-256 (3-ary SHAKE256 Merkle-XOF) + container + KEM-DEM golden-verified; codec-agnostic modalities (image/audio/video/document/structured) + seekable anti-truncation streaming. ML-DSA-65 root signing (slice 4) next. **Defensive-publication paper:** [`docs/scientific-papers/`](docs/scientific-papers/) |
 | **`env.tmf` sealed secrets (`@galerina/ext-secrets-tmf`)** | shipped | An **optional encrypted-at-rest `.env` replacement** — sealed credentials in the `.tmf` capsule format instead of a plaintext dotenv file; opt-in package, 17 tests |
-| **Security hardening — fail-open class taxonomy** | shipped today | 10 recurring fail-open classes named + mechanically detected; **SEC-002 mutation: all gates killed** (every fail-closed gate genuinely guarded); `lint-wat-inline-comments` + the #163/#165/guarded-flow codegen+value-state fixes landed; **the `SPORE-TIER-001` flow-kind tier-floor is shipped and now enforced on the user-facing `galerina.mjs` production build path** (under `GALERINA_PROFILE=production` an under-declared guarded/plain flow fails the build; `SPORE-VALUESTATE-008` likewise enforced there — dev/check stay permissive); the value-state 34B-hole + `canCommit` deny-by-default are the next approved items |
+| **Security hardening — fail-open class taxonomy** | shipped today | 10 recurring fail-open classes named + mechanically detected; **SEC-002 mutation: all gates killed** (every fail-closed gate genuinely guarded); `lint-wat-inline-comments` + the #163/#165/guarded-flow codegen+value-state fixes landed; **the `FUNGI-TIER-001` flow-kind tier-floor is shipped and now enforced on the user-facing `galerina.mjs` production build path** (under `GALERINA_PROFILE=production` an under-declared guarded/plain flow fails the build; `FUNGI-VALUESTATE-008` likewise enforced there — dev/check stay permissive); the value-state 34B-hole + `canCommit` deny-by-default are the next approved items |
 | **Passive Execution Plans & Target Bridges** | ~22% | |
 | **AI Inference Tower (BitNet / GroqCloud / NVFP4)** | ~12% | default bridges are governed dev stubs/simulators |
 | **Photonic / Ternary Computing** | ~3% | software simulation only (not hardware) |
-| **Application-framework layer** | ~72% | admission/fusion border (3 gates + `planComposition` multi-module linker + revocation, 87 tests) · `galerina new app` scaffolder · governed resolver (hash/sig/registry/install-deny + SPORE-PKG-006) — all real + tested. **B8 HTTP transport unlocked + in progress** (S1 cert-gate landed, kernel-wiring pending). Servable api-server/example-app + signed registry index are the remaining gaps |
+| **Application-framework layer** | ~72% | admission/fusion border (3 gates + `planComposition` multi-module linker + revocation, 87 tests) · `galerina new app` scaffolder · governed resolver (hash/sig/registry/install-deny + FUNGI-PKG-006) — all real + tested. **B8 HTTP transport unlocked + in progress** (S1 cert-gate landed, kernel-wiring pending). Servable api-server/example-app + signed registry index are the remaining gaps |
 | **B8 governed HTTP transport (TLSTP)** | in progress | **S1 K3 cert/channel-validation gate shipped** (`galerina-core-network`, 126 tests, fail-closed `revocation-unknown → DENY`, SEC-002 mutation-guarded) — wiring into live kernel auth + 0066 first-3 (handshake-bind · raw-byte shim · ECH/OHTTP) are next |
 | **Tri-Pipe fault tolerance (binary/hybrid/photonic)** | re-R&D | shipped: fail-closed core · arena + overflow traps · DbC post-conditions · K3 fail-safe · NMR tolerance · Freivalds verify · DRCM containment. A multi-agent stability re-R&D is in flight |
 
-**Roadmap (security-first)** → [galerina-roadmap-2026-06-23.md](docs/Knowledge-Bases/galerina-roadmap-2026-06-23.md) · **% audit** → [galerina-percent-audit-roadmap-2026-06-25-v2.md](docs/Knowledge-Bases/galerina-percent-audit-roadmap-2026-06-25-v2.md) (~88% shippable) · [build-roadmap](docs/Knowledge-Bases/galerina-build-roadmap.md). *2026-06-25: faithful Int64 WASM lowering is lift-ready (gate closed by design); the Untrusted Governed Lane is documented; the Tower-of-Hanoi cross-language benchmark + the JS-quirks-vs-Galerina R&D (notes/59) landed.* *Latest (2026-06-24, v1.0.0-beta.2): `SPORE-TIER-001` + `SPORE-VALUESTATE-008` are now enforced on the `galerina.mjs` production build path, opt-in hybrid Ed25519+ML-DSA-65 `.lmanifest` signing shipped (certified profile), and `@galerina/ext-secrets-tmf` (`env.tmf` sealed secrets) landed; the next security fix is wiring the S1 cert-gate into live kernel admission (run `node scripts/status.mjs`).*
+**Roadmap (security-first)** → [galerina-roadmap-2026-06-23.md](docs/Knowledge-Bases/galerina-roadmap-2026-06-23.md) · **% audit** → [galerina-percent-audit-roadmap-2026-06-25-v2.md](docs/Knowledge-Bases/galerina-percent-audit-roadmap-2026-06-25-v2.md) (~88% shippable) · [build-roadmap](docs/Knowledge-Bases/galerina-build-roadmap.md). *2026-06-25: faithful Int64 WASM lowering is lift-ready (gate closed by design); the Untrusted Governed Lane is documented; the Tower-of-Hanoi cross-language benchmark + the JS-quirks-vs-Galerina R&D (notes/59) landed.* *Latest (2026-06-24, v1.0.0-beta.2): `FUNGI-TIER-001` + `FUNGI-VALUESTATE-008` are now enforced on the `galerina.mjs` production build path, opt-in hybrid Ed25519+ML-DSA-65 `.lmanifest` signing shipped (certified profile), and `@galerina/ext-secrets-tmf` (`env.tmf` sealed secrets) landed; the next security fix is wiring the S1 cert-gate into live kernel admission (run `node scripts/status.mjs`).*
 
 ---
 
@@ -259,7 +259,7 @@ contract { intent { "Map a status enum to a display string." } }
     Active    => { return "live" }
     Suspended => { return "paused" }
     Deleted   => { return "removed" }
-    _         => { return "unknown" }   // compulsory wildcard — SPORE-MATCH-001
+    _         => { return "unknown" }   // compulsory wildcard — FUNGI-MATCH-001
   }
 }
 ```
@@ -268,7 +268,7 @@ contract { intent { "Map a status enum to a display string." } }
 
 ## Architecture Patterns
 
-Nine canonical patterns. Patterns 1–6 compile today (`drcm_stable_v0`); 7–9 require DRCM phases (`drcm_core_v1`). Each has a verified `.spore` example in `tests/patterns/`.
+Nine canonical patterns. Patterns 1–6 compile today (`drcm_stable_v0`); 7–9 require DRCM phases (`drcm_core_v1`). Each has a verified `.fungi` example in `tests/patterns/`.
 
 | # | Pattern | Profile | When to use |
 |---|---|---|---|
@@ -292,7 +292,7 @@ A Galerina app is **compile-time conventions + signed governed packages fused at
 
 ```text
 my-orders-app/
-├── App.spore          composition-root flow (the app entry)
+├── App.fungi          composition-root flow (the app entry)
 ├── App.manifest     declarative descriptor → folded into the SIGNED build/App.lmanifest
 ├── flows/           your governed business logic (routeOrders, createOrder, …)
 ├── deps/            signed governed components admitted at the fuse border
@@ -300,7 +300,7 @@ my-orders-app/
 └── .gitignore       build/ output + .env secrets are never committed
 ```
 
-`galerina build App.spore` produces **one signed `build/App.wasm` + `build/App.lmanifest`** (Ed25519). A host **App Kernel** admits that wasm at a deny-by-default **fuse border** — three fail-closed gates — before it runs a single instruction:
+`galerina build App.fungi` produces **one signed `build/App.wasm` + `build/App.lmanifest`** (Ed25519). A host **App Kernel** admits that wasm at a deny-by-default **fuse border** — three fail-closed gates — before it runs a single instruction:
 
 1. **hash-pin** — the `.wasm` sha256 must equal the signed descriptor.
 2. **signature + revocation** — a valid Ed25519 signature from a **non-revoked** key.
@@ -316,14 +316,14 @@ At runtime the app reaches the world **only** through the deny-by-default **Capa
 
 ### Compiler pipeline
 ```
-.spore source
-  ↓ lexer          — tokenise, SPORE-LEX-001..006
+.fungi source
+  ↓ lexer          — tokenise, FUNGI-LEX-001..006
   ↓ parser         — AST: flow/contract/match/record/for/import
-  ↓ symbol resolver — SPORE-NAME-001..003
-  ↓ type checker   — SPORE-TYPE-001..023
-  ↓ value-state    — SPORE-VALUESTATE/SECRET/TAINT/GATE
-  ↓ effect checker — SPORE-EFFECT-001..005
-  ↓ governance     — SPORE-GOV-001..020, SPORE-TERM-001, ProofGraph
+  ↓ symbol resolver — FUNGI-NAME-001..003
+  ↓ type checker   — FUNGI-TYPE-001..023
+  ↓ value-state    — FUNGI-VALUESTATE/SECRET/TAINT/GATE
+  ↓ effect checker — FUNGI-EFFECT-001..005
+  ↓ governance     — FUNGI-GOV-001..020, FUNGI-TERM-001, ProofGraph
   ↓ GIR emitter    — Governed Intermediate Representation
   ↓ tiered runtime — cache · bytecode VM · sync · WASM · tree-walker
 ```
@@ -344,7 +344,7 @@ The ~94 package directories (**60 active and test-bearing**; the rest are planne
 
 **Two rules hold the architecture together:**
 
-1. **Govern-Don't-Absorb.** The **core governs**; the **`ext` packages do the heavy lifting** (cryptography, native compute, file formats) *at the border* — never absorbed into the TCB. The `.tmf` KEM-DEM crypto lives in `galerina-ext-tmf`, **governed** by the core's `SPORE-SUBSTRATE-001` (crypto-on-core) invariant, so the core never grows a dependency it would have to trust. A bridge or codec is a *governed participant*, not part of the trusted base.
+1. **Govern-Don't-Absorb.** The **core governs**; the **`ext` packages do the heavy lifting** (cryptography, native compute, file formats) *at the border* — never absorbed into the TCB. The `.tmf` KEM-DEM crypto lives in `galerina-ext-tmf`, **governed** by the core's `FUNGI-SUBSTRATE-001` (crypto-on-core) invariant, so the core never grows a dependency it would have to trust. A bridge or codec is a *governed participant*, not part of the trusted base.
 2. **Self-contained packages, explicit boundaries.** There are **no npm workspaces** — every package installs and builds independently via `file:../` deps, so each boundary is an explicit, individually-deployable seam, and a package enters an app **only across the signed admission border**, never by ambient import.
 
 > **Licensing model (planned).** The intended split is **`core` = Apache-2.0** (free forever — the compiler, runtime, governance core) and an **`enterprise` tier under BSL** (compliance/reporting packages). This is a recorded design decision, not yet a physical directory split.
@@ -360,7 +360,7 @@ packages-galerina/
 ├── galerina-ext-tmf/           ACTIVE — .tmf trust engine: TMX-256 + container + KEM-DEM (slices 1–3)
 ├── galerina-ext-bridge-quantum/ ACTIVE — governed ffsim bridge (Phase 1.5; real exec deferred to Phase 2)
 ├── galerina-devtools-security/ ACTIVE — runSecurityAudit, PCI DSS 4.0.1
-├── galerina-devtools-pci/      ACTIVE — PCI DSS 4.0.1 (SPORE-PCI-001..010)
+├── galerina-devtools-pci/      ACTIVE — PCI DSS 4.0.1 (FUNGI-PCI-001..010)
 ├── galerina-devtools-benchmarks/ ACTIVE — 23 benchmarks across all runtimes
 ├── galerina-core-network/      ACTIVE — network I/O policy + egress/inbound guards + TLSTP S1 K3 cert-validation gate (126 tests)
 ├── galerina-framework-app-kernel/ ACTIVE — admission/fusion host: fuse-loader 3 gates + planComposition multi-module linker + revocation (87 tests)
@@ -373,7 +373,7 @@ docs/Knowledge-Bases/         450+ specification documents
 
 ### Five-layer execution stack
 ```
-Layer 1: Galerina Source (.spore)         — what the developer writes
+Layer 1: Galerina Source (.fungi)         — what the developer writes
        ↓ compiler pipeline
 Layer 2: Governed IR (GIR)            — verified governance contract
        ↓ target bridge
@@ -393,16 +393,16 @@ Layer 5: ProofGraph + .lmanifest      — cryptographic audit proof (Ed25519 def
 node scripts/run-all-tests.cjs --core
 npm test
 
-# Scaffold a new governed app (App.spore + App.manifest + flows/ deps/ proofs/, deny-by-default)
+# Scaffold a new governed app (App.fungi + App.manifest + flows/ deps/ proofs/, deny-by-default)
 galerina new app my-orders-app
 
 # Full benchmark suite (~5–10 min) on this machine, then compare
 cd packages-galerina/galerina-devtools-benchmarks && npm run run && npm run compare
 
-# Compile a .spore program to WASM and run it
-galerina build examples/auth-service/sovereignTransaction.spore
-galerina run   examples/auth-service/verifyPassword.spore --invoke verifyPassword
-galerina check examples/auth-service/verifyPassword.spore
+# Compile a .fungi program to WASM and run it
+galerina build examples/auth-service/sovereignTransaction.fungi
+galerina run   examples/auth-service/verifyPassword.fungi --invoke verifyPassword
+galerina check examples/auth-service/verifyPassword.fungi
 
 # Run a .wasm binary without Node.js
 wasmtime --invoke main build/benchmark.wasm
@@ -411,7 +411,7 @@ wasmtime --invoke main build/benchmark.wasm
 node galerina.mjs border-check
 
 # Security + PCI audit sweep
-node packages-galerina/galerina-devtools-security/dist/cli.js audit examples/auth-service/verifyPassword.spore
+node packages-galerina/galerina-devtools-security/dist/cli.js audit examples/auth-service/verifyPassword.fungi
 node packages-galerina/galerina-devtools-pci/dist/cli.js audit examples/auth-service/
 ```
 
@@ -427,7 +427,7 @@ node packages-galerina/galerina-devtools-pci/dist/cli.js audit examples/auth-ser
 | [`docs/Knowledge-Bases/galerina-fail-open-taxonomy.md`](docs/Knowledge-Bases/galerina-fail-open-taxonomy.md) | The 10 recurring fail-open classes + mechanical detectors + the security-first hardening list |
 | [`AGENTS.md`](AGENTS.md) | The AI-agent entry point — authoritative sources, package map, conventions |
 | [`docs/Knowledge-Bases/galerina-build-roadmap.md`](docs/Knowledge-Bases/galerina-build-roadmap.md) | Forward roadmap, P9 critical path, audit remediation |
-| `docs/Knowledge-Bases/galerina-governance-rules.md` | Numbered rule registry — SPORE codes, enforce status, examples |
+| `docs/Knowledge-Bases/galerina-governance-rules.md` | Numbered rule registry — FUNGI codes, enforce status, examples |
 | `docs/Knowledge-Bases/galerina-architecture-patterns.md` | 9 canonical patterns with feature gates |
 | `docs/Knowledge-Bases/galerina-zero-trust-engine.md` | "Galerina as a zero-trust engine" — the 4 border mandates + status |
 | `docs/Knowledge-Bases/galerina-engineering-goals.md` | 3 architectural goals — native speed, single-cycle bitmask, no system crash |

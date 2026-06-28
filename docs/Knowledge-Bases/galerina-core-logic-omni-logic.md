@@ -8,7 +8,7 @@ Area: Omni logic
 Version target: v0.2
 Implementation status: advisory/research model only
 Canonical diagnostics:
-  - SPORE-OMNI-001 through SPORE-OMNI-005
+  - FUNGI-OMNI-001 through FUNGI-OMNI-005
 ```
 
 Omni Logic is Galerina's advisory multi-state reasoning model.
@@ -226,11 +226,11 @@ OmniDecision -> runtime Bool
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-OMNI-001` | Invalid Omni state |
-| `SPORE-OMNI-002` | Omni confidence outside valid range |
-| `SPORE-OMNI-003` | Omni reasoning missing evidence |
-| `SPORE-OMNI-004` | Omni logic attempted direct runtime Bool conversion |
-| `SPORE-OMNI-005` | Omni advisory result attempted authority escalation |
+| `FUNGI-OMNI-001` | Invalid Omni state |
+| `FUNGI-OMNI-002` | Omni confidence outside valid range |
+| `FUNGI-OMNI-003` | Omni reasoning missing evidence |
+| `FUNGI-OMNI-004` | Omni logic attempted direct runtime Bool conversion |
+| `FUNGI-OMNI-005` | Omni advisory result attempted authority escalation |
 
 ---
 

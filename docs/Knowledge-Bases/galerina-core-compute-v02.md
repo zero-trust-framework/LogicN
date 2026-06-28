@@ -432,29 +432,29 @@ function checkCompatibility(
 
 ## Diagnostic Codes (v0.2)
 
-### SPORE-COMPUTE
+### FUNGI-COMPUTE
 
 | Code           | Meaning                  |
 | -------------- | ------------------------ |
-| SPORE-COMPUTE-001 | Invalid compute workload |
-| SPORE-COMPUTE-002 | GPU planning failure     |
-| SPORE-COMPUTE-003 | Optical planning failure |
+| FUNGI-COMPUTE-001 | Invalid compute workload |
+| FUNGI-COMPUTE-002 | GPU planning failure     |
+| FUNGI-COMPUTE-003 | Optical planning failure |
 
-### SPORE-WASM
+### FUNGI-WASM
 
 | Code        | Meaning                     |
 | ----------- | --------------------------- |
-| SPORE-WASM-001 | Forbidden WASM effect       |
-| SPORE-WASM-002 | Invalid runtime capability  |
-| SPORE-WASM-003 | Unsupported browser runtime |
+| FUNGI-WASM-001 | Forbidden WASM effect       |
+| FUNGI-WASM-002 | Invalid runtime capability  |
+| FUNGI-WASM-003 | Unsupported browser runtime |
 
-### SPORE-COMPAT
+### FUNGI-COMPAT
 
 | Code          | Meaning                        |
 | ------------- | ------------------------------ |
-| SPORE-COMPAT-001 | Runtime incompatibility        |
-| SPORE-COMPAT-002 | Forbidden target effect        |
-| SPORE-COMPAT-003 | Unsupported deployment profile |
+| FUNGI-COMPAT-001 | Runtime incompatibility        |
+| FUNGI-COMPAT-002 | Forbidden target effect        |
+| FUNGI-COMPAT-003 | Unsupported deployment profile |
 
 ---
 

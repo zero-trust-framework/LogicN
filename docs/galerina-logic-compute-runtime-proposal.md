@@ -3,17 +3,17 @@
 Galerina, short for **Galerina**, is a strict, memory-safe, security-first programming
 language and compiler/toolchain.
 
-Galerina source files use the `.spore` extension.
+Galerina source files use the `.fungi` extension.
 
 Example files:
 
 ```text
-boot.spore
-main.spore
-routes.spore
-models.spore
-compute.spore
-security.spore
+boot.fungi
+main.fungi
+routes.fungi
+models.fungi
+compute.fungi
+security.fungi
 ```
 
 This document proposes how Galerina should support deterministic logic, three-state

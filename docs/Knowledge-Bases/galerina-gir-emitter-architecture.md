@@ -40,7 +40,7 @@ Parser
 
 ```typescript
 GIRProgram {
-  schemaVersion: "spore.gir.v1"
+  schemaVersion: "fungi.gir.v1"
   sourceHash: string              // SHA-256 of source text (deterministic)
   generatedAt: string             // ISO timestamp (stripped in canonical hash)
   girHash?: string                // SHA-256 of canonical GIR (post-emission)
@@ -206,7 +206,7 @@ contract {
 
 Not legacy:
 ```galerina
-with effects [database.write]  ← SPORE-SYNTAX-LEGACY-001 warning, GIR still emits
+with effects [database.write]  ← FUNGI-SYNTAX-LEGACY-001 warning, GIR still emits
 ```
 
 ---

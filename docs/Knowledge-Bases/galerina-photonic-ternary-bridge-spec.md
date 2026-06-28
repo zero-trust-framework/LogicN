@@ -86,9 +86,9 @@ Required checks:
 4. `Tri` cannot be silently coerced to `Bool`.
 
 Diagnostics:
-- `SPORE-TYPE-031` InvalidTriCondition
-- `SPORE-TYPE-032` InvalidTriOperand
-- `SPORE-TYPE-033` TriBoolImplicitCoercionDenied
+- `FUNGI-TYPE-031` InvalidTriCondition
+- `FUNGI-TYPE-032` InvalidTriOperand
+- `FUNGI-TYPE-033` TriBoolImplicitCoercionDenied
 
 ---
 
@@ -123,10 +123,10 @@ All must be true:
 5. Hardware trust profile accepts selected photonic bridge.
 
 Diagnostics:
-- `SPORE-PHOTONIC-001` MissingPhotonicCalibration
-- `SPORE-PHOTONIC-002` UnsupportedPhotonicOp
-- `SPORE-PHOTONIC-003` DeterminismRisk
-- `SPORE-PHOTONIC-004` TrustProfileMismatch
+- `FUNGI-PHOTONIC-001` MissingPhotonicCalibration
+- `FUNGI-PHOTONIC-002` UnsupportedPhotonicOp
+- `FUNGI-PHOTONIC-003` DeterminismRisk
+- `FUNGI-PHOTONIC-004` TrustProfileMismatch
 
 ---
 
@@ -178,5 +178,5 @@ Internal encoding: `-1` = False, `0` = Unknown, `+1` = True. Surface language re
 - `galerina-core-photonic-backend-architecture.md` — governance-first photonic runtime architecture
 - `galerina-core-photonic-governance-architecture.md` — photonic governance overlay spec
 - `galerina-phase13-passive-plans-target-bridges.md` — Phase 13 TargetBridgePlan and HardwareTrustProfile contracts
-- `formal-type-system-spec.md` — authoritative type rules and SPORE-TYPE-* diagnostics
+- `formal-type-system-spec.md` — authoritative type rules and FUNGI-TYPE-* diagnostics
 - `mathematics-and-tri-logic.md` — mathematical foundations for Tri

@@ -4,7 +4,7 @@
 
 ```text
 Proof chain generation: specified - implementation Phase 7B/8
-Related graph support:   spore-graph ExecutionProofChain / buildProofChain()
+Related graph support:   fungi-graph ExecutionProofChain / buildProofChain()
 ```
 
 This document defines the execution proof chain that connects compiler
@@ -52,7 +52,7 @@ Formal mathematical proofs are a separate concept covered by
 ## ExecutionProofChain Schema
 
 ```yaml
-schemaVersion: "spore.execution.proof.v1"
+schemaVersion: "fungi.execution.proof.v1"
 proofId: uuid
 generatedAt: ISO8601
 hashes:

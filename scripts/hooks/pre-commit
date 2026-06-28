@@ -1,6 +1,6 @@
 #!/bin/sh
 # =============================================================================
-# Galerina pre-commit hook — keep the generated //spore: dependency metadata current
+# Galerina pre-commit hook — keep the generated //fungi: dependency metadata current
 # WITHOUT letting `galerina build` mutate your source.
 #
 # This is the "keep build pure + use a hook" alternative to `build --package`'s
@@ -20,22 +20,22 @@ set -e
 
 APP_DIR="${GALERINA_APP_DIR:-.}"
 
-# Fast exit: only do work when this commit actually touches .spore files.
-staged_lln=$(git diff --cached --name-only --diff-filter=ACM -- '*.spore')
-[ -z "$staged_lln" ] && exit 0
+# Fast exit: only do work when this commit actually touches .fungi files.
+staged_fungi-=$(git diff --cached --name-only --diff-filter=ACM -- '*.fungi')
+[ -z "$staged_fungi-" ] && exit 0
 
-# Refresh the whole app's //spore: blocks in place (cross-file: a flow called from
+# Refresh the whole app's //fungi: blocks in place (cross-file: a flow called from
 # another file is never mislabelled "safe to delete"). Swap `node galerina.mjs`
-# for `spore` once the CLI is globally linked (npm link).
+# for `fungi` once the CLI is globally linked (npm link).
 node galerina.mjs deps --all "$APP_DIR" --write >/dev/null
 
-# Re-stage any .spore the refresh changed, so the commit includes current metadata.
+# Re-stage any .fungi the refresh changed, so the commit includes current metadata.
 # (A dependency edit in one file can change another file's USEDBY — that file is
 # re-staged too, which is correct: its metadata genuinely changed in this commit.)
-changed=$(git diff --name-only -- '*.spore')
+changed=$(git diff --name-only -- '*.fungi')
 if [ -n "$changed" ]; then
   printf '%s\n' "$changed" | xargs git add
-  echo "pre-commit: refreshed //spore: metadata on:"
+  echo "pre-commit: refreshed //fungi: metadata on:"
   printf '  %s\n' $changed
 fi
 

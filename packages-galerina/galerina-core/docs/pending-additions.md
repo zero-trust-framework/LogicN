@@ -68,7 +68,7 @@ Production artefacts require a compile.
 
 ## 2. Unified Development Command
 
-Status: prototype support exists for a checked generate-and-run cycle, including `Galerina dev --watch` for re-running that cycle when `.spore` files change.
+Status: prototype support exists for a checked generate-and-run cycle, including `Galerina dev --watch` for re-running that cycle when `.fungi` files change.
 
 Recommended command:
 
@@ -91,7 +91,7 @@ watch for changes if requested
 Suggested `Galerina dev` flow:
 
 ```text
-read boot.spore
+read boot.fungi
 parse source files
 type-check source
 security-check source
@@ -121,7 +121,7 @@ Galerina must validate the project before main() runs.
 Startup order:
 
 ```text
-1. Read boot.spore
+1. Read boot.fungi
 2. Validate project config
 3. Validate imports and packages
 4. Validate globals, env vars and secrets
@@ -496,7 +496,7 @@ Pending implementation examples:
 ```text
 parse compute auto
 parse pure vector float/decimal/required modifiers
-load boot.spore compute preference order
+load boot.fungi compute preference order
 emit compute auto target selection reports
 emit AI guide compute auto summaries
 detect photonic_mzi target capability through target plugin or deployment profile
@@ -692,7 +692,7 @@ Core rule:
 ```text
 Import local files.
 Use approved packages.
-Register packages in boot.spore.
+Register packages in boot.fungi.
 Use packages explicitly in source files.
 Report package permissions, hashes, usage and loading behaviour.
 ```
@@ -700,7 +700,7 @@ Report package permissions, hashes, usage and loading behaviour.
 Syntax direction:
 
 ```text
-import "./types.spore"
+import "./types.fungi"
 use std.json
 use GraphQL
 
@@ -1062,7 +1062,7 @@ Correct:
 
 ```text
 compiler/galerina.js
-examples/hello.spore
+examples/hello.fungi
 schemas/ai-context.schema.json
 docs/type-system.md
 ```
@@ -1071,7 +1071,7 @@ Incorrect inside this repository:
 
 ```text
 packages-galerina/galerina-core/compiler/galerina.js
-packages-galerina/galerina-core/examples/hello.spore
+packages-galerina/galerina-core/examples/hello.fungi
 packages-galerina/galerina-core/schemas/ai-context.schema.json
 ```
 
@@ -1197,7 +1197,7 @@ add Pigeon-style typed API schema output or equivalent
 add flutter-ffi target planning
 add native-library plus Dart binding output planning
 add unsupported-platform diagnostics for Flutter FFI
-add source maps from generated Dart/native bindings back to .spore files
+add source maps from generated Dart/native bindings back to .fungi files
 defer Flutter UI component syntax until lower support levels are stable
 emit async-report.json
 emit bytes-interop-report.json
@@ -1259,7 +1259,7 @@ emit worker-bridge-report.json
 emit client-server-split-report.json
 add client/server split diagnostics
 add worker clone/transfer safety diagnostics
-add source maps from generated JS/WASM back to .spore files
+add source maps from generated JS/WASM back to .fungi files
 ```
 
 ---

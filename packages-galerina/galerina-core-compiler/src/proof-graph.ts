@@ -203,7 +203,7 @@ export interface EpilogueReceipt {
   readonly outputSeal?:    string;                 // sha256:<hex> of result (populated post-execution)
   readonly zkReceiptStub?: string;                 // "zk_snark_receipt:PENDING — prover not yet integrated"
   readonly zkProof?:       ZkProof;                // present when prover backend is wired (replaces zkReceiptStub)
-  readonly zkRejected?:    string;                 // certified profile REFUSED the proof (#0094): SPORE-PROOF-CERT-00x reason; zkProof is absent (fail-closed)
+  readonly zkRejected?:    string;                 // certified profile REFUSED the proof (#0094): FUNGI-PROOF-CERT-00x reason; zkProof is absent (fail-closed)
   readonly generatedAt:    string;                 // ISO timestamp
   readonly onFailure:      EpilogueFailureAction;
 }
@@ -220,10 +220,10 @@ export interface EpilogueReceipt {
 /** Phase-1 placeholder circuit ids whose verify() is a public-input recompute (forgeable). */
 export const PLACEHOLDER_CIRCUIT_IDS: ReadonlySet<string> = new Set(["galerina-sha256-v0.1"]);
 
-/** SPORE-PROOF-CERT-001 — certified profile refused a Phase-1 placeholder / undecodable proof. */
-export const SPORE_PROOF_CERT_001 = "SPORE-PROOF-CERT-001" as const;
-/** SPORE-PROOF-CERT-002 — certified profile: the proof did not verify() against the claimed input. */
-export const SPORE_PROOF_CERT_002 = "SPORE-PROOF-CERT-002" as const;
+/** FUNGI-PROOF-CERT-001 — certified profile refused a Phase-1 placeholder / undecodable proof. */
+export const FUNGI_PROOF_CERT_001 = "FUNGI-PROOF-CERT-001" as const;
+/** FUNGI-PROOF-CERT-002 — certified profile: the proof did not verify() against the claimed input. */
+export const FUNGI_PROOF_CERT_002 = "FUNGI-PROOF-CERT-002" as const;
 
 /** Decode {circuitId, type} from a ZkProof's base64 proof object; undefined on any decode failure. */
 function decodeProofMeta(proofBase64: string): { circuitId?: string | undefined; type?: string | undefined } {
@@ -315,7 +315,7 @@ export function generateEpilogueReceipt(opts: {
           if (meta.circuitId === undefined || PLACEHOLDER_CIRCUIT_IDS.has(meta.circuitId) || meta.type === "groth16-phase1") {
             return {
               strategy: "zk_snark_receipt",
-              zkRejected: `${SPORE_PROOF_CERT_001}: certified profile refuses a Phase-1 placeholder/undecodable proof (circuitId=${meta.circuitId ?? "<undecodable>"}, type=${meta.type ?? "<none>"}) — its verify() is a public-input recompute (forgeable), not admissible.`,
+              zkRejected: `${FUNGI_PROOF_CERT_001}: certified profile refuses a Phase-1 placeholder/undecodable proof (circuitId=${meta.circuitId ?? "<undecodable>"}, type=${meta.type ?? "<none>"}) — its verify() is a public-input recompute (forgeable), not admissible.`,
               generatedAt,
               onFailure,
             };
@@ -329,7 +329,7 @@ export function generateEpilogueReceipt(opts: {
           if (!verified) {
             return {
               strategy: "zk_snark_receipt",
-              zkRejected: `${SPORE_PROOF_CERT_002}: certified profile rejected the proof — it did not verify() === true against the claimed input (or no verifier was supplied; deny-by-default).`,
+              zkRejected: `${FUNGI_PROOF_CERT_002}: certified profile rejected the proof — it did not verify() === true against the claimed input (or no verifier was supplied; deny-by-default).`,
               generatedAt,
               onFailure,
             };
@@ -405,19 +405,19 @@ export interface HardwareSealedDispatch {
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-HW diagnostics — Hardware governance violations
+// FUNGI-HW diagnostics — Hardware governance violations
 // ---------------------------------------------------------------------------
 
 /**
- * SPORE-HW-001: contract.hardware declares a quantum target but the flow
+ * FUNGI-HW-001: contract.hardware declares a quantum target but the flow
  * does not have a FormalRequired proof chain.
  *
  * Quantum targets are ExperimentalPlane (Class 3) with Probabilistic observability.
  * They require post-execution validation and result sanitisation before results
  * enter the governance pipeline.
  */
-export const SPORE_HW_001 = {
-  code: "SPORE-HW-001",
+export const FUNGI_HW_001 = {
+  code: "FUNGI-HW-001",
   name: "QuantumTargetRequiresFormalProof",
   severity: "error" as const,
   message: "contract.hardware { target quantum } requires ProofLevel.FormalRequired. Quantum coprocessors are ExperimentalPlane (probabilistic, unobservable). Add formal proof requirements or use a lower-class target.",
@@ -426,12 +426,12 @@ export const SPORE_HW_001 = {
 } as const;
 
 /**
- * SPORE-HW-002: contract.hardware declares a Sealed target (NPU, TPU, ANE)
+ * FUNGI-HW-002: contract.hardware declares a Sealed target (NPU, TPU, ANE)
  * but the flow declares no audit record for hardware dispatch.
  * The Input/Output seal requires an audit trail to be meaningful.
  */
-export const SPORE_HW_002 = {
-  code: "SPORE-HW-002",
+export const FUNGI_HW_002 = {
+  code: "FUNGI-HW-002",
   name: "SealedTargetRequiresAuditTrace",
   severity: "warning" as const,
   message: "contract.hardware declares a sealed target (NPU, TPU, or ANE). The Input/Output seal is auto-applied, but audit.write is recommended to record the seal in the audit trail.",
@@ -440,12 +440,12 @@ export const SPORE_HW_002 = {
 } as const;
 
 /**
- * SPORE-HW-003: contract.hardware declares a photonic or neuromorphic target
+ * FUNGI-HW-003: contract.hardware declares a photonic or neuromorphic target
  * (AcceleratorPlane) without a runtime attestation requirement.
  * Escalated proof requires attestation for partially observable hardware.
  */
-export const SPORE_HW_003 = {
-  code: "SPORE-HW-003",
+export const FUNGI_HW_003 = {
+  code: "FUNGI-HW-003",
   name: "AcceleratorPlaneRequiresAttestation",
   severity: "warning" as const,
   message: "contract.hardware declares a photonic or neuromorphic target (AcceleratorPlane). ProofLevel.Escalated requires runtime attestation. Add `require runtime_attestation` to the audit block.",
@@ -454,14 +454,14 @@ export const SPORE_HW_003 = {
 } as const;
 
 /**
- * SPORE-HW-004: contract.hardware declares a target NOT in the hardware-trust registry for this build.
+ * FUNGI-HW-004: contract.hardware declares a target NOT in the hardware-trust registry for this build.
  * R&D 0045 (tier D): an unrecognised capability is K3 INDETERMINATE — surfaced as a YELLOW uncertainty
  * warning, NOT a red denial. The build still succeeds; the warning auto-clears once the target becomes
  * registered (a driver/profile update collapses the uncertainty into verification). Advisory only — a
  * target DECLARATION is not a governed sink (where INDETERMINATE would have to fail closed).
  */
-export const SPORE_HW_004 = {
-  code: "SPORE-HW-004",
+export const FUNGI_HW_004 = {
+  code: "FUNGI-HW-004",
   name: "UnknownHardwareTarget",
   severity: "warning" as const,
   message: "is not in the hardware-trust registry for this build — its trust profile and proof requirements cannot be verified (uncertainty, not a denial). The build proceeds; this clears automatically once the target is registered.",
@@ -484,8 +484,8 @@ export type ProofObligationKind =
   | "target"       // compute target is allowed by runtime policy
   | "privacy"      // PII/PHI data is correctly protected/redacted
   | "audit"        // audit trail is required and declared
-  | "no-escape"    // no dynamic code execution (SPORE-SOURCE-ESCAPE-001 clean)
-  | "no-mutation"; // no monkey patching (SPORE-SEC-020/021 clean)
+  | "no-escape"    // no dynamic code execution (FUNGI-SOURCE-ESCAPE-001 clean)
+  | "no-mutation"; // no monkey patching (FUNGI-SEC-020/021 clean)
 
 export interface ProofObligation {
   readonly kind:        ProofObligationKind;
@@ -518,7 +518,7 @@ export interface ProofEvidence {
 // ---------------------------------------------------------------------------
 
 export interface ProofGraph {
-  readonly schemaVersion:    "spore.proof.v1";
+  readonly schemaVersion:    "fungi.proof.v1";
   readonly flowName:         string;
   readonly executionSignature: ExecutionSignature;
   readonly signatureHash:    string;   // hash of ExecutionSignature — enables proof sharing
@@ -541,11 +541,11 @@ export interface ProofGraph {
   readonly epilogueReceipt?: EpilogueReceipt;
   /**
    * Phase 39: GovernanceSignature — quantum-resistant proof certificate.
-   * Present in production profile. algorithm: "spore.gov.sig.v1".
+   * Present in production profile. algorithm: "fungi.gov.sig.v1".
    * See galerina-governance-signature.md for full spec.
    */
   readonly governanceSignature?: {
-    readonly algorithm: "spore.gov.sig.v1" | "spore.gov.sig.v2";  // v2 = Phase 55 hybrid
+    readonly algorithm: "fungi.gov.sig.v1" | "fungi.gov.sig.v2";  // v2 = Phase 55 hybrid
     readonly signerKeyId: string;
     readonly signature: string;
     readonly signedAt: string;
@@ -602,7 +602,7 @@ export function buildProofGraph(
     );
 
   return {
-    schemaVersion: "spore.proof.v1",
+    schemaVersion: "fungi.proof.v1",
     flowName,
     executionSignature: sig,
     signatureHash: sigHash,
@@ -653,9 +653,9 @@ export function sharesGovernanceShape(a: ProofGraph, b: ProofGraph): boolean {
 // Phase 55 — ML-DSA upgrade (NIST FIPS 204 / @noble/post-quantum)
 //
 // Migration profile:
-//   compat      (Phase 39): Ed25519 only  — "spore.gov.sig.v1"
-//   hybrid      (Phase 55): Ed25519 + ML-DSA-65 — both required  — "spore.gov.sig.v2"
-//   pq_strict   (future):   ML-DSA-65 only — "spore.gov.sig.v3"
+//   compat      (Phase 39): Ed25519 only  — "fungi.gov.sig.v1"
+//   hybrid      (Phase 55): Ed25519 + ML-DSA-65 — both required  — "fungi.gov.sig.v2"
+//   pq_strict   (future):   ML-DSA-65 only — "fungi.gov.sig.v3"
 //
 // The signed payload is a canonical SHA-256 hash of the deterministic proof
 // graph fields: schemaVersion + flowName + signatureHash + verified + obligations.
@@ -777,8 +777,8 @@ function fromBase64url(s: string): Uint8Array {
 /**
  * Sign a ProofGraph with a governance key pair.
  *
- * Phase 39 (compat): Ed25519 only  → algorithm: "spore.gov.sig.v1"
- * Phase 55 (hybrid): Ed25519 + ML-DSA-65 → algorithm: "spore.gov.sig.v2"
+ * Phase 39 (compat): Ed25519 only  → algorithm: "fungi.gov.sig.v1"
+ * Phase 55 (hybrid): Ed25519 + ML-DSA-65 → algorithm: "fungi.gov.sig.v2"
  *
  * Returns a new ProofGraph with the governanceSignature field populated.
  * Note: ML-DSA hybrid signing is async — use signProofGraphAsync for Phase 55 keys.
@@ -794,7 +794,7 @@ export function signProofGraph(pg: ProofGraph, keyPair: GovernanceKeyPair): Proo
   return {
     ...pg,
     governanceSignature: {
-      algorithm:   "spore.gov.sig.v1",
+      algorithm:   "fungi.gov.sig.v1",
       signerKeyId: keyPair.keyId,
       signature,
       signedAt:    new Date().toISOString(),
@@ -834,7 +834,7 @@ export async function signProofGraphHybrid(pg: ProofGraph, keyPair: GovernanceKe
   return {
     ...pg,
     governanceSignature: {
-      algorithm:   "spore.gov.sig.v2",   // hybrid
+      algorithm:   "fungi.gov.sig.v2",   // hybrid
       signerKeyId: keyPair.keyId,
       signature,
       signedAt:    new Date().toISOString(),
@@ -845,8 +845,8 @@ export async function signProofGraphHybrid(pg: ProofGraph, keyPair: GovernanceKe
 /**
  * Verify a GovernanceSignature on a ProofGraph.
  *
- * Phase 39 (compat): accepts "spore.gov.sig.v1" (Ed25519)
- * Phase 55 (hybrid): accepts "spore.gov.sig.v2" (Ed25519 + ML-DSA-65) — async variant below
+ * Phase 39 (compat): accepts "fungi.gov.sig.v1" (Ed25519)
+ * Phase 55 (hybrid): accepts "fungi.gov.sig.v2" (Ed25519 + ML-DSA-65) — async variant below
  *
  * Returns true only when the signature is cryptographically valid.
  */
@@ -856,7 +856,7 @@ export function verifyGovernanceSignature(pg: ProofGraph, publicKey: Uint8Array)
   // NO SILENT DOWNGRADE: a v2 (hybrid) signature MUST be verified with BOTH halves via
   // verifyGovernanceSignatureHybrid. Validating only the classical Ed25519 half here would
   // silently drop the post-quantum guarantee — so the sync path rejects v2 outright.
-  if (alg !== "spore.gov.sig.v1") return false;
+  if (alg !== "fungi.gov.sig.v1") return false;
   try {
     const payload = canonicalSigningPayload(pg);
     const sigBuf = fromBase64url(pg.governanceSignature.signature);
@@ -879,7 +879,7 @@ export async function verifyGovernanceSignatureHybrid(
   mlDsaPublicKey: Uint8Array,
 ): Promise<boolean> {
   if (!pg.governanceSignature) return false;
-  if (pg.governanceSignature.algorithm !== "spore.gov.sig.v2") return false;
+  if (pg.governanceSignature.algorithm !== "fungi.gov.sig.v2") return false;
   try {
     const payload = canonicalSigningPayload(pg);
     const parts = pg.governanceSignature.signature.split("|");
@@ -958,7 +958,7 @@ export function buildProofGraphCached(
   if (cached !== undefined) {
     _proofCacheHits++;
     return {
-      schemaVersion: "spore.proof.v1",
+      schemaVersion: "fungi.proof.v1",
       flowName,
       executionSignature: sig,
       signatureHash: cached.sigHash,
@@ -978,7 +978,7 @@ export function buildProofGraphCached(
   PROOF_SHAPE_CACHE.set(sigHash, { sigHash, obligations, evidence, verified });
 
   return {
-    schemaVersion: "spore.proof.v1",
+    schemaVersion: "fungi.proof.v1",
     flowName,
     executionSignature: sig,
     signatureHash: sigHash,
@@ -1015,7 +1015,7 @@ export function clearProofCache(): void {
 // ---------------------------------------------------------------------------
 
 export interface GovernanceROIReport {
-  readonly schemaVersion: "spore.roi.v1";
+  readonly schemaVersion: "fungi.roi.v1";
   readonly flowCount: number;
   readonly provenFlows: number;
   readonly governanceProofsGenerated: number;
@@ -1044,7 +1044,7 @@ export function generateROIReport(
   const hoursRemoved = proven * hoursPerProof;
 
   return {
-    schemaVersion: "spore.roi.v1",
+    schemaVersion: "fungi.roi.v1",
     flowCount: proofGraphs.size,
     provenFlows: proven,
     governanceProofsGenerated: proven,

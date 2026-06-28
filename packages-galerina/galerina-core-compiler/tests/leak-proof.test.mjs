@@ -1,4 +1,4 @@
-// leak-proof — the AI-code-gen referee's machine-consumable structural leak proof (spore.leakproof.v1).
+// leak-proof — the AI-code-gen referee's machine-consumable structural leak proof (fungi.leakproof.v1).
 // An autonomous LLM writer reads this to self-patch the exact capability leak the compiler proved.
 // Fail-closed: ANY error-severity governance leak → module verdict 'leak'; non-leak codes are ignored.
 import { test } from "node:test";
@@ -9,19 +9,19 @@ const diag = (o) => ({ name: "X", severity: "error", message: "", ...o });
 
 test("a clean module (no governance leaks) → verdict 'clean'", () => {
   const p = buildLeakProof([
-    diag({ code: "SPORE-TYPE-001", message: "unknown type" }),       // not a capability leak
-    diag({ code: "SPORE-IMPORT-005", message: "traversal" }),        // not a capability leak
+    diag({ code: "FUNGI-TYPE-001", message: "unknown type" }),       // not a capability leak
+    diag({ code: "FUNGI-IMPORT-005", message: "traversal" }),        // not a capability leak
   ]);
-  assert.equal(p.schema, "spore.leakproof.v1");
+  assert.equal(p.schema, "fungi.leakproof.v1");
   assert.equal(p.verdict, "clean");
   assert.equal(p.leaks.length, 0);
 });
 
 test("a secret-egress error → verdict 'leak', category + capability + redact fix extracted", () => {
   const p = buildLeakProof([diag({
-    code: "SPORE-VALUESTATE-003", name: "SECRET_TO_SINK",
+    code: "FUNGI-VALUESTATE-003", name: "SECRET_TO_SINK",
     message: "an unsafe value flows to network.outbound at the trust boundary",
-    location: { file: "f.spore", line: 12, column: 3 },
+    location: { file: "f.fungi", line: 12, column: 3 },
     suggestedCode: "redact(value)", suggestedFix: "redact() the value before the sink",
     why: "a secret reaches a network sink", risk: "credential exfiltration",
   })]);
@@ -37,12 +37,12 @@ test("a secret-egress error → verdict 'leak', category + capability + redact f
   assert.equal(f.why, "a secret reaches a network sink");
 });
 
-test("category + fix mapping per SPORE family", () => {
+test("category + fix mapping per FUNGI family", () => {
   const cases = [
-    ["SPORE-TENANT-002", "tenant-isolation", "bind-tenant-scope"],
-    ["SPORE-PRIVACY-002", "privacy-egress", "redact-or-seal"],
-    ["SPORE-EFFECT-001", "undeclared-effect", "declare-effect"],
-    ["SPORE-SUBSTRATE-005", "substrate-misuse", "move-to-digital-lane"],
+    ["FUNGI-TENANT-002", "tenant-isolation", "bind-tenant-scope"],
+    ["FUNGI-PRIVACY-002", "privacy-egress", "redact-or-seal"],
+    ["FUNGI-EFFECT-001", "undeclared-effect", "declare-effect"],
+    ["FUNGI-SUBSTRATE-005", "substrate-misuse", "move-to-digital-lane"],
   ];
   for (const [code, cat, kind] of cases) {
     const f = buildLeakProof([diag({ code, message: "uses database.write" })]).leaks[0];
@@ -52,7 +52,7 @@ test("category + fix mapping per SPORE family", () => {
 });
 
 test("deny-by-default: a warning-only leak does NOT flip verdict to leak, but is still reported", () => {
-  const p = buildLeakProof([diag({ code: "SPORE-TENANT-001", severity: "warning", message: "dangling tenant.scope" })]);
+  const p = buildLeakProof([diag({ code: "FUNGI-TENANT-001", severity: "warning", message: "dangling tenant.scope" })]);
   assert.equal(p.verdict, "clean");           // no DENY-severity finding
   assert.equal(p.leaks.length, 1);            // but still surfaced as a warn
   assert.equal(p.leaks[0].severity, "warn");
@@ -60,15 +60,15 @@ test("deny-by-default: a warning-only leak does NOT flip verdict to leak, but is
 });
 
 test("info-severity is ignored entirely", () => {
-  const p = buildLeakProof([diag({ code: "SPORE-EFFECT-001", severity: "info", message: "fyi" })]);
+  const p = buildLeakProof([diag({ code: "FUNGI-EFFECT-001", severity: "info", message: "fyi" })]);
   assert.equal(p.leaks.length, 0);
 });
 
 test("summary counts by category + denies", () => {
   const p = buildLeakProof([
-    diag({ code: "SPORE-SECRET-002", message: "secret.read leaks" }),
-    diag({ code: "SPORE-VALUESTATE-003", message: "value to database.write" }),
-    diag({ code: "SPORE-TENANT-002", message: "cross-tenant" }),
+    diag({ code: "FUNGI-SECRET-002", message: "secret.read leaks" }),
+    diag({ code: "FUNGI-VALUESTATE-003", message: "value to database.write" }),
+    diag({ code: "FUNGI-TENANT-002", message: "cross-tenant" }),
   ]);
   assert.equal(p.verdict, "leak");
   assert.equal(p.summary.total, 3);
@@ -78,7 +78,7 @@ test("summary counts by category + denies", () => {
 });
 
 test("canonicalLeakProof is deterministic + order-independent (signable)", () => {
-  const a = buildLeakProof([diag({ code: "SPORE-SECRET-002", message: "x" }), diag({ code: "SPORE-TENANT-002", message: "y" })]);
-  const b = buildLeakProof([diag({ code: "SPORE-TENANT-002", message: "y" }), diag({ code: "SPORE-SECRET-002", message: "x" })]);
+  const a = buildLeakProof([diag({ code: "FUNGI-SECRET-002", message: "x" }), diag({ code: "FUNGI-TENANT-002", message: "y" })]);
+  const b = buildLeakProof([diag({ code: "FUNGI-TENANT-002", message: "y" }), diag({ code: "FUNGI-SECRET-002", message: "x" })]);
   assert.equal(canonicalLeakProof(a), canonicalLeakProof(b)); // sorted → input order doesn't matter
 });

@@ -127,7 +127,7 @@ pub fn fetch_user(
 ) -> Result<UserProfile, NetworkError> {
     http.get("/users/" + id)
 }
-// SPORE-EFFECT-001: undeclared effect
+// FUNGI-EFFECT-001: undeclared effect
 // function: fetch_user  required effect: network
 ```
 
@@ -153,7 +153,7 @@ Example — restricted import:
 
 ```galerina
 import { InternalKey } from "app/auth/private-keys"
-// SPORE-BOUNDARY-001: import crosses restricted package boundary
+// FUNGI-BOUNDARY-001: import crosses restricted package boundary
 ```
 
 Example — secret leakage through public API:
@@ -161,7 +161,7 @@ Example — secret leakage through public API:
 ```galerina
 private type SecretToken = String
 pub fn export_token() -> SecretToken { ... }
-// SPORE-BOUNDARY-002: public API exposes private secret-bearing type
+// FUNGI-BOUNDARY-002: public API exposes private secret-bearing type
 ```
 
 See `effect-checker-and-boundary-checker.md` for full specification.

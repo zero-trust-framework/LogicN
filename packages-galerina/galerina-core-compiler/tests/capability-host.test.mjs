@@ -7,7 +7,7 @@ import { describe, it } from "node:test";
 import {
   createCapabilityHost,
   createContractEnforcer,
-  SPORE_VOID,
+  FUNGI_VOID,
 } from "../dist/index.js";
 
 // ---------------------------------------------------------------------------
@@ -115,7 +115,7 @@ describe("execute() — denied capability", () => {
     let implCalled = false;
     const result = await host.execute(call, async (_args) => {
       implCalled = true;
-      return SPORE_VOID;
+      return FUNGI_VOID;
     });
     assert.equal(result.value.__tag, "err");
     assert.equal(implCalled, false, "impl should NOT be called for denied capability");
@@ -136,7 +136,7 @@ describe("observedEffects", () => {
       args: [],
       context: DUMMY_CONTEXT,
     };
-    await host.execute(call, async (_args) => SPORE_VOID);
+    await host.execute(call, async (_args) => FUNGI_VOID);
     assert.ok(host.observedEffects.has("database.read"));
   });
 
@@ -148,7 +148,7 @@ describe("observedEffects", () => {
       args: [],
       context: DUMMY_CONTEXT,
     };
-    await host.execute(call, async (_args) => SPORE_VOID);
+    await host.execute(call, async (_args) => FUNGI_VOID);
     assert.equal(host.observedEffects.has("network.outbound"), false);
   });
 });

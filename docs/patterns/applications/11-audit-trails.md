@@ -41,7 +41,7 @@ contract {
     event: "patient_record_updated",
     actor: actor.id,
     patientId: id,
-    data: redact(data)    // protected → redacted; SPORE-VALUESTATE-003 fires if omitted
+    data: redact(data)    // protected → redacted; FUNGI-VALUESTATE-003 fires if omitted
   })
 }
 ```
@@ -98,7 +98,7 @@ const result = verifyProofChain({
 | Enforced by | Developer discipline | Compiler |
 | Signed | No | Ed25519 |
 | Linked to source | No | Yes (source_hash) |
-| Redaction enforced | No | Yes (SPORE-VALUESTATE-003) |
+| Redaction enforced | No | Yes (FUNGI-VALUESTATE-003) |
 | Tamper-detectable | No | Yes (proof chain) |
 | Retained per policy | Manual | `privacy { retention }` |
 
@@ -114,10 +114,10 @@ privacy {
 }
 ```
 
-If a `protected` value is passed to `AuditLog.write` without `redact()`, the compiler emits `SPORE-VALUESTATE-003`.
+If a `protected` value is passed to `AuditLog.write` without `redact()`, the compiler emits `FUNGI-VALUESTATE-003`.
 
 ```galerina
-AuditLog.write({ data: patientRecord })          // SPORE-VALUESTATE-003
+AuditLog.write({ data: patientRecord })          // FUNGI-VALUESTATE-003
 AuditLog.write({ data: redact(patientRecord) })  // OK — redacted value
 ```
 

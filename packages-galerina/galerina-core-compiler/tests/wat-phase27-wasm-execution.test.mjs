@@ -22,7 +22,7 @@ import {
 // ---------------------------------------------------------------------------
 
 async function compileAndRunWASM(src, flowName, args) {
-  const prog = parseProgram(src, "test.spore");
+  const prog = parseProgram(src, "test.fungi");
   const errs = (prog.diagnostics ?? []).filter(d => d.severity === "error");
   if (errs.length > 0) throw new Error("Parse: " + errs.map(d => d.message).join("; "));
   const fx = checkEffects(prog.flows, prog.ast);
@@ -154,7 +154,7 @@ describe("Phase 27: WASM binary is valid spec-compliant binary", () => {
   it("binary has WASM magic bytes 0x00 0x61 0x73 0x6d", async () => {
     const prog = parseProgram(
       "pure flow add(a: Int, b: Int) -> Int contract { effects {} } { return a + b }",
-      "test.spore"
+      "test.fungi"
     );
     const fx = checkEffects(prog.flows, prog.ast);
     const { gir } = emitGIR(prog.ast, prog.flows, fx);

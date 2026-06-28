@@ -45,9 +45,9 @@ describe("ELEMENT_TYPE_TO_TYPED_ARRAY: mapping completeness", () => {
 });
 
 describe("buildTypedArrayLoweringPlan: plan construction", () => {
-  it("returns a plan with schemaVersion spore.lowering.v1", () => {
+  it("returns a plan with schemaVersion fungi.lowering.v1", () => {
     const plan = buildTypedArrayLoweringPlan({ tensors: [] });
-    assert.equal(plan.schemaVersion, "spore.lowering.v1");
+    assert.equal(plan.schemaVersion, "fungi.lowering.v1");
   });
 
   it("maps Float32 tensors to Float32Array entries", () => {
@@ -118,9 +118,9 @@ describe("PRODUCTION_ERASURE and DEV_ERASURE: metadata flags", () => {
 // ---------------------------------------------------------------------------
 
 describe("buildMonomorphisationPlan: schema and stub", () => {
-  it("returns schemaVersion spore.mono.v1", () => {
+  it("returns schemaVersion fungi.mono.v1", () => {
     const plan = buildMonomorphisationPlan([]);
-    assert.equal(plan.schemaVersion, "spore.mono.v1");
+    assert.equal(plan.schemaVersion, "fungi.mono.v1");
   });
 
   it("returns empty candidates for non-generic flows", () => {
@@ -137,9 +137,9 @@ describe("buildMonomorphisationPlan: schema and stub", () => {
 // ---------------------------------------------------------------------------
 
 describe("buildKernelFusionPlan: schema and fusion grouping", () => {
-  it("returns schemaVersion spore.fusion.v1", () => {
+  it("returns schemaVersion fungi.fusion.v1", () => {
     const plan = buildKernelFusionPlan([], []);
-    assert.equal(plan.schemaVersion, "spore.fusion.v1");
+    assert.equal(plan.schemaVersion, "fungi.fusion.v1");
   });
 
   it("groups consecutive fusable tensor ops into a single kernel", () => {

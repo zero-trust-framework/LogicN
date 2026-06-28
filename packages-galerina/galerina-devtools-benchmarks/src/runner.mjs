@@ -8,7 +8,7 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const benchDir   = join(__dirname, "..", "benchmarks");
 const resultsDir  = join(__dirname, "..", "results");
 
-// opsPerRun: how many operations the Galerina .spore benchmark does per flow call.
+// opsPerRun: how many operations the Galerina .fungi benchmark does per flow call.
 // Used to normalise runsPerSecond → ops/second for fair comparison.
 // passiveCallCount: how many outer-loop calls to make in passive mode.
 //   Heavy benchmarks (internal loops doing thousands of ops): use 3 calls
@@ -85,7 +85,7 @@ const BENCHMARKS = [
   // allocated per run. One op = one node allocated. Read the bytes/op column here.
   { id: "binary-trees", dir: "binary-trees", galerinaOpsPerRun: 135854, passiveCallCount: 3 },
   // ── .tmf trust-container CREATION — TMX-256 SHAKE Merkle + LE container packing ──
-  // The Node.js column IS the shipped @galerina/ext-tmf engine (pure TS/Node — no .spore
+  // The Node.js column IS the shipped @galerina/ext-tmf engine (pure TS/Node — no .fungi
   // path exists); python.py / bench.rs are byte-identical reference writers that assert
   // the SAME golden root. Honest "can other languages create a .tmf, and how fast?".
   { id: "tmf-container", dir: "tmf-container" },
@@ -97,7 +97,7 @@ const BENCHMARKS = [
   // ── HTTP throughput — sequential requests/sec to governed localhost endpoint ──
   { id: "http-throughput", dir: "http-throughput", devtoolsOnly: true },
   // ── DevTools benchmarks — measure tool throughput over auth-service corpus ──
-  // These run node.mjs only (no .spore / Rust / WASM path). Key metric: files/sec
+  // These run node.mjs only (no .fungi / Rust / WASM path). Key metric: files/sec
   // or queries/sec. Added 2026-06-03 with the 4 new devtools packages.
   { id: "naming-check",       dir: "naming-check",       devtoolsOnly: true },
   { id: "context-receipt",    dir: "context-receipt",    devtoolsOnly: true },
@@ -136,14 +136,14 @@ function runProc(cmd, args=[]) {
   try { return JSON.parse(r.stdout.trim()); } catch { return null; }
 }
 
-async function runGalerina(sporePath, mode, bench) {
+async function runGalerina(fungiPath, mode, bench) {
   try {
     const { runGalerinaBenchmark, runGalerinaPassiveBenchmark } = await import("./galerina-runner.mjs");
     if (mode === "passive") {
       const callCount = bench?.passiveCallCount ?? 10;
-      return await runGalerinaPassiveBenchmark(sporePath, callCount);
+      return await runGalerinaPassiveBenchmark(fungiPath, callCount);
     }
-    return await runGalerinaBenchmark(sporePath, mode);
+    return await runGalerinaBenchmark(fungiPath, mode);
   } catch(e) { return { error: true, reason: String(e), runtime: `galerina-${mode}` }; }
 }
 
@@ -207,14 +207,14 @@ async function runBenchmark(bench) {
     } catch(e) { res.denoWebGpu = { error: true, reason: String(e), runtime: "deno-webgpu" }; }
   }
 
-  const spore = join(dir, "benchmark.spore");
-  if (existsSync(spore)) {
+  const fungi = join(dir, "benchmark.fungi");
+  if (existsSync(fungi)) {
     console.log(`  galerina (governed)...`);
-    res.galerinaGoverned = await runGalerina(spore, "governed", bench);
+    res.galerinaGoverned = await runGalerina(fungi, "governed", bench);
     console.log(`  galerina (manifest)...`);
-    res.galerinaManifest = await runGalerina(spore, "manifest", bench);
+    res.galerinaManifest = await runGalerina(fungi, "manifest", bench);
     console.log(`  galerina (passive)...`);
-    res.galerinaPassive = await runGalerina(spore, "passive", bench);
+    res.galerinaPassive = await runGalerina(fungi, "passive", bench);
   }
 
   // ── Normalise throughput to a single canonical unit per benchmark ──────────

@@ -73,7 +73,7 @@ for at least 10 of the Level-1 examples. Benchmark report shows Phase 30 target 
 
 ### Primary example proving it
 
-`examples/benchmarks/arithmetic-hot-path.spore` — pure flow computing fib(30)
+`examples/benchmarks/arithmetic-hot-path.fungi` — pure flow computing fib(30)
 10,000 times. Benchmark shows < 3× Python time using the register-VM executor.
 
 ### Test count target
@@ -94,7 +94,7 @@ Import resolution works end-to-end so CEC examples using domain types compile.
 - **31A — Package registry v1.0 live.**
   `packages-galerina/galerina-registry/` becomes a publishable registry service.
   `galerina package hash` command generates SHA-256 content hashes for manifest
-  files. `galerina package sign` signs manifests with Ed25519. SPORE-PKG-001..005
+  files. `galerina package sign` signs manifests with Ed25519. FUNGI-PKG-001..005
   are enforced in all CI runs. A lockfile format (`galerina.lock`) is defined.
 
 - **31B — @galerina/auth published.**
@@ -114,18 +114,18 @@ Import resolution works end-to-end so CEC examples using domain types compile.
   Domain types `Email`, `PatientId`, `CurrencyCode` resolve in CEC Level 8/9 examples.
   CEC stable count jumps from ~108 → ~160+.
 
-- **31E — SPORE-PKG-001..005 enforced in all CI.**
+- **31E — FUNGI-PKG-001..005 enforced in all CI.**
   `galerina check` in CI mode with `--strict-packages` fails on any unsigned, unhashed,
   or capability-expanded package. The registry CI script validates all published packages.
 
 ### Key milestone
 
-`import Email from "@galerina/healthcare-types"` compiles in `getPatient.spore` with 0
+`import Email from "@galerina/healthcare-types"` compiles in `getPatient.fungi` with 0
 errors. Package lockfile generated and committed for the three core packages.
 
 ### Primary example proving it
 
-`examples/healthcare/getPatient.spore` with the `@galerina/healthcare` import fully
+`examples/healthcare/getPatient.fungi` with the `@galerina/healthcare` import fully
 resolved. `verifyGovernance("production")` produces zero governance violations.
 PHI protection contract verified by the runtime manifest.
 
@@ -152,31 +152,31 @@ highlighting, error squiggles, and hover type info. `galerina format` and
   Protocol: JSON-RPC over stdio. Compatible with VS Code, Neovim, Helix.
 
 - **32B — IDE: syntax highlighting, error squiggles, hover type info.**
-  VS Code extension `galerina-vscode` (minimal): TextMate grammar for `.spore` files,
+  VS Code extension `galerina-vscode` (minimal): TextMate grammar for `.fungi` files,
   LSP client wired to the LSP server. Error squiggles from publishDiagnostics.
   Hover shows resolved TypeId and effect declarations. No build step required.
 
 - **32C — `galerina format` command.**
   `cli.ts` gains `format` subcommand. Opinionated formatter: consistent indentation
   (2 spaces), contract block alignment, sorted effects list. Uses the existing lexer
-  and parser; format is deterministic (same input → same output). SPORE-BUILD-001
+  and parser; format is deterministic (same input → same output). FUNGI-BUILD-001
   cannot be triggered by format output.
 
 - **32D — `galerina explain <diagnostic>` command.**
-  `cli.ts` gains `explain` subcommand. `galerina explain SPORE-EFFECT-005` prints the
+  `cli.ts` gains `explain` subcommand. `galerina explain FUNGI-EFFECT-005` prints the
   full diagnostic definition: code, name, severity, message, why, suggestedFix,
   and an inline code example showing the problem and fix. All diagnostics in
   `index.ts` gain an optional `example` field.
 
 ### Key milestone
 
-A `.spore` file opened in VS Code shows syntax highlighting, and editing to introduce
-an `SPORE-EFFECT-005` violation causes a red squiggle within 500 ms. `galerina explain
-SPORE-EFFECT-005` prints a complete explanation.
+A `.fungi` file opened in VS Code shows syntax highlighting, and editing to introduce
+an `FUNGI-EFFECT-005` violation causes a red squiggle within 500 ms. `galerina explain
+FUNGI-EFFECT-005` prints a complete explanation.
 
 ### Primary example proving it
 
-`examples/auth-service/verifyPassword.spore` opened in VS Code LSP mode. Hover over
+`examples/auth-service/verifyPassword.fungi` opened in VS Code LSP mode. Hover over
 `crypto.verify` shows: `Effect: crypto.verify · Requires: crypto.verify capability`.
 Removing the effect from the contract produces a squiggle on the `Crypto.verify`
 call immediately.
@@ -184,7 +184,7 @@ call immediately.
 ### Test count target
 
 **2730 tests** (80 new: 32A LSP protocol, 32B grammar, 32C format determinism,
-32D explain output for all SPORE-* codes).
+32D explain output for all FUNGI-* codes).
 
 ---
 
@@ -202,7 +202,7 @@ bundle story is proven end-to-end. Edge deployment of the auth service is live.
   - Capability host backed by Deno APIs (`Deno.env`, `Deno.kv`)
   - Audit writer emitting to `console.log` (structured JSON for log aggregation)
   `verifyPassword` deploys to Deno Deploy with governed execution proven by
-  the runtime manifest in every response header (`X-SPORE-Proof`).
+  the runtime manifest in every response header (`X-FUNGI-Proof`).
 
 - **33B — Cloudflare Workers target working.**
   `galerina build --target=cf-worker` emits a `worker.js` with:
@@ -210,30 +210,30 @@ bundle story is proven end-to-end. Edge deployment of the auth service is live.
   - Capability host backed by Workers KV and Secrets
   - WASM binary inlined as a base64 asset (auto-assembled by `assembleWAT`)
   - `wrangler.toml` generated from `package.galerina.yaml`
-  SPORE-NET-001/002 network destination policy enforced in the Workers capability
+  FUNGI-NET-001/002 network destination policy enforced in the Workers capability
   host (no dynamic host construction).
 
 - **33C — Edge deployment of auth service.**
   `examples/auth-service/` gains `deno-deploy/` and `cf-worker/` sub-targets.
   `verifyPassword` and `createSession` both deploy. End-to-end test: HTTP POST
-  to the deployed edge function, response includes `X-SPORE-Proof` hash.
+  to the deployed edge function, response includes `X-FUNGI-Proof` hash.
   Audit log verifiable by replaying the proof chain.
 
 - **33D — WASM bundle story proven.**
   `galerina build --target=wasm-bundle` emits a self-contained `.wasm` that can be
   loaded by any WASM runtime (wasmtime, Deno, CF Workers, browser). The WASM
   import table is populated with host stubs for all declared effects. The binary
-  is deterministic (hash-stable across repeated builds). SPORE-BUILD-001 cannot fire.
+  is deterministic (hash-stable across repeated builds). FUNGI-BUILD-001 cannot fire.
 
 ### Key milestone
 
-`verifyPassword.spore` deployed to Deno Deploy. `curl -X POST https://<deploy-url>/verify`
-returns a governed JSON response with `X-SPORE-Proof` header. The proof chain
+`verifyPassword.fungi` deployed to Deno Deploy. `curl -X POST https://<deploy-url>/verify`
+returns a governed JSON response with `X-FUNGI-Proof` header. The proof chain
 verifies against the published GIR hash.
 
 ### Primary example proving it
 
-`examples/auth-service/verifyPassword.spore` built with `--target=deno-deploy`, deployed,
+`examples/auth-service/verifyPassword.fungi` built with `--target=deno-deploy`, deployed,
 executed, and verified. Runtime manifest published to `build/wasm/manifest.json`.
 
 ### Test count target
@@ -264,7 +264,7 @@ Rate limiting from Phase 11C is fully wired.
   `capabilityHost.ts` gains a tenant ID parameter. Each tenant gets its own
   `FlowCallCounters` instance. A tenant that exceeds its rate limit cannot
   affect another tenant's counter. The runtime report includes `tenantId` in
-  every audit event. SPORE-GOV-013 (BoundaryViolation) fires if a flow attempts
+  every audit event. FUNGI-GOV-013 (BoundaryViolation) fires if a flow attempts
   to access a capability not granted to its tenant.
 
 - **34C — Rate limiting enforcement (Phase 11C complete).**
@@ -274,12 +274,12 @@ Rate limiting from Phase 11C is fully wired.
   using `AbortSignal`. `retryPolicy.ts` retries capability calls with exponential
   back-off up to `maxRetries`. All three are connected, not skeletons.
 
-- **34D — SPORE-NET-001/002 enforced in production.**
+- **34D — FUNGI-NET-001/002 enforced in production.**
   Network destination policy (`parseNetworkDestinationPolicy`) is wired into
   the capability host's `network.outbound` handler. In production mode, any
-  call to a host not in `allowedHosts` emits SPORE-NET-001 and the call is denied.
+  call to a host not in `allowedHosts` emits FUNGI-NET-001 and the call is denied.
   DNS rebinding defence: private IP ranges are checked after DNS resolution
-  (`PRIVATE_IP_RANGES` from `security-policy.ts`). SPORE-NET-002 fires on
+  (`PRIVATE_IP_RANGES` from `security-policy.ts`). FUNGI-NET-002 fires on
   private IP access without explicit `allowPrivateNetwork: true`.
 
 ### Key milestone
@@ -290,7 +290,7 @@ limits and isolated audit logs. Policy federation verified: healthcare policy
 
 ### Primary example proving it
 
-`examples/auth-service/multi-tenant-verify.spore` — two tenants with different rate
+`examples/auth-service/multi-tenant-verify.fungi` — two tenants with different rate
 limits share one service instance. Tenant A hitting rate limit does not affect
 tenant B. Each tenant's audit log is separate and hash-verifiable.
 
@@ -310,26 +310,26 @@ Third-party auditors can verify the chain without the source code.
 ### What it delivers
 
 - **35A — HIPAA governance template.**
-  `packages/@galerina/healthcare/hipaa-template.spore` — a contract set that any
+  `packages/@galerina/healthcare/hipaa-template.fungi` — a contract set that any
   Galerina service can `use HipaaBaseContract`:
   - Requires `audit.write` with retention duration declared
   - Requires `phi.read` effect for any PHI field access
   - Requires `deny protected PatientId to response.body` in all routes
   - Requires redaction before any audit write that touches PHI
-  - Emits `SPORE-GOV-HIPAA-001` if any PHI escapes the audit boundary
+  - Emits `FUNGI-GOV-HIPAA-001` if any PHI escapes the audit boundary
   The template is enforced at compile time by `verifyGovernance("production")`.
 
 - **35B — PCI-DSS flow patterns.**
-  `packages/@galerina/finance/pci-dss-template.spore` — a contract set for payment
+  `packages/@galerina/finance/pci-dss-template.fungi` — a contract set for payment
   flows:
   - `CardNumber` is always `protected` and never logged
   - `CVV` is `redacted` after initial validation — irreversibly
   - `PaymentResult` cannot include raw card data in `response.body`
   - Scope: CHD (cardholder data) never enters an insecure effect chain
-  Enforced at compile time. SPORE-GOV-PCI-001 fires on any CHD exposure.
+  Enforced at compile time. FUNGI-GOV-PCI-001 fires on any CHD exposure.
 
 - **35C — PHI protection end-to-end proven.**
-  `examples/healthcare/getPatient.spore` with the HIPAA template applied.
+  `examples/healthcare/getPatient.fungi` with the HIPAA template applied.
   Full proof chain: `buildProofChain()` produces a chain that includes:
   - Source hash of the flow
   - GIR hash of the compiled flow
@@ -346,13 +346,13 @@ Third-party auditors can verify the chain without the source code.
 
 ### Key milestone
 
-A `getPatient.spore` execution produces an audit chain that `galerina audit verify`
+A `getPatient.fungi` execution produces an audit chain that `galerina audit verify`
 confirms as PASS. The chain is self-contained: no source code needed to verify
 PHI was not leaked. Third-party auditor tool confirmed working.
 
 ### Primary example proving it
 
-`examples/healthcare/getPatient.spore` compiled with `--hipaa`, executed against
+`examples/healthcare/getPatient.fungi` compiled with `--hipaa`, executed against
 a mock database, audit chain written to `audit/2026-06-01-getPatient.chain.json`.
 `galerina audit verify audit/2026-06-01-getPatient.chain.json` → PASS.
 
@@ -393,7 +393,7 @@ An AI inference example is deployed and audited.
   invoked. Fallback to CPU SIMD path when NPU process is unavailable.
 
 - **36D — AI inference example deployed and audited.**
-  `examples/ai-inference/classifyMessage.spore` built with `--target=deno-deploy`,
+  `examples/ai-inference/classifyMessage.fungi` built with `--target=deno-deploy`,
   deployed to an edge function. Input: user message string. Output: classification
   result + confidence score. Audit: PII declared in privacy contract, PII redacted
   before audit write. Governance: `ai.inference` + `audit.write` effects declared
@@ -401,13 +401,13 @@ An AI inference example is deployed and audited.
 
 ### Key milestone
 
-`classifyMessage.spore` deployed to Deno Deploy. WASM binary uses `f32x4.add` SIMD
+`classifyMessage.fungi` deployed to Deno Deploy. WASM binary uses `f32x4.add` SIMD
 ops for the embedding dot product. NPU dispatch path exercised in CI (mocked EDA
 process). Audit chain proves PII was not logged.
 
 ### Primary example proving it
 
-`examples/ai-inference/classifyMessage.spore` WAT output contains `v128.load`,
+`examples/ai-inference/classifyMessage.fungi` WAT output contains `v128.load`,
 `f32x4.mul`, `v128.store`. The proof chain includes: source hash + GIR hash +
 runtime manifest (npu→cpu fallback recorded) + audit record (PII redacted).
 
@@ -440,14 +440,14 @@ scaffolded, enabling high-security Galerina deployments.
   - `redacted PHI` → CHERI capability zeroed after first use (no revive)
   - `secret.read` effect → CHERI capability granted only to the specific flow
   The mapping is a specification; implementation targets ARM Morello or CHERI RISC-V.
-  `SPORE_CHERI_001` diagnostic: accessing a CHERI-mapped value without the right
+  `FUNGI_CHERI_001` diagnostic: accessing a CHERI-mapped value without the right
   capability permission.
 
 - **37C — ARM MTE integration spec.**
   `docs/Knowledge-Bases/arm-mte-integration.md` documents how ARM Memory Tagging
   Extension (MTE) tags align with `governedMemory.ts`:
   - `protected` values allocated in MTE-tagged regions
-  - Tag mismatch → hardware trap → Galerina `SPORE-RUNTIME-005` audit event
+  - Tag mismatch → hardware trap → Galerina `FUNGI-RUNTIME-005` audit event
   - `GovernedValueTag` maps to an MTE tag byte
   Scaffold: `governedMemory.ts` gains `mteTag?: number` on `GovernedValueTag`.
   Runtime: stub for MTE tag allocation (real MTE requires native ARM runtime).
@@ -463,15 +463,15 @@ scaffolded, enabling high-security Galerina deployments.
 
 ### Key milestone
 
-`verifyPassword.spore` built with `--target=tee --attestation=ml-dsa-65`. The
+`verifyPassword.fungi` built with `--target=tee --attestation=ml-dsa-65`. The
 resulting attestation is verifiable by `galerina audit verify` using the ML-DSA
 public key. CHERI mapping document published to `docs/Knowledge-Bases/`.
 
 ### Primary example proving it
 
-`examples/auth-service/verifyPassword.spore` attestation produced with ML-DSA-65
+`examples/auth-service/verifyPassword.fungi` attestation produced with ML-DSA-65
 key. `galerina audit verify --algorithm=ml-dsa-65 auth-service.chain.json` → PASS.
-`galerina explain SPORE-CHERI-001` prints the CHERI capability mapping explanation.
+`galerina explain FUNGI-CHERI-001` prints the CHERI capability mapping explanation.
 
 ### Test count target
 
@@ -492,7 +492,7 @@ link across service boundaries. Federated policy evaluation is operational.
   A Galerina service can declare `trusts "@galerina/auth" version "^1.0"` in its
   `package.galerina.yaml`. The governance verifier checks that the trusted service's
   runtime manifest is signed and its capabilities are a subset of what is granted.
-  SPORE-GOV-FEDERATED-001: cross-service trust without a signed manifest.
+  FUNGI-GOV-FEDERATED-001: cross-service trust without a signed manifest.
   `verifyGovernance("production")` spans service boundaries.
 
 - **38B — Cross-boundary capability delegation.**
@@ -500,7 +500,7 @@ link across service boundaries. Federated policy evaluation is operational.
   A delegation token is signed with the service's attestation key (Ed25519 or ML-DSA).
   The receiving service validates the delegation before exercising the capability.
   Delegations are time-bounded and scoped (cannot grant more than the delegator has).
-  SPORE-GOV-FEDERATED-002: exercising a capability without valid delegation.
+  FUNGI-GOV-FEDERATED-002: exercising a capability without valid delegation.
 
 - **38C — Distributed audit chain.**
   `buildProofChain()` gains a `parentChainHash` field. When service B processes a
@@ -527,8 +527,8 @@ the auth-service chain. `galerina audit verify --follow-chain` validates both.
 ### Primary example proving it
 
 `examples/distributed/auth-patient-federation/`:
-- `auth-service.spore` delegates `database.read` to `patient-api`
-- `patient-api.spore` exercises the delegated capability
+- `auth-service.fungi` delegates `database.read` to `patient-api`
+- `patient-api.fungi` exercises the delegated capability
 - Combined audit chain: `galerina audit verify --follow-chain combined.chain.json` → PASS
 
 ### Test count target
@@ -560,7 +560,7 @@ status. Compliance reports are generated automatically.
   the `RuntimeManifest` type: `allowedEffects`, `maxNetworkRequests`,
   `maxMemoryMb`, `requiresAudit`, `auditRetentionDays`, `allowedHosts`.
   The governance sidecar watches the CRD and reloads policy on change without
-  restarting the main container. SPORE-K8S-001: policy CRD spec mismatch with
+  restarting the main container. FUNGI-K8S-001: policy CRD spec mismatch with
   the service manifest.
 
 - **39C — Governance dashboard.**
@@ -577,14 +577,14 @@ status. Compliance reports are generated automatically.
   compliance report:
   - All flows with PHI effects listed with their contracts
   - Audit retention policy per flow
-  - Any SPORE-GOV-HIPAA-* violations in the last build
+  - Any FUNGI-GOV-HIPAA-* violations in the last build
   - Signed attestation key fingerprint
   `galerina report --format=pci-dss` generates the equivalent for PCI-DSS flows.
   Reports are deterministic (same build → same report hash).
 
 ### Key milestone
 
-`examples/healthcare/getPatient.spore` deployed to a local Kubernetes cluster using
+`examples/healthcare/getPatient.fungi` deployed to a local Kubernetes cluster using
 `galerina build --target=kubernetes`. The governance sidecar enforces the HIPAA
 policy. `galerina report --format=hipaa` produces a passing compliance report.
 
@@ -617,17 +617,17 @@ Performance is within 10× of Node.js for pure governed flows.
   - Phase 31D import resolver fully working (domain types resolve)
   - Phase 30 BOM cleanup for Level-1 files
   - All remaining Level 8/9 examples (Tensor, AI) governed correctly
-  - `SPORE-BUILD-001` never fires on any CEC example
+  - `FUNGI-BUILD-001` never fires on any CEC example
   CEC stable count: 222/222.
 
 - **40B — Stage B: Galerina compiler compiles itself.**
   `galerina build src/ --self-hosted` runs without errors. The self-hosted
-  compiler produces a binary that compiles the `greet.spore` hello-world example
+  compiler produces a binary that compiles the `greet.fungi` hello-world example
   identically to the TypeScript bootstrap.
   `verify-selfhost` command: B1 (TypeScript) → B2 (self-hosted round 1) →
   B3 (self-hosted round 2). B2 and B3 output hashes match.
   `PARITY_ACHIEVED = true` for all four Stage B milestone files (already true
-  for lexer.spore, parser.spore, type-checker.spore, compiler.capabilities.spore).
+  for lexer.fungi, parser.fungi, type-checker.fungi, compiler.capabilities.fungi).
 
 - **40C — Package registry with 10+ certified packages.**
   The Galerina registry publishes certified packages with Ed25519 or ML-DSA
@@ -636,7 +636,7 @@ Performance is within 10× of Node.js for pure governed flows.
   `@galerina/auth`, `@galerina/healthcare`, `@galerina/ai`, `@galerina/finance`,
   `@galerina/observability`, `@galerina/vault`, `@galerina/messaging`,
   `@galerina/identity`, `@galerina/audit`, `@galerina/compliance` (10 packages).
-  All packages enforce SPORE-PKG-001..005 in CI.
+  All packages enforce FUNGI-PKG-001..005 in CI.
 
 - **40D — Production deployment at 3 real organisations.**
   Three external organisations run Galerina services in production:
@@ -663,7 +663,7 @@ Performance is within 10× of Node.js for pure governed flows.
 ### Primary example proving it
 
 The Galerina compiler itself (`src/`) is compiled by Galerina. The resulting binary
-compiles `examples/auth-service/verifyPassword.spore` with identical output to the
+compiles `examples/auth-service/verifyPassword.fungi` with identical output to the
 TypeScript bootstrap (verified by hash comparison).
 
 ### Test count target
@@ -701,7 +701,7 @@ These items must be resolved before Phase 40 milestones are reachable:
 | Phase 11C: contractEnforcer wired | 34C rate limiting | 34 |
 | Phase 11D: governed memory access checks | 37C ARM MTE | 37 |
 | Phase 11E: import resolver complete | 31D domain types | 31 |
-| Lexer.spore Gaps 2–5 (strings, chars, comments) | 40B Stage B | 35 |
+| Lexer.fungi Gaps 2–5 (strings, chars, comments) | 40B Stage B | 35 |
 
 ---
 

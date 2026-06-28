@@ -18,7 +18,7 @@ strictly UNDER the AEAD boundary**, so the receiver can reconstruct lost or corr
 touching a key or plaintext byte. It is adopted as the **only sound digital residue** of the owner's refuted "ternary
 symbol repair / request only the missing entropy" idea: that idea was rejected on two grounds (an AEAD/MAC fails
 closed on a single bit, and a "request the missing entropy" wire-delta re-opens the killed cleartext-semantic leak
-`SPORE-PRIVACY-002`), whereas FEC-over-opaque-ciphertext re-introduces *none* of that —
+`FUNGI-PRIVACY-002`), whereas FEC-over-opaque-ciphertext re-introduces *none* of that —
 see the refutation and the surviving residue in
 `docs/Knowledge-Bases/galerina-tlstp-transport-auth-rnd-2026-06-22.md:79` (the "only sound residue = digital FEC over
 opaque ciphertext") and the spec source in
@@ -127,7 +127,7 @@ columns for the *missing* data symbols need solving against the surviving *parit
 2. (Necessity) If `|S| = k − 1`, the system `G_S d = c_S` is `k−1` equations in `k` unknowns over GF(2⁸); its solution
    set is a coset of a ≥1-dimensional kernel ⇒ **≥ 256 distinct candidate `d`** all consistent with what was received.
    No deterministic rule can pick the true one without *more transmitted symbols* — and "request the missing symbol"
-   is exactly the forbidden move (it re-opens `SPORE-PRIVACY-002`; see §4). Hence unrecoverable. ∎
+   is exactly the forbidden move (it re-opens `FUNGI-PRIVACY-002`; see §4). Hence unrecoverable. ∎
 
 ### 2.5 The LT / fountain (rateless) alternative
 
@@ -176,7 +176,7 @@ So **a post-repair bit error still fails the tag closed → `−1`/DENY**. FEC c
 clean ciphertext or fail; it can never forge authenticity, and it never participates in the authenticity decision. The
 verdict path is unchanged: a failed `open()` yields a `−1` that `decideAtBoundary` collapses to deny
 (`three-valued-governance.ts:141-153`), and an INDETERMINATE (e.g. "still waiting for more symbols") collapses to deny
-too (`SPORE-GOV-3VL-001`, `three-valued-governance.ts:99-128`). **Unknown → DENY** holds end to end.
+too (`FUNGI-GOV-3VL-001`, `three-valued-governance.ts:99-128`). **Unknown → DENY** holds end to end.
 
 ---
 
@@ -261,11 +261,11 @@ The decoder **cannot** select the true `(0x20, 0x40)` and **returns FAIL (cannot
 
 **S3 response (fail-closed, and this is the load-bearing behaviour):**
 - The decoder **does NOT** ask the peer to "send the missing symbol's entropy / a delta-matrix" — that move is
-  forbidden (it re-opens the cleartext-semantic leak `SPORE-PRIVACY-002`; see §4). It may only request **whole
+  forbidden (it re-opens the cleartext-semantic leak `FUNGI-PRIVACY-002`; see §4). It may only request **whole
   additional FEC symbols of the same opaque code**, or time out.
 - The reassembled buffer is incomplete ⇒ **`open()` is never called** — there is no candidate `(Ĉ,T̂)` to authenticate.
 - The transport produces an **INDETERMINATE (`0`)** while the FEC budget is being collected, which
-  `decideAtBoundary` collapses to **deny** with `SPORE-GOV-3VL-001`
+  `decideAtBoundary` collapses to **deny** with `FUNGI-GOV-3VL-001`
   (`three-valued-governance.ts:121-128, 141-153`). On budget exhaustion / timeout the transport FSM (S4) transitions
   `Recovering → Closed/Erase` to a definite **`−1`/DENY** — **never silently to `+1`**.
 
@@ -326,7 +326,7 @@ safe to place under the AEAD.
    `substrate-model.ts:200-205`).
 3. **Capability gating.** Expose `transport.fec` as a deny-by-default capability so FEC is *off* unless granted —
    reuse the closed capability-import builder `buildCapabilityImports` (`fuse-loader.ts:435-455`,
-   `SPORE-FUSE-UNKNOWN-CAP`). An ungranted `transport.fec` ⇒ refuse to fuse (no silent default).
+   `FUNGI-FUSE-UNKNOWN-CAP`). An ungranted `transport.fec` ⇒ refuse to fuse (no silent default).
 
 ### 4.2 Ordered implementation steps
 
@@ -353,7 +353,7 @@ safe to place under the AEAD.
 - **Recover boundary:** for every `k`-subset of the `n` symbols, `decode` reconstructs `d` exactly (Example A is one
   case). Property-test over random `d`.
 - **Deny boundary (Example B):** any `< k` present ⇒ `decode` returns `null`; assert `open()` is **never called** and
-  the boundary verdict is **deny** with `SPORE-GOV-3VL-001`.
+  the boundary verdict is **deny** with `FUNGI-GOV-3VL-001`.
 - **Repair-but-wrong (Example C):** inject a flipped bit into a *received* symbol that escapes the per-symbol CRC ⇒
   `decode` produces `d̂ ≠ d` ⇒ `open()` **throws** ⇒ verdict `−1`/deny. (Proves authenticate-then-repair.)
 - **Tamper-with-tag:** flip a bit in `T` after a clean decode ⇒ AEAD fails closed.
@@ -373,7 +373,7 @@ safe to place under the AEAD.
   repair" was refuted (`galerina-tlstp-transport-auth-rnd-2026-06-22.md:79, 90`). Enforce by construction: `fec-rs.ts`
   imports nothing from the key/KDF surface, and the only legal `open()` caller is the receive path *after* `decode`.
 
-- **(G2) NEVER "request only the missing entropy" / a delta-matrix on the wire — this re-opens `SPORE-PRIVACY-002`.**
+- **(G2) NEVER "request only the missing entropy" / a delta-matrix on the wire — this re-opens `FUNGI-PRIVACY-002`.**
   The lawful loss-recovery move is "send **additional whole opaque FEC symbols** of the same code" (a fountain top-up),
   which leaks nothing about content. A "send me the value at position `i`" or "send the delta between your chunk and
   mine" request leaks structure of the (would-be) plaintext and re-opens the killed cleartext-semantic-routing leak
@@ -389,7 +389,7 @@ safe to place under the AEAD.
   authenticity. Never widen the FEC into a blind error-corrector over ciphertext.
 
 - **(G4) Fail-closed on under-budget — return `null`, never a guess.** `|present| < k` must return `null` and produce
-  an INDETERMINATE→deny verdict (`SPORE-GOV-3VL-001`), with the S4 timeout escalating to `−1`/Erase. A decoder that
+  an INDETERMINATE→deny verdict (`FUNGI-GOV-3VL-001`), with the S4 timeout escalating to `−1`/Erase. A decoder that
   returns a *plausible* `d̂` from an under-determined system (256 candidates, §2.4) would hand a fabricated ciphertext
   to `open()`; even though the tag would almost certainly reject it, the *correct* behaviour is to never reach `open()`
   at all. Unknown → DENY.

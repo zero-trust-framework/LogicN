@@ -1,7 +1,7 @@
 import { performance } from "node:perf_hooks";
 
 // Mandelbrot escape-time (Computer Language Benchmarks Game) — scaled-integer kernel.
-// Mirrors benchmark.spore, python.py and bench.rs EXACTLY. The only negative division
+// Mirrors benchmark.fungi, python.py and bench.rs EXACTLY. The only negative division
 // numerator (2*zr*zi) is split into sign+magnitude so EVERY integer division has a
 // non-negative numerator → Math.trunc == Python // == Rust / == Galerina /, making the
 // checksum identical across all runtimes. All intermediates stay < 2^31.

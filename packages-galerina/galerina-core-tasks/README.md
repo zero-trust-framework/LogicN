@@ -45,7 +45,7 @@ tests.run()
 
 ## Task Files
 
-The first supported task file shape is `tasks.spore`:
+The first supported task file shape is `tasks.fungi`:
 
 ```Galerina
 task generateReports {

@@ -59,7 +59,7 @@ git push
 
 Only if `neutral` or `tightening`:
 ```
-galerina build <file.spore>
+galerina build <file.fungi>
   → WAT assertion injection (inlined governance checks)
   → .lmanifest generated (RFC 8785 canonical JSON)
   → ML-DSA-65 signature over manifest body hash
@@ -83,9 +83,9 @@ run-phase-close.mjs
 
 ```
 /project
-├── /flows              ← Business execution logic (*.spore)
-├── /governance         ← Immutable policy definitions (InvoicingGuard.spore, etc.)
-│   └── root.spore        ← Root Policy — first commit, signed by master key
+├── /flows              ← Business execution logic (*.fungi)
+├── /governance         ← Immutable policy definitions (InvoicingGuard.fungi, etc.)
+│   └── root.fungi        ← Root Policy — first commit, signed by master key
 ├── /contracts          ← Local contract bindings [conforms_to: /governance/...]
 ├── /tests
 │   ├── /patterns       ← 9 architecture pattern examples (verified)
@@ -118,7 +118,7 @@ For both human developers and AI agents:
 
 ### The Bootstrap Problem
 
-The **first commit** in any Galerina project must be the Root Policy (`governance/root.spore`), signed by a physical offline master key. Every subsequent PR is checked against this root. Without this, the first expansion PR has no ceiling to check against.
+The **first commit** in any Galerina project must be the Root Policy (`governance/root.fungi`), signed by a physical offline master key. Every subsequent PR is checked against this root. Without this, the first expansion PR has no ceiling to check against.
 
 ### Manifest Signing as the Final Gate
 
@@ -174,7 +174,7 @@ Every CI run should produce a `governance-impact.json` file capturing the securi
 ```
 
 **Use in AI-assisted development:** The `governance-impact.json` becomes a "system prompt" for AI agents reviewing their own proposals. The agent can self-assess before committing:
-> "This PR is classified as Expansion. It adds network.outbound to processPayment. This violates InvoicingDomainGuard. To fix: request policy update in /governance/invoicing_guard.spore."
+> "This PR is classified as Expansion. It adds network.outbound to processPayment. This violates InvoicingDomainGuard. To fix: request policy update in /governance/invoicing_guard.fungi."
 
 **Pending implementation:** Task #63 (governance-impact.json artifact generation)
 

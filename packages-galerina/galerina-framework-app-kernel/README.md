@@ -69,7 +69,7 @@ Frameworks provide opinions and user-facing structure.
 - Response policy enforcement for status/body contracts, content types,
   cache rules, security header profiles, field filtering, safe errors, safe
   cookies and safe redirects.
-- Runtime enforcement of `boot.spore` security policy.
+- Runtime enforcement of `boot.fungi` security policy.
 - Strict input validation before handlers run.
 - Deny-by-default application effects for file, network, database, shell, AI,
   GPU and interop access unless declared by policy.
@@ -190,11 +190,11 @@ npm.cmd --prefix packages-galerina/galerina-framework-app-kernel test
 Current fixtures cover:
 
 ```text
-hello-world.spore
-vector-function.spore
-sum.spore
-decimal-sum.spore
-json-return.spore
+hello-world.fungi
+vector-function.fungi
+sum.fungi
+decimal-sum.fungi
+json-return.fungi
 ```
 
 The hello-world fixture uses:

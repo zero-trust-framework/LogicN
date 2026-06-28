@@ -22,7 +22,7 @@ contract { effects {} }
   return total }`;
 
 function compileWAT(src) {
-  const prog = L.parseProgram(src, "t.spore");
+  const prog = L.parseProgram(src, "t.fungi");
   const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
   if (errs.length) throw new Error("parse: " + errs.map((e) => e.message).join("; "));
   const fx = L.checkEffects(prog.flows, prog.ast);
@@ -83,7 +83,7 @@ describe("#128/GAP-4: for-in EXECUTES correctly and matches the interpreter", ()
     const instance = await instantiate(compileWAT(SUM_LIST), host);
     const wasmVal = instance.exports.sumList(arr);
 
-    const prog = L.parseProgram(SUM_LIST, "t.spore");
+    const prog = L.parseProgram(SUM_LIST, "t.fungi");
     const listVal = { __tag: "list", items: nums.map((v) => ({ __tag: "int", value: v })) };
     const ref = (await L.executeFlow("sumList", new Map([["items", listVal]]), prog.ast, prog.flows)).value;
     assert.equal(ref.__tag, "int", "interpreter produced an int");

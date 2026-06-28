@@ -2,13 +2,13 @@
  * Int64 gate-lift REGRESSION GUARD — pins the POST-lift state (owner-gated, 2026-06-25).
  *
  * The Int64 WASM lowering is faithful + proven byte-exact (see wat-i64-differential.test.mjs: walker ≡ WASM
- * over the full (2^53,2^63) corpus), so the `SPORE-NUMERIC-001` gate was LIFTED for Int64. UInt64 has now ALSO
+ * over the full (2^53,2^63) corpus), so the `FUNGI-NUMERIC-001` gate was LIFTED for Int64. UInt64 has now ALSO
  * been lifted (#52): the tree-walker carries it as a NON-NEGATIVE bigint via the exact-trapping u64-arith
  * layer, and the WASM emitter DECLINES it (walker-only — unsigned ≠ signed i64). So both 64-bit scalars now
  * compile/build/run faithfully.
  *
  * The crux is a DELIBERATE SET SPLIT that this guard pins:
- *   • BACKEND_UNLOWERABLE_SCALAR  (the SPORE-NUMERIC-001 GATE)        = { }                          — empty (both lifted)
+ *   • BACKEND_UNLOWERABLE_SCALAR  (the FUNGI-NUMERIC-001 GATE)        = { }                          — empty (both lifted)
  *   • FAST_TIER_UNLOWERABLE_SCALAR (the bytecode-VM / sync bail)    = { Int64, UInt64, Decimal }   — all STILL bail
  * The 64-bit widths are admitted by the gate (walker + WASM/u64-walker carry them) yet MUST still route off
  * the i32-only fast tiers, which would silently truncate them. Folding the two sets together would either
@@ -21,10 +21,10 @@ import { parseProgram, checkValueStates } from "../dist/index.js";
 import { BACKEND_UNLOWERABLE_SCALAR, FAST_TIER_UNLOWERABLE_SCALAR, flowDeclaresUnlowerable64 } from "../dist/numeric-lowering.js";
 
 const gateDiags = (src) => {
-  const p = parseProgram(src, "lift.spore");
-  return (checkValueStates(p.ast).diagnostics ?? []).filter((d) => d.code === "SPORE-NUMERIC-001");
+  const p = parseProgram(src, "lift.fungi");
+  return (checkValueStates(p.ast).diagnostics ?? []).filter((d) => d.code === "FUNGI-NUMERIC-001");
 };
-const firstFlow = (src) => parseProgram(src, "b.spore").ast.children.find((c) => c.kind === "pureFlowDecl");
+const firstFlow = (src) => parseProgram(src, "b.fungi").ast.children.find((c) => c.kind === "pureFlowDecl");
 
 test("Int64 is LIFTED: a scalar Int64 flow is ADMITTED by the gate (return / param / local all clean)", () => {
   assert.equal(gateDiags("pure flow f(n: Int) -> Int64 contract { effects {} } { return n }").length, 0, "Int64 RETURN must be admitted");

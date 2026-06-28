@@ -14,13 +14,13 @@ ergonomics here is also better security). The machinery to fix this already exis
 | Field | What it really is | Verdict |
 |---|---|---|
 | `lane: photonic` | the developer's deployment **choice** | **declare** |
-| `redundancy: N` | a **mechanism** — votes to hit the tolerance | **✅ auto-infer.** The compiler already has the NMR math (`substrate-math.ts`) and already checks N-meets-tolerance (SPORE-SUBSTRATE-002/003) — it can compute the minimum N. Declaring it = an *override* for extra margin, never mandatory. |
+| `redundancy: N` | a **mechanism** — votes to hit the tolerance | **✅ auto-infer.** The compiler already has the NMR math (`substrate-math.ts`) and already checks N-meets-tolerance (FUNGI-SUBSTRATE-002/003) — it can compute the minimum N. Declaring it = an *override* for extra margin, never mandatory. |
 | `resilience { on_substrate_fault fallback … }` | a **mechanism** — what to do on fault | **✅ auto-default.** Omitting it already fails **closed** (`OnIndeterminate` defaults to `trap`). Smart default: **auto-synthesize the digital twin** (same body, `lane: digital`) and wire it. Declare only for a custom fallback. |
 | `tolerance: 5e-3` | the **required guarantee** — the app's precision need | **⚠️ keep declarable, don't infer the value** (the compiler can't know how precise your result must be). Improve readability: `tolerance: 0.5%` or named levels `strict\|balanced\|loose`; default from the deployment profile, not always the tightest. |
 | `invariant { ensure result … }` | the **spec** — the contract of correctness | **❌ never auto-infer.** Deriving "result ∈ [0,1]" *from the body* makes a bug in the body the spec — a silent fail-open, the exact anti-pattern DbC exists to prevent. Ergonomic fix: lift it into the **type** (return `Probability`, a refined Float in [0,1]) so it reads naturally + is type-checked. Keep `ensure` for genuine post-conditions. |
 
 ## The friendly form (the common case should be one line)
-```spore
+```fungi
 guarded flow scoreBatch(features: Tensor<Float,[256]>) -> Probability
 contract {
   intent    { "Score a batch on the photonic co-processor." }

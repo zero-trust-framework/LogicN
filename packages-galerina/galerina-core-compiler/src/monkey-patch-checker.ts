@@ -5,18 +5,18 @@
 // Galerina's governance model requires declared behaviour — no secret rewrites.
 //
 // Fires:
-//   SPORE-SEC-020  RuntimeMutationProhibited
+//   FUNGI-SEC-020  RuntimeMutationProhibited
 //     Calls that attempt to replace/patch runtime objects, capabilities,
 //     imported functions, adapters, or globals.
 //     Examples: Runtime.patch(...), capabilities.override(...)
 //
-//   SPORE-SEC-021  PrototypeMutationProhibited
+//   FUNGI-SEC-021  PrototypeMutationProhibited
 //     Assignments that target a .prototype. chain.
 //     Examples: String.prototype.trim = customTrim
 //
 // Does NOT fire for:
-//   SPORE-SOURCE-ESCAPE-001 — eval(), Function(), dynamic execution
-//   SPORE-BACKEND-001        — emitted JS escape checks (future emitter)
+//   FUNGI-SOURCE-ESCAPE-001 — eval(), Function(), dynamic execution
+//   FUNGI-BACKEND-001        — emitted JS escape checks (future emitter)
 //
 // Entry points:
 //   checkMonkeyPatching(ast)             — AST-level check (primary)
@@ -44,7 +44,7 @@ export interface MonkeyPatchCheckResult {
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-SEC-020: Runtime mutation — banned call patterns
+// FUNGI-SEC-020: Runtime mutation — banned call patterns
 //
 // Matched against the full qualified call name (receiver.method).
 // PROTECTED_NAMESPACES: runtime objects that must not be mutated.
@@ -135,7 +135,7 @@ function makeSec020Diagnostic(
   location: SourceLocation | undefined,
 ): MonkeyPatchDiagnostic {
   const base = {
-    code: "SPORE-SEC-020",
+    code: "FUNGI-SEC-020",
     name: "RuntimeMutationProhibited",
     severity: "error" as const,
     message: `Runtime behaviour modification is prohibited. '${callName}' replaces or patches a runtime object, capability, or adapter — this bypasses governance and audit trails.`,
@@ -150,7 +150,7 @@ function makeSec021Diagnostic(
   location: SourceLocation | undefined,
 ): MonkeyPatchDiagnostic {
   const base = {
-    code: "SPORE-SEC-021",
+    code: "FUNGI-SEC-021",
     name: "PrototypeMutationProhibited",
     severity: "error" as const,
     message: `Prototype mutation is prohibited. Assigning to '${targetPath}' rewrites shared inherited behaviour — this is not allowed in Galerina.`,
@@ -161,7 +161,7 @@ function makeSec021Diagnostic(
 }
 
 // ---------------------------------------------------------------------------
-// AST walker — SPORE-SEC-020 (runtime mutation via call)
+// AST walker — FUNGI-SEC-020 (runtime mutation via call)
 // ---------------------------------------------------------------------------
 
 function isRuntimeMutationCall(node: AstNode): boolean {
@@ -181,7 +181,7 @@ function isRuntimeMutationCall(node: AstNode): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// AST walker — SPORE-SEC-021 (prototype assignment)
+// AST walker — FUNGI-SEC-021 (prototype assignment)
 //
 // Detects assignStmt/letDecl/mutDecl where the target chain contains "prototype".
 // Also detects callExpr where the receiver chain contains "prototype" (rare but
@@ -215,13 +215,13 @@ function isPrototypeMutationAssign(node: AstNode): boolean {
 // ---------------------------------------------------------------------------
 
 function walkAst(node: AstNode, diagnostics: MonkeyPatchDiagnostic[]): void {
-  // SPORE-SEC-020: runtime mutation call
+  // FUNGI-SEC-020: runtime mutation call
   if (isRuntimeMutationCall(node)) {
     const fullName = buildFullCallName(node);
     diagnostics.push(makeSec020Diagnostic(fullName, node.location));
   }
 
-  // SPORE-SEC-021: prototype mutation assignment
+  // FUNGI-SEC-021: prototype mutation assignment
   if (isPrototypeMutationAssign(node)) {
     const targetPath = node.value ?? "<unknown>";
     diagnostics.push(makeSec021Diagnostic(targetPath, node.location));
@@ -233,7 +233,7 @@ function walkAst(node: AstNode, diagnostics: MonkeyPatchDiagnostic[]): void {
 }
 
 // ---------------------------------------------------------------------------
-// Text-level scanner — SPORE-SEC-021 (supplements AST for edge cases)
+// Text-level scanner — FUNGI-SEC-021 (supplements AST for edge cases)
 //
 // Covers: String.prototype.trim = customTrim
 // Excluded: String.prototype.trim.call(...) — a read, not a write
@@ -273,7 +273,7 @@ function scanTextForPrototypeMutation(
 }
 
 // ---------------------------------------------------------------------------
-// Text-level scanner — SPORE-SEC-020 (supplements AST)
+// Text-level scanner — FUNGI-SEC-020 (supplements AST)
 //
 // Catches string-based runtime patch patterns the AST might not model:
 //   Runtime.patch("Database.find", ...)
@@ -316,8 +316,8 @@ function scanTextForRuntimeMutation(
 /**
  * Walks the Galerina AST and reports source-level monkey-patching attempts.
  *
- * SPORE-SEC-020: calls to Runtime.patch, capabilities.override, etc.
- * SPORE-SEC-021: assignments that target a .prototype. chain (AST form).
+ * FUNGI-SEC-020: calls to Runtime.patch, capabilities.override, etc.
+ * FUNGI-SEC-021: assignments that target a .prototype. chain (AST form).
  *
  * Complement with checkMonkeyPatchingSource() for text-level coverage.
  */

@@ -4,7 +4,7 @@
 // Validates that effects declared on flows are consistent with their content.
 // Spec: docs/Knowledge-Bases/effect-checker-and-boundary-checker.md
 //
-// Diagnostic codes: SPORE-EFFECT-001..004 (compiler-diagnostics.md)
+// Diagnostic codes: FUNGI-EFFECT-001..004 (compiler-diagnostics.md)
 // =============================================================================
 
 import { type AstNode, type AstNodeKind, type ParseDiagnostic, type FlowMeta, type SourceLocation } from "./parser.js";
@@ -318,11 +318,11 @@ const CANONICAL_EFFECTS = new Set([
   "crypto.verify",
   "crypto.sign",
   // #34 confidentiality — KEM-DEM / AEAD ops. Like sign/verify, these must run bit-exact
-  // on the deterministic core (SPORE-SUBSTRATE-001), never on a noisy/analog lane.
+  // on the deterministic core (FUNGI-SUBSTRATE-001), never on a noisy/analog lane.
   "crypto.encrypt",
   "crypto.decrypt",
   "crypto.seal",
-  // SPORE-CRYPTO-PQ-001: signing-algorithm marker effects declared ALONGSIDE crypto.sign to
+  // FUNGI-CRYPTO-PQ-001: signing-algorithm marker effects declared ALONGSIDE crypto.sign to
   // ASSERT the algorithm. The base `crypto.sign` handles call-matching; these mark whether
   // the signature is post-quantum. In a certified profile a PQ/hybrid marker is required.
   "crypto.sign.hybrid",
@@ -360,7 +360,7 @@ const EFFECT_NAME_ALIASES: ReadonlyMap<string, string> = new Map([
 // ---------------------------------------------------------------------------
 
 // Phase 19 (legacy): regex-based call pattern matching for effect inference.
-// Being replaced by STDLIB_CAPABILITY_MAP AST-based lookups (Phase 19A, SPORE-STDLIB-001).
+// Being replaced by STDLIB_CAPABILITY_MAP AST-based lookups (Phase 19A, FUNGI-STDLIB-001).
 // These patterns remain for backward compatibility with non-stdlib call patterns
 // (e.g. *DB.insert, *Payment.charge) that are not in STDLIB_CAPABILITY_MAP.
 // Phase 20: migrate *DB.* and *Payment.* patterns to a structured registry.
@@ -437,7 +437,7 @@ const PLAIN_FLOW_PRIVILEGED_EFFECTS = new Set([
   "payment.charge",
 ]);
 
-// SPORE-TIER-001 — effects that REQUIRE the `secure` flow tier. Touching any of these from a
+// FUNGI-TIER-001 — effects that REQUIRE the `secure` flow tier. Touching any of these from a
 // `flow`/`guarded` declaration under-declares the obligation (secure-only passes never attach).
 // Deliberately conservative — benign reads (database.read, filesystem.read, desktop.user.read)
 // stay guarded-tier and are NOT included, to avoid false floors.
@@ -511,7 +511,7 @@ export function checkFlowEffects(
 
   if (flow.qualifier === "pure" && flow.declaredEffects.length > 0) {
     diagnostics.push({
-      code: "SPORE-EFFECT-003",
+      code: "FUNGI-EFFECT-003",
       name: "EFFECT_BOUNDARY_VIOLATION",
       severity: "error",
       message: `pure flow "${flow.name}" declares effects ${formatEffects(flow.declaredEffects)}. Pure flows must have no effects.`,
@@ -525,7 +525,7 @@ export function checkFlowEffects(
     for (const effect of observedEffects) {
       if (PURE_FORBIDDEN_EFFECTS.has(effect)) {
         diagnostics.push({
-          code: "SPORE-EFFECT-003",
+          code: "FUNGI-EFFECT-003",
           name: "EFFECT_BOUNDARY_VIOLATION",
           severity: "error",
           message: `pure flow "${flow.name}" uses "${effect}" which is forbidden in pure flows.`,
@@ -538,7 +538,7 @@ export function checkFlowEffects(
 
     for (const callName of unique(findCallsToEffectfulFlows(flowNode, effectfulFlows))) {
       diagnostics.push({
-        code: "SPORE-EFFECT-003",
+        code: "FUNGI-EFFECT-003",
         name: "EFFECT_BOUNDARY_VIOLATION",
         severity: "error",
         message: `pure flow "${flow.name}" calls "${callName}" which has declared effects. Pure flows cannot call effectful flows.`,
@@ -577,7 +577,7 @@ export function checkFlowEffects(
           ? buildContractEffectsBlock(mergedEffects)
           : "";
         diagnostics.push({
-          code: "SPORE-EFFECT-001",
+          code: "FUNGI-EFFECT-001",
           name: "UNDECLARED_EFFECT",
           severity: "error",
           message: `${qualifierLabel} "${flow.name}" uses effect "${effect}" which is not declared.`,
@@ -591,7 +591,7 @@ export function checkFlowEffects(
     for (const effect of flow.declaredEffects) {
       if (!observedEffects.has(effect) && !hasTransitiveEffect(flow.name, effect, allFlows, callGraph, new Set())) {
         diagnostics.push({
-          code: "SPORE-EFFECT-002",
+          code: "FUNGI-EFFECT-002",
           name: "OVERDECLARED_EFFECT",
           severity: "warning",
           message: `${qualifierLabel} "${flow.name}" declares effect "${effect}" but no matching operation was observed.`,
@@ -608,7 +608,7 @@ export function checkFlowEffects(
     for (const effect of flow.declaredEffects) {
       if (PLAIN_FLOW_PRIVILEGED_EFFECTS.has(effect)) {
         diagnostics.push({
-          code: "SPORE-EFFECT-001",
+          code: "FUNGI-EFFECT-001",
           name: "UNDECLARED_EFFECT",
           severity: "warning",
           message: `Plain flow "${flow.name}" declares privileged effect "${effect}". Use "secure flow" for security-sensitive operations.`,
@@ -620,20 +620,20 @@ export function checkFlowEffects(
     }
   }
 
-  // SPORE-TIER-001 (landing A+B): a flow/guarded declaration that touches a secure-required effect
+  // FUNGI-TIER-001 (landing A+B): a flow/guarded declaration that touches a secure-required effect
   // under-declares the obligation — the secure-only passes (intent justification, epilogue proof,
   // secret-egress sealing) gate on qualifier === "secure" and never attach at this tier. Floor:
   // escalate to `secure`. The scan ALWAYS runs; severity is gated on enforceTierFloor — production
   // builds (build-production / build-deterministic) ESCALATE to error (fail the build), while
   // dev/check emit a WARNING so testers see the obligation early without the corpus-breaking error
-  // churn. `pure` is intentionally excluded — pure + these effects is already a hard SPORE-EFFECT-003
+  // churn. `pure` is intentionally excluded — pure + these effects is already a hard FUNGI-EFFECT-003
   // error above. (Landing A dev-mode warning, 2026-06-24.)
   if (flow.qualifier === "flow" || flow.qualifier === "guarded") {
     const tierEffects = new Set<string>([...observedEffects, ...flow.declaredEffects]);
     const secureTriggers = [...tierEffects].filter((e) => SECURE_REQUIRED_EFFECTS.has(e)).sort();
     if (secureTriggers.length > 0) {
       diagnostics.push({
-        code: "SPORE-TIER-001",
+        code: "FUNGI-TIER-001",
         name: "UNDER_DECLARED_FLOW_TIER",
         severity: enforceTierFloor ? "error" : "warning",
         message: `${flow.qualifier} flow "${flow.name}" uses secure-tier effect(s) ${formatEffects(secureTriggers)} but is declared "${flow.qualifier}", not "secure". Secure-only obligations (intent justification, epilogue proof, secret-egress sealing) are skipped at this tier.`,
@@ -644,7 +644,7 @@ export function checkFlowEffects(
     }
   }
 
-  // SPORE-STDLIB-001: check stdlib calls against STDLIB_CAPABILITY_MAP
+  // FUNGI-STDLIB-001: check stdlib calls against STDLIB_CAPABILITY_MAP
   if (flowNode !== undefined) {
     for (const diag of checkStdlibEffects(flow, flowNode, mode)) {
       diagnostics.push(diag);
@@ -679,8 +679,8 @@ export function checkFlowEffects(
 // ---------------------------------------------------------------------------
 
 // Broad aliases are the short forms without a dot-path qualifier.
-// Using these emits SPORE-EFFECT-005 (BroadAliasUsed — warning, not error).
-// Other non-canonical names emit SPORE-EFFECT-004 (error).
+// Using these emits FUNGI-EFFECT-005 (BroadAliasUsed — warning, not error).
+// Other non-canonical names emit FUNGI-EFFECT-004 (error).
 const BROAD_EFFECT_ALIASES: ReadonlySet<string> = new Set([
   "network", "database", "filesystem", "secret", "ai", "audit", "pii", "phi",
 ]);
@@ -690,9 +690,9 @@ function validateDeclaredEffectNames(flow: FlowMeta, diagnostics: EffectDiagnost
     const canonical = EFFECT_NAME_ALIASES.get(effect);
     if (canonical !== undefined) {
       if (BROAD_EFFECT_ALIASES.has(effect)) {
-        // SPORE-EFFECT-005: broad alias — warn, not error; developer should use canonical form
+        // FUNGI-EFFECT-005: broad alias — warn, not error; developer should use canonical form
         diagnostics.push({
-          code: "SPORE-EFFECT-005",
+          code: "FUNGI-EFFECT-005",
           name: "BroadAliasUsed",
           severity: "warning",
           message: `Effect "${effect}" is a broad alias. Use the canonical name "${canonical}" to precisely declare authority.`,
@@ -704,7 +704,7 @@ function validateDeclaredEffectNames(flow: FlowMeta, diagnostics: EffectDiagnost
       } else {
         // Other alias variants (e.g. "http.get" → "network.outbound") — non-canonical, error
         diagnostics.push({
-          code: "SPORE-EFFECT-004",
+          code: "FUNGI-EFFECT-004",
           name: "NON_CANONICAL_EFFECT",
           severity: "error",
           message: `Effect "${effect}" is not a canonical effect name. Use "${canonical}".`,
@@ -715,7 +715,7 @@ function validateDeclaredEffectNames(flow: FlowMeta, diagnostics: EffectDiagnost
       }
     } else if (!CANONICAL_EFFECTS.has(effect)) {
       diagnostics.push({
-        code: "SPORE-EFFECT-004",
+        code: "FUNGI-EFFECT-004",
         name: "UNKNOWN_EFFECT",
         severity: "error",
         message: `Effect "${effect}" is not a recognised Galerina effect name.`,
@@ -739,7 +739,7 @@ function validateInterFlowPropagation(
   for (const [effect, calledName] of requiredEffects) {
     if (!declared.has(effect)) {
       diagnostics.push({
-        code: "SPORE-EFFECT-002",
+        code: "FUNGI-EFFECT-002",
         name: "TRANSITIVE_EFFECT_NOT_DECLARED",
         severity: "error",
         message: `Flow "${flow.name}" calls "${calledName}" which requires effect "${effect}", but "${flow.name}" does not declare it.`,
@@ -760,7 +760,7 @@ function validateInterFlowPropagation(
     for (const [effect, fnCallLoc] of fnHelperEffects) {
       if (!declared.has(effect)) {
         diagnostics.push({
-          code: "SPORE-EFFECT-002",
+          code: "FUNGI-EFFECT-002",
           name: "TRANSITIVE_EFFECT_NOT_DECLARED",
           severity: "error",
           message: `Flow "${flow.name}" has a fn helper that uses effect "${effect}" which is not declared on the parent flow.`,
@@ -774,7 +774,7 @@ function validateInterFlowPropagation(
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-STDLIB-001: stdlib call requires undeclared effect
+// FUNGI-STDLIB-001: stdlib call requires undeclared effect
 // ---------------------------------------------------------------------------
 
 // FAIL-CLOSED (#153): the broad effect that *any* method on a known-effectful
@@ -842,11 +842,11 @@ function broadEffectForUnknownEffectfulCall(
  * Walks the AST for callExpr nodes in a flow's body.
  * For each call, reconstructs the full qualified name (receiver.method or method)
  * and looks it up in STDLIB_CAPABILITY_MAP.
- * If found AND any required effect is NOT in flow.declaredEffects → emit SPORE-STDLIB-001.
+ * If found AND any required effect is NOT in flow.declaredEffects → emit FUNGI-STDLIB-001.
  *
  * FAIL-CLOSED (#153): if the receiver is a known-effectful module but the
  * specific method is NOT in the capability map, the call is treated as
- * requiring the module's broad effect (SPORE-STDLIB-002) instead of being
+ * requiring the module's broad effect (FUNGI-STDLIB-002) instead of being
  * silently allowed.
  *
  * Severity: "error" in production mode, "warning" in development mode.
@@ -889,7 +889,7 @@ export function checkStdlibEffects(
           if (requiredEffect === "") continue;  // pure stdlib call — no effect needed
           if (!declared.has(requiredEffect)) {
             diagnostics.push({
-              code: "SPORE-STDLIB-001",
+              code: "FUNGI-STDLIB-001",
               name: "StdlibEffectNotDeclared",
               severity,
               message: `${name} requires ${requiredEffect} which is not declared in the contract.`,
@@ -910,7 +910,7 @@ export function checkStdlibEffects(
         const broadEffect = broadEffectForUnknownEffectfulCall(receiverName, methodName);
         if (broadEffect !== undefined && !declared.has(broadEffect)) {
           diagnostics.push({
-            code: "SPORE-STDLIB-002",
+            code: "FUNGI-STDLIB-002",
             name: "UnknownEffectfulStdlibCall",
             severity,
             message: `${fullName} is an unrecognised method on the effectful module "${receiverName}"; it requires at least ${broadEffect} which is not declared in the contract. Effectful modules are deny-by-default: declare the effect or use a recognised operation.`,
@@ -1029,7 +1029,7 @@ function buildFlowCallGraph(
   // Check for circular flow dependencies and log via detectCycle
   const cycleResult = detectCycle(callGraph);
   if (cycleResult.hasCycle && cycleResult.cycle !== undefined) {
-    // Cycle detected — callers will see diagnostic SPORE-EFFECT-002 from
+    // Cycle detected — callers will see diagnostic FUNGI-EFFECT-002 from
     // collectTransitiveCalledEffects (which guards against infinite recursion
     // using the `seen` set). The cycle is recorded here for future diagnostics.
     // No throw: the checker degrades gracefully on cycles.

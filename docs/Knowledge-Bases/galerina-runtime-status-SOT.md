@@ -13,7 +13,7 @@
 > The §6 / `appLayerStatus` "app layer = TEMPLATES, NOT IMPLEMENTED" line is now **partly stale**: the
 > app-framework **admission/fusion border + scaffolder + governed resolver are REAL and tested** this
 > session (fuse-loader 3 gates + `planComposition` + revocation = 60 tests; `galerina new app`; unified
-> admission vocabulary; SPORE-PKG-006). Still unbuilt: the signed registry index + a richer example app.
+> admission vocabulary; FUNGI-PKG-006). Still unbuilt: the signed registry index + a richer example app.
 > Two-axis position (Axis B self-hosting ≈80%) and real-DSS.wasm 0% are unchanged.
 
 This document exists because the percentage and test-count figures across the
@@ -37,7 +37,7 @@ compiler 3,321 · security 14). (Auto-generate these counts to stop drift = #150
 
 | Package | Tests | Pass | Fail | Notes |
 |---|---|---|---|---|
-| galerina-core-compiler | 3,322 | 3,322 | 0 | **P9 BYTE-PARITY ACHIEVED (#143, 2026-06-06):** the self-hosted **`lexer.spore` `tokenize` produces a byte-for-byte identical token stream in the Stage-A interpreter AND in real WASM** executed through the #105 admission gate — verified over a 12-input corpus (keywords/identifiers/symbols/operators/numbers/member/method) in `tests/wat-p9-tokenize-parity.test.mjs`. The full path runs: `.spore → WAT → real-wabt binary → Ed25519-attested #105 admission → execute → reconstruct tokens from linear memory`. Enablers: **#144** enum-variant member lowering; **#145** string-intern table exposure + complete host stdlib (`char_to_string`/`str_concat`/`str_eq`/`char_is_letter|digit`/`array_contains_str`/`unwrap_or`/…) + output reader; **#160** type-directed lowering (Option<Char> None/Some sentinel dispatch + binding, `charLiteral`→codepoint, `codePoint` identity, `Char.toString`→`__char_to_string`, String `+`→`__str_concat`, String `==`/`!=`→`__str_eq`, `Array<String>.contains`→`__array_contains_str`, `(unreachable)` tail terminator). Scope note: parity is proven for **`tokenize`**; parser/type-checker/governance-verifier WASM parity remain (they execute in Stage-A). **#105 WASM admission gate** (`wasm-runtime.ts`): attestation-first Ed25519 verify before host linking, closed-allowlist imports — `CRITICAL_SECURITY_VIOLATION` fail-closed; proven end-to-end in real WASM |
+| galerina-core-compiler | 3,322 | 3,322 | 0 | **P9 BYTE-PARITY ACHIEVED (#143, 2026-06-06):** the self-hosted **`lexer.fungi` `tokenize` produces a byte-for-byte identical token stream in the Stage-A interpreter AND in real WASM** executed through the #105 admission gate — verified over a 12-input corpus (keywords/identifiers/symbols/operators/numbers/member/method) in `tests/wat-p9-tokenize-parity.test.mjs`. The full path runs: `.fungi → WAT → real-wabt binary → Ed25519-attested #105 admission → execute → reconstruct tokens from linear memory`. Enablers: **#144** enum-variant member lowering; **#145** string-intern table exposure + complete host stdlib (`char_to_string`/`str_concat`/`str_eq`/`char_is_letter|digit`/`array_contains_str`/`unwrap_or`/…) + output reader; **#160** type-directed lowering (Option<Char> None/Some sentinel dispatch + binding, `charLiteral`→codepoint, `codePoint` identity, `Char.toString`→`__char_to_string`, String `+`→`__str_concat`, String `==`/`!=`→`__str_eq`, `Array<String>.contains`→`__array_contains_str`, `(unreachable)` tail terminator). Scope note: parity is proven for **`tokenize`**; parser/type-checker/governance-verifier WASM parity remain (they execute in Stage-A). **#105 WASM admission gate** (`wasm-runtime.ts`): attestation-first Ed25519 verify before host linking, closed-allowlist imports — `CRITICAL_SECURITY_VIOLATION` fail-closed; proven end-to-end in real WASM |
 | galerina-core-economics | 15 | 15 | 0 | |
 | galerina-devtools-graph-algorithms | 95 | 95 | 0 | |
 | galerina-core-security | 14 | 14 | 0 | |
@@ -75,7 +75,7 @@ the test suite via the Stage A interpreter.
 | Area | Status | Evidence |
 |---|---|---|
 | Core syntax (flow/contract/match/record/enum) | ✅ 100% | All examples + governance tests pass |
-| Governance rules (SPORE-GOV/EFFECT/CAP/etc.) | ✅ 100% | 35+ rule codes registered + tested |
+| Governance rules (FUNGI-GOV/EFFECT/CAP/etc.) | ✅ 100% | 35+ rule codes registered + tested |
 | CBOR .lmanifest generation | ✅ 100% | CBOR Tag 410-417; build artifacts generated |
 | DSS simulation (Phases 1–7 DRCM) | ✅ 95% | Phase 7 OCI deployment pending (#113) |
 | Tower-native syntax (v2.2) | ✅ 100% | See §4 |
@@ -84,7 +84,7 @@ the test suite via the Stage A interpreter.
 | @experimental_profile directive | ✅ 100% | |
 | Module path separator `::` | ✅ 100% | |
 | Record constructor in let bindings | ✅ 100% | |
-| Match exhaustiveness check (SPORE-MATCH-001) | ✅ 100% | |
+| Match exhaustiveness check (FUNGI-MATCH-001) | ✅ 100% | |
 | For-loop desugaring | ✅ 100% | |
 
 ---
@@ -97,7 +97,7 @@ the test suite via the Stage A interpreter.
 | Phase 2 | invariant {} block + WAT gate injection | ✅ 100% | — |
 | Phase 3 | .lmanifest generation pipeline + admission gate | ✅ 100% | — |
 | Phase 4 | Structured SystemCapabilityType + policy {} monotonicity | ✅ 100% | — |
-| Phase 5 | DWI step keyword + DSS supervisor in .spore | ✅ 100% | — |
+| Phase 5 | DWI step keyword + DSS supervisor in .fungi | ✅ 100% | — |
 | Phase 6 | Epilogue Receipt generation + verification + ledger | ✅ 100% | — |
 | Phase 7 (negative tests) | OWASP vectors + containment failure tests | ✅ 100% | — |
 | Phase 7 (OCI/gVisor) | Layer 2 OS container config + Linux deployment | ✅ 100% | scripts/Dockerfile.galerina + deploy-linux.sh |
@@ -109,7 +109,7 @@ the test suite via the Stage A interpreter.
 ## 4. Tower-native syntax (v2.2) — 100%
 
 All 12 Tower-native constructs are implemented in Stage A and recognised by the
-Stage B self-hosted `lexer.spore` and `parser.spore` (tasks #97/#98, 2026-06-05):
+Stage B self-hosted `lexer.fungi` and `parser.fungi` (tasks #97/#98, 2026-06-05):
 
 | Keyword/Construct | Status | Task |
 |---|---|---|
@@ -139,20 +139,20 @@ reached; cross-flow calls + recursion work; R6 corpus all passing).
 
 | Pipeline stage | File | Status | Evidence |
 |---|---|---|---|
-| Lex | `lexer.spore` | **near-full** (v2.2 updated 2026-06-05) | Full token stream + GovComment + 52 keywords; 32 executing tests |
-| Parse | `parser.spore` | **partial (full body AST)** (v2.2 updated 2026-06-05) | `parseFlows` yields complete flow AST; 11 new v2.2 record types; `guardDecls` in ParseResult; 63 executing tests |
-| Type-check | `type-checker.spore` | **partial (return + body)** | `checkFlowBodies` walks full body AST; 22 executing tests |
-| Effect-check | `effect-checker.spore` | **partial (return + body)** | `checkBodyEffects` from body call expressions; 21 executing tests |
-| Govern | `governance-verifier.spore` | **partial (decl + body)** | `checkBodyGovernance` walks body AST; 17 executing tests |
-| Emit (GIR) | `gir-emitter.spore` | **partial (flat + body)** | `emitBodyGIR` lowers full body; 21 executing tests |
-| Execute | `runtime.spore` | **partial (GIR eval + calls)** | `runProgram` + flow table; recursion works (fib(15)=610); 20 executing tests |
-| Capabilities | `compiler.capabilities.spore` | **functional** | 8 flows, tested |
+| Lex | `lexer.fungi` | **near-full** (v2.2 updated 2026-06-05) | Full token stream + GovComment + 52 keywords; 32 executing tests |
+| Parse | `parser.fungi` | **partial (full body AST)** (v2.2 updated 2026-06-05) | `parseFlows` yields complete flow AST; 11 new v2.2 record types; `guardDecls` in ParseResult; 63 executing tests |
+| Type-check | `type-checker.fungi` | **partial (return + body)** | `checkFlowBodies` walks full body AST; 22 executing tests |
+| Effect-check | `effect-checker.fungi` | **partial (return + body)** | `checkBodyEffects` from body call expressions; 21 executing tests |
+| Govern | `governance-verifier.fungi` | **partial (decl + body)** | `checkBodyGovernance` walks body AST; 17 executing tests |
+| Emit (GIR) | `gir-emitter.fungi` | **partial (flat + body)** | `emitBodyGIR` lowers full body; 21 executing tests |
+| Execute | `runtime.fungi` | **partial (GIR eval + calls)** | `runProgram` + flow table; recursion works (fib(15)=610); 20 executing tests |
+| Capabilities | `compiler.capabilities.fungi` | **functional** | 8 flows, tested |
 
 **v2.2 Stage B updates (2026-06-05, tasks #97/#98):**
-- `lexer.spore`: Added `GovComment` token kind; added 12 v2.2 keywords (guard, access,
+- `lexer.fungi`: Added `GovComment` token kind; added 12 v2.2 keywords (guard, access,
   gate, static, bitfield, governed, view, trap, step, evict, assimilate, policy);
   added `;;` govComment scanning with `GovComment` token emission. Table now 52 keywords.
-- `parser.spore`: Added 11 v2.2 AST record types (GuardDecl, AccessDecl, GateDecl,
+- `parser.fungi`: Added 11 v2.2 AST record types (GuardDecl, AccessDecl, GateDecl,
   StaticDecl, BitfieldDecl, TrapDecl, StepExpr, EvictExpr, AssimilatedPluginDecl,
   GovernedFlowDecl, PolicyMutationDecl); added `guardDecls: Array<GuardDecl>` to
   ParseResult; added `guard {}` top-level parsing in `parseFlows`; initialised and
@@ -189,7 +189,7 @@ These items MUST NOT be marked done until the infrastructure actually executes
 
 | Axis | Honest current state | Basis |
 |---|---|---|
-| A — governed decision logic in `.spore` | **14 governed services tested** (of 25 `.spore` service files) | §8 |
+| A — governed decision logic in `.fungi` | **14 governed services tested** (of 25 `.fungi` service files) | §8 |
 | B — engine self-hosting (THE goal) | **≈80%** — R6 corpus: Stage A == Stage B on all 5 flows; v2.2 syntax recognised by lexer + parser | §5 |
 
 Against the actual goal (Axis B at 100%), current position is **≈80%**.
@@ -198,7 +198,7 @@ Against the actual goal (Axis B at 100%), current position is **≈80%**.
 
 ## 8. Axis A — governed service surface
 
-`examples/auth-service/` holds 25 `.spore` service files. **14 are covered by
+`examples/auth-service/` holds 25 `.fungi` service files. **14 are covered by
 executing endpoint/integration tests** (the rest are unverified surface):
 
 auditChainService, capabilityHostService, compilationService, economicsService,
@@ -231,13 +231,13 @@ valueClassificationService, verifyPassword, verifyPasswordService.
   `galerina version` command, SOT updated (keygen, signing, R6, OCI, deploy).
 
 ### 2026-06-05 (tasks #97/#98/#115 — prior session)
-- **Task #97** — lexer.spore v2.2 update: added `GovComment` to `TokenKind` enum;
+- **Task #97** — lexer.fungi v2.2 update: added `GovComment` to `TokenKind` enum;
   expanded `makeKeywordTable()` from 40 to 52 keywords (added: guard, access, gate,
   static, bitfield, governed, view, trap, step, evict, assimilate, policy); added
   `;;` govComment interception in `tokenize` (emits `TokenKind.GovComment`).
   `phase40-stage-b-bootstrap.test.mjs` updated: keyword count test → 52. Both files
   check clean: `node galerina.mjs check` 0 errors, 0 governance warnings.
-- **Task #98** — parser.spore v2.2 update: added 11 new record type declarations
+- **Task #98** — parser.fungi v2.2 update: added 11 new record type declarations
   (GuardDecl, AccessDecl, GateDecl, StaticDecl, BitfieldDecl, TrapDecl, StepExpr,
   EvictExpr, AssimilatedPluginDecl, GovernedFlowDecl, PolicyMutationDecl); updated
   `ParseResult` to add `guardDecls: Array<GuardDecl>`; added `guard {}` top-level

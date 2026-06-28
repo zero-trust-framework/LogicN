@@ -8,7 +8,7 @@ posture is `galerina-quantum-resistance-posture.md` (this doc is the forward-loo
 > **Posture (binding):** grounded + cited; honest-core vs aspirational kept strictly separate; **no security or
 > performance number without a reproducible benchmark + the device it ran on**; no invented crypto; fail-closed
 > (`unknown → deny`); **crypto-on-core** — the bit-exact trust primitive is always digital; photonics/quantum
-> live *around* the gate, never inside it (`SPORE-SUBSTRATE-001`).
+> live *around* the gate, never inside it (`FUNGI-SUBSTRATE-001`).
 
 ## Bottom line
 - **`.tmf` is quantum-*resistant* today, not quantum-*proof*.** Its security is PQC — standardized but
@@ -69,7 +69,7 @@ Full survey: `rd-absorbed/rd-photonic-lane-e-qkd-confidentiality.md` (web-cited)
 
 ## Roadmap (R&D + interface work; hardware integration owner- and availability-gated)
 - **Q0 — PQC baseline + hybrid (L2). ✅ DONE / shipping.** The always-present base layer.
-- **Q1 — QRNG entropy capability (Lane D). 🟢 buildable as an interface now.** Host SP 800-90B source → 90A DRBG → keygen/nonce behind the Galerina capability boundary, **fail-closed on a failed health test**. Acceptance: a NIST-ESV-validated QRNG + a measured RBG2/RBG3 throughput on named HW. (Benefit at signing is side-channel/fault hardening, not more unforgeability.) **Governed interface design: `galerina-qrng-entropy-capability-design.md`** (capability `entropy.qrng`; fail-closed `SPORE-ENTROPY-001/002`).
+- **Q1 — QRNG entropy capability (Lane D). 🟢 buildable as an interface now.** Host SP 800-90B source → 90A DRBG → keygen/nonce behind the Galerina capability boundary, **fail-closed on a failed health test**. Acceptance: a NIST-ESV-validated QRNG + a measured RBG2/RBG3 throughput on named HW. (Benefit at signing is side-channel/fault hardening, not more unforgeability.) **Governed interface design: `galerina-qrng-entropy-capability-design.md`** (capability `entropy.qrng`; fail-closed `FUNGI-ENTROPY-001/002`).
 - **Q2 — Lane E: QKD/OTP survey + governance interface. 🟡 track + define.** The QKD sibling of Lane B + the hybrid-KDF profile above. Track + keep the interface defined and inert until a vetted QKD link + reproducible key-rate measurement exists. **Survey now written** (`rd-absorbed/rd-photonic-lane-e-qkd-confidentiality.md`, 2026-06-17) — see the Lane E section below.
 - **Q3 — QDS Tier-B (Lane B). 🟡 track.** Interface defined; stays track-not-build until the four Lane-B acceptance criteria hold.
 - **Q4 — research horizon. 🔬 watch only.** Device-independent QKD/QDS, quantum repeaters / twin-field, MDI-everywhere.

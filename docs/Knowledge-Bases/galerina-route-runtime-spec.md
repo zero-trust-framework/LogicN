@@ -135,7 +135,7 @@ Before the flow runs:
 
 1. The runtime deserializes `request.body`.
 2. The decoded shape is checked against `CreateOrderRequest`.
-3. On failure, the runtime returns `400` with an `SPORE-PARSE-*` or decode-related
+3. On failure, the runtime returns `400` with an `FUNGI-PARSE-*` or decode-related
    structured error body.
 4. On success, the typed value is passed to the flow or attached to the hydrated
    request according to the route ABI.

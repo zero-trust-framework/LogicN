@@ -3,7 +3,7 @@
 //
 // The tree-walker now carries an `int64` (bigint) value tag and routes int64 arithmetic through the
 // checked i64-arith layer (exact above 2^53, traps on overflow/div-0). These keys are ADDITIVE — they
-// are unreachable while scalar Int64 is rejected by SPORE-NUMERIC-001, so zero regression today; they
+// are unreachable while scalar Int64 is rejected by FUNGI-NUMERIC-001, so zero regression today; they
 // become live when Int64 is lifted from the gate. Tested directly via the exported BINARY_DISPATCH +
 // dispatchKey (mirrors dispatch-completeness.test.mjs) so we prove the arithmetic without the gate.
 // =============================================================================

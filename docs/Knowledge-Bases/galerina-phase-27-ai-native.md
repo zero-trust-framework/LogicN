@@ -43,9 +43,9 @@ Input/output: DataHandle only — no raw pointers
 No strings, no PII, no protected values
 No filesystem, no network access
 Child-process isolation (Phase 27: process, Phase 28: component)
-Signed module (SPORE-PKG-005 equivalent for native)
+Signed module (FUNGI-PKG-005 equivalent for native)
 Audit entry required: records chosen target, buffer sizes (not content)
-Fallback: cpu (always declared — SPORE-GOV-014 enforces this)
+Fallback: cpu (always declared — FUNGI-GOV-014 enforces this)
 ```
 
 ### EDA (Exhaustive Data Arena) Model
@@ -122,18 +122,18 @@ The `tensor-view` record is the wire representation of `DataHandle` in the Compo
 
 ---
 
-## Stage B: type-checker.spore Parity Goal
+## Stage B: type-checker.fungi Parity Goal
 
-Phase 27 includes a Stage B parity goal: the self-hosted `type-checker.spore` should reach functional parity with the TypeScript `type-checker.ts` for the subset of types used in AI/inference flows:
+Phase 27 includes a Stage B parity goal: the self-hosted `type-checker.fungi` should reach functional parity with the TypeScript `type-checker.ts` for the subset of types used in AI/inference flows:
 
-- `Tensor<Float32, [768]>` — element type and shape checking (SPORE-TYPE-030, SPORE-TYPE-031)
-- `protected MessageText` — value-state boundary enforcement (SPORE-VALUESTATE-006)
+- `Tensor<Float32, [768]>` — element type and shape checking (FUNGI-TYPE-030, FUNGI-TYPE-031)
+- `protected MessageText` — value-state boundary enforcement (FUNGI-VALUESTATE-006)
 - `NativePluginManifest` — manifest schema validation
 - `DataHandle` — offset/length type enforcement (no raw pointer types in source)
 
-**Parity milestone:** `type-checker.spore` must emit equivalent diagnostics for the `classifyMessage` flow as `type-checker.ts` when run via the interpreter (Stage A execution).
+**Parity milestone:** `type-checker.fungi` must emit equivalent diagnostics for the `classifyMessage` flow as `type-checker.ts` when run via the interpreter (Stage A execution).
 
-The self-hosted checker is in `src/self-hosted/type-checker.spore`. Phase 28 will extend it to cover the full native plugin ABI surface.
+The self-hosted checker is in `src/self-hosted/type-checker.fungi`. Phase 28 will extend it to cover the full native plugin ABI surface.
 
 ---
 
@@ -172,7 +172,7 @@ The compiler proves the PII boundary at compile time via value-state tracking:
 All native acceleration modules in Galerina must satisfy these rules (source: hybrid-wasm-architecture.md):
 
 **Rule 1 — Signed**
-Native modules must be signed (same scheme as packages: SPORE-PKG-005 equivalent).
+Native modules must be signed (same scheme as packages: FUNGI-PKG-005 equivalent).
 The `NativePluginManifest.signature` field carries the ed25519 signature.
 
 **Rule 2 — Capability-declared**
@@ -197,7 +197,7 @@ The native target choice must be recorded in the audit proof.
 
 **Rule 7 — Fallback declared**
 A fallback target must always be declared (minimum: `cpu`).
-SPORE-GOV-014 enforces this: missing fallback is a warning that escalates to error in production.
+FUNGI-GOV-014 enforces this: missing fallback is a warning that escalates to error in production.
 
 **Rule 8 — No remote inference from intent**
 `remote.execution` must never be inferred from `ai.inference`.
@@ -212,7 +212,7 @@ Defined in `packages-galerina/galerina-core-compiler/src/type-registry.ts`:
 
 ```typescript
 export interface NativePluginManifest {
-  readonly schemaVersion: "spore.native-plugin.v1";
+  readonly schemaVersion: "fungi.native-plugin.v1";
   readonly name: string;
   readonly capability: string;          // e.g. "host.npu.inference"
   readonly hash: string;                // sha256: content hash of native binary
@@ -229,7 +229,7 @@ export interface NativePluginManifest {
 
 ```json
 {
-  "schemaVersion": "spore.native-plugin.v1",
+  "schemaVersion": "fungi.native-plugin.v1",
   "name": "galerina-tensor-dot-npu",
   "capability": "host.npu.inference",
   "hash": "sha256:a3b4c5d6e7f8...",
@@ -284,6 +284,6 @@ Phase 29: Full hybrid partitioner; compiler determines control_plane/data_plane 
 ## See Also
 
 - `docs/Knowledge-Bases/galerina-hybrid-wasm-architecture.md` — canonical architecture document
-- `examples/ai-inference/classifyMessage.spore` — the complete example
+- `examples/ai-inference/classifyMessage.fungi` — the complete example
 - `examples/ai-inference/GOVERNANCE_PROOF.md` — governance proof for classifyMessage
 - `packages-galerina/galerina-core-compiler/src/type-registry.ts` — NativePluginManifest type

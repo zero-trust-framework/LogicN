@@ -183,7 +183,7 @@ and zero-wipes the stale slot. The guest is never restarted; application code ne
 ### Taint enforcement — the most implementable, highest-leverage slice
 This is where the proposal lands **directly on a subsystem Galerina already has** — the
 value-state / taint checker (`value-state-checker.ts`, `ValueStateFlags`, `SINK_REQUIREMENTS`,
-`SPORE-GATE-*`/`SPORE-TAINT-*`). Add a top-classification taint bit for secrets and a compile-time
+`FUNGI-GATE-*`/`FUNGI-TAINT-*`). Add a top-classification taint bit for secrets and a compile-time
 guard that blocks a secret-tainted value from reaching a logger / network sink:
 ```ts
 export const enum SecurityTaintExtension { Secret_Credential = 1 << 5 }
@@ -196,7 +196,7 @@ function verifySecretContainment(node, input): void {
   }
 }
 ```
-A `Log.info(db_password)` is then rejected at **compile time** (a new `SPORE-TAINT-xxx`),
+A `Log.info(db_password)` is then rejected at **compile time** (a new `FUNGI-TAINT-xxx`),
 before any bytecode is emitted — exactly Galerina's "declared-and-enforced, fail before execution"
 posture. **This piece is buildable today**: it's an extension of the taint flags + sink-requirement
 table I audited this session, not new infrastructure.
@@ -252,9 +252,9 @@ Ranked by leverage × buildability against today's codebase:
    A binding read from a `secrets {}` credential accessor (`secret.get` / `vault.read` /
    `kms.decrypt` / `secrets.*`) is inferred **SecureString** in the value-state checker, so the
    compile-time sink guards block it from every leak path:
-   - **`SPORE-SECRET-001`** — logging sinks (`log.*`, `print`)
-   - **`SPORE-SECRET-003`** — serialization / audit (`json.encode`, `AuditLog.write`)
-   - **`SPORE-SECRET-002`** — network/egress (`http.*`, `https.*`, `net.*`, `fetch`, `email.send`) ← added
+   - **`FUNGI-SECRET-001`** — logging sinks (`log.*`, `print`)
+   - **`FUNGI-SECRET-003`** — serialization / audit (`json.encode`, `AuditLog.write`)
+   - **`FUNGI-SECRET-002`** — network/egress (`http.*`, `https.*`, `net.*`, `fetch`, `email.send`) ← added
    `redact()` is the safe escape on all three (also fixed: the log guard now honors `redact()`
    like the serialize guard). Pure compile-time, no host/cloud dependency; tests in
    `tests/value-state-checker.test.mjs`. The `SecurityTaintExtension` bit from the original

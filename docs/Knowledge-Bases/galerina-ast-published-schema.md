@@ -68,7 +68,7 @@ Every AST node must include:
   "id": "node_abc123",
   "kind": "FlowDeclaration",
   "span": {
-    "file": "api-orders.spore",
+    "file": "api-orders.fungi",
     "start": { "line": 10, "column": 1 },
     "end": { "line": 18, "column": 2 }
   }
@@ -142,14 +142,14 @@ diagnostic attachment points
 ## CLI Output Modes
 
 ```bash
-galerina ast api-orders.spore --json
+galerina ast api-orders.fungi --json
 galerina ast src --json --out build/ast
-galerina ast api-orders.spore --json --syntax-only
-galerina ast api-orders.spore --json --resolved
+galerina ast api-orders.fungi --json --syntax-only
+galerina ast api-orders.fungi --json --resolved
 galerina ast src --json --compact
 galerina ast src --json --include-trivia
 galerina schema ast --out schema/galerina-ast-v1.json
-galerina ast api-orders.spore --json | galerina schema validate ast
+galerina ast api-orders.fungi --json | galerina schema validate ast
 ```
 
 | Mode | Description |
@@ -296,12 +296,12 @@ internal compiler-only nodes are not exposed by default
 
 | Code | Meaning |
 |---|---|
-| `SPORE-AST-001` | AST JSON emitted |
-| `SPORE-AST-002` | Requested AST schema version is unsupported |
-| `SPORE-AST-003` | Resolved AST unavailable due to type errors |
-| `SPORE-AST-004` | AST schema validation failed |
-| `SPORE-AST-005` | Unstable internal node requested in stable AST mode |
-| `SPORE-AST-006` | Language edition requires newer AST schema |
+| `FUNGI-AST-001` | AST JSON emitted |
+| `FUNGI-AST-002` | Requested AST schema version is unsupported |
+| `FUNGI-AST-003` | Resolved AST unavailable due to type errors |
+| `FUNGI-AST-004` | AST schema validation failed |
+| `FUNGI-AST-005` | Unstable internal node requested in stable AST mode |
+| `FUNGI-AST-006` | Language edition requires newer AST schema |
 
 ---
 

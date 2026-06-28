@@ -4,7 +4,7 @@
  * MILESTONE (2026-06-06): the lexer module links (#145a), and `tokenize` now runs
  * end-to-end — admitted via the attestation-first #105 gate, with a closed host-import
  * runtime, reading its `Ok(List<Token>)` back out of linear memory. This proves the
- * full path: .spore → WAT → real-wabt WASM → #105 admission → execute → reconstruct output.
+ * full path: .fungi → WAT → real-wabt WASM → #105 admission → execute → reconstruct output.
  *
  * ITERATION MILESTONE (#160, 2026-06-06): the Option<Char> match now dispatches on the
  * i32 sentinel (None ⇒ subject < 0, Some(c) ⇒ subject >= 0, c bound to the value), char
@@ -22,12 +22,12 @@ import { join, dirname } from "node:path";
 import * as L from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const LEXER = join(__dir, "../src/self-hosted/lexer.spore");
+const LEXER = join(__dir, "../src/self-hosted/lexer.fungi");
 
 async function runTokenize(input) {
   let src = readFileSync(LEXER, "utf8");
   if (src.charCodeAt(0) === 0xFEFF) src = src.slice(1);
-  const prog = L.parseProgram(src, "lexer.spore");
+  const prog = L.parseProgram(src, "lexer.fungi");
   const fx = L.checkEffects(prog.flows, prog.ast);
   const { gir } = L.emitGIR(prog.ast, prog.flows, fx);
   const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "lexer", prog.ast, true));

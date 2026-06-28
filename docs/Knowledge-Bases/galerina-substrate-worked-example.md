@@ -14,7 +14,7 @@ made concrete: **work on the lane, decision in the core.**
 
 ## The full example
 
-```spore
+```fungi
 // ─────────────────────────────────────────────────────────────────────────────
 // 1) THE WORK — runs on the photonic (untrusted, low-trust) lane. Value-only.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -26,7 +26,7 @@ contract {
   intent { "Score one transaction batch on the photonic co-processor — value-only, governed." }
 
   // effects {} — the DECLARED effect footprint, deny-by-default. The compiler proves the body
-  // does no more than this (SPORE-EFFECT-001 if it does). This flow is pure compute: it reads no
+  // does no more than this (FUNGI-EFFECT-001 if it does). This flow is pure compute: it reads no
   // secret, opens no socket, writes no ledger — so the set is empty. THAT is what lets it run on
   // an untrusted lane at all: it can never carry a key or a decision off the lane.
   effects {}
@@ -96,9 +96,9 @@ contract {
 
 | Clause | Role | What the compiler enforces |
 |---|---|---|
-| **flow kind** (`guarded` / `secure` / `pure` / `flow`) | the trust tier of the flow | a `pure` flow may declare no effects; `secure` is the highest-obligation tier; `guarded` sits between. The **tier floor** (SPORE-TIER-001) stops a low tier from doing high-tier work. |
+| **flow kind** (`guarded` / `secure` / `pure` / `flow`) | the trust tier of the flow | a `pure` flow may declare no effects; `secure` is the highest-obligation tier; `guarded` sits between. The **tier floor** (FUNGI-TIER-001) stops a low tier from doing high-tier work. |
 | `intent { "…" }` | human/AI-readable purpose | kept attached as governance metadata; part of what an AI-proposed flow must supply. |
-| `effects { … }` | **deny-by-default** effect footprint | the body may do **no more** than is declared (`SPORE-EFFECT-001`). An empty set = pure compute = safe to offload. |
+| `effects { … }` | **deny-by-default** effect footprint | the body may do **no more** than is declared (`FUNGI-EFFECT-001`). An empty set = pure compute = safe to offload. |
 | `substrate { lane, tolerance, redundancy }` | opt the **work** onto a lane | `lane`: `digital` (default, exact) / `photonic` / `noisy`. `tolerance`: the deviation the runtime cheap-verifies. `redundancy`: N (or `tmr`) for majority-vote NMR. |
 | `resilience { on_substrate_fault fallback <flow> }` | first-class fault handling | every fault class resolves to a handler, fail-closed; `fallback <flow>` degrades to an exact flow instead of failing. |
 | `invariant { ensure …; }` | Design-by-Contract pre/post-conditions | `ensure result …` is checked **fail-closed at the flow exit on every tier**; a violated post-condition **traps**, the value never escapes. |
@@ -109,25 +109,25 @@ These are the rules the compiler applies the moment a flow declares `substrate {
 
 | Rule | Fires when | Why |
 |---|---|---|
-| **SPORE-SUBSTRATE-001** (crypto-on-core) | a `crypto.*` effect (`sign`/`encrypt`/`decrypt`/`seal`) shares a flow with a **non-digital** lane | crypto + bit-exact determinism must stay on the digital lane. *This is the one that makes `sealDecision` above refuse to compile if you add `substrate { lane: photonic }` — even with `redundancy: 3`.* |
-| **SPORE-SUBSTRATE-002** (tolerance unmet) | declared `tolerance` is tighter than `redundancy` can deliver on that lane (`nmr(pBad, N) > tolerance`) | a false promise of precision. Error in `production`, warning in `dev`. Raising `redundancy` (e.g. to `tmr`) clears it — *monotone*. |
-| **SPORE-SUBSTRATE-003** (voting won't converge) | more redundancy *would not* help — either you'd need an impractical N, or the lane's error rate ≥ 0.5 (`noisy`) so votes can't converge | no amount of voting fixes a coin-flip lane; don't pretend it does. |
-| **SPORE-SUBSTRATE-004** (un-voted analog → deterministic sink) | a raw, un-voted analog value flows into a bit-exact sink | an irreproducible value must never silently become a reproducible one. |
+| **FUNGI-SUBSTRATE-001** (crypto-on-core) | a `crypto.*` effect (`sign`/`encrypt`/`decrypt`/`seal`) shares a flow with a **non-digital** lane | crypto + bit-exact determinism must stay on the digital lane. *This is the one that makes `sealDecision` above refuse to compile if you add `substrate { lane: photonic }` — even with `redundancy: 3`.* |
+| **FUNGI-SUBSTRATE-002** (tolerance unmet) | declared `tolerance` is tighter than `redundancy` can deliver on that lane (`nmr(pBad, N) > tolerance`) | a false promise of precision. Error in `production`, warning in `dev`. Raising `redundancy` (e.g. to `tmr`) clears it — *monotone*. |
+| **FUNGI-SUBSTRATE-003** (voting won't converge) | more redundancy *would not* help — either you'd need an impractical N, or the lane's error rate ≥ 0.5 (`noisy`) so votes can't converge | no amount of voting fixes a coin-flip lane; don't pretend it does. |
+| **FUNGI-SUBSTRATE-004** (un-voted analog → deterministic sink) | a raw, un-voted analog value flows into a bit-exact sink | an irreproducible value must never silently become a reproducible one. |
 
 ## The one line that will not compile (and that's the point)
 
 If you move the decision onto the lane:
 
-```spore
+```fungi
 secure flow sealDecision(score: Float, txnId: TxnId) -> Result<Receipt, ApiError>
 contract {
   effects { crypto.sign audit.write }
-  substrate { lane: photonic  tolerance: 5e-3  redundancy: 3 }   // ← SPORE-SUBSTRATE-001 (compile error)
+  substrate { lane: photonic  tolerance: 5e-3  redundancy: 3 }   // ← FUNGI-SUBSTRATE-001 (compile error)
 }
 { … }
 ```
 
-→ **`SPORE-SUBSTRATE-001: crypto.sign requires a digital, bit-exact lane`** — and it's *profile-independent*
+→ **`FUNGI-SUBSTRATE-001: crypto.sign requires a digital, bit-exact lane`** — and it's *profile-independent*
 (an error in `dev` too, not just `production`), because this is a hard fence, not a tunable. That compile error
 **is the security guarantee**: the language — not a convention, not a code review — proves the *decision* can
 never follow the *maths* onto the untrusted lane. That is why a photonic component scores **low trust but high

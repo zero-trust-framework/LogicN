@@ -1,4 +1,4 @@
-SPORE-EFFECT-002
+FUNGI-EFFECT-002
 
 processOrder calls saveOrder which requires database.write, but processOrder does not declare it.
 Add database.write to processOrder:

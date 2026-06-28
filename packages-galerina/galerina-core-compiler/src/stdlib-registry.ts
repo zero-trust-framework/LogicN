@@ -86,7 +86,7 @@ export const STDLIB_CAPABILITY_MAP: ReadonlyMap<string, StdlibCapabilityEntry> =
   ["Classifier.classify",  { requiredEffects: ["ai.inference"],  wasmImport: "host:classifier.run",description: "Run classifier." }],
 
   // ── Crypto ─────────────────────────────────────────────────────────────────
-  // Note: constantTimeEquals is pure but has special security semantics (SPORE-TYPE-013)
+  // Note: constantTimeEquals is pure but has special security semantics (FUNGI-TYPE-013)
   ["Crypto.constantTimeEquals", { requiredEffects: [], description: "Constant-time equality for secrets. Never use == on SecureString." }],
   ["Hash.sha256",               { requiredEffects: [], description: "SHA-256 hash (pure computation)." }],
   ["Hash.sha512",               { requiredEffects: [], description: "SHA-512 hash (pure computation)." }],
@@ -236,9 +236,9 @@ export const TRI_STDLIB_OPS: ReadonlyMap<string, TriOpInfo> = new Map([
   ["Tri.and",        { pure: true, photonicCompatible: true,  description: "TriState AND: min(a, b) in ternary logic." }],
   ["Tri.or",         { pure: true, photonicCompatible: true,  description: "TriState OR: max(a, b) in ternary logic." }],
   ["Tri.not",        { pure: true, photonicCompatible: true,  description: "TriState NOT: negation (Negative↔Positive, Neutral unchanged)." }],
-  ["Tri.toBool",     { pure: true, photonicCompatible: false, description: "Convert Tri to Bool using an explicit policy (requires SPORE-SAFETY-003 approval)." }],
+  ["Tri.toBool",     { pure: true, photonicCompatible: false, description: "Convert Tri to Bool using an explicit policy (requires FUNGI-SAFETY-003 approval)." }],
   ["Tri.toDecision", { pure: true, photonicCompatible: false, description: "Convert Tri to Decision type using a declared conversion policy." }],
-  ["Tri.match",      { pure: true, photonicCompatible: true,  description: "Exhaustive match on all three Tri states. Required by SPORE-TYPE-021." }],
+  ["Tri.match",      { pure: true, photonicCompatible: true,  description: "Exhaustive match on all three Tri states. Required by FUNGI-TYPE-021." }],
   ["Tri.fromBool",   { pure: true, photonicCompatible: false, description: "Convert Bool to Tri (true→Positive, false→Negative, no Neutral)." }],
 ]);
 

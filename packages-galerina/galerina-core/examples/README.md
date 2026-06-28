@@ -7,22 +7,22 @@
 > apply it (propose → compiler-verify → policy → human-approve).
 
 These examples are source fixtures for the prototype CLI, package tests and
-documentation. The directory currently contains 24 `.spore` fixtures covering the
+documentation. The directory currently contains 24 `.fungi` fixtures covering the
 v1 syntax subset and target/report planning examples.
 
 Run from `packages-galerina/galerina-core`:
 
 ```bash
-node compiler/galerina.js check examples --exclude source-map-error.spore
-node compiler/galerina.js build examples --exclude source-map-error.spore --out build/examples
+node compiler/galerina.js check examples --exclude source-map-error.fungi
+node compiler/galerina.js build examples --exclude source-map-error.fungi --out build/examples
 node compiler/galerina.js verify build/examples
 ```
 
-`source-map-error.spore` intentionally contains an invalid compute-block file read
+`source-map-error.fungi` intentionally contains an invalid compute-block file read
 so `Galerina explain --for-ai` can demonstrate target compatibility diagnostics.
 
 ```bash
-node compiler/galerina.js explain examples/source-map-error.spore --for-ai
+node compiler/galerina.js explain examples/source-map-error.fungi --for-ai
 ```
 
 ## Contract Examples
@@ -32,27 +32,27 @@ explain. In the current examples, contracts are represented by:
 
 - typed request/response records such as `ContractOrderRequest` and
   `ContractOrderResponse`
-- API route declarations such as `api OrdersApi` in `api-orders.spore`
+- API route declarations such as `api OrdersApi` in `api-orders.fungi`
 - flow signatures such as
   `secure flow createContractOrder(...) -> Result<..., ...>`
 - explicit effects such as `effects [database.write]`
 - strict comments such as `/// @purpose`, `/// @input`, `/// @output`,
   `/// @request`, `/// @response` and `/// @effects`
 
-The focused example is `contracts.spore`. It shows how typed data shapes, a secure
+The focused example is `contracts.fungi`. It shows how typed data shapes, a secure
 flow contract, recoverable errors, strict comments and effect declarations fit
-together. `api-orders.spore` shows the route-level API contract form.
+together. `api-orders.fungi` shows the route-level API contract form.
 
 ## Four-Digit Guess Benchmark
 
-`four-digit-guess-benchmark.spore` is a Galerina-style local-only benchmark contract
+`four-digit-guess-benchmark.fungi` is a Galerina-style local-only benchmark contract
 for finding a four-digit code. The companion runnable scripts do the same work
 and print JSON reports with elapsed time, attempt rate, CPU and memory fields.
 The default mode is `sequential` so every runtime performs the same number of
 attempts for a given target:
 
 ```bash
-node packages-galerina/galerina-core/compiler/galerina.js run packages-galerina/galerina-core/examples/four-digit-guess-benchmark.spore
+node packages-galerina/galerina-core/compiler/galerina.js run packages-galerina/galerina-core/examples/four-digit-guess-benchmark.fungi
 node packages-galerina/galerina-core/examples/four-digit-guess-benchmark.node.js --target 9999 --max 100000 --mode sequential
 python packages-galerina/galerina-core/examples/four-digit-guess-benchmark.py --target 9999 --max 100000 --mode sequential
 ```
@@ -61,7 +61,7 @@ Use a four-digit `--target` only. This intentionally does not guess full UUIDs.
 
 ## Arithmetic Threshold Benchmark
 
-`arithmetic-threshold-benchmark.spore` is a deterministic local benchmark. It
+`arithmetic-threshold-benchmark.fungi` is a deterministic local benchmark. It
 repeatedly performs:
 
 ```text
@@ -76,7 +76,7 @@ Python scripts perform the same loop and emit JSON reports with elapsed time,
 addition rate, CPU and memory fields:
 
 ```bash
-node packages-galerina/galerina-core/compiler/galerina.js run packages-galerina/galerina-core/examples/arithmetic-threshold-benchmark.spore
+node packages-galerina/galerina-core/compiler/galerina.js run packages-galerina/galerina-core/examples/arithmetic-threshold-benchmark.fungi
 node packages-galerina/galerina-core/examples/arithmetic-threshold-benchmark.node.js --threshold 100000000000000
 python packages-galerina/galerina-core/examples/arithmetic-threshold-benchmark.py --threshold 100000000000000
 ```
@@ -89,13 +89,13 @@ python packages-galerina/galerina-core/examples/arithmetic-threshold-benchmark.p
 
 ## Compute Mix Throughput Benchmark
 
-`compute-mix-throughput-benchmark.spore` is the fairer timed benchmark fixture. It
+`compute-mix-throughput-benchmark.fungi` is the fairer timed benchmark fixture. It
 runs a deterministic UInt32 workload with addition, multiplication, shift, xor,
 branching and checksum output. The default measured window is 20 seconds after a
 2 second warm-up:
 
 ```bash
-node packages-galerina/galerina-core/compiler/galerina.js run packages-galerina/galerina-core/examples/compute-mix-throughput-benchmark.spore --target-ms 20000 --warmup-ms 2000 --batch-size 100000
+node packages-galerina/galerina-core/compiler/galerina.js run packages-galerina/galerina-core/examples/compute-mix-throughput-benchmark.fungi --target-ms 20000 --warmup-ms 2000 --batch-size 100000
 node packages-galerina/galerina-core/examples/compute-mix-throughput-benchmark.node.js --target-ms 20000 --warmup-ms 2000 --batch-size 100000
 python packages-galerina/galerina-core/examples/compute-mix-throughput-benchmark.py --target-ms 20000 --warmup-ms 2000 --batch-size 100000 --no-tracemalloc
 ```
@@ -104,7 +104,7 @@ For a quick correctness smoke test, use fixed-work mode. With `--warmup-ms 0`,
 all runtimes should produce the same checksum for the same operation count:
 
 ```bash
-node packages-galerina/galerina-core/compiler/galerina.js run packages-galerina/galerina-core/examples/compute-mix-throughput-benchmark.spore --operations 100000 --warmup-ms 0 --batch-size 10000
+node packages-galerina/galerina-core/compiler/galerina.js run packages-galerina/galerina-core/examples/compute-mix-throughput-benchmark.fungi --operations 100000 --warmup-ms 0 --batch-size 10000
 node packages-galerina/galerina-core/examples/compute-mix-throughput-benchmark.node.js --operations 100000 --warmup-ms 0 --batch-size 10000
 python packages-galerina/galerina-core/examples/compute-mix-throughput-benchmark.py --operations 100000 --warmup-ms 0 --batch-size 10000 --no-tracemalloc
 ```
@@ -151,27 +151,27 @@ runner overhead, not native compiler performance.
 
 Current fixtures:
 
-- `ai-context.spore`
-- `api-orders.spore`
-- `arithmetic-threshold-benchmark.spore` - deterministic arithmetic threshold benchmark contract
-- `boot.spore`
-- `browser-form.spore`
-- `compute-block.spore`
-- `compute-mix-throughput-benchmark.spore` - timed deterministic UInt32 throughput benchmark
-- `contracts.spore` - typed flow contract with strict comments, `Result` errors and effects
-- `decision.spore`
-- `gpu-plan.spore`
-- `four-digit-guess-benchmark.spore` - local-only four-digit benchmark contract with runtime metrics
-- `hello.spore`
-- `json-decode.spore`
-- `logic-review-scale.spore`
-- `option.spore`
-- `parallel-api-calls.spore`
-- `payment-webhook.spore`
-- `photonic-plan.spore`
-- `result.spore` - `Result<T, E>` return and `match result { Ok(...) ... Err(...) ... }`
-- `rollback.spore`
-- `source-map-error.spore`
-- `strict-types.spore`
-- `ternary-sim.spore`
-- `workers.spore`
+- `ai-context.fungi`
+- `api-orders.fungi`
+- `arithmetic-threshold-benchmark.fungi` - deterministic arithmetic threshold benchmark contract
+- `boot.fungi`
+- `browser-form.fungi`
+- `compute-block.fungi`
+- `compute-mix-throughput-benchmark.fungi` - timed deterministic UInt32 throughput benchmark
+- `contracts.fungi` - typed flow contract with strict comments, `Result` errors and effects
+- `decision.fungi`
+- `gpu-plan.fungi`
+- `four-digit-guess-benchmark.fungi` - local-only four-digit benchmark contract with runtime metrics
+- `hello.fungi`
+- `json-decode.fungi`
+- `logic-review-scale.fungi`
+- `option.fungi`
+- `parallel-api-calls.fungi`
+- `payment-webhook.fungi`
+- `photonic-plan.fungi`
+- `result.fungi` - `Result<T, E>` return and `match result { Ok(...) ... Err(...) ... }`
+- `rollback.fungi`
+- `source-map-error.fungi`
+- `strict-types.fungi`
+- `ternary-sim.fungi`
+- `workers.fungi`

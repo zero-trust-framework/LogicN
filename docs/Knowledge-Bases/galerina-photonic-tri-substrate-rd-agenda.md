@@ -114,7 +114,7 @@ value **first-class and proved**.
 
 ### Sketch
 - A `decision` value type with three states; verifier emits `0` when an obligation is undischarged.
-- New diagnostic, e.g. `SPORE-GOV-3VL-001`: "indeterminate verdict reached a trust boundary →
+- New diagnostic, e.g. `FUNGI-GOV-3VL-001`: "indeterminate verdict reached a trust boundary →
   collapsed to deny" (audited, not silent).
 - Truth-table oracle tests (Galerina already has this pattern — #166/#185) over the full 3×3 space.
 
@@ -149,7 +149,7 @@ declared redundancy" — and crypto must be *forbidden* on such a lane. Today no
   `tolerance {}` sub-block) on a flow/contract — parsed by Stage A like other contract blocks.
 - Verifier obligations:
   - **B1 — Crypto-on-core invariant:** any flow with effect `Crypto`/`Hash`/`Sign` **must** be
-    `lane: digital`. Violations → `SPORE-SUBSTRATE-CRYPTO-ON-NOISY`. *This is the honest, durable
+    `lane: digital`. Violations → `FUNGI-SUBSTRATE-CRYPTO-ON-NOISY`. *This is the honest, durable
     insight from the entire TMX thread, expressed as an enforceable rule:* bulk compute may be
     photonic; integrity must stay on a deterministic core.
   - **B2 — Redundancy sufficiency:** if `tolerance` is tighter than the lane's modeled noise (Dir.
@@ -158,7 +158,7 @@ declared redundancy" — and crypto must be *forbidden* on such a lane. Today no
     into a context that the strict profile requires to be deterministic.
 
 ### Acceptance tests
-1. A flow declaring `Hash` on `lane: photonic` is rejected (`SPORE-SUBSTRATE-CRYPTO-ON-NOISY`).
+1. A flow declaring `Hash` on `lane: photonic` is rejected (`FUNGI-SUBSTRATE-CRYPTO-ON-NOISY`).
 2. A tight-tolerance flow without TMR is rejected; adding a `consensusTrit` vote admits it.
 3. A voted analog result is accepted into a deterministic sink; an un-voted one is not.
 
@@ -185,7 +185,7 @@ failure modes in software and letting the verifier reason against them. No silic
 ### Mapping onto Galerina
 - Extend `tpl-simulator.ts` into a **substrate model**: parameters for phase-drift, crosstalk, and
   lane-failure probability, applied to trit/analog operations.
-- The verifier runs each `substrate`-annotated flow against the model and emits `SPORE-SUBSTRATE-*`
+- The verifier runs each `substrate`-annotated flow against the model and emits `FUNGI-SUBSTRATE-*`
   diagnostics when the flow's *declared* guarantee (Dir. B tolerance) is **not provable** under the
   modeled noise.
 - Output doubles as the **spec a future photonic backend must satisfy** — the model is the contract

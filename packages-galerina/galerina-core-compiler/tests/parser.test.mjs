@@ -6,7 +6,7 @@ import { parseProgram } from "../dist/index.js";
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function parseOk(source) {
-  const result = parseProgram(source, "test.spore");
+  const result = parseProgram(source, "test.fungi");
   const errors = result.diagnostics.filter((d) => d.severity === "error");
   assert.equal(
     errors.length,
@@ -250,22 +250,22 @@ flow add(a: Int, b: Int) -> Int {
     const flow = result.flows[0];
     assert.ok(flow !== undefined);
     assert.ok(flow.location.line > 0);
-    assert.equal(flow.location.file, "test.spore");
+    assert.equal(flow.location.file, "test.fungi");
   });
 });
 
 describe("Parser — error recovery", () => {
   it("recovers after an unexpected token at top level", () => {
-    const result = parseProgram("!!! flow add(a: Int) -> Int { return a }", "test.spore");
+    const result = parseProgram("!!! flow add(a: Int) -> Int { return a }", "test.fungi");
     // Should still produce the flow even with leading garbage
     // (may produce errors but should not throw)
     assert.ok(result.ast !== undefined);
   });
 
-  it("reports SPORE-PARSE-002 when flow qualifier is not followed by flow", () => {
-    const result = parseProgram("secure secure", "test.spore");
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-PARSE-002");
-    assert.ok(diag !== undefined, "Expected SPORE-PARSE-002 for malformed flow qualifier");
+  it("reports FUNGI-PARSE-002 when flow qualifier is not followed by flow", () => {
+    const result = parseProgram("secure secure", "test.fungi");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-PARSE-002");
+    assert.ok(diag !== undefined, "Expected FUNGI-PARSE-002 for malformed flow qualifier");
   });
 });
 
@@ -316,17 +316,17 @@ pure flow calculate(price: Decimal) -> Decimal {
     assert.equal(fn.value, "applyVat");
   });
 
-  it("emits SPORE-SYNTAX-005 for top-level fn", () => {
+  it("emits FUNGI-SYNTAX-005 for top-level fn", () => {
     const result = parseProgram(`
 fn calculate(x: Int) -> Int {
   return x
 }
-`, "test.spore");
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-SYNTAX-005");
-    assert.ok(diag !== undefined, "Expected SPORE-SYNTAX-005 for top-level fn");
+`, "test.fungi");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-SYNTAX-005");
+    assert.ok(diag !== undefined, "Expected FUNGI-SYNTAX-005 for top-level fn");
   });
 
-  it("emits SPORE-SEC-014 when fn declares effects", () => {
+  it("emits FUNGI-SEC-014 when fn declares effects", () => {
     const result = parseProgram(`
 guarded flow myFlow() -> Void effects [database.write] {
   fn bad() -> Void
@@ -335,9 +335,9 @@ guarded flow myFlow() -> Void effects [database.write] {
   }
   return
 }
-`, "test.spore");
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-SEC-014");
-    assert.ok(diag !== undefined, "Expected SPORE-SEC-014 for fn with effects");
+`, "test.fungi");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-SEC-014");
+    assert.ok(diag !== undefined, "Expected FUNGI-SEC-014 for fn with effects");
   });
 });
 
@@ -1008,7 +1008,7 @@ pure flow named() -> Int
 contract { intent { "named" } }
 { return add(a: 3, b: 4) }
 `;
-    const parsed = parseProgram(src, "test.spore");
+    const parsed = parseProgram(src, "test.fungi");
     const r1 = await executeFlow("positional", {}, parsed.ast);
     const r2 = await executeFlow("named", {}, parsed.ast);
     assert.deepEqual(r1.value, r2.value, "named and positional should produce same result");
@@ -1026,7 +1026,7 @@ pure flow test() -> String
 contract { intent { "test" } }
 { return greet(name: "Bob", greeting: "Hi") }
 `;
-    const parsed = parseProgram(src, "test.spore");
+    const parsed = parseProgram(src, "test.fungi");
     const r = await executeFlow("test", {}, parsed.ast);
     assert.equal(r.value?.__tag, "string", "result should be a string");
     assert.equal(r.value?.value, "Hi, Bob!", `Expected 'Hi, Bob!' got '${r.value?.value}'`);

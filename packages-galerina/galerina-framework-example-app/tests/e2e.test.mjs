@@ -66,14 +66,14 @@ test("scaffold: `galerina new app` emits the runnable golden layout", () => {
     assert.equal(r.status, 0, `scaffold should succeed:\n${r.stderr}`);
 
     for (const rel of [
-      "src/App.spore",
-      "src/flows/greeting.spore",
+      "src/App.fungi",
+      "src/flows/greeting.fungi",
       "App.manifest",
       "config/app.config.json",
       "host/server.ts",
       "host/config.ts",
-      "packages/greeting/package.spore.json",
-      "packages/greeting/src/index.spore",
+      "packages/greeting/package.fungi.json",
+      "packages/greeting/src/index.fungi",
       "tests/e2e.test.mjs",
       "package.json",
       "tsconfig.json",
@@ -89,7 +89,7 @@ test("scaffold: `galerina new app` emits the runnable golden layout", () => {
     const manifest = JSON.parse(readFileSync(join(target, "App.manifest"), "utf8"));
     assert.equal(manifest.kind, "app");
     assert.deepEqual(manifest.capabilities, [], "app capabilities default to []");
-    const pkg = JSON.parse(readFileSync(join(target, "packages/greeting/package.spore.json"), "utf8"));
+    const pkg = JSON.parse(readFileSync(join(target, "packages/greeting/package.fungi.json"), "utf8"));
     assert.deepEqual(pkg.capabilities, [], "greeting package grants no capabilities");
   });
 });

@@ -79,7 +79,7 @@ export function generateRunnerKeypair(): { publicKeyPem: string; privateKeyPem: 
 /** Domain-separated admission pre-image (#173). The signature binds the module hash AND the profile,
  *  so the `profile` label is no longer OUTSIDE the signature — a dev attestation can no longer be
  *  re-labeled `certified` and still verify. Versioned tag so the pre-image can evolve fail-closed. */
-const WASM_ADMIT_DOMAIN = "SPORE-WASM-ADMIT-v1";
+const WASM_ADMIT_DOMAIN = "FUNGI-WASM-ADMIT-v1";
 function admissionPreimage(sha256Hex: string, profile: RunnerProfile): Uint8Array {
   return Buffer.from(`${WASM_ADMIT_DOMAIN}\0${sha256Hex}\0${profile}`, "utf8");
 }

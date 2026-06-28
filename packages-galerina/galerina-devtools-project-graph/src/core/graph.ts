@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — immutable Graph<N,E> implementation
+// fungi-graph — immutable Graph<N,E> implementation
 //
 // Not exported directly. Consumers receive Graph<N,E> instances from
 // GraphBuilder.build() or GraphBuilder.fromJSON().
@@ -62,7 +62,7 @@ export class ImmutableGraph<N, E> implements Graph<N, E> {
 
   toJSON(): GraphJSON<N, E> {
     return {
-      schemaVersion: "spore.graph.v1",
+      schemaVersion: "fungi.graph.v1",
       nodes: this.#allNodes.map((n) => ({ id: n.id, data: n.data })),
       edges: this.#allEdges.map((e) => ({
         from: e.from,

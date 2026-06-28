@@ -82,7 +82,7 @@ export interface RegisterFunction {
  * Contains all compiled functions and the program entry points.
  */
 export interface RegisterBytecodeModule {
-  readonly schemaVersion: "spore.bytecode.v1";
+  readonly schemaVersion: "fungi.bytecode.v1";
   readonly functions: readonly RegisterFunction[];
   readonly entryPoints: readonly string[];
 }
@@ -127,7 +127,7 @@ export function emitBytecode(
     .map((f) => f.name);
 
   return {
-    schemaVersion: "spore.bytecode.v1",
+    schemaVersion: "fungi.bytecode.v1",
     functions,
     entryPoints,
   };

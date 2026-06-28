@@ -60,7 +60,7 @@ Outputs:
 
 ### Intent/Behaviour Consistency
 
-Diagnostic: `SPORE-GOV-001` or `SPORE-INTENT-001`
+Diagnostic: `FUNGI-GOV-001` or `FUNGI-INTENT-001`
 
 If a flow declares:
 
@@ -73,7 +73,7 @@ emits an intent mismatch.
 
 ### Audit Requirement from Intent
 
-Diagnostic: `SPORE-GOV-002`
+Diagnostic: `FUNGI-GOV-002`
 
 Optional policy rule:
 
@@ -88,7 +88,7 @@ this to an error.
 
 ### Protected Data Sent Externally Without Authority
 
-Diagnostic: `SPORE-GOV-003`
+Diagnostic: `FUNGI-GOV-003`
 
 If a protected binding flows to an external network sink such as `http.post`
 without an authority or policy block approving the sharing, the verifier flags
@@ -96,7 +96,7 @@ the flow.
 
 ### Compute Target Deny Violations
 
-Diagnostic: `SPORE-GOV-004`
+Diagnostic: `FUNGI-GOV-004`
 
 If a flow declares:
 
@@ -111,7 +111,7 @@ target violation.
 
 ### Policy Purpose/Behaviour Mismatch
 
-Diagnostic: `SPORE-GOV-005`
+Diagnostic: `FUNGI-GOV-005`
 
 If a policy declares:
 
@@ -122,35 +122,35 @@ purpose "appointment_reminder"
 but the flow calls a marketing API or otherwise behaves outside that purpose,
 the verifier emits a purpose mismatch.
 
-## SPORE-GOV Diagnostic Series
+## FUNGI-GOV Diagnostic Series
 
 | Code | Name | Meaning |
 |---|---|---|
-| `SPORE-GOV-001` | `INTENT_BEHAVIOR_MISMATCH` | Declared intent conflicts with observed behaviour. |
-| `SPORE-GOV-002` | `MISSING_AUDIT_FOR_GOVERNED_SINK` | A governed sink lacks required audit evidence under profile policy. |
-| `SPORE-GOV-003` | `PROTECTED_DATA_SENT_EXTERNALLY_WITHOUT_AUTHORITY` | Protected value reaches external network sink without authority. |
-| `SPORE-GOV-004` | `DENIED_TARGET_SELECTED` | A denied target or placement category was selected or observed. |
-| `SPORE-GOV-005` | `POLICY_PURPOSE_MISMATCH` | Policy purpose does not match observed behaviour. |
-| `SPORE-GOV-006` | `GOVERNANCE_PROOF_REQUIRED_BUT_MISSING` | Required governance proof obligation is missing. |
-| `SPORE-GOV-007` | `AUTHORITY_BLOCK_MISSING_REASON` | Authority block lacks required reason or approval evidence. |
-| `SPORE-GOV-008` | `EXPERIMENTAL_CODE_IN_PRODUCTION_PROFILE` | Experimental code is used in a production profile. |
-| `SPORE-GOV-009` | `PRIVILEGED_FLOW_MISSING_CAPABILITY` | Privileged flow lacks a required capability declaration. |
-| `SPORE-GOV-010` | `INTENT_MISSING_ON_SECURE_FLOW` | Secure flow requires intent under selected profile. |
+| `FUNGI-GOV-001` | `INTENT_BEHAVIOR_MISMATCH` | Declared intent conflicts with observed behaviour. |
+| `FUNGI-GOV-002` | `MISSING_AUDIT_FOR_GOVERNED_SINK` | A governed sink lacks required audit evidence under profile policy. |
+| `FUNGI-GOV-003` | `PROTECTED_DATA_SENT_EXTERNALLY_WITHOUT_AUTHORITY` | Protected value reaches external network sink without authority. |
+| `FUNGI-GOV-004` | `DENIED_TARGET_SELECTED` | A denied target or placement category was selected or observed. |
+| `FUNGI-GOV-005` | `POLICY_PURPOSE_MISMATCH` | Policy purpose does not match observed behaviour. |
+| `FUNGI-GOV-006` | `GOVERNANCE_PROOF_REQUIRED_BUT_MISSING` | Required governance proof obligation is missing. |
+| `FUNGI-GOV-007` | `AUTHORITY_BLOCK_MISSING_REASON` | Authority block lacks required reason or approval evidence. |
+| `FUNGI-GOV-008` | `EXPERIMENTAL_CODE_IN_PRODUCTION_PROFILE` | Experimental code is used in a production profile. |
+| `FUNGI-GOV-009` | `PRIVILEGED_FLOW_MISSING_CAPABILITY` | Privileged flow lacks a required capability declaration. |
+| `FUNGI-GOV-010` | `INTENT_MISSING_ON_SECURE_FLOW` | Secure flow requires intent under selected profile. |
 
 ## CEC Governance Mapping
 
 | Example | Expected governance rule |
 |---|---|
-| `docs/Examples/Level-5-Governance/203-intent-mismatch-invalid` | `SPORE-GOV-001` |
+| `docs/Examples/Level-5-Governance/203-intent-mismatch-invalid` | `FUNGI-GOV-001` |
 | `docs/Examples/Level-5-Governance/204-remote-execution-denied` | valid denied target declaration |
-| `docs/Examples/Level-5-Governance/205-remote-execution-violation` | `SPORE-GOV-004` |
+| `docs/Examples/Level-5-Governance/205-remote-execution-violation` | `FUNGI-GOV-004` |
 | `docs/Examples/Level-5-Governance/206-protected-data-sharing-authority` | valid authority evidence |
-| `docs/Examples/Level-5-Governance/207-protected-data-sharing-missing-authority` | `SPORE-GOV-003` |
+| `docs/Examples/Level-5-Governance/207-protected-data-sharing-missing-authority` | `FUNGI-GOV-003` |
 | `docs/Examples/Level-5-Governance/208-audit-proof-required` | valid audit evidence |
-| `docs/Examples/Level-5-Governance/209-audit-proof-missing` | `SPORE-GOV-002` or `SPORE-GOV-006` |
+| `docs/Examples/Level-5-Governance/209-audit-proof-missing` | `FUNGI-GOV-002` or `FUNGI-GOV-006` |
 | `docs/Examples/Level-5-Governance/210-governed-execution-plan` | valid GIR proof inputs |
 | `docs/Examples/Level-5-Governance/211-policy-block-allows-purpose` | valid policy evidence |
-| `docs/Examples/Level-5-Governance/212-policy-purpose-mismatch` | `SPORE-GOV-005` |
+| `docs/Examples/Level-5-Governance/212-policy-purpose-mismatch` | `FUNGI-GOV-005` |
 
 ## Compiler Status
 

@@ -44,7 +44,7 @@ Sensitive values should usually stay local for as short a time as possible.
 
 ## Global Registry
 
-Project-wide values should be declared in `boot.spore`.
+Project-wide values should be declared in `boot.fungi`.
 
 ```Galerina
 globals {

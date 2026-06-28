@@ -21,14 +21,14 @@ helpers, or used by privileged runtime APIs.
 
 Invalid:
 
-```spore
+```fungi
 let raw_price: unsafe Decimal = request.price
 let total = raw_price + 1
 ```
 
 Invalid:
 
-```spore
+```fungi
 let raw_name: unsafe String = request.name
 let name = raw_name.trim()
 ```
@@ -62,7 +62,7 @@ including:
 
 Example:
 
-```spore
+```fungi
 let body: unsafe Json = request.body
 ```
 
@@ -73,7 +73,7 @@ let body: unsafe Json = request.body
 Validation proves that data matches a required structure, type, schema, format,
 range, required-field set, allowed-value set or runtime policy.
 
-```spore
+```fungi
 let email: safe Email = validate.email(raw_email)
 ```
 
@@ -82,7 +82,7 @@ let email: safe Email = validate.email(raw_email)
 Guard checks for dangerous patterns or payloads. It should reject dangerous
 values rather than silently rewriting them.
 
-```spore
+```fungi
 let checked: safe String = guard(raw_comment)
 ```
 
@@ -93,7 +93,7 @@ patterns and suspicious content.
 
 Sanitization cleans and normalises generic untrusted data.
 
-```spore
+```fungi
 let cleaned: safe String = sanitize.data(raw)
 ```
 
@@ -109,7 +109,7 @@ JavaScript, CSS, shell execution or XML.
 Encoding converts an already-safe value into a safe representation for a
 specific destination context.
 
-```spore
+```fungi
 let html: safe Html = encode.html(cleaned)
 let url: safe UrlPart = encode.url(cleaned)
 let js: safe JavaScript = encode.javascript(cleaned)
@@ -138,7 +138,7 @@ runtime logic before approved trust conversion or explicit safe declaration.
 
 Galerina should prefer typed, parameterized queries over manual SQL escaping.
 
-```spore
+```fungi
 let q: Query = sql {
     SELECT id, email
     FROM users
@@ -152,7 +152,7 @@ database.main.run(q, {
 
 Unsafe interpolation is invalid:
 
-```spore
+```fungi
 let q: Query = sql {
     SELECT * FROM users WHERE id = ${raw_id}
 }

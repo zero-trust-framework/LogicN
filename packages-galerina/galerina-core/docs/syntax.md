@@ -121,19 +121,19 @@ If a feature cannot be managed this way yet, it must remain documented as
 Galerina source files use:
 
 ```text
-.spore
+.fungi
 ```
 
 Examples:
 
 ```text
-boot.spore
-main.spore
-hello.spore
-routes.spore
-order-service.spore
-payment-webhook.spore
-fraud-check.spore
+boot.fungi
+main.fungi
+hello.fungi
+routes.fungi
+order-service.fungi
+payment-webhook.fungi
+fraud-check.fungi
 ```
 
 ## Entry File
@@ -141,16 +141,16 @@ fraud-check.spore
 Recommended project entry file:
 
 ```text
-boot.spore
+boot.fungi
 ```
 
 Example project:
 
 ```text
 my-app/
-├── boot.spore
+├── boot.fungi
 ├── src/
-│   └── main.spore
+│   └── main.fungi
 └── build/
 ```
 
@@ -1378,7 +1378,7 @@ This settles the `import` vs `use` direction: `use` is used inside an `imports` 
 
 ---
 
-## `boot.spore` Syntax
+## `boot.fungi` Syntax
 
 Example:
 
@@ -1391,7 +1391,7 @@ language {
   compatibility "stable"
 }
 
-entry "./src/main.spore"
+entry "./src/main.fungi"
 
 targets {
   binary {
@@ -1701,7 +1701,7 @@ Should `flow` remain the function keyword?
 Should `secure flow` be a keyword or annotation?
 Should effects appear before or after the return type?
 Should `Decision` be built-in or standard library?
-Should `boot.spore` contain all config or import config from Galerina.config?
+Should `boot.fungi` contain all config or import config from Galerina.config?
 Should API route syntax use HTTP verbs directly or string names?
 ```
 

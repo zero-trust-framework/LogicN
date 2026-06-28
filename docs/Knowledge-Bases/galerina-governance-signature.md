@@ -44,8 +44,8 @@ Auditable:         the signer's public key is published and stable
 
 ```typescript
 export interface GovernanceSignature {
-  readonly algorithm: "spore.gov.sig.v1";  // Galerina terminology
-  readonly signerKeyId: string;           // Published key ID (e.g. "spore-gov-2026-01")
+  readonly algorithm: "fungi.gov.sig.v1";  // Galerina terminology
+  readonly signerKeyId: string;           // Published key ID (e.g. "fungi-gov-2026-01")
   readonly signature: string;             // Base64-encoded signature bytes
   readonly signedAt: string;              // ISO-8601 timestamp
   readonly expiresAt?: string;            // Optional — for rotating governance keys
@@ -53,7 +53,7 @@ export interface GovernanceSignature {
 
 export interface ProofGraph {
   // ... existing fields unchanged ...
-  readonly schemaVersion: "spore.proof.v1";
+  readonly schemaVersion: "fungi.proof.v1";
   readonly flowName: string;
   readonly executionSignature: ExecutionSignature;
   readonly signatureHash: string;            // SHA-256 — unchanged, still present
@@ -116,7 +116,7 @@ both classical and quantum computers. The underlying standard is:
 ```
 NIST FIPS 204 (2024) — Module Lattice Digital Signature Algorithm (ML-DSA)
 Previously known as: Dilithium (as a nickname, after the Star Trek material)
-Galerina name:         GovernanceSignature (spore.gov.sig.v1)
+Galerina name:         GovernanceSignature (fungi.gov.sig.v1)
 ```
 
 The algorithm name `ML-DSA` may appear in implementation-layer code and
@@ -128,35 +128,35 @@ comments. The Galerina KB and language spec use `GovernanceSignature` throughout
 
 | Security Level | Signature | Public Key | Signs/sec |
 |---|---|---|---|
-| `spore.gov.sig.v1` (standard) | 2.4KB | 1.3KB | ~90K/s |
-| `spore.gov.sig.v2` (high security) | 3.3KB | 1.9KB | ~60K/s |
+| `fungi.gov.sig.v1` (standard) | 2.4KB | 1.3KB | ~90K/s |
+| `fungi.gov.sig.v2` (high security) | 3.3KB | 1.9KB | ~60K/s |
 | ECDSA-256 (classical, insecure post-quantum) | 64 bytes | 33 bytes | ~100K/s |
 
 Signatures are 37× larger than ECDSA but quantum-safe. For ProofGraphs
 (signed once at compile time), this is acceptable. For on-chain audit
-records, use `spore.gov.sig.v1`.
+records, use `fungi.gov.sig.v1`.
 
 ---
 
-## Shipped: `spore.gov.sig.v2` Hybrid Signature (Ed25519 + ML-DSA-65)
+## Shipped: `fungi.gov.sig.v2` Hybrid Signature (Ed25519 + ML-DSA-65)
 
-> **Status: SHIPPED (opt-in).** The `spore.gov.sig.v2` algorithm tag is now a live,
+> **Status: SHIPPED (opt-in).** The `fungi.gov.sig.v2` algorithm tag is now a live,
 > persisted hybrid signature — not the "high security" size variant the table
 > above describes for v1. The **default** governance signing path remains Ed25519
-> (`spore.gov.sig.v1`, unchanged). Hybrid is opt-in; under
+> (`fungi.gov.sig.v1`, unchanged). Hybrid is opt-in; under
 > `GALERINA_MANIFEST_PROFILE=certified` it is **mandatory and fail-closed**.
 
 The migration profile baked into `proof-graph.ts` is:
 
 | Profile | Algorithm tag | Algorithms | Status |
 |---|---|---|---|
-| compat (Phase 39) | `spore.gov.sig.v1` | Ed25519 only | shipped, default |
-| hybrid (Phase 55) | `spore.gov.sig.v2` | Ed25519 + ML-DSA-65 — **both required** | shipped, opt-in |
-| pq_strict (future) | `spore.gov.sig.v3` | ML-DSA-65 only | reserved |
+| compat (Phase 39) | `fungi.gov.sig.v1` | Ed25519 only | shipped, default |
+| hybrid (Phase 55) | `fungi.gov.sig.v2` | Ed25519 + ML-DSA-65 — **both required** | shipped, opt-in |
+| pq_strict (future) | `fungi.gov.sig.v3` | ML-DSA-65 only | reserved |
 
 ```typescript
 export interface GovernanceSignature {
-  readonly algorithm: "spore.gov.sig.v1" | "spore.gov.sig.v2";  // v2 = Phase 55 hybrid
+  readonly algorithm: "fungi.gov.sig.v1" | "fungi.gov.sig.v2";  // v2 = Phase 55 hybrid
   readonly signerKeyId: string;
   readonly signature: string;   // v2: "<ed25519_b64url>|<mldsa65_b64url>" — both halves
   readonly signedAt: string;
@@ -164,7 +164,7 @@ export interface GovernanceSignature {
 }
 ```
 
-**Both-halves rule.** A `spore.gov.sig.v2` signature carries the two halves joined
+**Both-halves rule.** A `fungi.gov.sig.v2` signature carries the two halves joined
 by a `|` (base64url never contains `|`, so a classical Ed25519 value can never be
 mistaken for hybrid). `verifyGovernanceSignatureHybrid` checks **both** the
 Ed25519 and the ML-DSA-65 half — neither alone admits. The signer
@@ -193,7 +193,7 @@ signing envelope this fixed shape is produced by `makeManifestEnvelope`
 Governance signing key:  held by the Galerina governance compiler, never in source
 Published public key:    published at https://keys.galerina.dev/gov/{keyId}
 Key rotation:            new key per year, old keys remain valid for verification
-Key ID format:           "spore-gov-YYYY-MM" (e.g. "spore-gov-2026-01")
+Key ID format:           "fungi-gov-YYYY-MM" (e.g. "fungi-gov-2026-01")
 ```
 
 ---
@@ -204,8 +204,8 @@ Key ID format:           "spore-gov-YYYY-MM" (e.g. "spore-gov-2026-01")
 2. Add `signProofGraph(proof, signingKey)` function
 3. Add `verifyGovernanceSignature(proof, publicKey)` function
 4. Wire into governance verifier: production profile → sign all ProofGraphs
-5. Add `spore.gov.sig.v1` diagnostic: `SPORE-GOV-SIG-001` — missing signature in production
-6. CLI: `galerina verify --proof proof.json --key spore-gov-2026-01` command
+5. Add `fungi.gov.sig.v1` diagnostic: `FUNGI-GOV-SIG-001` — missing signature in production
+6. CLI: `galerina verify --proof proof.json --key fungi-gov-2026-01` command
 7. Tests: 30+ test cases for sign/verify/tamper-detection
 
 **Underlying library**: `ml-dsa` npm package (or `pqcrypto` Rust crate for
@@ -216,12 +216,12 @@ the native accelerator path on i9 with SHA-NI extension).
 ## Example: Aerospace Audit Chain
 
 ```
-2026-06-01:  updateFlightPath.spore compiled
-             ProofGraph issued with GovernanceSignature (spore-gov-2026-01)
+2026-06-01:  updateFlightPath.fungi compiled
+             ProofGraph issued with GovernanceSignature (fungi-gov-2026-01)
              Stored in: flight-control-v3.2.proof.json
 
 2055-03-15:  Incident investigation begins
-             Investigator: verify proof.json --key spore-gov-2026-01
+             Investigator: verify proof.json --key fungi-gov-2026-01
              Result: VALID — governance compiler issued this on 2026-06-01
              Conclusion: flow was governance-verified at time of deployment
 ```

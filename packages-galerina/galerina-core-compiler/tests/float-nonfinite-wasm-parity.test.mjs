@@ -1,21 +1,21 @@
 // float-nonfinite WASM parity (#55, increment 2 — 0014 differential). The tree-walker traps on a non-finite
-// float (mkFloat / floatCmp, SPORE-FLOAT-NAN-001); the WASM tier must trap IDENTICALLY or the fail-open simply
+// float (mkFloat / floatCmp, FUNGI-FLOAT-NAN-001); the WASM tier must trap IDENTICALLY or the fail-open simply
 // moves to the opt-in WASM path. The wat-emitter now wraps every f64 arithmetic RESULT and ordering-compare
-// OPERAND in $spore_assert_finite_f64 (traps `unreachable` on NaN/±Inf) and rejects a non-finite f64.const.
+// OPERAND in $fungi_assert_finite_f64 (traps `unreachable` on NaN/±Inf) and rejects a non-finite f64.const.
 // This asserts: non-finite ⇒ BOTH tiers fail closed; finite ⇒ BOTH tiers compute the same value.
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import * as L from "../dist/index.js";
 
 async function walkerTraps(src, flow) {
-  const p = L.parseProgram(src, "p.spore");
+  const p = L.parseProgram(src, "p.fungi");
   assert.equal(p.diagnostics.filter((d) => d.severity === "error").length, 0, "parse");
   try { L.resolveSymbols(p.ast); L.checkTypes(p.ast); } catch {}
   const r = await L.executeFlow(flow, new Map(), p.ast);
   return r?.value?.__tag === "runtimeError" && r.value.message === "NonFiniteFloat";
 }
 async function runWasm(src, flow) {
-  const p = L.parseProgram(src, "p.spore");
+  const p = L.parseProgram(src, "p.fungi");
   assert.equal(p.diagnostics.filter((d) => d.severity === "error").length, 0, "parse");
   const fx = L.checkEffects(p.flows, p.ast);
   const { gir } = L.emitGIR(p.ast, p.flows, fx);

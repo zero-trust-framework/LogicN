@@ -10,7 +10,7 @@ import { describe, it } from "node:test";
 import {
   createRootCapabilityProvider,
   COMPILER_MINIMUM_CAPABILITIES,
-  SPORE_BUILD_001,
+  FUNGI_BUILD_001,
 } from "../dist/index.js";
 
 describe("createRootCapabilityProvider", () => {
@@ -53,12 +53,12 @@ describe("CompilerCapabilityHost", () => {
   it("host.use() records an audit entry for an allowed capability", () => {
     const provider = createRootCapabilityProvider();
     const host = provider.createCompilerHost(new Set(COMPILER_MINIMUM_CAPABILITIES));
-    host.use("filesystem.read", "/project/src/main.spore");
+    host.use("filesystem.read", "/project/src/main.fungi");
     const log = provider.getAuditLog();
     assert.strictEqual(log.length, 1);
     assert.strictEqual(log[0].domain, "COMPILER");
     assert.strictEqual(log[0].capability, "filesystem.read");
-    assert.strictEqual(log[0].resource, "/project/src/main.spore");
+    assert.strictEqual(log[0].resource, "/project/src/main.fungi");
     assert.ok(typeof log[0].timestamp === "string" && log[0].timestamp.length > 0);
   });
 
@@ -111,7 +111,7 @@ describe("UserRuntimeCapabilities", () => {
 describe("Audit log", () => {
   it("records capability usage via provider.audit()", () => {
     const provider = createRootCapabilityProvider();
-    provider.audit("COMPILER", "filesystem.read", "/src/main.spore");
+    provider.audit("COMPILER", "filesystem.read", "/src/main.fungi");
     provider.audit("USER_PROGRAM", "database.read", "users");
     const log = provider.getAuditLog();
     assert.strictEqual(log.length, 2);
@@ -192,20 +192,20 @@ describe("COMPILER_MINIMUM_CAPABILITIES", () => {
   });
 });
 
-describe("SPORE_BUILD_001", () => {
+describe("FUNGI_BUILD_001", () => {
   it("has the correct code", () => {
-    assert.strictEqual(SPORE_BUILD_001.code, "SPORE-BUILD-001");
+    assert.strictEqual(FUNGI_BUILD_001.code, "FUNGI-BUILD-001");
   });
 
   it("has severity error", () => {
-    assert.strictEqual(SPORE_BUILD_001.severity, "error");
+    assert.strictEqual(FUNGI_BUILD_001.severity, "error");
   });
 
   it("has the correct name", () => {
-    assert.strictEqual(SPORE_BUILD_001.name, "NonDeterministicBuild");
+    assert.strictEqual(FUNGI_BUILD_001.name, "NonDeterministicBuild");
   });
 
   it("has a suggestedFix", () => {
-    assert.ok(typeof SPORE_BUILD_001.suggestedFix === "string" && SPORE_BUILD_001.suggestedFix.length > 0);
+    assert.ok(typeof FUNGI_BUILD_001.suggestedFix === "string" && FUNGI_BUILD_001.suggestedFix.length > 0);
   });
 });

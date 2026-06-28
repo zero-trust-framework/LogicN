@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — GraphBuilder<N,E>
+// fungi-graph — GraphBuilder<N,E>
 //
 // Mutable builder that produces immutable Graph<N,E> instances.
 // Fluent API: builder.addNode(...).addNode(...).addEdge(...).build()
@@ -18,12 +18,12 @@ import type { Graph, GraphEdge, GraphJSON, GraphNode, NodeId } from "./types.js"
  *
  * ## Usage — ad-hoc / transient graphs
  * `GraphBuilder` can be used directly whenever you need to wrap an existing
- * array-based data structure temporarily to run an lln-graph algorithm on it.
+ * array-based data structure temporarily to run an fungi-graph algorithm on it.
  * For example, converting a plain `{ nodes[], edges[] }` object so you can
  * call `bfsPath()`:
  *
  * ```ts
- * import { GraphBuilder, bfsPath } from "lln-graph";
+ * import { GraphBuilder, bfsPath } from "fungi-graph";
  *
  * const builder = new GraphBuilder<LegacyNode, LegacyEdge>();
  * for (const n of legacyGraph.nodes) builder.addNode(n.id, n);
@@ -66,12 +66,12 @@ export class GraphBuilder<N, E> {
   addEdge(from: NodeId, to: NodeId, data: E): this {
     if (!this.#nodes.has(from)) {
       throw new Error(
-        `lln-graph GraphBuilder.addEdge: source node "${from}" has not been added. Call addNode first.`,
+        `fungi-graph GraphBuilder.addEdge: source node "${from}" has not been added. Call addNode first.`,
       );
     }
     if (!this.#nodes.has(to)) {
       throw new Error(
-        `lln-graph GraphBuilder.addEdge: target node "${to}" has not been added. Call addNode first.`,
+        `fungi-graph GraphBuilder.addEdge: target node "${to}" has not been added. Call addNode first.`,
       );
     }
     const edge: GraphEdge<E> = { from, to, data };
@@ -108,12 +108,12 @@ export class GraphBuilder<N, E> {
 
   /**
    * Deserialise a GraphJSON back into an immutable Graph.
-   * Throws if schemaVersion does not match "spore.graph.v1".
+   * Throws if schemaVersion does not match "fungi.graph.v1".
    */
   static fromJSON<N, E>(json: GraphJSON<N, E>): Graph<N, E> {
-    if (json.schemaVersion !== "spore.graph.v1") {
+    if (json.schemaVersion !== "fungi.graph.v1") {
       throw new Error(
-        `lln-graph: unsupported graph schemaVersion "${json.schemaVersion}". Expected "spore.graph.v1".`,
+        `fungi-graph: unsupported graph schemaVersion "${json.schemaVersion}". Expected "fungi.graph.v1".`,
       );
     }
     const builder = new GraphBuilder<N, E>();

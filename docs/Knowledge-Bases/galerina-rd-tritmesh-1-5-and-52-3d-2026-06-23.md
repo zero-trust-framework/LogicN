@@ -23,15 +23,15 @@ The task name conflates two same-named things:
 - **The notes' "Tri-Pipe Substrate Router"** (R&D-007 / tritmesh-6) is a *physics-aware routing GATEWAY* across Binary-silicon (S_B) / Hybrid-accelerator (S_H) / Photonic-quantum (S_P).
 - **Galerina's shipped "Tri-Pipe"** is `galerina-tri-pipe/src/execution-router.ts` (`ExecutionRouter.route` + `createTriPipeEngine`) — a 3-axis composition (AXIS-1 capability tier via `resolveHardware`, AXIS-2 `routePrecision`, AXIS-3 `PartitionDecider` net-win gate).
 
-These are **the same thing**: the notes' R(o) re-derives `ExecutionRouter.route` 1:1. Every router mechanic in the notes is shipped — routing function, `R(D_crypto)→S_B` (= SPORE-SUBSTRATE-001, `partition-decider.ts:112`), `E_route = min(cap,avail)` (= `vAnd`/`allOf`), the analog→trit discretization gate (= `decideAtBoundary` + `effectiveVerdict=vAnd` + `freivalds.ts` tolerance re-verify + `photonic-bridge.ts:99` 0b11 corrupt-trit trap), and the Tower-Citizen sim/hw hot-swap (= `photonic-switch.ts selectPhotonicBackend`, fail-closed, attested-only). **Nothing in the router itself is a new mechanic.**
+These are **the same thing**: the notes' R(o) re-derives `ExecutionRouter.route` 1:1. Every router mechanic in the notes is shipped — routing function, `R(D_crypto)→S_B` (= FUNGI-SUBSTRATE-001, `partition-decider.ts:112`), `E_route = min(cap,avail)` (= `vAnd`/`allOf`), the analog→trit discretization gate (= `decideAtBoundary` + `effectiveVerdict=vAnd` + `freivalds.ts` tolerance re-verify + `photonic-bridge.ts:99` 0b11 corrupt-trit trap), and the Tower-Citizen sim/hw hot-swap (= `photonic-switch.ts selectPhotonicBackend`, fail-closed, attested-only). **Nothing in the router itself is a new mechanic.**
 
 ## Per-head verdict table
 
 | Head | Source | Verdict | Galerina use | photonic/tri | Invariant |
 |---|---|---|---|---|---|
 | Type-system partitioning (Tri primitive + K3) | tm-1 | ALREADY-SHIPPED | governance verdict lattice (three-valued-governance.ts) | core tri primitive | PASS |
-| Float-as-gate prohibition (f64→K3) | tm-1 | ALREADY-SHIPPED | SPORE-SUBSTRATE-004 + f64-not-a-gate | analog→trit safety boundary | PASS |
-| Secret primitive + Brand/SealTaint zero-wipe | tm-1 | ALREADY-SHIPPED | R&D 0055 B2b + SPORE-PRIVACY-002 | n/a (digital) | PASS |
+| Float-as-gate prohibition (f64→K3) | tm-1 | ALREADY-SHIPPED | FUNGI-SUBSTRATE-004 + f64-not-a-gate | analog→trit safety boundary | PASS |
+| Secret primitive + Brand/SealTaint zero-wipe | tm-1 | ALREADY-SHIPPED | R&D 0055 B2b + FUNGI-PRIVACY-002 | n/a (digital) | PASS |
 | Pointer prohibition + SoA bump-arena | tm-1 | ALREADY-SHIPPED | wat-emitter arena (R&D 0055) | n/a | PASS |
 | Composite types (Record/Enum/Option/Result/Tensor) | tm-1 | ALREADY-SHIPPED | shipped type system | n/a | PASS |
 | Three expansion guardrails (crypto-Binary/No-Coercion/passport) | tm-1 | ALREADY-SHIPPED | standing invariants | No-Coercion safety basis | PASS |
@@ -47,7 +47,7 @@ These are **the same thing**: the notes' R(o) re-derives `ExecutionRouter.route`
 | MeshQL — ternary result set (governed iterator) | tm-2 | ALREADY-SHIPPED | allOf/decideAtBoundary | K3-0 fail-safe withhold | PASS |
 | MeshQL — named Masked-vs-Trapped distinction | tm-2 | TRACK | expose 0 vs -1 on row results | retry-on-0 aligns RECOVERING | PASS |
 | MeshQL — governance DCE (compile-time cap fold) | tm-2 | ALREADY-SHIPPED | Static Manifest Clamping | n/a | PASS |
-| MeshQL — PII taint → egress sentinel | tm-2 | ALREADY-SHIPPED | SPORE-PRIVACY-002 SealTaint | n/a | PASS |
+| MeshQL — PII taint → egress sentinel | tm-2 | ALREADY-SHIPPED | FUNGI-PRIVACY-002 SealTaint | n/a | PASS |
 | MeshQL — hot/cold split + distributed query topology | tm-2 | TRITMESH-ONLY | local K3 gate authoritative | n/a | PASS |
 | **Degrade-only telemetry → K3 admission feedback loop** | **tm-4** | **NEW-MECHANIC** | **wire observability anomaly → vAnd operand on cert/admission** | **substrate-agnostic, withSideSignal semantics** | **PASS** |
 | Audit/compliance — K3-verdict immutable .tmf ledger | tm-4 | ALREADY-SHIPPED | audit-logger + .tmf history chain | n/a (digital crypto) | PASS |
@@ -60,7 +60,7 @@ These are **the same thing**: the notes' R(o) re-derives `ExecutionRouter.route`
 | **K3 ternary partial-return (Result.Masked per-branch)** | **tm-5** | **NEW-MECHANIC** | **per-field vAnd fold → typed Masked sentinel, keep-the-rest** | **K3-native, digital** | **PASS** |
 | Graph-traversal DoS — DAG depth + fuel | tm-5 | ALREADY-SHIPPED | limits{} + recursion cap + CBOR depth-8; fuel #103/104 | n/a | PASS |
 | MeshQL graph as .tmf nodes+edges | tm-5 | TRITMESH-ONLY | per-hop K3 → partial-return head | n/a | N/A |
-| Encrypted cold-index OpenSearch + arena zero-wipe | tm-5 | TRITMESH-ONLY | arena-zeroize already 0055 B2 | n/a | N/A (cleartext-embedding ⚠ SPORE-PRIVACY-002) |
+| Encrypted cold-index OpenSearch + arena zero-wipe | tm-5 | TRITMESH-ONLY | arena-zeroize already 0055 B2 | n/a | N/A (cleartext-embedding ⚠ FUNGI-PRIVACY-002) |
 | .tmf-governed multi-app suite (Dumb-App/Smart-Core) | tm-3,combo | TRITMESH-ONLY | consumes shipped .tmf+K3 | none | PASS (reuses invariants) |
 | Substrate noise model + NMR/TMR voting | 52-3D-1 | ALREADY-SHIPPED | nmrFailureProbability + consensusTrit | photonic failure modes | PASS |
 | Photonic ternary / Base-3 mod-3 optical adder | 52-3D-1 | ALREADY-SHIPPED | tpl-simulator trit ops | TritMesh hardware claim | PASS (n/a governance) |
@@ -86,23 +86,23 @@ These are **the same thing**: the notes' R(o) re-derives `ExecutionRouter.route`
 
 1. **Degrade-only telemetry → K3 admission feedback loop** (governance/runtime, S). The two halves ship — blind observability (`galerina-observability createObservability`, counts/error-rates/health, no payloads) and the degrade-only side-signal (`cert-gate.ts withSideSignal`, `vAnd`, No-Coercion `min(t*,r)≤t*`). NOT shipped: feeding the *live* anomaly metric back into the admission/cert gate as that operand, so a node auto-degrades ALLOW→INDETERMINATE under attack. Net-new runtime self-throttle, reuses `withSideSignal`+`vAnd`, no new crypto/lattice.
 
-2. **K3 ternary partial-return / per-branch `Result.Masked` response shaping** (governance/runtime, M). Today masking is binary-only: `governance-verifier.ts` rejects a leak (redact/seal/remove-field) and `view(cap1|cap2)` is a masked pointer; there is no three-valued per-branch partial-return that denies one field while returning the rest with a typed `Masked(code)` sentinel carrying SPORE-GOV-3VL-001. A thin fail-closed composition of `decideAtBoundary`+`view()`+`redact()` at an output boundary; deny-by-default on unknown branches.
+2. **K3 ternary partial-return / per-branch `Result.Masked` response shaping** (governance/runtime, M). Today masking is binary-only: `governance-verifier.ts` rejects a leak (redact/seal/remove-field) and `view(cap1|cap2)` is a masked pointer; there is no three-valued per-branch partial-return that denies one field while returning the rest with a typed `Masked(code)` sentinel carrying FUNGI-GOV-3VL-001. A thin fail-closed composition of `decideAtBoundary`+`view()`+`redact()` at an output boundary; deny-by-default on unknown branches.
 
 3. **Governed Transformation-Matrix admission (T-as-signed-artifact)** (governance/compiler, M). EMERGENT only when 52-3D-1 (geometry=code) composes with 52-3D-2 (.tmf governs the reprogram blob). Verified absent (0 hits for config-blob/matrix fingerprint/tensor-admission). `hybrid-engine.ts:219` Freivalds verifies the matmul *result*, NOT that T is the admitted matrix — a hot weight/config swap is an unsigned code path today. Extend signed-admission (`fuse-loader`/`wasmHash`/`behavioralFingerprint`) to a photonic-config artifact class + `photonic.reprogram` capability, admitted by `certGate`/`decideAtBoundary` before the PPU port reprograms the mesh. HW-gated (#102-106) but the *governance rail* is core-buildable now.
 
 ## Already-shipped / re-derived (cite)
 
-- **K3 verdict lattice / vAnd / decideAtBoundary / SPORE-GOV-3VL-001** — `three-valued-governance.ts`; KB `galerina-three-valued-governance.md`.
-- **Crypto-on-core (R(D_crypto)→S_B / SPORE-SUBSTRATE-001)** — `substrate-inference.ts` CRYPTO_EFFECT; `substrate-model.ts verifyToleranceUnderNoise`; `partition-decider.ts:112`.
-- **Analog→trit discretization, NMR/TMR, fail-safe-0** — `substrate-model.ts` NoisyLane/effectiveVerdict/nmrFailureProbability; SPORE-SUBSTRATE-002/003/004; `freivalds.ts`; `photonic-bridge.ts:99` (0b11 trap).
+- **K3 verdict lattice / vAnd / decideAtBoundary / FUNGI-GOV-3VL-001** — `three-valued-governance.ts`; KB `galerina-three-valued-governance.md`.
+- **Crypto-on-core (R(D_crypto)→S_B / FUNGI-SUBSTRATE-001)** — `substrate-inference.ts` CRYPTO_EFFECT; `substrate-model.ts verifyToleranceUnderNoise`; `partition-decider.ts:112`.
+- **Analog→trit discretization, NMR/TMR, fail-safe-0** — `substrate-model.ts` NoisyLane/effectiveVerdict/nmrFailureProbability; FUNGI-SUBSTRATE-002/003/004; `freivalds.ts`; `photonic-bridge.ts:99` (0b11 trap).
 - **Router R(o) + net-win cost gate** — `execution-router.ts`, `tri-pipe.ts`, `partition-decider.ts` (proven 0 mis-routes / 0 slowdowns, D2 25/25).
 - **Tower-Citizen sim/hw hot-swap** — `photonic-switch.ts selectPhotonicBackend`, `emulator.ts` (deterministic=false), `galerina-tower-citizen`; KB `rd-photonic-ppu-emulator-and-switch.md`.
 - **Physical TamperTrust fold + revocation-unknown→DENY** — `cert-gate.ts withSideSignal/sideSignals`; TLSTP S1; KB `galerina-b8-governed-transport.md`.
 - **Recovering FSM (correctly above the trit)** — KB `galerina-tlstp-s4-recovering-fsm.md` (INV-2/INV-3; rejects note's "hold 0" alias).
-- **Secret zero-wipe + SealTaint + GC-free SoA arena** — R&D 0055 (`wat-emitter.ts` B2b), SPORE-PRIVACY-002, flat SoA 2.22x.
+- **Secret zero-wipe + SealTaint + GC-free SoA arena** — R&D 0055 (`wat-emitter.ts` B2b), FUNGI-PRIVACY-002, flat SoA 2.22x.
 - **eps calibration-as-attestation** — `toleranceWitness`+`pinnedEnvHash`+`backendArtifactHash`; KB `galerina-ext-bridge-quantum-design.md`.
 - **Governance DCE + const/branch-fold** — R&D 0036 (proven 1.64x, 7.1x code-size).
-- **DoS limits** — `governance-verifier.ts` SPORE-GOV-019 limits{}, interpreter recursion cap 2000, CBOR depth-8 Billion-Laughs; fuel #103/104.
+- **DoS limits** — `governance-verifier.ts` FUNGI-GOV-019 limits{}, interpreter recursion cap 2000, CBOR depth-8 Billion-Laughs; fuel #103/104.
 - **Immutable audit ledger** — `audit-logger.ts` + `galerina-ext-tmf/spec/tmf-history-chain-v0.md` (per-segment AEAD+ML-DSA).
 - **MBQC quantum bridge** — `galerina-ext-bridge-quantum` (#199, Phase-1 20/20, Tier-3 Toxic Border).
 - **Trit algebra / WDM crosstalk vocab** — `tpl-simulator.ts`, `emulator.ts wdmCrosstalkMatrix` (R&D 0042).
@@ -114,13 +114,13 @@ These are **the same thing**: the notes' R(o) re-derives `ExecutionRouter.route`
 - **ntt_mul ≈ matmul** — refuted; different operation.
 - **Measurement-based "third logic" (MBQC) as a new governance primitive** — governance treats it identically to any low-trust analog reading; adds no primitive.
 - **Superdense "drop the MAC/AEAD because entanglement self-proves integrity"** — VIOLATES crypto-Binary + No-Coercion; photonic/quantum state is PAC-learnable. Keep digital ML-DSA/AEAD always.
-- **Crypto/KDF on photonics "to speed it up"** — forbidden by SPORE-SUBSTRATE-001 (0.999≠1.0 corrupts keys); vAnd=min cannot lift 0→+1. Compiler already traps it.
+- **Crypto/KDF on photonics "to speed it up"** — forbidden by FUNGI-SUBSTRATE-001 (0.999≠1.0 corrupts keys); vAnd=min cannot lift 0→+1. Compiler already traps it.
 
 ## TritMesh-only (saved for later)
 
 - MeshQL / TritMeshQL (query-as-capability-contract; graph as .tmf nodes+edges) — zero hits in core Galerina source; the reusable nucleus (K3 row verdicts, governance DCE) is shipped; the engine is a product.
 - .tmf passport / "Govern-Don't-Absorb" / 5-product suite (DB/Object/Stream/Vector/Audit) / Dumb-App-Smart-Core gateway — consumes shipped .tmf+K3+capability machinery; adds no governance algebra; Smart-Core isolation is aspirational #102-106.
 - Any-Sync P2P mesh resurrection / CID-pointer rollback / hold-in-0 wasm hot-swap — product data-plane/networking; borrowed K3-0 is shipped.
-- Encrypted cold-index OpenSearch + arena zero-wipe — arena-zeroize is owned (R&D 0055 B2); ⚠ cleartext-semantic-embedding search collides with SPORE-PRIVACY-002 if ever pulled in.
+- Encrypted cold-index OpenSearch + arena zero-wipe — arena-zeroize is owned (R&D 0055 B2); ⚠ cleartext-semantic-embedding search collides with FUNGI-PRIVACY-002 if ever pulled in.
 - Sync/async photonic timing, neuromorphic LIF neuron, Base-3 optical adder, holographic storage — substrate/hardware vocabulary; governed as ordinary low-trust Citizens behind the discretization gate.
 - Nested-record SoA auto-flatten — TritMeshQL-only; single-level reject is the fail-closed default if ever built.

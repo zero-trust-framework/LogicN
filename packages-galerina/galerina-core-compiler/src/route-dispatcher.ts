@@ -162,7 +162,7 @@ export function startServer(
           res.setHeader("X-Galerina-Denial-Reason", "effect-gate");
           res.end(JSON.stringify({
             error: "Governance Denied",
-            code: "SPORE-RUNTIME-EFFECT-GATE",
+            code: "FUNGI-RUNTIME-EFFECT-GATE",
             detail: `Flow '${match.route.flowName}' declares effects disallowed in '${mode}' profile`,
             deniedEffects: violations,
             profile: mode,

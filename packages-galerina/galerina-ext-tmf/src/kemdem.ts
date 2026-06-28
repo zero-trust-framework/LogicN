@@ -9,7 +9,7 @@
 //      golden, since KEM/AEAD carry randomness). @noble is borrowed from the compiler's node_modules (no local
 //      install — same pattern as the crypto-ops bench); @noble's own bare imports resolve from there.
 //
-// Crypto-on-core (SPORE-SUBSTRATE-001): every primitive is bit-exact digital. No photonic crypto.
+// Crypto-on-core (FUNGI-SUBSTRATE-001): every primitive is bit-exact digital. No photonic crypto.
 // Verify-before-decrypt (§7): this layer sits UNDER the TMX-256 + signature gate; the caller proves
 // integrity+authenticity+ALLOW(+1) before any open(). seal/open here are the confidentiality step only.
 //

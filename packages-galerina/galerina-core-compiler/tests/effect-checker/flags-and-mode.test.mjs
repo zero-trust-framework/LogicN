@@ -1,12 +1,12 @@
 // =============================================================================
-// Effect Checker — EffectCheckerFlags, SPORE-EFFECT-005, EffectCheckerMode (Phase 18E)
+// Effect Checker — EffectCheckerFlags, FUNGI-EFFECT-005, EffectCheckerMode (Phase 18E)
 //
 // Tests for:
 //   - EffectCheckerFlags bitset (shape, values, bit operations)
 //   - FlowEffectSummary carries declaredEffectsMask, inferredEffectsMask, checkerFlags
-//   - SPORE-EFFECT-005 BroadAliasUsed fires for 'network', 'database', 'ai', etc.
-//   - SPORE-EFFECT-004 still fires for completely unknown effect names
-//   - SPORE_EFFECT_005 constant shape
+//   - FUNGI-EFFECT-005 BroadAliasUsed fires for 'network', 'database', 'ai', etc.
+//   - FUNGI-EFFECT-004 still fires for completely unknown effect names
+//   - FUNGI_EFFECT_005 constant shape
 //   - EffectCheckerMode type exported
 // =============================================================================
 
@@ -20,7 +20,7 @@ import {
   buildFlowEffectSummary,
   EffectCheckerFlags,
   effectsToFlags,
-  SPORE_EFFECT_005,
+  FUNGI_EFFECT_005,
   LEGACY_EFFECT_CALL_PATTERNS_COUNT,
 } from "../../dist/index.js";
 
@@ -66,7 +66,7 @@ describe("EffectCheckerFlags: constant shape", () => {
 
 describe("buildFlowEffectSummary: carries bitset fields", () => {
   function parseAndSummarise(source) {
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const flow = parsed.flows[0];
     if (!flow) throw new Error("No flow found");
     const node = parsed.ast.children?.find(
@@ -129,10 +129,10 @@ pure flow add(a: Int, b: Int) -> Int {
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-EFFECT-005: BroadAliasUsed fires for broad alias names
+// FUNGI-EFFECT-005: BroadAliasUsed fires for broad alias names
 // ---------------------------------------------------------------------------
 
-describe("SPORE-EFFECT-005: BroadAliasUsed fires for broad aliases", () => {
+describe("FUNGI-EFFECT-005: BroadAliasUsed fires for broad aliases", () => {
   function check(effectName) {
     const source = `
 guarded flow doWork(x: String) -> Void
@@ -141,53 +141,53 @@ contract { effects { ${effectName} } }
   return
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const results = checkEffects(parsed.flows, parsed.ast);
     return results.flatMap((r) => r.diagnostics);
   }
 
-  it("'network' → SPORE-EFFECT-005 (warning)", () => {
+  it("'network' → FUNGI-EFFECT-005 (warning)", () => {
     const diags = check("network");
-    const d = diags.find((x) => x.code === "SPORE-EFFECT-005");
-    assert.ok(d !== undefined, "SPORE-EFFECT-005 must fire for 'network'");
-    assert.equal(d.severity, "warning", "SPORE-EFFECT-005 must be a warning");
+    const d = diags.find((x) => x.code === "FUNGI-EFFECT-005");
+    assert.ok(d !== undefined, "FUNGI-EFFECT-005 must fire for 'network'");
+    assert.equal(d.severity, "warning", "FUNGI-EFFECT-005 must be a warning");
     assert.equal(d.suggestedCode, "network.outbound");
   });
 
-  it("'database' → SPORE-EFFECT-005 (warning)", () => {
+  it("'database' → FUNGI-EFFECT-005 (warning)", () => {
     const diags = check("database");
-    const d = diags.find((x) => x.code === "SPORE-EFFECT-005");
-    assert.ok(d !== undefined, "SPORE-EFFECT-005 must fire for 'database'");
+    const d = diags.find((x) => x.code === "FUNGI-EFFECT-005");
+    assert.ok(d !== undefined, "FUNGI-EFFECT-005 must fire for 'database'");
     assert.equal(d.suggestedCode, "database.read");
   });
 
-  it("'ai' → SPORE-EFFECT-005 (warning)", () => {
+  it("'ai' → FUNGI-EFFECT-005 (warning)", () => {
     const diags = check("ai");
-    const d = diags.find((x) => x.code === "SPORE-EFFECT-005");
-    assert.ok(d !== undefined, "SPORE-EFFECT-005 must fire for 'ai'");
+    const d = diags.find((x) => x.code === "FUNGI-EFFECT-005");
+    assert.ok(d !== undefined, "FUNGI-EFFECT-005 must fire for 'ai'");
     assert.equal(d.suggestedCode, "ai.inference");
   });
 
-  it("'audit' → SPORE-EFFECT-005 (warning)", () => {
+  it("'audit' → FUNGI-EFFECT-005 (warning)", () => {
     const diags = check("audit");
-    const d = diags.find((x) => x.code === "SPORE-EFFECT-005");
-    assert.ok(d !== undefined, "SPORE-EFFECT-005 must fire for 'audit'");
+    const d = diags.find((x) => x.code === "FUNGI-EFFECT-005");
+    assert.ok(d !== undefined, "FUNGI-EFFECT-005 must fire for 'audit'");
     assert.equal(d.suggestedCode, "audit.write");
   });
 
-  it("canonical 'network.outbound' → no SPORE-EFFECT-005", () => {
+  it("canonical 'network.outbound' → no FUNGI-EFFECT-005", () => {
     const diags = check("network.outbound");
-    const d005 = diags.find((x) => x.code === "SPORE-EFFECT-005");
-    assert.ok(d005 === undefined, "SPORE-EFFECT-005 must NOT fire for canonical 'network.outbound'");
+    const d005 = diags.find((x) => x.code === "FUNGI-EFFECT-005");
+    assert.ok(d005 === undefined, "FUNGI-EFFECT-005 must NOT fire for canonical 'network.outbound'");
   });
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-EFFECT-004 still fires for completely unknown names
+// FUNGI-EFFECT-004 still fires for completely unknown names
 // ---------------------------------------------------------------------------
 
-describe("SPORE-EFFECT-004: still fires for unknown effect names", () => {
-  it("completely unknown effect name → SPORE-EFFECT-004 (error)", () => {
+describe("FUNGI-EFFECT-004: still fires for unknown effect names", () => {
+  it("completely unknown effect name → FUNGI-EFFECT-004 (error)", () => {
     const source = `
 guarded flow doWork(x: String) -> Void
 contract { effects { completely.made.up.effect } }
@@ -195,15 +195,15 @@ contract { effects { completely.made.up.effect } }
   return
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const results = checkEffects(parsed.flows, parsed.ast);
     const diags = results.flatMap((r) => r.diagnostics);
-    const d004 = diags.find((x) => x.code === "SPORE-EFFECT-004");
-    assert.ok(d004 !== undefined, "SPORE-EFFECT-004 must fire for unknown effect");
-    assert.equal(d004.severity, "error", "SPORE-EFFECT-004 must be an error");
+    const d004 = diags.find((x) => x.code === "FUNGI-EFFECT-004");
+    assert.ok(d004 !== undefined, "FUNGI-EFFECT-004 must fire for unknown effect");
+    assert.equal(d004.severity, "error", "FUNGI-EFFECT-004 must be an error");
   });
 
-  it("'network' is NOT SPORE-EFFECT-004 — it's SPORE-EFFECT-005", () => {
+  it("'network' is NOT FUNGI-EFFECT-004 — it's FUNGI-EFFECT-005", () => {
     const source = `
 guarded flow doWork(x: String) -> Void
 contract { effects { network } }
@@ -211,53 +211,53 @@ contract { effects { network } }
   return
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const results = checkEffects(parsed.flows, parsed.ast);
     const diags = results.flatMap((r) => r.diagnostics);
-    const d004 = diags.find((x) => x.code === "SPORE-EFFECT-004");
-    assert.ok(d004 === undefined, "SPORE-EFFECT-004 must NOT fire for broad alias 'network'");
+    const d004 = diags.find((x) => x.code === "FUNGI-EFFECT-004");
+    assert.ok(d004 === undefined, "FUNGI-EFFECT-004 must NOT fire for broad alias 'network'");
   });
 });
 
 // ---------------------------------------------------------------------------
-// SPORE_EFFECT_005 constant shape
+// FUNGI_EFFECT_005 constant shape
 // ---------------------------------------------------------------------------
 
-describe("SPORE_EFFECT_005: constant shape", () => {
+describe("FUNGI_EFFECT_005: constant shape", () => {
   it("has correct code and name", () => {
-    assert.equal(SPORE_EFFECT_005.code, "SPORE-EFFECT-005");
-    assert.equal(SPORE_EFFECT_005.name, "BroadAliasUsed");
-    assert.equal(SPORE_EFFECT_005.severity, "warning");
+    assert.equal(FUNGI_EFFECT_005.code, "FUNGI-EFFECT-005");
+    assert.equal(FUNGI_EFFECT_005.name, "BroadAliasUsed");
+    assert.equal(FUNGI_EFFECT_005.severity, "warning");
   });
 
   it("has why and suggestedFix", () => {
-    assert.ok(typeof SPORE_EFFECT_005.why === "string");
-    assert.ok(typeof SPORE_EFFECT_005.suggestedFix === "string");
-    assert.ok(SPORE_EFFECT_005.suggestedFix.includes("network.outbound"),
+    assert.ok(typeof FUNGI_EFFECT_005.why === "string");
+    assert.ok(typeof FUNGI_EFFECT_005.suggestedFix === "string");
+    assert.ok(FUNGI_EFFECT_005.suggestedFix.includes("network.outbound"),
       "suggestedFix must give canonical examples");
   });
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-STDLIB-001: checkStdlibEffects wired into checkFlowEffects
+// FUNGI-STDLIB-001: checkStdlibEffects wired into checkFlowEffects
 // ---------------------------------------------------------------------------
 
-describe("SPORE-STDLIB-001: stdlib effect not declared", () => {
+describe("FUNGI-STDLIB-001: stdlib effect not declared", () => {
   // Helper: parse source, run checkEffects in production mode, return all diagnostics
   function checkProd(source) {
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const results = checkEffects(parsed.flows, parsed.ast, "production");
     return results.flatMap((r) => r.diagnostics);
   }
 
   // Helper: parse source, run checkEffects in development mode, return all diagnostics
   function checkDev(source) {
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const results = checkEffects(parsed.flows, parsed.ast, "development");
     return results.flatMap((r) => r.diagnostics);
   }
 
-  it("File.readText without filesystem.read → SPORE-STDLIB-001 (error in production)", () => {
+  it("File.readText without filesystem.read → FUNGI-STDLIB-001 (error in production)", () => {
     // guarded flow that calls File.readText but does NOT declare filesystem.read
     const source = `
 guarded flow loadConfig(path: String) -> String
@@ -268,15 +268,15 @@ contract { effects { audit.write } }
 }
 `;
     const diags = checkProd(source);
-    const d = diags.find((x) => x.code === "SPORE-STDLIB-001");
-    assert.ok(d !== undefined, "SPORE-STDLIB-001 must fire when filesystem.read is not declared");
+    const d = diags.find((x) => x.code === "FUNGI-STDLIB-001");
+    assert.ok(d !== undefined, "FUNGI-STDLIB-001 must fire when filesystem.read is not declared");
     assert.equal(d.severity, "error", "In production mode severity must be error");
     assert.ok(d.message.includes("filesystem.read"), `message must mention the missing effect, got: ${d.message}`);
     assert.equal(d.suggestedCode, "filesystem.read");
     assert.ok(d.suggestedFix.includes("filesystem.read"), "suggestedFix must reference the missing effect");
   });
 
-  it("File.readText WITH filesystem.read declared → no SPORE-STDLIB-001", () => {
+  it("File.readText WITH filesystem.read declared → no FUNGI-STDLIB-001", () => {
     const source = `
 guarded flow loadConfig(path: String) -> String
 contract { effects { filesystem.read } }
@@ -286,11 +286,11 @@ contract { effects { filesystem.read } }
 }
 `;
     const diags = checkProd(source);
-    const d = diags.find((x) => x.code === "SPORE-STDLIB-001");
-    assert.ok(d === undefined, "SPORE-STDLIB-001 must NOT fire when filesystem.read is declared");
+    const d = diags.find((x) => x.code === "FUNGI-STDLIB-001");
+    assert.ok(d === undefined, "FUNGI-STDLIB-001 must NOT fire when filesystem.read is declared");
   });
 
-  it("File.readText without filesystem.read → SPORE-STDLIB-001 (warning in dev mode)", () => {
+  it("File.readText without filesystem.read → FUNGI-STDLIB-001 (warning in dev mode)", () => {
     const source = `
 guarded flow loadConfig(path: String) -> String
 contract { effects { audit.write } }
@@ -300,12 +300,12 @@ contract { effects { audit.write } }
 }
 `;
     const diags = checkDev(source);
-    const d = diags.find((x) => x.code === "SPORE-STDLIB-001");
-    assert.ok(d !== undefined, "SPORE-STDLIB-001 must fire in dev mode too");
+    const d = diags.find((x) => x.code === "FUNGI-STDLIB-001");
+    assert.ok(d !== undefined, "FUNGI-STDLIB-001 must fire in dev mode too");
     assert.equal(d.severity, "warning", "In development mode severity must be warning");
   });
 
-  it("String.split (pure, no effects) → no SPORE-STDLIB-001", () => {
+  it("String.split (pure, no effects) → no FUNGI-STDLIB-001", () => {
     // String.split is NOT in STDLIB_CAPABILITY_MAP → no diagnostic emitted
     const source = `
 pure flow splitWords(s: String) -> Array<String> {
@@ -314,8 +314,8 @@ pure flow splitWords(s: String) -> Array<String> {
 }
 `;
     const diags = checkProd(source);
-    const d = diags.find((x) => x.code === "SPORE-STDLIB-001");
-    assert.ok(d === undefined, "SPORE-STDLIB-001 must NOT fire for pure stdlib calls like String.split");
+    const d = diags.find((x) => x.code === "FUNGI-STDLIB-001");
+    assert.ok(d === undefined, "FUNGI-STDLIB-001 must NOT fire for pure stdlib calls like String.split");
   });
 
   it("checkStdlibEffects() is exported and callable directly", () => {
@@ -344,7 +344,7 @@ describe("LEGACY_EFFECT_CALL_PATTERNS_COUNT is tracked", () => {
 describe("EffectCheckResult: carries checkerFlags", () => {
   it("pure flow result has PureComputeCandidate flag", () => {
     const source = `pure flow pure(x: Int) -> Int { return x }`;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const results = checkEffects(parsed.flows, parsed.ast);
     assert.ok(results.length > 0, "Must have at least one result");
     const r = results[0];
@@ -360,7 +360,7 @@ contract { effects { database.write } }
   return
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const results = checkEffects(parsed.flows, parsed.ast);
     const r = results[0];
     assert.ok(!(r.checkerFlags & EffectCheckerFlags.PureComputeCandidate),

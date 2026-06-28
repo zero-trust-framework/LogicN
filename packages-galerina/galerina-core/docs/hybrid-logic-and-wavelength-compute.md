@@ -449,7 +449,7 @@ Explicit target blocks only where needed.
 Safe defaults.
 Clear fallback.
 Generated reports explain what happened.
-Source maps point back to original .spore files.
+Source maps point back to original .fungi files.
 AI guide summarises the compiled or checked logic.
 ```
 
@@ -620,7 +620,7 @@ Memory:
 {
   "hybridCompute": {
     "flow": "handleOrder",
-    "source": "src/orders/handle-order.spore:1",
+    "source": "src/orders/handle-order.fungi:1",
     "logic": [
       {
         "domain": "Decision",

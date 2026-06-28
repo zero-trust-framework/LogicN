@@ -17,7 +17,7 @@
 // Deny-by-default: a record whose decision cannot be determined is recorded
 // as "deny" (fail-closed), never silently "allow".
 //
-// Schema version: spore.compliance-ledger.v1
+// Schema version: fungi.compliance-ledger.v1
 // =============================================================================
 
 import { createHash } from "node:crypto";
@@ -119,7 +119,7 @@ export interface ComplianceEntry {
 
 /** A full, append-only compliance report over an egress ledger. */
 export interface ComplianceReport {
-  readonly schemaVersion: "spore.compliance-ledger.v1";
+  readonly schemaVersion: "fungi.compliance-ledger.v1";
   /** Egress directory the report was derived from. */
   readonly sourceDir: string;
   /** Number of egress batches consumed. */
@@ -283,7 +283,7 @@ export function buildComplianceReport(
   }
 
   return {
-    schemaVersion: "spore.compliance-ledger.v1",
+    schemaVersion: "fungi.compliance-ledger.v1",
     sourceDir,
     batchCount: batches.length,
     entries,

@@ -2,10 +2,10 @@
 
 > **⚠️ MEMORY-SAFETY STANCE SUPERSEDED (0034 verdict, 2026-06-18).** The "Phase 5 full lifetime and borrow
 > analysis" this doc commits to is a **non-goal** — it was never built and is not on the roadmap.
-> `SPORE-MEMORY-001..008` are not emitted; `borrow`/`borrow mut`/`move`/`pinned` examples parse/compile clean but are unenforced (corrected #65). The
+> `FUNGI-MEMORY-001..008` are not emitted; `borrow`/`borrow mut`/`move`/`pinned` examples parse/compile clean but are unenforced (corrected #65). The
 > canonical model is **"Governed Capability + Ternary-Tagged Memory"** (value-state/taint + effect/capability
 > + runtime generation-tag UAF guards, shipped `692e62d`) — see **`galerina-memory-safety-model.md`**. The
-> Phase-3 *scanner-level* enforcement described here is real; the borrow/lifetime tier is design-only; `USE_AFTER_MOVE` (SPORE-MEMORY-001) was honest-retired as RESERVED in #65 — consume-once already ships as `SPORE-AFFINE-001`.
+> Phase-3 *scanner-level* enforcement described here is real; the borrow/lifetime tier is design-only; `USE_AFTER_MOVE` (FUNGI-MEMORY-001) was honest-retired as RESERVED in #65 — consume-once already ships as `FUNGI-AFFINE-001`.
 
 ## Purpose
 
@@ -53,7 +53,7 @@ let b = config.retries   // safe
 within their scope. There is no borrow needed for pure reads.
 
 **Phase 3 enforcement:** The scanner rejects `mut` bindings in `pure flow`
-bodies (SPORE-BINDING-004). Reads of immutable values do not require borrowing.
+bodies (FUNGI-BINDING-004). Reads of immutable values do not require borrowing.
 
 ---
 
@@ -65,10 +65,10 @@ Two mutable aliases of the same value cannot coexist.
 ```galerina
 mut buffer: Buffer = Buffer.allocate(1024)
 let ref1 = borrow mut buffer
-let ref2 = borrow mut buffer   // COMPILE ERROR: SPORE-MEMORY-005 — MUTABLE_ALIAS
+let ref2 = borrow mut buffer   // COMPILE ERROR: FUNGI-MEMORY-005 — MUTABLE_ALIAS
 ```
 
-**Phase 3 enforcement:** SPORE-MEMORY-005 is defined and exported. Full alias
+**Phase 3 enforcement:** FUNGI-MEMORY-005 is defined and exported. Full alias
 tracking requires Phase 5 (AST borrow checker).
 
 ---
@@ -111,7 +111,7 @@ Properties:
 - The mutable borrow expires at the end of its scope.
 - The original owner regains full ownership afterward.
 
-**Phase 3 enforcement:** SPORE-MEMORY-005 is defined. Aliasing detection is
+**Phase 3 enforcement:** FUNGI-MEMORY-005 is defined. Aliasing detection is
 Phase 5 (AST borrow checker).
 
 ---
@@ -131,10 +131,10 @@ flow handleRequest(move conn: Connection) -> Result<Response, ConnError> {
 
 ```galerina
 sendPayload(move payload)
-return transmit(payload.data)  // COMPILE ERROR: SPORE-MEMORY-001 — USE_AFTER_MOVE
+return transmit(payload.data)  // COMPILE ERROR: FUNGI-MEMORY-001 — USE_AFTER_MOVE
 ```
 
-**Phase 3 enforcement:** SPORE-MEMORY-001 (USE_AFTER_MOVE) is defined. Scanner
+**Phase 3 enforcement:** FUNGI-MEMORY-001 (USE_AFTER_MOVE) is defined. Scanner
 can detect simple sequential use-after-move patterns. Full cross-branch move
 validation is Phase 5.
 
@@ -146,13 +146,13 @@ A borrow cannot escape the scope of its owner. Returning a borrow reference
 from a flow or storing it in a longer-lived binding is rejected:
 
 ```galerina
-flow getRef() -> borrow Buffer {  // COMPILE ERROR: SPORE-MEMORY-003
+flow getRef() -> borrow Buffer {  // COMPILE ERROR: FUNGI-MEMORY-003
   let buf: Buffer = Buffer.allocate(64)
   return borrow buf               // borrow would outlive buf
 }
 ```
 
-**Phase 3 enforcement:** SPORE-MEMORY-003 (BORROW_ESCAPES_SCOPE) is defined.
+**Phase 3 enforcement:** FUNGI-MEMORY-003 (BORROW_ESCAPES_SCOPE) is defined.
 Escape analysis requires Phase 5 (lifetime analysis on AST).
 
 ---
@@ -167,7 +167,7 @@ let item = items[0]             // SAFE only if length is proven > 0
 let safe = items.get(0)         // returns Option<T> — always safe
 ```
 
-**Phase 3 enforcement:** SPORE-MEMORY-006 (BOUNDS_VIOLATION) is defined. Static
+**Phase 3 enforcement:** FUNGI-MEMORY-006 (BOUNDS_VIOLATION) is defined. Static
 bounds proof and runtime bounds check insertion are Phase 5 (type checker) and
 Phase 6 (code generation).
 
@@ -179,7 +179,7 @@ Raw pointer dereference expressions (`*ptr`) are forbidden outside approved
 `unsafe` blocks. Galerina provides no raw pointer type in normal code:
 
 ```galerina
-let value = *rawPtr          // COMPILE ERROR: SPORE-RAWPTR-001
+let value = *rawPtr          // COMPILE ERROR: FUNGI-RAWPTR-001
 ```
 
 Inside an unsafe block, raw pointer access is permitted but requires a declared
@@ -192,9 +192,9 @@ unsafe block readRaw reason "Hardware register needs direct read" fallback safeR
 ```
 
 **Phase 3 enforcement:**
-- SPORE-RAWPTR-001 (RAW_POINTER_OUTSIDE_UNSAFE) — scanner detects `*identifier`
+- FUNGI-RAWPTR-001 (RAW_POINTER_OUTSIDE_UNSAFE) — scanner detects `*identifier`
   patterns outside unsafe scope.
-- SPORE-MEMORY-008 (UNSAFE_MEMORY_REQUIRES_FALLBACK) — scanner rejects `unsafe
+- FUNGI-MEMORY-008 (UNSAFE_MEMORY_REQUIRES_FALLBACK) — scanner rejects `unsafe
   block` openings without a `reason` declaration on the same line.
 
 ---
@@ -237,34 +237,34 @@ This document commits to the following split:
 
 ```
 Phase 3 (binding-level, scanner):
-  ✓ mut in pure flow rejected (SPORE-BINDING-004)
-  ✓ unsafe block without reason rejected (SPORE-MEMORY-008)
-  ✓ raw pointer outside unsafe rejected (SPORE-RAWPTR-001)
-  ✓ let/readonly reassignment rejected (SPORE-BINDING-001/002)
-  ✓ readonly mutation rejected (SPORE-BINDING-003)
-  ✓ SPORE-MEMORY-001..008 defined (subset enforced at scanner level)
+  ✓ mut in pure flow rejected (FUNGI-BINDING-004)
+  ✓ unsafe block without reason rejected (FUNGI-MEMORY-008)
+  ✓ raw pointer outside unsafe rejected (FUNGI-RAWPTR-001)
+  ✓ let/readonly reassignment rejected (FUNGI-BINDING-001/002)
+  ✓ readonly mutation rejected (FUNGI-BINDING-003)
+  ✓ FUNGI-MEMORY-001..008 defined (subset enforced at scanner level)
 
 Phase 5 (lifetime rules, AST borrow checker):
-  ○ Full lifetime analysis: borrow does not outlive owner (SPORE-MEMORY-003)
-  ○ Mutable alias detection: two borrows cannot coexist (SPORE-MEMORY-005)
-  ○ Cross-branch move tracking: use-after-move across all paths (SPORE-MEMORY-001 full)
+  ○ Full lifetime analysis: borrow does not outlive owner (FUNGI-MEMORY-003)
+  ○ Mutable alias detection: two borrows cannot coexist (FUNGI-MEMORY-005)
+  ○ Cross-branch move tracking: use-after-move across all paths (FUNGI-MEMORY-001 full)
   ○ Borrow escape analysis: borrows cannot be returned or stored long-term
-  ○ Bounds proof insertion: static + runtime bounds checks (SPORE-MEMORY-006)
-  ○ Pinned allocation planning (SPORE target integration)
+  ○ Bounds proof insertion: static + runtime bounds checks (FUNGI-MEMORY-006)
+  ○ Pinned allocation planning (FUNGI target integration)
 ```
 
 ---
 
 ## Compiler Diagnostic Series
 
-Memory and safety diagnostics use the `SPORE-MEMORY-*`, `SPORE-RAWPTR-*`, and
-`SPORE-BINDING-*` series. See `compiler-diagnostics.md` for the full table.
+Memory and safety diagnostics use the `FUNGI-MEMORY-*`, `FUNGI-RAWPTR-*`, and
+`FUNGI-BINDING-*` series. See `compiler-diagnostics.md` for the full table.
 
 | Series | Covers |
 |---|---|
-| `SPORE-MEMORY-001..008` | Ownership, borrow, move, aliasing, bounds, unsafe |
-| `SPORE-RAWPTR-001` | Raw pointer access outside unsafe blocks |
-| `SPORE-BINDING-001..004` | Immutable binding, readonly binding, mut-in-pure |
+| `FUNGI-MEMORY-001..008` | Ownership, borrow, move, aliasing, bounds, unsafe |
+| `FUNGI-RAWPTR-001` | Raw pointer access outside unsafe blocks |
+| `FUNGI-BINDING-001..004` | Immutable binding, readonly binding, mut-in-pure |
 
 ---
 
@@ -284,10 +284,10 @@ Memory and safety diagnostics use the `SPORE-MEMORY-*`, `SPORE-RAWPTR-*`, and
 ## Exit Criteria (Phase 3)
 
 - [x] Memory model decision documented here (hybrid ownership).
-- [x] SPORE-MEMORY-001..008 defined in `galerina-core-compiler`.
-- [x] SPORE-RAWPTR-001 defined and scanner-enforced.
-- [x] SPORE-BINDING-004 (`mut` in `pure flow`) defined and scanner-enforced.
-- [x] `unsafe block` without `reason` rejected (SPORE-MEMORY-008).
+- [x] FUNGI-MEMORY-001..008 defined in `galerina-core-compiler`.
+- [x] FUNGI-RAWPTR-001 defined and scanner-enforced.
+- [x] FUNGI-BINDING-004 (`mut` in `pure flow`) defined and scanner-enforced.
+- [x] `unsafe block` without `reason` rejected (FUNGI-MEMORY-008).
 - [x] `borrow`, `move`, `pinned` reserved in `v1-reserved-keywords.md`.
 - [x] AST node vocabulary committed to `AstNodeKind`.
 - [x] Phase boundary between Phase 3 (scanner) and Phase 5 (lifetime) documented.

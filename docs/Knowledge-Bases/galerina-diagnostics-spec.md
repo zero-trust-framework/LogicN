@@ -18,7 +18,7 @@ Goal: make the system's internal state queryable, not just its outcomes. Every d
 ## C. Runtime Verification (RV)
 - **Concept:** compile "safety invariants" (e.g. "a photonic pulse must never share a memory slot with an array bridge") as non-intrusive `assert` probes into the #105 host harness; fire `DIAGNOSTIC_WARNING` *before* a violation, not after a crash.
 - **Capture:** `{ invariantId, approached: bool, stateSnapshotRef }`.
-- **Reuses:** the compiler's existing formal-method machinery (`invariant {}` blocks #36, SPORE-INV-000 #76) extended from compile-time to the runtime harness. The ultimate "Janitor" — detects the *potential* for a mess.
+- **Reuses:** the compiler's existing formal-method machinery (`invariant {}` blocks #36, FUNGI-INV-000 #76) extended from compile-time to the runtime harness. The ultimate "Janitor" — detects the *potential* for a mess.
 
 ## D. Performance-history plugin (drift detector)
 - **Concept:** async ring-buffer ingest of benchmark JSON → `performance-history.jsonl`; flag drift; sparkline per workload.

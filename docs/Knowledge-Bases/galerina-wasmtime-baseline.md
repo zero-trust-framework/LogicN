@@ -4,7 +4,7 @@
 **Context:** Recorded before `wasmtime galerina.wasm` compilation of the Stage-B runtime.
 All figures use the Stage-A TypeScript interpreter running on Node.js v24 (Intel i9-9900K).
 
-When `wasmtime galerina.wasm governance-cost.spore` is wired, compare governed vs these numbers.
+When `wasmtime galerina.wasm governance-cost.fungi` is wired, compare governed vs these numbers.
 The tree-walker overhead (~273K× slower than Rust for governance-cost) should collapse significantly
 once Stage-B is compiled to native WASM and governance checks run at compiled speed.
 
@@ -27,10 +27,10 @@ once Stage-B is compiled to native WASM and governance checks run at compiled sp
 - The jump from 3.2K/s → ~500M/s on governance-cost would be **~156,000×** improvement.
 
 ## Build path to `wasmtime galerina.wasm`
-1. Compile `src/self-hosted/runtime.spore` through the Phase 27 WAT emitter → `galerina-runtime.wat`
+1. Compile `src/self-hosted/runtime.fungi` through the Phase 27 WAT emitter → `galerina-runtime.wat`
 2. Assemble WAT → `galerina-runtime.wasm` via wabt
 3. Run: `wasmtime galerina-runtime.wasm --invoke runProgram <source>`
-4. Or build a standalone CLI: `galerina program.spore` (no Node.js, no wasmtime flags)
+4. Or build a standalone CLI: `galerina program.fungi` (no Node.js, no wasmtime flags)
 
 See: `docs/Knowledge-Bases/galerina-selfhosting-roadmap-axisB.md`
 
@@ -39,7 +39,7 @@ See: `docs/Knowledge-Bases/galerina-selfhosting-roadmap-axisB.md`
 ## UPDATE 2026-06-03 — wasmtime pipeline confirmed working
 
 ```bash
-node galerina.mjs build benchmarks/governance-cost/benchmark.spore
+node galerina.mjs build benchmarks/governance-cost/benchmark.fungi
 wasmtime --invoke main build/benchmark.wasm
 # → 5050  (correct: triangleNumber(100) = sum 1..100)
 ```

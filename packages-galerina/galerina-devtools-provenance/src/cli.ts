@@ -3,11 +3,11 @@
 // @galerina/devtools-provenance — CLI
 //
 // Commands:
-//   galerina-provenance trace <file.spore> [--flow <name>]
+//   galerina-provenance trace <file.fungi> [--flow <name>]
 //     Trace data lineage for one file (optionally filtered to one flow).
 //
 //   galerina-provenance audit <directory>
-//     Scan all .spore flows in a directory, show risk summary.
+//     Scan all .fungi flows in a directory, show risk summary.
 //
 //   galerina-provenance report <directory> [--json]
 //     Full provenance report for a directory.
@@ -16,7 +16,7 @@
 //   0 — success (no high-risk flows)
 //   1 — usage error
 //   2 — high-risk flows found (taint reaches sink ungated) OR a file the
-//       analyzer could not parse (SPORE-PROV-001 — blind analysis denies by default)
+//       analyzer could not parse (FUNGI-PROV-001 — blind analysis denies by default)
 // =============================================================================
 
 import { readFileSync } from "node:fs";
@@ -34,7 +34,7 @@ async function main(): Promise<number> {
     case "trace": {
       const filePath = args[1];
       if (filePath === undefined || filePath === "") {
-        process.stderr.write("Usage: galerina-provenance trace <file.spore> [--flow <name>]\n");
+        process.stderr.write("Usage: galerina-provenance trace <file.fungi> [--flow <name>]\n");
         return 1;
       }
 
@@ -52,7 +52,7 @@ async function main(): Promise<number> {
       }
 
       const result = analyzeFile(source, filePath, options);
-      // SPORE-PROV-001: a blind (parse-failed) analysis is non-clean -> flag high-risk.
+      // FUNGI-PROV-001: a blind (parse-failed) analysis is non-clean -> flag high-risk.
       const highRisk = result.ungatedSinkReached || result.analyzerBlind;
       const riskFlows = highRisk
         ? (result.analyzerBlind
@@ -60,7 +60,7 @@ async function main(): Promise<number> {
                 flowName: "<parse-failure>",
                 filePath,
                 risk: "high" as const,
-                description: `SPORE-PROV-001: '${filePath}' failed to parse — analyzer BLIND, cannot certify clean (deny-by-default).`,
+                description: `FUNGI-PROV-001: '${filePath}' failed to parse — analyzer BLIND, cannot certify clean (deny-by-default).`,
               }]
             : result.flows.map(flowName => ({
                 flowName,
@@ -86,7 +86,7 @@ async function main(): Promise<number> {
       };
 
       process.stdout.write(renderTextReport(graph, 1));
-      // SPORE-PROV-001: blind analysis is NOT a pass — deny by default.
+      // FUNGI-PROV-001: blind analysis is NOT a pass — deny by default.
       return highRisk ? 2 : 0;
     }
 
@@ -100,7 +100,7 @@ async function main(): Promise<number> {
 
       const files = collectSporeFiles(resolve(dir));
       if (files.length === 0) {
-        process.stderr.write(`No .spore files found in '${dir}'\n`);
+        process.stderr.write(`No .fungi files found in '${dir}'\n`);
         return 0;
       }
 
@@ -138,7 +138,7 @@ async function main(): Promise<number> {
       const files = collectSporeFiles(resolve(dir));
 
       if (files.length === 0) {
-        process.stderr.write(`No .spore files found in '${dir}'\n`);
+        process.stderr.write(`No .fungi files found in '${dir}'\n`);
         return 0;
       }
 
@@ -159,7 +159,7 @@ async function main(): Promise<number> {
     default: {
       process.stdout.write("galerina-provenance — Data Lineage & Provenance Tracker for Galerina\n\n");
       process.stdout.write("Commands:\n");
-      process.stdout.write("  trace <file.spore> [--flow <name>]   Trace data lineage for one file\n");
+      process.stdout.write("  trace <file.fungi> [--flow <name>]   Trace data lineage for one file\n");
       process.stdout.write("  audit <directory>                   Scan all flows, show risk summary\n");
       process.stdout.write("  report <directory> [--json]         Full provenance report\n\n");
       process.stdout.write("Exit codes: 0=clean, 1=usage error, 2=high-risk flows found\n");

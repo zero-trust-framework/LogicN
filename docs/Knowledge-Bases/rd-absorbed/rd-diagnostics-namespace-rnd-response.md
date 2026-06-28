@@ -13,7 +13,7 @@
 **Boundary:** the Galerina repo is **off-limits to edit** from this R&D session — this doc is a *recommendation*
 the owner applies there; nothing here modifies the compiler or its tests. **Why it matters here:** the
 privacy-governance phase ([`privacy/privacy-governance-v0.md`](privacy/privacy-governance-v0.md) §3) adds
-`SPORE-DP-*` / `SPORE-PRIVACY-*` codes that must register cleanly under exactly this invariant.
+`FUNGI-DP-*` / `FUNGI-PRIVACY-*` codes that must register cleanly under exactly this invariant.
 
 > **Verdict on the KB:** the design is sound — turning a documentation convention into a build-breaking
 > invariant, with a **shrink-only `PENDING_REGISTRATION`** allowlist as the pragmatic bridge, is the right
@@ -22,16 +22,16 @@ privacy-governance phase ([`privacy/privacy-governance-v0.md`](privacy/privacy-g
 ---
 
 ## Patch 1 — Reverse drift / orphaned codes (make the check **bidirectional**)
-**Gap.** The invariant asserts **Source ──▶ Registry** (every emitted `SPORE-*` is registered). It does **not**
-assert **Registry ──▶ Source**. So if a refactor deletes the code that emitted `SPORE-SECRET-005`, the registry
+**Gap.** The invariant asserts **Source ──▶ Registry** (every emitted `FUNGI-*` is registered). It does **not**
+assert **Registry ──▶ Source**. So if a refactor deletes the code that emitted `FUNGI-SECRET-005`, the registry
 entry becomes **ghost documentation** — a documented code nothing emits, silently rotting.
 
-**Fix.** Add the reverse assertion. Every `SPORE-*` in `compiler-diagnostics.md` must either be **found emitted in
+**Fix.** Add the reverse assertion. Every `FUNGI-*` in `compiler-diagnostics.md` must either be **found emitted in
 the source tree** *or* carry an explicit **`[RETIRED]`** tag. This preserves the existing "never reuse a retired
 number" rule (retired entries stay in the registry, tagged, so the number is never recycled).
 ```js
 // diagnostic-namespace.test.mjs (addition)
-const emitted   = scanSourceForCodes();          // set of SPORE-* in `code: "SPORE-..."` literals
+const emitted   = scanSourceForCodes();          // set of FUNGI-* in `code: "FUNGI-..."` literals
 const registered = parseRegistry();              // entries from compiler-diagnostics.md (with tags)
 // forward (existing): every emitted code is registered or PENDING_REGISTRATION
 for (const c of emitted) assert(registered.has(c) || PENDING.has(c), `unregistered emitted code ${c}`);
@@ -46,21 +46,21 @@ reused) instead of leaving ghost docs.
 ---
 
 ## Patch 2 — Dynamic string interpolation (codes MUST be static literals)
-**Gap.** The scan relies on `code: "SPORE-..."` literals (AST/regex). It is blind to dynamic construction:
+**Gap.** The scan relies on `code: "FUNGI-..."` literals (AST/regex). It is blind to dynamic construction:
 ```js
-const errorCode = `SPORE-PRIVACY-00${level}`;   // invisible to the conformance scan -> unregisterable, untrackable
+const errorCode = `FUNGI-PRIVACY-00${level}`;   // invisible to the conformance scan -> unregisterable, untrackable
 ```
 This both evades registration **and** makes the namespace un-auditable (a code that only exists at runtime).
 
 **Fix.** A **hard lint**: diagnostic codes must be **static string literals**. Dynamic generation or
-interpolation that produces an `SPORE-*` prefix is a **fatal compiler error** (itself a registered diagnostic,
-e.g. `SPORE-META-001` *type-check/lint*). The AST check:
+interpolation that produces an `FUNGI-*` prefix is a **fatal compiler error** (itself a registered diagnostic,
+e.g. `FUNGI-META-001` *type-check/lint*). The AST check:
 ```js
-// lint pass: forbid non-literal SPORE-* code construction
-// FAIL on: TemplateLiteral / BinaryExpression('+') whose (static prefix) starts with "SPORE-"
+// lint pass: forbid non-literal FUNGI-* code construction
+// FAIL on: TemplateLiteral / BinaryExpression('+') whose (static prefix) starts with "FUNGI-"
 //          when used as a `code:` property value or passed to the diagnostic emitter.
-if (node.type !== 'Literal' && reachesDiagnosticEmitter(node) && startsWithSPORE(staticPrefixOf(node)))
-  fatal('SPORE-META-001', 'diagnostic code must be a static string literal; dynamic SPORE-* construction is forbidden');
+if (node.type !== 'Literal' && reachesDiagnosticEmitter(node) && startsWithFUNGI(staticPrefixOf(node)))
+  fatal('FUNGI-META-001', 'diagnostic code must be a static string literal; dynamic FUNGI-* construction is forbidden');
 ```
 This guarantees the Patch-1 scan sees **every** code, and keeps the namespace a static, auditable API surface.
 
@@ -88,14 +88,14 @@ asserts the generated file equals the committed one (drift = stale generated fil
 ---
 
 ## How these compose with the privacy phase
-The new `SPORE-DP-*` / `SPORE-PRIVACY-*` codes (privacy-governance §3) are introduced **with mechanism tags**
+The new `FUNGI-DP-*` / `FUNGI-PRIVACY-*` codes (privacy-governance §3) are introduced **with mechanism tags**
 (`effect-check`, `dataflow-taint`, `declarative-clause`) precisely so that: Patch 1 confirms they are emitted
 (not orphaned), Patch 2 forces them to be static literals, and Patch 3 auto-routes the `dataflow-taint` /
 governance ones into `governance-rules.md`. The discipline and the new privacy codes are designed to fit.
 
 ## Acceptance (what "airtight" means here)
 1. Bidirectional conformance: an orphaned registry code fails the test until `[RETIRED]`-tagged.
-2. Static-literal lint: a `\`SPORE-...${x}\`` anywhere on the emit path is a fatal compile error.
+2. Static-literal lint: a `\`FUNGI-...${x}\`` anywhere on the emit path is a fatal compile error.
 3. Governance subset is generated/derived (or asserted-consistent) from the canonical registry — no manual sync.
 With these three patched into `diagnostic-namespace.test.mjs` (+ the lint pass), the namespace is a strict,
 testable, auditable API surface — and the 87 `PENDING_REGISTRATION` codes can be reconciled shrink-only without

@@ -4,12 +4,12 @@
 // Self-contained, machine-checkable proof (node built-ins ONLY — no npm, no repo
 // imports) for R&D item RD-0168:
 //
-//   "A dev tool that uses the dependency / flow GRAPH to check that .spore files
+//   "A dev tool that uses the dependency / flow GRAPH to check that .fungi files
 //    are PCI/DSS compliant and to flag other security issues."
 //
 // THESIS (what this proof establishes)
 // ------------------------------------
-// The shipped per-flow AST PCI checker (galerina-devtools-pci, SPORE-PCI-001..010)
+// The shipped per-flow AST PCI checker (galerina-devtools-pci, FUNGI-PCI-001..010)
 // asks LOCAL questions ("does THIS flow declare audit.write / TLS / privacy{}?").
 // It cannot answer a CROSS-flow data-flow question: "does cardholder data (PAN)
 // REACH an egress/log sink along a path that has NO encrypt/redact edge on it?"
@@ -27,11 +27,11 @@
 //   Req 10 (audit trail):  a PAN-touching sink path must cross an `audit` edge. Else FAIL.
 //   K3:    a node whose data-classification is UNKNOWN that reaches ANY sink
 //           collapses the verdict to INDETERMINATE (unknown -> deny, never a
-//           silent PASS). This is `collapse(0) = deny` / SPORE-GOV-3VL-001.
+//           silent PASS). This is `collapse(0) = deny` / FUNGI-GOV-3VL-001.
 //
 // We DERIVE the verdicts from a real graph walk (BFS path enumeration), we don't
 // hand-assert them; we also run the RD-0167 unsigned-index attack to show the
-// scanner's OWN trust root (the .spore index/graph) must be signed, else an
+// scanner's OWN trust root (the .fungi index/graph) must be signed, else an
 // attacker rewrites the graph to hide a PAN->egress edge from the scanner.
 //
 // V# = proved here.  X# = excluded (named, with reason / owner).
@@ -123,7 +123,7 @@ const sourcesOfClass = (g, cls) =>
 // 1) THE GRAPH-DRIVEN PCI ENGINE (the net-new RD-0168 layer, ~120 lines here).
 //    Verdict is a TRIT:  -1 DENY/FAIL | 0 INDETERMINATE | +1 PASS  (K3).
 //    collapse: only +1 authorizes; 0 and -1 both deny (galerina-three-valued-
-//    governance.md §4, SPORE-GOV-3VL-001).
+//    governance.md §4, FUNGI-GOV-3VL-001).
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DENY = -1, INDET = 0, ALLOW = 1;
@@ -139,7 +139,7 @@ const finding = (code, req, severity, message, path) => ({ code, pciRequirement:
 const pathHasEdge = (edges, kind) => edges.includes(kind);
 
 // ---- Req 4.2 — PAN must not reach an egress sink without an encrypt edge on the path.
-//      SPORE-PCI-G-004 (G = graph-driven variant of the existing SPORE-PCI-003).
+//      FUNGI-PCI-G-004 (G = graph-driven variant of the existing FUNGI-PCI-003).
 function checkReq4(g) {
   const findings = [];
   let verdict = ALLOW;
@@ -150,7 +150,7 @@ function checkReq4(g) {
         if (!encrypted) {
           verdict = minTrit(verdict, DENY);
           findings.push(finding(
-            "SPORE-PCI-G-004", "4.2", "critical",
+            "FUNGI-PCI-G-004", "4.2", "critical",
             `PAN node '${panId}' reaches egress sink '${egress}' along a path with NO encrypt/redact edge — cardholder data leaves on a cleartext channel (PCI Req 4.2).`,
             p.nodes.join(" -> "),
           ));
@@ -162,7 +162,7 @@ function checkReq4(g) {
 }
 
 // ---- Req 3.4 / 10.3 — secret (or PAN) must not reach a log sink without a redact edge.
-//      SPORE-PCI-G-006 (graph variant of SPORE-PCI-006).
+//      FUNGI-PCI-G-006 (graph variant of FUNGI-PCI-006).
 function checkNoSecretInLogs(g) {
   const findings = [];
   let verdict = ALLOW;
@@ -174,7 +174,7 @@ function checkNoSecretInLogs(g) {
           verdict = minTrit(verdict, DENY);
           const cls = g.node(sId).classification;
           findings.push(finding(
-            "SPORE-PCI-G-006", cls === "PAN" ? "10.3" : "3.4", "critical",
+            "FUNGI-PCI-G-006", cls === "PAN" ? "10.3" : "3.4", "critical",
             `${cls} node '${sId}' reaches log sink '${logSink}' with NO redact edge on the path — secrets/PAN must never be written to logs in the clear (PCI Req ${cls === "PAN" ? "10.3" : "3.4"}).`,
             p.nodes.join(" -> "),
           ));
@@ -186,7 +186,7 @@ function checkNoSecretInLogs(g) {
 }
 
 // ---- Req 10.2 — a PAN-touching egress/store path must cross an audit edge.
-//      SPORE-PCI-G-005 (graph variant of SPORE-PCI-005). Missing audit edge = FAIL.
+//      FUNGI-PCI-G-005 (graph variant of FUNGI-PCI-005). Missing audit edge = FAIL.
 function checkAuditTrail(g) {
   const findings = [];
   let verdict = ALLOW;
@@ -198,7 +198,7 @@ function checkAuditTrail(g) {
           if (!pathHasEdge(p.edges, "audit")) {
             verdict = minTrit(verdict, DENY);
             findings.push(finding(
-              "SPORE-PCI-G-005", "10.2", "high",
+              "FUNGI-PCI-G-005", "10.2", "high",
               `PAN node '${panId}' reaches ${sinkKind} sink '${sink}' along a path with NO audit edge — all cardholder-data access must be audit-logged (PCI Req 10.2).`,
               p.nodes.join(" -> "),
             ));
@@ -212,7 +212,7 @@ function checkAuditTrail(g) {
 
 // ---- K3 — any UNKNOWN-classification node that reaches ANY sink => INDETERMINATE.
 //      The scanner was BLIND about that node's data class; unknown -> deny, never a
-//      silent pass. SPORE-PCI-G-000 / SPORE-GOV-3VL-001.
+//      silent pass. FUNGI-PCI-G-000 / FUNGI-GOV-3VL-001.
 function checkUnknownReachesSink(g) {
   const findings = [];
   let verdict = ALLOW;
@@ -222,7 +222,7 @@ function checkUnknownReachesSink(g) {
       if (allPaths(g, uId, sink).length > 0) {
         verdict = minTrit(verdict, INDET);   // lower ALLOW -> INDET, but never below an existing DENY
         findings.push(finding(
-          "SPORE-PCI-G-000", "3.4", "high",
+          "FUNGI-PCI-G-000", "3.4", "high",
           `Node '${uId}' has UNKNOWN data-classification and reaches sink '${sink}' — the scanner cannot prove it is not cardholder data, so the verdict is INDETERMINATE (unknown -> deny, never silent pass).`,
           null,
         ));
@@ -259,8 +259,8 @@ console.log("V1  PAN reaches egress with NO encrypt/redact edge on the path => F
   const r = runGraphPciAudit(g);
   ok(r.label === "fail", `verdict = '${r.label}' (expected 'fail')`);
   ok(r.passed === false, "passed === false (a leaking graph never authorizes)");
-  const req4 = r.findings.find(f => f.code === "SPORE-PCI-G-004");
-  ok(req4 !== undefined, "raised SPORE-PCI-G-004 (PAN->egress, no encryption)");
+  const req4 = r.findings.find(f => f.code === "FUNGI-PCI-G-004");
+  ok(req4 !== undefined, "raised FUNGI-PCI-G-004 (PAN->egress, no encryption)");
   ok(req4 && req4.path === "pan_in -> buildBody -> http_out",
      `finding carries the offending path: ${req4 ? req4.path : "<none>"}`);
   // The local AST checker would MISS this if buildBody is a separate flow with no
@@ -294,8 +294,8 @@ console.log("\nV2b control: encrypt present but audit MISSING => Req4 clears, Re
   g.addEdge("sealed", "http_out", "flow");     // encrypted but NOT audited
   const r = runGraphPciAudit(g);
   ok(r.label === "fail", `verdict = '${r.label}' (expected 'fail' — audit missing)`);
-  ok(r.findings.some(f => f.code === "SPORE-PCI-G-004") === false, "Req 4.2 NOT raised (encrypt edge present cleared it)");
-  ok(r.findings.some(f => f.code === "SPORE-PCI-G-005"), "Req 10.2 (SPORE-PCI-G-005) raised — audit edge absent");
+  ok(r.findings.some(f => f.code === "FUNGI-PCI-G-004") === false, "Req 4.2 NOT raised (encrypt edge present cleared it)");
+  ok(r.findings.some(f => f.code === "FUNGI-PCI-G-005"), "Req 10.2 (FUNGI-PCI-G-005) raised — audit edge absent");
 }
 
 // ── V3 (TASK assertion c) — UNKNOWN-classification node reaching a sink => INDETERMINATE.
@@ -311,7 +311,7 @@ console.log("\nV3  UNKNOWN-classification node reaching a sink => INDETERMINATE 
   const r = runGraphPciAudit(g);
   ok(r.label === "indeterminate", `verdict = '${r.label}' (expected 'indeterminate', NOT 'pass')`);
   ok(r.passed === false, "passed === false — an unknown reaching a sink does NOT silently pass (K3 collapse(0)=deny)");
-  ok(r.findings.some(f => f.code === "SPORE-PCI-G-000"), "raised SPORE-PCI-G-000 (unknown class reaches sink)");
+  ok(r.findings.some(f => f.code === "FUNGI-PCI-G-000"), "raised FUNGI-PCI-G-000 (unknown class reaches sink)");
   // Boundary-collapse proof: INDET is strictly below ALLOW, so it cannot authorize.
   ok(minTrit(ALLOW, INDET) === INDET && INDET < ALLOW, "collapse: minTrit(ALLOW, INDET) = INDET < ALLOW (only +1 authorizes)");
 }
@@ -327,8 +327,8 @@ console.log("\nV4  secret reaches a LOG sink with no redact edge => FAIL (PCI Re
   g.addEdge("ctx", "applog", "flow");          // secret written to logs in the clear
   const r = runGraphPciAudit(g);
   ok(r.label === "fail", `verdict = '${r.label}' (expected 'fail')`);
-  const f = r.findings.find(x => x.code === "SPORE-PCI-G-006");
-  ok(f !== undefined, "raised SPORE-PCI-G-006 (secret->log, no redact)");
+  const f = r.findings.find(x => x.code === "FUNGI-PCI-G-006");
+  ok(f !== undefined, "raised FUNGI-PCI-G-006 (secret->log, no redact)");
   ok(f && f.pciRequirement === "3.4", `requirement tagged ${f ? f.pciRequirement : "<none>"} (3.4)`);
 
   // Positive control: the SAME secret->log path WITH a redact edge clears.
@@ -339,7 +339,7 @@ console.log("\nV4  secret reaches a LOG sink with no redact edge => FAIL (PCI Re
   g2.addEdge("api_key", "masked", "redact");
   g2.addEdge("masked", "applog", "flow");
   const r2 = runGraphPciAudit(g2);
-  ok(r2.findings.some(x => x.code === "SPORE-PCI-G-006") === false, "redact edge on the path clears the secret->log finding");
+  ok(r2.findings.some(x => x.code === "FUNGI-PCI-G-006") === false, "redact edge on the path clears the secret->log finding");
 }
 
 // ── V5 — GENERALIZATION: same engine flags an SSRF / taint->egress path (other security
@@ -359,8 +359,8 @@ console.log("\nV5  generalization — untrusted input reaches network egress unv
   const r = runGraphPciAudit(g);
   // unknown->sink gives INDETERMINATE (the SSRF candidate the scanner must not pass).
   ok(r.label === "indeterminate", `untrusted->egress => '${r.label}' (flagged, not passed)`);
-  ok(r.findings.some(f => f.code === "SPORE-PCI-G-000"), "SSRF candidate surfaced via the same unknown-reaches-sink rule");
-  // (Production RD-0168 would carry a distinct 'untrusted' class + SPORE-SSRF-G code;
+  ok(r.findings.some(f => f.code === "FUNGI-PCI-G-000"), "SSRF candidate surfaced via the same unknown-reaches-sink rule");
+  // (Production RD-0168 would carry a distinct 'untrusted' class + FUNGI-SSRF-G code;
   //  here we prove the GRAPH QUERY is the same — only the node tag/code differ.)
 }
 
@@ -395,11 +395,11 @@ console.log("\nV6  reachability core is sound: allPaths(u, sink) nonempty IFF tr
 }
 
 // ── V7 — THE TRUST-ROOT FLAG (ties RD-0168 to RD-0167). The scanner READS the graph
-//   FROM the .spore (in-passport index / flow-dependency edges). If that graph is
+//   FROM the .fungi (in-passport index / flow-dependency edges). If that graph is
 //   UNSIGNED, an attacker rewrites it to DELETE the PAN->egress edge so the scanner
 //   sees a clean graph while the real program still leaks. The scanner's own input
 //   must be signed. We run the real attack with node:crypto Ed25519.
-console.log("\nV7  scanner trust-root: an UNSIGNED .spore graph can be rewritten to HIDE the PAN->egress edge from the scanner:");
+console.log("\nV7  scanner trust-root: an UNSIGNED .fungi graph can be rewritten to HIDE the PAN->egress edge from the scanner:");
 {
   const { publicKey, privateKey } = generateKeyPairSync("ed25519");
 
@@ -473,10 +473,10 @@ console.log("\nV8  verdict fold is fail-closed monotone: adding any sub-verdict 
 // EXCLUDED — named, not proven here (kept honest about scope boundaries).
 // ─────────────────────────────────────────────────────────────────────────────
 const EXCLUDED = [
-  ["X1", "Building the DataFlowGraph from REAL .spore AST (classification inference from types/taint)",
-        "OUT OF SCOPE for this PoC (no repo imports). RD-0168 build reuses galerina-devtools-project-graph's AST->graph builders + the compiler's TaintType.Cardholder_Data (already drives SPORE-PRIVACY-002). Here the graph is hand-modeled to prove the QUERY layer."],
-  ["X2", "Replacing the shipped per-flow AST checker (SPORE-PCI-001..010)",
-        "NOT proposed. RD-0168 is ADDITIVE: the AST checker keeps the local Req 3.3/3.5/6.x/7/8 lint; the graph layer adds the CROSS-flow reachability checks (Req 3.4/4.2/10.x) the AST checker structurally cannot see. Same SPORE-PCI-G-* code family, merged report."],
+  ["X1", "Building the DataFlowGraph from REAL .fungi AST (classification inference from types/taint)",
+        "OUT OF SCOPE for this PoC (no repo imports). RD-0168 build reuses galerina-devtools-project-graph's AST->graph builders + the compiler's TaintType.Cardholder_Data (already drives FUNGI-PRIVACY-002). Here the graph is hand-modeled to prove the QUERY layer."],
+  ["X2", "Replacing the shipped per-flow AST checker (FUNGI-PCI-001..010)",
+        "NOT proposed. RD-0168 is ADDITIVE: the AST checker keeps the local Req 3.3/3.5/6.x/7/8 lint; the graph layer adds the CROSS-flow reachability checks (Req 3.4/4.2/10.x) the AST checker structurally cannot see. Same FUNGI-PCI-G-* code family, merged report."],
   ["X3", "Path-explosion on large graphs (allPaths is exponential in the worst case)",
         "PoC-only. Production uses bounded reachability (bfsReachable) + per-node fixpoint accumulation of 'has an encrypt/redact/audit edge been crossed on ANY path to here', i.e. a lattice fold over the existing fixpoint.ts — linear in edges, not path enumeration. The exponential allPaths here is for proof clarity on a 3-node graph."],
   ["X4", "Soundness of the classification itself (is this node REALLY PAN?)",

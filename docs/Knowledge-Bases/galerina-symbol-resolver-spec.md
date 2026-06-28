@@ -8,7 +8,7 @@ Implementation:   packages-galerina/galerina-core-compiler/src/symbol-resolver.t
 Export:           resolveSymbols(ast: AstNode): SymbolResolveResult
 ```
 
-This document defines the Galerina symbol resolver pass and the `SPORE-NAME-*`
+This document defines the Galerina symbol resolver pass and the `FUNGI-NAME-*`
 diagnostics emitted for name resolution failures.
 
 ---
@@ -16,7 +16,7 @@ diagnostics emitted for name resolution failures.
 ## TL;DR
 - Runs before the type checker — checks names in expression position
 - Flow names are program-scope (hoisted); binding names are block-scope (sequential)
-- Capital-letter identifiers are suppressed from SPORE-NAME-001 (stdlib modules)
+- Capital-letter identifiers are suppressed from FUNGI-NAME-001 (stdlib modules)
 
 ---
 
@@ -27,10 +27,10 @@ diagnostics emitted for name resolution failures.
   position.
 - Flow names are program-scope and hoisted; binding names are block-scope and
   sequential.
-- Standard prelude names are always in scope and never emit `SPORE-NAME-001`.
-- Shadowing an outer scope is `SPORE-TYPE-020` warning; duplicate declaration in
-  the same scope is `SPORE-NAME-002` error.
-- `fn` exists only inside flow bodies; top-level `fn` is `SPORE-SYNTAX-005`, not a
+- Standard prelude names are always in scope and never emit `FUNGI-NAME-001`.
+- Shadowing an outer scope is `FUNGI-TYPE-020` warning; duplicate declaration in
+  the same scope is `FUNGI-NAME-002` error.
+- `fn` exists only inside flow bodies; top-level `fn` is `FUNGI-SYNTAX-005`, not a
   name error.
 
 ---
@@ -48,7 +48,7 @@ It runs after parsing and before type checking. Its job is existence and scope,
 not type compatibility, value-state, effects, imports, or governance policy.
 
 The symbol resolver produces a resolved name environment for later passes and
-emits `SPORE-NAME-*` diagnostics for undeclared names, duplicate names, and related
+emits `FUNGI-NAME-*` diagnostics for undeclared names, duplicate names, and related
 module-resolution errors.
 
 ## Pipeline Position
@@ -153,7 +153,7 @@ The first pass collects declarations that are visible from program scope:
 
 Flow and type declarations are hoisted for name resolution. A flow can call
 another flow before its textual declaration without triggering
-`SPORE-NAME-003`.
+`FUNGI-NAME-003`.
 
 ### Second Pass: Body Walk
 
@@ -175,7 +175,7 @@ declaration point in the current block.
 ## Standard Prelude
 
 The Galerina standard prelude provides names that are always available. These names
-must not trigger `SPORE-NAME-001`.
+must not trigger `FUNGI-NAME-001`.
 
 ### Constructor Values
 
@@ -272,7 +272,7 @@ toString
 ### Phase 7A Suppressions
 
 Until the standard library is formally declared, the resolver suppresses
-`SPORE-NAME-001` for capitalized identifiers matching these suffixes:
+`FUNGI-NAME-001` for capitalized identifiers matching these suffixes:
 
 ```text
 *DB
@@ -301,7 +301,7 @@ tightened when the stdlib and module import system are formalised.
 
 ## Diagnostics
 
-## SPORE-NAME-001: UNDECLARED_NAME
+## FUNGI-NAME-001: UNDECLARED_NAME
 
 Trigger:
 
@@ -310,7 +310,7 @@ in any enclosing scope and is not part of the standard prelude.
 
 Do not trigger for:
 
-- `typeRef` nodes; unknown types are `SPORE-TYPE-001`.
+- `typeRef` nodes; unknown types are `FUNGI-TYPE-001`.
 - Names in the standard prelude.
 - Constructor values: `None`, `Some`, `Ok`, `Err`.
 - Flow names collected in program scope.
@@ -344,7 +344,7 @@ pure flow calculate() -> Int {
 Diagnostic:
 
 ```text
-SPORE-NAME-001 UNDECLARED_NAME
+FUNGI-NAME-001 UNDECLARED_NAME
 'undeclaredHelper' is not declared in the current scope.
 ```
 
@@ -355,7 +355,7 @@ Declare 'undeclaredHelper' in scope, import it when modules are available, or
 replace it with a declared flow, fn, or binding.
 ```
 
-## SPORE-NAME-002: DUPLICATE_NAME
+## FUNGI-NAME-002: DUPLICATE_NAME
 
 Trigger:
 
@@ -365,7 +365,7 @@ same scope level.
 Do not trigger for:
 
 - A binding in an inner block that shadows an outer binding. That is
-  `SPORE-TYPE-020` warning.
+  `FUNGI-TYPE-020` warning.
 - Flow declarations with the same name; duplicate top-level declarations are
   parser or declaration-collection errors.
 - Type names in type position.
@@ -383,7 +383,7 @@ pure flow duplicateLocal() -> Int {
 Diagnostic:
 
 ```text
-SPORE-NAME-002 DUPLICATE_NAME
+FUNGI-NAME-002 DUPLICATE_NAME
 'x' is already declared in this scope.
 ```
 
@@ -399,7 +399,7 @@ pure flow shadowOuter() -> Int {
 }
 ```
 
-This is not `SPORE-NAME-002`; it is handled by `SPORE-TYPE-020` as a warning.
+This is not `FUNGI-NAME-002`; it is handled by `FUNGI-TYPE-020` as a warning.
 
 Suggested fix:
 
@@ -413,10 +413,10 @@ form. An invalid extension is:
 
 ```galerina
 mut count: Int = 0
-let count: String = "zero"  // SPORE-NAME-002 in the same scope
+let count: String = "zero"  // FUNGI-NAME-002 in the same scope
 ```
 
-## SPORE-NAME-003: USE_BEFORE_DECLARATION
+## FUNGI-NAME-003: USE_BEFORE_DECLARATION
 
 Trigger:
 
@@ -444,7 +444,7 @@ pure flow beforeDecl() -> Int {
 Diagnostic:
 
 ```text
-SPORE-NAME-003 USE_BEFORE_DECLARATION
+FUNGI-NAME-003 USE_BEFORE_DECLARATION
 'x' is used before its declaration.
 ```
 
@@ -467,7 +467,7 @@ Move the binding declaration before its first use, or pass the value as a
 parameter.
 ```
 
-## SPORE-NAME-004: PRIVATE_ACCESS
+## FUNGI-NAME-004: PRIVATE_ACCESS
 
 Trigger:
 
@@ -495,7 +495,7 @@ flow loadOrder(id: OrderId) -> Result<Order, ApiError> {
 ```
 
 If `internalOrders` belongs to another module and was not imported or exported,
-this becomes `SPORE-NAME-004`.
+this becomes `FUNGI-NAME-004`.
 
 Suggested fix:
 
@@ -504,7 +504,7 @@ Import the module and access an exported name, or make the declaration public in
 the defining module.
 ```
 
-## SPORE-NAME-005: AMBIGUOUS_NAME
+## FUNGI-NAME-005: AMBIGUOUS_NAME
 
 Trigger:
 
@@ -519,8 +519,8 @@ Deferred - module imports and aliasing are not implemented yet.
 
 Do not trigger for:
 
-- Same-scope duplicate local bindings; those are `SPORE-NAME-002`.
-- Outer-scope shadowing; that is `SPORE-TYPE-020`.
+- Same-scope duplicate local bindings; those are `FUNGI-NAME-002`.
+- Outer-scope shadowing; that is `FUNGI-TYPE-020`.
 - Overloaded constructors in the standard prelude until overload resolution is
   formalised.
 
@@ -552,8 +552,8 @@ The symbol resolver checks identifier existence in expression position.
 The type checker checks type names in type position:
 
 ```text
-typeRef -> SPORE-TYPE-001 when unknown
-identifier expression -> SPORE-NAME-001 when unknown
+typeRef -> FUNGI-TYPE-001 when unknown
+identifier expression -> FUNGI-NAME-001 when unknown
 ```
 
 The two passes must not double-fire on the same source token. For example,
@@ -577,9 +577,9 @@ effectful.
 There is no diagnostic overlap:
 
 ```text
-undeclared call target -> SPORE-NAME-001
-declared effectful call in pure flow -> SPORE-EFFECT-003
-missing declared effect -> SPORE-EFFECT-001 / SPORE-EFFECT-002
+undeclared call target -> FUNGI-NAME-001
+declared effectful call in pure flow -> FUNGI-EFFECT-003
+missing declared effect -> FUNGI-EFFECT-001 / FUNGI-EFFECT-002
 ```
 
 ---
@@ -618,11 +618,11 @@ export function resolveSymbols(ast: AstNode): SymbolResolveResult;
 
 | Diagnostic | CEC mapping |
 |---|---|
-| `SPORE-NAME-001` | Custom example: identifier used but never declared, such as `undeclaredHelper(42)` |
-| `SPORE-NAME-002` | `docs/Examples/Level-1-Basics/006-mut-binding`, extended with a duplicate `count` declaration |
-| `SPORE-NAME-003` | Custom example: `let y = x + 1` before `let x: Int = 5` |
-| `SPORE-NAME-004` | Pending module-system example; imports not implemented in Phase 7A |
-| `SPORE-NAME-005` | Pending module-system example; ambiguous imports not implemented in Phase 7A |
+| `FUNGI-NAME-001` | Custom example: identifier used but never declared, such as `undeclaredHelper(42)` |
+| `FUNGI-NAME-002` | `docs/Examples/Level-1-Basics/006-mut-binding`, extended with a duplicate `count` declaration |
+| `FUNGI-NAME-003` | Custom example: `let y = x + 1` before `let x: Int = 5` |
+| `FUNGI-NAME-004` | Pending module-system example; imports not implemented in Phase 7A |
+| `FUNGI-NAME-005` | Pending module-system example; ambiguous imports not implemented in Phase 7A |
 
 Related Level 1 examples:
 
@@ -631,7 +631,7 @@ Related Level 1 examples:
 - `docs/Examples/Level-1-Basics/006-mut-binding` demonstrates valid mutable
   binding declaration and later use.
 - `docs/Examples/Level-1-Basics/020-invalid-fn-top-level` demonstrates that a
-  top-level `fn` is syntax invalid (`SPORE-SYNTAX-005`), not a name-resolution
+  top-level `fn` is syntax invalid (`FUNGI-SYNTAX-005`), not a name-resolution
   failure.
 
 ---

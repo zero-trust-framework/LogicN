@@ -1,4 +1,4 @@
-// UInt64 unlock (#52): the owner-authorized lift of UInt64 from the SPORE-NUMERIC-001 gate. The exact-trapping
+// UInt64 unlock (#52): the owner-authorized lift of UInt64 from the FUNGI-NUMERIC-001 gate. The exact-trapping
 // u64-arith layer (overflow/underflow/÷0 TRAP, no silent 2^64 wrap) is now wired into the tree-walker as a
 // NON-NEGATIVE bigint. UInt64 stays WALKER-ONLY (FAST_TIER_UNLOWERABLE) — the fast tiers bail and the WASM
 // emitter DECLINES it (unsigned ≠ signed i64), so there is no silent tier divergence.
@@ -8,22 +8,22 @@ import * as L from "../dist/index.js";
 
 async function run(body, ret = "UInt64") {
   const src = `pure flow probe() -> ${ret} {\n${body}\n}`;
-  const p = L.parseProgram(src, "p.spore");
+  const p = L.parseProgram(src, "p.fungi");
   assert.equal(p.diagnostics.filter((d) => d.severity === "error").length, 0, "parse");
   try { L.resolveSymbols(p.ast); L.checkTypes(p.ast); } catch {}
   const r = await L.executeFlow("probe", new Map(), p.ast);
   return r.value;
 }
 function tcDiags(src) {
-  const p = L.parseProgram(src, "p.spore");
+  const p = L.parseProgram(src, "p.fungi");
   L.resolveSymbols(p.ast);
   const tc = L.checkTypes(p.ast);
   return [...(p.diagnostics ?? []), ...(tc?.diagnostics ?? [])];
 }
 
-test("the SPORE-NUMERIC-001 gate is LIFTED — a UInt64 declaration compiles clean", () => {
+test("the FUNGI-NUMERIC-001 gate is LIFTED — a UInt64 declaration compiles clean", () => {
   const ds = tcDiags(`pure flow f() -> UInt64 {\n  let x: UInt64 = 42\n  return x\n}`);
-  assert.ok(!ds.some((d) => d.code === "SPORE-NUMERIC-001"), `UInt64 should be unlocked, got: ${ds.map((d) => d.code).join(",")}`);
+  assert.ok(!ds.some((d) => d.code === "FUNGI-NUMERIC-001"), `UInt64 should be unlocked, got: ${ds.map((d) => d.code).join(",")}`);
 });
 
 test("UInt64 arithmetic is EXACT beyond 2^53 (where i32 would overflow)", async () => {
@@ -70,12 +70,12 @@ test("WASM tier lowers a uint64×uint64 op with UNSIGNED ops (checked u64 helper
   // The u64 WASM emitter now lowers uint64×uint64 faithfully (see u64-wasm-differential.test.mjs for the
   // byte-exact walker≡WASM proof). It must use the UNSIGNED checked helper / native u64 ops, never signed i64.
   const src = `pure flow add(a: UInt64, b: UInt64) -> UInt64\ncontract { effects {} }\n{ return a + b }`;
-  const p = L.parseProgram(src, "p.spore");
+  const p = L.parseProgram(src, "p.fungi");
   assert.equal(p.diagnostics.filter((d) => d.severity === "error").length, 0);
   const fx = L.checkEffects(p.flows, p.ast);
   const { gir } = L.emitGIR(p.ast, p.flows, fx);
   const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "p", p.ast, true));
-  assert.match(wat, /call \$spore_checked_add_u64/, "UInt64 '+' must use the strict-trapping unsigned helper");
+  assert.match(wat, /call \$fungi_checked_add_u64/, "UInt64 '+' must use the strict-trapping unsigned helper");
   assert.match(wat, /\(result i64\)/, "a UInt64-returning flow must be typed (result i64)");
-  assert.doesNotMatch(wat, /spore_checked_add_i64/, "must NOT emit a signed-i64 add for a UInt64 op");
+  assert.doesNotMatch(wat, /fungi_checked_add_i64/, "must NOT emit a signed-i64 add for a UInt64 op");
 });

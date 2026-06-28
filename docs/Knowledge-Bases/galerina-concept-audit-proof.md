@@ -209,7 +209,7 @@ unauthorizedCapabilities:
 If unauthorized authority is attempted:
 
 ```text
-SPORE-AUDIT-001: Unauthorized capability escalation detected.
+FUNGI-AUDIT-001: Unauthorized capability escalation detected.
   attempted: payment.charge
   declared:  payment.refund only
 ```
@@ -451,4 +451,4 @@ That is fundamentally different from: *did execution succeed?*
 | [Intent](galerina-concept-intent.md) | First pipeline stage — semantic purpose |
 | [Governed Execution Plan](galerina-concept-governed-execution-plan.md) | Second stage — the contract audit proof verifies against |
 | [Coordinated Compute](galerina-concept-coordinated-compute.md) | Third stage — generates the runtime evidence audit proof consumes |
-| [compiler-diagnostics.md](compiler-diagnostics.md) | Full `SPORE-*` diagnostic code table |
+| [compiler-diagnostics.md](compiler-diagnostics.md) | Full `FUNGI-*` diagnostic code table |

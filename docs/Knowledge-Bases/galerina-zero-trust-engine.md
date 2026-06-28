@@ -19,8 +19,8 @@ Brawn = `.tmf` NVFP4 vector streaming, the elastic-precision photonic CPU (tower
 
 | # | Mandate | What it does | Shipped implementation | Status |
 |---|---|---|---|---|
-| 1 | **K3 Capability Gate** | Evaluates the environment in strict 3-valued logic before brawn spins up; `Allow(+1)` proceeds, `Deny(-1)`/`Unknown(0)` → fail-closed. Never silently collapses (emits `SPORE-GOV-3VL-001`). | `galerina-tower-citizen/src/three-valued-governance.ts` (`vAnd/vOr/vNot`, `decideAtBoundary`); transition form in `governance-enforcer.ts` (`0→+1` is a RESTRICTED transition needing audit signature). Reuses balanced-trit gates in `tpl-simulator.ts`. | ✅ shipped · 17/17 tests |
-| 2 | **Substrate Validator** | Keeps bit-exact crypto on the deterministic digital core; rejects crypto on a noisy/analog/photonic lane (`SPORE-SUBSTRATE-001`), and unvoted analog into a deterministic sink (`-004`). Compiler pass, always-error, fail-closed. | `galerina-core-compiler/src/substrate-inference.ts` (`CRYPTO_EFFECT`, `checkSubstrateViolations`); wired into the pipeline at `governance-verifier.ts`. | ✅ shipped · 27/27 tests |
+| 1 | **K3 Capability Gate** | Evaluates the environment in strict 3-valued logic before brawn spins up; `Allow(+1)` proceeds, `Deny(-1)`/`Unknown(0)` → fail-closed. Never silently collapses (emits `FUNGI-GOV-3VL-001`). | `galerina-tower-citizen/src/three-valued-governance.ts` (`vAnd/vOr/vNot`, `decideAtBoundary`); transition form in `governance-enforcer.ts` (`0→+1` is a RESTRICTED transition needing audit signature). Reuses balanced-trit gates in `tpl-simulator.ts`. | ✅ shipped · 17/17 tests |
+| 2 | **Substrate Validator** | Keeps bit-exact crypto on the deterministic digital core; rejects crypto on a noisy/analog/photonic lane (`FUNGI-SUBSTRATE-001`), and unvoted analog into a deterministic sink (`-004`). Compiler pass, always-error, fail-closed. | `galerina-core-compiler/src/substrate-inference.ts` (`CRYPTO_EFFECT`, `checkSubstrateViolations`); wired into the pipeline at `governance-verifier.ts`. | ✅ shipped · 27/27 tests |
 | 3 | **Attestation Verifier** | Verifies cryptographic proofs before letting the app read payload: TMX-256 root digest + signature verify-before-read; hybrid **Ed25519 + ML-DSA-65** (verify BOTH, no PQ downgrade). | In-process **BridgeManifest** path fully verifying: `galerina-tower-citizen/src/bridge-attestation.ts` (`verifyAttestation`, `verifyAttestationHybrid`). TMX-256 core in `galerina-ext-tmf/src/tmx256.ts`. | ✅ in-process path shipped · ⚠️ `.tmf` *file-format* signature pending (see residuals) |
 | 4 | **`LOAD → TRAP → ERASE` kill-switch** | On any violation: trap the error, write a cryptographic audit record, and hard-wipe memory (`zeroize`) so no state survives for an attacker to scrape. | `galerina-tower-citizen/src/tower-runtime.ts` (load/execute/erase + budget trap), `audit-logger.ts` (TRAP/ERASE phases, HMAC-chainable), `tpl-simulator.ts` (`mem.fill(0,…)`), `galerina-core-config/src/posture.ts` (`zeroizeAfterUse` default-on, fail-secure). | ✅ shipped |
 
@@ -38,7 +38,7 @@ The concrete Tier-3 example (the `ffsim` quantum subprocess) composes all four: 
 2. **Mid-compute capability revocation** — re-evaluate the K3 verdict *during* a long-running brawn job and pre-empt + zeroize. All primitives exist (`decideAtBoundary` + `TowerRuntime.evict` + `tpl-simulator.erase`); only the orchestration is unbuilt. File a separate scoped note **only if** a real long-running-external-compute use case needs pre-emption.
 
 ## Cross-refs
-- `galerina-three-valued-governance.md` (K3 calculus, SPORE-GOV-3VL-001)
-- `galerina-governance-rules.md` (SPORE-SUBSTRATE-001/004)
+- `galerina-three-valued-governance.md` (K3 calculus, FUNGI-GOV-3VL-001)
+- `galerina-governance-rules.md` (FUNGI-SUBSTRATE-001/004)
 - `galerina-tmf-engine.md` (TMX-256, container, slices)
 - `galerina-ext-bridge-quantum-design.md` (Tier-3 Toxic Border example)

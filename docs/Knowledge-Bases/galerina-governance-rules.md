@@ -6,7 +6,7 @@
 
 Rules are organized by category prefix. Each rule carries:
 - A **status** — `ENFORCED` (compiler rejects violations today), `PLANNED` (scheduled for a DRCM phase), or `PRINCIPLE` (architecture discipline, not yet compiler-enforced).
-- The **SPORE diagnostic code** that fires on violation (where applicable).
+- The **FUNGI diagnostic code** that fires on violation (where applicable).
 - A **correct** and **wrong** example.
 
 ---
@@ -21,9 +21,9 @@ Three distinct "policy"-related concepts exist in Galerina. These must never be 
 | **`access {}` Capability Negotiation (v2.1)** | `access { purpose "..." allow T to "..." }` | Inline block **between** `contract {}` and `{ body }` | Active negotiation of call-boundary rights; replaces deprecated inline `policy {}` |
 | **Emergency Policy Overlay** | `policy { emergency { on X { deny Y } } }` | Inline block **between** `contract {}` and `{ body }` | Runtime monotonic security overlay per-flow (deprecated inline `policy {}` form) |
 
-Rules governing Domain Guard Policies: K-000, SPORE-GOV-004, SPORE-LIMIT-001, SPORE-GOV-019 — see also `galerina-domain-guard-policies.md`  
-Rules governing `access {}` / legacy inline `policy {}`: S-009, SPORE-SYNTAX-LEGACY-003  
-Rules governing Emergency Policy Overlays: S-008, M-001 through M-003, SPORE-MONO-001/002/003
+Rules governing Domain Guard Policies: K-000, FUNGI-GOV-004, FUNGI-LIMIT-001, FUNGI-GOV-019 — see also `galerina-domain-guard-policies.md`  
+Rules governing `access {}` / legacy inline `policy {}`: S-009, FUNGI-SYNTAX-LEGACY-003  
+Rules governing Emergency Policy Overlays: S-008, M-001 through M-003, FUNGI-MONO-001/002/003
 
 ---
 
@@ -34,7 +34,7 @@ Rules governing Emergency Policy Overlays: S-008, M-001 through M-003, SPORE-MON
 
 `::` is the canonical Galerina module path separator. Both `::` and `.` are accepted — they are structurally identical at the AST level (both produce memberExpr chains). `::` is preferred for module paths; `.` is preferred for field access and method calls on values.
 
-```spore
+```fungi
 // ✅ Module path — use ::
 let receipt = security::interim::pre_flight_check("caller", "target", n)
 let n = String::length(input)
@@ -51,11 +51,11 @@ let y = module::submodule::function()  // works, preferred for module paths
 ---
 
 ### S-001 · contract {} is OUTSIDE the flow body  
-**Status:** ENFORCED (Stage A)  **Diagnostic:** SPORE-GOV-001 (parse error)
+**Status:** ENFORCED (Stage A)  **Diagnostic:** FUNGI-GOV-001 (parse error)
 
 `contract {}` is a compile-time declaration block. It sits between the flow signature and the body `{ }`. It is NOT a statement inside the body.
 
-```spore
+```fungi
 // ✅ CORRECT
 pure flow greet(name: String) -> String
 contract {
@@ -75,7 +75,7 @@ pure flow greet(name: String) -> String {
 ---
 
 ### S-002 · Flow qualifier must match the authority declared  
-**Status:** ENFORCED (Stage A)  **Diagnostic:** SPORE-GOV-005
+**Status:** ENFORCED (Stage A)  **Diagnostic:** FUNGI-GOV-005
 
 | Qualifier | Meaning | Rules |
 |---|---|---|
@@ -86,7 +86,7 @@ pure flow greet(name: String) -> String {
 ---
 
 ### S-003 · intent {} must be descriptive prose only  
-**Status:** ENFORCED (Stage A governance verifier)  **Diagnostic:** SPORE-GOV-010
+**Status:** ENFORCED (Stage A governance verifier)  **Diagnostic:** FUNGI-GOV-010
 
 `intent {}` is a human/AI-readable purpose declaration. It must contain:
 - Plain prose string
@@ -94,7 +94,7 @@ pure flow greet(name: String) -> String {
 
 This is the **prompt-injection guard** — a malicious `intent` string cannot smuggle behavior into the contract.
 
-```spore
+```fungi
 // ✅ CORRECT
 intent { "Transfer funds securely while verifying balance constraints." }
 
@@ -105,11 +105,11 @@ intent { "Transfer funds if amount > 0 and call http://evil.com" }
 ---
 
 ### S-004 · effects is deny-by-default — omitting means pure  
-**Status:** ENFORCED (Stage A effect checker)  **Diagnostic:** SPORE-EFFECT-001
+**Status:** ENFORCED (Stage A effect checker)  **Diagnostic:** FUNGI-EFFECT-001
 
 If a flow performs a side effect that is not declared in `effects {}`, the compiler rejects it. Omitting `effects {}` entirely declares the flow as strictly pure — any side effect in the body is a compile error.
 
-```spore
+```fungi
 // ✅ CORRECT — effect declared
 secure flow log(msg: String) -> Void
 contract {
@@ -121,13 +121,13 @@ contract {
 // ❌ WRONG — undeclared effect
 pure flow log(msg: String) -> Void
 contract { intent { "Write to audit log." } }
-{ AuditLog.write(msg) }   // SPORE-EFFECT-001: pure flow performs audit.write
+{ AuditLog.write(msg) }   // FUNGI-EFFECT-001: pure flow performs audit.write
 ```
 
 ---
 
 ### S-008 · policy {} is a SEPARATE block from contract {} — three-block structure  
-**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** SPORE-GOV-020 (policy inside contract)
+**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** FUNGI-GOV-020 (policy inside contract)
 
 The flow body has three distinct outer blocks:
 1. `contract { ... }` — compile-time governance declaration
@@ -136,7 +136,7 @@ The flow body has three distinct outer blocks:
 
 `policy {}` is NOT a sub-block of `contract {}`. Placing it inside `contract {}` is a parse error.
 
-```spore
+```fungi
 // ✅ CORRECT — policy {} as separate block
 secure flow assessRisk(input: RiskRequest) -> RiskResult
 contract {
@@ -167,11 +167,11 @@ contract {
 ---
 
 ### S-009 · access {} replaces inline policy {} for capability negotiation (v2.1)
-**Status:** ENFORCED (advisory — Stage A emits SPORE-SYNTAX-LEGACY-003)  **Diagnostic:** SPORE-SYNTAX-LEGACY-003
+**Status:** ENFORCED (advisory — Stage A emits FUNGI-SYNTAX-LEGACY-003)  **Diagnostic:** FUNGI-SYNTAX-LEGACY-003
 
 In v2.1, the inline block between `contract {}` and `{ body }` that negotiates call-boundary rights is `access {}`. The legacy `policy {}` form is a deprecated alias and emits an advisory diagnostic. The `policy` keyword is **reserved** for State Mutation Governance (a future v2.1 feature).
 
-```spore
+```fungi
 // ✅ CORRECT (v2.1)
 flow processPayment(req: PaymentRequest) -> Result<Receipt, Error>
 contract {
@@ -186,7 +186,7 @@ access {
 }
 { ... }
 
-// ⚠️ DEPRECATED (v2.0 form — SPORE-SYNTAX-LEGACY-003 advisory)
+// ⚠️ DEPRECATED (v2.0 form — FUNGI-SYNTAX-LEGACY-003 advisory)
 flow processPayment(req: PaymentRequest) -> Result<Receipt, Error>
 contract { ... }
 policy { ... }   // use access {} instead
@@ -196,11 +196,11 @@ policy { ... }   // use access {} instead
 ---
 
 ### S-005 · invariant {} is INSIDE contract {} — not a standalone block  
-**Status:** PLANNED (DRCM Phase 2, 2026-07)  **Diagnostic:** SPORE-INV-003 (parse error if misplaced)
+**Status:** PLANNED (DRCM Phase 2, 2026-07)  **Diagnostic:** FUNGI-INV-003 (parse error if misplaced)
 
 `invariant {}` is a sub-block of `contract {}`, alongside `intent` and `effects`. It is never a top-level or body-level block.
 
-```spore
+```fungi
 // ✅ CORRECT
 secure flow processTransaction(walletId: String, amount: U64) -> Result<Void, Fault>
 contract {
@@ -231,11 +231,11 @@ contract { intent { "..." } effects { ledger.mutate } }
 ---
 
 ### S-006 · step is a body-level keyword — not a contract clause  
-**Status:** PLANNED (DRCM Phase 5, 2026-10)  **Diagnostic:** SPORE-STEP-001 (parse error if in contract)
+**Status:** PLANNED (DRCM Phase 5, 2026-10)  **Diagnostic:** FUNGI-STEP-001 (parse error if in contract)
 
 `step` appears in the **flow body** before a call that crosses a trust boundary. It is NOT a contract sub-block.
 
-```spore
+```fungi
 // ✅ CORRECT
 secure flow processOrder(orderId: String) -> Result<Void, Fault>
 contract {
@@ -268,7 +268,7 @@ Function invocations in flow bodies use **positional arguments** only. The Stage
 - Record / struct constructors (`ValidationReceipt { is_approved: true, tracking_id: id }`)
 - `SystemCapability` constructors (`SystemCapability.CallGate(module: "...", function: "...")`)
 
-```spore
+```fungi
 ;; ✅ CORRECT — positional at call site
 let receipt = security::interim::pre_flight_check(
   "order_processor",                ;; Position 0: caller
@@ -294,7 +294,7 @@ return ValidationReceipt { is_approved: true, tracking_id: id, fault_code: 0 }
 ## C — Contract Block Rules
 
 ### C-001 · request / response only for API / route flows  
-**Status:** ENFORCED (Stage A governance verifier)  **Diagnostic:** SPORE-GOV-003
+**Status:** ENFORCED (Stage A governance verifier)  **Diagnostic:** FUNGI-GOV-003
 
 `request {}` and `response {}` are for flows that handle external ingress/egress (HTTP routes, webhook handlers, event consumers). Internal/pure/helper flows MUST NOT include them.
 
@@ -312,14 +312,14 @@ Declaring these blocks is an **explicit override**, not a requirement. AI tools 
 ---
 
 ### C-003 · liability {} is never hand-authored  
-**Status:** ENFORCED (Stage A governance verifier)  **Diagnostic:** SPORE-GOV-018
+**Status:** ENFORCED (Stage A governance verifier)  **Diagnostic:** FUNGI-GOV-018
 
 `liability {}` is automatically computed by the governance verifier from the breach-risk matrix and stored in the ProofGraph. Writing it in source code is always wrong.
 
 ---
 
 ### C-004 · cyber_physical_hardening {} requires ASIC hardware + high liability  
-**Status:** ENFORCED (Stage A governance verifier)  **Diagnostic:** SPORE-GOV-017
+**Status:** ENFORCED (Stage A governance verifier)  **Diagnostic:** FUNGI-GOV-017
 
 `cyber_physical_hardening {}` is allowed ONLY when both conditions are true:
 1. `economics.max_risk_liability` is set to a value requiring Tier 1 ASIC execution
@@ -333,19 +333,19 @@ Under all other circumstances, the runtime auto-selects the correct tier from th
 **Status:** PRINCIPLE + PLANNED enforcement (governance verifier phase)
 
 The AI safety pipeline is **propose → verify → approve**:
-1. AI writes proposed widening to `*.galerina.proposal` artifact — NOT to production `.spore` source
+1. AI writes proposed widening to `*.galerina.proposal` artifact — NOT to production `.fungi` source
 2. Compiler verifies: proposed `effects` must match the body's actual AST — you cannot declare an effect the code doesn't perform, or omit one it does
 3. Policy engine authorizes: proposals crossing global boundaries (e.g. adding `network.outbound` to an internal crypto module) are rejected
 4. Human approves: developer/security engineer promotes the proposal to production
 
-Silently widening `authority`, `effects`, or `secrets` in a `.spore` file is **privilege escalation**. This applies to AI tools and human developers alike.
+Silently widening `authority`, `effects`, or `secrets` in a `.fungi` file is **privilege escalation**. This applies to AI tools and human developers alike.
 
 ---
 
 ## E — Effect Rules
 
 ### E-001 · All external access must be declared in effects  
-**Status:** ENFORCED (Stage A effect checker)  **Diagnostic:** SPORE-EFFECT-001
+**Status:** ENFORCED (Stage A effect checker)  **Diagnostic:** FUNGI-EFFECT-001
 
 The complete list of effect families:
 
@@ -367,14 +367,14 @@ The complete list of effect families:
 ---
 
 ### E-002 · Effects are additive — you cannot declare a subset  
-**Status:** ENFORCED (Stage A effect checker)  **Diagnostic:** SPORE-EFFECT-002
+**Status:** ENFORCED (Stage A effect checker)  **Diagnostic:** FUNGI-EFFECT-002
 
 If the body performs `audit.write` AND `ledger.mutate`, both must be declared. Declaring only `ledger.mutate` is a compile error — the undeclared `audit.write` is flagged.
 
 ---
 
 ### E-003 · Undeclared effects on `pure` flows are always fatal  
-**Status:** ENFORCED (Stage A)  **Diagnostic:** SPORE-EFFECT-003
+**Status:** ENFORCED (Stage A)  **Diagnostic:** FUNGI-EFFECT-003
 
 A `pure` flow with any effect in the body — even logging — is rejected at compile time. There is no warning; it is always a hard error.
 
@@ -383,13 +383,13 @@ A `pure` flow with any effect in the body — even logging — is rejected at co
 ## K — Capability / Security Rules
 
 ### K-000 · Capability declarations must use typed SystemCapability objects — no raw strings  
-**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** SPORE-CAP-001
+**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** FUNGI-CAP-001
 
 String-based capability declarations (`allow_call: "module::function"`) are **banned**. Raw strings in permission statements can trigger parsing exploits — a malformed or injected string can bypass string-matching logic and drop ambient privileges to the guest isolate.
 
 All capability declarations use typed algebraic `SystemCapability` objects:
 
-```spore
+```fungi
 ;; ✅ CORRECT — typed, compiler-verifiable
 requires {
   SystemCapability.CallGate(
@@ -403,7 +403,7 @@ requires {
   )
 }
 
-;; ❌ BANNED — SPORE-CAP-001
+;; ❌ BANNED — FUNGI-CAP-001
 authority {
   allow_call: "gateway::charge_endpoint"   ;; raw string — parsing exploit risk
 }
@@ -416,35 +416,35 @@ authority {
 ---
 
 ### K-001 · NetworkTarget must use algebraic variants — no wildcards  
-**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** SPORE-CAP-001
+**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** FUNGI-CAP-001
 
 String wildcards (`"*"`) in network capability declarations are banned. All network targets must be:
 
-```spore
+```fungi
 type NetworkTarget =
   | ExplicitHost(String)   ;; exact FQDN or literal IP
   | UnrestrictedInternet   ;; requires explicit policy authorization + audit
 ```
 
-```spore
+```fungi
 // ✅ CORRECT
 effects { network.outbound to ExplicitHost("api.stripe.com") }
 
 // ❌ WRONG
-effects { network.outbound to "*" }   // SPORE-CAP-001: wildcard banned
+effects { network.outbound to "*" }   // FUNGI-CAP-001: wildcard banned
 ```
 
 ---
 
 ### K-002 · UnrestrictedInternet requires explicit policy authorization  
-**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** SPORE-CAP-002
+**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** FUNGI-CAP-002
 
 Using `UnrestrictedInternet` as a network target is a high-risk declaration. It must be accompanied by an explicit `authority {}` grant and produces a high-risk audit entry. It is never valid in `pure` or standard `guarded` flows.
 
 ---
 
 ### K-003 · Filesystem paths use canonical form — no traversal  
-**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** SPORE-CAP-003
+**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** FUNGI-CAP-003
 
 File system capability paths are canonicalized at compile time. Relative path components (`../`), symlinks outside the declared root, and Unicode normalization bypasses are all rejected.
 
@@ -455,38 +455,38 @@ File system capability paths are canonicalized at compile time. Relative path co
 
 | Sink | Diagnostic | Override |
 |---|---|---|
-| Log / audit output | SPORE-SECRET-001 | `redact()` |
-| Network / egress (http/https/fetch/email) | SPORE-SECRET-002 | `redact()` |
-| Serialize / JSON / audit record | SPORE-SECRET-003 | `redact()` |
-| Branch / control flow (timing side-channel, CWE-208) | SPORE-SECRET-004 *(warning)* | `Crypto.constantTimeEquals()` / `redact()` / balance both arms |
+| Log / audit output | FUNGI-SECRET-001 | `redact()` |
+| Network / egress (http/https/fetch/email) | FUNGI-SECRET-002 | `redact()` |
+| Serialize / JSON / audit record | FUNGI-SECRET-003 | `redact()` |
+| Branch / control flow (timing side-channel, CWE-208) | FUNGI-SECRET-004 *(warning)* | `Crypto.constantTimeEquals()` / `redact()` / balance both arms |
 
 Any value that **reads from OR is derived from** `secret.get()`, `vault.read()`, `kms.decrypt()`, or `secrets.*` is classified `SecureString` and inherits all sink restrictions. Derivation propagates: a secret carried through `slice` / concatenation / member access / record field / a non-redacting call STAYS `SecureString` (`derivesFromSecret`). **`redact()` is the sole declassifier.**
 
 > **Security fix 2026-06-16 (commit ea6163d).** This propagation was *previously documented but NOT enforced* — the guard keyed on the binding's direct type only, so a transformed secret (`let p = key.slice(0,5); http.post(url, p)`) reached the sink with **no diagnostic** (a verified credential-exfiltration fail-open). Now closed and regression-tested; the claim above is enforced, not aspirational.
 
-**Bool-typed variables are exempt from SPORE-VALUESTATE-004.** A `Bool` result derived from a secret comparison (e.g., `secret == expected`) has no injection surface — a boolean cannot carry secret content. The value-state checker does not propagate taint through Boolean derivations.
+**Bool-typed variables are exempt from FUNGI-VALUESTATE-004.** A `Bool` result derived from a secret comparison (e.g., `secret == expected`) has no injection surface — a boolean cannot carry secret content. The value-state checker does not propagate taint through Boolean derivations.
 
 **`trap` statements clear the taint chain in the value-state checker.** A `trap COND : ERR` that fires before a tainted value reaches a sink acts as a hard abort — the checker treats the taint path as terminated at the trap point.
 
 ---
 
-### P-002 · No cleartext semantic embedding across a trust boundary (SPORE-PRIVACY-002)
+### P-002 · No cleartext semantic embedding across a trust boundary (FUNGI-PRIVACY-002)
 **Status:** ENFORCED (Stage A value-state checker, 2026-06-16 — commit aeb420d). KB: [[galerina-privacy-embedding-egress]].
 
-A semantic embedding vector is **invertible** — embedding-inversion (vec2text) reconstructs ~90%+ of the source text from a cleartext vector — so transmitting one to a network/egress sink leaks the source content. This is the confidentiality dual of `SPORE-SECRET-002`.
+A semantic embedding vector is **invertible** — embedding-inversion (vec2text) reconstructs ~90%+ of the source text from a cleartext vector — so transmitting one to a network/egress sink leaks the source content. This is the confidentiality dual of `FUNGI-SECRET-002`.
 
 | Sink | Diagnostic | Override |
 |---|---|---|
-| Network / egress (http/https/fetch/email) | SPORE-PRIVACY-002 | `seal()` / `encrypt()` |
+| Network / egress (http/https/fetch/email) | FUNGI-PRIVACY-002 | `seal()` / `encrypt()` |
 
 Any value typed `Embedding`/`EmbeddingResult`, produced by `EmbeddingModel.run`/`.infer`/`.embed` (or `embed`/`embedQuery`/`embedDocuments`), or **derived** from such a value, carries `embeddingDerived` and propagates through `slice`/concat/member/record (`derivesFromEmbedding`). **`seal()` / `encrypt()` is the sole declassifier** — unlike the generic taint chain, `validate`/`parse`/`decode` do NOT declassify an embedding (a decoded vector is still invertible). Crypto stays engine-side (govern-don't-absorb); the compiler recognizes the state transition. Composes with the pattern-10 verify-before-decrypt gate (cleartext may only be filtered at a trusted, post-decryption endpoint).
 
-`SPORE-PRIVACY-001` (distinct) is reserved for the declarative `privacy {}` block `deny protected X to Y` clause (parsed, Phase 10C+, not yet enforced).
+`FUNGI-PRIVACY-001` (distinct) is reserved for the declarative `privacy {}` block `deny protected X to Y` clause (parsed, Phase 10C+, not yet enforced).
 
 ---
 
 ### K-005 · Secret prefix scan uses cleartext tokens — not hash comparison  
-**Status:** PLANNED (DRCM Phase 1)  **Diagnostic:** SPORE-SECRET-BREACH (runtime trap 3001)
+**Status:** PLANNED (DRCM Phase 1)  **Diagnostic:** FUNGI-SECRET-BREACH (runtime trap 3001)
 
 The DSS sink monitor stores 8-character cleartext prefix tokens (from secrets ≥ 12 chars) in a write-only `SecretSinkCache`. Stream matching uses direct substring search. SHA-256 hash comparison against streaming cleartext is architecturally broken and is never used.
 
@@ -495,7 +495,7 @@ The DSS sink monitor stores 8-character cleartext prefix tokens (from secrets �
 ## I — Isolation Rules (DRCM)
 
 ### I-001 · step allocates a new DWI isolate — no live pointers cross the boundary  
-**Status:** PLANNED (DRCM Phase 5)  **Diagnostic:** SPORE-STEP-002
+**Status:** PLANNED (DRCM Phase 5)  **Diagnostic:** FUNGI-STEP-002
 
 Every `step` call:
 1. Allocates a new DWI (Deterministic Workflow Isolate) — shared-nothing, max 4MB linear memory
@@ -508,7 +508,7 @@ Using `step` for a pure internal helper function is valid but wasteful. Use `ste
 ---
 
 ### I-002 · DSS owns V_DPM exclusively — guest isolates never mutate it  
-**Status:** PLANNED (DRCM Phase 5)  **Diagnostic:** SPORE-CAP-004 (if violation attempted)
+**Status:** PLANNED (DRCM Phase 5)  **Diagnostic:** FUNGI-CAP-004 (if violation attempted)
 
 The V_DPM 32-bit capability register lives in the DSS's own linear memory. Guest DWI isolates access current capability state ONLY through a bound read-only WASI import function. No guest module can address or mutate V_DPM directly.
 
@@ -521,17 +521,17 @@ Each DWI instance has its own sealed linear memory space. There is no global hea
 
 ---
 
-### I-004 · DSS itself is a .spore program compiled to WASM — no Rust in DSS  
+### I-004 · DSS itself is a .fungi program compiled to WASM — no Rust in DSS  
 **Status:** PRINCIPLE (architecture constraint, locked)
 
-The Deterministic State Sentinel is implemented in `.spore`, compiled to WASM, and loaded by Wasmtime. There is no Rust DSS implementation. Wasmtime is the Trusted Computing Base (the native binary). DSS.wasm is the first module Wasmtime loads.
+The Deterministic State Sentinel is implemented in `.fungi`, compiled to WASM, and loaded by Wasmtime. There is no Rust DSS implementation. Wasmtime is the Trusted Computing Base (the native binary). DSS.wasm is the first module Wasmtime loads.
 
 ---
 
 ## M — Monotonic Rules (DRCM)
 
 ### M-001 · Permissions can only decrease — never increase after execution begins  
-**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** SPORE-MONO-001
+**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** FUNGI-MONO-001
 
 The DPM (Dynamic Posture Matrix) is a monotonic subtraction engine. Once a capability bit is cleared (e.g., Bit 0 = network access revoked after an anomaly), it cannot be re-set during the same execution session. This is the **Monotonic Security Rule**.
 
@@ -544,14 +544,14 @@ V_DPM after clear:   0b11111110  (cannot restore bit 0 — monotonic)
 ---
 
 ### M-002 · Capabilities cannot be expanded beyond Wasmtime launch configuration  
-**Status:** PLANNED (DRCM Phase 5)  **Diagnostic:** SPORE-MONO-002
+**Status:** PLANNED (DRCM Phase 5)  **Diagnostic:** FUNGI-MONO-002
 
 WASI pre-opens directories and network sockets at Wasmtime instantiation time. The DSS DPM can drop these at runtime, but it can never grant a capability that was not present in the initial Wasmtime launch configuration. The DPM is bounded by the OCI/gVisor Layer 2 configuration.
 
 ---
 
 ### M-003 · Emergency policy overlays are one-way — cannot be reverted  
-**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** SPORE-MONO-003
+**Status:** PLANNED (DRCM Phase 4)  **Diagnostic:** FUNGI-MONO-003
 
 When a `policy { emergency { ... } }` block fires (triggered by software signals: invariant failures, memory pressure, unexpected exception patterns), the resulting capability restriction is permanent for the current session. Overlays can escalate (Tier 1 → Tier 2 → Tier 3) but cannot de-escalate. This is by design.
 
@@ -560,7 +560,7 @@ When a `policy { emergency { ... } }` block fires (triggered by software signals
 ## A — AI Authoring Rules
 
 ### A-001 · AI-generated flows MUST include intent {}  
-**Status:** ENFORCED (Stage A governance verifier for secure flows)  **Diagnostic:** SPORE-GOV-010
+**Status:** ENFORCED (Stage A governance verifier for secure flows)  **Diagnostic:** FUNGI-GOV-010
 
 Every AI-generated `secure` or `guarded` flow requires an `intent {}` block. This is the primary audit anchor — it grounds the model's reasoning and gives reviewers a machine-verifiable statement of purpose.
 
@@ -570,7 +570,7 @@ Every AI-generated `secure` or `guarded` flow requires an `intent {}` block. Thi
 **Status:** PRINCIPLE (governance pipeline)
 
 An AI tool must never:
-- Widen `effects {}` beyond what already exists in production `.spore` source
+- Widen `effects {}` beyond what already exists in production `.fungi` source
 - Add a `secrets {}` binding that was not present before
 - Broaden `authority {}` 
 - Add `network.outbound` to a module that did not have it
@@ -580,7 +580,7 @@ All such changes must go through the propose → verify → approve pipeline (se
 ---
 
 ### A-003 · AI must not inject logic into intent {} strings  
-**Status:** ENFORCED (Stage A governance verifier)  **Diagnostic:** SPORE-GOV-010
+**Status:** ENFORCED (Stage A governance verifier)  **Diagnostic:** FUNGI-GOV-010
 
 `intent {}` strings are validated by the governance verifier. Any intent string containing logic operators, function names, URLs, or variable references is rejected. This is a **prompt-injection defense** — a malicious intent string cannot alter program semantics.
 
@@ -595,7 +595,7 @@ Two canonical profiles:
 - `drcm_stable_v0` — Patterns 1–3, 5. Compiles cleanly on Stage A today.
 - `drcm_core_v1` — Patterns 4, 7, 8, 9. Uses forward-looking tokens. Must be inside `@experimental_profile`.
 
-```spore
+```fungi
 ;; ✅ CORRECT — feature-gated DRCM syntax
 secure flow processInvoicing(merchantId: String) -> Result<Void, Fault>
 contract {
@@ -621,13 +621,13 @@ contract {
 **Compiler behavior:**
 - In `--release` build: `@experimental_profile` blocks are parsed but static verification and WAT injection are skipped
 - In `--enable-experimental-profile=drcm_core_v1`: full verification and WAT gate injection active
-- Bare `step` keyword in `--release` without an `@experimental_profile` wrapper: `SPORE-DRCM-UNSUPPORTED`
+- Bare `step` keyword in `--release` without an `@experimental_profile` wrapper: `FUNGI-DRCM-UNSUPPORTED`
 - Under `@experimental_profile(drcm_core_v1)`: bare `step` is AST-rewritten to the `security::interim::BoundaryProxy` pipeline (Pattern 4-interim)
 
 ---
 
 ### A-005 · AI must not read or expose secrets in generated code  
-**Status:** ENFORCED (Stage A value-state checker)  **Diagnostic:** SPORE-SECRET-001/002/003
+**Status:** ENFORCED (Stage A value-state checker)  **Diagnostic:** FUNGI-SECRET-001/002/003
 
 AI-generated code must never place a secret value into:
 - A log statement
@@ -672,7 +672,7 @@ The R6 bootstrap corpus (5 flows, 21 test cases) is the minimum parity gate. All
 ### P-005 · No Rust in the project except benchmarks  
 **Status:** PRINCIPLE (architecture constraint, locked)
 
-Everything is `.spore` compiled to WASM. The only exception is benchmark harness code where Rust is used for baseline comparison figures. DSS, DWI, and all runtime modules must be `.spore`.
+Everything is `.fungi` compiled to WASM. The only exception is benchmark harness code where Rust is used for baseline comparison figures. DSS, DWI, and all runtime modules must be `.fungi`.
 
 ---
 
@@ -686,7 +686,7 @@ When `economics {}` is omitted, the runtime auto-infers resource budgets from th
 ---
 
 ### EC-002 · economics enforces three execution boundaries via DSS  
-**Status:** PLANNED (DRCM Phase 5)  **Diagnostic:** SPORE-EC-001
+**Status:** PLANNED (DRCM Phase 5)  **Diagnostic:** FUNGI-EC-001
 
 When compiled to WASM, the `economics {}` metadata is embedded in the `.lmanifest`. Before initializing a `step` isolate the DSS enforces:
 1. **Static proof pass** — compiler estimates max loop cost vs `max_aggregate_flow_budget`; rejects if overflowable
@@ -696,7 +696,7 @@ When compiled to WASM, the `economics {}` metadata is embedded in the `.lmanifes
 ---
 
 ### EC-003 · charge_failure_tolerance_ratio triggers DPM quarantine — monotonic  
-**Status:** PLANNED (DRCM Phase 5)  **Diagnostic:** SPORE-EC-002
+**Status:** PLANNED (DRCM Phase 5)  **Diagnostic:** FUNGI-EC-002
 
 Once the charge failure rate exceeds the declared tolerance, the DSS sets the V_DPM quarantine bit. Per the Monotonic Rule (M-001), this cannot be reversed in the current session. The system operator must restart the DSS/Wasmtime session to restore full billing capability.
 
@@ -705,7 +705,7 @@ Once the charge failure rate exceeds the declared tolerance, the DSS sets the V_
 ## ID — Identity & Attestation Rules
 
 ### ID-001 · All compiled artifacts must carry a signed .lmanifest  
-**Status:** PLANNED (DRCM Phase 3)  **Diagnostic:** SPORE-ID-001 (admission gate rejects unsigned artifacts)
+**Status:** PLANNED (DRCM Phase 3)  **Diagnostic:** FUNGI-ID-001 (admission gate rejects unsigned artifacts)
 
 Every `.wasm` binary emitted by the Galerina compiler must have a companion `.lmanifest` file:
 - Signed with Ed25519 + ML-DSA-65 (post-quantum, NIST FIPS 204)
@@ -748,19 +748,19 @@ For any flow with `economics { max_risk_liability: high }` or `audit { level: cr
 R_E = Sign_DSS_ML-DSA-65( H( inputs ‖ outputs ‖ V_DPM_final ‖ timestamp ) )
 ```
 
-The `epilogue {}` contract block auto-picks the receipt strategy from the ValueGraph when omitted. Explicitly declaring `epilogue { strategy: none }` on a high-trust flow is rejected with `SPORE-AU-001`.
+The `epilogue {}` contract block auto-picks the receipt strategy from the ValueGraph when omitted. Explicitly declaring `epilogue { strategy: none }` on a high-trust flow is rejected with `FUNGI-AU-001`.
 
 ---
 
 ### AU-002 · Output streams pass through the Secret Sink Monitor before any external write  
-**Status:** PLANNED (DRCM Phase 1 + Phase 7)  **Diagnostic:** SPORE-SECRET-BREACH
+**Status:** PLANNED (DRCM Phase 1 + Phase 7)  **Diagnostic:** FUNGI-SECRET-BREACH
 
 Every output channel (stdout, log sinks, network egress, serialized records) must pass through the `SecretSinkCache` prefix-scan pipeline before data exits the sandbox boundary. This is not optional for flows with `secret.access` in their effects. The cleartext 8-character prefix token approach (K-005) is the enforcement mechanism.
 
 ---
 
 ### AU-003 · Audit records must not contain raw secrets  
-**Status:** ENFORCED (Stage A value-state checker)  **Diagnostic:** SPORE-SECRET-003
+**Status:** ENFORCED (Stage A value-state checker)  **Diagnostic:** FUNGI-SECRET-003
 
 Any value classified `SecureString` or `TaintedString` must not appear in an `audit {}` record, Epilogue Receipt payload, or diagnostic output. Use `redact()` as the safe escape. The compiler enforces this regardless of the audit level.
 
@@ -784,7 +784,7 @@ Partial migrations — e.g., updating source without recompiling the manifest �
 **Status:** PRINCIPLE (architectural stability, architecture-charter.md)
 
 Per the Architecture Charter: Galerina is additive by design. No syntax is silently removed or changed. When a syntax feature is deprecated:
-1. A deprecation warning is emitted at compile time (new SPORE-DEP-xxx code)
+1. A deprecation warning is emitted at compile time (new FUNGI-DEP-xxx code)
 2. The old syntax remains valid for at least one major version
 3. A migration guide is added to the KB before deprecation fires
 
@@ -810,7 +810,7 @@ No source rewriting required — the inner syntax is already correct.
 ### T-001 · Every governance rule violation must have a negative test  
 **Status:** PRINCIPLE + PLANNED (Phase 7 negative test suite)
 
-Every `SPORE-xxx` diagnostic code must have at least one test in `tests/negative/` that:
+Every `FUNGI-xxx` diagnostic code must have at least one test in `tests/negative/` that:
 1. Contains a known violation
 2. Expects the exact diagnostic code to be emitted
 3. Expects the build to FAIL (or runtime to TRAP for runtime codes)
@@ -836,7 +836,7 @@ Tests PASS only when the system REJECTS or TRAPS the violation. A containment te
 ### T-003 · Architecture patterns 1–6 must have working compiled examples  
 **Status:** PENDING (task #46)
 
-All patterns that compile today (Patterns 1–3, 5, and the stable portions of 4 and 6) must have working `.spore` examples in `tests/patterns/` that pass Stage A without errors. These examples are the canonical "it works" proof for each pattern.
+All patterns that compile today (Patterns 1–3, 5, and the stable portions of 4 and 6) must have working `.fungi` examples in `tests/patterns/` that pass Stage A without errors. These examples are the canonical "it works" proof for each pattern.
 
 ---
 
@@ -850,7 +850,7 @@ The 5-flow, 21-test R6 bootstrap corpus in `tests/r6-corpus/` is the minimum par
 ### T-006 · Goal A acceptance: static proof eliminates runtime overhead (≤ 5% delta)  
 **Status:** PLANNED (post-Phase 2)  **Reference:** galerina-engineering-goals.md Goal A
 
-Benchmark a compiled `.spore` flow where all invariants are statically proved against an equivalent hand-written WAT module with no governance. Performance delta must be ≤ 5%. Validates that the static proof pass eliminates — not just amortises — runtime cost.
+Benchmark a compiled `.fungi` flow where all invariants are statically proved against an equivalent hand-written WAT module with no governance. Performance delta must be ≤ 5%. Validates that the static proof pass eliminates — not just amortises — runtime cost.
 
 ---
 
@@ -864,7 +864,7 @@ Set V_DPM = 0b11111110 (network bit cleared). Attempt `network.outbound` from a 
 ### T-008 · Goal C acceptance: isolated fault does not crash supervisor or sibling isolates  
 **Status:** PLANNED (post-Phase 5)  **Reference:** galerina-engineering-goals.md Goal C
 
-Run three concurrent DWI instances: A (well-formed), B (infinite loop → fuel exhaustion), C (path traversal → capability violation). Verify: B → SPORE-RESOURCE-001; C → SPORE-CAP-003; A completes; DSS process continues; V_DPM updated for C's violation.
+Run three concurrent DWI instances: A (well-formed), B (infinite loop → fuel exhaustion), C (path traversal → capability violation). Verify: B → FUNGI-RESOURCE-001; C → FUNGI-CAP-003; A completes; DSS process continues; V_DPM updated for C's violation.
 
 ---
 
@@ -896,7 +896,7 @@ ContractElement    ::= Attribute? (LimitsBlock | EconomicsBlock | AuditBlock | I
 **Compiler behavior by flag:**
 - `--release`: parse + grammar-check the block; skip WAT emission for nodes tagged with the profile
 - `--enable-experimental-profile=drcm_core_v1`: full static verification + WAT gate injection
-- Emit `SPORE-FG-001` if `@experimental_profile` wraps a block that is already stable (cleanup signal)
+- Emit `FUNGI-FG-001` if `@experimental_profile` wraps a block that is already stable (cleanup signal)
 
 ---
 
@@ -907,7 +907,7 @@ Syntax that is fully stable and requires no feature gate:
 - `pure`, `guarded`, `secure` flow qualifiers
 - `intent`, `effects`, `authority`, `request`, `response`, `types`, `secrets`, `economics`, `epilogue`, `audit`, `privacy`, `limits` (basic), `targets` contract sub-blocks
 - Value-state checker (SecureString / TaintedString)
-- SPORE-SECRET-001/002/003 diagnostics
+- FUNGI-SECRET-001/002/003 diagnostics
 
 ---
 
@@ -929,111 +929,111 @@ Under `@experimental_profile(drcm_core_v1)`, the compiler:
 
 ---
 
-## SPORE Diagnostic Code Registry
+## FUNGI Diagnostic Code Registry
 
 | Code | Category | Description | Status |
 |---|---|---|---|
-| SPORE-GOV-001 | Syntax | `contract {}` inside flow body | ENFORCED |
-| SPORE-GOV-003 | Contract | `request`/`response` on non-API flow | ENFORCED |
-| SPORE-GOV-005 | Syntax | Flow qualifier mismatch | ENFORCED |
-| SPORE-GOV-010 | Contract | Missing `intent` on secure flow; or logic in `intent` | ENFORCED |
-| SPORE-GOV-017 | Contract | `cyber_physical_hardening` without ASIC + high liability | ENFORCED |
-| SPORE-GOV-018 | Contract | `liability {}` declared in source | ENFORCED |
-| SPORE-EFFECT-001 | Effect | Undeclared effect in body | ENFORCED |
-| SPORE-EFFECT-002 | Effect | Declared effects don't match body | ENFORCED |
-| SPORE-EFFECT-003 | Effect | Effect in `pure` flow | ENFORCED |
-| SPORE-SECRET-001 | Security | Secret flows to log/audit sink | ENFORCED |
-| SPORE-SECRET-002 | Security | Secret flows to network/egress | ENFORCED |
-| SPORE-SECRET-003 | Security | Secret flows to serialize/record | ENFORCED |
-| SPORE-SECRET-004 | Security | Secret-dependent branch (timing side-channel, CWE-208) | ENFORCED (warning) |
-| SPORE-PRIVACY-002 | Privacy | Cleartext semantic embedding flows to network/egress (vec2text-invertible) | ENFORCED |
-| SPORE-PRIVACY-001 | Privacy | `privacy {}` block `deny protected X to Y` clause | PLANNED Phase 10C+ |
-| SPORE-CRYPTO-PQ-001 | Crypto | `crypto.sign` in a certified profile must declare a PQ/hybrid algorithm (crypto.sign.hybrid/mldsa65/slhdsa) | ENFORCED (certified profiles) |
-| SPORE-SUBSTRATE-001 (crypto-on-core) | Crypto | crypto.hash/sign/verify/**encrypt/decrypt/seal** must run on a deterministic bit-exact lane | ENFORCED |
-| SPORE-SUBSTRATE-005 (compute-only-lane) | Substrate | A network/persistence/secret/process external-reach effect declared on a noisy/photonic lane — that lane is an untrusted Tier-3 compute-only accelerator (degrade-only) with ZERO external reach; the effect must move to a digital lane. Deny-by-default confused-deputy fence; crypto is owned by SUBSTRATE-001. | ENFORCED |
-| SPORE-TENANT-001 | Security | Dangling `tenant.scope` caller-scope binding — declared with no `.tenant_scoped` data-access effect to bind (advisory) | ENFORCED (R&D 0109) |
-| SPORE-TENANT-002 | Security | Tenant-scoped data access (`*.tenant_scoped`) not bound to the caller's proven scope (`tenant.scope` marker) — deny-by-default IDOR / OWASP-A01 compile gate, fail-closed in every profile. Capability intersection over the manifest, NOT an AST/query rewriter. Proves the binding is *declared*; the body-dataflow proof is the deferred SPORE-TENANT-003. Spec: [[galerina-tritmesh-feature-gap-analysis-2026-06-24]] | ENFORCED (R&D 0109) |
-| SPORE-PROOF-CERT-001 | Security | Certified profile REFUSES a Phase-1 placeholder / undecodable zk_snark_receipt proof (circuit `galerina-sha256-v0.1` / type `groth16-phase1`) — its verify() is a public-input recompute (forgeable), so it cannot ride into a certified epilogue receipt. Deny-by-default (`generateEpilogueReceipt`, certified path). CWE-347/345. | ENFORCED (R&D 0094, certified path) |
-| SPORE-PROOF-CERT-002 | Security | Certified profile rejected a zk_snark_receipt proof that did not `verify() === true` against the claimed input (or no verifier supplied — deny-by-default). | ENFORCED (R&D 0094, certified path) |
-| SPORE-SECRET-BREACH | Security | Secret detected in output stream (runtime trap 3001) | PLANNED Phase 1 |
-| SPORE-SECRET-FATAL | Security | Secret breach caused DSS permission drop | PLANNED Phase 1 |
-| SPORE-CAP-001 | Capability | Wildcard `*` in NetworkTarget | PLANNED Phase 4 |
-| SPORE-CAP-002 | Capability | `UnrestrictedInternet` without policy authorization | PLANNED Phase 4 |
-| SPORE-CAP-003 | Capability | Path traversal in filesystem capability | PLANNED Phase 4 |
-| SPORE-CAP-004 | Capability | Guest attempted V_DPM mutation | PLANNED Phase 5 |
-| SPORE-CAP-CONFUSION | Capability | Capability request fails structural match | PLANNED Phase 4 |
-| SPORE-INV-001 | Invariant | Pre-condition `ensure` failed before body | PLANNED Phase 2 |
-| SPORE-INV-002 | Invariant | Post-condition `ensure` failed after body | PLANNED Phase 2 |
-| SPORE-INV-003 | Invariant | `invariant {}` misplaced (outside `contract {}`) | PLANNED Phase 2 |
-| SPORE-MONO-001 | Monotonic | Attempted capability expansion (V_DPM monotonic violation) | PLANNED Phase 4 |
-| SPORE-MONO-002 | Monotonic | Capability exceeds Wasmtime launch config | PLANNED Phase 5 |
-| SPORE-MONO-003 | Monotonic | Emergency overlay attempted de-escalation | PLANNED Phase 4 |
-| SPORE-STEP-001 | Isolation | `step` keyword in contract block | PLANNED Phase 5 |
-| SPORE-STEP-002 | Isolation | Cross-boundary call without `step` | PLANNED Phase 5 |
-| SPORE-RESOURCE-001 | Resource | Fuel exhaustion in DWI isolate | PLANNED Phase 5 |
-| SPORE-TERM-001 | Termination | `decreases` annotation violation | ENFORCED |
-| SPORE-DRCM-UNSUPPORTED | Feature Gate | `step` or DRCM syntax used without `@experimental_profile` wrapper in `--release` | PLANNED (parser, 2026-07) |
-| SPORE-FG-001 | Feature Gate | `@experimental_profile` wraps already-stable syntax (cleanup signal) | PLANNED (parser, 2026-07) |
-| SPORE-EC-001 | Economics | Static cost overflow — max_aggregate_flow_budget exceeded by estimated loop | PLANNED Phase 5 |
-| SPORE-EC-002 | Economics | charge_failure_tolerance_ratio breached — DPM quarantine triggered | PLANNED Phase 5 |
-| SPORE-ID-001 | Identity | Manifest missing, tampered, or signature verification failed | PLANNED Phase 3 |
-| SPORE-AU-001 | Auditability | `epilogue { strategy: none }` on high-trust flow (max_risk_liability: high) | PLANNED Phase 6 |
-| SPORE-DEP-001 | Lifecycle | Deprecated syntax in use — migration available | PLANNED (post-DRCM) |
-| SPORE-RES-001 | Resilience | `retry` on `database.write`/`gateway.charge` without `idempotent: true` | ENFORCED (task #58) |
-| SPORE-FAULT-001 | Resilience | `on_denial_fault retry` — retrying a capability denial attempts a re-grant, colliding with deny-only monotonicity (SPORE-MONO-001) | ENFORCED (0017) |
-| SPORE-FAULT-002 | Resilience | `fallback <flow>` whose effect-set is not a subset of the post-fault capability set | PLANNED (0017 follow-on — needs fallback symbol resolution) |
-| SPORE-FAULT-003 | Resilience | Fail-OPEN fault action — `log` outside the `on_rotation_fault` back-compat opt-in (keeps serving past the fault) | ENFORCED (0017) |
-| SPORE-FAULT-004 | Resilience | `fallback <flow>` recursion/cycle beyond depth-1 | PLANNED (0017 follow-on) |
-| SPORE-OBS-001 | Observability | Explicit `observability {}` on a `pure` flow (no side effects to observe) | ENFORCED (task #58) |
-| SPORE-INV-000 | Invariant | **RUNTIME** — `unreachable` hardware trap fired; DSS emits Audit Event (CBOR Tag 410) | PLANNED DRCM Phase 5 (#76) |
-| SPORE-INV-001 | Invariant | `ensure expr` statically proved false at compile time | ENFORCED (task #36) |
-| SPORE-INV-003 | Invariant | `invariant {}` block declared but empty | ENFORCED (task #36) |
-| SPORE-INV-004 | Invariant | `ensure` expression references symbol not in flow's parameter scope | ENFORCED (task INV-004) |
-| SPORE-ASSUME-001 | Proof-Tracing | `assuming {}` condition not found in referenced flow's manifest ProofObligations | PLANNED (task #73) |
-| SPORE-ASSUME-002 | Proof-Tracing | Referenced manifest signature invalid or expired | PLANNED (task #74) |
-| SPORE-ASSUME-003 | Proof-Tracing | Manifest sourceHash mismatch — referenced flow has changed since manifest was signed | PLANNED (task #74) |
-| SPORE-ASSUME-004 | Proof-Tracing | Condition found as `runtime-precheck` only (partial proof — WAT gate still needed) | PLANNED (task #74) |
-| SPORE-SYNTAX-LEGACY-003 | Syntax | Inline `policy {}` block between contract and body. Use `access {}` instead. `policy` keyword reserved for State Mutation Governance. | ADVISORY (v2.1) |
-| SPORE-STATIC-001 | Static | `static` declaration value is not a compile-time constant (contains runtime expressions) | PLANNED (v2.1) |
-| SPORE-STATIC-002 | Static | `static` name declared more than once in the same scope | PLANNED (v2.1) |
-| SPORE-BF-001 | Bitfield | Two fields in the same `bitfield` declaration use the same bit position | PLANNED (v2.1) |
-| SPORE-BF-002 | Bitfield | Bit position exceeds 31 (V_DPM is a 32-bit register) | PLANNED (v2.1) |
-| SPORE-GATE-001 | Gate | `gate(condition)` references a condition not found in knownDomainGuards. Full enforcement in Phase 5. | PLANNED (v2.1) |
-| SPORE-GATE-002 | Gate | `gate {}` wrapping a `pure flow` — pure flows have no side effects; gate is redundant | PLANNED (v2.1) |
-| SPORE-IMPORT-001 | Import | `import "./path.spore"` target file not found at resolved path | PLANNED (v2.1) |
-| SPORE-IMPORT-002 | Import | Imported file has parse errors — cannot merge DAG | PLANNED (v2.1) |
-| SPORE-IMPORT-003 | Import | Circular import detected in import chain | PLANNED (v2.1) |
-| SPORE-IMPORT-004 | Import | Imported symbol name conflicts with local definition | PLANNED (v2.1) |
-| SPORE-IMPORT-005 | Import | Import path escapes the allowed project root — pre-governance path traversal (resolved import must stay within `GALERINA_FS_ROOT` or cwd; checked segment-safe + after symlink canonicalization) | ENFORCED |
-| SPORE-IMPORT-006 | Import | Imported file exceeds the maximum import size in bytes — compile-time read DoS guard (stat-checked before the read) | ENFORCED |
-| SPORE-ACCESS-001 | Access | `access {}` grant references unknown capability name | PLANNED (v2.1) |
-| SPORE-ACCESS-002 | Access | `grant` capability not declared in flow's `effects {}` | PLANNED (v2.1) |
-| SPORE-ASSIMILATE-001 | Assimilate | `assimilate` plugin declared outside `boot.spore` | PLANNED (v2.1) |
-| SPORE-ASSIMILATE-002 | Assimilate | `assimilation_memory_budget` not declared in `governance {}` | PLANNED (v2.1) |
-| SPORE-ASSIMILATE-003 | Assimilate | Assimilated plugin has no `access { grant }` block | PLANNED (v2.1) |
+| FUNGI-GOV-001 | Syntax | `contract {}` inside flow body | ENFORCED |
+| FUNGI-GOV-003 | Contract | `request`/`response` on non-API flow | ENFORCED |
+| FUNGI-GOV-005 | Syntax | Flow qualifier mismatch | ENFORCED |
+| FUNGI-GOV-010 | Contract | Missing `intent` on secure flow; or logic in `intent` | ENFORCED |
+| FUNGI-GOV-017 | Contract | `cyber_physical_hardening` without ASIC + high liability | ENFORCED |
+| FUNGI-GOV-018 | Contract | `liability {}` declared in source | ENFORCED |
+| FUNGI-EFFECT-001 | Effect | Undeclared effect in body | ENFORCED |
+| FUNGI-EFFECT-002 | Effect | Declared effects don't match body | ENFORCED |
+| FUNGI-EFFECT-003 | Effect | Effect in `pure` flow | ENFORCED |
+| FUNGI-SECRET-001 | Security | Secret flows to log/audit sink | ENFORCED |
+| FUNGI-SECRET-002 | Security | Secret flows to network/egress | ENFORCED |
+| FUNGI-SECRET-003 | Security | Secret flows to serialize/record | ENFORCED |
+| FUNGI-SECRET-004 | Security | Secret-dependent branch (timing side-channel, CWE-208) | ENFORCED (warning) |
+| FUNGI-PRIVACY-002 | Privacy | Cleartext semantic embedding flows to network/egress (vec2text-invertible) | ENFORCED |
+| FUNGI-PRIVACY-001 | Privacy | `privacy {}` block `deny protected X to Y` clause | PLANNED Phase 10C+ |
+| FUNGI-CRYPTO-PQ-001 | Crypto | `crypto.sign` in a certified profile must declare a PQ/hybrid algorithm (crypto.sign.hybrid/mldsa65/slhdsa) | ENFORCED (certified profiles) |
+| FUNGI-SUBSTRATE-001 (crypto-on-core) | Crypto | crypto.hash/sign/verify/**encrypt/decrypt/seal** must run on a deterministic bit-exact lane | ENFORCED |
+| FUNGI-SUBSTRATE-005 (compute-only-lane) | Substrate | A network/persistence/secret/process external-reach effect declared on a noisy/photonic lane — that lane is an untrusted Tier-3 compute-only accelerator (degrade-only) with ZERO external reach; the effect must move to a digital lane. Deny-by-default confused-deputy fence; crypto is owned by SUBSTRATE-001. | ENFORCED |
+| FUNGI-TENANT-001 | Security | Dangling `tenant.scope` caller-scope binding — declared with no `.tenant_scoped` data-access effect to bind (advisory) | ENFORCED (R&D 0109) |
+| FUNGI-TENANT-002 | Security | Tenant-scoped data access (`*.tenant_scoped`) not bound to the caller's proven scope (`tenant.scope` marker) — deny-by-default IDOR / OWASP-A01 compile gate, fail-closed in every profile. Capability intersection over the manifest, NOT an AST/query rewriter. Proves the binding is *declared*; the body-dataflow proof is the deferred FUNGI-TENANT-003. Spec: [[galerina-tritmesh-feature-gap-analysis-2026-06-24]] | ENFORCED (R&D 0109) |
+| FUNGI-PROOF-CERT-001 | Security | Certified profile REFUSES a Phase-1 placeholder / undecodable zk_snark_receipt proof (circuit `galerina-sha256-v0.1` / type `groth16-phase1`) — its verify() is a public-input recompute (forgeable), so it cannot ride into a certified epilogue receipt. Deny-by-default (`generateEpilogueReceipt`, certified path). CWE-347/345. | ENFORCED (R&D 0094, certified path) |
+| FUNGI-PROOF-CERT-002 | Security | Certified profile rejected a zk_snark_receipt proof that did not `verify() === true` against the claimed input (or no verifier supplied — deny-by-default). | ENFORCED (R&D 0094, certified path) |
+| FUNGI-SECRET-BREACH | Security | Secret detected in output stream (runtime trap 3001) | PLANNED Phase 1 |
+| FUNGI-SECRET-FATAL | Security | Secret breach caused DSS permission drop | PLANNED Phase 1 |
+| FUNGI-CAP-001 | Capability | Wildcard `*` in NetworkTarget | PLANNED Phase 4 |
+| FUNGI-CAP-002 | Capability | `UnrestrictedInternet` without policy authorization | PLANNED Phase 4 |
+| FUNGI-CAP-003 | Capability | Path traversal in filesystem capability | PLANNED Phase 4 |
+| FUNGI-CAP-004 | Capability | Guest attempted V_DPM mutation | PLANNED Phase 5 |
+| FUNGI-CAP-CONFUSION | Capability | Capability request fails structural match | PLANNED Phase 4 |
+| FUNGI-INV-001 | Invariant | Pre-condition `ensure` failed before body | PLANNED Phase 2 |
+| FUNGI-INV-002 | Invariant | Post-condition `ensure` failed after body | PLANNED Phase 2 |
+| FUNGI-INV-003 | Invariant | `invariant {}` misplaced (outside `contract {}`) | PLANNED Phase 2 |
+| FUNGI-MONO-001 | Monotonic | Attempted capability expansion (V_DPM monotonic violation) | PLANNED Phase 4 |
+| FUNGI-MONO-002 | Monotonic | Capability exceeds Wasmtime launch config | PLANNED Phase 5 |
+| FUNGI-MONO-003 | Monotonic | Emergency overlay attempted de-escalation | PLANNED Phase 4 |
+| FUNGI-STEP-001 | Isolation | `step` keyword in contract block | PLANNED Phase 5 |
+| FUNGI-STEP-002 | Isolation | Cross-boundary call without `step` | PLANNED Phase 5 |
+| FUNGI-RESOURCE-001 | Resource | Fuel exhaustion in DWI isolate | PLANNED Phase 5 |
+| FUNGI-TERM-001 | Termination | `decreases` annotation violation | ENFORCED |
+| FUNGI-DRCM-UNSUPPORTED | Feature Gate | `step` or DRCM syntax used without `@experimental_profile` wrapper in `--release` | PLANNED (parser, 2026-07) |
+| FUNGI-FG-001 | Feature Gate | `@experimental_profile` wraps already-stable syntax (cleanup signal) | PLANNED (parser, 2026-07) |
+| FUNGI-EC-001 | Economics | Static cost overflow — max_aggregate_flow_budget exceeded by estimated loop | PLANNED Phase 5 |
+| FUNGI-EC-002 | Economics | charge_failure_tolerance_ratio breached — DPM quarantine triggered | PLANNED Phase 5 |
+| FUNGI-ID-001 | Identity | Manifest missing, tampered, or signature verification failed | PLANNED Phase 3 |
+| FUNGI-AU-001 | Auditability | `epilogue { strategy: none }` on high-trust flow (max_risk_liability: high) | PLANNED Phase 6 |
+| FUNGI-DEP-001 | Lifecycle | Deprecated syntax in use — migration available | PLANNED (post-DRCM) |
+| FUNGI-RES-001 | Resilience | `retry` on `database.write`/`gateway.charge` without `idempotent: true` | ENFORCED (task #58) |
+| FUNGI-FAULT-001 | Resilience | `on_denial_fault retry` — retrying a capability denial attempts a re-grant, colliding with deny-only monotonicity (FUNGI-MONO-001) | ENFORCED (0017) |
+| FUNGI-FAULT-002 | Resilience | `fallback <flow>` whose effect-set is not a subset of the post-fault capability set | PLANNED (0017 follow-on — needs fallback symbol resolution) |
+| FUNGI-FAULT-003 | Resilience | Fail-OPEN fault action — `log` outside the `on_rotation_fault` back-compat opt-in (keeps serving past the fault) | ENFORCED (0017) |
+| FUNGI-FAULT-004 | Resilience | `fallback <flow>` recursion/cycle beyond depth-1 | PLANNED (0017 follow-on) |
+| FUNGI-OBS-001 | Observability | Explicit `observability {}` on a `pure` flow (no side effects to observe) | ENFORCED (task #58) |
+| FUNGI-INV-000 | Invariant | **RUNTIME** — `unreachable` hardware trap fired; DSS emits Audit Event (CBOR Tag 410) | PLANNED DRCM Phase 5 (#76) |
+| FUNGI-INV-001 | Invariant | `ensure expr` statically proved false at compile time | ENFORCED (task #36) |
+| FUNGI-INV-003 | Invariant | `invariant {}` block declared but empty | ENFORCED (task #36) |
+| FUNGI-INV-004 | Invariant | `ensure` expression references symbol not in flow's parameter scope | ENFORCED (task INV-004) |
+| FUNGI-ASSUME-001 | Proof-Tracing | `assuming {}` condition not found in referenced flow's manifest ProofObligations | PLANNED (task #73) |
+| FUNGI-ASSUME-002 | Proof-Tracing | Referenced manifest signature invalid or expired | PLANNED (task #74) |
+| FUNGI-ASSUME-003 | Proof-Tracing | Manifest sourceHash mismatch — referenced flow has changed since manifest was signed | PLANNED (task #74) |
+| FUNGI-ASSUME-004 | Proof-Tracing | Condition found as `runtime-precheck` only (partial proof — WAT gate still needed) | PLANNED (task #74) |
+| FUNGI-SYNTAX-LEGACY-003 | Syntax | Inline `policy {}` block between contract and body. Use `access {}` instead. `policy` keyword reserved for State Mutation Governance. | ADVISORY (v2.1) |
+| FUNGI-STATIC-001 | Static | `static` declaration value is not a compile-time constant (contains runtime expressions) | PLANNED (v2.1) |
+| FUNGI-STATIC-002 | Static | `static` name declared more than once in the same scope | PLANNED (v2.1) |
+| FUNGI-BF-001 | Bitfield | Two fields in the same `bitfield` declaration use the same bit position | PLANNED (v2.1) |
+| FUNGI-BF-002 | Bitfield | Bit position exceeds 31 (V_DPM is a 32-bit register) | PLANNED (v2.1) |
+| FUNGI-GATE-001 | Gate | `gate(condition)` references a condition not found in knownDomainGuards. Full enforcement in Phase 5. | PLANNED (v2.1) |
+| FUNGI-GATE-002 | Gate | `gate {}` wrapping a `pure flow` — pure flows have no side effects; gate is redundant | PLANNED (v2.1) |
+| FUNGI-IMPORT-001 | Import | `import "./path.fungi"` target file not found at resolved path | PLANNED (v2.1) |
+| FUNGI-IMPORT-002 | Import | Imported file has parse errors — cannot merge DAG | PLANNED (v2.1) |
+| FUNGI-IMPORT-003 | Import | Circular import detected in import chain | PLANNED (v2.1) |
+| FUNGI-IMPORT-004 | Import | Imported symbol name conflicts with local definition | PLANNED (v2.1) |
+| FUNGI-IMPORT-005 | Import | Import path escapes the allowed project root — pre-governance path traversal (resolved import must stay within `GALERINA_FS_ROOT` or cwd; checked segment-safe + after symlink canonicalization) | ENFORCED |
+| FUNGI-IMPORT-006 | Import | Imported file exceeds the maximum import size in bytes — compile-time read DoS guard (stat-checked before the read) | ENFORCED |
+| FUNGI-ACCESS-001 | Access | `access {}` grant references unknown capability name | PLANNED (v2.1) |
+| FUNGI-ACCESS-002 | Access | `grant` capability not declared in flow's `effects {}` | PLANNED (v2.1) |
+| FUNGI-ASSIMILATE-001 | Assimilate | `assimilate` plugin declared outside `boot.fungi` | PLANNED (v2.1) |
+| FUNGI-ASSIMILATE-002 | Assimilate | `assimilation_memory_budget` not declared in `governance {}` | PLANNED (v2.1) |
+| FUNGI-ASSIMILATE-003 | Assimilate | Assimilated plugin has no `access { grant }` block | PLANNED (v2.1) |
 
 ---
 
 ## ST — Static Declaration Rules (new in v2.1)
 
 ### ST-001 · static value must be a compile-time constant
-**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** SPORE-STATIC-001
+**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** FUNGI-STATIC-001
 
 A `static` declaration value must be resolvable at compile time. Runtime expressions (function calls, parameter references, conditionals) are not permitted.
 
-```spore
+```fungi
 // ✅ CORRECT
 static MAX_RETRY = 3
 static FLOOR_PROOF = 3
 
-// ❌ WRONG — SPORE-STATIC-001
+// ❌ WRONG — FUNGI-STATIC-001
 static MAX_RETRY = getConfig("retry")   // runtime call — not a compile-time constant
 ```
 
 ---
 
 ### ST-002 · static names must be unique in scope
-**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** SPORE-STATIC-002
+**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** FUNGI-STATIC-002
 
 A `static` name may not be declared more than once in the same scope. Redeclaration is a compile error.
 
@@ -1042,12 +1042,12 @@ A `static` name may not be declared more than once in the same scope. Redeclarat
 ## BF — Bitfield Rules (new in v2.1)
 
 ### BF-001 · bitfield bit positions must not overlap
-**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** SPORE-BF-001
+**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** FUNGI-BF-001
 
 Two fields in the same `bitfield` declaration must not use the same bit position. Overlap is a compile error — it would produce ambiguous bitmask values.
 
-```spore
-// ❌ WRONG — SPORE-BF-001
+```fungi
+// ❌ WRONG — FUNGI-BF-001
 bitfield V_DPM {
   network_outbound: 0
   storage_write: 0   // duplicate bit position — error
@@ -1057,12 +1057,12 @@ bitfield V_DPM {
 ---
 
 ### BF-002 · bitfield bit positions must not exceed 31
-**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** SPORE-BF-002
+**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** FUNGI-BF-002
 
 V_DPM is a 32-bit register. Bit positions are 0–31. Any `bitfield` declaration using a position ≥ 32 is a compile error.
 
-```spore
-// ❌ WRONG — SPORE-BF-002
+```fungi
+// ❌ WRONG — FUNGI-BF-002
 bitfield V_DPM {
   overflow_bit: 32   // bit position out of range — V_DPM is 32-bit
 }
@@ -1073,10 +1073,10 @@ bitfield V_DPM {
 ## PT — Proof-Tracing Rules (new in v2.1)
 
 ### PT-001 · assuming() is a proof-tracing block — not a runtime conditional
-**Status:** PLANNED (tasks #73/#74)  **Diagnostics:** SPORE-ASSUME-001 through SPORE-ASSUME-004
+**Status:** PLANNED (tasks #73/#74)  **Diagnostics:** FUNGI-ASSUME-001 through FUNGI-ASSUME-004
 
 Syntax:
-```spore
+```fungi
 assuming(flowRef, "claim") {
   // code that may only execute if "claim" is proved in flowRef's manifest
 }
@@ -1091,12 +1091,12 @@ This is not a runtime `if`-statement — it is a **compile-time proof assertion*
 ## GT — Gate Rules (new in v2.1)
 
 ### GT-001 · gate condition must reference a known Domain Guard Policy
-**Status:** PLANNED (v2.1 governance verifier; full enforcement Phase 5)  **Diagnostic:** SPORE-GATE-001
+**Status:** PLANNED (v2.1 governance verifier; full enforcement Phase 5)  **Diagnostic:** FUNGI-GATE-001
 
 A `gate(condition)` block's condition must name a Domain Guard Policy found in `knownDomainGuards`. At Phase 5, unresolvable gate conditions are a hard error. Currently emits a warning.
 
-```spore
-// ⚠️ SPORE-GATE-001 — 'unknown_policy' not in knownDomainGuards
+```fungi
+// ⚠️ FUNGI-GATE-001 — 'unknown_policy' not in knownDomainGuards
 gate(unknown_policy) {
   flow sensitiveOp() -> Result<Void, Fault>
   contract { ... }
@@ -1107,12 +1107,12 @@ gate(unknown_policy) {
 ---
 
 ### GT-002 · gate {} wrapping a pure flow is redundant
-**Status:** PLANNED (v2.1 governance verifier)  **Diagnostic:** SPORE-GATE-002
+**Status:** PLANNED (v2.1 governance verifier)  **Diagnostic:** FUNGI-GATE-002
 
 `gate {}` blocks add an admission guard check (V_DPM bit 8). `pure` flows have no side effects by definition; the gate check is redundant and signals a likely authoring error.
 
-```spore
-// ⚠️ SPORE-GATE-002 — gate wraps a pure flow
+```fungi
+// ⚠️ FUNGI-GATE-002 — gate wraps a pure flow
 gate(admin_only) {
   pure flow helper(x: Int) -> Int   // pure: no effects, gate is redundant
   contract { ... }
@@ -1142,47 +1142,47 @@ The `;;` governance annotation is a first-class token. Its text is collected int
 ## IM — Import Rules (new in v2.1)
 
 ### IM-001 · import file must exist at the resolved path
-**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** SPORE-IMPORT-001
+**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** FUNGI-IMPORT-001
 
-`import "./path.spore"` resolves relative to the importing file's directory. A missing file is always a hard error — the DAG merge cannot proceed.
+`import "./path.fungi"` resolves relative to the importing file's directory. A missing file is always a hard error — the DAG merge cannot proceed.
 
-```spore
-// ❌ WRONG — SPORE-IMPORT-001
-import "./nonexistent.spore"
+```fungi
+// ❌ WRONG — FUNGI-IMPORT-001
+import "./nonexistent.fungi"
 ```
 
 ---
 
 ### IM-002 · imported file must be error-free before merge
-**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** SPORE-IMPORT-002
+**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** FUNGI-IMPORT-002
 
-An imported `.spore` file with parse errors cannot contribute symbols to the DAG. The importer fails with the nested error list. Fix the imported file first.
+An imported `.fungi` file with parse errors cannot contribute symbols to the DAG. The importer fails with the nested error list. Fix the imported file first.
 
 ---
 
 ### IM-003 · circular imports are rejected
-**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** SPORE-IMPORT-003
+**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** FUNGI-IMPORT-003
 
-If file A imports file B and file B imports file A (directly or transitively), the import chain is circular. The compiler detects the cycle and emits `SPORE-IMPORT-003` on the second edge that closes the cycle.
+If file A imports file B and file B imports file A (directly or transitively), the import chain is circular. The compiler detects the cycle and emits `FUNGI-IMPORT-003` on the second edge that closes the cycle.
 
 ---
 
 ### IM-004 · imported symbol collisions are a warning
-**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** SPORE-IMPORT-004 (warning)
+**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** FUNGI-IMPORT-004 (warning)
 
-If an imported symbol name conflicts with a locally-defined name, the local definition wins and `SPORE-IMPORT-004` is emitted as a warning. Use explicit aliases (`import "./path.spore" as X`) to avoid collisions.
+If an imported symbol name conflicts with a locally-defined name, the local definition wins and `FUNGI-IMPORT-004` is emitted as a warning. Use explicit aliases (`import "./path.fungi" as X`) to avoid collisions.
 
 ---
 
 ## AC — Access Block Rules (new in v2.1)
 
 ### AC-001 · access {} grant must reference a known capability name
-**Status:** PLANNED (v2.1 governance verifier)  **Diagnostic:** SPORE-ACCESS-001 (warning)
+**Status:** PLANNED (v2.1 governance verifier)  **Diagnostic:** FUNGI-ACCESS-001 (warning)
 
 A `grant X` line in an `access {}` block must name a capability found in the capability registry. Typos and invented capability names produce a warning; full enforcement at Phase 5.
 
-```spore
-// ⚠️ SPORE-ACCESS-001 — 'network.telepathy' not in capability registry
+```fungi
+// ⚠️ FUNGI-ACCESS-001 — 'network.telepathy' not in capability registry
 access {
   grant network.telepathy
 }
@@ -1191,19 +1191,19 @@ access {
 ---
 
 ### AC-002 · access {} grant capability must be declared in effects {}
-**Status:** PLANNED (v2.1 governance verifier)  **Diagnostic:** SPORE-ACCESS-002 (warning)
+**Status:** PLANNED (v2.1 governance verifier)  **Diagnostic:** FUNGI-ACCESS-002 (warning)
 
 `access { grant X }` is a boundary declaration. Granting a capability that is not listed in the flow's `effects {}` is likely an authoring error — the capability cannot be exercised if the effect is not declared. Emits a warning.
 
-```spore
-// ⚠️ SPORE-ACCESS-002 — grant references network.outbound but effects {} doesn't declare it
+```fungi
+// ⚠️ FUNGI-ACCESS-002 — grant references network.outbound but effects {} doesn't declare it
 flow example() -> Void
 contract {
   intent { "Example flow." }
   effects { audit.write }
 }
 access {
-  grant network.outbound   // SPORE-ACCESS-002: not in effects {}
+  grant network.outbound   // FUNGI-ACCESS-002: not in effects {}
 }
 { ... }
 ```
@@ -1212,34 +1212,34 @@ access {
 
 ## AS — Assimilation Rules (new in v2.1)
 
-### AS-001 · assimilate plugins must be declared in boot.spore
-**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** SPORE-ASSIMILATE-001 (warning)
+### AS-001 · assimilate plugins must be declared in boot.fungi
+**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** FUNGI-ASSIMILATE-001 (warning)
 
-Hot-Code Residency plugins (`import plugin assimilate`) are boot-time only. Declaring them outside `boot.spore` is a governance violation — assimilation cannot be triggered at runtime after the DSS bootstrap completes.
+Hot-Code Residency plugins (`import plugin assimilate`) are boot-time only. Declaring them outside `boot.fungi` is a governance violation — assimilation cannot be triggered at runtime after the DSS bootstrap completes.
 
 ---
 
 ### AS-002 · assimilation_memory_budget must be declared
-**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** SPORE-ASSIMILATE-002 (warning)
+**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** FUNGI-ASSIMILATE-002 (warning)
 
 Any file that assimilates a plugin must declare `assimilation_memory_budget` in its `governance {}` block. Without a budget cap, the DSS cannot enforce memory isolation for the hot-code resident.
 
 ---
 
 ### AS-003 · assimilated plugin must have an access { grant } block
-**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** SPORE-ASSIMILATE-003 (error)
+**Status:** PLANNED (v2.1 compiler)  **Diagnostic:** FUNGI-ASSIMILATE-003 (error)
 
-An assimilated plugin with no `access { grant }` block inherits no capabilities — it cannot perform any governed operation. This is almost always an authoring error. `SPORE-ASSIMILATE-003` is a hard error: the assimilation is rejected until an explicit `access {}` block is added.
+An assimilated plugin with no `access { grant }` block inherits no capabilities — it cannot perform any governed operation. This is almost always an authoring error. `FUNGI-ASSIMILATE-003` is a hard error: the assimilation is rejected until an explicit `access {}` block is added.
 
-```spore
-// ❌ WRONG — SPORE-ASSIMILATE-003
-import plugin assimilate "./crypto.spore" as crypto {
+```fungi
+// ❌ WRONG — FUNGI-ASSIMILATE-003
+import plugin assimilate "./crypto.fungi" as crypto {
   contract { intent { "Fast crypto routines." } }
   // no access {} block — error
 }
 
 // ✅ CORRECT
-import plugin assimilate "./crypto.spore" as crypto {
+import plugin assimilate "./crypto.fungi" as crypto {
   contract { intent { "Fast crypto routines." } }
   access { grant secret.access }
 }
@@ -1249,50 +1249,50 @@ import plugin assimilate "./crypto.spore" as crypto {
 
 ## CLI output redaction — fail-closed tripwire
 
-**Status:** ENFORCED (R&D 0094-redact PART-A)  **Diagnostic:** SPORE-CLI-REDACT-001
+**Status:** ENFORCED (R&D 0094-redact PART-A)  **Diagnostic:** FUNGI-CLI-REDACT-001
 
 CLI output is scrubbed by `redactCliOutput` / `redactCliOutputChecked` (`galerina-core-cli/src/security.ts`) before it is printed. Two detector classes:
 
 - **Assignment forms** (`api_key=…`, `token=…`, `password=…`, `secret:…`, `cookie:…`, `bearer …`) — the key/prefix is preserved, the value becomes `SecureString(redacted)`.
 - **Bare credential tokens** (PEM private-key blocks, cloud access-key IDs `AKIA…`, VCS PATs `ghp_…`, Slack `xox?-…`, JWTs `eyJ….eyJ….…`) — redacted **regardless of surrounding context**, closing the prior fail-OPEN where a bare token with no `key=` prefix printed as cleartext.
 
-A bare-token match is a **tripwire**: a raw credential reaching CLI output means an upstream boundary already leaked it. `redactCliOutputChecked` reports `{ tripwire, markers }`; `formatCliResult` surfaces `SPORE-CLI-REDACT-001` (with the marker names, never the value) so an operator investigates the source rather than trusting the scrub silently. Redaction is best-effort defense-in-depth — never the primary secret boundary (`SPORE-SECRET-001..003` + `redact()` remain the compiler-enforced sink discipline); it can only ever add safety.
+A bare-token match is a **tripwire**: a raw credential reaching CLI output means an upstream boundary already leaked it. `redactCliOutputChecked` reports `{ tripwire, markers }`; `formatCliResult` surfaces `FUNGI-CLI-REDACT-001` (with the marker names, never the value) so an operator investigates the source rather than trusting the scrub silently. Redaction is best-effort defense-in-depth — never the primary secret boundary (`FUNGI-SECRET-001..003` + `redact()` remain the compiler-enforced sink discipline); it can only ever add safety.
 
 ---
 
 ## Sound-erasure obligation for non-overwritable substrates
 
-**Status:** ENFORCED at the decision core + the signed discovery rail (R&D 0116/0118; `admitSubstrateWrite` + `admitStorageSubstrate` BUILT — `galerina-tower-citizen/src/substrate-erasure.ts`, 20/20 tests: the lying-WORM-drive attack is closed end-to-end — `overwrite` needs a verified Ed25519-signed `storage.admit` attestation, else fail-closed to `crypto-only`); the Stage-1 compiler trap + Stage-3 crypto-erase witness are owner-gated; the physical Stage-2 dispatch seam + the medium-binding TOCTOU closure are HW-gated (#102-106)  **Diagnostic:** SPORE-RETAIN-001
+**Status:** ENFORCED at the decision core + the signed discovery rail (R&D 0116/0118; `admitSubstrateWrite` + `admitStorageSubstrate` BUILT — `galerina-tower-citizen/src/substrate-erasure.ts`, 20/20 tests: the lying-WORM-drive attack is closed end-to-end — `overwrite` needs a verified Ed25519-signed `storage.admit` attestation, else fail-closed to `crypto-only`); the Stage-1 compiler trap + Stage-3 crypto-erase witness are owner-gated; the physical Stage-2 dispatch seam + the medium-binding TOCTOU closure are HW-gated (#102-106)  **Diagnostic:** FUNGI-RETAIN-001
 
 Galerina's secret-erasure is **overwrite-based** (zero the arena page / derived-secret buffer; B2/B2b in `wat-emitter.ts`). On **write-once/fixed media** that invariant is silently false — a thermally-fixed photorefractive hologram cannot be erased optically (>170 °C re-heat only), WORM glass is physically immutable, and unfixed holograms leave residual/decaying gratings (data remanence). The sound discipline is **cryptographic erase** (NIST SP 800-88 Rev. 1 "Purge"): seal *before* writing, destroy the key to "delete".
 
-The invariant: a substrate admitted via the storage capability whose media is write-once/fixed is flagged `eraseModel: "crypto-only"`; on it (1) **only KEM-DEM ciphertext may be written** — a cleartext-secret-tainted value reaching it is a fail-closed compile/admission error (extends `SPORE-SECRET-002` / `SPORE-PRIVACY-002` taint to a new sink class); (2) the DEK lives on overwritable digital silicon and "deletion" = key destruction, never media overwrite; (3) erasure emits a key-destruction **witness** (no read-back-verify of the medium is possible). No new crypto — reuses KEM-DEM + key custody (0 patents). Buildable surface: a capability-axis split in `photonic-admission.ts` (`storage.mount` vs `photonic.reprogram`) carrying `eraseModel`, plus one SealTaint sink rule.
+The invariant: a substrate admitted via the storage capability whose media is write-once/fixed is flagged `eraseModel: "crypto-only"`; on it (1) **only KEM-DEM ciphertext may be written** — a cleartext-secret-tainted value reaching it is a fail-closed compile/admission error (extends `FUNGI-SECRET-002` / `FUNGI-PRIVACY-002` taint to a new sink class); (2) the DEK lives on overwritable digital silicon and "deletion" = key destruction, never media overwrite; (3) erasure emits a key-destruction **witness** (no read-back-verify of the medium is possible). No new crypto — reuses KEM-DEM + key custody (0 patents). Buildable surface: a capability-axis split in `photonic-admission.ts` (`storage.mount` vs `photonic.reprogram`) carrying `eraseModel`, plus one SealTaint sink rule.
 
 ---
 
 ## Workspace-index integrity (anti poisoned-index)
 
-**Status:** ENFORCED (R&D 0098-intel-index; `galerina-devtools-intelligence/src/indexer.ts`, +5 tests)  **Diagnostics:** SPORE-INTEL-001 (integrity), SPORE-INTEL-002 (path traversal)
+**Status:** ENFORCED (R&D 0098-intel-index; `galerina-devtools-intelligence/src/indexer.ts`, +5 tests)  **Diagnostics:** FUNGI-INTEL-001 (integrity), FUNGI-INTEL-002 (path traversal)
 
 The `workspace.lindex` cache TRUSTS its stored `flows`/`fileHashes` on an incremental build (a file whose stored hash matches is not re-parsed — its cached flows are reused). An attacker who can write the `.lindex` could therefore pair **fabricated flows** with a correct content hash and have them trusted unverified (poisoned-index). 
 
-- **SPORE-INTEL-001** — the whole index is bound under an **integrity tag** (`computeIndexIntegrity`): `hmac-sha256:` when `GALERINA_INDEX_HMAC_KEY` is set (tamper-**resistant**, unforgeable without the key), else `sha256:` (tamper-**evident**). It is re-verified on load (`verifyIndexIntegrity`, constant-time); any mismatch / absence → the cached index is **discarded and the workspace is fully re-parsed** (fail-closed, never silent). Set the key in untrusted-FS environments.
-- **SPORE-INTEL-002** — a caller-supplied `indexDir` containing a `..` path-traversal segment is **refused** before any write (CWE-22), so a poisoned indexDir cannot plant/overwrite a `workspace.lindex` outside its intended root. A deliberate absolute/sub-path with no `..` is allowed.
+- **FUNGI-INTEL-001** — the whole index is bound under an **integrity tag** (`computeIndexIntegrity`): `hmac-sha256:` when `GALERINA_INDEX_HMAC_KEY` is set (tamper-**resistant**, unforgeable without the key), else `sha256:` (tamper-**evident**). It is re-verified on load (`verifyIndexIntegrity`, constant-time); any mismatch / absence → the cached index is **discarded and the workspace is fully re-parsed** (fail-closed, never silent). Set the key in untrusted-FS environments.
+- **FUNGI-INTEL-002** — a caller-supplied `indexDir` containing a `..` path-traversal segment is **refused** before any write (CWE-22), so a poisoned indexDir cannot plant/overwrite a `workspace.lindex` outside its intended root. A deliberate absolute/sub-path with no `..` is allowed.
 
 ---
 
 ## Declared-but-inert safety control must fail loud
 
-**Status:** ENFORCED (R&D 0120; `resilience-inference.ts` `checkResilienceViolations`, consumed by `governance-verifier.ts`)  **Diagnostic:** SPORE-RES-CB-PENDING (warning)
+**Status:** ENFORCED (R&D 0120; `resilience-inference.ts` `checkResilienceViolations`, consumed by `governance-verifier.ts`)  **Diagnostic:** FUNGI-RES-CB-PENDING (warning)
 
-A safety control that is parsed + stored but **not yet enforced** must never read as enforced (the honest-posture / never-silent principle). A flow that declares `resilience { fallback circuit_breaker }` gets a **warning**: the circuit-breaker posture-trip is a NO-OP today (DRCM Phase 5), so on failure it will not actually trip the defensive-mode posture bit — do not rely on it for graceful degradation. The declaration is valid (warning, not error); the author is told to track the breaker externally or choose an enforced fallback (`propagate` / `return_cached` / `return_default` / `quarantine` / `escalate`) until DRCM Phase 5 lands. (The sibling rule `SPORE-RES-001` (error) forbids retry on a mutation effect without `idempotent: true`.)
+A safety control that is parsed + stored but **not yet enforced** must never read as enforced (the honest-posture / never-silent principle). A flow that declares `resilience { fallback circuit_breaker }` gets a **warning**: the circuit-breaker posture-trip is a NO-OP today (DRCM Phase 5), so on failure it will not actually trip the defensive-mode posture bit — do not rely on it for graceful degradation. The declaration is valid (warning, not error); the author is told to track the breaker externally or choose an enforced fallback (`propagate` / `return_cached` / `return_default` / `quarantine` / `escalate`) until DRCM Phase 5 lands. (The sibling rule `FUNGI-RES-001` (error) forbids retry on a mutation effect without `idempotent: true`.)
 
 ---
 
 ## SBOM integrity — never claim coverage you don't have
 
-**Status:** ENFORCED in the emitter (R&D 0120-F3; `galerina-core-compiler/src/sbom.ts` `generateCycloneDxSbom`, 6 tests)  **Diagnostic:** SPORE-SBOM-001
+**Status:** ENFORCED in the emitter (R&D 0120-F3; `galerina-core-compiler/src/sbom.ts` `generateCycloneDxSbom`, 6 tests)  **Diagnostic:** FUNGI-SBOM-001
 
-The CycloneDX 1.5 SBOM is assembled from the resolved `PackageManifest` set (name / version / sha256 `hash` / `signerKeyId` / `registry` / `effects` / `capabilities`). Fail-closed posture: an SBOM must **never claim integrity it does not have**. A component without a well-formed `sha256:<64 hex>` content hash is emitted **without** a `hashes` entry, tagged `galerina:integrity = UNVERIFIED`, raised as **SPORE-SBOM-001** (error), and the whole BOM is marked `galerina:complete = false`. A consumer gates on `result.complete` (reject an incomplete SBOM) rather than trusting a document that silently omits an unverifiable component. Output is **deterministic** (component order = input order; no wall-clock unless a timestamp is supplied) for reproducible builds. The governance footprint (effects/capabilities/signer/registry) rides as CycloneDX `properties` — a *governed* SBOM, not just a dependency list.
+The CycloneDX 1.5 SBOM is assembled from the resolved `PackageManifest` set (name / version / sha256 `hash` / `signerKeyId` / `registry` / `effects` / `capabilities`). Fail-closed posture: an SBOM must **never claim integrity it does not have**. A component without a well-formed `sha256:<64 hex>` content hash is emitted **without** a `hashes` entry, tagged `galerina:integrity = UNVERIFIED`, raised as **FUNGI-SBOM-001** (error), and the whole BOM is marked `galerina:complete = false`. A consumer gates on `result.complete` (reject an incomplete SBOM) rather than trusting a document that silently omits an unverifiable component. Output is **deterministic** (component order = input order; no wall-clock unless a timestamp is supplied) for reproducible builds. The governance footprint (effects/capabilities/signer/registry) rides as CycloneDX `properties` — a *governed* SBOM, not just a dependency list.
 
 ---

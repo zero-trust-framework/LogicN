@@ -9,7 +9,7 @@
 // normalizes + denies all of these fail-closed BEFORE any fetch.
 //
 // Each case below denies at the guard (no network call is made). We assert the
-// result is a Galerina Err carrying the SSRF / SPORE-NET-001 marker.
+// result is a Galerina Err carrying the SSRF / FUNGI-NET-001 marker.
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -39,7 +39,7 @@ function assertSsrfDenied(result, label) {
   assert.equal(result.__tag, "err", `${label}: expected an Err (SSRF denial), got ${result?.__tag}`);
   const msg = result.error?.value ?? "";
   assert.match(msg, /SSRF/, `${label}: Err must name SSRF — got: ${msg}`);
-  assert.match(msg, /SPORE-NET-001/, `${label}: Err must carry SPORE-NET-001 — got: ${msg}`);
+  assert.match(msg, /FUNGI-NET-001/, `${label}: Err must carry FUNGI-NET-001 — got: ${msg}`);
 }
 
 describe("SSRF egress-guard wiring (61-9)", () => {

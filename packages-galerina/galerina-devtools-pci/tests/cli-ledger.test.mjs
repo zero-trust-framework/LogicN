@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 const CLI = fileURLToPath(new URL("../dist/cli.js", import.meta.url));
 
 function makeEgressDir() {
-  const dir = mkdtempSync(join(tmpdir(), "spore-ledger-"));
+  const dir = mkdtempSync(join(tmpdir(), "fungi-ledger-"));
   const records = [
     JSON.stringify({ who: "svc-a", what: "charge", effect: "Network", decision: "allow", timestamp: "2026-06-15T10:00:00Z" }),
     JSON.stringify({ who: "svc-b", what: "refund", effect: "Network", decision: "deny", timestamp: "2026-06-15T10:01:00Z" }),
@@ -29,7 +29,7 @@ test("ledger — builds report + writes append-only ledger; deny-by-default", ()
   const r = spawnSync(process.execPath, [CLI, "ledger", dir, "--json"], { encoding: "utf8" });
   assert.equal(r.status, 0, r.stderr);
   const report = JSON.parse(r.stdout);
-  assert.equal(report.schemaVersion, "spore.compliance-ledger.v1");
+  assert.equal(report.schemaVersion, "fungi.compliance-ledger.v1");
   assert.equal(report.entries.length, 3);
   assert.equal(report.allowCount, 1);
   assert.equal(report.denyCount, 2); // explicit deny + opaque record failing closed
@@ -43,7 +43,7 @@ test("ledger — missing egress-dir arg → usage + exit 1", () => {
 });
 
 test("ledger — nonexistent dir → empty report, exit 0 (no egress file = nothing to report)", () => {
-  const dir = join(tmpdir(), `spore-ledger-absent-${process.pid}`);
+  const dir = join(tmpdir(), `fungi-ledger-absent-${process.pid}`);
   const r = spawnSync(process.execPath, [CLI, "ledger", dir, "--json"], { encoding: "utf8" });
   assert.equal(r.status, 0, r.stderr);
   const report = JSON.parse(r.stdout);

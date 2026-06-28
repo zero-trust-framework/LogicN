@@ -518,7 +518,7 @@ export interface FileProvenanceResult {
   hasTaintedData: boolean;
   ungatedSinkReached: boolean;
   /**
-   * SPORE-PROV-001 (AnalyzerBlindOnParseFailure): the source failed to parse
+   * FUNGI-PROV-001 (AnalyzerBlindOnParseFailure): the source failed to parse
    * (error diagnostics + zero flows + empty AST), so the analyzer was BLIND.
    * A blind analysis is NOT clean — callers must treat this as non-zero/deny,
    * exactly like ungatedSinkReached (NIST SP 800-207 T6, CWE-636).
@@ -560,7 +560,7 @@ export function analyzeFile(
   const lines = source.split(/\r?\n/);
   const totalLines = lines.length;
 
-  // SPORE-PROV-001: read the parse diagnostics that were previously ignored. If the
+  // FUNGI-PROV-001: read the parse diagnostics that were previously ignored. If the
   // source did not parse (errors + no flows + empty AST), the analyzer is blind —
   // every downstream "no ungated sink" conclusion is vacuous, not safe.
   const parseErrors = (parsed.diagnostics ?? []).filter(d => d.severity === "error");
@@ -570,12 +570,12 @@ export function analyzeFile(
     (parsed.ast.children ?? []).length === 0;
 
   // Use the value-state checker as the AUTHORITATIVE source for ungated-sink detection.
-  // SPORE-VALUESTATE-003 = unsafe value at governed sink
-  // SPORE-VALUESTATE-005 = derived unsafe value at sink
+  // FUNGI-VALUESTATE-003 = unsafe value at governed sink
+  // FUNGI-VALUESTATE-005 = derived unsafe value at sink
   // The compiler already knows which flows are clean vs not.
   const vsResult = checkValueStates(parsed.ast);
   const hasCompilerUngatedDiag = vsResult.diagnostics.some(
-    d => d.code === "SPORE-VALUESTATE-003" || d.code === "SPORE-VALUESTATE-005",
+    d => d.code === "FUNGI-VALUESTATE-003" || d.code === "FUNGI-VALUESTATE-005",
   );
 
   // Build per-line source text for scoped scanning
@@ -675,8 +675,8 @@ export function analyzeFile(
         return sourceNodeMap.has(arg) && !gatedBindings.has(arg);
       });
 
-      // Fail-closed (SPORE-PROV-001 / 0098-prov-parsefail): a source-level ungated
-      // detection stands on its own. A SILENT compiler (no SPORE-VALUESTATE-003/-005)
+      // Fail-closed (FUNGI-PROV-001 / 0098-prov-parsefail): a source-level ungated
+      // detection stands on its own. A SILENT compiler (no FUNGI-VALUESTATE-003/-005)
       // means "could not prove a violation" — NOT "proven clean". Use the compiler
       // diagnostic to ESCALATE (OR), never to SUPPRESS (AND): absence of evidence is
       // not evidence of safety.
@@ -787,7 +787,7 @@ export function collectSporeFiles(dir: string): string[] {
       const stat = statSync(full);
       if (stat.isDirectory()) {
         files.push(...collectSporeFiles(full));
-      } else if (extname(entry) === ".spore") {
+      } else if (extname(entry) === ".fungi") {
         files.push(full);
       }
     } catch {
@@ -837,7 +837,7 @@ export function buildProvenanceGraph(
       }
     }
 
-    // SPORE-PROV-001: a file the analyzer could not parse is NOT clean. Count it
+    // FUNGI-PROV-001: a file the analyzer could not parse is NOT clean. Count it
     // toward the high-risk total (so cli.ts `flowsWithUngatedSinks > 0 ? 2 : 0`
     // returns 2) and record an explicit blind-file risk entry, distinct from an
     // ungated sink but equally "deny".
@@ -848,7 +848,7 @@ export function buildProvenanceGraph(
           flowName: "<parse-failure>",
           filePath,
           risk: "high",
-          description: `SPORE-PROV-001: '${filePath}' failed to parse — the provenance analyzer was BLIND and cannot certify it clean (deny-by-default).`,
+          description: `FUNGI-PROV-001: '${filePath}' failed to parse — the provenance analyzer was BLIND and cannot certify it clean (deny-by-default).`,
         });
       }
     }

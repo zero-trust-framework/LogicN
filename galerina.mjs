@@ -3,17 +3,17 @@
  * galerina — Galerina program compiler and runner
  *
  * Usage:
- *   node galerina.mjs run <program.spore>           # compile + run via Node.js WebAssembly
- *   node galerina.mjs build <program.spore>         # compile to .wasm + .wat in build/
- *   node galerina.mjs check <program.spore>         # type-check + governance only
- *   node galerina.mjs run <program.spore> --invoke <flow> [args...]  # invoke a specific flow
+ *   node galerina.mjs run <program.fungi>           # compile + run via Node.js WebAssembly
+ *   node galerina.mjs build <program.fungi>         # compile to .wasm + .wat in build/
+ *   node galerina.mjs check <program.fungi>         # type-check + governance only
+ *   node galerina.mjs run <program.fungi> --invoke <flow> [args...]  # invoke a specific flow
  *
  * The WASM path:
- *   .spore source → parseProgram → emitGIR → buildWATModuleFromGIR → renderWAT
+ *   .fungi source → parseProgram → emitGIR → buildWATModuleFromGIR → renderWAT
  *               → assembleWAT (wabt) → WebAssembly.instantiate → run
  *
  * To use with wasmtime instead of Node:
- *   node galerina.mjs build program.spore
+ *   node galerina.mjs build program.fungi
  *   wasmtime --invoke main build/program.wasm
  *
  * Baseline (governance-cost, Stage-A tree-walker): 3,200 ops/sec
@@ -28,29 +28,29 @@ import { execSync, spawnSync } from "node:child_process";
 import { totalmem, freemem } from "node:os";
 
 // ── Pre-governance ingest guard (threat-model: file-ingestion DoS) ────────────
-// Untrusted .spore is read into a JS string BEFORE any governance runs. The lexer's SPORE-LEX-004 10MB guard
+// Untrusted .fungi is read into a JS string BEFORE any governance runs. The lexer's FUNGI-LEX-004 10MB guard
 // is POST-allocation (it checks source.length AFTER the whole file is decoded), so a 500MB file commits
 // +500MB RSS before being rejected, and a >512MB file throws an uncaught ERR_STRING_TOO_LONG that crashes
 // the CLI with no diagnostic. This statSyncs the SIZE on disk first and fails CLOSED (returns null; the
 // caller exits on a main path, continues on a batch path), so an oversized/unreadable file is rejected
 // before the allocation it would otherwise exhaust the host with.
-const MAX_SOURCE_BYTES = 10 * 1024 * 1024; // 10MB — mirrors the lexer's SPORE-LEX-004 constant
+const MAX_SOURCE_BYTES = 10 * 1024 * 1024; // 10MB — mirrors the lexer's FUNGI-LEX-004 constant
 function readUntrustedSource(path) {
   try {
     const st = statSync(path);
     if (st.size > MAX_SOURCE_BYTES) {
-      console.error(`❌ SPORE-LEX-004: ${path} is ${(st.size / 1048576).toFixed(1)}MB, over the ${MAX_SOURCE_BYTES / 1048576}MB source limit — refusing to read (fail-closed).`);
+      console.error(`❌ FUNGI-LEX-004: ${path} is ${(st.size / 1048576).toFixed(1)}MB, over the ${MAX_SOURCE_BYTES / 1048576}MB source limit — refusing to read (fail-closed).`);
       return null;
     }
     return readFileSync(path, "utf8");
   } catch (e) {
-    console.error(`❌ SPORE-BACKEND-001: could not read ${path} — ${e instanceof Error ? e.message : String(e)} (fail-closed).`);
+    console.error(`❌ FUNGI-BACKEND-001: could not read ${path} — ${e instanceof Error ? e.message : String(e)} (fail-closed).`);
     return null;
   }
 }
 
 // ── Auto assimilation memory budget ──────────────────────────────────────────
-// Called when boot.spore declares `assimilation_memory_budget: auto`
+// Called when boot.fungi declares `assimilation_memory_budget: auto`
 // OR when the governance block is omitted entirely (auto is the default).
 //
 // Formula: min(available_RAM * 0.20, 256MB)
@@ -111,19 +111,19 @@ async function main() {
   // This command was historically `gen-tests`; it is now the two-word `galerina generate tests`.
   // Normalize the subcommand into an internal dispatch token (the literal string "generate tests",
   // which contains a space and therefore can never equal a single shell argv token) and drop the
-  // consumed `tests` token, leaving the downstream `sporeFile = rest[0]` + parse pipeline unchanged.
+  // consumed `tests` token, leaving the downstream `fungiFile = rest[0]` + parse pipeline unchanged.
   if (command === "generate") {
     if (rest[0] === "tests") {
       command = "generate tests";
       rest = rest.slice(1);
     } else {
-      console.error(`Unknown 'generate' subcommand: '${rest[0] ?? ""}'. Did you mean:  galerina generate tests <file.spore> [--tap]`);
+      console.error(`Unknown 'generate' subcommand: '${rest[0] ?? ""}'. Did you mean:  galerina generate tests <file.fungi> [--tap]`);
       process.exit(1);
     }
   }
   // The old `gen-tests` spelling was renamed to `generate tests` — redirect rather than 404 silently.
   if (command === "gen-tests") {
-    console.error("`galerina gen-tests` was renamed. Use:  galerina generate tests <file.spore> [--tap]");
+    console.error("`galerina gen-tests` was renamed. Use:  galerina generate tests <file.fungi> [--tap]");
     process.exit(1);
   }
 
@@ -131,32 +131,32 @@ async function main() {
     console.log(`galerina — Galerina compiler + runtime (Phase 27 WASM)
 
 Commands:
-  galerina run <file.spore> [--invoke <flow>] [args...]   compile .spore → WASM → run
+  galerina run <file.fungi> [--invoke <flow>] [args...]   compile .fungi → WASM → run
                                                       (--invoke targets pure flows returning a primitive Int/Bool;
                                                        args are ints or true/false. Secure/effectful flows run in
                                                        the governed runtime, not the raw WASM --invoke surface.)
-  galerina run <file.spore> --invoke <flow> --governed    run ANY flow through the GOVERNED runtime (#125): contract
+  galerina run <file.fungi> --invoke <flow> --governed    run ANY flow through the GOVERNED runtime (#125): contract
                                                        enforcer + fail-closed capability host (only declared effects)
                                                        + audit. Required for secure/effectful flows; fail-closed.
-  galerina build <file.spore>                             compile → build/<name>.wasm + .wat + .lmanifest
+  galerina build <file.fungi>                             compile → build/<name>.wasm + .wat + .lmanifest
   galerina build --package <dir>                        compile a package's /src → governed .wasm in <dir>/dist/ (fusable, emits .fuse.json)
-  galerina build --package <dir> --no-refresh           ...without refreshing the //spore: dependency metadata (reproducible CI)
+  galerina build --package <dir> --no-refresh           ...without refreshing the //fungi: dependency metadata (reproducible CI)
   galerina fuse <dir...> [--invoke <pkg>:<export>]       host-link a SET of built packages (multi-module; deny-by-default, fail-closed)
-  galerina deps <file.spore> [--flow <name>]              print generated //spore: USES/USEDBY/IMPACT/COMPLEXITY for a file
-  galerina deps <file.spore> --write                      write the //spore: metadata into that file (machine-owned tier)
-  galerina deps --all [dir] [--write]                   refresh //spore: across EVERY .spore in the app (cross-file; default dir = cwd)
-  galerina deps --all [dir] --check                     CI gate: exit 1 if any //spore: is stale (don't write)
-  galerina check <file.spore>                             type-check + governance verify
-  galerina check <file.spore> --diff                      show change class vs HEAD~1 before pushing
-  galerina check --what-if <policy.spore>                 shadow policy analysis (dry run)
-  galerina check --what-if <policy.spore> <file.spore>      what-if against single file
-  galerina verify <file.spore>                            DRCM Phase 3 admission gate — verify manifest
-  galerina generate tests <file.spore> [--tap]            contract-driven test obligations (0016) — 5 dimensions; --tap = TAP plan
-  galerina manifest-to-dot <file.spore>                   export manifest as Graphviz DOT for DAG audit
+  galerina deps <file.fungi> [--flow <name>]              print generated //fungi: USES/USEDBY/IMPACT/COMPLEXITY for a file
+  galerina deps <file.fungi> --write                      write the //fungi: metadata into that file (machine-owned tier)
+  galerina deps --all [dir] [--write]                   refresh //fungi: across EVERY .fungi in the app (cross-file; default dir = cwd)
+  galerina deps --all [dir] --check                     CI gate: exit 1 if any //fungi: is stale (don't write)
+  galerina check <file.fungi>                             type-check + governance verify
+  galerina check <file.fungi> --diff                      show change class vs HEAD~1 before pushing
+  galerina check --what-if <policy.fungi>                 shadow policy analysis (dry run)
+  galerina check --what-if <policy.fungi> <file.fungi>      what-if against single file
+  galerina verify <file.fungi>                            DRCM Phase 3 admission gate — verify manifest
+  galerina generate tests <file.fungi> [--tap]            contract-driven test obligations (0016) — 5 dimensions; --tap = TAP plan
+  galerina manifest-to-dot <file.fungi>                   export manifest as Graphviz DOT for DAG audit
   galerina init-env                                      validate capabilities against root policy
   galerina keygen                                        generate Ed25519 signing keypair for manifests
   galerina keygen --hybrid                               generate hybrid Ed25519 + ML-DSA-65 (PQ) keypair (#34)
-  galerina deploy <file.spore> [--tag <image>]            run full deploy pipeline (check+build+verify+health)
+  galerina deploy <file.fungi> [--tag <image>]            run full deploy pipeline (check+build+verify+health)
   galerina budget                                        show auto assimilation_memory_budget for this machine
   galerina version                                      show version and runtime status
   galerina diagnostic                                    run diagnostic fault-injection benchmark suite
@@ -164,13 +164,13 @@ Commands:
   galerina kb-graph [--all]                              scan docs/Knowledge-Bases/ cross-reference graph
   galerina ledger <egress-dir> [--json]                  build hash-linked compliance report from audit-egress
   galerina new <target-dir> [--name <pkg>]               scaffold an opinionated secure governed package
-  galerina new app <target-dir> [--name <app>]           scaffold a governed app (App.spore + App.manifest + flows/ deps/ proofs/)
-  galerina infer <file.spore> [--invoke F] [--prompt P] [--model M]   run governed AI inference from a flow's ai {} contract
+  galerina new app <target-dir> [--name <app>]           scaffold a governed app (App.fungi + App.manifest + flows/ deps/ proofs/)
+  galerina infer <file.fungi> [--invoke F] [--prompt P] [--model M]   run governed AI inference from a flow's ai {} contract
 
 Examples:
-  galerina run   governance-cost.spore --invoke main
-  galerina build governance-cost.spore
-  galerina check examples/auth-service/verifyPassword.spore
+  galerina run   governance-cost.fungi --invoke main
+  galerina build governance-cost.fungi
+  galerina check examples/auth-service/verifyPassword.fungi
 
   # After build, run the raw WASM binary without Node.js:
   wasmtime --invoke main build/governance-cost.wasm
@@ -203,12 +203,12 @@ Baseline comparison (governance-cost):
   if (command === "deploy") {
     const tagIdx = rest.indexOf("--tag");
     const imageTag = tagIdx >= 0 ? rest[tagIdx + 1] : "galerina-app:latest";
-    // Flag-order-robust target = the .spore arg, EXCLUDING flag-consumed tokens. AUDIT FIX: a `.spore` value
-    // passed to `--tag` must not be mistaken for the deploy target (`--tag evil.spore real.spore` shadowing).
+    // Flag-order-robust target = the .fungi arg, EXCLUDING flag-consumed tokens. AUDIT FIX: a `.fungi` value
+    // passed to `--tag` must not be mistaken for the deploy target (`--tag evil.fungi real.fungi` shadowing).
     const consumed = new Set(tagIdx >= 0 ? [tagIdx, tagIdx + 1] : []);
-    const sporeFile = rest.find((a, i) => !consumed.has(i) && !a.startsWith("--") && /^[A-Za-z0-9_./\\-]+\.spore$/.test(a));
-    if (!sporeFile) {
-      console.error("Usage: galerina deploy <file.spore> [--tag <image-tag>] [--dev]");
+    const fungiFile = rest.find((a, i) => !consumed.has(i) && !a.startsWith("--") && /^[A-Za-z0-9_./\\-]+\.fungi$/.test(a));
+    if (!fungiFile) {
+      console.error("Usage: galerina deploy <file.fungi> [--tag <image-tag>] [--dev]");
       process.exit(1);
     }
     // A deploy is inherently a PRODUCTION action, so the pipeline runs under GALERINA_PROFILE=production by
@@ -228,29 +228,29 @@ Baseline comparison (governance-cost):
     const deployProfile = devDeploy ? "dev" : "production";
 
     // SECURITY (2026-06-06): validate the user-supplied path and NEVER interpolate it
-    // into a shell string. A `.spore` path containing shell metacharacters (backticks,
+    // into a shell string. A `.fungi` path containing shell metacharacters (backticks,
     // ;, |, $(), …) would otherwise be executed by the shell. We reject obviously
     // hostile input and dispatch via argv-based spawnSync with shell:false.
-    if (!/^[A-Za-z0-9_./\\-]+\.spore$/.test(sporeFile)) {
-      console.error(`❌ Refusing to deploy: '${sporeFile}' is not a safe .spore path (alphanumerics, _ . / \\ - only, must end in .spore).`);
+    if (!/^[A-Za-z0-9_./\\-]+\.fungi$/.test(fungiFile)) {
+      console.error(`❌ Refusing to deploy: '${fungiFile}' is not a safe .fungi path (alphanumerics, _ . / \\ - only, must end in .fungi).`);
       process.exit(2);
     }
-    // AUDIT FIX (path traversal): the safe-char regex still admits `../../../x.spore`. Confine the target to
+    // AUDIT FIX (path traversal): the safe-char regex still admits `../../../x.fungi`. Confine the target to
     // the project root — a deploy must never compile/ship an out-of-tree file or clobber a build artifact by
     // basename collision. Reject any `..` segment and any path that resolves outside cwd.
     const root = resolve(process.cwd());
-    const absTarget = resolve(sporeFile);
-    const hasDotDot = sporeFile.split(/[\\/]/).includes("..");
+    const absTarget = resolve(fungiFile);
+    const hasDotDot = fungiFile.split(/[\\/]/).includes("..");
     if (hasDotDot || !(absTarget === root || absTarget.startsWith(root + sep))) {
-      console.error(`❌ Refusing to deploy: '${sporeFile}' resolves outside the project root (no '..' / out-of-tree paths).`);
+      console.error(`❌ Refusing to deploy: '${fungiFile}' resolves outside the project root (no '..' / out-of-tree paths).`);
       process.exit(2);
     }
-    if (!existsSync(sporeFile)) {
-      console.error(`❌ Deploy target not found: ${sporeFile}`);
+    if (!existsSync(fungiFile)) {
+      console.error(`❌ Deploy target not found: ${fungiFile}`);
       process.exit(2);
     }
 
-    console.log(`\n🏰 Galerina Deploy — ${sporeFile}`);
+    console.log(`\n🏰 Galerina Deploy — ${fungiFile}`);
     console.log(`   Image tag: ${imageTag}`);
     console.log(devDeploy
       ? `   Profile:   dev  ⚠️  --dev: NON-PRODUCTION deploy — signing/admission NOT enforced (local testing only)`
@@ -263,12 +263,12 @@ Baseline comparison (governance-cost):
     // argv arrays — NOT shell strings. spawnSync(shell:false) passes each arg verbatim,
     // so path contents can never be interpreted as shell syntax.
     const steps = [
-      { name: "Governance check", argv: [self, "check", sporeFile] },
-      { name: "Build WASM",       argv: [self, "build", sporeFile] },
-      { name: "Verify manifest",  argv: [self, "verify", sporeFile] },
+      { name: "Governance check", argv: [self, "check", fungiFile] },
+      { name: "Build WASM",       argv: [self, "build", fungiFile] },
+      { name: "Verify manifest",  argv: [self, "verify", fungiFile] },
       // --governed: the health-check module has a secure flow (audit.write), so the plain WASM --invoke
       // instantiation can't satisfy the host imports. Run it through the governed interpreter instead.
-      { name: "Health check",     argv: [self, "run", "examples/deployment/health-check.spore", "--invoke", "getHealthStatus", "--governed"] },
+      { name: "Health check",     argv: [self, "run", "examples/deployment/health-check.fungi", "--invoke", "getHealthStatus", "--governed"] },
     ];
 
     for (const step of steps) {
@@ -287,17 +287,17 @@ Baseline comparison (governance-cost):
     console.log(`   Receipts: build/receipt-ledger/receipts.jsonl`);
     console.log(`   Audit:    build/audit-log/audit-log.jsonl`);
     console.log(`\n   OCI packaging: see scripts/Dockerfile.galerina`);
-    console.log(`   Deployment:     ./scripts/deploy-linux.sh ${sporeFile}\n`);
+    console.log(`   Deployment:     ./scripts/deploy-linux.sh ${fungiFile}\n`);
     process.exit(0);
   }
 
   // ── galerina init-env — validate capabilities against root governance policy (#65) ─
-  // Must be checked BEFORE sporeFile requirement since it takes no file argument.
+  // Must be checked BEFORE fungiFile requirement since it takes no file argument.
   if (command === "init-env") {
     const m2 = await import(compilerPath);
     const { readdirSync: rds } = await import("node:fs");
     const scanDir = (dir) => {
-      try { return rds(dir).filter(f => f.endsWith(".spore")).map(f => `${dir}/${f}`); }
+      try { return rds(dir).filter(f => f.endsWith(".fungi")).map(f => `${dir}/${f}`); }
       catch { return []; }
     };
     const flowFiles = [...scanDir("flows"), ...scanDir("examples/auth-service"), ...scanDir("tests/patterns")];
@@ -330,9 +330,9 @@ Baseline comparison (governance-cost):
         // H8 (threat-model) — a file the governance gate CANNOT analyze must FAIL the scan, never be
         // silently skipped as analyzed-clean. Otherwise a crafted flow that crashes the verifier escapes
         // the baseline ("governance-scan evasion"). Unknown → deny: count it as a hard violation so the
-        // dev tool (init-env) LOCATES it (SPORE-SCAN-UNANALYZABLE) and the non-zero exit fails CI.
+        // dev tool (init-env) LOCATES it (FUNGI-SCAN-UNANALYZABLE) and the non-zero exit fails CI.
         unanalyzable++; violations++;
-        console.log(`  ❌ ${file}: SPORE-SCAN-UNANALYZABLE — could not parse/verify (${String(e?.message ?? e).slice(0, 100)}) — a file the gate cannot analyze FAILS the scan`);
+        console.log(`  ❌ ${file}: FUNGI-SCAN-UNANALYZABLE — could not parse/verify (${String(e?.message ?? e).slice(0, 100)}) — a file the gate cannot analyze FAILS the scan`);
       }
     }
     if (violations === 0) {
@@ -431,7 +431,7 @@ Baseline comparison (governance-cost):
     console.log(`\n   To start signing manifests:`);
     console.log(`     export GALERINA_SIGNING_KEY_ID=${keyId}`);
     console.log(`     source ${envPath}  # or add to your shell env`);
-    console.log(`     galerina build <file.spore>  # will now sign the manifest\n`);
+    console.log(`     galerina build <file.fungi>  # will now sign the manifest\n`);
 
     process.exit(0);
   }
@@ -442,7 +442,7 @@ Baseline comparison (governance-cost):
   // Exit 0 = policy compatible, Exit 2 = expansion violations
   if (command === "check" && rest[0] === "--what-if" && rest[1]) {
     const policyFile = rest[1];
-    const targetFile = rest[2]; // optional: target specific .spore file
+    const targetFile = rest[2]; // optional: target specific .fungi file
 
     if (!existsSync(policyFile)) {
       console.error(`❌ Policy file not found: ${policyFile}`);
@@ -451,7 +451,7 @@ Baseline comparison (governance-cost):
 
     console.log(`\n🔍 Shadow Policy Analysis — What-If Mode`);
     console.log(`   Policy:  ${policyFile}`);
-    console.log(`   Target:  ${targetFile ?? "all .spore files in build/"}`);
+    console.log(`   Target:  ${targetFile ?? "all .fungi files in build/"}`);
     console.log(`   Status:  DRY RUN — no changes applied\n`);
 
     // Read the shadow policy file
@@ -477,11 +477,11 @@ Baseline comparison (governance-cost):
       .filter(l => l.length > 0 && !l.startsWith('//') && !l.startsWith(';'))
       ?? [];
 
-    // Find all .spore files to check
-    const sporeFiles = targetFile
+    // Find all .fungi files to check
+    const fungiFiles = targetFile
       ? [targetFile]
       : readdirSync(".", { recursive: true })
-          .filter(f => String(f).endsWith(".spore") && !String(f).includes("node_modules"))
+          .filter(f => String(f).endsWith(".fungi") && !String(f).includes("node_modules"))
           .map(f => String(f))
           .slice(0, 20); // cap at 20
 
@@ -491,9 +491,9 @@ Baseline comparison (governance-cost):
     let compatible = 0;
     const report = [];
 
-    for (const sporeFile of sporeFiles) {
-      if (!existsSync(sporeFile)) continue;
-      const src = readUntrustedSource(sporeFile);
+    for (const fungiFile of fungiFiles) {
+      if (!existsSync(fungiFile)) continue;
+      const src = readUntrustedSource(fungiFile);
       if (src === null) continue; // oversized/unreadable → skip this file in the batch (fail-closed)
 
       // Extract declared effects from the file
@@ -519,14 +519,14 @@ Baseline comparison (governance-cost):
       if (blockedEffects.length > 0) {
         violations++;
         report.push({
-          file: sporeFile,
+          file: fungiFile,
           status: "❌ VIOLATION",
           blocked: blockedEffects,
           allowed: declaredEffects.filter(e => !blockedEffects.includes(e)),
         });
       } else if (declaredEffects.length > 0) {
         compatible++;
-        report.push({ file: sporeFile, status: "✅ compatible", blocked: [], allowed: declaredEffects });
+        report.push({ file: fungiFile, status: "✅ compatible", blocked: [], allowed: declaredEffects });
       }
     }
 
@@ -547,7 +547,7 @@ Baseline comparison (governance-cost):
     console.log(`  Violations:    ${violations} file(s) — would fail under this policy`);
     console.log(`  Warnings:      ${warnings}`);
     console.log(`\n  📋 This is a DRY RUN — policy '${policyName}' has NOT been applied.`);
-    console.log(`     To apply: cp ${policyFile} governance/${policyName}.spore && galerina init-env\n`);
+    console.log(`     To apply: cp ${policyFile} governance/${policyName}.fungi && galerina init-env\n`);
 
     process.exit(violations > 0 ? 2 : 0);
   }
@@ -564,7 +564,7 @@ Baseline comparison (governance-cost):
     console.log(`  Auto budget (20%):  ${Math.round(freeMB * 0.20)} MB (before ceiling)`);
     console.log(`  Resolved budget:    ${autoBudget} MB  ← what 'auto' uses`);
     console.log();
-    console.log(`  boot.spore options:`);
+    console.log(`  boot.fungi options:`);
     console.log(`    governance { }                                           → ${autoBudget} MB (omitted = auto)`);
     console.log(`    governance { assimilation_memory_budget: auto }         → ${autoBudget} MB`);
     console.log(`    governance { assimilation_memory_budget: auto max 50MB }→ ${computeAutoAssimilationBudgetMB(50)} MB`);
@@ -788,8 +788,8 @@ Baseline comparison (governance-cost):
 
   const m = await import(compilerPath);
 
-  // ── //spore: whole-app refresh helpers (R&D 0045 — `deps --all` and the build auto-refresh) ──────
-  // Recursively collect every .spore source under a root (skipping build/vendor dirs), then run a
+  // ── //fungi: whole-app refresh helpers (R&D 0045 — `deps --all` and the build auto-refresh) ──────
+  // Recursively collect every .fungi source under a root (skipping build/vendor dirs), then run a
   // CROSS-FILE flow analysis so USES/USEDBY/IMPACT span files (a flow called from another file is
   // never mislabelled "safe to delete"). Returns per-file rewrite results; `write:true` persists them.
   const collectSporeFiles = (root) => {
@@ -802,12 +802,12 @@ Baseline comparison (governance-cost):
         if (e.name.startsWith(".")) continue;
         const p = join(dir, e.name);
         if (e.isDirectory()) { if (!SKIP.has(e.name)) walk(p); }
-        else if (e.isFile() && e.name.endsWith(".spore")) out.push(p);
+        else if (e.isFile() && e.name.endsWith(".fungi")) out.push(p);
       }
     };
     try {
       const st = statSync(root);
-      if (st.isFile()) { if (root.endsWith(".spore")) out.push(root); }
+      if (st.isFile()) { if (root.endsWith(".fungi")) out.push(root); }
       else walk(root);
     } catch { /* missing root → no files */ }
     return out;
@@ -848,31 +848,31 @@ Baseline comparison (governance-cost):
   };
 
   // ── Package build mode: `galerina build --package <dir>` (#175, design-doc §11)
-  // Compiles a package's /src entry (with its `import ./*.spore` DAG, #94) into one
+  // Compiles a package's /src entry (with its `import ./*.fungi` DAG, #94) into one
   // governed, signed .wasm + .lmanifest written INTO the package's dist/, plus a
   // <name>.fuse.json fusion descriptor — ready to be FUSED into a host App Kernel.
   let packageBuild = null;
   let packageDescriptor = null;
-  let sporeFile = rest[0];
+  let fungiFile = rest[0];
   {
     const pkgIdx = command === "build" ? rest.indexOf("--package") : -1;
     if (pkgIdx >= 0) {
       const pkgDir = rest[pkgIdx + 1];
       if (!pkgDir) { console.error("Error: --package requires a directory path"); process.exit(1); }
-      const descPath = join(pkgDir, "package.spore.json");
+      const descPath = join(pkgDir, "package.fungi.json");
       if (!existsSync(descPath)) { console.error(`Error: missing package descriptor: ${descPath}`); process.exit(1); }
       try { packageDescriptor = JSON.parse(readFileSync(descPath, "utf8")); }
-      catch (e) { console.error(`Error: invalid package.spore.json — ${e.message}`); process.exit(1); }
-      if (!packageDescriptor.name) { console.error('Error: package.spore.json must declare a "name"'); process.exit(1); }
+      catch (e) { console.error(`Error: invalid package.fungi.json — ${e.message}`); process.exit(1); }
+      if (!packageDescriptor.name) { console.error('Error: package.fungi.json must declare a "name"'); process.exit(1); }
       packageBuild = pkgDir;
-      sporeFile = join(pkgDir, packageDescriptor.entry || "src/index.spore");
+      fungiFile = join(pkgDir, packageDescriptor.entry || "src/index.fungi");
     }
   }
 
-  // ── galerina deps --all [dir] [--write] — refresh //spore: across EVERY .spore file in the app ──────
+  // ── galerina deps --all [dir] [--write] — refresh //fungi: across EVERY .fungi file in the app ──────
   // Cross-file: builds one whole-program flow graph so USES/USEDBY/IMPACT span files. Without
-  // --write it prints a per-file preview; with --write it rewrites each file's //spore: block in place
-  // (machine-owned tier, R&D 0045 #3 — touches only //spore: lines). Default root = the --package dir,
+  // --write it prints a per-file preview; with --write it rewrites each file's //fungi: block in place
+  // (machine-owned tier, R&D 0045 #3 — touches only //fungi: lines). Default root = the --package dir,
   // else a positional path, else the current directory. Must run BEFORE the single-file read below.
   if (command === "deps" && rest.includes("--all")) {
     const dirArg = rest.find(a => !a.startsWith("--"));
@@ -885,17 +885,17 @@ Baseline comparison (governance-cost):
       // A file whose generated block WOULD change is stale (the don't-trust-check rule applied to
       // the tool's own output). Exit non-zero so CI fails when someone forgot to refresh.
       const stale = results.filter(r => r.changed);
-      for (const r of stale) console.log(`✗ ${r.file}: //spore: is STALE`);
+      for (const r of stale) console.log(`✗ ${r.file}: //fungi: is STALE`);
       if (stale.length > 0) {
-        console.log(`\n${stale.length}/${results.length} file(s) have stale //spore: metadata — run: galerina deps --all --write`);
+        console.log(`\n${stale.length}/${results.length} file(s) have stale //fungi: metadata — run: galerina deps --all --write`);
         process.exit(1);
       }
-      console.log(`✓ //spore: metadata current across ${parsedCount} file(s).`);
+      console.log(`✓ //fungi: metadata current across ${parsedCount} file(s).`);
       process.exit(0);
     }
     if (write) {
       let changed = 0;
-      for (const r of results) if (r.changed) { changed++; console.log(`✅ ${r.file}: refreshed //spore: on ${r.flows} flow(s)`); }
+      for (const r of results) if (r.changed) { changed++; console.log(`✅ ${r.file}: refreshed //fungi: on ${r.flows} flow(s)`); }
       console.log(`\n${changed}/${results.length} file(s) updated across ${parsedCount} parsed file(s)${parseErrors ? `, ${parseErrors} skipped (parse errors)` : ""}.`);
     } else {
       for (const r of results) {
@@ -935,7 +935,7 @@ Baseline comparison (governance-cost):
         assertRegistryTrustworthy("."); // throws if the registry is unsigned-under-pin / signed by a revoked key
         opts.revocationCheck = (keyId) => isKeyRevoked(keyId, ".");
       } catch (e) {
-        console.error(`❌ SPORE-FUSE-REVOCATION-UNTRUSTED: ${e.message} — refusing to fuse (fail-closed)`);
+        console.error(`❌ FUNGI-FUSE-REVOCATION-UNTRUSTED: ${e.message} — refusing to fuse (fail-closed)`);
         process.exit(1);
       }
       // #49 (H3/H4) — verify a HYBRID (Ed25519+ML-DSA-65) .lmanifest signature AT LOAD. The kernel stays
@@ -946,7 +946,7 @@ Baseline comparison (governance-cost):
         const cc = await import(new URL("packages-galerina/galerina-core-compiler/dist/index.js", import.meta.url).href);
         opts.hybridVerifier = cc.makeLmanifestHybridVerifier();
       } catch (e) {
-        console.error(`❌ SPORE-FUSE-HYBRID-VERIFIER-UNAVAILABLE: ${e.message} — refusing to fuse (fail-closed)`);
+        console.error(`❌ FUNGI-FUSE-HYBRID-VERIFIER-UNAVAILABLE: ${e.message} — refusing to fuse (fail-closed)`);
         process.exit(1);
       }
       const components = await ak.fusePackages(dirs, opts);
@@ -962,16 +962,16 @@ Baseline comparison (governance-cost):
       }
       process.exit(0);
     } catch (e) {
-      console.error(`❌ ${e.message}`); // fail-closed SPORE-FUSE-* codes
+      console.error(`❌ ${e.message}`); // fail-closed FUNGI-FUSE-* codes
       process.exit(1);
     }
   }
 
-  if (!sporeFile) { console.error("Error: no .spore file specified"); process.exit(1); }
+  if (!fungiFile) { console.error("Error: no .fungi file specified"); process.exit(1); }
 
-  const source = readUntrustedSource(sporeFile);
-  if (source === null) process.exit(1); // fail-closed: oversized/unreadable .spore rejected before parse
-  const parsed = m.parseProgram(source, sporeFile);
+  const source = readUntrustedSource(fungiFile);
+  if (source === null) process.exit(1); // fail-closed: oversized/unreadable .fungi rejected before parse
+  const parsed = m.parseProgram(source, fungiFile);
   const errors = (parsed.diagnostics ?? []).filter(d => d.severity === "error");
 
   // ── galerina infer — run a governed AI inference from a flow's ai {} contract ──
@@ -1044,7 +1044,7 @@ Baseline comparison (governance-cost):
     const correlationId = `INFER-${flowName}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     const receipt = await engine.infer({ prompt, correlationId, ...(model ? { model } : {}) });
 
-    console.log(`\n  Governed Inference — ${flowName}  (${sporeFile})`);
+    console.log(`\n  Governed Inference — ${flowName}  (${fungiFile})`);
     console.log("  ─────────────────────────────────────────────");
     console.log(`  governance_tier:   tier-${tier} ${tier === 1 ? "(air-gapped CPU · BitNet ternary)" : tier === 2 ? "(cloud)" : "(Blackwell GPU)"}`);
     console.log(`  approved_models:   ${ai.approvedModels ? ai.approvedModels.join(", ") : "(unrestricted)"}`);
@@ -1095,12 +1095,12 @@ Baseline comparison (governance-cost):
     const flagIdx = rest.indexOf("--flow");
     const only = flagIdx >= 0 ? rest[flagIdx + 1] : undefined;
     if (only !== undefined && !depMap.has(only)) {
-      console.error(`Error: no flow named '${only}' in ${sporeFile}`);
+      console.error(`Error: no flow named '${only}' in ${fungiFile}`);
       process.exit(1);
     }
     const names = only !== undefined ? [only] : [...depMap.keys()];
 
-    // Build the generated //spore: lines per flow (USES/USEDBY/IMPACT + COMPLEXITY).
+    // Build the generated //fungi: lines per flow (USES/USEDBY/IMPACT + COMPLEXITY).
     const genLines = new Map();
     for (const name of names) {
       const d = depMap.get(name);
@@ -1111,22 +1111,22 @@ Baseline comparison (governance-cost):
       genLines.set(name, lines);
     }
 
-    // ── --write: silently overwrite the //spore: block above each flow IN THE SOURCE (R&D 0045 #3) ──
-    // Touches ONLY //spore: lines — removes the old contiguous //spore: block immediately above each flow
+    // ── --write: silently overwrite the //fungi: block above each flow IN THE SOURCE (R&D 0045 #3) ──
+    // Touches ONLY //fungi: lines — removes the old contiguous //fungi: block immediately above each flow
     // declaration and inserts the fresh block; never modifies a human // line, a contract, or any code.
     // Processes bottom-up so line indices stay valid. Fail-closed: parse errors already exited above.
     if (rest.includes("--write")) {
       const out = m.rewriteGeneratedComments(source, genLines);
       if (out !== source) {
-        writeFileSync(sporeFile, out);
-        console.log(`✅ ${sporeFile}: refreshed //spore: metadata on ${genLines.size} flow(s)`);
+        writeFileSync(fungiFile, out);
+        console.log(`✅ ${fungiFile}: refreshed //fungi: metadata on ${genLines.size} flow(s)`);
       } else {
-        console.log(`✓ ${sporeFile}: //spore: metadata already current (${genLines.size} flow(s))`);
+        console.log(`✓ ${fungiFile}: //fungi: metadata already current (${genLines.size} flow(s))`);
       }
       process.exit(0);
     }
 
-    if (names.length === 0) console.log(`(${sporeFile}: no flows)`);
+    if (names.length === 0) console.log(`(${fungiFile}: no flows)`);
     for (const name of names) {
       const lines = genLines.get(name);
       if (lines === undefined) continue;
@@ -1139,29 +1139,29 @@ Baseline comparison (governance-cost):
   if (command === "check") {
     const fx = m.checkEffects(parsed.flows, parsed.ast);
     const gov = m.verifyGovernance(parsed.ast, parsed.flows, fx, "production");
-    // Surface the dev/check-mode tier-floor + boundary-input WARNINGS (SPORE-TIER-001 / SPORE-VALUESTATE-008)
+    // Surface the dev/check-mode tier-floor + boundary-input WARNINGS (FUNGI-TIER-001 / FUNGI-VALUESTATE-008)
     // so a tester sees the obligation here, before a production build escalates the SAME finding to a
     // fail-closed error. The floor scan always runs; only its severity is gated on the production profile,
     // so in `check` these arrive as warnings — display-only, they do not fail the check.
-    const tierWarnings = fx.flatMap(r => (r.diagnostics ?? []).filter(d => d.code === "SPORE-TIER-001"));
-    // P2 (threat-model): SPORE-EFFECT-003 (an effectful op in a PURE flow — a zero-trust boundary breach)
-    // and SPORE-STDLIB-002 (deny-by-default unrecognized effectful method) are integrity invariants the
-    // PRODUCTION build already rejects. `check` (all modes) surfaced NEITHER — it took only SPORE-TIER-001
+    const tierWarnings = fx.flatMap(r => (r.diagnostics ?? []).filter(d => d.code === "FUNGI-TIER-001"));
+    // P2 (threat-model): FUNGI-EFFECT-003 (an effectful op in a PURE flow — a zero-trust boundary breach)
+    // and FUNGI-STDLIB-002 (deny-by-default unrecognized effectful method) are integrity invariants the
+    // PRODUCTION build already rejects. `check` (all modes) surfaced NEITHER — it took only FUNGI-TIER-001
     // from `fx` and the exit predicate ignored fx entirely — so a pure-flow effect breach or a
     // deny-by-default escape printed "0 errors" EXIT=0. Surface them and FAIL CLOSED in ALL modes.
     // (Deliberately narrow: the broader undeclared-effect class EFFECT-001/STDLIB-001 stays dev-advisory.)
-    const INTEGRITY_EFFECT_CODES = new Set(["SPORE-EFFECT-003", "SPORE-STDLIB-002"]);
+    const INTEGRITY_EFFECT_CODES = new Set(["FUNGI-EFFECT-003", "FUNGI-STDLIB-002"]);
     const integrityEffectErrors = fx.flatMap(r => (r.diagnostics ?? []).filter(
       d => d.severity === "error" && INTEGRITY_EFFECT_CODES.has(d.code)));
     // Run the value-state checker ONCE and surface ALL of its ERROR-severity diagnostics, not just the
-    // migration-grade SPORE-VALUESTATE-008 boundary warning. The old code filtered to VALUESTATE-008 ALONE,
-    // so a fail-closed value-state ERROR — e.g. SPORE-NUMERIC-001 for a still-gated 64-bit width (UInt64)
+    // migration-grade FUNGI-VALUESTATE-008 boundary warning. The old code filtered to VALUESTATE-008 ALONE,
+    // so a fail-closed value-state ERROR — e.g. FUNGI-NUMERIC-001 for a still-gated 64-bit width (UInt64)
     // the WASM backend would silently truncate — was discarded and `check` printed "0 errors" on a file the
     // production build rejects (the verified hole). These errors are UNCONDITIONAL (not mode-gated), so they
     // also drive the exit code below; VALUESTATE-008 stays a dev/check WARNING and remains display-only.
     const vsDiags = m.checkValueStates(parsed.ast).diagnostics ?? [];
     const valueStateErrors = vsDiags.filter(d => d.severity === "error");
-    const boundaryWarnings = vsDiags.filter(d => d.code === "SPORE-VALUESTATE-008" && d.severity !== "error");
+    const boundaryWarnings = vsDiags.filter(d => d.code === "FUNGI-VALUESTATE-008" && d.severity !== "error");
     const allDiags = [...errors, ...gov.diagnostics, ...tierWarnings, ...valueStateErrors, ...boundaryWarnings, ...integrityEffectErrors];
     if (allDiags.length === 0) {
       // We're building the language — distinguish "compiled real content" from "found nothing". A clean
@@ -1171,9 +1171,9 @@ Baseline comparison (governance-cost):
       const declCount = (parsed.ast?.children ?? []).length;
       const flowCount = parsed.flows?.length ?? 0;
       if (declCount === 0) {
-        console.log(`ℹ️  ${sporeFile}: parsed OK, but found NO flows or declarations — nothing to compile (an empty or comment-only file?).`);
+        console.log(`ℹ️  ${fungiFile}: parsed OK, but found NO flows or declarations — nothing to compile (an empty or comment-only file?).`);
       } else {
-        console.log(`✅ ${sporeFile}: 0 errors, 0 governance warnings (${flowCount} flow(s), ${declCount} top-level declaration(s))`);
+        console.log(`✅ ${fungiFile}: 0 errors, 0 governance warnings (${flowCount} flow(s), ${declCount} top-level declaration(s))`);
       }
     } else {
       allDiags.forEach(d => console.log(`${d.severity === "error" ? "❌" : "⚠️"} ${d.code}: ${d.message}`));
@@ -1189,11 +1189,11 @@ Baseline comparison (governance-cost):
           new URL("packages-galerina/galerina-core-compiler/dist/governance-diff.js", import.meta.url).href
         );
         // Get the HEAD~1 version of this file from git
-        const gitResult = spawnSync("git", ["show", `HEAD~1:${sporeFile}`],
+        const gitResult = spawnSync("git", ["show", `HEAD~1:${fungiFile}`],
           { encoding: "utf8", cwd: process.cwd() });
         if (gitResult.status === 0) {
           const prevSource = gitResult.stdout;
-          const prevParsed = m.parseProgram(prevSource, sporeFile);
+          const prevParsed = m.parseProgram(prevSource, fungiFile);
           const diff = diffGovernance(prevParsed.flows, parsed.flows);
           console.log("\n── Governance diff (HEAD~1 → current) ──");
           console.log(renderGovernanceDiff(diff));
@@ -1210,13 +1210,13 @@ Baseline comparison (governance-cost):
       } catch { /* non-fatal */ }
     }
 
-    // Exit non-zero on parse errors OR fail-closed value-state errors (e.g. SPORE-NUMERIC-001 for a
+    // Exit non-zero on parse errors OR fail-closed value-state errors (e.g. FUNGI-NUMERIC-001 for a
     // still-gated width) — these are unconditional correctness failures the build/run path also rejects.
     // Tier/boundary findings stay display-only WARNINGS in check mode and do NOT affect the exit code.
     process.exit(errors.length > 0 || valueStateErrors.length > 0 || integrityEffectErrors.length > 0 ? 1 : 0);
   }
 
-  // ── galerina generate tests <file.spore> [--tap] — contract-driven test obligations (0016) ──
+  // ── galerina generate tests <file.fungi> [--tap] — contract-driven test obligations (0016) ──
   // Derives the fail-closed test obligations a flow's contract implies, across all five
   // generator dimensions (fault-injection / effect-egress / capability-denial / boundary /
   // substrate-violation), from the flow GIR. --tap prints a TAP plan for the fault dimension.
@@ -1233,7 +1233,7 @@ Baseline comparison (governance-cost):
       ["substrate-violation", suite.substrateViolation],
     ];
     const total = dims.reduce((n, [, c]) => n + c.length, 0);
-    console.log(`\n🧪 Contract-driven test obligations — ${sporeFile}`);
+    console.log(`\n🧪 Contract-driven test obligations — ${fungiFile}`);
     console.log(`   ${total} obligation(s) across ${gir.flows.length} flow(s) · 5 dimensions`);
     for (const [name, cases] of dims) {
       console.log(`\n── ${name} (${cases.length}) ──`);
@@ -1247,10 +1247,10 @@ Baseline comparison (governance-cost):
 
   // ── galerina manifest-to-dot — export manifest DAG as Graphviz DOT ────────────
   if (command === "manifest-to-dot") {
-    const name = basename(sporeFile, ".spore");
+    const name = basename(fungiFile, ".fungi");
     const manifestPath = `build/${name}.lmanifest`;
     if (!existsSync(manifestPath)) {
-      console.error(`❌ No manifest at ${manifestPath}. Run 'galerina build ${sporeFile}' first.`);
+      console.error(`❌ No manifest at ${manifestPath}. Run 'galerina build ${fungiFile}' first.`);
       process.exit(1);
     }
     try {
@@ -1309,17 +1309,17 @@ Baseline comparison (governance-cost):
   }
 
   // ── galerina verify — DRCM Phase 3 admission gate (#37) ──────────────────────
-  // Verifies the .lmanifest for a compiled .spore file:
+  // Verifies the .lmanifest for a compiled .fungi file:
   //   1. Checks the manifest exists (build/<name>.lmanifest)
   //   2. Decodes the binary CBOR manifest
   //   3. Computes SHA-256 of the source and compares to manifest.sourceHash
   //   4. Verifies CBOR round-trip (canonical encoding)
   //
-  // SPORE-MANIFEST-TAMPER: sourceHash mismatch — binary may have been modified
-  // SPORE-MANIFEST-MISSING: no .lmanifest found for this source file
+  // FUNGI-MANIFEST-TAMPER: sourceHash mismatch — binary may have been modified
+  // FUNGI-MANIFEST-MISSING: no .lmanifest found for this source file
   // ── galerina budget ─────────────────────────────────────────────────────────
   // Shows the auto-computed assimilation_memory_budget for this machine.
-  // Helps developers understand what boot.spore `auto` will resolve to.
+  // Helps developers understand what boot.fungi `auto` will resolve to.
   if (command === "budget") {
     const totalMB = Math.round(totalmem() / (1024 * 1024));
     const freeMB  = Math.round(freemem()  / (1024 * 1024));
@@ -1332,7 +1332,7 @@ Baseline comparison (governance-cost):
     console.log(`  Auto budget (20%):  ${Math.round(freeMB * 0.20)} MB (before ceiling)`);
     console.log(`  Resolved budget:    ${autoBudget} MB  ← what 'auto' uses`);
     console.log();
-    console.log(`  boot.spore options:`);
+    console.log(`  boot.fungi options:`);
     console.log(`    governance { assimilation_memory_budget: auto }        → ${autoBudget} MB`);
     console.log(`    governance { assimilation_memory_budget: auto max 50MB } → ${computeAutoAssimilationBudgetMB(50)} MB`);
     console.log(`    governance { }                                          → ${autoBudget} MB (omitted = auto)`);
@@ -1343,11 +1343,11 @@ Baseline comparison (governance-cost):
   }
 
   if (command === "verify") {
-    const name = basename(sporeFile, ".spore");
+    const name = basename(fungiFile, ".fungi");
     const manifestPath = `build/${name}.lmanifest`;
     if (!existsSync(manifestPath)) {
-      console.error(`❌ SPORE-MANIFEST-MISSING: No manifest found at ${manifestPath}`);
-      console.error(`   Run 'galerina build ${sporeFile}' first to generate the manifest.`);
+      console.error(`❌ FUNGI-MANIFEST-MISSING: No manifest found at ${manifestPath}`);
+      console.error(`   Run 'galerina build ${fungiFile}' first to generate the manifest.`);
       process.exit(1);
     }
     try {
@@ -1360,11 +1360,11 @@ Baseline comparison (governance-cost):
       // Check 1: sourceHash
       const actualHash = "sha256:" + createHash("sha256").update(source, "utf8").digest("hex");
       if (manifest.sourceHash !== actualHash) {
-        console.error(`❌ SPORE-MANIFEST-TAMPER: Source hash mismatch for '${sporeFile}'`);
+        console.error(`❌ FUNGI-MANIFEST-TAMPER: Source hash mismatch for '${fungiFile}'`);
         console.error(`   Manifest has: ${manifest.sourceHash}`);
         console.error(`   Current file: ${actualHash}`);
         console.error(`   The source has been modified since the manifest was generated.`);
-        console.error(`   Rebuild with: galerina build ${sporeFile}`);
+        console.error(`   Rebuild with: galerina build ${fungiFile}`);
         process.exit(1);
       }
 
@@ -1373,13 +1373,13 @@ Baseline comparison (governance-cost):
       const canonical = manifestBytes.length === reEncoded.length &&
         manifestBytes.every((b, i) => b === reEncoded[i]);
       if (!canonical) {
-        console.error(`❌ SPORE-MANIFEST-NONCANONICAL: CBOR round-trip failed — manifest is non-canonical`);
+        console.error(`❌ FUNGI-MANIFEST-NONCANONICAL: CBOR round-trip failed — manifest is non-canonical`);
         process.exit(1);
       }
 
       // Check 3: schema version — v1 = Ed25519-or-placeholder (default); v2 = a persisted hybrid signature (0102 / #34 (c)).
-      if (manifest.schemaVersion !== "spore.manifest.v1" && manifest.schemaVersion !== "spore.manifest.v2") {
-        console.error(`❌ SPORE-MANIFEST-VERSION: Unknown schema version '${manifest.schemaVersion}'`);
+      if (manifest.schemaVersion !== "fungi.manifest.v1" && manifest.schemaVersion !== "fungi.manifest.v2") {
+        console.error(`❌ FUNGI-MANIFEST-VERSION: Unknown schema version '${manifest.schemaVersion}'`);
         process.exit(1);
       }
 
@@ -1392,8 +1392,8 @@ Baseline comparison (governance-cost):
       // GALERINA_MANIFEST_PROFILE (NOT GALERINA_PROFILE — orthogonal axes; production!=certified, Adv #1/#5) and is
       // evaluated on the AUTHORITATIVE decoded-CBOR `manifest` BEFORE the signature dispatch below, so a v1 manifest
       // (and any placeholder/unsigned/missing-json variant) is refused before it can reach the classical pass path
-      // (Adv #2). The acceptance predicate is a subset of what the signer writes (schemaVersion "spore.manifest.v2" +
-      // sigAlgorithm "spore.gov.sig.v2" + a both-half "|" signature; galerina.mjs:2045-2052) and of the existing v2
+      // (Adv #2). The acceptance predicate is a subset of what the signer writes (schemaVersion "fungi.manifest.v2" +
+      // sigAlgorithm "fungi.gov.sig.v2" + a both-half "|" signature; galerina.mjs:2045-2052) and of the existing v2
       // detection (1357-1358), so a valid v2 manifest passes and flows into the untouched hybrid-verify path (Adv #4).
       // DEFAULT (non-certified) consume is byte-for-byte unchanged — the whole block is a no-op when certified is off.
       // This sits inside the outer manifest try (catch at ~1520 always exits 1), so an error here is fail-closed (Adv #5).
@@ -1402,17 +1402,17 @@ Baseline comparison (governance-cost):
         const _mpOffV = new Set(["", "dev", "development", "test", "off", "none", "default"]);
         const certifiedConsume = !_mpOffV.has(_mpRawV);
         if (certifiedConsume && _mpRawV !== "certified") {
-          console.warn(`   ⚠️  SPORE-MANIFEST-PROFILE-UNRECOGNIZED: GALERINA_MANIFEST_PROFILE='${process.env.GALERINA_MANIFEST_PROFILE}' is not recognized — fail-securing to certified (post-quantum signature REQUIRED at verify). Set 'certified' or 'dev' explicitly.`);
+          console.warn(`   ⚠️  FUNGI-MANIFEST-PROFILE-UNRECOGNIZED: GALERINA_MANIFEST_PROFILE='${process.env.GALERINA_MANIFEST_PROFILE}' is not recognized — fail-securing to certified (post-quantum signature REQUIRED at verify). Set 'certified' or 'dev' explicitly.`);
         }
         if (certifiedConsume) {
           const _sigV = manifest.governanceSignature;
-          const _isV2Hybrid = manifest.schemaVersion === "spore.manifest.v2"
+          const _isV2Hybrid = manifest.schemaVersion === "fungi.manifest.v2"
             && _sigV && typeof _sigV === "object"
-            && _sigV.sigAlgorithm === "spore.gov.sig.v2"
+            && _sigV.sigAlgorithm === "fungi.gov.sig.v2"
             && typeof _sigV.signature === "string" && _sigV.signature.includes("|");
           if (!_isV2Hybrid) {
-            console.error("❌ SPORE-MANIFEST-PQ-REQUIRED: GALERINA_MANIFEST_PROFILE=certified requires a v2 hybrid Ed25519+ML-DSA-65 manifest " +
-              "(schemaVersion 'spore.manifest.v2', sigAlgorithm 'spore.gov.sig.v2', a both-half '|' signature), but this manifest is not v2 hybrid. " +
+            console.error("❌ FUNGI-MANIFEST-PQ-REQUIRED: GALERINA_MANIFEST_PROFILE=certified requires a v2 hybrid Ed25519+ML-DSA-65 manifest " +
+              "(schemaVersion 'fungi.manifest.v2', sigAlgorithm 'fungi.gov.sig.v2', a both-half '|' signature), but this manifest is not v2 hybrid. " +
               "Refusing to accept a classical-only (v1) manifest under a post-quantum-required posture (fail-closed, no PQ downgrade). " +
               "Rebuild under certified: GALERINA_MANIFEST_PROFILE=certified galerina keygen --hybrid && galerina build.");
             process.exit(1);
@@ -1422,7 +1422,7 @@ Baseline comparison (governance-cost):
 
       const proofCount = manifest.proofObligations?.length ?? 0;
       const constraintCount = manifest.derivedConstraints?.length ?? 0;
-      console.log(`✅ ${sporeFile}: manifest verified`);
+      console.log(`✅ ${fungiFile}: manifest verified`);
       console.log(`   Source hash:         ${actualHash.slice(0, 30)}...`);
       console.log(`   CBOR size:           ${manifestBytes.length}B (canonical ✅)`);
       console.log(`   Schema version:      ${manifest.schemaVersion}`);
@@ -1451,16 +1451,16 @@ Baseline comparison (governance-cost):
             const sig = jsonManifest.governanceSignature;
 
             // ── 0102 / #34: HYBRID (v2) manifest signature branch — dispatch on the signature's OWN fields ──
-            // A v2 sig is self-describing: sigAlgorithm "spore.gov.sig.v2" OR algorithm "Ed25519+ML-DSA-65" OR a
+            // A v2 sig is self-describing: sigAlgorithm "fungi.gov.sig.v2" OR algorithm "Ed25519+ML-DSA-65" OR a
             // pipe in the signature (base64url never contains '|', so a classical Ed25519 sig can't trip it).
             // Checked FIRST; the classical branch below becomes `else if`, so a v2 sig is NEVER decoded by the
             // single-key Buffer.from(sig.signature,'base64') path (which would silently truncate at the '|' —
             // Adv-1 #2). This mirrors the shipped verifyGovernanceSignature v2-refusal at proof-graph.ts:763.
-            const isHybridSig = sig.sigAlgorithm === "spore.gov.sig.v2" || sig.algorithm === "Ed25519+ML-DSA-65"
+            const isHybridSig = sig.sigAlgorithm === "fungi.gov.sig.v2" || sig.algorithm === "Ed25519+ML-DSA-65"
               || (typeof sig.signature === "string" && sig.signature.includes("|"));
             if (isHybridSig) {
-              if (!sig.keyId || !sig.signature || !sig.bodyHash || sig.sigAlgorithm !== "spore.gov.sig.v2" || !sig.signature.includes("|")) {
-                console.error(`❌ SPORE-MANIFEST-PQ-REQUIRED: incomplete/inconsistent or non-both-half hybrid (v2) signature — fail-closed (no PQ downgrade).`);
+              if (!sig.keyId || !sig.signature || !sig.bodyHash || sig.sigAlgorithm !== "fungi.gov.sig.v2" || !sig.signature.includes("|")) {
+                console.error(`❌ FUNGI-MANIFEST-PQ-REQUIRED: incomplete/inconsistent or non-both-half hybrid (v2) signature — fail-closed (no PQ downgrade).`);
                 process.exit(1);
               }
               try {
@@ -1468,16 +1468,16 @@ Baseline comparison (governance-cost):
                 const reg = await import("./governance/revocation-registry.mjs");
                 const trust = reg.assertRegistryTrustworthy(".");
                 if (trust.present && !trust.signed) {
-                  console.warn(`   ⚠️  SPORE-REVOCATION-UNSIGNED: governance/revocations.json is not signed (tamperable) — run: node governance/sign-revocations.mjs`);
+                  console.warn(`   ⚠️  FUNGI-REVOCATION-UNSIGNED: governance/revocations.json is not signed (tamperable) — run: node governance/sign-revocations.mjs`);
                 }
                 if (reg.isKeyRevoked(sig.keyId)) {
-                  console.error(`❌ SPORE-MANIFEST-REVOKED-KEY: manifest signed by REVOKED key ${sig.keyId} — fail-closed (Deny).`);
+                  console.error(`❌ FUNGI-MANIFEST-REVOKED-KEY: manifest signed by REVOKED key ${sig.keyId} — fail-closed (Deny).`);
                   process.exit(1);
                 }
                 const edPubPath = join("governance", `signing-key-${sig.keyId}.pub.pem`);
                 const mlPubPath = join("governance", `signing-key-${sig.keyId}.mldsa.pub.b64`);
                 if (!existsSync(edPubPath) || !existsSync(mlPubPath)) {
-                  console.error(`❌ SPORE-MANIFEST-PUBKEY-MISSING: hybrid public key(s) missing for keyId ${sig.keyId} (${edPubPath} / ${mlPubPath}) — fail-closed (cannot verify both halves).`);
+                  console.error(`❌ FUNGI-MANIFEST-PUBKEY-MISSING: hybrid public key(s) missing for keyId ${sig.keyId} (${edPubPath} / ${mlPubPath}) — fail-closed (cannot verify both halves).`);
                   process.exit(1);
                 }
                 const { createPublicKey } = await import("node:crypto");
@@ -1492,7 +1492,7 @@ Baseline comparison (governance-cost):
                 const bodyHash = createHash("sha256").update(Buffer.from(manifestSigningInput(manifestWithoutSig, manifestSigCanon(sig)))).digest("hex");
                 // Defence-in-depth: the explicit bodyHash field must match the recomputed body.
                 if (sig.bodyHash !== `sha256:${bodyHash}`) {
-                  console.error(`❌ SPORE-MANIFEST-TAMPER: v2 manifest bodyHash mismatch (declared ${sig.bodyHash} vs computed sha256:${bodyHash}) — fail-closed.`);
+                  console.error(`❌ FUNGI-MANIFEST-TAMPER: v2 manifest bodyHash mismatch (declared ${sig.bodyHash} vs computed sha256:${bodyHash}) — fail-closed.`);
                   process.exit(1);
                 }
                 // Reconstruct the EXACT envelope the signer bound via the SAME shared helper (no drift).
@@ -1501,7 +1501,7 @@ Baseline comparison (governance-cost):
                 const envelope = cc.makeManifestEnvelope(bodyHash, jsonManifest.generatedAt);
                 // Attach the persisted v2 signature in the ProofGraph-layer shape (algorithm + signature are the
                 // only fields verifyGovernanceSignatureHybrid reads; proof-graph.ts:786-789).
-                envelope.governanceSignature = { algorithm: "spore.gov.sig.v2", signerKeyId: sig.keyId, signature: sig.signature, signedAt: sig.signedAt };
+                envelope.governanceSignature = { algorithm: "fungi.gov.sig.v2", signerKeyId: sig.keyId, signature: sig.signature, signedAt: sig.signedAt };
                 // Published Ed25519 pubkey is PEM → DER SPKI (verifier expects DER, proof-graph.ts:797);
                 // ML-DSA pubkey is base64 of raw bytes.
                 const edPubDer = new Uint8Array(createPublicKey(readFileSync(edPubPath, "utf-8")).export({ type: "spki", format: "der" }));
@@ -1510,11 +1510,11 @@ Baseline comparison (governance-cost):
                 if (valid) {
                   console.log(`   🔐🛡️  Hybrid signature verified (Ed25519+ML-DSA-65, keyId: ${sig.keyId.slice(0, 8)}...) — both halves`);
                 } else {
-                  console.error(`❌ SPORE-MANIFEST-TAMPER: hybrid signature verification FAILED (both halves required) — manifest may be tampered or PQ-downgraded.`);
+                  console.error(`❌ FUNGI-MANIFEST-TAMPER: hybrid signature verification FAILED (both halves required) — manifest may be tampered or PQ-downgraded.`);
                   process.exit(1);
                 }
               } catch (err) {
-                console.error(`❌ SPORE-MANIFEST-TAMPER: hybrid signature verification could not be completed — fail-closed: ${err.message}`);
+                console.error(`❌ FUNGI-MANIFEST-TAMPER: hybrid signature verification could not be completed — fail-closed: ${err.message}`);
                 process.exit(1);
               }
             } else if (sig.algorithm && sig.keyId && sig.signature) {
@@ -1527,14 +1527,14 @@ Baseline comparison (governance-cost):
                 const reg = await import("./governance/revocation-registry.mjs");
                 const trust = reg.assertRegistryTrustworthy("."); // throws on tamper / revoked signer
                 if (trust.present && !trust.signed) {
-                  console.warn(`   ⚠️  SPORE-REVOCATION-UNSIGNED: governance/revocations.json is not signed (tamperable) — run: node governance/sign-revocations.mjs`);
+                  console.warn(`   ⚠️  FUNGI-REVOCATION-UNSIGNED: governance/revocations.json is not signed (tamperable) — run: node governance/sign-revocations.mjs`);
                 }
                 if (reg.isKeyRevoked(sig.keyId)) {
-                  console.error(`❌ SPORE-MANIFEST-REVOKED-KEY: manifest signed by REVOKED key ${sig.keyId} — fail-closed (Deny). See security/revocations/REV-2026-06.md`);
+                  console.error(`❌ FUNGI-MANIFEST-REVOKED-KEY: manifest signed by REVOKED key ${sig.keyId} — fail-closed (Deny). See security/revocations/REV-2026-06.md`);
                   process.exit(1);
                 }
               } catch (revErr) {
-                console.error(`❌ SPORE-REVOCATION-REGISTRY: revocation registry untrustworthy — fail-closed (cannot confirm key is not revoked): ${revErr.message}`);
+                console.error(`❌ FUNGI-REVOCATION-REGISTRY: revocation registry untrustworthy — fail-closed (cannot confirm key is not revoked): ${revErr.message}`);
                 process.exit(1);
               }
               // Look for the public key file
@@ -1560,7 +1560,7 @@ Baseline comparison (governance-cost):
                   if (valid) {
                     console.log(`   🔐 Signature verified (${sig.algorithm}, keyId: ${sig.keyId.slice(0, 8)}...)`);
                   } else {
-                    console.error(`❌ SPORE-MANIFEST-TAMPER: Signature verification FAILED — manifest may be tampered`);
+                    console.error(`❌ FUNGI-MANIFEST-TAMPER: Signature verification FAILED — manifest may be tampered`);
                     process.exit(1);
                   }
                 } catch (err) {
@@ -1568,20 +1568,20 @@ Baseline comparison (governance-cost):
                   // cannot be COMPLETED (malformed key/sig, crypto error) must DENY — not warn-and-pass.
                   // Treating present-but-unverifiable as fine is the canonical fail-open. (The genuinely
                   // unsigned/dev case is handled by the `=== "placeholder"` branch below, unaffected.)
-                  console.error(`❌ SPORE-MANIFEST-TAMPER: signature verification could not be completed — fail-closed: ${err.message}`);
+                  console.error(`❌ FUNGI-MANIFEST-TAMPER: signature verification could not be completed — fail-closed: ${err.message}`);
                   process.exit(1);
                 }
               } else {
                 // AUDIT FIX (fail-closed): the manifest asserts a signature but its public key is absent,
                 // so integrity cannot be verified — DENY rather than skip.
-                console.error(`❌ SPORE-MANIFEST-PUBKEY-MISSING: public key ${pubKeyPath} not found but manifest asserts a signature — fail-closed (cannot verify integrity)`);
+                console.error(`❌ FUNGI-MANIFEST-PUBKEY-MISSING: public key ${pubKeyPath} not found but manifest asserts a signature — fail-closed (cannot verify integrity)`);
                 process.exit(1);
               }
             } else {
               // Signature object present but INCOMPLETE (missing algorithm/keyId/signature) — can't even
               // attempt verification. Treat as unsigned: fail-closed under production, warn in dev.
               if (requireSigned) {
-                console.error(`❌ SPORE-MANIFEST-UNSIGNED: signature object is incomplete (missing algorithm/keyId/signature) but GALERINA_PROFILE=production requires a valid signature — fail-closed.`);
+                console.error(`❌ FUNGI-MANIFEST-UNSIGNED: signature object is incomplete (missing algorithm/keyId/signature) but GALERINA_PROFILE=production requires a valid signature — fail-closed.`);
                 process.exit(1);
               }
               console.warn(`   ⚠️  Manifest signature object is incomplete — treated as unsigned.`);
@@ -1590,14 +1590,14 @@ Baseline comparison (governance-cost):
             // An unsigned (placeholder) manifest is fine for dev; under GALERINA_PROFILE=production a
             // signature is REQUIRED — fail-closed (mirrors #178 fail-closed-in-prod).
             if (requireSigned) {
-              console.error(`❌ SPORE-MANIFEST-UNSIGNED: manifest is unsigned (placeholder) but GALERINA_PROFILE=production requires a signature — fail-closed. Run: galerina keygen && galerina build`);
+              console.error(`❌ FUNGI-MANIFEST-UNSIGNED: manifest is unsigned (placeholder) but GALERINA_PROFILE=production requires a signature — fail-closed. Run: galerina keygen && galerina build`);
               process.exit(1);
             }
             console.log(`   ℹ️  Manifest is unsigned (placeholder). Run: galerina keygen && galerina build`);
           } else {
             // No signature field at all, or an unexpected scalar — treat as unsigned.
             if (requireSigned) {
-              console.error(`❌ SPORE-MANIFEST-UNSIGNED: manifest carries no signature but GALERINA_PROFILE=production requires one — fail-closed.`);
+              console.error(`❌ FUNGI-MANIFEST-UNSIGNED: manifest carries no signature but GALERINA_PROFILE=production requires one — fail-closed.`);
               process.exit(1);
             }
             console.log(`   ℹ️  Manifest has no signature field — treated as unsigned.`);
@@ -1606,7 +1606,7 @@ Baseline comparison (governance-cost):
           // In production a signature MUST be confirmable; an unreadable signature copy means it cannot
           // be — fail-closed rather than warn-and-pass.
           if (requireSigned) {
-            console.error(`❌ SPORE-MANIFEST-INVALID: could not read ${jsonManifestPath} for the required signature check under GALERINA_PROFILE=production — fail-closed: ${err.message}`);
+            console.error(`❌ FUNGI-MANIFEST-INVALID: could not read ${jsonManifestPath} for the required signature check under GALERINA_PROFILE=production — fail-closed: ${err.message}`);
             process.exit(1);
           }
           console.warn(`   ⚠️  Could not read .lmanifest.json for signature check: ${err.message}`);
@@ -1614,13 +1614,13 @@ Baseline comparison (governance-cost):
       } else {
         // No signed-manifest copy at all. Dev = skip; production = deny (signature required).
         if (requireSigned) {
-          console.error(`❌ SPORE-MANIFEST-UNSIGNED: no ${jsonManifestPath} present but GALERINA_PROFILE=production requires a signed manifest — fail-closed.`);
+          console.error(`❌ FUNGI-MANIFEST-UNSIGNED: no ${jsonManifestPath} present but GALERINA_PROFILE=production requires a signed manifest — fail-closed.`);
           process.exit(1);
         }
         console.log(`   ℹ️  No .lmanifest.json found — signature check skipped`);
       }
     } catch (e) {
-      console.error(`❌ SPORE-MANIFEST-INVALID: Failed to parse manifest — ${e.message}`);
+      console.error(`❌ FUNGI-MANIFEST-INVALID: Failed to parse manifest — ${e.message}`);
       process.exit(1);
     }
     return;
@@ -1635,7 +1635,7 @@ Baseline comparison (governance-cost):
   // Before executing, verify the source matches its manifest (if one exists).
   // This is the Stage A equivalent of the DSS.wasm admission check in Phase 5.
   if (command === "run") {
-    const name = basename(sporeFile, ".spore");
+    const name = basename(fungiFile, ".fungi");
     const manifestPath = `build/${name}.lmanifest`;
     if (existsSync(manifestPath)) {
       let manifest;
@@ -1647,17 +1647,17 @@ Baseline comparison (governance-cost):
         manifest = decodeCBOR(manifestBytes).value;
         const actualHash = "sha256:" + createHash("sha256").update(source, "utf8").digest("hex");
         if (manifest.sourceHash && manifest.sourceHash !== actualHash) {
-          console.error(`❌ SPORE-MANIFEST-TAMPER: Source has changed since manifest was signed.`);
+          console.error(`❌ FUNGI-MANIFEST-TAMPER: Source has changed since manifest was signed.`);
           console.error(`   Manifest: ${manifest.sourceHash}`);
           console.error(`   Current:  ${actualHash}`);
-          console.error(`   Rebuild with: galerina build ${sporeFile}`);
+          console.error(`   Rebuild with: galerina build ${fungiFile}`);
           process.exit(1);
         }
       } catch (e) {
         // AUDIT FIX (fail-closed): a manifest that EXISTS but cannot be read/decoded is suspicious
         // (possible tamper of the authoritative CBOR) — DENY rather than silently proceed. An ABSENT
         // manifest is the dev "run the source directly" case, already handled by the existsSync guard.
-        console.error(`❌ SPORE-MANIFEST-INVALID: admission manifest ${manifestPath} is present but could not be read/decoded — fail-closed: ${e.message}`);
+        console.error(`❌ FUNGI-MANIFEST-INVALID: admission manifest ${manifestPath} is present but could not be read/decoded — fail-closed: ${e.message}`);
         process.exit(1);
       }
 
@@ -1677,17 +1677,17 @@ Baseline comparison (governance-cost):
         const _mpOffR = new Set(["", "dev", "development", "test", "off", "none", "default"]);
         const certifiedRun = !_mpOffR.has(_mpRawR);
         if (certifiedRun && _mpRawR !== "certified") {
-          console.warn(`   ⚠️  SPORE-MANIFEST-PROFILE-UNRECOGNIZED: GALERINA_MANIFEST_PROFILE='${process.env.GALERINA_MANIFEST_PROFILE}' is not recognized — fail-securing to certified (post-quantum signature REQUIRED to run). Set 'certified' or 'dev' explicitly.`);
+          console.warn(`   ⚠️  FUNGI-MANIFEST-PROFILE-UNRECOGNIZED: GALERINA_MANIFEST_PROFILE='${process.env.GALERINA_MANIFEST_PROFILE}' is not recognized — fail-securing to certified (post-quantum signature REQUIRED to run). Set 'certified' or 'dev' explicitly.`);
         }
         if (certifiedRun) {
           const _sigR = manifest && manifest.governanceSignature;
-          const _isV2HybridR = manifest && manifest.schemaVersion === "spore.manifest.v2"
+          const _isV2HybridR = manifest && manifest.schemaVersion === "fungi.manifest.v2"
             && _sigR && typeof _sigR === "object"
-            && _sigR.sigAlgorithm === "spore.gov.sig.v2"
+            && _sigR.sigAlgorithm === "fungi.gov.sig.v2"
             && typeof _sigR.signature === "string" && _sigR.signature.includes("|");
           if (!_isV2HybridR) {
-            console.error("❌ SPORE-MANIFEST-PQ-REQUIRED: GALERINA_MANIFEST_PROFILE=certified requires a v2 hybrid Ed25519+ML-DSA-65 manifest " +
-              "(schemaVersion 'spore.manifest.v2', sigAlgorithm 'spore.gov.sig.v2', a both-half '|' signature), but this flow's manifest is not v2 hybrid. " +
+            console.error("❌ FUNGI-MANIFEST-PQ-REQUIRED: GALERINA_MANIFEST_PROFILE=certified requires a v2 hybrid Ed25519+ML-DSA-65 manifest " +
+              "(schemaVersion 'fungi.manifest.v2', sigAlgorithm 'fungi.gov.sig.v2', a both-half '|' signature), but this flow's manifest is not v2 hybrid. " +
               "Refusing to run a classical-only (v1) manifest under a post-quantum-required posture (fail-closed, no PQ downgrade). " +
               "Rebuild under certified: GALERINA_MANIFEST_PROFILE=certified galerina keygen --hybrid && galerina build.");
             process.exit(1);
@@ -1718,29 +1718,29 @@ Baseline comparison (governance-cost):
           );
           const sig = manifest && manifest.governanceSignature;
           if (!sig || typeof sig !== "object" || !(sig.algorithm && sig.keyId && sig.signature)) {
-            console.error(`❌ SPORE-MANIFEST-UNSIGNED: the authoritative manifest is unsigned/placeholder but GALERINA_PROFILE=production requires a signature to run — fail-closed. Run: galerina keygen && galerina build ${sporeFile}`);
+            console.error(`❌ FUNGI-MANIFEST-UNSIGNED: the authoritative manifest is unsigned/placeholder but GALERINA_PROFILE=production requires a signature to run — fail-closed. Run: galerina keygen && galerina build ${fungiFile}`);
             process.exit(1);
           }
           // ── 0102 / #34: HYBRID (v2) admission branch — self-describing on the signature's own fields ──
           // A v2 sig MUST be verified with BOTH halves; it must NOT reach the classical legacy-format guard
           // (which would mis-reject the jcs v2 sig) NOR the single-key cryptoVerify below (Adv-1 #2 / Adv-2 #2).
-          const runIsHybridSig = sig.sigAlgorithm === "spore.gov.sig.v2" || sig.algorithm === "Ed25519+ML-DSA-65"
+          const runIsHybridSig = sig.sigAlgorithm === "fungi.gov.sig.v2" || sig.algorithm === "Ed25519+ML-DSA-65"
             || (typeof sig.signature === "string" && sig.signature.includes("|"));
           if (runIsHybridSig) {
-            if (sig.sigAlgorithm !== "spore.gov.sig.v2" || !sig.bodyHash || !sig.keyId || !String(sig.signature).includes("|")) {
-              console.error(`❌ SPORE-MANIFEST-PQ-REQUIRED: incomplete/inconsistent or non-both-half hybrid (v2) signature — refusing to run (fail-closed, no PQ downgrade).`);
+            if (sig.sigAlgorithm !== "fungi.gov.sig.v2" || !sig.bodyHash || !sig.keyId || !String(sig.signature).includes("|")) {
+              console.error(`❌ FUNGI-MANIFEST-PQ-REQUIRED: incomplete/inconsistent or non-both-half hybrid (v2) signature — refusing to run (fail-closed, no PQ downgrade).`);
               process.exit(1);
             }
             const reg = await import("./governance/revocation-registry.mjs");
             reg.assertRegistryTrustworthy(".");
             if (reg.isKeyRevoked(sig.keyId)) {
-              console.error(`❌ SPORE-MANIFEST-REVOKED-KEY: manifest signed by REVOKED key ${sig.keyId} — refusing to run (fail-closed, Deny).`);
+              console.error(`❌ FUNGI-MANIFEST-REVOKED-KEY: manifest signed by REVOKED key ${sig.keyId} — refusing to run (fail-closed, Deny).`);
               process.exit(1);
             }
             const edPubPath = join("governance", `signing-key-${sig.keyId}.pub.pem`);
             const mlPubPath = join("governance", `signing-key-${sig.keyId}.mldsa.pub.b64`);
             if (!existsSync(edPubPath) || !existsSync(mlPubPath)) {
-              console.error(`❌ SPORE-MANIFEST-PUBKEY-MISSING: hybrid public key(s) missing for keyId ${sig.keyId} — refusing to run (fail-closed, cannot verify both halves).`);
+              console.error(`❌ FUNGI-MANIFEST-PUBKEY-MISSING: hybrid public key(s) missing for keyId ${sig.keyId} — refusing to run (fail-closed, cannot verify both halves).`);
               process.exit(1);
             }
             const { createPublicKey } = await import("node:crypto");
@@ -1750,44 +1750,44 @@ Baseline comparison (governance-cost):
             // self-verifiable from CBOR per #67); never trust sig.bodyHash as the signed input.
             const runBodyHash = createHash("sha256").update(Buffer.from(manifestSigningInput(withoutSigH, manifestSigCanon(sig)))).digest("hex");
             if (sig.bodyHash !== `sha256:${runBodyHash}`) {
-              console.error(`❌ SPORE-MANIFEST-TAMPER: v2 manifest bodyHash mismatch — refusing to run (fail-closed).`);
+              console.error(`❌ FUNGI-MANIFEST-TAMPER: v2 manifest bodyHash mismatch — refusing to run (fail-closed).`);
               process.exit(1);
             }
             // Reconstruct the signed envelope via the SAME shared helper the signer/verify paths use.
             const envelope = cc.makeManifestEnvelope(runBodyHash, manifest.generatedAt);
-            envelope.governanceSignature = { algorithm: "spore.gov.sig.v2", signerKeyId: sig.keyId, signature: sig.signature, signedAt: sig.signedAt };
+            envelope.governanceSignature = { algorithm: "fungi.gov.sig.v2", signerKeyId: sig.keyId, signature: sig.signature, signedAt: sig.signedAt };
             const edPubDer = new Uint8Array(createPublicKey(readFileSync(edPubPath, "utf-8")).export({ type: "spki", format: "der" }));
             const mlPubRaw = new Uint8Array(Buffer.from(readFileSync(mlPubPath, "utf-8").trim(), "base64"));
             const sigOkHybrid = await cc.verifyGovernanceSignatureHybrid(envelope, edPubDer, mlPubRaw);
             if (!sigOkHybrid) {
-              console.error(`❌ SPORE-MANIFEST-TAMPER: hybrid manifest signature verification FAILED (both halves required) — refusing to run (fail-closed).`);
+              console.error(`❌ FUNGI-MANIFEST-TAMPER: hybrid manifest signature verification FAILED (both halves required) — refusing to run (fail-closed).`);
               process.exit(1);
             }
           } else {
           // A legacy (pretty-JSON) signature can't be self-verified from CBOR (key order is not preserved
           // through canonical CBOR) — push toward the current canonical signer rather than mis-report it as tampered.
           if (manifestSigCanon(sig) !== "jcs") {
-            console.error(`❌ SPORE-MANIFEST-LEGACY-FORMAT: the authoritative CBOR carries a legacy-format signature that cannot be self-verified — rebuild with the current canonical signer: galerina build ${sporeFile}`);
+            console.error(`❌ FUNGI-MANIFEST-LEGACY-FORMAT: the authoritative CBOR carries a legacy-format signature that cannot be self-verified — rebuild with the current canonical signer: galerina build ${fungiFile}`);
             process.exit(1);
           }
           // A revoked signer is Deny even with a cryptographically valid signature.
           const reg = await import("./governance/revocation-registry.mjs");
           reg.assertRegistryTrustworthy("."); // throws on a tampered / revoked-signer registry → caught below
           if (reg.isKeyRevoked(sig.keyId)) {
-            console.error(`❌ SPORE-MANIFEST-REVOKED-KEY: manifest signed by REVOKED key ${sig.keyId} — refusing to run (fail-closed, Deny).`);
+            console.error(`❌ FUNGI-MANIFEST-REVOKED-KEY: manifest signed by REVOKED key ${sig.keyId} — refusing to run (fail-closed, Deny).`);
             process.exit(1);
           }
           // Signature integrity over the manifest body (mirrors verify / #109).
           const pubKeyPath = join("governance", `signing-key-${sig.keyId}.pub.pem`);
           if (!existsSync(pubKeyPath)) {
-            console.error(`❌ SPORE-MANIFEST-PUBKEY-MISSING: public key ${pubKeyPath} not found but the manifest asserts a signature — fail-closed (cannot verify before running).`);
+            console.error(`❌ FUNGI-MANIFEST-PUBKEY-MISSING: public key ${pubKeyPath} not found but the manifest asserts a signature — fail-closed (cannot verify before running).`);
             process.exit(1);
           }
           const { verify: cryptoVerify, createPublicKey } = await import("node:crypto");
           const { governanceSignature: _omit, ...withoutSig } = manifest;
           const sigOk = cryptoVerify(null, Buffer.from(manifestSigningInput(withoutSig, manifestSigCanon(sig))), createPublicKey(readFileSync(pubKeyPath, "utf-8")), Buffer.from(sig.signature, "base64"));
           if (!sigOk) {
-            console.error(`❌ SPORE-MANIFEST-TAMPER: manifest signature verification FAILED — refusing to run (fail-closed).`);
+            console.error(`❌ FUNGI-MANIFEST-TAMPER: manifest signature verification FAILED — refusing to run (fail-closed).`);
             process.exit(1);
           }
           }
@@ -1795,7 +1795,7 @@ Baseline comparison (governance-cost):
           // Only genuine errors reach here (bad JSON / unreadable key / crypto error / untrustworthy
           // registry); the explicit process.exit(1) calls above terminate synchronously, they do not
           // throw. Any failure to COMPLETE the admission check is itself fail-closed.
-          console.error(`❌ SPORE-MANIFEST-INVALID: could not complete the required signature/revocation admission under GALERINA_PROFILE=production — fail-closed: ${e.message}`);
+          console.error(`❌ FUNGI-MANIFEST-INVALID: could not complete the required signature/revocation admission under GALERINA_PROFILE=production — fail-closed: ${e.message}`);
           process.exit(1);
         }
       }
@@ -1836,13 +1836,13 @@ Baseline comparison (governance-cost):
         gargs.set(name, v);
       });
 
-      const gres = await m.run(source, sporeFile, gflow, gargs, { mode: "dev" });
+      const gres = await m.run(source, fungiFile, gflow, gargs, { mode: "dev" });
 
       for (const d of gres.diagnostics ?? []) if (d.severity === "error") console.error(`  ✗ ${d.code}: ${d.message}`);
       for (const g of gres.governanceDiagnostics ?? []) if (g.severity === "error") console.error(`  ⛔ ${g.code}: ${g.message}`);
 
       if (!gres.ok) {
-        console.error(`\n❌ Governed run of '${gflow}' FAILED (fail-closed) — see the SPORE-* diagnostics above.`);
+        console.error(`\n❌ Governed run of '${gflow}' FAILED (fail-closed) — see the FUNGI-* diagnostics above.`);
         process.exit(1);
       }
 
@@ -1868,11 +1868,11 @@ Baseline comparison (governance-cost):
   // Compile to WASM
   // ── Production-gated governance floor (mirror of
   //    packages-galerina/galerina-core-compiler/src/cli.ts:405-450) ───────────────────────────────────
-  // The internal compiler bin (cli.ts) derives the effect-checker mode + SPORE-TIER-001 tier-floor flag
+  // The internal compiler bin (cli.ts) derives the effect-checker mode + FUNGI-TIER-001 tier-floor flag
   // from the build mode and SURFACES checkValueStates / checkEffects ERROR diagnostics so an
   // under-declared flow fails the build. The user-facing `galerina build` path did NEITHER: checkEffects
   // was 2-arg (enforceTierFloor defaulted false) and its `.diagnostics` were fed to emitGIR but never
-  // inspected, so SPORE-TIER-001 / SPORE-VALUESTATE-008 / SPORE-EFFECT-* errors never failed the build — only
+  // inspected, so FUNGI-TIER-001 / FUNGI-VALUESTATE-008 / FUNGI-EFFECT-* errors never failed the build — only
   // codegen (assembled.valid) did. We gate strictness on the SAME fail-secure GALERINA_PROFILE resolver
   // the signing/admission gates already use (galerina.mjs:1815): UNSET/dev → enforcement OFF (zero-touch
   // local dev), exact "production" → ON, any set-but-unrecognized value fail-secures to ON. The
@@ -1882,8 +1882,8 @@ Baseline comparison (governance-cost):
   const govErrors = [];
   let fx;
   if (buildIsProduction) {
-    // PRODUCTION ONLY: turn on the flow-kind tier floor (SPORE-TIER-001) and escalate the boundary-input
-    // check (SPORE-VALUESTATE-008). mode is passed EXPLICITLY as the 3rd arg so enforceTierFloor lands in
+    // PRODUCTION ONLY: turn on the flow-kind tier floor (FUNGI-TIER-001) and escalate the boundary-input
+    // check (FUNGI-VALUESTATE-008). mode is passed EXPLICITLY as the 3rd arg so enforceTierFloor lands in
     // the 4th position. checkEffects/emitGIR ignore `.diagnostics` for codegen (emitGIR reads only
     // observedEffects), so the floored fx produces byte-identical GIR — the floor only adds diagnostics.
     fx = m.checkEffects(parsed.flows, parsed.ast, "production", true);
@@ -1896,11 +1896,11 @@ Baseline comparison (governance-cost):
     // DEV / CHECK / UNSET: no tier floor, checkEffects diagnostics stay advisory (mode defaults to
     // "production", enforceTierFloor defaults to false) — `fx` is byte-identical to the pre-existing call.
     fx = m.checkEffects(parsed.flows, parsed.ast);
-    // P2 (threat-model): EVEN in dev, two effect invariants fail closed — SPORE-EFFECT-003 (effectful op in
-    // a PURE flow, a boundary breach) and SPORE-STDLIB-002 (deny-by-default unrecognized effectful method).
+    // P2 (threat-model): EVEN in dev, two effect invariants fail closed — FUNGI-EFFECT-003 (effectful op in
+    // a PURE flow, a boundary breach) and FUNGI-STDLIB-002 (deny-by-default unrecognized effectful method).
     // The production branch above already folds ALL error diagnostics; this keeps these two fail-closed at
     // every profile (the broader EFFECT-001/STDLIB-001 class stays dev-advisory, by design).
-    const INTEGRITY_EFFECT_CODES = new Set(["SPORE-EFFECT-003", "SPORE-STDLIB-002"]);
+    const INTEGRITY_EFFECT_CODES = new Set(["FUNGI-EFFECT-003", "FUNGI-STDLIB-002"]);
     for (const result of fx) {
       for (const d of result.diagnostics ?? []) {
         if (d.severity === "error" && INTEGRITY_EFFECT_CODES.has(d.code)) govErrors.push(d);
@@ -1908,12 +1908,12 @@ Baseline comparison (governance-cost):
     }
   }
   // UNCONDITIONAL value-state gate (mirror of cli.ts:416 + runtime.ts:116 — the internal compiler bin and
-  // the governed runtime BOTH run checkValueStates on every build/run). The SPORE-NUMERIC-001 numeric-
+  // the governed runtime BOTH run checkValueStates on every build/run). The FUNGI-NUMERIC-001 numeric-
   // truncation gate is fail-closed and NOT mode-gated: a still-unlowerable 64-bit width (UInt64) the WASM
   // backend would silently truncate 64→32 (CWE-704) MUST reject the build REGARDLESS of profile. This scan
   // previously ran ONLY under GALERINA_PROFILE=production, so a default `build` of an unlowerable-width flow
   // silently emitted a truncating module (the verified hole). The MODE only governs whether the
-  // migration-grade SPORE-VALUESTATE-008 boundary warning ALSO escalates to a fail-closed error (production)
+  // migration-grade FUNGI-VALUESTATE-008 boundary warning ALSO escalates to a fail-closed error (production)
   // or stays a warning (dev). Int64 is no longer rejected here — the emitter now lowers it faithfully.
   const valueStateResult = m.checkValueStates(parsed.ast, buildIsProduction ? "production" : "development");
   for (const d of valueStateResult.diagnostics ?? []) {
@@ -1921,11 +1921,11 @@ Baseline comparison (governance-cost):
   }
   if (govErrors.length > 0) {
     for (const d of govErrors) {
-      const loc = d.location?.line !== undefined ? ` (${sporeFile}:${d.location.line}:${d.location.column ?? 0})` : "";
+      const loc = d.location?.line !== undefined ? ` (${fungiFile}:${d.location.line}:${d.location.column ?? 0})` : "";
       console.error(`  ⛔ ${d.code}: ${d.message}${loc}`);
     }
     const profileNote = buildIsProduction ? " under GALERINA_PROFILE=production" : "";
-    console.error(`\n❌ Build of '${sporeFile}' FAILED (fail-closed${profileNote}) — ${govErrors.length} governance error(s) above. Declare the required tier/effects (or seal/gate boundary inputs) and rebuild.`);
+    console.error(`\n❌ Build of '${fungiFile}' FAILED (fail-closed${profileNote}) — ${govErrors.length} governance error(s) above. Declare the required tier/effects (or seal/gate boundary inputs) and rebuild.`);
     process.exit(1);
   }
   const { gir } = m.emitGIR(parsed.ast, parsed.flows, fx);
@@ -1951,15 +1951,15 @@ Baseline comparison (governance-cost):
   if (!faithfulCompile) {
     const stubReason = assembled.diagnostics.map(d => d.message).join("; ");
     if (buildIsProduction) {
-      console.error(`  ⛔ SPORE-EMIT-STUB: '${sporeFile}' did not lower to a FAITHFUL WASM module — the JS assembler produced a stub (${stubReason}).`);
-      console.error(`\n❌ Build of '${sporeFile}' FAILED (fail-closed under GALERINA_PROFILE=production) — refusing to sign a non-faithful artifact: a signed stub would attest fidelity it does not have. The WASM emitter cannot yet faithfully lower this flow.`);
+      console.error(`  ⛔ FUNGI-EMIT-STUB: '${fungiFile}' did not lower to a FAITHFUL WASM module — the JS assembler produced a stub (${stubReason}).`);
+      console.error(`\n❌ Build of '${fungiFile}' FAILED (fail-closed under GALERINA_PROFILE=production) — refusing to sign a non-faithful artifact: a signed stub would attest fidelity it does not have. The WASM emitter cannot yet faithfully lower this flow.`);
       process.exit(1);
     }
-    console.warn(`  ⚠ SPORE-EMIT-STUB: '${sporeFile}' lowered to a NON-FAITHFUL stub (${stubReason}). The .wasm is for local inspection only — it MUST NOT be shipped (a production build will fail closed here rather than sign it).`);
+    console.warn(`  ⚠ FUNGI-EMIT-STUB: '${fungiFile}' lowered to a NON-FAITHFUL stub (${stubReason}). The .wasm is for local inspection only — it MUST NOT be shipped (a production build will fail closed here rather than sign it).`);
   }
 
   if (command === "build") {
-    const name = packageBuild ? packageDescriptor.name : basename(sporeFile, ".spore");
+    const name = packageBuild ? packageDescriptor.name : basename(fungiFile, ".fungi");
     const outDir = packageBuild ? join(packageBuild, "dist") : "build";
     mkdirSync(outDir, { recursive: true });
     writeFileSync(`${outDir}/${name}.wasm`, assembled.wasm);
@@ -1972,9 +1972,9 @@ Baseline comparison (governance-cost):
       );
       const govResult = m.verifyGovernance(parsed.ast, parsed.flows,
         m.checkEffects(parsed.flows, parsed.ast), "dev");
-      const source = readUntrustedSource(sporeFile);
-      if (source === null) process.exit(1); // fail-closed: oversized/unreadable .spore rejected
-      const baseManifest = generateManifest(source, sporeFile, parsed.flows, govResult);
+      const source = readUntrustedSource(fungiFile);
+      if (source === null) process.exit(1); // fail-closed: oversized/unreadable .fungi rejected
+      const baseManifest = generateManifest(source, fungiFile, parsed.flows, govResult);
 
       // ── Net a: embed the fusion descriptor INTO the manifest BEFORE signing ──────
       // (Fuse B2 STEP A) The fuse fields (kind/provides/seam/capabilities) and the
@@ -1988,7 +1988,7 @@ Baseline comparison (governance-cost):
         ? {
             ...baseManifest,
             fuse: {
-              schemaVersion: "spore.fuse.v1",
+              schemaVersion: "fungi.fuse.v1",
               name,
               version: packageDescriptor.version ?? "0.0.0",
               kind: packageDescriptor.kind ?? "capability",
@@ -2021,7 +2021,7 @@ Baseline comparison (governance-cost):
       // ── Real manifest signing (#108) — ZERO-TOUCH key lifecycle ──────────────
       // Stage A: Ed25519 (Node.js native crypto). Stage B: ML-DSA-65 (FIPS 204).
       // A developer never handles keys: the dev signing key is auto-provisioned, healthy
-      // keys sign silently, and a coded SPORE-KEY-* diagnostic appears ONLY when action is
+      // keys sign silently, and a coded FUNGI-KEY-* diagnostic appears ONLY when action is
       // needed (stale → warn; revoked/tampered/prod-missing → fail-closed).
       let signingKeyId = process.env.GALERINA_SIGNING_KEY_ID;
       let signingKeyB64 = process.env.GALERINA_SIGNING_PRIVATE_KEY_B64;
@@ -2041,7 +2041,7 @@ Baseline comparison (governance-cost):
         const assessment = kl.assessSigningKey({ rootDir: ".", profile });
         if (assessment.diagnostics.length > 0) console.log(kl.formatDiagnostics(assessment.diagnostics));
         if (assessment.fatal) {
-          console.error(`❌ Refusing to sign (fail-closed) — resolve the SPORE-KEY-* issue above and re-run.`);
+          console.error(`❌ Refusing to sign (fail-closed) — resolve the FUNGI-KEY-* issue above and re-run.`);
           process.exit(1);
         }
         if (assessment.action === "auto-provision") {
@@ -2064,7 +2064,7 @@ Baseline comparison (governance-cost):
         if (signingKeyId) {
           const { isKeyRevoked } = await import("./governance/revocation-registry.mjs");
           if (isKeyRevoked(signingKeyId)) {
-            console.error(`❌ SPORE-KEY-004 (error): signing key ${signingKeyId} is REVOKED — refusing to sign. Mint a fresh key.`);
+            console.error(`❌ FUNGI-KEY-004 (error): signing key ${signingKeyId} is REVOKED — refusing to sign. Mint a fresh key.`);
             process.exit(1);
           }
         }
@@ -2078,7 +2078,7 @@ Baseline comparison (governance-cost):
       // because GALERINA_SIGNING_ALGORITHM was dropped. If the tag IS present it must agree, else fail-closed.
       const isHybridKey = !!signingMlDsaB64;
       if (isHybridKey && signingAlgorithm && signingAlgorithm !== "hybrid-ed25519-mldsa65") {
-        console.error(`❌ SPORE-MANIFEST-PQ-REQUIRED: an ML-DSA signing half is present but GALERINA_SIGNING_ALGORITHM='${signingAlgorithm}' is not 'hybrid-ed25519-mldsa65' — refusing to sign with an inconsistent key (fail-closed).`);
+        console.error(`❌ FUNGI-MANIFEST-PQ-REQUIRED: an ML-DSA signing half is present but GALERINA_SIGNING_ALGORITHM='${signingAlgorithm}' is not 'hybrid-ed25519-mldsa65' — refusing to sign with an inconsistent key (fail-closed).`);
         process.exit(1);
       }
       // CERTIFIED MODE — FAIL-SECURE resolution (Adv-1 #3 / Adv-2 #4). `profile` (line 1699) is scoped to
@@ -2091,14 +2091,14 @@ Baseline comparison (governance-cost):
       const _mpOff = new Set(["", "dev", "development", "test", "off", "none", "default"]);
       const certifiedMode = !_mpOff.has(_mpRaw);
       if (certifiedMode && _mpRaw !== "certified") {
-        console.warn(`   ⚠️  SPORE-MANIFEST-PROFILE-UNRECOGNIZED: GALERINA_MANIFEST_PROFILE='${process.env.GALERINA_MANIFEST_PROFILE}' is not recognized — fail-securing to certified (post-quantum signature REQUIRED). Set 'certified' or 'dev' explicitly.`);
+        console.warn(`   ⚠️  FUNGI-MANIFEST-PROFILE-UNRECOGNIZED: GALERINA_MANIFEST_PROFILE='${process.env.GALERINA_MANIFEST_PROFILE}' is not recognized — fail-securing to certified (post-quantum signature REQUIRED). Set 'certified' or 'dev' explicitly.`);
       }
       // Certified MANDATES hybrid: a real classical-only key under certified is fail-closed (no PQ downgrade).
       // Gated on a key actually being present so a no-key dev/certified build still emits an (unsigned)
       // manifest that the production VERIFY gate already fail-closes on — existing production Ed25519 signing
       // WITHOUT GALERINA_MANIFEST_PROFILE is untouched.
       if (certifiedMode && signingKeyId && signingKeyB64 && !isHybridKey) {
-        console.error("❌ SPORE-MANIFEST-PQ-REQUIRED: the certified manifest profile requires a hybrid Ed25519+ML-DSA-65 signing key, " +
+        console.error("❌ FUNGI-MANIFEST-PQ-REQUIRED: the certified manifest profile requires a hybrid Ed25519+ML-DSA-65 signing key, " +
           "but the ML-DSA half (GALERINA_SIGNING_MLDSA_PRIVATE_KEY_B64) is missing. Refusing to emit a classical-only manifest (fail-closed, no PQ downgrade). " +
           "Run the offline ceremony: galerina keygen --hybrid, then re-build.");
         process.exit(1);
@@ -2166,7 +2166,7 @@ Baseline comparison (governance-cost):
                 throw new Error("shipped dist does not export signProofGraphHybrid/makeManifestEnvelope");
               }
             } catch (distErr) {
-              console.error(`❌ SPORE-MANIFEST-PQ-REQUIRED: hybrid signing requested (ML-DSA key present) but the shipped hybrid signer is unavailable — fail-closed (build the compiler: npm run build): ${distErr.message}`);
+              console.error(`❌ FUNGI-MANIFEST-PQ-REQUIRED: hybrid signing requested (ML-DSA key present) but the shipped hybrid signer is unavailable — fail-closed (build the compiler: npm run build): ${distErr.message}`);
               process.exit(1);
             }
 
@@ -2191,7 +2191,7 @@ Baseline comparison (governance-cost):
             // below), so the signed bodyHash must bind the v2 body — otherwise the verifier, which
             // re-derives the hash over the persisted v2 body, mismatches (caught by the E2E round-trip).
             // The signed body == the persisted body, minus the governanceSignature field.
-            manifestObjForSigning.schemaVersion = "spore.manifest.v2";
+            manifestObjForSigning.schemaVersion = "fungi.manifest.v2";
             const { governanceSignature: _ph, ...manifestWithoutSig } = manifestObjForSigning;
             const bodyHash = createHash("sha256").update(Buffer.from(manifestSigningInput(manifestWithoutSig, signCanon))).digest("hex");
 
@@ -2206,19 +2206,19 @@ Baseline comparison (governance-cost):
 
             // FAIL-CLOSED: the shipped signer falls back to Ed25519-only (v1) if it does not recognise the
             // key as hybrid (proof-graph.ts:714). Refuse to persist anything that is not a both-halves v2.
-            if (!signedEnv.governanceSignature || signedEnv.governanceSignature.algorithm !== "spore.gov.sig.v2"
+            if (!signedEnv.governanceSignature || signedEnv.governanceSignature.algorithm !== "fungi.gov.sig.v2"
                 || !signedEnv.governanceSignature.signature.includes("|")) {
-              console.error("❌ SPORE-MANIFEST-PQ-REQUIRED: hybrid signing did not produce a v2 (both-half) signature — refusing to write a downgraded manifest (fail-closed).");
+              console.error("❌ FUNGI-MANIFEST-PQ-REQUIRED: hybrid signing did not produce a v2 (both-half) signature — refusing to write a downgraded manifest (fail-closed).");
               process.exit(1);
             }
 
             const signedManifest = JSON.parse(manifestJson);
             // (c) VERSION BUMP — a persisted hybrid signature is a durable on-disk crypto fact (charter:
-            // bump once a real signature persists). The Ed25519 default path stays spore.manifest.v1.
-            signedManifest.schemaVersion = "spore.manifest.v2";
+            // bump once a real signature persists). The Ed25519 default path stays fungi.manifest.v1.
+            signedManifest.schemaVersion = "fungi.manifest.v2";
             signedManifest.governanceSignature = {
               algorithm: "Ed25519+ML-DSA-65",                        // hybrid, both required (NIST FIPS 204)
-              sigAlgorithm: "spore.gov.sig.v2",                        // envelope sig version — verifiers dispatch on this
+              sigAlgorithm: "fungi.gov.sig.v2",                        // envelope sig version — verifiers dispatch on this
               keyId: signingKeyId,
               canon: signCanon,                                      // body canon the bodyHash binds (RFC 8785 JCS)
               bodyHash: `sha256:${bodyHash}`,                        // explicit, audit-legible body binding (defence-in-depth only)
@@ -2257,8 +2257,8 @@ Baseline comparison (governance-cost):
           new URL("packages-galerina/galerina-core-compiler/dist/governance-diff.js", import.meta.url).href
         );
         const impactArtifact = {
-          schemaVersion: "spore.governance-impact.v1",
-          sourceFile: sporeFile.replace(/\\/g, "/"),
+          schemaVersion: "fungi.governance-impact.v1",
+          sourceFile: fungiFile.replace(/\\/g, "/"),
           sourceHash: manifest.sourceHash,
           generatedAt: manifest.generatedAt,
           flowCount: parsed.flows.length,
@@ -2298,7 +2298,7 @@ Baseline comparison (governance-cost):
       // embedding above was skipped (e.g. manifest generation threw, non-fatal).
       const fuseWasmSha256 = "sha256:" + createHash("sha256").update(Buffer.from(assembled.wasm)).digest("hex");
       const fuseDescriptor = {
-        schemaVersion: "spore.fuse.v1",
+        schemaVersion: "fungi.fuse.v1",
         name,
         version: packageDescriptor.version ?? "0.0.0",
         kind: packageDescriptor.kind ?? "capability",
@@ -2313,21 +2313,21 @@ Baseline comparison (governance-cost):
       console.log(`   ${outDir}/${name}.fuse.json   (fusion descriptor — kind=${fuseDescriptor.kind}, seam=${fuseDescriptor.seam ?? "—"})`);
     }
 
-    // ── //spore: auto-refresh (R&D 0045) ── a package build refreshes the generated dependency
+    // ── //fungi: auto-refresh (R&D 0045) ── a package build refreshes the generated dependency
     // metadata across the package's sources by DEFAULT, so `galerina build --package` keeps every
-    // //spore: USES/USEDBY/IMPACT/COMPLEXITY block current (cross-file). Opt out with --no-refresh for
-    // reproducible CI builds. Only //spore: lines are touched — human // comments and code are never
+    // //fungi: USES/USEDBY/IMPACT/COMPLEXITY block current (cross-file). Opt out with --no-refresh for
+    // reproducible CI builds. Only //fungi: lines are touched — human // comments and code are never
     // modified. Scoped to the package's own source tree, so it never rewrites files elsewhere.
     if (packageBuild && !rest.includes("--no-refresh")) {
-      const { results } = refreshGeneratedComments(dirname(sporeFile), { write: true });
+      const { results } = refreshGeneratedComments(dirname(fungiFile), { write: true });
       const changed = results.filter(r => r.changed);
       if (changed.length > 0) {
         const flows = changed.reduce((n, r) => n + r.flows, 0);
-        console.log(`   refreshed //spore: metadata on ${flows} flow(s) in ${changed.length} file(s)  (--no-refresh to skip)`);
+        console.log(`   refreshed //fungi: metadata on ${flows} flow(s) in ${changed.length} file(s)  (--no-refresh to skip)`);
       }
     }
 
-    console.log(`✅ Compiled ${packageBuild ? packageDescriptor.name + " (package)" : sporeFile}`);
+    console.log(`✅ Compiled ${packageBuild ? packageDescriptor.name + " (package)" : fungiFile}`);
     console.log(`   ${outDir}/${name}.wasm  (${assembled.wasm.byteLength} bytes)`);
     console.log(`   ${outDir}/${name}.wat   (${wat.split("\n").length} lines)`);
     if (!packageBuild) {
@@ -2420,7 +2420,7 @@ Baseline comparison (governance-cost):
         // Result/Void) run in the governed runtime, not the raw WASM --invoke surface (dogfooding #2).
         console.error(`Flow '${flowName}' exists but is NOT in the WASM --invoke surface — only pure flows returning a primitive (Int/Bool) are exported.`);
         console.error(`('${flowName}' is likely a secure/effectful flow; those run in the governed runtime, not raw WASM --invoke.)`);
-        console.error(`→ Run it under governance:  galerina run ${sporeFile} --invoke ${flowName} --governed`);
+        console.error(`→ Run it under governance:  galerina run ${fungiFile} --invoke ${flowName} --governed`);
         console.error(`Invokable here (raw WASM, pure only): ${exported.join(", ") || "(none)"}`);
       } else {
         console.error(`No flow named '${flowName}'. Invokable here: ${exported.join(", ") || "(none)"}`);

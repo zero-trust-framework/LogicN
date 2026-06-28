@@ -26,8 +26,8 @@ export async function runTaskCommand(context: CliContext): Promise<CliResult> {
       code: 1,
       message: `Task file not found: ${relativeTaskFile(context, taskFile)}`,
       details: [
-        "Create tasks.spore in the repository root or pass --file <path>.",
-        "Example: Galerina task generateReports --file packages-galerina/galerina-core-tasks/examples/tasks.spore --dry-run"
+        "Create tasks.fungi in the repository root or pass --file <path>.",
+        "Example: Galerina task generateReports --file packages-galerina/galerina-core-tasks/examples/tasks.fungi --dry-run"
       ]
     };
   }
@@ -94,7 +94,7 @@ export async function runTaskCommand(context: CliContext): Promise<CliResult> {
 function resolveTaskFile(context: CliContext): string {
   const fileFlagIndex = context.args.findIndex((arg) => arg === "--file");
   const fileValue = fileFlagIndex >= 0 ? context.args[fileFlagIndex + 1] : undefined;
-  return resolve(context.cwd, fileValue ?? "tasks.spore");
+  return resolve(context.cwd, fileValue ?? "tasks.fungi");
 }
 
 function resolveReportPath(context: CliContext): string {

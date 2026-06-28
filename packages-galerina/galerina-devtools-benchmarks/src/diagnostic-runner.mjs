@@ -20,32 +20,32 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dir, "../../..");
 const RESULTS_DIR = join(__dir, "../results");
 
-// Track which spore files have been built in this session (avoid redundant rebuilds per benchmark)
+// Track which fungi files have been built in this session (avoid redundant rebuilds per benchmark)
 const _builtFiles = new Set();
 
-// Build a .spore file to register a fresh manifest before running
-function buildFile(sporeFile) {
-  if (_builtFiles.has(sporeFile)) return;
+// Build a .fungi file to register a fresh manifest before running
+function buildFile(fungiFile) {
+  if (_builtFiles.has(fungiFile)) return;
   spawnSync(
     "node",
-    [join(ROOT, "galerina.mjs"), "build", sporeFile],
+    [join(ROOT, "galerina.mjs"), "build", fungiFile],
     { cwd: ROOT, encoding: "utf-8", timeout: 30_000 }
   );
-  _builtFiles.add(sporeFile);
+  _builtFiles.add(fungiFile);
 }
 
-// Run governance check on a .spore file — measures static analysis speed
+// Run governance check on a .fungi file — measures static analysis speed
 // Returns { success, flowCount, violations, diagnostics }
-function runGovernanceCheck(sporeFile) {
+function runGovernanceCheck(fungiFile) {
   const result = spawnSync(
     "node",
-    [join(ROOT, "galerina.mjs"), "check", sporeFile],
+    [join(ROOT, "galerina.mjs"), "check", fungiFile],
     { cwd: ROOT, encoding: "utf-8", timeout: 10_000 }
   );
   const output = (result.stdout ?? "") + (result.stderr ?? "");
   const hasViolation = output.includes("❌") || result.status !== 0;
   // Count trap declarations in the source as a proxy for trap-coverage completeness
-  const trapCount = (output.match(/SPORE-INV|trap/g) ?? []).length;
+  const trapCount = (output.match(/FUNGI-INV|trap/g) ?? []).length;
   return {
     success: result.status === 0,
     stdout: output,
@@ -76,21 +76,21 @@ function readRecentAuditLog(limit = 200) {
 //     - Invariant blocks are structurally validated
 //     - The check must exit 0 for governance-compliant files
 //
-//   Trap coverage is verified via static trap declarations in the .spore source,
+//   Trap coverage is verified via static trap declarations in the .fungi source,
 //   not by runtime WASM execution (Stage B will wire the runtime signal path
 //   via real DSS.wasm V_DPM bitmask enforcement).
 //
 //   For the logging-throughput benchmark, two separate files are checked
 //   to measure the "Audit Tax" — governance check time for pure vs secure flows.
-async function runDiagnostic(benchId, sporeFile, scenarios) {
+async function runDiagnostic(benchId, fungiFile, scenarios) {
   console.log(`\n  Diagnostic: ${benchId}`);
   const results = { id: benchId, category: "diagnostic", timestamp: new Date().toISOString(), scenarios: {} };
 
   // Warm-up governance check (cold-start excluded from timing)
-  runGovernanceCheck(sporeFile);
+  runGovernanceCheck(fungiFile);
 
   for (const [scenarioName, { flow, args, expectTrap, iterations = 100, altFile }] of Object.entries(scenarios)) {
-    const targetFile = altFile ?? sporeFile;
+    const targetFile = altFile ?? fungiFile;
     const start = Date.now();
     let successes = 0;
 
@@ -102,7 +102,7 @@ async function runDiagnostic(benchId, sporeFile, scenarios) {
 
     const elapsed = Date.now() - start;
 
-    // Governance compliance: for all diagnostic benchmarks, the .spore file must pass
+    // Governance compliance: for all diagnostic benchmarks, the .fungi file must pass
     // governance check cleanly — this confirms trap declarations are structurally sound.
     // For "toxic" scenarios, compliance = traps ARE declared (static coverage).
     // For "baseline" scenarios, compliance = file compiles clean.
@@ -139,7 +139,7 @@ async function runDiagnostic(benchId, sporeFile, scenarios) {
 const DIAGNOSTICS = [
   {
     id: "toxic-input",
-    sporeFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/toxic-input/benchmark.spore",
+    fungiFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/toxic-input/benchmark.fungi",
     scenarios: {
       // All scenarios check the same file; traps-in-src confirms all toxic traps are declared
       "toxic variants (gov check)": { expectTrap: true,  iterations: 50 },
@@ -148,7 +148,7 @@ const DIAGNOSTICS = [
   },
   {
     id: "governance-violation",
-    sporeFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-violation/benchmark.spore",
+    fungiFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/governance-violation/benchmark.fungi",
     scenarios: {
       "role-denied (gov check)":    { expectTrap: true,  iterations: 50 },
       "authorised (gov check)":     { expectTrap: false, iterations: 50 },
@@ -156,14 +156,14 @@ const DIAGNOSTICS = [
   },
   {
     id: "resource-exhaustion",
-    sporeFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/resource-exhaustion/benchmark.spore",
+    fungiFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/resource-exhaustion/benchmark.fungi",
     scenarios: {
       "ceiling/over-budget (gov)":  { expectTrap: true,  iterations: 50 },
     },
   },
   {
     id: "logging-throughput",
-    sporeFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/logging-throughput/benchmark.spore",
+    fungiFile: "packages-galerina/galerina-devtools-benchmarks/benchmarks/logging-throughput/benchmark.fungi",
     scenarios: {
       // Both scenarios check the same file — it contains both pure and secure flows.
       // msPerOp difference (if any) reflects compiler analysis depth for pure vs secure.
@@ -185,7 +185,7 @@ async function main() {
 
   const allResults = [];
   for (const d of toRun) {
-    const result = await runDiagnostic(d.id, d.sporeFile, d.scenarios);
+    const result = await runDiagnostic(d.id, d.fungiFile, d.scenarios);
     allResults.push(result);
   }
 

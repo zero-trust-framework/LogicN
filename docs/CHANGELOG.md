@@ -182,19 +182,19 @@ All notable changes to this app should be documented here.
   `galerina-ai-neural`, including ONNX model profile validation, explicit
   fallback reporting, on-device/no-network checks and tensor shape validation.
 - Added bounded Omni logic rules in `galerina-core-logic` and the 20th core
-  `.spore` example, `logic-review-scale.spore`.
+  `.fungi` example, `logic-review-scale.fungi`.
 - Added `packages-galerina/galerina-core/docs/syntax-logic-status.md` with a
   compact Galerina syntax and logic status table.
 - Expanded the syntax and logic status table with detailed entries for loops,
   flow modifiers, vector flows, class/object-model decisions, I/O, memory,
   package, target and tooling syntax status.
-- Updated the core `result.spore` example to include explicit
+- Updated the core `result.fungi` example to include explicit
   `match result { Ok(...) ... Err(...) ... }` handling.
 - Added security-risk grading to the Galerina syntax and logic status table,
   including stable text grades and colour-rendering guidance.
 - Moved `Not core for v1` syntax items into a dedicated bottom table in the
   Galerina syntax and logic status document.
-- Added `contracts.spore` to the core examples folder and documented how Galerina
+- Added `contracts.fungi` to the core examples folder and documented how Galerina
   contracts are represented through typed shapes, flow signatures, `Result`
   errors, effects and strict comments.
 - Added an explicit untrusted-syntax governance rule: syntax starts untrusted
@@ -468,7 +468,7 @@ All notable changes to this app should be documented here.
   run instructions for project graph generation.
 - Added AI-facing instructions to consult and regenerate `build\graph` project
   graph outputs when graph data is missing or stale.
-- Added `Galerina task` CLI integration for loading `tasks.spore`, listing tasks,
+- Added `Galerina task` CLI integration for loading `tasks.fungi`, listing tasks,
   resolving dependency order and running dry-run task plans.
 - Added `galerina-core-tasks` task file parsing, dependency resolution, cycle detection
   and tests.

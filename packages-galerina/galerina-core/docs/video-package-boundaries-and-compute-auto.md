@@ -2,17 +2,17 @@
 
 Galerina, short for **Galerina**, is a strict, memory-safe, security-first programming language and compiler/toolchain.
 
-Galerina source files use the `.spore` extension.
+Galerina source files use the `.fungi` extension.
 
 Example files:
 
 ```text
-boot.spore
-main.spore
-video-provider-example.spore
-video-policy.spore
-video-worker-example.spore
-browser-video-example.spore
+boot.fungi
+main.fungi
+video-provider-example.fungi
+video-policy.fungi
+video-worker-example.fungi
+browser-video-example.fungi
 ```
 
 ---
@@ -1686,7 +1686,7 @@ Example:
   "videoPackageReport": {
     "package": "VideoClassifierPackage",
     "flow": "classifyVideo",
-    "source": "src/video/classify.spore:4",
+    "source": "src/video/classify.fungi:4",
     "input": {
       "type": "FileRef",
       "declaredMaxDuration": "30m",
@@ -1713,7 +1713,7 @@ Example:
 {
   "videoPrivacyReport": {
     "flow": "processVideoFile",
-    "source": "src/video/jobs.spore:12",
+    "source": "src/video/jobs.fungi:12",
     "rawVideoStored": false,
     "metadataStripped": true,
     "faceDetection": false,
@@ -1753,7 +1753,7 @@ Example:
 {
   "videoTargetReport": {
     "flow": "summariseVideo",
-    "source": "src/video/summary.spore:4",
+    "source": "src/video/summary.fungi:4",
     "stages": [
       {
         "stage": "video_decode",
@@ -1829,7 +1829,7 @@ Keep camera access, screen capture, file loading, validation and permission chec
     {
       "package": "VideoClassifierPackage",
       "flow": "classifyVideo",
-      "source": "src/video/classify.spore:4",
+      "source": "src/video/classify.fungi:4",
       "input": "FileRef",
       "output": "ClassificationLabel",
       "effects": ["file.read", "compute.run"],
@@ -1838,7 +1838,7 @@ Keep camera access, screen capture, file loading, validation and permission chec
     {
       "package": "VideoEmbeddingPackage",
       "flow": "createVideoEmbedding",
-      "source": "src/video/embed.spore:4",
+      "source": "src/video/embed.fungi:4",
       "input": "FileRef",
       "output": "VideoEmbedding",
       "effects": ["file.read", "compute.run"],
@@ -1847,7 +1847,7 @@ Keep camera access, screen capture, file loading, validation and permission chec
     {
       "package": "VideoTranscriptionPackage",
       "flow": "transcribeVideo",
-      "source": "src/video/transcribe.spore:4",
+      "source": "src/video/transcribe.fungi:4",
       "input": "FileRef",
       "output": "Transcript",
       "effects": ["file.read", "compute.run"],

@@ -46,7 +46,7 @@ policy is missing** — delete one ~250-byte JSON → `BASELINE_CREATED` (a PASS
 | **Devtools** | yes | **yes** — engine `reporter.ts:52-86`+`cli.ts:74` DO exit-1 (wired in ONE place) | **yes** · **NO** — not in CI; **scanner blind spot:** `.mjs`-shipping `devtools-benchmarks` scans Files:0 = vacuous PASS | **high** |
 | **Web stubs** `galerina-web-*` | yes (all-zero) | **partial** — only the drift tripwire | **partial** `[]` = strongest posture · **NO** | **low** |
 | **DB stubs** `galerina-db-*` | yes (all-zero) | **partial** — latent until a driver lands | **yes** canonical typosquatted-driver entry point · **NO** | **medium** |
-| **Auth/governance/misc** | yes | **yes** — auth/kernel sealed; **`example-app` graph BLIND** (scanned `.spore` src/, reports Files:0, missed `host/server.ts`) | **yes** — example-app `host/server.ts` deep-imports siblings via `../../…/dist/` = the 60-3 path-reach an enforced graph catches · **NO** · false-clean graph `galerina new app` COPIES | **high** |
+| **Auth/governance/misc** | yes | **yes** — auth/kernel sealed; **`example-app` graph BLIND** (scanned `.fungi` src/, reports Files:0, missed `host/server.ts`) | **yes** — example-app `host/server.ts` deep-imports siblings via `../../…/dist/` = the 60-3 path-reach an enforced graph catches · **NO** · false-clean graph `galerina new app` COPIES | **high** |
 
 ## Cross-cutting actions (ordered)
 

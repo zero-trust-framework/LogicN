@@ -30,13 +30,13 @@ Already enforced by the compiler at every build:
 
 | Feature | Enforcement |
 |---|---|
-| No hidden nulls | `Option<T>` required; SPORE-TYPE-008 on null/undefined |
+| No hidden nulls | `Option<T>` required; FUNGI-TYPE-008 on null/undefined |
 | No silent failures | `Result<T,E>` required; no throw/catch |
 | Explicit mutability | `let` = immutable, `mut` = explicit, `readonly` = read-only view |
 | Explicit effects | `contract.effects {}` or `with effects [...]` required |
-| Explicit unsafe | `unsafe let raw` marks boundary origin; SPORE-VALUESTATE-003 if misused |
+| Explicit unsafe | `unsafe let raw` marks boundary origin; FUNGI-VALUESTATE-003 if misused |
 | Protected/redacted | Governance qualifiers enforced by type system |
-| No top-level state | `let`/`mut` outside flows = SPORE-SYNTAX-006/007 |
+| No top-level state | `let`/`mut` outside flows = FUNGI-SYNTAX-006/007 |
 
 These are non-negotiable. The language is honest by construction.
 
@@ -56,7 +56,7 @@ contract {
 
 Enforcement chain:
 ```
-undeclared effect used     → SPORE-EFFECT-001 (compiler error)
+undeclared effect used     → FUNGI-EFFECT-001 (compiler error)
 effect without capability  → capabilityHost.check() → denied (runtime)
 capability not in policy   → RootCapabilityProvider → denied (runtime)
 ```
@@ -65,7 +65,7 @@ The `capabilityHost.ts` ensures no side-effect bypasses governance:
 - `AuditLog.write` → `host.audit.write` (checked)
 - `http.get()` → `host.network.outbound` (checked)
 - `fs.read()` → `host.filesystem.read` (checked)
-- No `globalThis`, `process`, `eval` → SPORE-BACKEND-001 / SPORE-SOURCE-ESCAPE-001
+- No `globalThis`, `process`, `eval` → FUNGI-BACKEND-001 / FUNGI-SOURCE-ESCAPE-001
 
 ---
 
@@ -85,12 +85,12 @@ AuditLog.write({ email: redact(email) })
 ```
 
 Compiler enforcements:
-- `unsafe` at governed sink → SPORE-VALUESTATE-003
-- Two-hop taint (`rawEmail.trim()` at sink) → SPORE-VALUESTATE-005
-- `protected Email` in response without `response.denies` → SPORE-GOV-003
-- `SecureString` in log → SPORE-SECRET-001
-- `SecureString` compared with `==` → SPORE-SECRET-002
-- Sensitive binding name without SecureString → SPORE-STYLE-SEC-001
+- `unsafe` at governed sink → FUNGI-VALUESTATE-003
+- Two-hop taint (`rawEmail.trim()` at sink) → FUNGI-VALUESTATE-005
+- `protected Email` in response without `response.denies` → FUNGI-GOV-003
+- `SecureString` in log → FUNGI-SECRET-001
+- `SecureString` compared with `==` → FUNGI-SECRET-002
+- Sensitive binding name without SecureString → FUNGI-STYLE-SEC-001
 
 ---
 
@@ -110,8 +110,8 @@ deny unknown outbound hosts  → network.outbound requires explicit host policy
 Implementation:
 - `contract.rules { deny network.outbound unless approved.host }` — future Phase 17
 - `contract.privacy { deny protected values to network }` — implemented
-- `SPORE-NETWORK-001 SecretInUrl` — future diagnostic
-- `SPORE-NETWORK-002 PlaintextHttp` — future diagnostic
+- `FUNGI-NETWORK-001 SecretInUrl` — future diagnostic
+- `FUNGI-NETWORK-002 PlaintextHttp` — future diagnostic
 
 ---
 
@@ -133,7 +133,7 @@ safe degraded mode                  → fallback {} block (Phase 18)
 Runtime authority is granted narrowly via `RootCapabilityProvider`:
 - Compiler authority ≠ user program authority (isolated domains)
 - Generated JS uses `capabilityHost` not `globalThis`/`process`/`require`
-- `SPORE-BUILD-001` fires if build is non-deterministic
+- `FUNGI-BUILD-001` fires if build is non-deterministic
 
 ---
 
@@ -155,7 +155,7 @@ No package silently widens authority:
 - Packages declare `exports`, `effects`, `capabilities`
 - Package that adds effects requires explicit flow declaration
 - Future: `trusted`, `signatures`, `checksums` fields
-- Future: `SPORE-PACKAGE-001 CapabilityExpansion` — package widens authority without declaration
+- Future: `FUNGI-PACKAGE-001 CapabilityExpansion` — package widens authority without declaration
 
 ---
 
@@ -164,15 +164,15 @@ No package silently widens authority:
 `galerina build --production` fails on:
 
 ```text
-undeclared effects in any secure flow      → SPORE-EFFECT-001
-missing effects from SPORE-EFFECT-002 callee → SPORE-EFFECT-002
-plaintext networking without TLS           → future SPORE-NETWORK-002
-secret/SecureString in logs                → SPORE-SECRET-001
-unsafe debug mode patterns                 → SPORE-SOURCE-ESCAPE-001
-protected data in response without policy  → SPORE-GOV-003
-missing audit on governed flows            → SPORE-GOV-002
-untrusted package capability expansion     → future SPORE-PACKAGE-001
-non-deterministic build                    → SPORE-BUILD-001
+undeclared effects in any secure flow      → FUNGI-EFFECT-001
+missing effects from FUNGI-EFFECT-002 callee → FUNGI-EFFECT-002
+plaintext networking without TLS           → future FUNGI-NETWORK-002
+secret/SecureString in logs                → FUNGI-SECRET-001
+unsafe debug mode patterns                 → FUNGI-SOURCE-ESCAPE-001
+protected data in response without policy  → FUNGI-GOV-003
+missing audit on governed flows            → FUNGI-GOV-002
+untrusted package capability expansion     → future FUNGI-PACKAGE-001
+non-deterministic build                    → FUNGI-BUILD-001
 ```
 
 `service.manifest.json` emitted per service — DevOps can audit authority before deployment.
@@ -186,10 +186,10 @@ non-deterministic build                    → SPORE-BUILD-001
 | External input | Boundary data is unsafe until validated | `unsafe let` + validation gate |
 | Package authority | Packages can widen attack surface | `package.galerina.yaml` explicit |
 | Network | Untrusted external world | TLS required, hosts declared |
-| Effects | Side-effects must be declared | SPORE-EFFECT-001 |
+| Effects | Side-effects must be declared | FUNGI-EFFECT-001 |
 | Capabilities | Runtime authority must be bounded | capabilityHost.check() |
 | Memory | Protected values have ownership | governedMemory.ts |
-| Generated code | JS output must not use ambient authority | SPORE-BACKEND-001 |
+| Generated code | JS output must not use ambient authority | FUNGI-BACKEND-001 |
 
 ---
 
@@ -198,8 +198,8 @@ non-deterministic build                    → SPORE-BUILD-001
 | Layer | Status |
 |---|---|
 | Language security | ✅ Implemented (Phase 1-15) |
-| Effect/capability security | ✅ Implemented (SPORE-EFFECT-001..004, capabilityHost) |
-| Boundary/data security | ✅ Implemented (SPORE-VALUESTATE-*, SPORE-SECRET-*, SPORE-GOV-003) |
+| Effect/capability security | ✅ Implemented (FUNGI-EFFECT-001..004, capabilityHost) |
+| Boundary/data security | ✅ Implemented (FUNGI-VALUESTATE-*, FUNGI-SECRET-*, FUNGI-GOV-003) |
 | Network security | ⚠️ Partial (privacy contract enforced; TLS/host policy Phase 17) |
 | Runtime security | ⚠️ Partial (contractEnforcer, capabilityHost; full enforcement Phase 16) |
 | Package security | ⚠️ Phase 17A (manifests added; authority verification Phase 17B) |

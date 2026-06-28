@@ -1,7 +1,7 @@
 /**
- * Self-hosted runtime dispatcher (runtime.spore) — execution tests.
+ * Self-hosted runtime dispatcher (runtime.fungi) — execution tests.
  *
- * Exercises the Stage B tier-selection logic by executing the .spore flows
+ * Exercises the Stage B tier-selection logic by executing the .fungi flows
  * through the production interpreter and asserting their outputs. Guards the
  * cache-eligibility regression where `if c { let cacheStr = ... }` shadowed the
  * outer binding instead of reassigning it (must be `mut` + assignment).
@@ -15,9 +15,9 @@ import { dirname, join } from "node:path";
 import { parseProgram, executeFlow } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const RUNTIME_SPORE = join(__dir, "..", "src", "self-hosted", "runtime.spore");
+const RUNTIME_FUNGI = join(__dir, "..", "src", "self-hosted", "runtime.fungi");
 
-const program = parseProgram(readFileSync(RUNTIME_SPORE, "utf8"), "runtime.spore");
+const program = parseProgram(readFileSync(RUNTIME_FUNGI, "utf8"), "runtime.fungi");
 
 function argsOf(obj) {
   const m = new Map();
@@ -40,14 +40,14 @@ async function call(flowName, obj) {
 const plan = async (obj) => (await call("buildExecutionPlan", obj)).items.map((i) => i.value);
 const field = (rec, name) => rec.fields.get(name).value;
 
-describe("runtime.spore — parses clean", () => {
+describe("runtime.fungi — parses clean", () => {
   it("has zero parse errors", () => {
     const errors = program.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, errors.map((e) => e.message).join(", "));
   });
 });
 
-describe("runtime.spore — selectTier", () => {
+describe("runtime.fungi — selectTier", () => {
   it("pure integer flow → bytecode tier", async () => {
     const d = await call("selectTier", { qualifier: "pure", effectCount: 0, isIntegerOnly: true });
     assert.equal(field(d, "tier"), "bytecode");
@@ -71,7 +71,7 @@ describe("runtime.spore — selectTier", () => {
   });
 });
 
-describe("runtime.spore — isCacheEligible", () => {
+describe("runtime.fungi — isCacheEligible", () => {
   it("pure + no effects → eligible", async () => {
     assert.equal((await call("isCacheEligible", { qualifier: "pure", effectCount: 0 })).value, true);
   });
@@ -85,7 +85,7 @@ describe("runtime.spore — isCacheEligible", () => {
   });
 });
 
-describe("runtime.spore — buildExecutionPlan (cache regression guard)", () => {
+describe("runtime.fungi — buildExecutionPlan (cache regression guard)", () => {
   it("cache-eligible pure integer flow reports cache:true", async () => {
     const [tier, cache] = await plan({ flowName: "f", qualifier: "pure", effectCount: 0, isIntegerOnly: true });
     assert.equal(tier, "bytecode");
@@ -127,7 +127,7 @@ async function runGIR(stmts, env = []) {
   return { ty: v.fields.get("ty").value, i: v.fields.get("i").value, b: v.fields.get("b").value };
 }
 
-describe("runtime.spore — GIR evaluator (S7)", () => {
+describe("runtime.fungi — GIR evaluator (S7)", () => {
   it("evaluates a const return", async () => {
     assert.equal((await runGIR([gStmt({ op: "ret", expr: [constI(42)] })])).i, 42);
   });
@@ -214,7 +214,7 @@ async function runProgram(table, entryName, args) {
   return { ty: v.fields.get("ty").value, i: v.fields.get("i").value, b: v.fields.get("b").value };
 }
 
-describe("runtime.spore — runProgram (cross-flow call)", () => {
+describe("runtime.fungi — runProgram (cross-flow call)", () => {
   it("single-arg flow: double(x) = return x + x; double(21) → 42", async () => {
     const double = flowEntry("double", ["x"], [
       gStmt({ op: "ret", expr: [gExpr("binop", "Int", "add", [gExpr("load", "", "x"), gExpr("load", "", "x")])] }),

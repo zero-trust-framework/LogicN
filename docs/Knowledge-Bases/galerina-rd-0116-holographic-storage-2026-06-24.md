@@ -1,7 +1,7 @@
 # R&D 0116 — Holographic "O(1)-read petabyte" storage: worth more R&D? + the sound-erasure finding
 
-**Date:** 2026-06-24 · **Workflow:** `w0qh5u5jl` (8 agents, adversarial-verified) · **Status:** R&D record + one net-new normative invariant (`SPORE-RETAIN-001`, build gated on a storage-substrate path)
-**Posture:** grounded, cited, fail-closed, crypto-on-core (SPORE-SUBSTRATE-001). Builds on `RD-0110`, `RD-0111-C12`, `RD-0114-G2`.
+**Date:** 2026-06-24 · **Workflow:** `w0qh5u5jl` (8 agents, adversarial-verified) · **Status:** R&D record + one net-new normative invariant (`FUNGI-RETAIN-001`, build gated on a storage-substrate path)
+**Posture:** grounded, cited, fail-closed, crypto-on-core (FUNGI-SUBSTRATE-001). Builds on `RD-0110`, `RD-0111-C12`, `RD-0114-G2`.
 **Companion docs:** [`galerina-rd-0111-photonic-3d-brief-rigorous-2026-06-24.md`](galerina-rd-0111-photonic-3d-brief-rigorous-2026-06-24.md) · [`galerina-rd-0114-tmf-vs-db-comparison-2026-06-24.md`](galerina-rd-0114-tmf-vs-db-comparison-2026-06-24.md) · [`galerina-rd-reference-index.md`](galerina-rd-reference-index.md)
 
 > Owner ask: "is it worth doing any more R&D into this — 'holographic O(1)-read petabyte storage — research-stage (~9.6 GB/cm³ demonstrated, not PB; random page access isn't O(1))'?"
@@ -10,13 +10,13 @@
 
 ## 1) DIRECT ANSWER  `[RD-0116-O1]`
 
-**REFUTE-AND-PARK the storage claim (no further SOTA R&D) + BUILD exactly one small net-new governance artifact (`SPORE-RETAIN-001`, §4).**
+**REFUTE-AND-PARK the storage claim (no further SOTA R&D) + BUILD exactly one small net-new governance artifact (`FUNGI-RETAIN-001`, §4).**
 
 The "O(1)-read petabyte" claim is settled-false and already encoded as a guardrail (`RD-0114-G2`), so re-litigating the physics has zero marginal value — but the adversarial pass surfaced **one genuine net-new wrinkle**: you cannot crypto-shred a write-once/fixed hologram by overwriting it, which silently breaks Galerina's overwrite-based erasure invariant. Closing that is a tiny, crypto-reusing obligation worth writing down.
 
 - **REFUTE-AND-PARK** — "holographic O(1)-read petabyte storage." Already nailed by `RD-0111-C12` + `RD-0114-G2`. No new refutation R&D warranted; the physics hasn't moved (still ~1% of the 1/λ³ limit, TB-not-PB, Bragg-search-not-O(1)). The newest result (Tan group, *Optica* 2026, DOI 10.1364/OPTICA.586593) raises *per-page bits* but **publishes no GB/cm³ or capacity number** — moves no Galerina conclusion.
 - **TRACK** (one ledger line, annual OFC/Optica skim) — revisit only on a *single-medium PB* demo or *true O(1) addressing*; neither on the horizon.
-- **BUILD** — `SPORE-RETAIN-001` sound-erasure obligation (§4).
+- **BUILD** — `FUNGI-RETAIN-001` sound-erasure obligation (§4).
 
 ## 2) The honest SOTA picture  `[RD-0116-O2]`
 
@@ -36,11 +36,11 @@ Two independent, separately-falsifiable claims; both false as stated, each with 
 - **"O(1) read" — FALSE as random access.** Read latency is O(1) in *page size* (a whole page reconstructs in one exposure), but addressing an arbitrary page is a **Bragg-condition search over the multiplex dimension** (angle/wavelength/phase tune + SLM/CCD settle). → **Survivor:** *high parallel read BANDWIDTH*, not O(1) random access. (= the latency-vs-cost distinction of `RD-0110-O1`.)
 - **"petabyte" — FALSE as single-medium demonstrated.** Demonstrated single-medium is MB-to-low-GB; PB is a rack extrapolation against a ~40 GB/cm³ ceiling that is itself ~2 OoM below theory. Density and clean-fast-readout trade off directly. → **Survivor:** *high volumetric DENSITY (~10 GB/cm³ demonstrated, research-stage)*, not petabyte single-medium.
 
-**Integrity-anchor question (the one that matters for Galerina):** *no* exotic medium (holographic, Silica, Cerabyte, DNA, tape) replaces a digital content-id/signature as the integrity anchor — structurally. Every one separates **durability/ECC** (corrects random decay; unkeyed, no authenticity) from **authenticity** (always a separate digital checksum/signature over the digitized readback). None offers information-theoretic integrity at rest. The avalanche argument of SPORE-SUBSTRATE-001 applies unchanged: the anchor must be computed on bit-exact digital silicon *after* readback. **Govern, Don't Absorb** holds — any medium is a storage *backend* for .tmf blobs; the content-id stays SHA-256/SHAKE256.
+**Integrity-anchor question (the one that matters for Galerina):** *no* exotic medium (holographic, Silica, Cerabyte, DNA, tape) replaces a digital content-id/signature as the integrity anchor — structurally. Every one separates **durability/ECC** (corrects random decay; unkeyed, no authenticity) from **authenticity** (always a separate digital checksum/signature over the digitized readback). None offers information-theoretic integrity at rest. The avalanche argument of FUNGI-SUBSTRATE-001 applies unchanged: the anchor must be computed on bit-exact digital silicon *after* readback. **Govern, Don't Absorb** holds — any medium is a storage *backend* for .tmf blobs; the content-id stays SHA-256/SHAKE256.
 
-## 4) The net-new finding + the build  `[RD-0116-O4]` → `SPORE-RETAIN-001`
+## 4) The net-new finding + the build  `[RD-0116-O4]` → `FUNGI-RETAIN-001`
 
-**Admission is ~fully covered, one descriptor widening.** A holographic store is just another HW-gated substrate; `admitPhotonicConfig` (`galerina-tower-citizen/src/photonic-admission.ts`) already admits it fail-closed (hash-pin + Ed25519 + revocation + deny-by-default capability → K3). The only structural gap: the capability is hard-bound to `PHOTONIC_REPROGRAM_CAP = "photonic.reprogram"` (compute). Mounting a storage volume ≠ reprogramming a PPU (least-authority) → the rail needs a **capability-axis split** (`photonic.reprogram` | `storage.mount`/`holo.volume.admit`). Descriptor widening, hours — not a new primitive. Bulk-page readout as a declassification surface reuses the existing taint lattice (SPORE-PRIVACY-002 SealTaint) as a new tainted source — a wiring obligation.
+**Admission is ~fully covered, one descriptor widening.** A holographic store is just another HW-gated substrate; `admitPhotonicConfig` (`galerina-tower-citizen/src/photonic-admission.ts`) already admits it fail-closed (hash-pin + Ed25519 + revocation + deny-by-default capability → K3). The only structural gap: the capability is hard-bound to `PHOTONIC_REPROGRAM_CAP = "photonic.reprogram"` (compute). Mounting a storage volume ≠ reprogramming a PPU (least-authority) → the rail needs a **capability-axis split** (`photonic.reprogram` | `storage.mount`/`holo.volume.admit`). Descriptor widening, hours — not a new primitive. Bulk-page readout as a declassification surface reuses the existing taint lattice (FUNGI-PRIVACY-002 SealTaint) as a new tainted source — a wiring obligation.
 
 **Threat-model change — the genuine net-new wrinkle (crypto-shred / data-remanence).** Galerina's secret-erasure today is **overwrite-based** (zero the arena page / derived-secret buffer; B2/B2b in `wat-emitter.ts`). That assumption is **silently false** on volumetric/WORM media:
 - **Thermally-fixed Fe:LiNbO₃ holograms cannot be erased optically** — the only erase path is re-heating to >170 °C for ~30 min (USPTO 5,648,856; IOP *J. Phys.: Condens. Matter* 3(28), 1991; *Opt. Lett.* 20(11):1334, 1995). There is **no in-place `memset` analog**.
@@ -51,11 +51,11 @@ NIST SP 800-88 Rev. 1 already names **cryptographic erase = the "Purge" techniqu
 
 > **If a secret (or its ciphertext) is ever allowed to land on a write-once/fixed medium, Galerina's overwrite-based erasure invariant is silently violated and the secret is unrecoverable-by-deletion. The ONLY sound erasure is destroying the key — so the secret must have been KEM-DEM-sealed before it touched the substrate, and the key must live on a substrate that CAN be overwritten (digital silicon). Crypto-shred replaces media-shred.**
 
-### `SPORE-RETAIN-001` (proposed) — "Sound-erasure obligation for non-overwritable substrates"
+### `FUNGI-RETAIN-001` (proposed) — "Sound-erasure obligation for non-overwritable substrates"
 
 A normative invariant (KB + Guardrail `RD-0114-G3`):
 1. Any substrate admitted via the storage capability whose media is write-once/fixed is flagged `eraseModel: "crypto-only"` (vs `"overwrite"`).
-2. On a `crypto-only` substrate, **only KEM-DEM ciphertext may be written** — a cleartext-secret-tainted value reaching it is a **fail-closed** compile/admission error (extends SPORE-SECRET-002 / SPORE-PRIVACY-002 taint to a new sink class).
+2. On a `crypto-only` substrate, **only KEM-DEM ciphertext may be written** — a cleartext-secret-tainted value reaching it is a **fail-closed** compile/admission error (extends FUNGI-SECRET-002 / FUNGI-PRIVACY-002 taint to a new sink class).
 3. The DEK lives on overwritable digital silicon; "deletion" = key destruction (NIST SP 800-88 Purge), never media overwrite.
 4. Erasure emits a **crypto-erase WITNESS** (key-destruction attestation), since no read-back-verify of the medium is possible.
 
@@ -70,6 +70,6 @@ A normative invariant (KB + Guardrail `RD-0114-G3`):
 
 ## 6) Paper / defensive-pub note
 
-No paper on the storage claim (settled-negative, already covered). The `SPORE-RETAIN-001` finding is **defensive-pub-worthy** as a small governance note: *"overwrite-based secret-erasure is unsound on write-once/fixed substrates; the sound discipline is seal-before-write + crypto-erase (key destruction) with a destruction witness."* Reuses KEM-DEM + key custody; no new crypto → 0 patents, consistent with the standing strategy.
+No paper on the storage claim (settled-negative, already covered). The `FUNGI-RETAIN-001` finding is **defensive-pub-worthy** as a small governance note: *"overwrite-based secret-erasure is unsound on write-once/fixed substrates; the sound discipline is seal-before-write + crypto-erase (key destruction) with a destruction witness."* Reuses KEM-DEM + key custody; no new crypto → 0 patents, consistent with the standing strategy.
 
 **Key files:** `galerina-tower-citizen/src/photonic-admission.ts` (the rail to widen) · `galerina-ext-tmf/src/kemdem.ts` (the seal) · `wat-emitter.ts` B2/B2b (the overwrite-erase that's unsound on WORM) · `docs/Knowledge-Bases/galerina-rd-0114-...md` (Guardrail B, where `RD-0114-G3` lands).

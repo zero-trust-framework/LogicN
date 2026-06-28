@@ -53,7 +53,7 @@ constraints proves them over **unbounded** expression trees, retiring the "depth
 
 The **S-matrix / unitary `S†S = I` photonic-physics part does not map onto Galerina today.** That math verifies
 *real optical hardware* — energy conservation and phase coherence across scattering channels. Galerina's photonics
-is **digital simulation** (~3%, no real optics), and crypto-on-core (`SPORE-SUBSTRATE-001`) deliberately keeps the
+is **digital simulation** (~3%, no real optics), and crypto-on-core (`FUNGI-SUBSTRATE-001`) deliberately keeps the
 math on a deterministic digital core. The honest Galerina analog of "is the substrate physically consistent" is the
 **substrate *noise* model** (NMR / tolerance, see [galerina-substrate-failure-model.md](galerina-substrate-failure-model.md)),
 **not** unitary scattering matrices. Hardware-gated — track for bring-up, do not build now.

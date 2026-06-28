@@ -3,7 +3,7 @@
 // indicates that relevant files were edited this turn.
 //
 // Execution order (matches the dependency chain):
-//   1. @galerina/devtools-project-graph — upstream library (C:\laragon\www\SPORE-Graph, when created)
+//   1. @galerina/devtools-project-graph — upstream library (C:\laragon\www\FUNGI-Graph, when created)
 //   2. galerina-core-*, galerina-devtools-graph-algorithms  — packages that may depend on @galerina/devtools-project-graph
 //   3. galerina-devtools-graph-project  — downstream consumer of @galerina/devtools-project-graph
 //
@@ -17,7 +17,7 @@ const fs = require('fs');
 
 const ROOT        = path.join(__dirname, '..');
 const PACKAGES_DIR = path.join(ROOT, 'packages-galerina');
-const SPORE_GRAPH_DIR = path.join(ROOT, '..', 'SPORE-Graph');
+const FUNGI_GRAPH_DIR = path.join(ROOT, '..', 'FUNGI-Graph');
 const SENTINEL    = path.join(ROOT, '.claude', '.core-changed');
 const GRAPH_PKG   = 'galerina-devtools-graph-project';
 
@@ -57,8 +57,8 @@ const results = [];
 let allPassed = true;
 
 // 1. @galerina/devtools-project-graph — run first; core packages depend on it
-if (fs.existsSync(SPORE_GRAPH_DIR) && hasTestScript(SPORE_GRAPH_DIR)) {
-  const r = runTest(SPORE_GRAPH_DIR, '@galerina/devtools-project-graph');
+if (fs.existsSync(FUNGI_GRAPH_DIR) && hasTestScript(FUNGI_GRAPH_DIR)) {
+  const r = runTest(FUNGI_GRAPH_DIR, '@galerina/devtools-project-graph');
   results.push(r);
   if (!r.passed) allPassed = false;
 }

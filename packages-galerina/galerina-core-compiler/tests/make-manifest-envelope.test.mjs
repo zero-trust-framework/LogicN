@@ -45,7 +45,7 @@ describe("makeManifestEnvelope — pins the .lmanifest signing-envelope shape", 
   it("pins the load-bearing fields exactly (shape lock)", () => {
     const env = makeManifestEnvelope(BODY_HASH, GENERATED_AT);
     assert.equal(env.flowName, "lmanifest");
-    assert.equal(env.schemaVersion, "spore.proof.v1");
+    assert.equal(env.schemaVersion, "fungi.proof.v1");
     assert.equal(env.verified, true);             // obligation has matching evidence
     assert.equal(env.generatedAt, GENERATED_AT);  // threaded for fidelity (excluded from signed payload)
     // all-zero ExecutionSignature
@@ -77,7 +77,7 @@ describe("makeManifestEnvelope — pins the .lmanifest signing-envelope shape", 
   it("hybrid-signs and verifies through the shipped PQ path", async () => {
     const kp = await generateHybridGovernanceKeyPair("manifest-envelope-test");
     const signed = await signProofGraphHybrid(makeManifestEnvelope(BODY_HASH, GENERATED_AT), kp);
-    assert.equal(signed.governanceSignature?.algorithm, "spore.gov.sig.v2");
+    assert.equal(signed.governanceSignature?.algorithm, "fungi.gov.sig.v2");
     assert.ok((signed.governanceSignature?.signature ?? "").includes("|"), "both-half v2 signature");
     const ok = await verifyGovernanceSignatureHybrid(signed, kp.publicKey, kp.mlDsaPublicKey);
     assert.equal(ok, true, "envelope round-trips through hybrid sign+verify");

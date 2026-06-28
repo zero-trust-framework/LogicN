@@ -14,7 +14,7 @@
 
 ## Canonical patterns
 
-```spore
+```fungi
 // Healthcare: validate all PII to protected types, audit with redaction
 secure flow createPatient(readonly request: Request) -> CreatePatientResult
 contract {
@@ -35,7 +35,7 @@ contract {
 }
 ```
 
-```spore
+```fungi
 // Authority block: grant protected data to cross a trust boundary
 authority {
   grant pii.share to SpecialistService
@@ -47,20 +47,20 @@ authority {
 ## Do not use in this level
 
 - `result of X else Y` (proposal only — use `Result<T, E>`)
-- Sending `protected` data to an external service without an `authority` block — triggers `SPORE-GOV-003`
-- Omitting `pii.write` or `pii.read` when handling PHI or PII data — triggers `SPORE-EFFECT-001`
-- Logging `protected` values without `redact()` — triggers `SPORE-VALUESTATE-001`
+- Sending `protected` data to an external service without an `authority` block — triggers `FUNGI-GOV-003`
+- Omitting `pii.write` or `pii.read` when handling PHI or PII data — triggers `FUNGI-EFFECT-001`
+- Logging `protected` values without `redact()` — triggers `FUNGI-VALUESTATE-001`
 - Partial contracts — all 16 sections should be considered and included where relevant at this level
 
 ## Key diagnostics this level demonstrates
 
 | Code | Meaning |
 |------|---------|
-| `SPORE-GOV-003` | Protected data sent to external service without an `authority` block |
-| `SPORE-VALUESTATE-001` | Protected value written to audit/log sink without `redact()` |
-| `SPORE-VALUESTATE-003` | Unsafe binding flows into a governed database or network sink without validation |
-| `SPORE-EFFECT-001` | Required effect (`pii.write`, `audit.write`) missing from contract `effects` block |
-| `SPORE-TARGET-001` | Non-CPU compute target missing `fallback` (applies when compute targets are used) |
+| `FUNGI-GOV-003` | Protected data sent to external service without an `authority` block |
+| `FUNGI-VALUESTATE-001` | Protected value written to audit/log sink without `redact()` |
+| `FUNGI-VALUESTATE-003` | Unsafe binding flows into a governed database or network sink without validation |
+| `FUNGI-EFFECT-001` | Required effect (`pii.write`, `audit.write`) missing from contract `effects` block |
+| `FUNGI-TARGET-001` | Non-CPU compute target missing `fallback` (applies when compute targets are used) |
 
 ## Example IDs at this level
 

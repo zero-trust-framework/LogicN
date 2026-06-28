@@ -1,7 +1,7 @@
 /**
  * governance-enforcer.ts — TPL state-transition policy enforcement
  *
- * Enforces the `state_transition_policy` from governance.spore (TPL Standard v1.0 §3).
+ * Enforces the `state_transition_policy` from governance.fungi (TPL Standard v1.0 §3).
  *
  * The core rule: a transition from State 0 (EPISTEMIC HOLD) to State +1 (COMMIT)
  * is a RESTRICTED transition. The Tower refuses it unless a cryptographic audit

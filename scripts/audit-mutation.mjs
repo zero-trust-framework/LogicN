@@ -198,14 +198,14 @@ const CC_I32 = [
 
 // ── secret-egress: the value-state-checker SINK gate (unsafe/tainted/secret → exfiltration sink) ──
 // isNetworkSink (value-state-checker.ts) recognises the egress paths a tainted/secret value must not reach;
-// when it does, SPORE-VALUESTATE-003 fires (a compile-time deny). Make a sink go UNRECOGNISED and the unsafe
+// when it does, FUNGI-VALUESTATE-003 fires (a compile-time deny). Make a sink go UNRECOGNISED and the unsafe
 // value escapes with NO diagnostic — a fail-OPEN (the exact class the comment notes was a past VSC-003 hole).
 // domain-security.test.mjs asserts the diagnostic fires at each sink, so it kills these [test].
 const VSC_EGRESS_TEST = ["node", "--test", "tests/domain-security.test.mjs"];
 const VSC_EGRESS = [
   {
     // Corrupt the registry KEY so the SINK_REQUIREMENTS lookup misses → the sink is ungoverned →
-    // an unsafe value reaches it with no SPORE-VALUESTATE-003. (Registry is the single source of truth.)
+    // an unsafe value reaches it with no FUNGI-VALUESTATE-003. (Registry is the single source of truth.)
     id: "vsc-response-body-sink-unregistered",
     file: `${CC}/src/value-state-checker.ts`,
     find: '["response.body",',

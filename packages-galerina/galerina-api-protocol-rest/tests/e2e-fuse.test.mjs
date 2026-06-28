@@ -51,7 +51,7 @@ test("the built REST adapter fuses (zero-touch auto-signed) and invoke('main') r
   // main() runs the representative POST /orders request → 201 Created.
   assert.equal(component.invoke("main"), 201);
   // A verified manifest must NOT trip any unsigned path.
-  assert.ok(!lines.some((l) => l.includes("SPORE-FUSE-UNSIGNED")), "a verified manifest must not warn unsigned");
+  assert.ok(!lines.some((l) => l.includes("FUNGI-FUSE-UNSIGNED")), "a verified manifest must not warn unsigned");
 });
 
 // ── 2 — the full REST dispatch matrix routes correctly through the fused wasm ──
@@ -86,7 +86,7 @@ test("the fused adapter dispatches the full (method, path) REST matrix", async (
 
 // ── 3 — a tampered .wasm (hash ≠ signed descriptor) is rejected, fail-closed ──
 test("a tampered .wasm (sha256 mismatch vs signed descriptor) is rejected before fusion", async () => {
-  const root = mkdtempSync(join(tmpdir(), "spore-b3-"));
+  const root = mkdtempSync(join(tmpdir(), "fungi-b3-"));
   const pkg = join(root, PKG_NAME);
   mkdirSync(pkg, { recursive: true });
   cpSync(PKG_DIR, pkg, { recursive: true });
@@ -99,7 +99,7 @@ test("a tampered .wasm (sha256 mismatch vs signed descriptor) is rejected before
 
     await assert.rejects(
       () => fusePackage(pkg, { allowUnsigned: true, warn: () => {} }),
-      /SPORE-FUSE-HASH-MISMATCH/,
+      /FUNGI-FUSE-HASH-MISMATCH/,
       "tampered wasm must be refused with a hash-mismatch fusion error",
     );
   } finally {
@@ -113,7 +113,7 @@ test("a tampered .wasm (sha256 mismatch vs signed descriptor) is rejected before
 // loader treats that as unsigned — and assert the fail-closed floor still holds, plus
 // that allowUnsigned admits it only with an audible warning.
 test("an unsigned/placeholder manifest is refused unless allowUnsigned is set", async () => {
-  const root = mkdtempSync(join(tmpdir(), "spore-b3-unsigned-"));
+  const root = mkdtempSync(join(tmpdir(), "fungi-b3-unsigned-"));
   const pkg = join(root, PKG_NAME);
   mkdirSync(pkg, { recursive: true });
   cpSync(PKG_DIR, pkg, { recursive: true });
@@ -130,7 +130,7 @@ test("an unsigned/placeholder manifest is refused unless allowUnsigned is set", 
     // Fail-closed without allowUnsigned.
     await assert.rejects(
       () => fusePackage(pkg, { warn: () => {} }),
-      /SPORE-FUSE-UNSIGNED/,
+      /FUNGI-FUSE-UNSIGNED/,
       "unsigned manifest must be refused fail-closed when allowUnsigned is not set",
     );
 
@@ -139,7 +139,7 @@ test("an unsigned/placeholder manifest is refused unless allowUnsigned is set", 
     const component = await fusePackage(pkg, { allowUnsigned: true, warn });
     assert.equal(component.invoke("main"), 201);
     assert.ok(
-      lines.some((l) => l.includes("SPORE-FUSE-UNSIGNED-ALLOWED")),
+      lines.some((l) => l.includes("FUNGI-FUSE-UNSIGNED-ALLOWED")),
       "expected unsigned-allowed warning",
     );
   } finally {

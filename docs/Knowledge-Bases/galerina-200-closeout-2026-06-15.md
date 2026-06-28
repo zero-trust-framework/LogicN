@@ -11,10 +11,10 @@
 
 | Item | Result |
 |---|---|
-| `.td`→`.spore` migration audit | ✅ complete — **0 legacy `.td` files** (399 `.spore`) |
+| `.td`→`.fungi` migration audit | ✅ complete — **0 legacy `.td` files** (399 `.fungi`) |
 | Doc reconciliation | ✅ SOT count 47→48/4,346→4,360; ledger header+rollup; **#143/#145 un-staled (P9 done)**; **#199 corrected (Phase 0+1 shipped)** |
 | FFSM `SESSION-HANDOFF.md` | ✅ "⚠️ SUPERSEDED" banner — it told a cold session to "start at Phase 0", but Phase 0+1 shipped & tested (12 tests). Prevented a re-build of already-shipped work |
-| **#177 graph fix** | ✅ `createFileNode` + `extractGalerinaSymbols` (galerina-source nodes) + 3 new pkgs in workspace → `.spore` packages now index (api-protocol-rest 0→35, substrate-math 0→48, ext-bridge-quantum 3→170 refs; 1,312 `.spore` node-paths, was 0) |
+| **#177 graph fix** | ✅ `createFileNode` + `extractGalerinaSymbols` (galerina-source nodes) + 3 new pkgs in workspace → `.fungi` packages now index (api-protocol-rest 0→35, substrate-math 0→48, ext-bridge-quantum 3→170 refs; 1,312 `.fungi` node-paths, was 0) |
 | `SecretSinkMonitor` dead duplicate | ✅ deleted (user/side-session) → graph regenerated, dead node gone |
 | Full-repo deep audit | ✅ 14-cluster, 43 agents → **48 confirmed / 1 refuted**, adversarially verified |
 | External idea mining | ✅ 8 repos → 12 ranked governance ideas ([galerina-external-idea-mining-2026-06-15.md](galerina-external-idea-mining-2026-06-15.md)) |
@@ -33,7 +33,7 @@
 | H3 | manifest labelled `Ed25519+ML-DSA-65` but both fields are placeholders — generator signs nothing `manifest-generator.ts:604-612` | 🟠 OPEN — honesty fix |
 | H4 | working ML-DSA-65 hybrid signing wired NOWHERE; "blocked on FIPS 204" refuted by in-repo `@noble/post-quantum` `proof-graph.ts:583-771` | 🟠 OPEN |
 | H5 | Fusion **B2 ABI mismatch** — fused sync `invoke(i32)` never bridged to kernel async `HandlerResult` `fuse-loader.ts:92,454` | 🟠 OPEN — decision A/B/C/D |
-| H6 | #177 graph drops all `.spore` files | ✅ **FIXED this cycle** |
+| H6 | #177 graph drops all `.fungi` files | ✅ **FIXED this cycle** |
 | H7 | dead duplicate `SecretSinkMonitor` `core-security/src/sink-monitor.ts` | ✅ **FIXED (deleted)** |
 | H8 | `target-*` TS cluster wired nowhere; no real codegen backend despite "target backend" framing | 🟡 OPEN — scaffold relabel (#155-adjacent) |
 | H9 | layer-design doc marks fusion-B2 seam-wiring "DONE+verified" but no seam code exists `galerina-framework-layer-design.md:365` | 🟠 OPEN — doc honesty |
@@ -91,7 +91,7 @@ surface is mostly scaffolding (future roadmap), not regressions.
 | `test_lexer*.mjs` + `test_substrate*.mjs` (compiler root) | **5** scratch files | delete (redundant with `tests/`) |
 | `*.pdb` in benchmark dirs | **24** files (~32 MB debug symbols) | gitignore + delete (not needed to run `.exe`) |
 | orphan `build/*.wasm` (e.g. `galerina-governance-cost.wasm` 2026-06-03) | several | not used by the runner (compiles fresh) — safe to clear |
-| `core-security/src/dss/*.spore` (13 files) | uncompiled scaffold in shipped `src/` | move out of `src/` (gated on #38-41/#76) |
+| `core-security/src/dss/*.fungi` (13 files) | uncompiled scaffold in shipped `src/` | move out of `src/` (gated on #38-41/#76) |
 
 ---
 
@@ -129,5 +129,5 @@ surface is mostly scaffolding (future roadmap), not regressions.
 sink-monitor consolidation · full audit (48 findings) · external idea mining (12 ideas) · % completion ·
 roadmap. **Deferred to you (TCB/decisions):** H1, H2, H5, #149. **External-infra-gated:** DSS.wasm,
 ffsim Ph2, ML-DSA manifest wiring. Suite green (48/48·4,360·0). Benchmark: no runtime path changed →
-2026-06-15 15:45 `build/bench-report.md` stands (harness confirmed compiling the correct fresh `.spore`).
+2026-06-15 15:45 `build/bench-report.md` stands (harness confirmed compiling the correct fresh `.fungi`).
 **P10/#200 = the in-repo close-out is COMPLETE; the open items are the next roadmap, not this milestone.**

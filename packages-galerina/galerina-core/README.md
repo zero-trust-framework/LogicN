@@ -67,11 +67,11 @@ cd packages-galerina/galerina-core
 # Install dev dependencies
 npm install
 
-# Run a .spore file
-node compiler/galerina.js run examples/hello.spore
+# Run a .fungi file
+node compiler/galerina.js run examples/hello.fungi
 
 # Check a file for safety errors
-node compiler/galerina.js check examples/result.spore
+node compiler/galerina.js check examples/result.fungi
 
 # Run the full example test suite (42 tests)
 npm test
@@ -99,9 +99,9 @@ compiler.
 The prototype (`compiler/galerina.js`) can:
 
 - Parse and check the documented Galerina v1 subset
-- Run simple `.spore` files via Node.js
-- Emit scanner-level safety diagnostics (`SPORE-MEMORY-*`, `SPORE-SAFETY-*`,
-  `SPORE-BINDING-*`, `SPORE-RAWPTR-*`, etc.)
+- Run simple `.fungi` files via Node.js
+- Emit scanner-level safety diagnostics (`FUNGI-MEMORY-*`, `FUNGI-SAFETY-*`,
+  `FUNGI-BINDING-*`, `FUNGI-RAWPTR-*`, etc.)
 - Generate JSON schema and OpenAPI specs from type declarations
 - Emit placeholder build artefacts (`app.bin`, `app.wasm`) with honest
   prototype metadata
@@ -152,17 +152,17 @@ and hardware accelerator backends directly.
 
 ## Language Overview
 
-Galerina source files use the `.spore` extension. The language is strict by default:
+Galerina source files use the `.fungi` extension. The language is strict by default:
 no `null`, no silent coercion, no hidden exceptions, no unchecked mutation, no
 raw pointers in normal code.
 
 ### File extension
 
 ```text
-hello.spore
-order-service.spore
-payment-webhook.spore
-boot.spore          ← project entry point
+hello.fungi
+order-service.fungi
+payment-webhook.fungi
+boot.fungi          ← project entry point
 ```
 
 ### Quick taste
@@ -178,7 +178,7 @@ secure flow main() -> Result<Void, Error> {
 Run it:
 
 ```bash
-node compiler/galerina.js run examples/hello.spore
+node compiler/galerina.js run examples/hello.fungi
 ```
 
 ---
@@ -258,7 +258,7 @@ enforces that declared effects match actual behavior.
 // Pure flows cannot:
 //   - perform I/O of any kind
 //   - call effectful flows
-//   - use `mut` bindings (SPORE-BINDING-004)
+//   - use `mut` bindings (FUNGI-BINDING-004)
 //   - use `await`
 //
 // They are deterministic and composable. Use them for all computation that
@@ -278,7 +278,7 @@ pure flow calculateDiscount(total: Float, pct: Float) -> Float {
 guarded flow processOrder(input: CreateOrderRequest) -> Result<OrderId, OrderError>
 effects [database.write, network.outbound] {
 
-  // `let` binding — immutable. Cannot be reassigned (SPORE-BINDING-001).
+  // `let` binding — immutable. Cannot be reassigned (FUNGI-BINDING-001).
   let order: Order = Order {
     id:         generateId()
     customerId: input.customerId
@@ -322,7 +322,7 @@ the compiler enforces.
 // ── let — immutable binding ───────────────────────────────────────────────
 //
 // `let` declares a binding that cannot be reassigned.
-// Attempting to reassign it is SPORE-BINDING-001.
+// Attempting to reassign it is FUNGI-BINDING-001.
 //
 let maxRetries: Int    = 3
 let apiUrl:     String = "https://api.example.com"
@@ -331,7 +331,7 @@ let apiUrl:     String = "https://api.example.com"
 // ── mut — explicit mutable binding ───────────────────────────────────────
 //
 // `mut` makes reassignment intentional and visible at the declaration site.
-// `mut` is banned inside `pure flow` (SPORE-BINDING-004).
+// `mut` is banned inside `pure flow` (FUNGI-BINDING-004).
 // Use `mut` only when the value genuinely changes over time.
 //
 guarded flow retryRequest(url: String) -> Result<Response, ApiError>
@@ -348,14 +348,14 @@ effects [network.outbound] {
 //
 // `readonly` gives a read-only view of a value owned elsewhere.
 // The binding cannot be reassigned, and properties cannot be mutated
-// through it (SPORE-BINDING-003).
+// through it (FUNGI-BINDING-003).
 // Use `readonly` for configuration, shared context and borrow parameters.
 //
 flow processRequest(req: Request) -> Result<Response, ApiError> {
   readonly config: AppConfig = loadConfig()
 
-  // config.timeout = 10    ← REJECTED: SPORE-BINDING-003
-  // config = otherConfig   ← REJECTED: SPORE-BINDING-002
+  // config.timeout = 10    ← REJECTED: FUNGI-BINDING-003
+  // config = otherConfig   ← REJECTED: FUNGI-BINDING-002
 
   return handleWithConfig(req, config)
 }
@@ -367,7 +367,7 @@ flow processRequest(req: Request) -> Result<Response, ApiError> {
 
 Intent makes a flow's purpose machine-readable. The effect checker, audit
 system and AI tooling all consume intent declarations. A flow whose inferred
-behavior conflicts with its declared intent is rejected (`SPORE-INTENT-001`).
+behavior conflicts with its declared intent is rejected (`FUNGI-INTENT-001`).
 
 ```galerina
 // ── intent on a guarded flow ──────────────────────────────────────────────
@@ -552,7 +552,7 @@ flow inspectBuffer() -> Result<UInt8, String> {
 //
 // `move conn` transfers ownership into closeConnection.
 // The caller's `conn` is invalid after this call.
-// Using it afterward is SPORE-MEMORY-001 (USE_AFTER_MOVE).
+// Using it afterward is FUNGI-MEMORY-001 (USE_AFTER_MOVE).
 //
 secure flow closeConnection(move conn: Connection) -> Result<Void, ConnError> {
   return conn.close()
@@ -563,14 +563,14 @@ secure flow closeConnection(move conn: Connection) -> Result<Void, ConnError> {
 flow badExample() -> Result<Void, String> {
   let conn: Connection = Connection.open("db://...")
   closeConnection(move conn)
-  return conn.ping()    // ERROR: SPORE-MEMORY-001 — conn was moved
+  return conn.ping()    // ERROR: FUNGI-MEMORY-001 — conn was moved
 }
 
 
 // ── mut binding — explicit, visible mutation ──────────────────────────────
 //
 // `mut` makes reassignment visible. It cannot appear in `pure flow`.
-// Attempting it in a pure flow emits SPORE-BINDING-004.
+// Attempting it in a pure flow emits FUNGI-BINDING-004.
 //
 guarded flow buildList(items: Array<String>) -> Array<String>
 effects [none] {
@@ -595,8 +595,8 @@ Raw pointer access and other unsafe operations are allowed, but they must be
 //   reason   — a human-readable justification (required)
 //   fallback — a safe flow to call if the unsafe path fails (required)
 //
-// Missing `reason` emits SPORE-MEMORY-008 (UNSAFE_MEMORY_REQUIRES_FALLBACK).
-// Raw pointer access outside unsafe emits SPORE-RAWPTR-001.
+// Missing `reason` emits FUNGI-MEMORY-008 (UNSAFE_MEMORY_REQUIRES_FALLBACK).
+// Raw pointer access outside unsafe emits FUNGI-RAWPTR-001.
 //
 flow readRegister(addr: UInt32) -> Result<UInt32, HardwareError> {
   unsafe block readMMIO reason "MMIO register requires direct memory read" fallback safeDefault {
@@ -607,7 +607,7 @@ flow readRegister(addr: UInt32) -> Result<UInt32, HardwareError> {
 
 // REJECTED: unsafe block without reason
 flow badUnsafe() -> Result<UInt32, HardwareError> {
-  unsafe block readMMIO {           // ERROR: SPORE-MEMORY-008 — missing reason
+  unsafe block readMMIO {           // ERROR: FUNGI-MEMORY-008 — missing reason
     let value = *mmio_ptr(0x4000)
     return Ok(value)
   }
@@ -615,7 +615,7 @@ flow badUnsafe() -> Result<UInt32, HardwareError> {
 
 // REJECTED: raw pointer outside unsafe
 flow alsoRejected(ptr: Pointer<UInt32>) -> UInt32 {
-  return *ptr    // ERROR: SPORE-RAWPTR-001 — raw pointer outside unsafe block
+  return *ptr    // ERROR: FUNGI-RAWPTR-001 — raw pointer outside unsafe block
 }
 ```
 
@@ -679,7 +679,7 @@ task buildApi {
 Run:
 
 ```bash
-node ../../galerina-core-cli/dist/index.js task buildApi --file tasks.spore --dry-run
+node ../../galerina-core-cli/dist/index.js task buildApi --file tasks.fungi --dry-run
 ```
 
 ---
@@ -703,10 +703,10 @@ Phase 1 — V1 Syntax Freeze                             ✅ complete
   V1 grammar documented.
   Authoritative keyword table (v1-reserved-keywords.md).
   One preferred spelling per core construct.
-  Syntax diagnostics: SPORE-SYNTAX-001..004.
+  Syntax diagnostics: FUNGI-SYNTAX-001..004.
 
 Phase 2 — Example Corpus                               ✅ complete
-  20 v1 .spore examples:
+  20 v1 .fungi examples:
     5 basic    — variables, flows, records, Result, Option
     5 types    — variants, match, Tri, generics, effects
     5 API/JSON — decode, validation, errors, webhooks, contracts
@@ -717,13 +717,13 @@ Phase 2 — Example Corpus                               ✅ complete
 
 Phase 3 — Memory Model Commitment                      ✅ complete
   Hybrid ownership model documented (galerina-v1-memory-model.md).
-  SPORE-MEMORY-001..008 defined and exported.
-  SPORE-BINDING-001..004 defined and exported.
-  SPORE-RAWPTR-001 defined and exported.
+  FUNGI-MEMORY-001..008 defined and exported.
+  FUNGI-BINDING-001..004 defined and exported.
+  FUNGI-RAWPTR-001 defined and exported.
   Scanner enforcement live:
-    mut in pure flow           → SPORE-BINDING-004
-    unsafe block without reason → SPORE-MEMORY-008
-    raw pointer outside unsafe  → SPORE-RAWPTR-001
+    mut in pure flow           → FUNGI-BINDING-004
+    unsafe block without reason → FUNGI-MEMORY-008
+    raw pointer outside unsafe  → FUNGI-RAWPTR-001
   borrow, move, pinned reserved in keyword table.
   AstNodeKind memory vocabulary committed (borrowExpr, moveExpr,
     pinnedDecl, borrowMutExpr, ownershipTransfer, borrowScopeBlock,
@@ -748,9 +748,9 @@ Phase 5 — Type and Effect Checker                      ⬜ future
   Explicit Tri-to-Bool conversion policy enforcement.
   Effect propagation: pure code cannot call effectful flows.
   Full lifetime and borrow analysis (borrow checker):
-    borrow does not outlive owner (SPORE-MEMORY-003 full)
-    mutable alias detection (SPORE-MEMORY-005 full)
-    cross-branch move tracking (SPORE-MEMORY-001 full)
+    borrow does not outlive owner (FUNGI-MEMORY-003 full)
+    mutable alias detection (FUNGI-MEMORY-005 full)
+    cross-branch move tracking (FUNGI-MEMORY-001 full)
 
 Phase 6 — Runtime and Reports                          ⬜ future
   CPU-compatible checked execution for the v1 subset.
@@ -852,8 +852,8 @@ galerina-core          ← you are here
 galerina-core-compiler
   Scanner-level enforcement (Phase 3 live).
   Lexer, parser, AST, type/effect/memory checker (Phases 4–5).
-  Diagnostic constants: SPORE-MEMORY-*, SPORE-SAFETY-*, SPORE-BINDING-*,
-    SPORE-RAWPTR-*, SPORE-SYNTAX-*, SPORE-BLOCK-*, SPORE-STRING-*, etc.
+  Diagnostic constants: FUNGI-MEMORY-*, FUNGI-SAFETY-*, FUNGI-BINDING-*,
+    FUNGI-RAWPTR-*, FUNGI-SYNTAX-*, FUNGI-BLOCK-*, FUNGI-STRING-*, etc.
 
 galerina-core-runtime
   Checked and compiled execution, effect dispatch, structured await,
@@ -984,26 +984,26 @@ Full specification with descriptions and examples for every stage:
 
 ## Diagnostic Codes
 
-All Galerina diagnostics follow the `SPORE-SERIES-NNN` format. The full table lives
+All Galerina diagnostics follow the `FUNGI-SERIES-NNN` format. The full table lives
 in `docs/Knowledge-Bases/compiler-diagnostics.md`.
 
 Active implemented series:
 
 | Series | Covers | Status |
 |---|---|---|
-| `SPORE-MEMORY-001..008` | Ownership, borrow, move, aliasing, bounds, unsafe | ✅ Phase 3 |
-| `SPORE-RAWPTR-001` | Raw pointer outside unsafe block | ✅ Phase 3 |
-| `SPORE-BINDING-001..004` | Immutable/readonly binding, mut-in-pure | ✅ Phase 3 |
-| `SPORE-SAFETY-001..006` | Tri/Bool safety, secret literals, dynamic code | ✅ Phase 3 |
-| `SPORE-SYNTAX-001..004` | Keyword violations, reserved words | ✅ Phase 1/3 |
-| `SPORE-BLOCK-001..004` | Typed content blocks (html, dom, script, css) | ✅ Phase 3 |
-| `SPORE-STRING-001..004` | String/bytes/encoding safety | ✅ Phase 3 |
-| `SPORE-CHAR-001..004` | Char vs byte disambiguation | ✅ Phase 3 |
-| `SPORE-BYTE-001..005` | Byte range, overflow, logging | ✅ Phase 3 |
-| `SPORE-INTENT-001..005` | Intent/effect consistency, unsafe reasons | ✅ Phase 3 |
-| `SPORE-PIPELINE-001..005` | Method-chain type and effect safety | ✅ Phase 3 |
-| `SPORE-PARSE-*` | Parse errors | ⬜ Phase 4 |
-| `SPORE-EFFECT-*` | Effect propagation | ⬜ Phase 5 |
+| `FUNGI-MEMORY-001..008` | Ownership, borrow, move, aliasing, bounds, unsafe | ✅ Phase 3 |
+| `FUNGI-RAWPTR-001` | Raw pointer outside unsafe block | ✅ Phase 3 |
+| `FUNGI-BINDING-001..004` | Immutable/readonly binding, mut-in-pure | ✅ Phase 3 |
+| `FUNGI-SAFETY-001..006` | Tri/Bool safety, secret literals, dynamic code | ✅ Phase 3 |
+| `FUNGI-SYNTAX-001..004` | Keyword violations, reserved words | ✅ Phase 1/3 |
+| `FUNGI-BLOCK-001..004` | Typed content blocks (html, dom, script, css) | ✅ Phase 3 |
+| `FUNGI-STRING-001..004` | String/bytes/encoding safety | ✅ Phase 3 |
+| `FUNGI-CHAR-001..004` | Char vs byte disambiguation | ✅ Phase 3 |
+| `FUNGI-BYTE-001..005` | Byte range, overflow, logging | ✅ Phase 3 |
+| `FUNGI-INTENT-001..005` | Intent/effect consistency, unsafe reasons | ✅ Phase 3 |
+| `FUNGI-PIPELINE-001..005` | Method-chain type and effect safety | ✅ Phase 3 |
+| `FUNGI-PARSE-*` | Parse errors | ⬜ Phase 4 |
+| `FUNGI-EFFECT-*` | Effect propagation | ⬜ Phase 5 |
 
 ---
 
@@ -1017,22 +1017,22 @@ galerina-core/
 │   └── galerina.js              prototype CLI — parser, checker, report generation
 ├── examples/
 │   ├── examples-manifest.md   v1 / post-v1 classification
-│   ├── hello.spore              basic: simple flow
-│   ├── result.spore             basic: Result and error handling
-│   ├── option.spore             basic: Option and None handling
-│   ├── strict-types.spore       basic: type aliases and records
-│   ├── decision.spore           basic: enum and exhaustive match
-│   ├── ternary-sim.spore        type-system: Tri and pure flow
-│   ├── json-decode.spore        type-system: typed JSON decode
-│   ├── contracts.spore          type-system: effects declarations
-│   ├── api-orders.spore         api: route shapes and typed responses
-│   ├── payment-webhook.spore    api: webhook with HMAC security
-│   ├── rollback.spore           api: transactional flow with checkpoint
-│   ├── borrow-scope.spore       memory: ACCEPT — scoped borrow
-│   ├── move-cleanup.spore       memory: ACCEPT — ownership transfer
-│   ├── reject-use-after-move.spore  memory: REJECT — SPORE-MEMORY-001
-│   ├── parallel-api-calls.spore concurrency: structured await
-│   └── workers.spore            concurrency: channels and workers
+│   ├── hello.fungi              basic: simple flow
+│   ├── result.fungi             basic: Result and error handling
+│   ├── option.fungi             basic: Option and None handling
+│   ├── strict-types.fungi       basic: type aliases and records
+│   ├── decision.fungi           basic: enum and exhaustive match
+│   ├── ternary-sim.fungi        type-system: Tri and pure flow
+│   ├── json-decode.fungi        type-system: typed JSON decode
+│   ├── contracts.fungi          type-system: effects declarations
+│   ├── api-orders.fungi         api: route shapes and typed responses
+│   ├── payment-webhook.fungi    api: webhook with HMAC security
+│   ├── rollback.fungi           api: transactional flow with checkpoint
+│   ├── borrow-scope.fungi       memory: ACCEPT — scoped borrow
+│   ├── move-cleanup.fungi       memory: ACCEPT — ownership transfer
+│   ├── reject-use-after-move.fungi  memory: REJECT — FUNGI-MEMORY-001
+│   ├── parallel-api-calls.fungi concurrency: structured await
+│   └── workers.fungi            concurrency: channels and workers
 ├── grammar/
 │   └── v1 grammar and token definitions
 ├── schemas/
@@ -1080,7 +1080,7 @@ windows.
 node compiler/galerina.js ai-context examples --out build/examples
 
 # Explain a specific file for AI context
-node compiler/galerina.js explain examples/source-map-error.spore --for-ai
+node compiler/galerina.js explain examples/source-map-error.fungi --for-ai
 ```
 
 AI reports are compact, deterministic, source-mapped and free of secrets.

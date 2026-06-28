@@ -18,11 +18,11 @@ graph TB
     end
 
     subgraph SecurityLayer["Security Layer"]
-        security["@galerina/core-security\nSecureStringReference · redactText\nPermissionModel · decidePermission\nCryptographicPolicy · SecurityReport\nSPORE-SECURITY-001…"]
+        security["@galerina/core-security\nSecureStringReference · redactText\nPermissionModel · decidePermission\nCryptographicPolicy · SecurityReport\nFUNGI-SECURITY-001…"]
     end
 
     subgraph ConfigLayer["Config & Environment Layer"]
-        config["@galerina/core-config\nProjectConfig · EnvironmentConfig\nRuntimeConfigHandoff · loadConfigFromObjects\nVault (SPORE-VAULT-001–005)\ndefaultEnvironmentPolicy · GALERINA_ENVIRONMENT_MODES"]
+        config["@galerina/core-config\nProjectConfig · EnvironmentConfig\nRuntimeConfigHandoff · loadConfigFromObjects\nVault (FUNGI-VAULT-001–005)\ndefaultEnvironmentPolicy · GALERINA_ENVIRONMENT_MODES"]
     end
 
     subgraph IOLayer["I/O Governance Layer"]
@@ -37,7 +37,7 @@ graph TB
     end
 
     subgraph CompilerLayer["Compiler Layer"]
-        compiler["@galerina/core-compiler\nvalidateCoreSyntaxSafety\ncheckBindingReassignment · checkReadonlyMutation\nvalidateIntentEffects (stub)\nSPORE-SYNTAX/BINDING/PIPELINE/INTENT/BLOCK/STRING/CHAR/BYTE-*"]
+        compiler["@galerina/core-compiler\nvalidateCoreSyntaxSafety\ncheckBindingReassignment · checkReadonlyMutation\nvalidateIntentEffects (stub)\nFUNGI-SYNTAX/BINDING/PIPELINE/INTENT/BLOCK/STRING/CHAR/BYTE-*"]
     end
 
     subgraph CLILayer["CLI Layer"]
@@ -104,21 +104,21 @@ flowchart TD
 
 ## 3. Compile-Time Pipeline Flow
 
-Source `.spore` files pass through the prototype parser (Stage 1, in `@galerina/core/compiler/`) and the compiler contract layer (`@galerina/core-compiler`). The 14-pass pipeline produces Governed IR and a RuntimeManifest.
+Source `.fungi` files pass through the prototype parser (Stage 1, in `@galerina/core/compiler/`) and the compiler contract layer (`@galerina/core-compiler`). The 14-pass pipeline produces Governed IR and a RuntimeManifest.
 
 ```mermaid
 flowchart LR
-    Source[".spore source files"]
+    Source[".fungi source files"]
     Lexer["Pass 1–2: Lexer / Tokeniser\n(galerina-core/compiler/galerina.js)"]
     Parser["Pass 3: Parser\n→ AST (AstNodeKind)"]
-    TypeCheck["Pass 4: Type checker\nBinding safety · SPORE-SYNTAX/BINDING"]
+    TypeCheck["Pass 4: Type checker\nBinding safety · FUNGI-SYNTAX/BINDING"]
     SafetyCheck["Pass 5–6: Safety checker\nSyntax safety · Content blocks\nvalidateCoreSyntaxSafety()"]
-    IntentCheck["Pass 7–8: Intent / Effect checker\nvalidateIntentEffects() — stub\nSPORE-INTENT-001–005"]
-    PipelineCheck["Pass 9: Pipeline checker\ncheckMethodChain() — stub\nSPORE-PIPELINE-001–005"]
-    BoundaryCheck["Pass 10–11: Boundary / Effect checker\nSPORE-BOUNDARY-* / SPORE-EFFECT-*\n(specified — not yet implemented)"]
+    IntentCheck["Pass 7–8: Intent / Effect checker\nvalidateIntentEffects() — stub\nFUNGI-INTENT-001–005"]
+    PipelineCheck["Pass 9: Pipeline checker\ncheckMethodChain() — stub\nFUNGI-PIPELINE-001–005"]
+    BoundaryCheck["Pass 10–11: Boundary / Effect checker\nFUNGI-BOUNDARY-* / FUNGI-EFFECT-*\n(specified — not yet implemented)"]
     ManifestGen["Pass 12–14: Optimise · Source map · Manifest\nRuntimeManifest + ManifestIntegrity\n(specified — not yet implemented)"]
     GovernedIR["Governed IR\n+ RuntimeManifest"]
-    Diagnostics["Compiler diagnostics\n(SPORE-* codes emitted per pass)"]
+    Diagnostics["Compiler diagnostics\n(FUNGI-* codes emitted per pass)"]
 
     Source --> Lexer --> Parser --> TypeCheck --> SafetyCheck
     SafetyCheck --> IntentCheck --> PipelineCheck --> BoundaryCheck --> ManifestGen
@@ -135,33 +135,33 @@ flowchart LR
 
 ## 4. Diagnostic Code Namespaces
 
-Each package owns a diagnostic namespace. The `SPORE-*` format is `SPORE-SERIES-NNN`.
+Each package owns a diagnostic namespace. The `FUNGI-*` format is `FUNGI-SERIES-NNN`.
 
 | Prefix | Owner | Count | Status |
 |---|---|---|---|
-| `SPORE-SYNTAX-*` | `@galerina/core-compiler` | 002 | Implemented |
-| `SPORE-BINDING-*` | `@galerina/core-compiler` | 004 | Implemented |
-| `SPORE-PIPELINE-*` | `@galerina/core-compiler` | 005 | Constants only (stubs) |
-| `SPORE-INTENT-*` | `@galerina/core-compiler` | 005 | Constants only (stubs) |
-| `SPORE-BLOCK-*` | `@galerina/core-compiler` | 004 | Implemented |
-| `SPORE-STRING-*` | `@galerina/core-compiler` | 004 | Constants only |
-| `SPORE-CHAR-*` | `@galerina/core-compiler` | 004 | Constants only |
-| `SPORE-BYTE-*` | `@galerina/core-compiler` | 005 | Constants only |
-| `SPORE-EFFECT-*` | `@galerina/core-compiler` | 004 | Specified — not implemented |
-| `SPORE-BOUNDARY-*` | `@galerina/core-compiler` | 004 | Specified — not implemented |
-| `SPORE-TRI-*` | `@galerina/core-logic` | 005 | Implemented |
-| `SPORE-DECISION-*` | `@galerina/core-logic` | 005 | Implemented |
-| `SPORE-BOOL-BOUNDARY-*` | `@galerina/core-logic` | 005 | Implemented |
-| `SPORE-OMNI-*` | `@galerina/core-logic` | 005 | Implemented |
-| `SPORE-CONFIG-*` | `@galerina/core-config` | 027 | Partially implemented |
-| `SPORE-VAULT-*` | `@galerina/core-config` | 005 | Implemented |
-| `SPORE-NETWORK-*` | `@galerina/core-network` | 008 | Specified — not implemented |
-| `SPORE-WASM-*` | `@galerina/core-compute` | 004 | Specified — not implemented |
-| `SPORE-COMPAT-*` | `@galerina/core-compute` | 004 | Specified — not implemented |
-| `SPORE-REPORT-*` | `@galerina/core-reports` | 005 | Specified — not implemented |
-| `SPORE-PROOF-*` | `@galerina/core-reports` | 005 | Specified — not implemented |
-| `SPORE-DENIAL-*` | `@galerina/core-reports` | 004 | Specified — not implemented |
-| `SPORE-EVIDENCE-*` | `@galerina/core-reports` | 004 | Specified — not implemented |
+| `FUNGI-SYNTAX-*` | `@galerina/core-compiler` | 002 | Implemented |
+| `FUNGI-BINDING-*` | `@galerina/core-compiler` | 004 | Implemented |
+| `FUNGI-PIPELINE-*` | `@galerina/core-compiler` | 005 | Constants only (stubs) |
+| `FUNGI-INTENT-*` | `@galerina/core-compiler` | 005 | Constants only (stubs) |
+| `FUNGI-BLOCK-*` | `@galerina/core-compiler` | 004 | Implemented |
+| `FUNGI-STRING-*` | `@galerina/core-compiler` | 004 | Constants only |
+| `FUNGI-CHAR-*` | `@galerina/core-compiler` | 004 | Constants only |
+| `FUNGI-BYTE-*` | `@galerina/core-compiler` | 005 | Constants only |
+| `FUNGI-EFFECT-*` | `@galerina/core-compiler` | 004 | Specified — not implemented |
+| `FUNGI-BOUNDARY-*` | `@galerina/core-compiler` | 004 | Specified — not implemented |
+| `FUNGI-TRI-*` | `@galerina/core-logic` | 005 | Implemented |
+| `FUNGI-DECISION-*` | `@galerina/core-logic` | 005 | Implemented |
+| `FUNGI-BOOL-BOUNDARY-*` | `@galerina/core-logic` | 005 | Implemented |
+| `FUNGI-OMNI-*` | `@galerina/core-logic` | 005 | Implemented |
+| `FUNGI-CONFIG-*` | `@galerina/core-config` | 027 | Partially implemented |
+| `FUNGI-VAULT-*` | `@galerina/core-config` | 005 | Implemented |
+| `FUNGI-NETWORK-*` | `@galerina/core-network` | 008 | Specified — not implemented |
+| `FUNGI-WASM-*` | `@galerina/core-compute` | 004 | Specified — not implemented |
+| `FUNGI-COMPAT-*` | `@galerina/core-compute` | 004 | Specified — not implemented |
+| `FUNGI-REPORT-*` | `@galerina/core-reports` | 005 | Specified — not implemented |
+| `FUNGI-PROOF-*` | `@galerina/core-reports` | 005 | Specified — not implemented |
+| `FUNGI-DENIAL-*` | `@galerina/core-reports` | 004 | Specified — not implemented |
+| `FUNGI-EVIDENCE-*` | `@galerina/core-reports` | 004 | Specified — not implemented |
 | `Galerina_RUNTIME_*` | `@galerina/core-runtime` | (open) | Implemented |
 | `Galerina_SECURITY_*` | `@galerina/core-security` | (open) | Implemented |
 | `Galerina_NETWORK_*` | `@galerina/core-network` | (open) | Implemented |

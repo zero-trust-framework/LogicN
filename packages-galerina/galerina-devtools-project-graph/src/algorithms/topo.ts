@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — Topological Sort (Kahn's algorithm)
+// fungi-graph — Topological Sort (Kahn's algorithm)
 //
 // Works on directed graphs. If the graph is not a DAG (contains a cycle),
 // returns the partial order produced so far and the remaining cycle nodes.

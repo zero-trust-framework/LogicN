@@ -163,7 +163,7 @@ let allRows: List<DataRow> = DatasetStore.readAll(path)
 ```
 
 ```text
-SPORE-STORAGE-001:
+FUNGI-STORAGE-001:
 Unbounded hard storage load denied.
 
 Reason:
@@ -174,13 +174,13 @@ Reason:
 ### Missing effect declaration
 
 A flow that calls `openStream()` without declaring `storage.read.infrequent`
-in its `effects [ ]` clause receives `SPORE-EFFECT-001: UndeclaredEffect`.
+in its `effects [ ]` clause receives `FUNGI-EFFECT-001: UndeclaredEffect`.
 
 ### Ungoverned path input
 
 The `path` parameter above is typed `FilePath safe validated`. An
 `unsafe unvalidated` path reaching a storage call would be caught by
-`SPORE-VALUESTATE-003: UnsafeValueReachedGovernedSink`.
+`FUNGI-VALUESTATE-003: UnsafeValueReachedGovernedSink`.
 
 ---
 
@@ -188,7 +188,7 @@ The `path` parameter above is typed `FilePath safe validated`. An
 
 | Code | Name | Trigger |
 |---|---|---|
-| `SPORE-STORAGE-001` | `UnboundedStorageLoad` | `readAll()` or equivalent under IHSA policy |
+| `FUNGI-STORAGE-001` | `UnboundedStorageLoad` | `readAll()` or equivalent under IHSA policy |
 
 ---
 

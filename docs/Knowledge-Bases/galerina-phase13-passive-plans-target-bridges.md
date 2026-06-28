@@ -183,7 +183,7 @@ control_flow       Y    Y     N    N    N
 
 1. Add `buildTargetBridgePlan(...)` module.
 2. Add bridge hash generation from canonical plan JSON.
-3. Emit bridge diagnostics: `SPORE-TARGET-101` through `SPORE-TARGET-103`.
+3. Emit bridge diagnostics: `FUNGI-TARGET-101` through `FUNGI-TARGET-103`.
 4. Attach bridge summary to GIR flow metadata.
 5. Add deterministic snapshot tests for bridge plans.
 6. Add `HardwareTrustProfile` merge logic.

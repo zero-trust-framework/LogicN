@@ -42,7 +42,7 @@ can reproduce itself:
    `canonical_hash(B1)`
 2. Build B2 — compile the compiler source with B1; compute `canonical_hash(B2)`
 3. Compare: if `canonical_hash(B1) == canonical_hash(B2)` → emit `PASS`
-4. On mismatch → emit diagnostic `SPORE-BUILD-001` with a diff of the diverging
+4. On mismatch → emit diagnostic `FUNGI-BUILD-001` with a diff of the diverging
    output sections
 
 ### executePlan() — Real Implementation (Secure/Guarded Flows Only)
@@ -83,7 +83,7 @@ resolution to the package level.
   manifest for `@galerina/healthcare-types` and locating the `Email` export
 - Cross-module type sharing: a type declared in one package is usable in
   another with full type-checker support
-- `SPORE-NAME-003`: cross-module shadow detection — a local name that shadows an
+- `FUNGI-NAME-003`: cross-module shadow detection — a local name that shadows an
   imported name from another package emits a diagnostic
 
 ### Impact on CEC Coverage
@@ -94,7 +94,7 @@ expected to raise the stable count from 189 to 200+.
 
 ---
 
-## Phase 18 — type-checker.spore (Stage B Milestone 4)
+## Phase 18 — type-checker.fungi (Stage B Milestone 4)
 
 ### Writing the Type Checker in Galerina
 
@@ -103,11 +103,11 @@ in Galerina.
 
 Implementation path:
 
-- `type-checker.spore` v0 consumes the token stream and AST produced by
-  `lexer.spore` and `parser.spore`
+- `type-checker.fungi` v0 consumes the token stream and AST produced by
+  `lexer.fungi` and `parser.fungi`
 - v0 checks: known types, call arity, basic type inference (let binding types)
 - v0 does not attempt full inference across call graphs — that is a later pass
-- The output of `type-checker.spore` is compared against the TypeScript reference
+- The output of `type-checker.fungi` is compared against the TypeScript reference
   implementation on the same corpus; any divergence is a bug in the Galerina
   implementation
 
@@ -130,7 +130,7 @@ is the prerequisite for real IDE integration.
   can track which nodes have changed
 - Parser depth limits: maximum nested brace depth and maximum generic type
   depth are enforced as parser-level limits (not post-parse checks)
-- `SPORE-PARSE-DEPTH-001` — new diagnostic emitted when nesting exceeds the
+- `FUNGI-PARSE-DEPTH-001` — new diagnostic emitted when nesting exceeds the
   declared limit
 
 ### Language Server Protocol (LSP) Skeleton
@@ -141,7 +141,7 @@ subset of LSP:
 | LSP capability | Description |
 |---|---|
 | `textDocument/hover` | Returns type and effect information for the token under the cursor |
-| `textDocument/diagnostics` | Streams all SPORE-* diagnostics for the open file |
+| `textDocument/diagnostics` | Streams all FUNGI-* diagnostics for the open file |
 | Governance-aware completions | Contract section names and effect names are offered as completions |
 
 The LSP implementation is intentionally minimal in Phase 19 — the goal is to
@@ -157,9 +157,9 @@ Stage B is complete when all of the following hold:
 
 | Criterion | Description |
 |---|---|
-| `lexer.spore` full parity | All token types produced by the TypeScript lexer are also produced by `lexer.spore` on the same input |
-| `parser.spore` completeness | Handles expressions, statements, and match arms — not just flow headers |
-| `type-checker.spore` completeness | Handles all SPORE-TYPE-001 through SPORE-TYPE-022 error codes |
+| `lexer.fungi` full parity | All token types produced by the TypeScript lexer are also produced by `lexer.fungi` on the same input |
+| `parser.fungi` completeness | Handles expressions, statements, and match arms — not just flow headers |
+| `type-checker.fungi` completeness | Handles all FUNGI-TYPE-001 through FUNGI-TYPE-022 error codes |
 | `galerina build src/ --self-hosted` | The TypeScript bootstrap layer is not used; the Galerina compiler compiles itself end-to-end |
 | `verify-selfhost PASS` | Three independent builds B1, B2, B3 all produce the same canonical hash |
 
@@ -250,7 +250,7 @@ capabilities.
 - `pinned` memory maps to CHERI sealed capabilities
 - The Galerina compiler emits CHERI-annotated lowering IR when targeting a CHERI
   platform
-- `SPORE-CHERI-001`: diagnostic emitted when a Galerina source pattern cannot be
+- `FUNGI-CHERI-001`: diagnostic emitted when a Galerina source pattern cannot be
   safely lowered to a CHERI capability (e.g., pointer arithmetic outside an
   `unsafe` block)
 

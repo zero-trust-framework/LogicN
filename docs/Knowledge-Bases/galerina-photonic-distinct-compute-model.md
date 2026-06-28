@@ -348,21 +348,21 @@ Real hardware provider interface only when actual backends exist.
 
 | Code | Meaning |
 |---|---|
-| `SPORE-PHOTONIC-001` | Photonic op unsupported by target |
-| `SPORE-PHOTONIC-002` | Wavelength band unsupported |
-| `SPORE-PHOTONIC-003` | Wavelength channels conflict |
-| `SPORE-PHOTONIC-004` | Delay-line depth unsupported |
-| `SPORE-PHOTONIC-005` | Optical/electrical conversion required but not declared |
-| `SPORE-PHOTONIC-006` | Phase information lost after detection |
-| `SPORE-PHOTONIC-007` | Noise budget exceeded |
-| `SPORE-PHOTONIC-008` | Calibration evidence required |
-| `SPORE-PHOTONIC-009` | Photonic fallback changed semantics |
-| `SPORE-PHOTONIC-010` | Photonic target cannot be treated as GPU kernel |
+| `FUNGI-PHOTONIC-001` | Photonic op unsupported by target |
+| `FUNGI-PHOTONIC-002` | Wavelength band unsupported |
+| `FUNGI-PHOTONIC-003` | Wavelength channels conflict |
+| `FUNGI-PHOTONIC-004` | Delay-line depth unsupported |
+| `FUNGI-PHOTONIC-005` | Optical/electrical conversion required but not declared |
+| `FUNGI-PHOTONIC-006` | Phase information lost after detection |
+| `FUNGI-PHOTONIC-007` | Noise budget exceeded |
+| `FUNGI-PHOTONIC-008` | Calibration evidence required |
+| `FUNGI-PHOTONIC-009` | Photonic fallback changed semantics |
+| `FUNGI-PHOTONIC-010` | Photonic target cannot be treated as GPU kernel |
 
 Example:
 
 ```text
-SPORE-PHOTONIC-004: delay-line depth unsupported
+FUNGI-PHOTONIC-004: delay-line depth unsupported
 
 Requested:
   DelayLine<128ps>

@@ -369,7 +369,7 @@ let output: Tensor<Float32> = dequantize(logits)
 ```
 
 The compiler prevents mixing quantized and full-precision tensors unsafely
-(see `SPORE-TYPE-017: QuantizedPrecisionMismatch`).
+(see `FUNGI-TYPE-017: QuantizedPrecisionMismatch`).
 
 ---
 
@@ -435,6 +435,6 @@ The `compute target` syntax is **designed now, implemented post-v1**. In v1:
 
 - Parse `compute target <keyword> { ... }` as a `ComputeTargetBlock` AST node
 - Record `target`, `prefer`, `fallback`, `requires`, `effects` metadata
-- Emit `SPORE-COMPUTE-001` (unsupported in runtime) — warn but do not halt
+- Emit `FUNGI-COMPUTE-001` (unsupported in runtime) — warn but do not halt
 
 Full runtime dispatch and tensor transfer tracking are Layer B features.

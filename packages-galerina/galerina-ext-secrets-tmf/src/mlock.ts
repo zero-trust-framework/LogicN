@@ -2,7 +2,7 @@
 //
 // The design doc requires "mlock pages against swap WHERE THE PLATFORM ALLOWS". Node has no
 // portable mlock() in core, and we add NO native dependency (no new crypto / no native addon
-// per SPORE-SUBSTRATE-001 layering). So this is a best-effort, never-throwing shim:
+// per FUNGI-SUBSTRATE-001 layering). So this is a best-effort, never-throwing shim:
 //   - On platforms with a vetted mlock addon present, callers may inject it via setMlockHook.
 //   - Otherwise it is a no-op, and the README states plainly that swap-locking is best-effort.
 // This is honest: zero-wipe is the guaranteed mitigation; mlock is opportunistic hardening.

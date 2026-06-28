@@ -6,14 +6,14 @@
 Phase 1 complete: Node.js bootstrap runtime (Stage A) ✅ — 2286 tests
 Phase 2 complete: GIR (Governance IR) stabilised ✅ — GIR v1 schema, canonical hash, PassiveExecutionPlan
 Phase 3 in progress: WAT emitter skeleton (Phase 19-23), Register VM types (Phase 23C), WASM target Phase 24
-Phase 4 planned: Phase 25-28 — Stage B self-hosting (lexer.spore token parity, parser.spore, type-checker.spore)
+Phase 4 planned: Phase 25-28 — Stage B self-hosting (lexer.fungi token parity, parser.fungi, type-checker.fungi)
 Phase 5 planned: Phase 28-29 — Full Stage B; Galerina verifies its own governed artifacts
 ```
 
 Current bootstrap architecture:
 - Stage A TypeScript runtime: tree-walking interpreter, capabilityHost, audit trail ✅
 - Stage A WASM path: WAT emitter skeleton → Phase 24 real instruction emission
-- Stage B: lexer.spore (executing), parser.spore v0, type-checker.spore, compiler.capabilities.spore — 0 parse errors ✅
+- Stage B: lexer.fungi (executing), parser.fungi v0, type-checker.fungi, compiler.capabilities.fungi — 0 parse errors ✅
 
 ## Definition
 
@@ -96,7 +96,7 @@ The governance layer remains the same — only the implementation backend change
 ```text
 Host: Galerina-compiled runtime components
 Purpose: Galerina compiles and runs some of its own runtime
-Deliverable: select runtime modules compiled from .spore source
+Deliverable: select runtime modules compiled from .fungi source
 Trust: Level 2 (production, CI/OIDC provenance required)
 ```
 
@@ -117,7 +117,7 @@ Trust: Level 2–3 (production + enterprise)
 At full self-hosting, the Galerina runtime:
 
 ```text
-compiles from .spore source
+compiles from .fungi source
 generates Trust Capsule automatically
 signs artifacts with CI/OIDC identity
 verifies all packages against registry

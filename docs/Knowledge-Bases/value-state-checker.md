@@ -94,7 +94,7 @@ safe   mut rawEmail         = validate.email(rawEmail)?
 
 ```galerina
 unsafe let rawInput: String = request.body
-Database.insert(rawInput)   // SPORE-VALUESTATE-003 — unsafe binding at governed sink
+Database.insert(rawInput)   // FUNGI-VALUESTATE-003 — unsafe binding at governed sink
 ```
 
 An `unsafe let` or `unsafe mut` binding cannot be passed directly to:
@@ -109,28 +109,28 @@ An `unsafe let` or `unsafe mut` binding cannot be passed directly to:
 
 ```galerina
 // Invalid:
-safe mut rawEmail = rawEmail         // no gate — SPORE-VALUESTATE-001
+safe mut rawEmail = rawEmail         // no gate — FUNGI-VALUESTATE-001
 ```
 
 The right side of `safe mut` must be a call to a recognised gate function (see
 Section 5). The compiler verifies the gate was called and the `?` propagation
 is present (gate failure must propagate, not be swallowed).
 
-Diagnostic: `SPORE-VALUESTATE-001` (`UnsafeToSafeTransitionDenied`)
+Diagnostic: `FUNGI-VALUESTATE-001` (`UnsafeToSafeTransitionDenied`)
 
 ### Rule 3 — Taint propagates through expressions
 
 ```galerina
 unsafe let rawInput: String = request.body
-let sql = "SELECT " + rawInput   // sql is now tainted — SPORE-VALUESTATE-004
-Database.query(sql)              // SPORE-VALUESTATE-003
+let sql = "SELECT " + rawInput   // sql is now tainted — FUNGI-VALUESTATE-004
+Database.query(sql)              // FUNGI-VALUESTATE-003
 ```
 
 When any operand in a binary expression is an `unsafe` binding, the result is
 tainted. This propagates through string concatenation, member access, and
 function arguments.
 
-Diagnostic: `SPORE-VALUESTATE-004` (`TaintedValuePropagation`)
+Diagnostic: `FUNGI-VALUESTATE-004` (`TaintedValuePropagation`)
 
 ### Rule 4 — `SecureString` bindings block restricted operations
 
@@ -138,10 +138,10 @@ Diagnostic: `SPORE-VALUESTATE-004` (`TaintedValuePropagation`)
 let apiKey: SecureString = SecretsStore.get("key")
 
 // All of the following are illegal:
-apiKey == expected       // SPORE-SECRET-002
-log.write(apiKey)        // SPORE-SECRET-001
-serialize(apiKey)        // SPORE-SECRET-003
-let plain: String = apiKey  // SPORE-SECRET-003
+apiKey == expected       // FUNGI-SECRET-002
+log.write(apiKey)        // FUNGI-SECRET-001
+serialize(apiKey)        // FUNGI-SECRET-003
+let plain: String = apiKey  // FUNGI-SECRET-003
 ```
 
 Approved operations:
@@ -149,16 +149,16 @@ Approved operations:
 - `redact(apiKey)` — produces a safe log placeholder
 - Pass to a flow that explicitly accepts `SecureString`
 
-Diagnostics: `SPORE-SECRET-001..003`
+Diagnostics: `FUNGI-SECRET-001..003`
 
 ### Rule 5 — `let` and `readonly` bindings cannot be reassigned
 
 ```galerina
 let count: Int = 0
-count = 1   // SPORE-BINDING-001 — let binding is immutable
+count = 1   // FUNGI-BINDING-001 — let binding is immutable
 
 readonly config: AppConfig = loadConfig()
-config = newConfig   // SPORE-BINDING-002 — readonly binding cannot be mutated
+config = newConfig   // FUNGI-BINDING-002 — readonly binding cannot be mutated
 ```
 
 Note: `safe mut` is the one permitted "reassignment" of a `let` binding —
@@ -257,25 +257,25 @@ Value-state checker reasoning:
 
 ---
 
-## 7. Diagnostics (SPORE-VALUESTATE-* and SPORE-SECRET-* series)
+## 7. Diagnostics (FUNGI-VALUESTATE-* and FUNGI-SECRET-* series)
 
-### SPORE-VALUESTATE-* series
-
-| Code | Name | Description |
-|---|---|---|
-| `SPORE-VALUESTATE-001` | `UnsafeToSafeTransitionDenied` | Value cannot become `safe validated` without a recognised gate function |
-| `SPORE-VALUESTATE-002` | `UnvalidatedValueUsed` | `unvalidated` value used where `validated` is required |
-| `SPORE-VALUESTATE-003` | `UnsafeValueReachedGovernedSink` | `unsafe` or `unvalidated` value passed to a governed sink |
-| `SPORE-VALUESTATE-004` | `TaintedValuePropagation` | Expression result is tainted by an `unsafe` operand |
-| `SPORE-VALUESTATE-005` | `InvalidValueStateTransition` | Value-state transition is not permitted by the state machine |
-
-### SPORE-SECRET-* series
+### FUNGI-VALUESTATE-* series
 
 | Code | Name | Description |
 |---|---|---|
-| `SPORE-SECRET-001` | `SecretValueLogged` | `secret protected` value passed to a logging function |
-| `SPORE-SECRET-002` | `SecretComparisonDenied` | `==` operator used on a `secret protected` value; use `constantTimeEquals()` |
-| `SPORE-SECRET-003` | `SecretSerializationDenied` | `secret protected` value serialised or converted to plain `String` |
+| `FUNGI-VALUESTATE-001` | `UnsafeToSafeTransitionDenied` | Value cannot become `safe validated` without a recognised gate function |
+| `FUNGI-VALUESTATE-002` | `UnvalidatedValueUsed` | `unvalidated` value used where `validated` is required |
+| `FUNGI-VALUESTATE-003` | `UnsafeValueReachedGovernedSink` | `unsafe` or `unvalidated` value passed to a governed sink |
+| `FUNGI-VALUESTATE-004` | `TaintedValuePropagation` | Expression result is tainted by an `unsafe` operand |
+| `FUNGI-VALUESTATE-005` | `InvalidValueStateTransition` | Value-state transition is not permitted by the state machine |
+
+### FUNGI-SECRET-* series
+
+| Code | Name | Description |
+|---|---|---|
+| `FUNGI-SECRET-001` | `SecretValueLogged` | `secret protected` value passed to a logging function |
+| `FUNGI-SECRET-002` | `SecretComparisonDenied` | `==` operator used on a `secret protected` value; use `constantTimeEquals()` |
+| `FUNGI-SECRET-003` | `SecretSerializationDenied` | `secret protected` value serialised or converted to plain `String` |
 
 ---
 
@@ -342,10 +342,10 @@ valueStateAudit:
 
 Phase 5 implements:
 - Parsing and storing value-state annotations on `bindingDecl` AST nodes
-- `SPORE-VALUESTATE-003`: detecting `unsafe unvalidated` values that reach
+- `FUNGI-VALUESTATE-003`: detecting `unsafe unvalidated` values that reach
   governed sinks (requires knowing which calls are governed sinks — use the
   effect checker's `database.write` / `audit.write` markers)
-- `SPORE-SECRET-001..003`: protecting `secret protected` values
+- `FUNGI-SECRET-001..003`: protecting `secret protected` values
 
 Phase 5 defers:
 - Full taint tracking through arbitrary expression trees

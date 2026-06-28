@@ -33,7 +33,7 @@ Run Mode should be convenient. Compile Mode should be complete.
 
 | Mode | Purpose | Typical Command |
 |---|---|---|
-| `run` | Run a single script or project directly | `Galerina run hello.spore` |
+| `run` | Run a single script or project directly | `Galerina run hello.fungi` |
 | `run --generate` | Run and generate development docs/reports | `Galerina run --generate` |
 | `generate` | Generate development docs/reports without running | `Galerina generate` |
 | `dev` | Check, generate and run in development mode | `Galerina dev` |
@@ -48,7 +48,7 @@ Run Mode should be convenient. Compile Mode should be complete.
 Run Mode aLOws Galerina source files to be executed directly.
 
 ```bash
-Galerina run hello.spore
+Galerina run hello.fungi
 ```
 
 Run Mode is useful for small scripts, learning Galerina, local development, quick
@@ -128,7 +128,7 @@ For faster development and server execution, Galerina may support cached IR or
 bytecode:
 
 ```text
-.spore source
+.fungi source
     -> parse
     -> type/security check
     -> cached Galerina IR or bytecode
@@ -221,7 +221,7 @@ The AI guide should update only after a successful compile. Failed builds should
 write `app.failure-report.json` without overwriting the last valid AI guide
 unless explicitly configured.
 
-## boot.spore Configuration
+## boot.fungi Configuration
 
 ```Galerina
 runtime {

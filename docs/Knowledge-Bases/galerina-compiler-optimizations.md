@@ -99,14 +99,14 @@ parse → type check → effect analysis → purity analysis
 
 | Code | Meaning |
 |---|---|
-| `SPORE-COMPTIME-001` | Effectful flow cannot execute at compile time |
-| `SPORE-COMPTIME-002` | Nondeterministic operation in comptime flow |
-| `SPORE-COMPTIME-003` | Compile-time evaluation exceeded resource budget |
-| `SPORE-COMPTIME-004` | Comptime flow attempted forbidden runtime access |
-| `SPORE-COMPTIME-005` | Secret value cannot be embedded into compile-time constant |
-| `SPORE-COMPTIME-006` | Target-dependent comptime result detected |
-| `SPORE-COMPTIME-007` | Recursive comptime evaluation exceeded limit |
-| `SPORE-COMPTIME-008` | Unsupported type for compile-time serialization |
+| `FUNGI-COMPTIME-001` | Effectful flow cannot execute at compile time |
+| `FUNGI-COMPTIME-002` | Nondeterministic operation in comptime flow |
+| `FUNGI-COMPTIME-003` | Compile-time evaluation exceeded resource budget |
+| `FUNGI-COMPTIME-004` | Comptime flow attempted forbidden runtime access |
+| `FUNGI-COMPTIME-005` | Secret value cannot be embedded into compile-time constant |
+| `FUNGI-COMPTIME-006` | Target-dependent comptime result detected |
+| `FUNGI-COMPTIME-007` | Recursive comptime evaluation exceeded limit |
+| `FUNGI-COMPTIME-008` | Unsupported type for compile-time serialization |
 
 ---
 
@@ -195,12 +195,12 @@ spans for each original stage are embedded in the fused loop IR.
 
 | Code | Meaning |
 |---|---|
-| `SPORE-PIPELINE-001` | Pipeline fused successfully (report) |
-| `SPORE-PIPELINE-002` | Fusion skipped — effect ordering conflict |
-| `SPORE-PIPELINE-003` | Fusion skipped — intermediate materialisation required |
-| `SPORE-PIPELINE-004` | Fusion skipped — lifetime escape |
-| `SPORE-PIPELINE-005` | Fusion skipped — error order ambiguity |
-| `SPORE-PIPELINE-006` | Fusion would change short-circuit behavior |
+| `FUNGI-PIPELINE-001` | Pipeline fused successfully (report) |
+| `FUNGI-PIPELINE-002` | Fusion skipped — effect ordering conflict |
+| `FUNGI-PIPELINE-003` | Fusion skipped — intermediate materialisation required |
+| `FUNGI-PIPELINE-004` | Fusion skipped — lifetime escape |
+| `FUNGI-PIPELINE-005` | Fusion skipped — error order ambiguity |
+| `FUNGI-PIPELINE-006` | Fusion would change short-circuit behavior |
 
 ---
 
@@ -261,12 +261,12 @@ optimization {
 
 | Code | Meaning |
 |---|---|
-| `SPORE-BOUNDS-001` | Bounds check eliminated by range proof |
-| `SPORE-BOUNDS-002` | Bounds check retained — collection may mutate |
-| `SPORE-BOUNDS-003` | Bounds check retained — index range is unknown |
-| `SPORE-BOUNDS-004` | Bounds check retained — alias may resize collection |
-| `SPORE-BOUNDS-005` | Bounds check retained — integer overflow proof failed |
-| `SPORE-BOUNDS-006` | Unsafe unchecked access rejected |
+| `FUNGI-BOUNDS-001` | Bounds check eliminated by range proof |
+| `FUNGI-BOUNDS-002` | Bounds check retained — collection may mutate |
+| `FUNGI-BOUNDS-003` | Bounds check retained — index range is unknown |
+| `FUNGI-BOUNDS-004` | Bounds check retained — alias may resize collection |
+| `FUNGI-BOUNDS-005` | Bounds check retained — integer overflow proof failed |
+| `FUNGI-BOUNDS-006` | Unsafe unchecked access rejected |
 
 ---
 
@@ -333,14 +333,14 @@ compute_profile_policy {
 
 | Code | Meaning |
 |---|---|
-| `SPORE-PGO-001` | Profile evidence ignored — workload hash changed |
-| `SPORE-PGO-002` | Profile evidence ignored — target is not approved |
-| `SPORE-PGO-003` | Profile evidence stale for current backend version |
-| `SPORE-PGO-004` | Tuned launch exceeds memory budget |
-| `SPORE-PGO-005` | Tuned launch failed correctness verification |
-| `SPORE-PGO-006` | Profile requested forbidden precision relaxation |
-| `SPORE-PGO-007` | No profile evidence available; using baseline planner |
-| `SPORE-PGO-008` | Tuned launch selected from trusted profile evidence |
+| `FUNGI-PGO-001` | Profile evidence ignored — workload hash changed |
+| `FUNGI-PGO-002` | Profile evidence ignored — target is not approved |
+| `FUNGI-PGO-003` | Profile evidence stale for current backend version |
+| `FUNGI-PGO-004` | Tuned launch exceeds memory budget |
+| `FUNGI-PGO-005` | Tuned launch failed correctness verification |
+| `FUNGI-PGO-006` | Profile requested forbidden precision relaxation |
+| `FUNGI-PGO-007` | No profile evidence available; using baseline planner |
+| `FUNGI-PGO-008` | Tuned launch selected from trusted profile evidence |
 
 ---
 
@@ -410,13 +410,13 @@ vectorisation, LTO, PGO — only after correctness and source maps are stable.
 
 | Code | Meaning |
 |---|---|
-| `SPORE-BACKEND-001` | Target backend not available |
-| `SPORE-BACKEND-002` | Feature not lowerable to selected backend |
-| `SPORE-BACKEND-003` | Runtime ABI mismatch |
-| `SPORE-BACKEND-004` | Unsafe native lowering requires explicit permission |
-| `SPORE-BACKEND-005` | Source map unavailable for optimised output |
-| `SPORE-BACKEND-006` | Backend optimisation would violate security boundary |
-| `SPORE-BACKEND-007` | Target fallback denied by policy |
+| `FUNGI-BACKEND-001` | Target backend not available |
+| `FUNGI-BACKEND-002` | Feature not lowerable to selected backend |
+| `FUNGI-BACKEND-003` | Runtime ABI mismatch |
+| `FUNGI-BACKEND-004` | Unsafe native lowering requires explicit permission |
+| `FUNGI-BACKEND-005` | Source map unavailable for optimised output |
+| `FUNGI-BACKEND-006` | Backend optimisation would violate security boundary |
+| `FUNGI-BACKEND-007` | Target fallback denied by policy |
 
 ---
 

@@ -974,7 +974,7 @@ The benchmark package should store last benchmark state.
 Example file:
 
 ```text
-.spore/benchmark-state.json
+.fungi/benchmark-state.json
 ```
 
 When Galerina updates to `2.0.0` in development mode:
@@ -1050,7 +1050,7 @@ benchmark {
     /types
 
   /examples
-    benchmark.config.spore
+    benchmark.config.fungi
     benchmark-report.example.json
 ```
 

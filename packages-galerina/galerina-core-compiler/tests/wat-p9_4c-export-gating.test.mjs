@@ -16,7 +16,7 @@ import {
 } from "../dist/index.js";
 
 async function compile(src) {
-  const prog = parseProgram(src, "test.spore");
+  const prog = parseProgram(src, "test.fungi");
   const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
   if (errs.length > 0) throw new Error("Parse: " + errs.map((d) => d.message).join("; "));
   const fx = checkEffects(prog.flows, prog.ast);

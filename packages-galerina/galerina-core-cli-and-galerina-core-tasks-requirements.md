@@ -226,7 +226,7 @@ For `galerina-core-tasks`:
 [ ] Define TaskDefinition type
 [ ] Define TaskEffect type
 [ ] Define TaskPermission type
-[ ] Load tasks.spore
+[ ] Load tasks.fungi
 [ ] Run named task
 [ ] Support task dependencies
 [ ] Detect circular dependencies
@@ -365,7 +365,7 @@ should support typed, permissioned tasks first.
 A project may define tasks in a file such as:
 
 ```text
-tasks.spore
+tasks.fungi
 ```
 
 Example:
@@ -649,7 +649,7 @@ These operations must be permission checked.
       task-status.ts
 
   /examples
-    tasks.spore
+    tasks.fungi
 
   /tests
     task-parse.test.ts
@@ -678,7 +678,7 @@ Minimal early structure:
     types.ts
 
   /examples
-    tasks.spore
+    tasks.fungi
 
   /tests
     run-task.test.ts
@@ -692,7 +692,7 @@ Flow:
 galerina-core-cli
   receives command
   loads project config
-  loads tasks.spore
+  loads tasks.fungi
   calls galerina-core-tasks
   galerina-core-tasks checks permissions
   galerina-core-tasks runs task

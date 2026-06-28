@@ -14,9 +14,9 @@ wrong, and verify-before-build caught it:** the scaffolder `scripts/galerina-new
 mode** (the default), and it already emits the deny-by-default four-artifact skeleton the authoring guide §3
 describes:
 
-- `package.spore.json` with `"capabilities": []` (deny-by-default, least-capability),
-- `src/index.spore` — a `pure flow` with **no `effects {}`** (cannot touch network/storage/secrets/db/inference),
-  ending in a mandatory fail-closed `_ =>` wildcard (SPORE-TYPE-023),
+- `package.fungi.json` with `"capabilities": []` (deny-by-default, least-capability),
+- `src/index.fungi` — a `pure flow` with **no `effects {}`** (cannot touch network/storage/secrets/db/inference),
+  ending in a mandatory fail-closed `_ =>` wildcard (FUNGI-TYPE-023),
 - `tests/`, `README.md` documenting the secure posture.
 
 So **"no plugin scaffolder" is [SHIPPED], not [ABSENT].** Building `galerina new plugin` from scratch would have
@@ -33,14 +33,14 @@ duplicated `galerina new package`. The *real* delta is much smaller (see §3a).
 |---|---|
 | `devtools-project-graph` | effect/boundary/audit graphs over monorepo source (engine behind `galerina` graph reports) |
 | `devtools-package-graph` | per-package boundary graph + **Hardened Border CI gate**; graphs *source* |
-| `devtools-graph-algorithms` | internal graph algorithms (planned `spore-graph` extraction) |
+| `devtools-graph-algorithms` | internal graph algorithms (planned `fungi-graph` extraction) |
 | `devtools-flowgraph` | cycles, dead flows, authority-escalation, PII-leakage paths, missing audit coverage |
 | `devtools-security` | taint / profiles / governance / hardware / sandbox / ReDoS → structured audit report |
 | `devtools-provenance` | data lineage / PII-flow tracker |
 | `devtools-pci` | PCI-DSS 4.0.1 contract-pattern audit |
 | `devtools-naming` | Zero-Ambiguity naming enforcer |
-| `devtools-intelligence` | BM25 + structural `.spore` code search (effects/economics/governance-aware) |
-| `devtools-context` | AI Context-Receipt generator (token reduction from `.spore`) |
+| `devtools-intelligence` | BM25 + structural `.fungi` code search (effects/economics/governance-aware) |
+| `devtools-context` | AI Context-Receipt generator (token reduction from `.fungi`) |
 | `devtools-kb-graph` | KB cross-reference graph (wired to CLI `galerina kb-graph`) |
 | `devtools-benchmarks` | governance-overhead benchmarks vs Python/Node/C++/Rust |
 
@@ -55,7 +55,7 @@ duplicated `galerina new package`. The *real* delta is much smaller (see §3a).
   *wiring* (see §2).
 - `route-defaults.ts`, `galerina-api-protocol-rest`, and a real `galerina-framework-api-server/src/index.ts`
   (thin governed HTTP/HTTPS transport in front of the kernel, optional TLS cert-gate).
-- governed `package-resolver.ts` — `SPORE-PKG-001..006` (hash + Ed25519 + auditable registry origin +
+- governed `package-resolver.ts` — `FUNGI-PKG-001..006` (hash + Ed25519 + auditable registry origin +
   `installScript:"deny"` + signing-key revocation).
 
 **Shipped CLI verbs** (`galerina.mjs` + `scripts/galerina-new.mjs`):
@@ -84,7 +84,7 @@ The `package` scaffold is correct but minimal: a `pure flow main() -> Int` with 
 The authoring guide §13 *package-standard checklist* asks an exemplary plugin to also carry `limits {}` and
 `invariant { ensure result }`, and to keep `tests/` distinct from generated `proofs/`. So the scaffold could be
 upgraded into a **golden plugin template** (the plugin analog of the SHIPPED example-app golden template) —
-**but** naively adding an `effects {}` block would be an `SPORE-EFFECT-006` over-declaration (you'd declare an
+**but** naively adding an `effects {}` block would be an `FUNGI-EFFECT-006` over-declaration (you'd declare an
 effect the stub never uses). The honest upgrade is therefore a *design* task, not a 15-minute drop:
 - a `pure`-default variant (today's, but + `limits {}` + an output `invariant` where the return type supports it),
 - optionally a `--with-effects <cap>` worked variant that declares *and uses* one capability (e.g. `audit.write`)

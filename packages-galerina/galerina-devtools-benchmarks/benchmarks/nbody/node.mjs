@@ -1,7 +1,7 @@
 import { performance } from "node:perf_hooks";
 
 // N-body pairwise gravitational force — scaled-integer kernel.
-// Mirrors benchmark.spore and python.py exactly: all intermediates stay < 2^31 and
+// Mirrors benchmark.fungi and python.py exactly: all intermediates stay < 2^31 and
 // every division has a non-negative numerator, so checksum is identical across
 // Node, Python and the Galerina integer path (Math.trunc == // == Galerina `/`).
 const G = 100000;   // scaled gravitational constant

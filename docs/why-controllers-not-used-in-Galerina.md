@@ -196,41 +196,41 @@ Recommended app shape:
 
 ```text
 src/
-  boot.spore
-  main.spore
+  boot.fungi
+  main.fungi
 
   routes/
-    orders.routes.spore
-    users.routes.spore
-    payments.routes.spore
+    orders.routes.fungi
+    users.routes.fungi
+    payments.routes.fungi
 
   actions/
     orders/
-      createOrder.spore
-      cancelOrder.spore
-      refundOrder.spore
+      createOrder.fungi
+      cancelOrder.fungi
+      refundOrder.fungi
 
     users/
-      getUserProfile.spore
-      updateUserEmail.spore
+      getUserProfile.fungi
+      updateUserEmail.fungi
 
   models/
-    Order.spore
-    User.spore
-    Payment.spore
+    Order.fungi
+    User.fungi
+    Payment.fungi
 
   policies/
-    orderAccess.policy.spore
-    userAccess.policy.spore
+    orderAccess.policy.fungi
+    userAccess.policy.fungi
 
   schemas/
     requests/
-      CreateOrderRequest.spore
-      CancelOrderRequest.spore
+      CreateOrderRequest.fungi
+      CancelOrderRequest.fungi
 
     responses/
-      OrderResponse.spore
-      CancelOrderResponse.spore
+      OrderResponse.fungi
+      CancelOrderResponse.fungi
 ```
 
 This is easier for humans and AI assistants to understand than one large
@@ -242,7 +242,7 @@ Frameworks may later support controller-style grouping:
 
 ```galerina
 controller OrdersController {
-  uses routes from "./routes/orders.routes.spore"
+  uses routes from "./routes/orders.routes.fungi"
   actions from "./actions/orders"
 }
 ```

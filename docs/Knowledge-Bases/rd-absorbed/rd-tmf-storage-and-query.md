@@ -111,7 +111,7 @@ untrusted — and it is checked before any plan is emitted.
 3. **Egress seam (per projected field).** A `semantic` field projected to an **untrusted** destination is
    **redacted**; to a **trusted** destination it is emitted. The reference models this decision purely as
    **destination trust** (`destTrusted`); in a real deployment the trusted-destination emit is itself gated by
-   the `k3-policy.spore` `authorizeRead == ALLOW` decision (with `egressRedact` on deny) — the reference *abstracts*
+   the `k3-policy.fungi` `authorizeRead == ALLOW` decision (with `egressRedact` on deny) — the reference *abstracts*
    that policy call, it does not implement it. The threat model is leakage to an *untrusted* destination, which
    is always redacted.
 

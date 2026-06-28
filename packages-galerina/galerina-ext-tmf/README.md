@@ -5,7 +5,7 @@ The **`.tmf` (TritMesh Format) engine** for Galerina — an *ext* package (not c
 whose integrity root is a 3-ary SHAKE256 Merkle tree, signed by the hybrid Ed25519 + ML-DSA-65 signer,
 with KEM-DEM confidentiality.
 
-> **Crypto-on-core (`SPORE-SUBSTRATE-001`).** Every primitive here runs **bit-exact on a deterministic
+> **Crypto-on-core (`FUNGI-SUBSTRATE-001`).** Every primitive here runs **bit-exact on a deterministic
 > digital core** — SHAKE256 via `node:crypto`; ML-DSA-65 / ML-KEM-768 via `@noble/post-quantum`. No
 > Rust, **no photonic crypto** (analog optics ≤~10-bit cannot carry an avalanche primitive). Photonics,
 > if ever used, is bulk math only — never integrity, signing, or key release.

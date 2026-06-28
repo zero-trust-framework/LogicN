@@ -892,7 +892,7 @@ Example:
     "triValues": [
       {
         "flow": "hasPermission",
-        "source": "src/security/access.spore:8",
+        "source": "src/security/access.fungi:8",
         "returnType": "Tri",
         "requiresExhaustiveMatch": true
       }

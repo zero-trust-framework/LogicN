@@ -26,7 +26,7 @@ Intent is not documentation. It is:
 
 - **structured** — machine-readable syntax, not free-form comments
 - **compiler-visible** — the checker can compare declared intent against actual behavior
-- **enforceable** — violations emit diagnostics (`SPORE-INTENT-001`)
+- **enforceable** — violations emit diagnostics (`FUNGI-INTENT-001`)
 - **reportable** — builds, audits and AI tools consume intent directly
 
 Most languages describe *how* computation happens. Galerina also describes *why it exists*, *what authority it needs*, *what boundaries it crosses*, and *what it must never do*.
@@ -98,7 +98,7 @@ The intent declaration is much richer — it exposes authority, side-effects, ex
 |---|---|---|
 | Format | Unstructured text | Structured syntax |
 | Compiler-visible | No | Yes |
-| Enforceable | No | Yes (`SPORE-INTENT-001`) |
+| Enforceable | No | Yes (`FUNGI-INTENT-001`) |
 | Machine-readable | No | Yes |
 | Reportable | No | Yes |
 
@@ -322,7 +322,7 @@ intent ReadOnlyAnalytics {
 If the implementation performs `database.insert(...)`, the checker emits:
 
 ```text
-SPORE-INTENT-001: Flow violates declared intent.
+FUNGI-INTENT-001: Flow violates declared intent.
   declared:  denies [database.write]
   actual:    database.write detected in analyticsFlow
 ```
@@ -431,11 +431,11 @@ This is governance visibility at the source level.
 
 | Code | Name | Trigger |
 |---|---|---|
-| `SPORE-INTENT-001` | `INTENT_BEHAVIOR_MISMATCH` | Flow behavior contradicts declared intent |
-| `SPORE-INTENT-002` | `INTENT_EFFECT_UNDECLARED` | Effect used without being declared in intent |
-| `SPORE-INTENT-003` | `INTENT_DENIED_EFFECT_USED` | Denied effect detected in implementation |
-| `SPORE-INTENT-004` | `INTENT_MISSING` | Secure or guarded flow has no intent declaration |
-| `SPORE-INTENT-005` | `INTENT_PURPOSE_EMPTY` | Intent block has no purpose string |
+| `FUNGI-INTENT-001` | `INTENT_BEHAVIOR_MISMATCH` | Flow behavior contradicts declared intent |
+| `FUNGI-INTENT-002` | `INTENT_EFFECT_UNDECLARED` | Effect used without being declared in intent |
+| `FUNGI-INTENT-003` | `INTENT_DENIED_EFFECT_USED` | Denied effect detected in implementation |
+| `FUNGI-INTENT-004` | `INTENT_MISSING` | Secure or guarded flow has no intent declaration |
+| `FUNGI-INTENT-005` | `INTENT_PURPOSE_EMPTY` | Intent block has no purpose string |
 
 ---
 
@@ -446,5 +446,5 @@ This is governance visibility at the source level.
 | [Governed Execution Plan](galerina-concept-governed-execution-plan.md) | Next pipeline stage — turns intent into an operational contract |
 | [Coordinated Compute](galerina-concept-coordinated-compute.md) | Third stage — runtime execution against the plan |
 | [Audit Proof](galerina-concept-audit-proof.md) | Fourth stage — verifiable evidence that governed execution occurred |
-| [compiler-diagnostics.md](compiler-diagnostics.md) | Full `SPORE-INTENT-*` code table |
+| [compiler-diagnostics.md](compiler-diagnostics.md) | Full `FUNGI-INTENT-*` code table |
 | [galerina-v1-memory-model.md](galerina-v1-memory-model.md) | Phase 3 memory model |

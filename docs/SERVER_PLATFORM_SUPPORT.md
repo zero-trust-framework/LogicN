@@ -304,24 +304,24 @@ A server-capable Galerina app might look like:
 ```text
 my-galerina-app/
 |-- api/
-|   |-- orders-api.spore
-|   `-- payment-webhook-api.spore
+|   |-- orders-api.fungi
+|   `-- payment-webhook-api.fungi
 |-- flows/
-|   `-- create-order.spore
+|   `-- create-order.fungi
 |-- domain/
-|   `-- orders.spore
+|   `-- orders.fungi
 |-- infrastructure/
-|   `-- payment-provider.spore
+|   `-- payment-provider.fungi
 |-- server/
-|   `-- galerina-server.spore
+|   `-- galerina-server.fungi
 |-- deploy/
-|   |-- nginx.spore
-|   |-- docker.spore
-|   `-- kubernetes.spore
+|   |-- nginx.fungi
+|   |-- docker.fungi
+|   `-- kubernetes.fungi
 `-- policies/
-    |-- security-policy.spore
-    |-- crash-policy.spore
-    `-- deployment-policy.spore
+    |-- security-policy.fungi
+    |-- crash-policy.fungi
+    `-- deployment-policy.fungi
 ```
 
 Example server file:

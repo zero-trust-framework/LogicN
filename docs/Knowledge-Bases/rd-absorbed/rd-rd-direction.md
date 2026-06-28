@@ -50,8 +50,8 @@
 
 ### 3.1 Prefer Galerina over Rust
 Rust is **not usable in the main project**, so the engine-language fork (D2) is re-pointed: **prefer Galerina +
-a governed host crypto library over a Rust engine.** Crypto itself cannot be pure `.spore` (proven —
-`galerina check` rejects even bitwise `^`, `tri-encription/spore/probe-no-bitwise.spore`), so the cryptographic
+a governed host crypto library over a Rust engine.** Crypto itself cannot be pure `.fungi` (proven —
+`galerina check` rejects even bitwise `^`, `tri-encription/fungi/probe-no-bitwise.fungi`), so the cryptographic
 primitives run as a **vetted host library invoked across the Galerina governance/capability boundary** (the
 seam: Galerina governs *whether* it runs; the host lib computes the exact bytes). For `#34` the natural,
 no-new-dependency path is Galerina's existing attestation host-call surface — **`@noble/post-quantum`

@@ -1,6 +1,6 @@
 # Galerina — wasmtime Compilation Roadmap
 
-**Goal:** `wasmtime galerina-runtime.wasm program.spore` executes a `.spore` source file
+**Goal:** `wasmtime galerina-runtime.wasm program.fungi` executes a `.fungi` source file
 without Node.js. Stage-B is the runtime; Stage-A is only a build tool during the
 compilation step, not a host at runtime.
 
@@ -8,20 +8,20 @@ compilation step, not a host at runtime.
 
 ## Current state
 
-Stage-B (the self-hosted Galerina runtime) consists of **8 `.spore` modules** that together
+Stage-B (the self-hosted Galerina runtime) consists of **8 `.fungi` modules** that together
 implement the full lex → parse → type/effect/govern → GIR → execute pipeline entirely
 in Galerina:
 
 | Module | File | Pipeline role |
 |---|---|---|
-| Lexer | `lexer.spore` | Tokenises `.spore` source text |
-| Parser | `parser.spore` | Builds a typed flow AST |
-| Type-checker | `type-checker.spore` | Validates types and return shapes |
-| Effect-checker | `effect-checker.spore` | Reconciles declared vs actual effects |
-| Governance verifier | `governance-verifier.spore` | Enforces contract rules (deny-by-default) |
-| GIR emitter | `gir-emitter.spore` | Lowers AST to Governed Intermediate Representation |
-| Runtime | `runtime.spore` | Executes GIR — the tree-walking engine |
-| Capabilities | `compiler.capabilities.spore` | Declares and enforces capability boundaries |
+| Lexer | `lexer.fungi` | Tokenises `.fungi` source text |
+| Parser | `parser.fungi` | Builds a typed flow AST |
+| Type-checker | `type-checker.fungi` | Validates types and return shapes |
+| Effect-checker | `effect-checker.fungi` | Reconciles declared vs actual effects |
+| Governance verifier | `governance-verifier.fungi` | Enforces contract rules (deny-by-default) |
+| GIR emitter | `gir-emitter.fungi` | Lowers AST to Governed Intermediate Representation |
+| Runtime | `runtime.fungi` | Executes GIR — the tree-walking engine |
+| Capabilities | `compiler.capabilities.fungi` | Declares and enforces capability boundaries |
 
 All eight modules run today, but they are **hosted by the Stage-A TypeScript interpreter
 inside Node.js**. Every governance check, every type validation, every GIR evaluation is
@@ -44,7 +44,7 @@ be met before the compiled binary exists:
    unit before the WAT emitter is invoked (the emitter currently processes one program at
    a time).
 3. **WASI host shim** — a WASM Component Model shim must expose `wasi:filesystem/read`
-   and `wasi:cli/args` so the running WASM binary can accept a `.spore` source path from
+   and `wasi:cli/args` so the running WASM binary can accept a `.fungi` source path from
    the command line and read the file.
 
 SIMD expansion (Phase 6.6 in the completion roadmap) is deliberately deferred until after
@@ -59,18 +59,18 @@ the baseline binary is working and benchmarked.
 Resolve import order (capabilities → lexer → parser → type-checker → effect-checker →
 governance-verifier → gir-emitter → runtime) and concatenate into one logical program.
 The merged source must expose a single entry-point flow, `runPipeline`, that accepts a
-`.spore` source string and returns the execution result.
+`.fungi` source string and returns the execution result.
 
 ```
 src/self-hosted/
-  compiler.capabilities.spore
-  lexer.spore
-  parser.spore
-  type-checker.spore
-  effect-checker.spore
-  governance-verifier.spore
-  gir-emitter.spore
-  runtime.spore        ← entry point: runPipeline(source: String) -> RtValue
+  compiler.capabilities.fungi
+  lexer.fungi
+  parser.fungi
+  type-checker.fungi
+  effect-checker.fungi
+  governance-verifier.fungi
+  gir-emitter.fungi
+  runtime.fungi        ← entry point: runPipeline(source: String) -> RtValue
 ```
 
 ### Step 2 — Run the merged source through the Stage-A pipeline (build-tool role)
@@ -79,9 +79,9 @@ Use Stage-A purely as a build tool — the TypeScript compiler is never a runtim
 after this point.
 
 ```bash
-node galerina-cli.mjs --parse     merged-runtime.spore   # parseProgram
-node galerina-cli.mjs --typecheck merged-runtime.spore   # checkTypes
-node galerina-cli.mjs --govern    merged-runtime.spore   # verifyGovernance
+node galerina-cli.mjs --parse     merged-runtime.fungi   # parseProgram
+node galerina-cli.mjs --typecheck merged-runtime.fungi   # checkTypes
+node galerina-cli.mjs --govern    merged-runtime.fungi   # verifyGovernance
 ```
 
 All three passes must emit `ACCEPT` before proceeding. Any `REJECT` or
@@ -93,7 +93,7 @@ emitter.
 ```bash
 node galerina-cli.mjs --emit-wat --target wasm \
   --entry runPipeline \
-  merged-runtime.spore \
+  merged-runtime.fungi \
   -o galerina-runtime.wat
 ```
 
@@ -127,7 +127,7 @@ Toolchain: [wabt](https://github.com/WebAssembly/wabt) (provides `wat2wasm`),
 
 | Interface | Purpose |
 |---|---|
-| `wasi:filesystem/read` | Read the `.spore` source file passed on the command line |
+| `wasi:filesystem/read` | Read the `.fungi` source file passed on the command line |
 | `wasi:cli/args` | Receive the source file path as `argv[1]` |
 
 The shim is implemented as a WASM Component Model adapter — it wraps
@@ -144,16 +144,16 @@ wasm-tools component new galerina-runtime.wasm \
 ### Step 6 — Run
 
 ```bash
-wasmtime galerina-runtime.wasm --invoke runPipeline my-program.spore
+wasmtime galerina-runtime.wasm --invoke runPipeline my-program.fungi
 ```
 
 Or, once a WASI CLI entry point is wired, the simpler invocation:
 
 ```bash
-wasmtime galerina-runtime.wasm my-program.spore
+wasmtime galerina-runtime.wasm my-program.fungi
 ```
 
-The WASM binary reads `my-program.spore` from the filesystem via the WASI shim and
+The WASM binary reads `my-program.fungi` from the filesystem via the WASI shim and
 executes it through the full self-hosted pipeline — no Node.js in the path.
 
 ---
@@ -174,10 +174,10 @@ executes it through the full self-hosted pipeline — no Node.js in the path.
 
 | Phase | Task | Status |
 |---|---|---|
-| 6.1 | Compile `runtime.spore` through Phase 27 WAT emitter → `galerina-runtime.wat` | pending |
+| 6.1 | Compile `runtime.fungi` through Phase 27 WAT emitter → `galerina-runtime.wat` | pending |
 | 6.2 | Assemble `galerina-runtime.wat` → `galerina-runtime.wasm` via wabt | pending |
 | 6.3 | WASI host shim — expose `wasi:filesystem` + `wasi:cli` to the WASM binary | pending |
-| 6.4 | `wasmtime galerina-runtime.wasm <program.spore>` — end-to-end run | pending |
+| 6.4 | `wasmtime galerina-runtime.wasm <program.fungi>` — end-to-end run | pending |
 | 6.5 | Benchmark: governance-cost governed via wasmtime vs baseline 3.2K/s | pending |
 | 6.6 | WASM SIMD expansion — f32x4, i8x16 shuffle, vectorised string ops | pending (after baseline) |
 

@@ -7,7 +7,7 @@
 //
 //   • A STUB package (no src/ and no dist/) is inert — it cannot fail open. PASS (contract pending).
 //   • An IMPLEMENTED package (has src/ or dist/) MUST also ship a committed fail-closed acceptance test
-//     (a file matching /(failclosed|acceptance)\.test\./i under the package) exercising its SPORE-WEB-*
+//     (a file matching /(failclosed|acceptance)\.test\./i under the package) exercising its FUNGI-WEB-*
 //     invariants. An impl WITHOUT that test is a VIOLATION — you cannot ship a web-* impl that hasn't
 //     proven its unknown->DENY behaviour. The RD-0100 rule "do NOT promote to BUILD without committing
 //     the acceptance tests" is thus enforced, not advisory.
@@ -43,7 +43,7 @@ export function classifyPackage(pkgName, { exists, hasImpl, hasAcceptanceTest })
   if (!hasAcceptanceTest) {
     return { pkg: pkgName, status: "IMPL_NO_TESTS", violation: true,
       reason: "implementation present (src/ or dist/) but NO fail-closed acceptance test (/(failclosed|acceptance).test./) " +
-              "— a web-* impl must be born fail-closed; commit the SPORE-WEB-* acceptance tests from governance/web-failclosed-contract.json in the same change" };
+              "— a web-* impl must be born fail-closed; commit the FUNGI-WEB-* acceptance tests from governance/web-failclosed-contract.json in the same change" };
   }
   return { pkg: pkgName, status: "IMPL_GUARDED", violation: false,
     reason: "implementation + fail-closed acceptance test both present" };
@@ -87,7 +87,7 @@ export function scan() {
   for (const name of onDisk) {
     if (!governed.includes(name)) {
       results.push({ pkg: name, status: "UNGOVERNED", violation: true,
-        reason: "a galerina-web-* package exists on disk but is NOT in governance/web-failclosed-contract.json (add it + its SPORE-WEB-* invariants)" });
+        reason: "a galerina-web-* package exists on disk but is NOT in governance/web-failclosed-contract.json (add it + its FUNGI-WEB-* invariants)" });
     }
   }
   return results;

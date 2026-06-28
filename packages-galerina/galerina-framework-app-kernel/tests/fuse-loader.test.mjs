@@ -27,7 +27,7 @@ function capturingWarn() {
 // Copy the built demo package into a throwaway dir so destructive tests don't touch
 // the real artifacts. Returns the temp package dir (with dist/ populated).
 function copyDemo() {
-  const root = mkdtempSync(join(tmpdir(), "spore-fuse-"));
+  const root = mkdtempSync(join(tmpdir(), "fungi-fuse-"));
   const pkg = join(root, "my-custom-api-rest");
   mkdirSync(pkg, { recursive: true });
   cpSync(DEMO_DIR, pkg, { recursive: true });
@@ -84,7 +84,7 @@ test("the built demo package fuses (allowUnsigned: placeholder-signed) and invok
   // The demo's main() returns the HTTP status 200 directly (pure governed flow).
   assert.equal(component.invoke("main"), 200);
   // allowUnsigned must WARN that it admitted an unsigned manifest.
-  assert.ok(lines.some((l) => l.includes("SPORE-FUSE-UNSIGNED-ALLOWED")), "expected an unsigned-allowed warning");
+  assert.ok(lines.some((l) => l.includes("FUNGI-FUSE-UNSIGNED-ALLOWED")), "expected an unsigned-allowed warning");
 });
 
 // ── 2 — a tampered .wasm (hash ≠ signed descriptor) is rejected, fail-closed ──
@@ -99,7 +99,7 @@ test("a tampered .wasm (sha256 mismatch vs signed descriptor) is rejected", asyn
 
     await assert.rejects(
       () => fusePackage(pkg, { allowUnsigned: true }),
-      /SPORE-FUSE-HASH-MISMATCH/,
+      /FUNGI-FUSE-HASH-MISMATCH/,
     );
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -130,10 +130,10 @@ test("a host import for a NON-declared capability is absent (deny-by-default)", 
 });
 
 // An undeclarable capability (no factory) is refused outright — deny-by-default.
-test("a capability with no host-import factory is refused (SPORE-FUSE-UNKNOWN-CAP)", () => {
+test("a capability with no host-import factory is refused (FUNGI-FUSE-UNKNOWN-CAP)", () => {
   assert.throws(
     () => buildCapabilityImports(["filesystem.write"], { "network.inbound": () => ({ namespace: "n", functions: {} }) }),
-    /SPORE-FUSE-UNKNOWN-CAP/,
+    /FUNGI-FUSE-UNKNOWN-CAP/,
   );
 });
 
@@ -141,7 +141,7 @@ test("a capability with no host-import factory is refused (SPORE-FUSE-UNKNOWN-CA
 test("an unsigned (placeholder) manifest is refused without allowUnsigned", async () => {
   await assert.rejects(
     () => fusePackage(DEMO_DIR, { /* allowUnsigned omitted */ warn: () => {} }),
-    /SPORE-FUSE-UNSIGNED/,
+    /FUNGI-FUSE-UNSIGNED/,
   );
 });
 
@@ -173,7 +173,7 @@ test("a real Ed25519-signed manifest is verified; tampering the body is rejected
     const { warn, lines } = capturingWarn();
     const component = await fusePackage(pkg, { governanceDir: govDir, warn });
     assert.equal(component.invoke("main"), 200);
-    assert.ok(!lines.some((l) => l.includes("SPORE-FUSE-UNSIGNED")), "a verified manifest must not warn unsigned");
+    assert.ok(!lines.some((l) => l.includes("FUNGI-FUSE-UNSIGNED")), "a verified manifest must not warn unsigned");
 
     // Now TAMPER the signed body (flip a field) without re-signing → verification fails.
     const tampered = JSON.parse(readFileSync(manifestPath, "utf8"));
@@ -182,7 +182,7 @@ test("a real Ed25519-signed manifest is verified; tampering the body is rejected
 
     await assert.rejects(
       () => fusePackage(pkg, { governanceDir: govDir, warn: () => {} }),
-      /SPORE-FUSE-SIG-INVALID/,
+      /FUNGI-FUSE-SIG-INVALID/,
     );
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -211,12 +211,12 @@ test("a validly-signed manifest whose signing key is REVOKED is refused (fail-cl
     // The signature is CRYPTOGRAPHICALLY VALID — but the key is revoked → refuse (the core audit gap).
     await assert.rejects(
       () => fusePackage(pkg, { governanceDir: govDir, warn: () => {}, revocationCheck: (k) => k === keyId }),
-      /SPORE-FUSE-KEY-REVOKED/,
+      /FUNGI-FUSE-KEY-REVOKED/,
     );
     // A revocation check that THROWS (e.g. an untrustworthy/tampered registry) is itself fail-closed.
     await assert.rejects(
       () => fusePackage(pkg, { governanceDir: govDir, warn: () => {}, revocationCheck: () => { throw new Error("registry untrusted"); } }),
-      /SPORE-FUSE-REVOCATION-UNVERIFIABLE/,
+      /FUNGI-FUSE-REVOCATION-UNVERIFIABLE/,
     );
     // A NON-revoked key still fuses — the gate blocks ONLY revoked keys.
     const ok = await fusePackage(pkg, { governanceDir: govDir, warn: () => {}, revocationCheck: () => false });
@@ -263,7 +263,7 @@ test("a jcs (RFC 8785 canonical) Ed25519 signature verifies through the loader (
     writeFileSync(manifestPath, JSON.stringify(tampered, null, 2));
     await assert.rejects(
       () => fusePackage(pkg, { governanceDir: govDir, warn: () => {} }),
-      /SPORE-FUSE-SIG-INVALID/,
+      /FUNGI-FUSE-SIG-INVALID/,
     );
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -281,7 +281,7 @@ test("a .fuse.json whose wasmSha256 disagrees with the signed manifest is reject
 
     await assert.rejects(
       () => fusePackage(pkg, { allowUnsigned: true, warn: () => {} }),
-      /SPORE-FUSE-SIDECAR-DRIFT/,
+      /FUNGI-FUSE-SIDECAR-DRIFT/,
     );
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -319,19 +319,19 @@ test("injected hybridVerifier is honored fail-closed for a HYBRID manifest", asy
   // (b) "invalid" → the loader THROWS (tamper), fail-closed.
   { const { root, pkg } = mkHybrid();
     try {
-      await assert.rejects(() => fusePackage(pkg, { warn: () => {}, hybridVerifier: () => "invalid" }), /SPORE-FUSE-HYBRID-INVALID/);
+      await assert.rejects(() => fusePackage(pkg, { warn: () => {}, hybridVerifier: () => "invalid" }), /FUNGI-FUSE-HYBRID-INVALID/);
     } finally { rmSync(root, { recursive: true, force: true }); } }
 
   // (c) a THROWING verifier fails closed.
   { const { root, pkg } = mkHybrid();
     try {
-      await assert.rejects(() => fusePackage(pkg, { warn: () => {}, hybridVerifier: () => { throw new Error("boom"); } }), /SPORE-FUSE-HYBRID-ERROR/);
+      await assert.rejects(() => fusePackage(pkg, { warn: () => {}, hybridVerifier: () => { throw new Error("boom"); } }), /FUNGI-FUSE-HYBRID-ERROR/);
     } finally { rmSync(root, { recursive: true, force: true }); } }
 
   // (d) "unverifiable" → treated as UNSIGNED: refused without allowUnsigned, admitted with it.
   { const { root, pkg } = mkHybrid();
     try {
-      await assert.rejects(() => fusePackage(pkg, { requireSignature: true, warn: () => {}, hybridVerifier: () => "unverifiable" }), /SPORE-FUSE-UNSIGNED/);
+      await assert.rejects(() => fusePackage(pkg, { requireSignature: true, warn: () => {}, hybridVerifier: () => "unverifiable" }), /FUNGI-FUSE-UNSIGNED/);
       const c = await fusePackage(pkg, { allowUnsigned: true, warn: () => {}, hybridVerifier: () => "unverifiable" });
       assert.equal(c.invoke("main"), 200);
     } finally { rmSync(root, { recursive: true, force: true }); } }
@@ -340,8 +340,8 @@ test("injected hybridVerifier is honored fail-closed for a HYBRID manifest", asy
   { const { root, pkg } = mkHybrid();
     try {
       const { warn, lines } = capturingWarn();
-      await assert.rejects(() => fusePackage(pkg, { requireSignature: true, warn }), /SPORE-FUSE-UNSIGNED/);
-      assert.ok(lines.some((l) => l.includes("SPORE-FUSE-HYBRID-UNVERIFIED")), "must warn hybrid-unverified when no verifier is injected");
+      await assert.rejects(() => fusePackage(pkg, { requireSignature: true, warn }), /FUNGI-FUSE-UNSIGNED/);
+      assert.ok(lines.some((l) => l.includes("FUNGI-FUSE-HYBRID-UNVERIFIED")), "must warn hybrid-unverified when no verifier is injected");
     } finally { rmSync(root, { recursive: true, force: true }); } }
 
   // (f) an ASYNC verifier (the real reference verifier is async — verifyGovernanceSignatureHybrid dynamic-imports
@@ -353,6 +353,6 @@ test("injected hybridVerifier is honored fail-closed for a HYBRID manifest", asy
     } finally { rmSync(root, { recursive: true, force: true }); } }
   { const { root, pkg } = mkHybrid();
     try {
-      await assert.rejects(() => fusePackage(pkg, { warn: () => {}, hybridVerifier: () => Promise.reject(new Error("async boom")) }), /SPORE-FUSE-HYBRID-ERROR/);
+      await assert.rejects(() => fusePackage(pkg, { warn: () => {}, hybridVerifier: () => Promise.reject(new Error("async boom")) }), /FUNGI-FUSE-HYBRID-ERROR/);
     } finally { rmSync(root, { recursive: true, force: true }); } }
 });

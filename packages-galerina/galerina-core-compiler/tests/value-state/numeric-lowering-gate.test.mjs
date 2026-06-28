@@ -1,5 +1,5 @@
 // =============================================================================
-// SPORE-NUMERIC-001 — backend numeric-lowering safety gate (fail-closed)
+// FUNGI-NUMERIC-001 — backend numeric-lowering safety gate (fail-closed)
 //
 // A scalar 64-bit width the WASM emitter cannot lower faithfully would be SILENTLY TRUNCATED
 // 64→32 bit (a fail-open correctness hazard). checkValueStates rejects it fail-closed (always,
@@ -20,15 +20,15 @@ import { describe, it } from "node:test";
 import { parseProgram, checkValueStates } from "../../dist/index.js";
 
 const numericDiags = (src) => {
-  const parsed = parseProgram(src, "numeric-gate-test.spore");
+  const parsed = parseProgram(src, "numeric-gate-test.fungi");
   const result = checkValueStates(parsed.ast);
-  return (result.diagnostics ?? []).filter((d) => d.code === "SPORE-NUMERIC-001");
+  return (result.diagnostics ?? []).filter((d) => d.code === "FUNGI-NUMERIC-001");
 };
 
-describe("SPORE-NUMERIC-001: UInt64 is LIFTED — admitted faithfully (the gate set is now empty)", () => {
+describe("FUNGI-NUMERIC-001: UInt64 is LIFTED — admitted faithfully (the gate set is now empty)", () => {
   it("does NOT flag a scalar UInt64 RETURN type (#52 unlock)", () => {
     const diags = numericDiags(`pure flow widePay() -> UInt64 {\n  let amount: Int = 5\n  return amount\n}\n`);
-    assert.equal(diags.length, 0, `UInt64 is unlocked — no SPORE-NUMERIC-001 expected, got ${diags.length}`);
+    assert.equal(diags.length, 0, `UInt64 is unlocked — no FUNGI-NUMERIC-001 expected, got ${diags.length}`);
   });
 
   it("does NOT flag a scalar UInt64 PARAMETER or LOCAL (#52 unlock)", () => {
@@ -37,7 +37,7 @@ describe("SPORE-NUMERIC-001: UInt64 is LIFTED — admitted faithfully (the gate 
   });
 });
 
-describe("SPORE-NUMERIC-001: no false positives", () => {
+describe("FUNGI-NUMERIC-001: no false positives", () => {
   it("does NOT flag a scalar Int64 (LIFTED — emitter lowers it faithfully to i64)", () => {
     // Return, param, and local Int64 are all admitted post-lift.
     assert.equal(numericDiags(`pure flow widePay() -> Int64 {\n  let amount: Int = 5\n  return amount\n}\n`).length, 0);

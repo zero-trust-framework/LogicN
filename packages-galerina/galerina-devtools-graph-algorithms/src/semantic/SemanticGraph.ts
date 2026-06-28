@@ -10,7 +10,7 @@
 // Spec:   galerina-semantic-graph-system.md
 //
 // Location: galerina-devtools-graph-algorithms (monorepo-first)
-// Future:   extract to C:\laragon\www\SPORE-Graph once API stabilises
+// Future:   extract to C:\laragon\www\FUNGI-Graph once API stabilises
 // =============================================================================
 
 // ---------------------------------------------------------------------------
@@ -77,7 +77,7 @@ export interface SemanticEdge {
 export interface SemanticGraph {
   readonly schemaVersion: "1.0";
   readonly generatedAt: string;    // ISO timestamp
-  readonly sourceFile?: string;    // primary .spore file
+  readonly sourceFile?: string;    // primary .fungi file
   readonly nodes: readonly SemanticNode[];
   readonly edges: readonly SemanticEdge[];
 }

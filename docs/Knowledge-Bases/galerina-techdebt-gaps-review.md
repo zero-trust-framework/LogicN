@@ -105,7 +105,7 @@ The distinct issues cluster into four hotspots:
   (`8eecf4187ebc9341`) recoverable from git history (`cb5036d:.env.galerina-signing`).
 - **#173 — RESOLVED (2026-06-24, verified)** WASM admission gate: the certified-profile is now
   BOUND into the signed pre-image — `wasm-runtime.ts:83` `admissionPreimage()` signs/verifies over
-  `domain‖sha256‖profile` (`SPORE-WASM-ADMIT-v1`) in BOTH `signWasm` (:91) and `verifyWasm` (:122), so a
+  `domain‖sha256‖profile` (`FUNGI-WASM-ADMIT-v1`) in BOTH `signWasm` (:91) and `verifyWasm` (:122), so a
   dev binary re-labeled `certified` no longer verifies. The earlier "open" flag was stale — it saw the
   `requireCertifiedProfile` equality check (:109), not the pre-image binding.
 - **#174 (medium/S)** Command injection in `galerina kb-graph` / `galerina diagnostic`

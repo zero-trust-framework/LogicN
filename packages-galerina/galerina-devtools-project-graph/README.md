@@ -1,4 +1,4 @@
-# SPORE-Graph
+# FUNGI-Graph
 
 **Graph data structures, algorithms, and runtime reporting for the [Galerina](https://github.com/galerina) platform.**
 
@@ -8,7 +8,7 @@
 
 ## What is it?
 
-SPORE-Graph is a standalone TypeScript library that provides:
+FUNGI-Graph is a standalone TypeScript library that provides:
 
 - An **immutable, generic graph core** (`Graph<N,E>`, `GraphBuilder<N,E>`) with O(1) node lookup
 - **Graph algorithms** — BFS path finding, DFS cycle detection, Kahn's topological sort, iterative fixpoint, reachability helpers
@@ -30,7 +30,7 @@ Galerina started with graph implementations scattered across several packages wi
 | `galerina-core-compiler` | EffectGraph and BoundaryGraph specified in KB docs but not yet data structures |
 | `galerina-core-reports` | ExecutionProofChain and EventDAG as type specs with no graph backing |
 
-This created duplicated algorithm code, no shared diagnostic format, and no common serialisation schema. SPORE-Graph consolidates all of it into one place, purpose-built for Galerina, released as a first-class standalone repo so it can evolve independently and be reused by any Galerina consumer.
+This created duplicated algorithm code, no shared diagnostic format, and no common serialisation schema. FUNGI-Graph consolidates all of it into one place, purpose-built for Galerina, released as a first-class standalone repo so it can evolve independently and be reused by any Galerina consumer.
 
 ---
 
@@ -48,7 +48,7 @@ This created duplicated algorithm code, no shared diagnostic format, and no comm
 | Produce a cryptographic proof of a build run | `buildProofChain` / `buildProofChainFromBuffers` → `upgradeExecutionProofV1ToV2` |
 | Build a causality DAG from runtime audit events | `buildEventDAG` |
 | Run a custom propagation algorithm over any graph | `fixpoint` |
-| Wrap any array-based `{ nodes[], edges[] }` structure to use lln-graph algorithms | `GraphBuilder` (ad-hoc pattern — see below) |
+| Wrap any array-based `{ nodes[], edges[] }` structure to use fungi-graph algorithms | `GraphBuilder` (ad-hoc pattern — see below) |
 
 ---
 
@@ -63,7 +63,7 @@ Or, if you are working inside the Galerina monorepo before the package is publis
 ```json
 // package.json
 "dependencies": {
-  "@galerina/devtools-project-graph": "github:galerina/lln-graph"
+  "@galerina/devtools-project-graph": "github:galerina/fungi-graph"
 }
 ```
 
@@ -126,7 +126,7 @@ import { createJsonlWriter } from "@galerina/devtools-project-graph";
 
 const writer = createJsonlWriter("build/reports/runtime-audit.jsonl");
 await writer.append({
-  schemaVersion: "spore.runtime.audit.v1",
+  schemaVersion: "fungi.runtime.audit.v1",
   eventId: "...", traceId: "...", spanId: "...",
   timestamp: new Date().toISOString(),
   category: "security", status: "allowed",
@@ -139,7 +139,7 @@ await writer.close();
 
 ## Integration pattern — wrapping legacy array-based graphs
 
-If you have an existing `{ nodes[], edges[] }` structure (e.g. from a JSON file or an older API) and want to use lln-graph's algorithms on it, build a transient graph and discard it:
+If you have an existing `{ nodes[], edges[] }` structure (e.g. from a JSON file or an older API) and want to use fungi-graph's algorithms on it, build a transient graph and discard it:
 
 ```ts
 import { GraphBuilder, bfsPath } from "@galerina/devtools-project-graph";
@@ -174,31 +174,31 @@ builder.addEdge("build", "install", { required: true }); // ❌ reversed order
 
 ## Diagnostic codes
 
-### SPORE-GRAPH-* (graph structure)
+### FUNGI-GRAPH-* (graph structure)
 
 | Code | Name | Meaning |
 |---|---|---|
-| `SPORE-GRAPH-001` | `CYCLE_DETECTED` | Graph contains a cycle where a DAG is required |
-| `SPORE-GRAPH-002` | `NODE_NOT_FOUND` | Referenced node does not exist |
-| `SPORE-GRAPH-003` | `DEPENDENCY_MISSING` | A declared dependency was not found |
-| `SPORE-GRAPH-004` | `FIXPOINT_TIMEOUT` | Iterative fixpoint did not converge within max iterations |
-| `SPORE-GRAPH-005` | `INVALID_TRANSITION` | Resource lifecycle state transition is not permitted |
+| `FUNGI-GRAPH-001` | `CYCLE_DETECTED` | Graph contains a cycle where a DAG is required |
+| `FUNGI-GRAPH-002` | `NODE_NOT_FOUND` | Referenced node does not exist |
+| `FUNGI-GRAPH-003` | `DEPENDENCY_MISSING` | A declared dependency was not found |
+| `FUNGI-GRAPH-004` | `FIXPOINT_TIMEOUT` | Iterative fixpoint did not converge within max iterations |
+| `FUNGI-GRAPH-005` | `INVALID_TRANSITION` | Resource lifecycle state transition is not permitted |
 
-### SPORE-EFFECT-* (effect checker)
+### FUNGI-EFFECT-* (effect checker)
 
-`SPORE-EFFECT-001` — `UNDECLARED_EFFECT` · `SPORE-EFFECT-002` — `EFFECT_NOT_INFERRED` · `SPORE-EFFECT-003` — `UNSAFE_EFFECT_IN_SAFE_FLOW` · `SPORE-EFFECT-004` — `TRANSITIVE_EFFECT_UNDECLARED`
+`FUNGI-EFFECT-001` — `UNDECLARED_EFFECT` · `FUNGI-EFFECT-002` — `EFFECT_NOT_INFERRED` · `FUNGI-EFFECT-003` — `UNSAFE_EFFECT_IN_SAFE_FLOW` · `FUNGI-EFFECT-004` — `TRANSITIVE_EFFECT_UNDECLARED`
 
-### SPORE-BOUNDARY-* (boundary checker)
+### FUNGI-BOUNDARY-* (boundary checker)
 
-`SPORE-BOUNDARY-001` — `DENIED_EFFECT_CROSSING` · `SPORE-BOUNDARY-002` — `SECRET_CROSSING_NON_SECRET_BOUNDARY` · `SPORE-BOUNDARY-003` — `VALIDATION_REQUIRED` · `SPORE-BOUNDARY-004` — `UNTRUSTED_SECRET_TRANSFER`
+`FUNGI-BOUNDARY-001` — `DENIED_EFFECT_CROSSING` · `FUNGI-BOUNDARY-002` — `SECRET_CROSSING_NON_SECRET_BOUNDARY` · `FUNGI-BOUNDARY-003` — `VALIDATION_REQUIRED` · `FUNGI-BOUNDARY-004` — `UNTRUSTED_SECRET_TRANSFER`
 
-### SPORE-CAPABILITY-*
+### FUNGI-CAPABILITY-*
 
-`SPORE-CAPABILITY-001` — `CAPABILITY_NOT_GRANTED`
+`FUNGI-CAPABILITY-001` — `CAPABILITY_NOT_GRANTED`
 
-### SPORE-REPORT-* / SPORE-AUDIT-*
+### FUNGI-REPORT-* / FUNGI-AUDIT-*
 
-`SPORE-REPORT-001` — invalid `schemaVersion` on audit event · `SPORE-AUDIT-003` — metadata contains a raw secret field
+`FUNGI-REPORT-001` — invalid `schemaVersion` on audit event · `FUNGI-AUDIT-003` — metadata contains a raw secret field
 
 ---
 
@@ -207,7 +207,7 @@ builder.addEdge("build", "install", { required: true }); // ❌ reversed order
 ```
 src/
   core/
-    types.ts          — NodeId, GraphNode<N>, GraphEdge<E>, Graph<N,E>, GraphJSON, LlnDiagnostic, SPORE-GRAPH-001..005
+    types.ts          — NodeId, GraphNode<N>, GraphEdge<E>, Graph<N,E>, GraphJSON, LlnDiagnostic, FUNGI-GRAPH-001..005
     graph.ts          — ImmutableGraph<N,E> implementation (not exported directly)
     builder.ts        — GraphBuilder<N,E> — the only way to construct a Graph
   algorithms/
@@ -257,7 +257,7 @@ You are free to use, modify, and distribute this library in commercial and open-
 
 Big thanks to the original graph implementations inside the Galerina monorepo that this library grew from and replaces:
 
-- **`galerina-devtools-project-graph`** — the 1 144-line workspace knowledge graph that established the `NodeKind` and `EdgeKind` taxonomy, the workspace scanning contracts, backend policy model, and the path-finding and explain APIs that lln-graph's `ProjectGraph` and `bfsPath` now power. The ideas here were solid; we just needed them on a proper algorithmic foundation.
+- **`galerina-devtools-project-graph`** — the 1 144-line workspace knowledge graph that established the `NodeKind` and `EdgeKind` taxonomy, the workspace scanning contracts, backend policy model, and the path-finding and explain APIs that fungi-graph's `ProjectGraph` and `bfsPath` now power. The ideas here were solid; we just needed them on a proper algorithmic foundation.
 
 - **`galerina-core-tasks/dependency-graph.ts`** — the original hand-written DFS that proved the dependency resolution contract (task ordering, cycle detection, missing dependency errors) that `resolveDependencies` and `buildDependencyGraph` now fulfil with Kahn's algorithm.
 

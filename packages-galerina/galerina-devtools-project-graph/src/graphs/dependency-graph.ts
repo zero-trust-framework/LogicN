@@ -1,10 +1,10 @@
 // =============================================================================
-// lln-graph — DependencyGraph
+// fungi-graph — DependencyGraph
 //
 // Task execution dependency graph with cycle detection and topological sort.
 // Replaces galerina-core-tasks/src/dependency-graph.ts.
 //
-// Error codes updated to SPORE-PGRAPH-* format for consistency.
+// Error codes updated to FUNGI-PGRAPH-* format for consistency.
 //
 // EDGE DIRECTION NOTE (critical for consumers):
 //
@@ -24,7 +24,7 @@
 import { GraphBuilder } from "../core/builder.js";
 import { topoSort } from "../algorithms/topo.js";
 import type { Graph, LlnDiagnostic } from "../core/types.js";
-import { LLN_PGRAPH_001, LLN_PGRAPH_003 } from "../core/types.js";
+import { FUNGI_PGRAPH_001, FUNGI_PGRAPH_003 } from "../core/types.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -61,7 +61,7 @@ export interface TaskEntry {
  * `resolveDependencies()` returns nodes in this natural topoSort order
  * (prerequisites first) — **no reversal is applied or needed**.
  *
- * Missing dependency targets are recorded as diagnostics (SPORE-PGRAPH-003)
+ * Missing dependency targets are recorded as diagnostics (FUNGI-PGRAPH-003)
  * rather than throwing, so the caller can decide how to surface them.
  *
  * @example
@@ -93,7 +93,7 @@ export function buildDependencyGraph(tasks: readonly TaskEntry[]): {
     for (const dep of task.depends ?? []) {
       if (!knownNames.has(dep)) {
         diagnostics.push({
-          ...LLN_PGRAPH_003,
+          ...FUNGI_PGRAPH_003,
           message: `Task "${task.name}" depends on "${dep}" which is not declared.`,
         });
         continue;
@@ -128,7 +128,7 @@ export type DependencyResolution =
  * alphabetically by id.
  *
  * Returns `ok: false` with the cycle node ids when the graph is not a DAG.
- * The `diagnostic` property carries the `SPORE-PGRAPH-001` (CYCLE_DETECTED) code.
+ * The `diagnostic` property carries the `FUNGI-PGRAPH-001` (CYCLE_DETECTED) code.
  *
  * **No reversal is applied.** `buildDependencyGraph` uses the dep→task edge
  * direction so that the raw topoSort order is already correct for execution.
@@ -146,7 +146,7 @@ export function resolveDependencies(graph: DependencyGraph): DependencyResolutio
     order: result.order,
     cycle: result.cycle,
     diagnostic: {
-      ...LLN_PGRAPH_001,
+      ...FUNGI_PGRAPH_001,
       message: `Circular dependency detected between tasks: ${result.cycle.join(" → ")}.`,
     },
   };

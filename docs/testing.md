@@ -3,7 +3,7 @@
 ## Summary
 
 This workspace currently uses the Galerina core prototype for checked Run Mode smoke
-tests. These tests execute `.spore` source directly and do not produce compiled
+tests. These tests execute `.fungi` source directly and do not produce compiled
 artefacts.
 
 ## Current Smoke Tests
@@ -11,11 +11,11 @@ artefacts.
 The app-kernel package has checked Run Mode fixtures:
 
 ```text
-packages-galerina/galerina-framework-app-kernel/tests/hello-world.spore
-packages-galerina/galerina-framework-app-kernel/tests/vector-function.spore
-packages-galerina/galerina-framework-app-kernel/tests/sum.spore
-packages-galerina/galerina-framework-app-kernel/tests/decimal-sum.spore
-packages-galerina/galerina-framework-app-kernel/tests/json-return.spore
+packages-galerina/galerina-framework-app-kernel/tests/hello-world.fungi
+packages-galerina/galerina-framework-app-kernel/tests/vector-function.fungi
+packages-galerina/galerina-framework-app-kernel/tests/sum.fungi
+packages-galerina/galerina-framework-app-kernel/tests/decimal-sum.fungi
+packages-galerina/galerina-framework-app-kernel/tests/json-return.fungi
 ```
 
 Run all app-kernel fixtures from the workspace root:
@@ -51,9 +51,9 @@ packages-galerina/galerina-framework-example-app/tests/
 `-- integration/
 
 packages-galerina/galerina-framework-app-kernel/tests/
-|-- hello-world.spore
-|-- vector-function.spore
-|-- sum.spore
-|-- decimal-sum.spore
-`-- json-return.spore
+|-- hello-world.fungi
+|-- vector-function.fungi
+|-- sum.fungi
+|-- decimal-sum.fungi
+`-- json-return.fungi
 ```

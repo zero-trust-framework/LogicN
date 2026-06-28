@@ -59,7 +59,7 @@ The session's `wat-i64-differential.test.mjs` is a correct differential, but **b
    independence. (The current hardcoded expects are already hand-derived from the spec — this makes the
    oracle explicit + reusable.)
 3. **Property/structured fuzzing:** `fast-check` over op-templates with shrinking (the EMI/Csmith analogue),
-   then a small grammar of nested Int64 flows. **Do NOT** build a full Csmith-grade `.spore` generator yet.
+   then a small grammar of nested Int64 flows. **Do NOT** build a full Csmith-grade `.fungi` generator yet.
 4. **Mutation testing:** Stryker over `wat-emitter.ts` + `i64-arith.ts` — a surviving mutant marks a hole.
 5. **Bounded Z3 QF-BV proof:** each emitted i64 op as bit-vectors vs the spec → universal coverage of the
    corners (mirrors the i32-conformance plan). Complements, does not supplant, the differential.

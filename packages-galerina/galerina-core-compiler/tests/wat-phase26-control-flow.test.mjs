@@ -18,7 +18,7 @@ import {
 } from "../dist/index.js";
 
 function compileToWAT(src) {
-  const prog = parseProgram(src, "test.spore");
+  const prog = parseProgram(src, "test.fungi");
   const errs = (prog.diagnostics ?? []).filter(d => d.severity === "error");
   if (errs.length > 0) throw new Error("Parse error: " + errs.map(d => d.message).join("; "));
   const fx = checkEffects(prog.flows, prog.ast);
@@ -53,7 +53,7 @@ describe("Phase 26: if/else value-producing", () => {
     assert.ok(wat.includes("(if (result i32)"));
     assert.ok(wat.includes("i32.lt_s"));
     // owner Fork A=TRAP: `0 - x` lowers to the checked-sub helper call
-    assert.ok(wat.includes("call $spore_checked_sub_i32"));
+    assert.ok(wat.includes("call $fungi_checked_sub_i32"));
   });
 
   it("equals(a, b) → 1 or 0 via == comparison", () => {

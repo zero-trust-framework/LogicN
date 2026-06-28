@@ -84,7 +84,7 @@ pure flow add(a: Int, b: Int) -> Int {
   return a + b
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const args = new Map([
       ["a", { __tag: "int", value: 3 }],
       ["b", { __tag: "int", value: 4 }],
@@ -101,7 +101,7 @@ pure flow double(n: Int) -> Int {
   return n + n
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
 
     for (const n of [1, 5, 10, 100]) {
       const args = new Map([["n", { __tag: "int", value: n }]]);
@@ -119,7 +119,7 @@ flow sayHello29(name: String) -> String {
   return "Hello"
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const args = new Map([["name", { __tag: "string", value: "World" }]]);
     const result = await executeFlow("sayHello29", args, parsed.ast, parsed.flows);
     assert.equal(result.value.__tag, "string");
@@ -132,7 +132,7 @@ pure flow square(n: Int) -> Int {
   return n * n
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const args = new Map([["n", { __tag: "int", value: 6 }]]);
     const result = await executeFlow("square", args, parsed.ast, parsed.flows);
 
@@ -159,7 +159,7 @@ describe("Phase 29C: checkProductionReadiness", () => {
 
   it("returns ready=false for any error-severity diagnostic", () => {
     const r = checkProductionReadiness([
-      { code: "SPORE-TYPE-001", severity: "error", message: "Type mismatch" },
+      { code: "FUNGI-TYPE-001", severity: "error", message: "Type mismatch" },
     ]);
     assert.equal(r.ready, false);
     assert.equal(r.errors, 1);
@@ -167,7 +167,7 @@ describe("Phase 29C: checkProductionReadiness", () => {
 
   it("counts warnings without blocking", () => {
     const r = checkProductionReadiness([
-      { code: "SPORE-EFFECT-005", severity: "warning", message: "Broad alias used" },
+      { code: "FUNGI-EFFECT-005", severity: "warning", message: "Broad alias used" },
     ]);
     assert.equal(r.ready, true);
     assert.equal(r.errors, 0);
@@ -177,43 +177,43 @@ describe("Phase 29C: checkProductionReadiness", () => {
 
   it("adds production-blocker codes to blockers list", () => {
     const r = checkProductionReadiness([
-      { code: "SPORE-SEC-020", severity: "error", message: "Runtime mutation" },
+      { code: "FUNGI-SEC-020", severity: "error", message: "Runtime mutation" },
     ]);
     assert.equal(r.ready, false);
     assert.equal(r.errors, 1);
     assert.equal(r.blockers.length, 1);
-    assert.ok(r.blockers[0].includes("SPORE-SEC-020"));
+    assert.ok(r.blockers[0].includes("FUNGI-SEC-020"));
   });
 
-  it("SPORE-SAFETY-004 (secret literal) is a production blocker", () => {
+  it("FUNGI-SAFETY-004 (secret literal) is a production blocker", () => {
     const r = checkProductionReadiness([
-      { code: "SPORE-SAFETY-004", severity: "error", message: "Secret literal" },
+      { code: "FUNGI-SAFETY-004", severity: "error", message: "Secret literal" },
     ]);
     assert.equal(r.ready, false);
-    assert.ok(r.blockers.some((b) => b.includes("SPORE-SAFETY-004")));
+    assert.ok(r.blockers.some((b) => b.includes("FUNGI-SAFETY-004")));
   });
 
-  it("SPORE-BUILD-001 (non-deterministic build) is a production blocker", () => {
+  it("FUNGI-BUILD-001 (non-deterministic build) is a production blocker", () => {
     const r = checkProductionReadiness([
-      { code: "SPORE-BUILD-001", severity: "error", message: "Non-deterministic" },
+      { code: "FUNGI-BUILD-001", severity: "error", message: "Non-deterministic" },
     ]);
     assert.equal(r.ready, false);
-    assert.ok(r.blockers.some((b) => b.includes("SPORE-BUILD-001")));
+    assert.ok(r.blockers.some((b) => b.includes("FUNGI-BUILD-001")));
   });
 
   it("multiple diagnostics: counts errors and warnings independently", () => {
     const diagnostics = [
-      { code: "SPORE-EFFECT-005", severity: "warning", message: "Broad alias" },
-      { code: "SPORE-TYPE-002", severity: "error", message: "Narrowing" },
-      { code: "SPORE-MEMORY-008", severity: "error", message: "unsafe block missing reason" },
+      { code: "FUNGI-EFFECT-005", severity: "warning", message: "Broad alias" },
+      { code: "FUNGI-TYPE-002", severity: "error", message: "Narrowing" },
+      { code: "FUNGI-MEMORY-008", severity: "error", message: "unsafe block missing reason" },
     ];
     const r = checkProductionReadiness(diagnostics);
     assert.equal(r.ready, false);
     assert.equal(r.errors, 2);
     assert.equal(r.warnings, 1);
-    // SPORE-MEMORY-008 is a blocker WITH A REAL EMITTER (detectUnsafeBlockWithoutReason); SPORE-TYPE-002 is
+    // FUNGI-MEMORY-008 is a blocker WITH A REAL EMITTER (detectUnsafeBlockWithoutReason); FUNGI-TYPE-002 is
     // an error but not in PRODUCTION_BLOCKERS. (001/002/003/007 removed — RESERVED, no emitter; RD-0124.)
-    assert.ok(r.blockers.some((b) => b.includes("SPORE-MEMORY-008")));
+    assert.ok(r.blockers.some((b) => b.includes("FUNGI-MEMORY-008")));
   });
 
   it("handles diagnostics without code or message gracefully", () => {
@@ -227,7 +227,7 @@ describe("Phase 29C: checkProductionReadiness", () => {
 
   it("blockers list is frozen (readonly)", () => {
     const r = checkProductionReadiness([
-      { code: "SPORE-SEC-020", severity: "error", message: "Runtime mutation" },
+      { code: "FUNGI-SEC-020", severity: "error", message: "Runtime mutation" },
     ]);
     assert.ok(Object.isFrozen(r.blockers), "blockers should be frozen");
   });
@@ -235,19 +235,19 @@ describe("Phase 29C: checkProductionReadiness", () => {
   // #65 / RD-0130 tripwire: the RESERVED (un-emitted) memory codes must NEVER be production
   // blockers — a blocker no pass can emit is a false capability claim (RD-0124). Galerina is
   // value-semantics, so 001..007 (use-after-move / borrow-* / readonly-mutation / mutable-alias /
-  // compile-time bounds / unchecked-access) have no emitter. Only SPORE-MEMORY-008 (wired via
+  // compile-time bounds / unchecked-access) have no emitter. Only FUNGI-MEMORY-008 (wired via
   // detectUnsafeBlockWithoutReason) is a memory blocker. Re-adding any of 001..007 here flips this red.
-  it("reserved memory codes SPORE-MEMORY-001..007 are NOT production blockers; 008 is", () => {
+  it("reserved memory codes FUNGI-MEMORY-001..007 are NOT production blockers; 008 is", () => {
     for (const code of [
-      "SPORE-MEMORY-001", "SPORE-MEMORY-002", "SPORE-MEMORY-003",
-      "SPORE-MEMORY-004", "SPORE-MEMORY-005", "SPORE-MEMORY-006", "SPORE-MEMORY-007",
+      "FUNGI-MEMORY-001", "FUNGI-MEMORY-002", "FUNGI-MEMORY-003",
+      "FUNGI-MEMORY-004", "FUNGI-MEMORY-005", "FUNGI-MEMORY-006", "FUNGI-MEMORY-007",
     ]) {
       // severity "warning" isolates blocker-set membership from the error count.
       const r = checkProductionReadiness([{ code, severity: "warning", message: code }]);
       assert.equal(r.blockers.length, 0, `${code} must NOT be a production blocker (RESERVED, no emitter — value-semantics #65)`);
       assert.equal(r.ready, true, `${code} as a warning must leave the program production-ready`);
     }
-    const r8 = checkProductionReadiness([{ code: "SPORE-MEMORY-008", severity: "warning", message: "unsafe block missing reason" }]);
-    assert.ok(r8.blockers.some((b) => b.includes("SPORE-MEMORY-008")), "SPORE-MEMORY-008 (the one WIRED memory code) must remain a production blocker");
+    const r8 = checkProductionReadiness([{ code: "FUNGI-MEMORY-008", severity: "warning", message: "unsafe block missing reason" }]);
+    assert.ok(r8.blockers.some((b) => b.includes("FUNGI-MEMORY-008")), "FUNGI-MEMORY-008 (the one WIRED memory code) must remain a production blocker");
   });
 });

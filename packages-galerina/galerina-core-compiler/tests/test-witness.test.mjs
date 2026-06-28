@@ -12,20 +12,20 @@ import {
 const WASM = "a".repeat(64);            // a stand-in wasm sha256 hex
 const OTHER = "b".repeat(64);
 
-const cleanProof = { schema: "spore.leakproof.v1", verdict: "clean", leaks: [], summary: { total: 0, denies: 0, byCategory: {} } };
+const cleanProof = { schema: "fungi.leakproof.v1", verdict: "clean", leaks: [], summary: { total: 0, denies: 0, byCategory: {} } };
 const denyFinding = {
-  code: "SPORE-SECRET-002", category: "secret-egress", severity: "deny", capability: "secret.read",
-  site: { file: "a.spore", line: 1, column: 1 }, related: [], why: "raw secret reaches a network sink",
+  code: "FUNGI-SECRET-002", category: "secret-egress", severity: "deny", capability: "secret.read",
+  site: { file: "a.fungi", line: 1, column: 1 }, related: [], why: "raw secret reaches a network sink",
   risk: "credential exfiltration", fix: { kind: "redact", suggestedCode: "seal(x)", explanation: "seal before egress" },
 };
-const leakProof = { schema: "spore.leakproof.v1", verdict: "leak", leaks: [denyFinding], summary: { total: 1, denies: 1, byCategory: { "secret-egress": 1 } } };
+const leakProof = { schema: "fungi.leakproof.v1", verdict: "leak", leaks: [denyFinding], summary: { total: 1, denies: 1, byCategory: { "secret-egress": 1 } } };
 // Tampered: the verdict LIES (says clean) while the summary/leaks still carry a deny.
-const tamperedClean = { schema: "spore.leakproof.v1", verdict: "clean", leaks: [denyFinding], summary: { total: 1, denies: 1, byCategory: { "secret-egress": 1 } } };
+const tamperedClean = { schema: "fungi.leakproof.v1", verdict: "clean", leaks: [denyFinding], summary: { total: 1, denies: 1, byCategory: { "secret-egress": 1 } } };
 const emptySuite = { faultInjection: [], effectEgress: [], capabilityDenial: [], boundary: [], substrateViolation: [] };
 
 test("a CLEAN witness for the matching artifact vouches", () => {
   const w = buildTestWitness(WASM, cleanProof, emptySuite);
-  assert.equal(w.schema, "spore.testwitness.v1");
+  assert.equal(w.schema, "fungi.testwitness.v1");
   assert.equal(w.wasmSha256, WASM);
   assert.equal(witnessVouchesClean(w, WASM), true);
 });
@@ -49,22 +49,22 @@ test("FAIL-CLOSED: a TAMPERED witness (verdict says clean, summary/leaks show a 
 test("FAIL-CLOSED: a malformed / empty leak proof does not silently verify as clean", () => {
   const badSchema = buildTestWitness(WASM, { ...cleanProof, schema: "x" }, emptySuite);
   assert.equal(witnessVouchesClean(badSchema, WASM), false);
-  const noProof = { schema: "spore.testwitness.v1", wasmSha256: WASM, suiteDigest: "d", leakProof: undefined };
+  const noProof = { schema: "fungi.testwitness.v1", wasmSha256: WASM, suiteDigest: "d", leakProof: undefined };
   assert.equal(witnessVouchesClean(noProof, WASM), false);
-  const emptyObj = { schema: "spore.testwitness.v1", wasmSha256: WASM, suiteDigest: "", leakProof: cleanProof };
+  const emptyObj = { schema: "fungi.testwitness.v1", wasmSha256: WASM, suiteDigest: "", leakProof: cleanProof };
   assert.equal(witnessVouchesClean(emptyObj, WASM), false); // empty suite digest = not a real receipt
 });
 
 test("FAIL-CLOSED (RD-0129): an UNKNOWN severity / summary-leaks denies mismatch does not vouch", () => {
   // A finding with a severity outside {deny,warn} must fail closed (not be treated as non-deny by omission).
   const unknownSev = { ...denyFinding, severity: "info" };
-  const wUnknown = buildTestWitness(WASM, { schema: "spore.leakproof.v1", verdict: "clean", leaks: [unknownSev], summary: { total: 1, denies: 0, byCategory: {} } }, emptySuite);
+  const wUnknown = buildTestWitness(WASM, { schema: "fungi.leakproof.v1", verdict: "clean", leaks: [unknownSev], summary: { total: 1, denies: 0, byCategory: {} } }, emptySuite);
   assert.equal(witnessVouchesClean(wUnknown, WASM), false);
   // summary.denies disagreeing with the leaks array (forged summary) must fail closed even if verdict=clean.
-  const wMismatch = buildTestWitness(WASM, { schema: "spore.leakproof.v1", verdict: "clean", leaks: [{ ...denyFinding, severity: "warn" }], summary: { total: 1, denies: 0, byCategory: {} } }, emptySuite);
+  const wMismatch = buildTestWitness(WASM, { schema: "fungi.leakproof.v1", verdict: "clean", leaks: [{ ...denyFinding, severity: "warn" }], summary: { total: 1, denies: 0, byCategory: {} } }, emptySuite);
   // (denies recomputed from leaks = 0, summary.denies = 0 → agree → still vouches; this one is genuinely clean)
   assert.equal(witnessVouchesClean(wMismatch, WASM), true);
-  const wForged = buildTestWitness(WASM, { schema: "spore.leakproof.v1", verdict: "clean", leaks: [], summary: { total: 0, denies: 1, byCategory: {} } }, emptySuite);
+  const wForged = buildTestWitness(WASM, { schema: "fungi.leakproof.v1", verdict: "clean", leaks: [], summary: { total: 0, denies: 1, byCategory: {} } }, emptySuite);
   assert.equal(witnessVouchesClean(wForged, WASM), false); // summary claims a deny the leaks array does not have
 });
 

@@ -1301,7 +1301,7 @@ Example:
 ```json
 {
   "errorType": "TypeError",
-  "file": "src/main.spore",
+  "file": "src/main.fungi",
   "line": 2,
   "column": 15,
   "expected": "Int",
@@ -1315,7 +1315,7 @@ Example:
 
 ## Type Safety and Source Maps
 
-Type errors should map to the original `.spore` file.
+Type errors should map to the original `.fungi` file.
 
 Example:
 
@@ -1324,7 +1324,7 @@ Type error:
 Cannot add String and Int.
 
 Original source:
-  src/main.spore:2:20
+  src/main.fungi:2:20
 
 Suggestion:
   Convert the String explicitly using toInt().

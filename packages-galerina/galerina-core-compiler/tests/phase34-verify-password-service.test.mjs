@@ -1,7 +1,7 @@
 /**
  * Phase 34 — verifyPassword governed HTTP service (Runtime-in-Galerina 25%)
  *
- * Verifies the first .spore file that IS a runtime service:
+ * Verifies the first .fungi file that IS a runtime service:
  *   HTTP POST → governance → BCrypt.verify → audit → governed JSON response
  */
 
@@ -15,12 +15,12 @@ import { parseProgram, startServer, executeFlow, checkEffects, verifyGovernance,
 import bcrypt from "bcryptjs";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const SERVICE = join(__dir, "..", "..", "..", "examples", "auth-service", "verifyPasswordService.spore");
+const SERVICE = join(__dir, "..", "..", "..", "examples", "auth-service", "verifyPasswordService.fungi");
 const FIXTURE_PASSWORD = "correct horse battery";
 
 function loadService() {
   const src = readFileSync(SERVICE, "utf8");
-  return parseProgram(src, "verifyPasswordService.spore");
+  return parseProgram(src, "verifyPasswordService.fungi");
 }
 
 // ── BCrypt stdlib ───────────────────────────────────────────────────────────
@@ -29,7 +29,7 @@ describe("Phase 34: BCrypt stdlib", () => {
   it("BCrypt.verify returns true for the correct password", async () => {
     const hash = bcrypt.hashSync(FIXTURE_PASSWORD, 10);
     const src = "pure flow c(p: String, h: String) -> Bool contract { effects {} } { return BCrypt.verify(p, h) }";
-    const prog = parseProgram(src, "t.spore");
+    const prog = parseProgram(src, "t.fungi");
     const r = await executeFlow("c", new Map([["p", { __tag: "string", value: FIXTURE_PASSWORD }], ["h", { __tag: "string", value: hash }]]), prog.ast, prog.flows);
     assert.deepEqual(r.value, { __tag: "bool", value: true });
   });
@@ -37,21 +37,21 @@ describe("Phase 34: BCrypt stdlib", () => {
   it("BCrypt.verify returns false for the wrong password", async () => {
     const hash = bcrypt.hashSync(FIXTURE_PASSWORD, 10);
     const src = "pure flow c(p: String, h: String) -> Bool contract { effects {} } { return BCrypt.verify(p, h) }";
-    const prog = parseProgram(src, "t.spore");
+    const prog = parseProgram(src, "t.fungi");
     const r = await executeFlow("c", new Map([["p", { __tag: "string", value: "wrong" }], ["h", { __tag: "string", value: hash }]]), prog.ast, prog.flows);
     assert.deepEqual(r.value, { __tag: "bool", value: false });
   });
 
   it("BCrypt.verify never throws on a malformed hash (returns false)", async () => {
     const src = "pure flow c(p: String, h: String) -> Bool contract { effects {} } { return BCrypt.verify(p, h) }";
-    const prog = parseProgram(src, "t.spore");
+    const prog = parseProgram(src, "t.fungi");
     const r = await executeFlow("c", new Map([["p", { __tag: "string", value: "x" }], ["h", { __tag: "string", value: "not-a-hash" }]]), prog.ast, prog.flows);
     assert.deepEqual(r.value, { __tag: "bool", value: false });
   });
 
   it("BCrypt.hash produces a verifiable $2b$ hash", async () => {
     const src = "pure flow h(p: String) -> String contract { effects {} } { return BCrypt.hash(p) }";
-    const prog = parseProgram(src, "t.spore");
+    const prog = parseProgram(src, "t.fungi");
     const r = await executeFlow("h", new Map([["p", { __tag: "string", value: "hunter2" }]]), prog.ast, prog.flows);
     assert.equal(r.value.__tag, "string");
     assert.ok(r.value.value.startsWith("$2"));
@@ -61,7 +61,7 @@ describe("Phase 34: BCrypt stdlib", () => {
 
 // ── Service compiles cleanly ──────────────────────────────────────────────────
 
-describe("Phase 34: verifyPasswordService.spore compiles", () => {
+describe("Phase 34: verifyPasswordService.fungi compiles", () => {
   it("parses with zero errors", () => {
     const prog = loadService();
     const errs = (prog.diagnostics ?? []).filter(d => d.severity === "error");
@@ -81,11 +81,11 @@ describe("Phase 34: verifyPasswordService.spore compiles", () => {
     assert.equal(taint.length, 0, `unexpected taint: ${taint.join(",")}`);
   });
 
-  it("crypto.verify effect is required and satisfied (no SPORE-EFFECT-001)", () => {
+  it("crypto.verify effect is required and satisfied (no FUNGI-EFFECT-001)", () => {
     const prog = loadService();
     const fx = checkEffects(prog.flows, prog.ast);
     const gov = verifyGovernance(prog.ast, prog.flows, fx, "production");
-    const undeclared = gov.diagnostics.filter(d => d.code === "SPORE-EFFECT-001");
+    const undeclared = gov.diagnostics.filter(d => d.code === "FUNGI-EFFECT-001");
     assert.equal(undeclared.length, 0, undeclared.map(d => d.message).join(" | "));
   });
 });

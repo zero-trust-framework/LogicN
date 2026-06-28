@@ -165,7 +165,7 @@ custom runtime identities
 ```
 
 These live in runtime configuration, deployment policy and enterprise manifests
-— not in normal `.spore` application code.
+— not in normal `.fungi` application code.
 
 ## Zero Trust Alignment
 

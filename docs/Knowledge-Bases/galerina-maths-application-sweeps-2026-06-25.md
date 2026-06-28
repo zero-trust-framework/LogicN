@@ -10,7 +10,7 @@ built; only a handful are real, all owner-gated. 2 guardrail-violating ideas mar
 
 | target | idea | verdict | ZT | note |
 |---|---|---|---|---|
-| .tmf | tensor batch-segment verify (Freivalds) | **refute** | 10 | Freivalds (float, probabilistic) on bit-exact .tmf bytes violates SPORE-SUBSTRATE-001; no O(n³) to amortise; min-fold is O(N²), SLOWER than the linear hash walk. **DO NOT BUILD.** |
+| .tmf | tensor batch-segment verify (Freivalds) | **refute** | 10 | Freivalds (float, probabilistic) on bit-exact .tmf bytes violates FUNGI-SUBSTRATE-001; no O(n³) to amortise; min-fold is O(N²), SLOWER than the linear hash walk. **DO NOT BUILD.** |
 | .tmf | per-segment ConfidenceVerdict trust score | re-derivation | 26 | in-file p_allow is attacker-editable pre-signing; trust must be verifier-side/out-of-band. |
 | .tmf | abstain-aware M-of-N threshold | **refute** | 40 | consensusTrit/majorityVote is *majority*, not a *distinct-signer threshold* → fail-OPEN to quorum-downgrade-by-attrition. Correct threshold already ships in `quorum.ts`. **DO NOT BUILD as proposed.** |
 | database | K3 ≡ SQL NULL (No-Coercion) | re-derivation | 86 | SQL NULL→triUnknown already lifts through triStateAnd/Or/Not; the query engine that would use it is a by-design stub. |

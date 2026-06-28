@@ -11,13 +11,13 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 const EXAMPLES_DIR = join(__dir, "../../../docs/Examples");
 
 const SUPPRESS = new Set([
-  "SPORE-TYPE-001",
-  "SPORE-TYPE-009",
-  "SPORE-NAME-001",
-  "SPORE-GOV-002",
-  "SPORE-SYNTAX-006",
-  "SPORE-SYNTAX-007",
-  "SPORE-SYNTAX-008",
+  "FUNGI-TYPE-001",
+  "FUNGI-TYPE-009",
+  "FUNGI-NAME-001",
+  "FUNGI-GOV-002",
+  "FUNGI-SYNTAX-006",
+  "FUNGI-SYNTAX-007",
+  "FUNGI-SYNTAX-008",
 ]);
 
 function runPipeline(source, filePath) {
@@ -43,11 +43,11 @@ function filteredDiags(diags) {
   return diags.filter((d) => !SUPPRESS.has(d.code));
 }
 
-const sporeFile = join(EXAMPLES_DIR, "Level-1-Basics/003-secure-flow/example.spore");
-const raw = readFileSync(sporeFile, "utf8");
+const fungiFile = join(EXAMPLES_DIR, "Level-1-Basics/003-secure-flow/example.fungi");
+const raw = readFileSync(fungiFile, "utf8");
 const source = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
 
-const allDiags = runPipeline(source, sporeFile);
+const allDiags = runPipeline(source, fungiFile);
 console.log("All diags:");
 allDiags.forEach(d => console.log(`  code=${d.code} severity=${d.severity} suppressed=${SUPPRESS.has(d.code)}`));
 

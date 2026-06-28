@@ -79,7 +79,7 @@ systems output       = generated backend artifact, not normal source style
 This means Galerina may lower checked IR to portable systems output:
 
 ```text
-main.spore
+main.fungi
   -> Galerina AST
   -> typed IR
   -> security, memory and effect checks

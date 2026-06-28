@@ -44,9 +44,9 @@ Core language constructs, keywords, type system, declaration blocks.
 | safe / unsafe type qualifiers | ✅ | `safe-unsafe-trust-model.md` |
 | Context-specific safe types (safe Email, safe Url, etc.) | ✅ | `safe-unsafe-trust-model.md` |
 | Array<T> and string operations | ✅ | `arrays-and-string-operations.md` |
-| Standard types: String, Char, Byte, Bytes, SecureString | ✅ | `galerina-core-standard-types-string-char-byte.md` — Unicode boundaries, encoding safety, `SPORE-STRING-001–004`, `SPORE-CHAR-001–004`, `SPORE-BYTE-001–005`; `charLiteral` and `byteLiteral` added to `AstNodeKind` in `galerina-core/src/index.ts` (2026-05-26) |
-| Binding keywords: let / mut / readonly; rejection of var / const; method-chain pipelines | ✅ | `galerina-core-syntax-bindings-pipeline.md` — `BindingKind`, `BindingDeclaration`, `MethodChainExpression`/`Call` in `@galerina/core`; `SPORE-SYNTAX-001..002`, `SPORE-BINDING-001..004`, `SPORE-PIPELINE-001..005` constants; `var`/`const` detection live in `validateCoreSyntaxSafety()`; `checkBindingReassignment()`, `checkReadonlyMutation()`, `checkMethodChain()` stubs; `readonlyDecl`, `methodChainExpr` added to `AstNodeKind`; `boot.spore` `const` → `readonly` fixed; 12/12 tests passing (2026-05-26) |
-| Typed content blocks: html / dom / script / css heredoc syntax | ✅ | `galerina-core-syntax-typed-content-blocks.md` — `ContentBlockType`, `TypedContentBlockExpression` in `@galerina/core`; `SPORE-BLOCK-001..004` constants, `SPORE_BLOCK_DIAGNOSTICS`; content block state tracking (brace depth suspended inside blocks), `SPORE-BLOCK-001` unknown type, `SPORE-BLOCK-002` unclosed block detection live in `validateCoreSyntaxSafety()`; `validateTypedContentBlock()` stub; `typedContentBlockExpr` added to `AstNodeKind`; 17/17 tests passing (2026-05-26) |
+| Standard types: String, Char, Byte, Bytes, SecureString | ✅ | `galerina-core-standard-types-string-char-byte.md` — Unicode boundaries, encoding safety, `FUNGI-STRING-001–004`, `FUNGI-CHAR-001–004`, `FUNGI-BYTE-001–005`; `charLiteral` and `byteLiteral` added to `AstNodeKind` in `galerina-core/src/index.ts` (2026-05-26) |
+| Binding keywords: let / mut / readonly; rejection of var / const; method-chain pipelines | ✅ | `galerina-core-syntax-bindings-pipeline.md` — `BindingKind`, `BindingDeclaration`, `MethodChainExpression`/`Call` in `@galerina/core`; `FUNGI-SYNTAX-001..002`, `FUNGI-BINDING-001..004`, `FUNGI-PIPELINE-001..005` constants; `var`/`const` detection live in `validateCoreSyntaxSafety()`; `checkBindingReassignment()`, `checkReadonlyMutation()`, `checkMethodChain()` stubs; `readonlyDecl`, `methodChainExpr` added to `AstNodeKind`; `boot.fungi` `const` → `readonly` fixed; 12/12 tests passing (2026-05-26) |
+| Typed content blocks: html / dom / script / css heredoc syntax | ✅ | `galerina-core-syntax-typed-content-blocks.md` — `ContentBlockType`, `TypedContentBlockExpression` in `@galerina/core`; `FUNGI-BLOCK-001..004` constants, `FUNGI_BLOCK_DIAGNOSTICS`; content block state tracking (brace depth suspended inside blocks), `FUNGI-BLOCK-001` unknown type, `FUNGI-BLOCK-002` unclosed block detection live in `validateCoreSyntaxSafety()`; `validateTypedContentBlock()` stub; `typedContentBlockExpr` added to `AstNodeKind`; 17/17 tests passing (2026-05-26) |
 | List<T> operations | ✅ | `list-operations.md` |
 | Query type (sql, graphql, mongo, search blocks) | ✅ | `query-type-and-database-access.md` |
 | Result<T, E> and typed errors | ✅ | `typed-error-model.md`, `no-exceptions-result-model.md` |
@@ -69,7 +69,7 @@ Core language constructs, keywords, type system, declaration blocks.
 
 | Topic | Status | KB File |
 | --- | --- | --- |
-| Unified .spore syntax (5 domains: program/runtime/compile/security/effects) | ✅ | `unified-syntax-architecture.md` |
+| Unified .fungi syntax (5 domains: program/runtime/compile/security/effects) | ✅ | `unified-syntax-architecture.md` |
 | API declaration (api name { endpoint: "..." }) | ✅ | `runtime-boundary-declarations.md` |
 | Route declaration (route GET "/path" { ... }) | ✅ | `runtime-boundary-declarations.md`, `http-method-declarations.md` |
 | Database declaration (database name { source: GlobalVault... }) | ✅ | `runtime-boundary-declarations.md` |
@@ -265,25 +265,25 @@ Execution, scheduling, trust verification, identity, memory, hardware targets.
 | Deployment model (build-once, deploy-many) | ✅ | `build-system-and-cli.md` |
 | Good-taste architecture principles | ✅ | `architecture-good-taste-principles.md` |
 | CI/CD integration (OIDC, SLSA provenance, attestation) | ✅ | `cicd-integration-and-provenance.md` |
-| Runtime audit log format | ✅ | `runtime-audit-log-format.md` — schemaVersion resolved: `"spore.runtime.audit.v1"` canonical; `ExecutionProofHashes` field names confirmed (`manifestSha256`, `auditSha256`, `evidenceSha256`, `denialSha256`, `artefactSha256`); `JsonlAuditWriter` interface + 7-rule contract added; `ExecutionProofV1`/`V2`, `ExecutionProofSection`, `upgradeExecutionProofV1ToV2()` added; `RuntimeAuditEvent` extended with `category` and `message` fields; `DenialReport.schemaVersion` → `"spore.denial.report.v1"` (2026-05-26) |
+| Runtime audit log format | ✅ | `runtime-audit-log-format.md` — schemaVersion resolved: `"fungi.runtime.audit.v1"` canonical; `ExecutionProofHashes` field names confirmed (`manifestSha256`, `auditSha256`, `evidenceSha256`, `denialSha256`, `artefactSha256`); `JsonlAuditWriter` interface + 7-rule contract added; `ExecutionProofV1`/`V2`, `ExecutionProofSection`, `upgradeExecutionProofV1ToV2()` added; `RuntimeAuditEvent` extended with `category` and `message` fields; `DenialReport.schemaVersion` → `"fungi.denial.report.v1"` (2026-05-26) |
 | Effect checker and boundary checker | ✅ | `effect-checker-and-boundary-checker.md` |
-| Formal type system specification — all built-in types, generic arity, null policy, 22 SPORE-TYPE-* diagnostic codes, 14-step checker execution order | ✅ | `formal-type-system-spec.md` — Phase 5 prerequisite; nominal typing, value-state interaction, SecureString restrictions, pipeline order (symbol resolution → type checker → value-state checker → effect checker → governance verifier) (2026-05-28) |
-| Value-state annotation grammar and checker — unsafe/safe/validated/tainted/secret/protected; gate functions; SPORE-VALUESTATE-001..005; SPORE-SECRET-001..003 | ✅ | `value-state-annotations.md` + `value-state-checker.md` — Phase 5 prerequisite; EBNF grammar, state machine, taint propagation, audit proof format (2026-05-28) |
-| Operator precedence and Pratt parser — binding power table, INFIX/PREFIX tables, governance implications, SPORE-EXPR-001..007 | ✅ | `operator-precedence.md` — Phase 5 prerequisite; table-driven Pratt decision, precedence examples, no ++ / --, no operator overloading, pipeline operator reserved (2026-05-28) |
+| Formal type system specification — all built-in types, generic arity, null policy, 22 FUNGI-TYPE-* diagnostic codes, 14-step checker execution order | ✅ | `formal-type-system-spec.md` — Phase 5 prerequisite; nominal typing, value-state interaction, SecureString restrictions, pipeline order (symbol resolution → type checker → value-state checker → effect checker → governance verifier) (2026-05-28) |
+| Value-state annotation grammar and checker — unsafe/safe/validated/tainted/secret/protected; gate functions; FUNGI-VALUESTATE-001..005; FUNGI-SECRET-001..003 | ✅ | `value-state-annotations.md` + `value-state-checker.md` — Phase 5 prerequisite; EBNF grammar, state machine, taint propagation, audit proof format (2026-05-28) |
+| Operator precedence and Pratt parser — binding power table, INFIX/PREFIX tables, governance implications, FUNGI-EXPR-001..007 | ✅ | `operator-precedence.md` — Phase 5 prerequisite; table-driven Pratt decision, precedence examples, no ++ / --, no operator overloading, pipeline operator reserved (2026-05-28) |
 | Parser error recovery — sync tokens, errorNode, Phase 4 existing implementation | ✅ | `parser-error-recovery.md` — Phase 5 prerequisite (2026-05-28) |
 | Governed compute chain — `compute target cpu/gpu/npu/best` syntax, tensor transfer, AI inference chain, `intent LocalPrivateInference`, audit proof format | ✅ | `governed-compute-chain.md` — post-v1 runtime feature; design spec; AST node `ComputeTargetBlock` (2026-05-28) |
-| IHSA (Infrequent Hard Storage Access) storage policy — `storage.read.infrequent` effect, streaming-first, memory pressure policy, SPORE-STORAGE-001 | ✅ | `ihsa-storage-policy.md` — post-v1 runtime enforcement; `spill.enabled false` default; governance policy block syntax (2026-05-28) |
-| @state() lifecycle system — Layer C runtime orchestration, session/gpu/context/distributed categories, lifecycle phases, SPORE-STATE-001..006 | ✅ | `lifecycle-state-system.md` — **Phase 6+ / Layer C only — do not implement in v1**; design intent preserved; reactivity, state dependency graph, mutation policies (2026-05-28) |
+| IHSA (Infrequent Hard Storage Access) storage policy — `storage.read.infrequent` effect, streaming-first, memory pressure policy, FUNGI-STORAGE-001 | ✅ | `ihsa-storage-policy.md` — post-v1 runtime enforcement; `spill.enabled false` default; governance policy block syntax (2026-05-28) |
+| @state() lifecycle system — Layer C runtime orchestration, session/gpu/context/distributed categories, lifecycle phases, FUNGI-STATE-001..006 | ✅ | `lifecycle-state-system.md` — **Phase 6+ / Layer C only — do not implement in v1**; design intent preserved; reactivity, state dependency graph, mutation policies (2026-05-28) |
 | Compile-time vs runtime authority boundary | ✅ | `compile-time-vs-runtime-authority.md` |
 | Package completion status and implementation order | ✅ | `package-completion-status.md` |
 | CLI build / verify / deploy / explain / plan (governance) | ✅ | `galerina-core-cli-deploy-explain-plan.md` |
 | API boundary architecture (request flow, manifest, routes) | ✅ | `galerina-api-boundary-architecture.md` |
 | GPU / photonic / WASM / compatibility backends | ✅ | `galerina-core-compute-gpu-and-photonic-backends.md` |
-| v1 Memory model — borrow/move/copy/escape, bounds checks, SPORE-MEMORY-001–008, unsafe FFI boundary | ✅ | `galerina-core-memory-model.md` — hybrid ownership model decision; binding hierarchy (let/mut/readonly/move/borrow/copy); one-mutable-borrow rule; escape rules; bounds-check behaviour (always on in v1); SPORE-MEMORY-001..008 diagnostic codes; unsafe block v1 allowed list vs post-v1; FFI native interface syntax; GPU/zero-copy implications; v1 implementation checklist (2026-05-26) |
-| Runtime-owned single-instance resources — Galerina's replacement for OOP singletons | ✅ | `galerina-core-runtime-resources.md` — `readonly resource`/`resource` syntax; `scope runtime`/`request`; `uses` declaration; `concurrency` modes; lifecycle model (declared→ready→closed); `ResourceDeclaration`/`RuntimeResourceRegistry`/`ResourceScopeContext` type shapes; `ResourceManifest`/resource report schemas; SPORE-RESOURCE-001..010 diagnostics; examples (AppConfig, Database, AuditWriter, SecretVault, RequestContext, FeatureFlags, test overrides); AstNodeKind additions implemented (`resourceDecl`, `resourceScopeDecl`, `resourceInitBlock`, `resourceShutdownBlock`, `usesDecl` added to `@galerina/core`); v1 checklist (2026-05-26) |
+| v1 Memory model — borrow/move/copy/escape, bounds checks, FUNGI-MEMORY-001–008, unsafe FFI boundary | ✅ | `galerina-core-memory-model.md` — hybrid ownership model decision; binding hierarchy (let/mut/readonly/move/borrow/copy); one-mutable-borrow rule; escape rules; bounds-check behaviour (always on in v1); FUNGI-MEMORY-001..008 diagnostic codes; unsafe block v1 allowed list vs post-v1; FFI native interface syntax; GPU/zero-copy implications; v1 implementation checklist (2026-05-26) |
+| Runtime-owned single-instance resources — Galerina's replacement for OOP singletons | ✅ | `galerina-core-runtime-resources.md` — `readonly resource`/`resource` syntax; `scope runtime`/`request`; `uses` declaration; `concurrency` modes; lifecycle model (declared→ready→closed); `ResourceDeclaration`/`RuntimeResourceRegistry`/`ResourceScopeContext` type shapes; `ResourceManifest`/resource report schemas; FUNGI-RESOURCE-001..010 diagnostics; examples (AppConfig, Database, AuditWriter, SecretVault, RequestContext, FeatureFlags, test overrides); AstNodeKind additions implemented (`resourceDecl`, `resourceScopeDecl`, `resourceInitBlock`, `resourceShutdownBlock`, `usesDecl` added to `@galerina/core`); v1 checklist (2026-05-26) |
 | Core package dependency graph + runtime data flow (Mermaid) | ✅ | `galerina-core-package-architecture.md` — package dependency graph (10 `galerina-core*` packages, logical relationships), runtime data flow (HTTP → Node → APIServer → Config/Security/Runtime → Response), compile-time 14-pass pipeline, diagnostic code namespace table, test coverage summary (2286 tests, all passing, 2026-05-31) |
-| Lexer improvements — endLine/endColumn spans, unicode escapes | ✅ | `galerina-lexer-spore.md` — SPORE-LEX-001 (invalid escape), SPORE-LEX-002 (unterminated string), SPORE-LEX-003 (unexpected char); endLine/endColumn position spans on all tokens; Lexer now at 99% Stage A (2026-05-31) |
-| Phase 14 — Root capability provider | ✅ | `galerina-static-capability-proofs.md` — root capability provider isolates compiler authority from user program authority; `compiler.capabilities.spore` declares compiler's own capabilities in Galerina source; SPORE-BUILD-001 NON_DETERMINISTIC_BUILD diagnostic (2026-05-31) |
+| Lexer improvements — endLine/endColumn spans, unicode escapes | ✅ | `galerina-lexer-fungi.md` — FUNGI-LEX-001 (invalid escape), FUNGI-LEX-002 (unterminated string), FUNGI-LEX-003 (unexpected char); endLine/endColumn position spans on all tokens; Lexer now at 99% Stage A (2026-05-31) |
+| Phase 14 — Root capability provider | ✅ | `galerina-static-capability-proofs.md` — root capability provider isolates compiler authority from user program authority; `compiler.capabilities.fungi` declares compiler's own capabilities in Galerina source; FUNGI-BUILD-001 NON_DETERMINISTIC_BUILD diagnostic (2026-05-31) |
 | Phase 15 — Passive execution plans | ✅ | `galerina-passive-execution-plans.md` — type + builder + attestation integration; plan-based executor converts AST-walking interpreter into auditable, cacheable execution plans; passive plan type system and builder fully specified (2026-05-31) |
 | Phase 16-17 — NodeFlags and ValueStateFlags | ✅ | `galerina-roadmap.md` — NodeFlags bitmask for AST node properties; ValueStateFlags bitmask for value state tracking (unsafe/safe/validated/tainted/secret/protected); integrated into compiler pipeline (2026-05-31) |
 | Phase 18 — GovernanceFlags and EffectCheckerFlags | ✅ | `governance-verifier-architecture.md`, `effect-checker-architecture.md` — GovernanceFlags bitmask for policy enforcement; EffectCheckerFlags for effect analysis passes; new architecture KB docs added (2026-05-31) |
@@ -297,9 +297,9 @@ Execution, scheduling, trust verification, identity, memory, hardware targets.
 | Tri / Decision / Bool logic systems | ✅ | `galerina-core-logic-tri-decision-bool.md` |
 | Environment config and secret reference model | ✅ | `galerina-core-config-environment-secrets.md` |
 | .env trust model (source vs trust level; security levels; compiler warnings) | ✅ | `galerina-core-config-dotenv-trust-model.md` |
-| Config Vault (typed non-secret shared config; SPORE-VAULT-001–005; vault global block) | ✅ | `galerina-core-config-vault.md` |
-| Flow Trace API (FlowTraceEvent; governed trace; JSONL; SPORE-TRACE-001–005; redaction) | ✅ | `galerina-core-flow-trace.md` |
-| Intent, safety levels, effects, flow tracing, runtime manifests | ✅ | `galerina-core-intent-safety-effects.md` — `SafetyLevel`, `IntentDeclaration`, `EffectReference`, `FlowDeclarationMetadata`, `FlowTraceEvent` in `@galerina/core`; `IntentCheckResult`, `IntentMismatch`, `SPORE-INTENT-001–005`, `validateIntentEffects()` stub in `@galerina/core-compiler`; `IntentReport`, `SafetyReport`, `FlowTraceReport`, `RuntimeFlowManifest` in `@galerina/core-reports`; 8 new `AstNodeKind` values; 3 new tests (2026-05-26) |
+| Config Vault (typed non-secret shared config; FUNGI-VAULT-001–005; vault global block) | ✅ | `galerina-core-config-vault.md` |
+| Flow Trace API (FlowTraceEvent; governed trace; JSONL; FUNGI-TRACE-001–005; redaction) | ✅ | `galerina-core-flow-trace.md` |
+| Intent, safety levels, effects, flow tracing, runtime manifests | ✅ | `galerina-core-intent-safety-effects.md` — `SafetyLevel`, `IntentDeclaration`, `EffectReference`, `FlowDeclarationMetadata`, `FlowTraceEvent` in `@galerina/core`; `IntentCheckResult`, `IntentMismatch`, `FUNGI-INTENT-001–005`, `validateIntentEffects()` stub in `@galerina/core-compiler`; `IntentReport`, `SafetyReport`, `FlowTraceReport`, `RuntimeFlowManifest` in `@galerina/core-reports`; 8 new `AstNodeKind` values; 3 new tests (2026-05-26) |
 | Network governance model | ✅ | `galerina-core-network-governance.md` |
 | Effect checker — v0.2 formal spec | ✅ | `galerina-core-effect-checker-v02.md` |
 | Manifest generation — v0.2 formal spec | ✅ | `galerina-core-manifest-generation-v02.md` |
@@ -313,7 +313,7 @@ Execution, scheduling, trust verification, identity, memory, hardware targets.
 | Online Safety Act age assurance policy | ✅ | `galerina-core-policy-online-safety-act.md` |
 | Security secret reference model — architecture spec | ✅ | `galerina-core-security-secret-reference-model.md` |
 | Photonic governance architecture | ✅ | `galerina-core-photonic-governance-architecture.md` |
-| Photonic backend architecture | ⚠️ | `galerina-core-photonic-backend-architecture.md` ⚠️ **Update status: legacy/historical** — contains prior 3-value OpticalTransportMode string union and original SPORE-PHOTONIC-001–006 meanings; use as historical context only until galerina-core-photonic reconciles the canonical enum and diagnostic table across all specs |
+| Photonic backend architecture | ⚠️ | `galerina-core-photonic-backend-architecture.md` ⚠️ **Update status: legacy/historical** — contains prior 3-value OpticalTransportMode string union and original FUNGI-PHOTONIC-001–006 meanings; use as historical context only until galerina-core-photonic reconciles the canonical enum and diagnostic table across all specs |
 | Logic types — v0.2 formal spec | ⚠️ | `galerina-core-logic-v02.md` ⚠️ **Update status: formal spec (type: discriminant, 3-state Decision)** — superseded for runtime-facing docs by package README and `galerina-core-logic-tri-decision-bool.md`; current canonical uses kind: discriminant and 4-state Decision (allow\|deny\|review\|unknown) |
 | Security — v0.2 formal spec | ✅ | `galerina-core-security-v02.md` **Update status: conflict resolved (2026-05-26)** — canonical public API is `unwrapForApprovedSink(sink)`; `revealUnsafeForRuntimeOnly()` is private internal only; KB updated to match |
 | Signed Attestation — Ed25519 artifact signing | ✅ | `galerina-signed-attestation.md` — attestation pipeline, YAML format, key_id rotation, Stage 2 post-quantum ML-DSA/SLH-DSA plan (2026-05-30) |
@@ -378,7 +378,7 @@ Status of documentation for `galerina-core` and the `galerina-core-*` family of 
 | examples/ | ✅ | hello, option, result, decision, payment-webhook, benchmarks |
 | compiler/galerina.js | ✅ | **Stage 1 runtime foundation** — plain JavaScript file, runs directly in Node.js with no build step; parser, type checker, formatter prototype; the model for all Stage 1 runtime additions |
 | src/index.ts | ✅ | **Shared type contracts** — `BaseDiagnostic` (minimal `{code,name,severity,message}` shape; all package diagnostics are structurally compatible), `CompilerDiagnostic extends BaseDiagnostic` (adds `location?`, `suggestedFix?`), `DiagnosticSeverity`, `SourceLocation`, `TokenKind`, `Token`, `LexResult`; `ContentBlockType`, `CONTENT_BLOCK_TYPES`, `TypedContentBlockExpression`; `BindingKind`, `BindingDeclaration`, `MethodChainCall`, `MethodChainExpression`; `SafetyLevel`, `IntentDeclaration`, `EffectReference`, `FlowDeclarationMetadata`; `FlowTraceStage`, `FlowTraceStatus`, `FlowTraceDecision`, `FlowTraceEvent`; `AstNodeKind` (includes `charLiteral`, `byteLiteral`, `readonlyDecl`, `methodChainExpr`, `typedContentBlockExpr`, `guardedFlowDecl`, `privilegedFlowDecl`, `unsafeFlowDecl`, `experimentalFlowDecl`, `unsafeBlock`, `intentDecl`, `requiresCapabilityDecl`, `fallbackDecl`, `resourceDecl`, `resourceScopeDecl`, `resourceInitBlock`, `resourceShutdownBlock`, `usesDecl` — 2026-05-26), `AstNode`, `ParseResult`, `BuildOutputKind`, `BuildOutput`, `BuildManifest`; `createCompilerDiagnostic()`, `hasErrors()`, `filterBySeverity()` helpers. Note: `EnvironmentMode` is **not** here — canonical owner is `@galerina/core-config`. |
-| tests/ | ✅ | 9 contract tests (2026-05-26) — `createCompilerDiagnostic` shape, optional fields, `hasErrors`, `filterBySeverity`, `CONTENT_BLOCK_TYPES`; `npm test` chains SPORE compiler examples (42 pass) + Node contract suite (9 pass) |
+| tests/ | ✅ | 9 contract tests (2026-05-26) — `createCompilerDiagnostic` shape, optional fields, `hasErrors`, `filterBySeverity`, `CONTENT_BLOCK_TYPES`; `npm test` chains FUNGI compiler examples (42 pass) + Node contract suite (9 pass) |
 
 ### galerina-core-runtime
 
@@ -420,17 +420,17 @@ Status of documentation for `galerina-core` and the `galerina-core-*` family of 
 | --- | --- | --- |
 | README.md | ✅ | Scope documented — Architecture Depth section added (RuntimeManifest v0.2 sub-types, Effect interface, EffectCategory, CheckedFunction/EffectGraph, Boundary types, ComputeDeviceProfile, internal file layout) |
 | TODO.md | ✅ | Work tracking — all v0.2 items added |
-| src/ | ⚠️ | Implementation stubs — compiler pipeline defined but not complete; `SPORE-STRING-001–004`, `SPORE-CHAR-001–004`, `SPORE-BYTE-001–005` diagnostic constants + arrays added (2026-05-26); `SPORE-MEMORY-001–008` memory diagnostics added (`USE_AFTER_MOVE`, `BORROW_AFTER_MOVE`, `BORROW_ESCAPES_SCOPE`, `READONLY_MUTATION`, `MUTABLE_ALIAS`, `BOUNDS_VIOLATION`, `UNCHECKED_ACCESS_OUTSIDE_UNSAFE`, `UNSAFE_MEMORY_REQUIRES_FALLBACK` — all `"error"`, 2026-05-26); `validateIntentEffects` stub returns correct `IntentCheckResult` shape |
+| src/ | ⚠️ | Implementation stubs — compiler pipeline defined but not complete; `FUNGI-STRING-001–004`, `FUNGI-CHAR-001–004`, `FUNGI-BYTE-001–005` diagnostic constants + arrays added (2026-05-26); `FUNGI-MEMORY-001–008` memory diagnostics added (`USE_AFTER_MOVE`, `BORROW_AFTER_MOVE`, `BORROW_ESCAPES_SCOPE`, `READONLY_MUTATION`, `MUTABLE_ALIAS`, `BOUNDS_VIOLATION`, `UNCHECKED_ACCESS_OUTSIDE_UNSAFE`, `UNSAFE_MEMORY_REQUIRES_FALLBACK` — all `"error"`, 2026-05-26); `validateIntentEffects` stub returns correct `IntentCheckResult` shape |
 | Lexer | ✅ | Implemented prototype in galerina-core/compiler/ |
 | Parser | ✅ | Implemented prototype in galerina-core/compiler/ |
 | Type checker | ✅ | Implemented prototype in galerina-core/compiler/ |
 | Formatter | ✅ | Implemented prototype in galerina-core/compiler/ |
 | AST / source map | ✅ | Implemented prototype in galerina-core/compiler/ |
-| Effect checker | ⚠️ | Fully specified (Effect interface, EffectCategory, CheckedFunction, EffectGraphNode, EffectGraph, inferExpressionEffects, propagateEffects, SPORE-EFFECT-001–004); not yet implemented |
-| Boundary checker | ⚠️ | Fully specified (Boundary, BoundaryRequirement, BoundaryEdge, BoundaryGraph, CheckedCallExpression, SPORE-BOUNDARY-001–004); not yet implemented |
+| Effect checker | ⚠️ | Fully specified (Effect interface, EffectCategory, CheckedFunction, EffectGraphNode, EffectGraph, inferExpressionEffects, propagateEffects, FUNGI-EFFECT-001–004); not yet implemented |
+| Boundary checker | ⚠️ | Fully specified (Boundary, BoundaryRequirement, BoundaryEdge, BoundaryGraph, CheckedCallExpression, FUNGI-BOUNDARY-001–004); not yet implemented |
 | Compiler pass pipeline | ✅ | 14-pass pipeline — pass 14 (Runtime manifest generator) added |
 | Manifest generation (pass 14) | ⚠️ | Fully specified v0.2 + pass-14 updates (RuntimeManifest with permissions[], reports[], ManifestIntegrity 5-hash type, serializeManifestStable()); not yet implemented |
-| tests/ | ✅ | 21 tests passing (2026-05-26) — syntax safety suite (17 original) + `validateIntentEffects` stub shape (returns correct flowName/safetyLevel/intent/effects/mismatches/diagnostics fields; omits `intent` key when `undefined`); `String/Char/Byte diagnostic constants` (SPORE-STRING-001–004, SPORE-CHAR-001–004, SPORE-BYTE-001–005: codes, names, severities, array lengths/prefixes); `Memory diagnostic constants` (SPORE-MEMORY-001–008: codes, names, all errors, array length 8, prefix check) |
+| tests/ | ✅ | 21 tests passing (2026-05-26) — syntax safety suite (17 original) + `validateIntentEffects` stub shape (returns correct flowName/safetyLevel/intent/effects/mismatches/diagnostics fields; omits `intent` key when `undefined`); `String/Char/Byte diagnostic constants` (FUNGI-STRING-001–004, FUNGI-CHAR-001–004, FUNGI-BYTE-001–005: codes, names, severities, array lengths/prefixes); `Memory diagnostic constants` (FUNGI-MEMORY-001–008: codes, names, all errors, array length 8, prefix check) |
 
 ### galerina-core-cli
 
@@ -441,12 +441,12 @@ Status of documentation for `galerina-core` and the `galerina-core-*` family of 
 | dist/ | ⚠️ | Compiled output present |
 | src/ | ⚠️ | 10 TypeScript files present — CLI framework operational (`types.ts`, `cli.ts`, `commands.ts`); check and fmt working; build/verify/deploy/explain/plan command bodies are the remaining implementation gaps |
 | galerina check | ✅ | Prototype implemented |
-| galerina build | ⚠️ | Partial — artefact generation not complete; fully specified (BuildArtefact, BuildResult, buildWorkspace, 14-pass pipeline, SPORE-BUILD-001–005) |
+| galerina build | ⚠️ | Partial — artefact generation not complete; fully specified (BuildArtefact, BuildResult, buildWorkspace, 14-pass pipeline, FUNGI-BUILD-001–005) |
 | galerina fmt | ✅ | Prototype implemented |
-| galerina verify | ⚠️ | Partial — hash checks only; fully specified (VerifiedArtefact, VerificationResult, verifyHash, SPORE-VERIFY-001–005) |
-| galerina deploy | ⚠️ | Not yet implemented — fully specified (DeploymentTarget 7 values, DeploymentResult, ValidateEffectsInput, validateEffects, exit codes 0–7, SPORE-DEPLOY-001–005) |
-| galerina explain | ⚠️ | Not yet implemented — fully specified (ExplainTrace, ExplainResult, buildTrace, SPORE-EXPLAIN-001–004) |
-| galerina plan | ⚠️ | Not yet implemented — fully specified (ComputePlan with GpuPlan/OpticalPlan/CompatibilityReport, estimateTarget, SPORE-PLAN-001–004) |
+| galerina verify | ⚠️ | Partial — hash checks only; fully specified (VerifiedArtefact, VerificationResult, verifyHash, FUNGI-VERIFY-001–005) |
+| galerina deploy | ⚠️ | Not yet implemented — fully specified (DeploymentTarget 7 values, DeploymentResult, ValidateEffectsInput, validateEffects, exit codes 0–7, FUNGI-DEPLOY-001–005) |
+| galerina explain | ⚠️ | Not yet implemented — fully specified (ExplainTrace, ExplainResult, buildTrace, FUNGI-EXPLAIN-001–004) |
+| galerina plan | ⚠️ | Not yet implemented — fully specified (ComputePlan with GpuPlan/OpticalPlan/CompatibilityReport, estimateTarget, FUNGI-PLAN-001–004) |
 
 ### galerina-core-logic
 
@@ -455,10 +455,10 @@ Status of documentation for `galerina-core` and the `galerina-core-*` family of 
 | README.md | ✅ | **Coverage Reconciliation Status at top**: canonical shape = kind: discriminant (not type:), 4-state Decision (allow\|deny\|review\|unknown), evidence arrays, fail-closed Bool, uncertain Omni → review(); Architecture Depth section updated for all v0.2 types |
 | TODO.md | ✅ | Work tracking — KB alignment item checked off; all v0.2 implementation items corrected to canonical README shapes: `kind:` discriminant with `value` fields, `UnknownReason` object, 4-state Decision with `review` + `evidence[]`, correct `CapabilityRequest`/`PolicyContext` fields, `deny>review>unknown>allow` priority, correct `BoolBoundaryResult`, `OmniState` as snake_case string literal union (2026-05-26) |
 | src/ | ✅ | Root `index.ts` — v0.1 numeric implementation (Tri, LogicState, LogicDefinition, TruthTableRow, OmniLogicDefinition); sub-paths (`/tri`, `/decision`, `/bool-boundary`, `/omni`) — v0.2 discriminated union implementation fully complete (2026-05-26) |
-| Tri logic operations | ✅ | v0.2 implemented in `src/tri/` — `TriState` discriminated union, `TRI_STATE_TRUE/FALSE`, `triUnknown`, `triUnknownFromReasons`, `triStateNot/And/Or/Nor`, `combineUnknownReasons`, `deduplicateUnknownReasons`, `SPORE-TRI-001–005` diagnostics; 13 tests passing (2026-05-26) |
-| Decision logic | ✅ | v0.2 implemented in `src/decision/` — 4-state `Decision`, `allow/deny/review/unknownDecision` constructors, `decisionToRuntimeBool`, `combineDecisions` (deny>review>unknown>allow), `evaluateCapability`, `SPORE-DECISION-001–005` diagnostics; 2286 tests passing (2026-05-31, total workspace) |
-| Bool boundary rules | ✅ | v0.2 implemented in `src/bool-boundary/` — `validateBoolBoundary` (TriState + Decision inputs, fail-closed on unknown/review), `BoolBoundaryResult`, `BoolBoundaryContext`, `SPORE-BOOL-BOUNDARY-001–005` diagnostics; 8 tests passing (2026-05-26) |
-| Omni logic | ✅ | v0.2 implemented in `src/omni/` — `OmniState` 8-value snake_case union, `OMNI_STATES`, `OMNI_UNCERTAIN_STATES`, `isOmniState`, `isOmniUncertain`, `omniToDecision` (uncertain→review, confidence threshold 0.8), `SPORE-OMNI-001–005` diagnostics; 10 tests passing (2026-05-26) |
+| Tri logic operations | ✅ | v0.2 implemented in `src/tri/` — `TriState` discriminated union, `TRI_STATE_TRUE/FALSE`, `triUnknown`, `triUnknownFromReasons`, `triStateNot/And/Or/Nor`, `combineUnknownReasons`, `deduplicateUnknownReasons`, `FUNGI-TRI-001–005` diagnostics; 13 tests passing (2026-05-26) |
+| Decision logic | ✅ | v0.2 implemented in `src/decision/` — 4-state `Decision`, `allow/deny/review/unknownDecision` constructors, `decisionToRuntimeBool`, `combineDecisions` (deny>review>unknown>allow), `evaluateCapability`, `FUNGI-DECISION-001–005` diagnostics; 2286 tests passing (2026-05-31, total workspace) |
+| Bool boundary rules | ✅ | v0.2 implemented in `src/bool-boundary/` — `validateBoolBoundary` (TriState + Decision inputs, fail-closed on unknown/review), `BoolBoundaryResult`, `BoolBoundaryContext`, `FUNGI-BOOL-BOUNDARY-001–005` diagnostics; 8 tests passing (2026-05-26) |
+| Omni logic | ✅ | v0.2 implemented in `src/omni/` — `OmniState` 8-value snake_case union, `OMNI_STATES`, `OMNI_UNCERTAIN_STATES`, `isOmniState`, `isOmniUncertain`, `omniToDecision` (uncertain→review, confidence threshold 0.8), `FUNGI-OMNI-001–005` diagnostics; 10 tests passing (2026-05-26) |
 
 ### galerina-core-compute
 
@@ -473,18 +473,18 @@ Status of documentation for `galerina-core` and the `galerina-core-*` family of 
 | Photonic / optical plan output | ⚠️ | Fully specified (OpticalNeed, OpticalFallbackPlan, OpticalPlan with recommendedMode, estimateOpticalNeed, buildOpticalPlan, photonic/ dir); not implemented |
 | GPU fallback rules | ✅ | Specified — all fallback paths documented with audit events |
 | Scheduler and planner | ✅ | Specified — responsibilities, inputs, and audit events documented |
-| WASM target | ⚠️ | Fully specified (WasmTarget extended with runtime type + forbiddenEffects[], DEFAULT_WASM_FORBIDDEN_EFFECTS, BROWSER_WASM_FORBIDDEN_EFFECTS, validateWasmEffect, validateWasmTarget, wasm/ dir, SPORE-WASM-001–004); not yet implemented |
-| Target compatibility report | ⚠️ | Fully specified (CompatibilityLevel, CompatibilityResult extended, TargetProfile, CompatibilityReport, buildCompatibilityReport, compatibility/ dir, SPORE-COMPAT-001–004); not yet implemented |
+| WASM target | ⚠️ | Fully specified (WasmTarget extended with runtime type + forbiddenEffects[], DEFAULT_WASM_FORBIDDEN_EFFECTS, BROWSER_WASM_FORBIDDEN_EFFECTS, validateWasmEffect, validateWasmTarget, wasm/ dir, FUNGI-WASM-001–004); not yet implemented |
+| Target compatibility report | ⚠️ | Fully specified (CompatibilityLevel, CompatibilityResult extended, TargetProfile, CompatibilityReport, buildCompatibilityReport, compatibility/ dir, FUNGI-COMPAT-001–004); not yet implemented |
 
 ### galerina-core-config
 
 | Area | Status | Notes |
 | --- | --- | --- |
 | README.md | ✅ | Scope documented — Architecture Depth section added (ConfigValue discriminated union 6 kinds, EnvironmentPolicy, defaultEnvironmentPolicy() per mode, EnvironmentConfig v0.2 with schemaVersion, SecretEnvironmentReference v0.2, SecretConfigSource discriminated union, LoadEnvironmentConfigInput, loadEnvironmentConfig(), EnvironmentConfigReport, SecretReportValue, internal file layout) |
-| TODO.md | ✅ | Work tracking — 4 implemented items checked off: `EnvironmentMode` closed type, `ProductionStrictnessPolicy` enforcement, `RuntimeConfigHandoff` type + constructor, host package manifest boundary diagnostic; **diagnostic rename complete (2026-05-26)**: all codes now SPORE-CONFIG-001…027 with `{code, name, message}` metadata; SecretConfigSource updated to canonical `env\|vault\|kms\|runtime` |
-| src/ | ⚠️ | Substantially implemented — `ProjectConfig`, `EnvironmentConfig`, `RuntimeConfigHandoff`, `ProductionStrictnessPolicy`, `DEFAULT_PRODUCTION_STRICTNESS_POLICY`, `loadConfigFromObjects`, `validateHostPackageManifestBoundary` present; diagnostic codes renamed SPORE-CONFIG-001…027 with `{code, name, message}` metadata (2026-05-26); v0.2 secret config surface (`SecretConfigSource`, `SecretEnvironmentReference`, `loadEnvironmentConfig`, `EnvironmentConfigReport`) not yet implemented — **naming conflict resolved**: canonical `env\|vault\|kms\|runtime` |
-| tests/ | ✅ | 17 tests passing (2026-05-26) — all original config tests + `GALERINA_ENVIRONMENT_MODES` (4 modes), `isEnvironmentMode`, `defaultEnvironmentPolicy` (production/staging strict, development/test permissive), `getVaultEntry` (typed retrieval, missing key), `SPORE_VAULT_001–005` constants, all 5 vault diagnostic constructors (correct codes, error severity, key in message/path) |
-| Environment config model | ⚠️ | Fully specified (EnvironmentConfig v0.2, EnvironmentMode, EnvironmentPolicy, defaultEnvironmentPolicy(), loadEnvironmentConfig(), EnvironmentConfigReport, SPORE-CONFIG-001–010); not yet implemented |
+| TODO.md | ✅ | Work tracking — 4 implemented items checked off: `EnvironmentMode` closed type, `ProductionStrictnessPolicy` enforcement, `RuntimeConfigHandoff` type + constructor, host package manifest boundary diagnostic; **diagnostic rename complete (2026-05-26)**: all codes now FUNGI-CONFIG-001…027 with `{code, name, message}` metadata; SecretConfigSource updated to canonical `env\|vault\|kms\|runtime` |
+| src/ | ⚠️ | Substantially implemented — `ProjectConfig`, `EnvironmentConfig`, `RuntimeConfigHandoff`, `ProductionStrictnessPolicy`, `DEFAULT_PRODUCTION_STRICTNESS_POLICY`, `loadConfigFromObjects`, `validateHostPackageManifestBoundary` present; diagnostic codes renamed FUNGI-CONFIG-001…027 with `{code, name, message}` metadata (2026-05-26); v0.2 secret config surface (`SecretConfigSource`, `SecretEnvironmentReference`, `loadEnvironmentConfig`, `EnvironmentConfigReport`) not yet implemented — **naming conflict resolved**: canonical `env\|vault\|kms\|runtime` |
+| tests/ | ✅ | 17 tests passing (2026-05-26) — all original config tests + `GALERINA_ENVIRONMENT_MODES` (4 modes), `isEnvironmentMode`, `defaultEnvironmentPolicy` (production/staging strict, development/test permissive), `getVaultEntry` (typed retrieval, missing key), `FUNGI_VAULT_001–005` constants, all 5 vault diagnostic constructors (correct codes, error severity, key in message/path) |
+| Environment config model | ⚠️ | Fully specified (EnvironmentConfig v0.2, EnvironmentMode, EnvironmentPolicy, defaultEnvironmentPolicy(), loadEnvironmentConfig(), EnvironmentConfigReport, FUNGI-CONFIG-001–010); not yet implemented |
 | Secret reference model | ⚠️ | Fully specified (SecretEnvironmentReference v0.2, SecretConfigSource discriminated union, SecretReportValue); ownership in galerina-core-security |
 | Runtime policy config | ✅ | Documented in KB — `runtime-policy-config.md` |
 
@@ -499,7 +499,7 @@ Status of documentation for `galerina-core` and the `galerina-core-*` family of 
 | Network boundary policy | ✅ | Documented in KB — `network-boundary-policy.md` |
 | Rate limiting | ✅ | Documented in KB — `layered-rate-limits.md` |
 | API boundary contracts | ✅ | Documented in KB — `runtime-boundary-declarations.md` |
-| Governance model | ⚠️ | Fully specified v0.2 (NetworkProtocol 7 values incl. tcp/udp, NetworkPolicy with default/allowDestinations/denyDestinations, productionNetworkPolicy SSRF deny list, GovernedNetworkRuntime, safeHttpRequest, AiProviderNetworkPolicy, SPORE-NETWORK-001–008); not yet implemented |
+| Governance model | ⚠️ | Fully specified v0.2 (NetworkProtocol 7 values incl. tcp/udp, NetworkPolicy with default/allowDestinations/denyDestinations, productionNetworkPolicy SSRF deny list, GovernedNetworkRuntime, safeHttpRequest, AiProviderNetworkPolicy, FUNGI-NETWORK-001–008); not yet implemented |
 | Webhook HMAC / replay / idempotency | ✅ | Fully specified v0.2 in `galerina-core-network-webhook.md` — canonical names: `secret: string\|Uint8Array`, `ReplayStore.has/put`, `IdempotencyStore.get/put(IdempotencyRecord)`; not yet implemented |
 
 ### galerina-core-reports
@@ -513,10 +513,10 @@ Status of documentation for `galerina-core` and the `galerina-core-*` family of 
 | Security report contracts | ✅ | Defined in galerina-core-security scope |
 | AI context report | ✅ | Documented in galerina-core (app.ai-context.json) |
 | Build / deployment reports | ✅ | Documented in `build-system-and-cli.md` |
-| Runtime audit log format (JSONL) | ⚠️ | **Conflict resolved (2026-05-26)** — `runtime-audit-log-format.md` updated: schemaVersion canonical `"spore.runtime.audit.v1"`, `ExecutionProofHashes` field names confirmed, `JsonlAuditWriter` + 7-rule contract added, `category`/`message` fields added to `RuntimeAuditEvent`, `DenialReport.schemaVersion` → `"spore.denial.report.v1"`. Specified but not yet implemented — `JsonlAuditWriter.append`, `serializeAuditEvent`, `validateAuditSafety` remain stubs |
-| Execution proof format | ⚠️ | **Updated (2026-05-26)** — `ExecutionProofV1` (schemaVersion `"spore.execution.proof.v1"`, fixed 5 hashes), `ExecutionProofV2` (extensible sections), `ExecutionProofSection`, `upgradeExecutionProofV1ToV2()` all added to `runtime-audit-log-format.md`. Specified but not yet implemented |
-| Denial report | ⚠️ | Fully specified v0.2 (DenialReport schemaVersion "galerina.denial.v1", 6-category union, denials/ dir, SPORE-DENIAL-001–004); not yet implemented |
-| Capability / effect / runtime evidence | ⚠️ | Fully specified v0.2 (CapabilityEvidence, EffectEvidence with declared/inferred/transitive fields, RuntimeEvidence with arrays, buildRuntimeEvidence async, evidence/ dir, SPORE-EVIDENCE-001–004); not yet implemented |
+| Runtime audit log format (JSONL) | ⚠️ | **Conflict resolved (2026-05-26)** — `runtime-audit-log-format.md` updated: schemaVersion canonical `"fungi.runtime.audit.v1"`, `ExecutionProofHashes` field names confirmed, `JsonlAuditWriter` + 7-rule contract added, `category`/`message` fields added to `RuntimeAuditEvent`, `DenialReport.schemaVersion` → `"fungi.denial.report.v1"`. Specified but not yet implemented — `JsonlAuditWriter.append`, `serializeAuditEvent`, `validateAuditSafety` remain stubs |
+| Execution proof format | ⚠️ | **Updated (2026-05-26)** — `ExecutionProofV1` (schemaVersion `"fungi.execution.proof.v1"`, fixed 5 hashes), `ExecutionProofV2` (extensible sections), `ExecutionProofSection`, `upgradeExecutionProofV1ToV2()` all added to `runtime-audit-log-format.md`. Specified but not yet implemented |
+| Denial report | ⚠️ | Fully specified v0.2 (DenialReport schemaVersion "galerina.denial.v1", 6-category union, denials/ dir, FUNGI-DENIAL-001–004); not yet implemented |
+| Capability / effect / runtime evidence | ⚠️ | Fully specified v0.2 (CapabilityEvidence, EffectEvidence with declared/inferred/transitive fields, RuntimeEvidence with arrays, buildRuntimeEvidence async, evidence/ dir, FUNGI-EVIDENCE-001–004); not yet implemented |
 
 ### galerina-core-tasks
 
@@ -544,13 +544,13 @@ Status of documentation for `galerina-core` and the `galerina-core-*` family of 
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| README.md | ✅ | Governance-First Architecture section added; v0.2 Architecture Depth section added; **Coverage Reconciliation Status**: unresolved conflicts — OpticalTransportMode enum (3 incompatible 6-value variants), SPORE-PHOTONIC-001–006 diagnostic table (prior vs v0.2 meanings differ), boundary overlap with galerina-core-vector/galerina-core-compute/galerina-target-photonic; do not implement until all three conflicts resolved |
-| TODO.md | ✅ | All governance types, functions, diagnostic codes, planned sub-packages added; **first three items**: "Reconcile canonical OpticalTransportMode enum", "Reconcile canonical SPORE-PHOTONIC-001–006 diagnostic table", "Confirm photonic ownership before implementation" |
+| README.md | ✅ | Governance-First Architecture section added; v0.2 Architecture Depth section added; **Coverage Reconciliation Status**: unresolved conflicts — OpticalTransportMode enum (3 incompatible 6-value variants), FUNGI-PHOTONIC-001–006 diagnostic table (prior vs v0.2 meanings differ), boundary overlap with galerina-core-vector/galerina-core-compute/galerina-target-photonic; do not implement until all three conflicts resolved |
+| TODO.md | ✅ | All governance types, functions, diagnostic codes, planned sub-packages added; **first three items**: "Reconcile canonical OpticalTransportMode enum", "Reconcile canonical FUNGI-PHOTONIC-001–006 diagnostic table", "Confirm photonic ownership before implementation" |
 | src/ | ⚠️ | Implementation stubs — planning layer only |
 | Photonic compute plan | ✅ | Documented in KB — `native-photonic-compute-future.md` |
 | Photonic resolution boundary | ✅ | Documented in KB — `photonic-resolution-boundary.md` |
-| Governance architecture (prior KB) | ⚠️ | Specified in `galerina-core-photonic-backend-architecture.md` (OpticalTransportMode prior meanings, SPORE-PHOTONIC-001–006 prior meanings); not yet implemented |
-| Governance architecture (v0.2 formal spec) | ⚠️ | Specified in `galerina-core-photonic-v02.md` (OpticalTransportMode 6-value enum, all validation functions, PhotonicCapability, topologies, SPORE-PHOTONIC-001–006 v0.2 meanings); not yet implemented |
+| Governance architecture (prior KB) | ⚠️ | Specified in `galerina-core-photonic-backend-architecture.md` (OpticalTransportMode prior meanings, FUNGI-PHOTONIC-001–006 prior meanings); not yet implemented |
+| Governance architecture (v0.2 formal spec) | ⚠️ | Specified in `galerina-core-photonic-v02.md` (OpticalTransportMode 6-value enum, all validation functions, PhotonicCapability, topologies, FUNGI-PHOTONIC-001–006 v0.2 meanings); not yet implemented |
 | Real photonic backend | ❌ | Not yet — planning only until hardware available |
 
 ### galerina-framework-api-server
@@ -908,10 +908,10 @@ out before implementation.
 | `galerina-core-compiler` effect/boundary | Reconcile effect/boundary model and diagnostic-code meanings before implementation | README/TODO and KB specs use different effect/boundary shapes and code ranges |
 | `galerina-core-compiler` manifest pass 14 | Bring package README/TODO up to pass-14 integrity/stable-serialization contract, then implement | `ManifestIntegrity`, `serializeManifestStable()`, and `buildManifestIntegrity()` are in pass-14 KB, not package README/TODO |
 | `galerina-core-cli` build/verify/deploy/explain/plan | Finish build/verify and implement deploy/explain/plan command paths | None documented |
-| `galerina-core-reports` audit/proof/denial/evidence/trace | Finalise package contracts and implementation for report schemas; add FlowTraceEvent contract and JSONL writer (SPORE-TRACE-001–005) | None documented |
+| `galerina-core-reports` audit/proof/denial/evidence/trace | Finalise package contracts and implementation for report schemas; add FlowTraceEvent contract and JSONL writer (FUNGI-TRACE-001–005) | None documented |
 | `galerina-core-compute` GPU/photonic/WASM/compat | Keep as planning until backend and target compatibility implementation starts | Photonic ownership and enum conflicts affect photonic plan output |
 | `galerina-core-logic` Tri/Decision/Bool/Omni | Implement v0.2 canonical runtime contracts — TODO items corrected to canonical README shapes (2026-05-26) | KB alignment complete; v0.2 TODO items now use `kind:` discriminant, `value` fields, `UnknownReason`, 4-state Decision + evidence, correct OmniState snake_case literals |
-| `galerina-core-config` environment/secrets/vault | Implement EnvironmentConfig v0.2, SecretEnvironmentReference loading/reporting, ConfigVault (SPORE-VAULT-001–005) — SecretConfigSource naming resolved (2026-05-26) | Canonical `SecretConfigSource`: `env\|vault\|kms\|runtime`; Config Vault and .env trust model KBs added |
+| `galerina-core-config` environment/secrets/vault | Implement EnvironmentConfig v0.2, SecretEnvironmentReference loading/reporting, ConfigVault (FUNGI-VAULT-001–005) — SecretConfigSource naming resolved (2026-05-26) | Canonical `SecretConfigSource`: `env\|vault\|kms\|runtime`; Config Vault and .env trust model KBs added |
 | `galerina-core-security` secret/taint | Implement v0.2 secret reference model — ProtectedSecret unwrap API resolved (2026-05-26) | Canonical: `unwrapForApprovedSink(sink)`; `private revealUnsafeForRuntimeOnly()` internal only |
 | `galerina-core-network` governance/webhook | Implement v0.2 contracts — legacy name audit complete (2026-05-26) | TODO corrected: `ReplayStore.insertOnce()` → `has/put(key,ttlSeconds)`, `IdempotencyStore.getOrSet()` → `get(key)/put(record,ttlSeconds?)` |
 | `galerina-core-photonic` governance | Reconcile enum, diagnostic table and ownership before implementation | Three incompatible `OpticalTransportMode` forms and diagnostic tables |
@@ -996,7 +996,7 @@ out before implementation.
 
 - KB: `galerina-core-config-environment-secrets.md`, `galerina-core-config-v02.md`
 - README: ConfigValue discriminated union, EnvironmentPolicy, defaultEnvironmentPolicy(), EnvironmentConfig v0.2 with schemaVersion, SecretEnvironmentReference v0.2, SecretConfigSource discriminated union, LoadEnvironmentConfigInput, loadEnvironmentConfig(), EnvironmentConfigReport, SecretReportValue
-- Manual check (2026-05-26): SecretConfigSource naming conflict resolved — canonical `env|vault|kms|runtime`; `galerina-core-config-environment-secrets.md` updated; TODO updated. ConfigDiagnostic `name` field added to KB and implementation. Diagnostic codes renamed from `Galerina_CONFIG_*` to `SPORE-CONFIG-001…027` with `{code, name, message}` metadata. Config keeps `ProtectedSecret` as a simple interface; `galerina-core-security` owns the full class.
+- Manual check (2026-05-26): SecretConfigSource naming conflict resolved — canonical `env|vault|kms|runtime`; `galerina-core-config-environment-secrets.md` updated; TODO updated. ConfigDiagnostic `name` field added to KB and implementation. Diagnostic codes renamed from `Galerina_CONFIG_*` to `FUNGI-CONFIG-001…027` with `{code, name, message}` metadata. Config keeps `ProtectedSecret` as a simple interface; `galerina-core-security` owns the full class.
 - Status: ✅ SecretConfigSource conflict resolved; implementation unblocked for EnvironmentConfig v0.2 and SecretEnvironmentReference loading/reporting
 
 **galerina-core-security: secret reference model with taint tracking**
@@ -1024,11 +1024,11 @@ out before implementation.
 
 **galerina-core-photonic: governance architecture**
 
-- KB (legacy/historical): `galerina-core-photonic-backend-architecture.md` — ⚠️ Update status: prior 3-value OpticalTransportMode and original SPORE-PHOTONIC-001–006 meanings; historical context only
+- KB (legacy/historical): `galerina-core-photonic-backend-architecture.md` — ⚠️ Update status: prior 3-value OpticalTransportMode and original FUNGI-PHOTONIC-001–006 meanings; historical context only
 - KB (conflicting v0.2): `galerina-core-photonic-v02.md` — ⚠️ Update status: not implementation-ready; OpticalTransportMode 6-value enum conflicts with governance spec and vector spec; reconciliation required
 - KB (governance spec): `galerina-core-photonic-governance-architecture.md` — DIRECT|WAVELENGTH|PACKETIZED|HYBRID|EMULATED|SIMULATED — also conflicts; see version conflict notes
 - README: v0.2 Architecture Depth section added; Coverage Reconciliation Status (unresolved: enum, diagnostic table, package boundary)
-- TODO first three items: "Reconcile canonical OpticalTransportMode enum", "Reconcile canonical SPORE-PHOTONIC-001–006 table", "Confirm ownership before implementation"
+- TODO first three items: "Reconcile canonical OpticalTransportMode enum", "Reconcile canonical FUNGI-PHOTONIC-001–006 table", "Confirm ownership before implementation"
 - Manual check: package README/TODO still contain both the prior 3-value
   `OpticalTransportMode` and a proposed v0.2 6-value enum after the warning
   block. Treat later implementation snippets as historical/proposed until the
@@ -1037,7 +1037,7 @@ out before implementation.
 
 **galerina-core-vector: photonic governance proposal**
 
-- KB: `galerina-core-vector-photonic-governance.md` — OpticalTransportMode prior 3-value + v0.2 6-value "electrical"|"hybrid"|"photonic"|"waveguide"|"plasmonic"|"coherent", PhotonicCapability 6-value, PhotonicTopology 6-value, PhotonicRuntimeTarget/PhotonicExecutionPlan v0.2, all validation functions, SPORE-PHOTONIC-001–006 prior+v0.2, deny-by-default fallback, BOUNDARY CONFLICT documented
+- KB: `galerina-core-vector-photonic-governance.md` — OpticalTransportMode prior 3-value + v0.2 6-value "electrical"|"hybrid"|"photonic"|"waveguide"|"plasmonic"|"coherent", PhotonicCapability 6-value, PhotonicTopology 6-value, PhotonicRuntimeTarget/PhotonicExecutionPlan v0.2, all validation functions, FUNGI-PHOTONIC-001–006 prior+v0.2, deny-by-default fallback, BOUNDARY CONFLICT documented
 - ⚠️ Update status: proposal/reference note only — galerina-core-photonic owns final definitions after reconciliation
 - README: Boundary conflict note + Coverage Reconciliation Status; vector does not own photonic runtime target semantics
 - TODO first item: "Treat vector photonic governance notes as proposal-only until ownership reconciled"
@@ -1101,7 +1101,7 @@ for all Stage 1 runtime additions.
 | --- | --- | --- |
 | `galerina-core` | **Runtime foundation** | `compiler/galerina.js` is the Stage 1 root — parser, type checker, formatter prototype already in JavaScript; runtime engine grows from here; no `src/` directory needed |
 | `galerina-core-cli` | **Include** | CLI tooling layer — 10 TypeScript files present from earlier contract work; `check` and `fmt` working; `build`, `verify`, `deploy`, `explain`, `plan` command bodies are the remaining gaps; language decision (keep TypeScript or migrate to `.js`) made when those commands are implemented |
-| `galerina-core-config` | **Include (scope-limited)** | Config and policy layer — TypeScript implemented (`ProjectConfig`/`EnvironmentConfig`/`RuntimeConfigHandoff`/`ProductionStrictnessPolicy`/`loadConfigFromObjects`/`validateHostPackageManifestBoundary`); diagnostic codes renamed to SPORE-CONFIG-001…027; SecretConfigSource conflict resolved (2026-05-26) — v0.2 secret config surface now unblocked |
+| `galerina-core-config` | **Include (scope-limited)** | Config and policy layer — TypeScript implemented (`ProjectConfig`/`EnvironmentConfig`/`RuntimeConfigHandoff`/`ProductionStrictnessPolicy`/`loadConfigFromObjects`/`validateHostPackageManifestBoundary`); diagnostic codes renamed to FUNGI-CONFIG-001…027; SecretConfigSource conflict resolved (2026-05-26) — v0.2 secret config surface now unblocked |
 | `galerina-core-logic` | **Include (v0.1 extensions)** | Runtime logic layer — 418 lines TypeScript v0.1 numeric Tri (`Tri = -1\|0\|1`, `TriBoolPolicy`, generic `LogicState<N>`/`LogicDefinition<N>` framework); extend v0.1 with missing operations; v0.2 discriminated union rewrite is a separate milestone after self-hosting is achievable |
 | `galerina-core-network` | **Add** | Runtime network layer — canonical v0.2 contracts in `galerina-core-network-webhook.md` are clean and unblocked (`WebhookRequest`/`WebhookResponse`, `IdempotencyRecord`, `ReplayStore.has/put`, `IdempotencyStore.get/put(IdempotencyRecord)`); high-value dependency for `galerina-framework-api-server`; no blocking conflicts |
 
@@ -1111,7 +1111,7 @@ for all Stage 1 runtime additions.
 | --- | --- | --- |
 | `SecretConfigSource` / `SecretEnvironmentReference` / `loadEnvironmentConfig` | `galerina-core-config` | **Resolved (2026-05-26)** — canonical: `env\|vault\|kms\|runtime`; KB and TODO updated; implementation unblocked |
 | `ProtectedSecret<T>` unwrap API | `galerina-core-security` | **Resolved (2026-05-26)** — canonical: `unwrapForApprovedSink(sink)`; `private revealUnsafeForRuntimeOnly()` internal only; KB and TODO updated |
-| `OpticalTransportMode` / SPORE-PHOTONIC diagnostic codes | `galerina-core-photonic` | Three incompatible 6-value enums; diagnostic code meanings differ across prior KB, v0.2 formal and vector spec |
+| `OpticalTransportMode` / FUNGI-PHOTONIC diagnostic codes | `galerina-core-photonic` | Three incompatible 6-value enums; diagnostic code meanings differ across prior KB, v0.2 formal and vector spec |
 | v0.2 `TriState` / `Decision` / `BoolBoundaryResult` / `OmniState` discriminated unions | `galerina-core-logic` | Phase 1 ships v0.1 extensions; v0.2 rewrite is a separate milestone |
 | `ReplayStore.exists/save` adapter name mapping | `galerina-framework-api-server` | Must be mapped to canonical `has/put(ttlSeconds)` before implementation can proceed |
 | `src/` contracts | `galerina-core` | No `src/` directory; no shared base contracts defined; deferred to a later pass |
@@ -1153,7 +1153,7 @@ vector (28.txt)  = "electrical"|"hybrid"|"photonic"|"waveguide"|"plasmonic"|"coh
 UNRESOLVED: three incompatible 6-value enums; must be reconciled before implementation
 ```
 
-**SPORE-PHOTONIC diagnostic codes**
+**FUNGI-PHOTONIC diagnostic codes**
 
 ```text
 prior KB = 001 unavailable, 002 denied by policy, 003 scheduler unavailable,

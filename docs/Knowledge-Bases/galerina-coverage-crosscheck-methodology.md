@@ -4,8 +4,8 @@
 wired into run-phase-close `--soft`); other dimensions pending. Full end-of-roadmap pass (ALL items, finished
 AND unfinished) is the remaining scope; thereafter a standing gate on every audit.
 
-**First run (codes, 2026-06-22) — the tool works + surfaced real signal:** 930 codes indexed vs only 67 SPORE
-codes in the governance registry → **317 src-real `SPORE-*` REGISTRY-UNCOVERED** (the registry is blind to most
+**First run (codes, 2026-06-22) — the tool works + surfaced real signal:** 930 codes indexed vs only 67 FUNGI
+codes in the governance registry → **317 src-real `FUNGI-*` REGISTRY-UNCOVERED** (the registry is blind to most
 codes); **40 DEAD candidates** (≥8 are false-positives — `ERR_REGISTRY_*` are live+tested but the code-index
 doesn't recognise the `{code:"ERR_…"}` result-object emit pattern → a code-index emit-detection gap to fix);
 0 registry-phantoms. Report: `build/coverage/coverage-codes.md`. Triage of the 317/40 is the codes-coverage
@@ -14,7 +14,7 @@ remediation (distinct from the conformance scanner's V1-V5).
 ## Why (the motivating failure)
 The diagnostic-"codes" audit nearly missed real problems. The src-only R3 scan (codes defined in >1
 package's `src`) found EFFECT/GRAPH but **missed** `galerina-devtools-project-graph` squatting on core's
-`SPORE-BOUNDARY` series — because core owns that series only in its **README/TODO**, not yet in `src`. A
+`FUNGI-BOUNDARY` series — because core owns that series only in its **README/TODO**, not yet in `src`. A
 `grep` for a stale "canonical to core" comment caught it by luck. **An audit whose completeness rests on
 one detector's blind spots is not trustworthy.** The fix: for each governed dimension, build a comprehensive
 INDEX, then CROSS-CHECK the audit against the index in BOTH directions so coverage is provable, not assumed.
@@ -28,7 +28,7 @@ Index the whole domain (every source) → prove the audit touched every entry �
 ## Universal-coverage REQUIREMENT (owner 2026-06-22, hard rule)
 **Everything in Galerina must be indexed by at least ONE audit.** An orphan — any construct (code, capability,
 syntax form, effect, governance rule, stdlib fn, CLI command, generated artifact) covered by NO index/audit —
-is a gap by definition. The first coverage run proved the risk: **317 src-real `SPORE-*` codes are not in the
+is a gap by definition. The first coverage run proved the risk: **317 src-real `FUNGI-*` codes are not in the
 governance registry** (the registry covered 67 of ~930). The end-state is: for each dimension, `audit-coverage`
 shows 0 orphans (every entry covered) and 0 phantoms (every audited thing exists).
 
@@ -46,12 +46,12 @@ One index per governed dimension. Each pairs with its audit and its enforcing de
 
 | Dimension | Index (tool) | Audit | Detector/gate | Status |
 |---|---|---|---|---|
-| Diagnostic codes (`SPORE-*`, `ERR_*`, traps) | `scripts/code-index.mjs` → `build/code-index/` | [taxonomy audit](galerina-diagnostic-code-taxonomy-audit-2026-06-22.md) | `scripts/audit-diagnostic-codes.mjs` (V1-V5) | ✅ index + audit + scanner exist |
+| Diagnostic codes (`FUNGI-*`, `ERR_*`, traps) | `scripts/code-index.mjs` → `build/code-index/` | [taxonomy audit](galerina-diagnostic-code-taxonomy-audit-2026-06-22.md) | `scripts/audit-diagnostic-codes.mjs` (V1-V5) | ✅ index + audit + scanner exist |
 | Capabilities · syntax · full language surface | **#217** capability/syntax index (PARKED) | — | — | 🔲 build #217 first |
 | Flows · dependencies · symbols | `galerina-core-cli graph` → `build/graph/` | — | phase-close regen | ✅ index exists; no coverage audit yet |
 | Governance rules | [galerina-governance-rules.md](galerina-governance-rules.md) registry | rules index | invariants matrix | 🔲 index-ify |
 | Effects | `EFFECT_REGISTRY` / `CANONICAL_EFFECTS` (effect-checker) | #201 work | effect-checker | partial |
-| Non-SPORE namespaces (CBOR tags, HTTP status, metric names) | — | taxonomy audit §6 | — | 🔲 index-ify |
+| Non-FUNGI namespaces (CBOR tags, HTTP status, metric names) | — | taxonomy audit §6 | — | 🔲 index-ify |
 
 ## The cross-check (bidirectional — this is the new gate)
 For each dimension, the audit is "covered" only when ALL THREE hold:
@@ -69,7 +69,7 @@ phantom [...] · sources ingested [...]`. Green = the three conditions hold with
 ## Graph the audit — it is a TOOL, never a manual pass (owner 2026-06-22, token economy)
 The cross-check — AND the audit itself, wherever possible — is **deterministic code**, not an LLM reading
 files. A manual audit costs tokens every run and inherits the reader's blind spots (the exact reason the
-codes audit nearly missed `SPORE-BOUNDARY`). A script is cheap, repeatable, and CI-gateable. Concretely:
+codes audit nearly missed `FUNGI-BOUNDARY`). A script is cheap, repeatable, and CI-gateable. Concretely:
 - **`scripts/audit-coverage.mjs <dimension>`** reads the dimension's index (a JSON graph — `code-index.json`,
   the #217 capability index, the project-graph JSON) and the audit's machine-readable coverage set, computes
   the bidirectional set-difference, and emits `build/coverage/coverage-<dimension>.md` + exit code = gap count.

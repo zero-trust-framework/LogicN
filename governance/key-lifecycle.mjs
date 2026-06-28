@@ -7,7 +7,7 @@
  * an untrusted revocation registry, or weak key-file permissions. Every diagnostic carries a
  * stable code, a severity, and concrete remediation instructions.
  *
- * Diagnostic codes (SPORE-KEY-*) are documented in
+ * Diagnostic codes (FUNGI-KEY-*) are documented in
  * docs/Knowledge-Bases/galerina-key-lifecycle-diagnostics.md.
  *
  * This is the developer-facing, zero-touch layer over the crypto-on-core primitives
@@ -25,11 +25,11 @@ const ENV_FILE = ".env.galerina-signing";
 
 /** Stable code registry (severity may vary by profile; see assessSigningKey). */
 export const KEY_DIAGNOSTICS = {
-  "SPORE-KEY-001": "No signing key found",
-  "SPORE-KEY-002": "Signing key is stale (past rotation age)",
-  "SPORE-KEY-004": "Signing key is revoked",
-  "SPORE-KEY-005": "Private-key file permissions too open",
-  "SPORE-KEY-010": "Revocation registry is untrusted",
+  "FUNGI-KEY-001": "No signing key found",
+  "FUNGI-KEY-002": "Signing key is stale (past rotation age)",
+  "FUNGI-KEY-004": "Signing key is revoked",
+  "FUNGI-KEY-005": "Private-key file permissions too open",
+  "FUNGI-KEY-010": "Revocation registry is untrusted",
 };
 
 function diag(code, severity, message, fix) {
@@ -71,7 +71,7 @@ export function assessSigningKey({ rootDir = ".", profile = "dev", staleDays = D
   try {
     assertRegistryTrustworthy(rootDir);
   } catch (e) {
-    diagnostics.push(diag("SPORE-KEY-010", "error",
+    diagnostics.push(diag("FUNGI-KEY-010", "error",
       `Revocation registry is untrusted: ${e.message}`,
       "Do NOT proceed — a tampered registry could hide a revoked key. Restore governance/revocations.json from a trusted source and re-sign it: node governance/sign-revocations.mjs"));
     return { keyId: null, diagnostics, fatal: true, action: "fail-closed" };
@@ -82,12 +82,12 @@ export function assessSigningKey({ rootDir = ".", profile = "dev", staleDays = D
   const keyId = env.GALERINA_SIGNING_KEY_ID || null;
   if (!keyId) {
     if (profile === "production") {
-      diagnostics.push(diag("SPORE-KEY-001", "error",
+      diagnostics.push(diag("FUNGI-KEY-001", "error",
         "No signing key found, and auto-provisioning is disabled in production.",
         "Provision the production signing key in your KMS/HSM and expose it as GALERINA_SIGNING_KEY_ID (private key via the keystore — never on disk or the command line). See #149."));
       return { keyId: null, diagnostics, fatal: true, action: "fail-closed" };
     }
-    diagnostics.push(diag("SPORE-KEY-001", "notice",
+    diagnostics.push(diag("FUNGI-KEY-001", "notice",
       "No signing key found — auto-provisioning a development signing key (zero-touch).",
       "Nothing to do for local development. For production, provision via KMS/HSM; never commit the private key (.env.galerina-signing is git-ignored)."));
     return { keyId: null, diagnostics, fatal: false, action: "auto-provision" };
@@ -95,7 +95,7 @@ export function assessSigningKey({ rootDir = ".", profile = "dev", staleDays = D
 
   // 3. Revoked? Never sign with a revoked key — fail closed.
   if (isKeyRevoked(keyId, rootDir)) {
-    diagnostics.push(diag("SPORE-KEY-004", "error",
+    diagnostics.push(diag("FUNGI-KEY-004", "error",
       `Signing key ${keyId} is REVOKED — refusing to use it.`,
       "Mint a fresh key (run `galerina keygen`, or let the next build auto-provision one). The revoked key must never sign again; see security/revocations/."));
     return { keyId, diagnostics, fatal: true, action: "fail-closed" };
@@ -106,7 +106,7 @@ export function assessSigningKey({ rootDir = ".", profile = "dev", staleDays = D
     const p = join(rootDir, ENV_FILE);
     try {
       if (existsSync(p) && (statSync(p).mode & 0o077) !== 0) {
-        diagnostics.push(diag("SPORE-KEY-005", "warning",
+        diagnostics.push(diag("FUNGI-KEY-005", "warning",
           `${ENV_FILE} is group/world-accessible.`,
           `Restrict it: chmod 600 ${ENV_FILE}. Better: move the key into a KMS/HSM (#149).`));
       }
@@ -116,7 +116,7 @@ export function assessSigningKey({ rootDir = ".", profile = "dev", staleDays = D
   // 5. Staleness — the ONE thing a developer is asked to act on (a warning, never a hard stop).
   const ageDays = keyAgeDays(rootDir, keyId, env.GALERINA_SIGNING_KEY_CREATED);
   if (ageDays !== null && ageDays > staleDays) {
-    diagnostics.push(diag("SPORE-KEY-002", "warning",
+    diagnostics.push(diag("FUNGI-KEY-002", "warning",
       `Signing key ${keyId} is STALE — ${ageDays} days old (rotate after ${staleDays}).`,
       "Rotate it: run `galerina keygen` to mint a new key, add the OLD key id to governance/revocations.json, then `node governance/sign-revocations.mjs`. (Automatic rotation is the roadmap — #149.)"));
   }

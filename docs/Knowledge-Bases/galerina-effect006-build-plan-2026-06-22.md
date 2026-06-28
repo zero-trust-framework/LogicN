@@ -1,14 +1,14 @@
-# #201 — SPORE-EFFECT-006 strict over-declaration: build plan + classification (2026-06-22)
+# #201 — FUNGI-EFFECT-006 strict over-declaration: build plan + classification (2026-06-22)
 
 Owner greenlit #201 ("build now"): an effect **declared** on a flow but not **observed** in its body (nor
-inherited transitively) is `SPORE-EFFECT-006 OVERDECLARED_EFFECT` — error, ALL profiles. The mirror of
-`SPORE-EFFECT-001` (use-without-declare). `SPORE-EFFECT-002` is de-overloaded to carry ONLY transitive-missing.
+inherited transitively) is `FUNGI-EFFECT-006 OVERDECLARED_EFFECT` — error, ALL profiles. The mirror of
+`FUNGI-EFFECT-001` (use-without-declare). `FUNGI-EFFECT-002` is de-overloaded to carry ONLY transitive-missing.
 Owner: "full principled fix + ALL effects operation-inferred (no declarative exemption — pii/phi inferred from
 a protected-type op)"; "the build must also fix every over-declared fixture/example."
 
 ## WIP already in place (restored from stash)
 - ① AI `\w+Model\.\w+` + payment `\b\w*Payment\w*\.\w+` patterns in `EFFECT_CALL_PATTERNS`.
-- `SPORE-EFFECT-006` emit in `effect-checker.ts` (~line 529); EFFECT-002 now transitive-only.
+- `FUNGI-EFFECT-006` emit in `effect-checker.ts` (~line 529); EFFECT-002 now transitive-only.
 - Reduced the flagged set 61 → **39 files (48 flow:effect pairs)**.
 
 ## Classification of the 39 (workflow `witigc2uq`, 8 agents · 472k tok): A=24 · B=11 · C=13
@@ -48,7 +48,7 @@ ADD a minimal op: 151 (audit.write — governed create should audit), 152 (datab
 
 ## Remaining sub-steps
 ④ flip the 2 warning-asserting unit tests → EFFECT-006 error · ⑤ port the over-declaration check to Stage-B
-`src/self-hosted/effect-checker.spore` · ⑥ register `SPORE_EFFECT_006` metadata (mirror `SPORE_EFFECT_005` in index.ts;
+`src/self-hosted/effect-checker.fungi` · ⑥ register `FUNGI_EFFECT_006` metadata (mirror `FUNGI_EFFECT_005` in index.ts;
 name `OVERDECLARED_EFFECT`, error) + diagnostics-spec doc.
 
 ## DECISIONS SURFACED (the classification raised two genuine ones — see chat AskUserQuestion 2026-06-22)
@@ -96,11 +96,11 @@ so corpus-consistency requires pii here. NOTE: interim pii/phi exemption is now 
   full-suite verify. Best done as one focused, security-critical push (not session-tail).
 
 ## Delivery split
-- **Part 1 (now, unblocked):** ⑥ `SPORE_EFFECT_006` metadata · D1(a) suppress on invalid/broad effect name (119) ·
+- **Part 1 (now, unblocked):** ⑥ `FUNGI_EFFECT_006` metadata · D1(a) suppress on invalid/broad effect name (119) ·
   category-A inference fixes (fnDecl descent + receiver patterns + cross-flow propagation) · category-C example
   fixes (remove/add per table) · D1(b) suppress audit.write when GOV-002/AUDIT-001 covers it (356/458) ·
   ④ unit tests · interim pii/phi exemption. Verify FULL suite.
 - **Part 2 (owner map):** populate pii/phi brand map, build ② type-driven inference, remove the interim exemption,
-  verify the 11 flows · ⑤ Stage-B `effect-checker.spore` port.
+  verify the 11 flows · ⑤ Stage-B `effect-checker.fungi` port.
 
 Full per-flow evidence: task output `tasks/witigc2uq.output`.

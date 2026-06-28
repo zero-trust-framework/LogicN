@@ -14,7 +14,7 @@ import {
 } from "../dist/index.js";
 
 describe("galerina-core-tasks", () => {
-  it("parses tasks.spore task definitions", () => {
+  it("parses tasks.fungi task definitions", () => {
     const tasks = parseTasksSource(`
 task generateReports {
   description "Generate local reports"
@@ -49,7 +49,7 @@ task buildApi {
 
   it("loads tasks and resolves dependency order", async () => {
     const cwd = await mkdtemp(join(tmpdir(), "galerina-core-tasks-"));
-    const taskFile = join(cwd, "tasks.spore");
+    const taskFile = join(cwd, "tasks.fungi");
 
     await writeFile(
       taskFile,
@@ -89,7 +89,7 @@ task build {
       permissions: []
     };
     const report = createTaskRunReport({
-      taskFile: "tasks.spore",
+      taskFile: "tasks.fungi",
       requestedTask: "build",
       dryRun: true,
       dependencyOrder: [task],
@@ -111,7 +111,7 @@ task build {
 
   it("rejects circular dependencies", () => {
     const loaded = {
-      path: "tasks.spore",
+      path: "tasks.fungi",
       tasks: [
         { name: "a", depends: ["b"], effects: [], permissions: [] },
         { name: "b", depends: ["a"], effects: [], permissions: [] }

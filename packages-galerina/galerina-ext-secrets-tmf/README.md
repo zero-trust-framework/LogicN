@@ -5,7 +5,7 @@ OPTIONAL, SEPARATE (`private:true`, `ext` tier, not auto-loaded) sealed-secrets 
 `env.tmf` is an **encrypted-at-rest replacement for a plaintext `.env`**, edited through a governed
 **in-memory-only** CLI. It is a THIN orchestration layer over the shipped `@galerina/ext-tmf`
 (format/crypto) and the `@galerina/ext-secrets-vault` store **discipline**. It adds **NO new crypto**
-and **NO new container bytes**; crypto stays Binary (SPORE-SUBSTRATE-001).
+and **NO new container bytes**; crypto stays Binary (FUNGI-SUBSTRATE-001).
 
 This is the SOPS / Bitnami-Sealed-Secrets / age pattern applied to the `.tmf` container, with one
 genuine hardening: **the decrypt-strictly-in-memory editor that structurally avoids the documented

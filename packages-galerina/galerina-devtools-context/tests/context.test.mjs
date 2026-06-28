@@ -2,7 +2,7 @@
  * @galerina/devtools-context — Integration Tests
  *
  * Tests the Context Receipt generator against both inline fixtures and
- * real auth-service .spore examples.
+ * real auth-service .fungi examples.
  */
 
 import { describe, it } from "node:test";
@@ -145,8 +145,8 @@ secure flow unsafeLookup(id: String): Result<Record, String>
 
 describe("context-receipt: basic generation", () => {
   it("generates receipt for a clean pure flow", () => {
-    const receipts = generateReceipts(CLEAN_PURE_FLOW, { fileName: "test.spore" });
-    assert.equal(receipts.schemaVersion, "spore.context-receipt.v1");
+    const receipts = generateReceipts(CLEAN_PURE_FLOW, { fileName: "test.fungi" });
+    assert.equal(receipts.schemaVersion, "fungi.context-receipt.v1");
     assert.ok(receipts.flowCount >= 1, `Expected at least 1 flow, got ${receipts.flowCount}`);
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined, "First receipt should exist");
@@ -156,7 +156,7 @@ describe("context-receipt: basic generation", () => {
 
   it("returns correct schema version", () => {
     const receipts = generateReceipts(CLEAN_PURE_FLOW);
-    assert.equal(receipts.schemaVersion, "spore.context-receipt.v1");
+    assert.equal(receipts.schemaVersion, "fungi.context-receipt.v1");
     assert.ok(typeof receipts.generatedAt === "string");
     assert.ok(receipts.generatedAt.length > 0);
   });
@@ -172,7 +172,7 @@ describe("context-receipt: basic generation", () => {
 
 describe("context-receipt: contract extraction", () => {
   it("captures intent string for a pure flow", () => {
-    const receipts = generateReceipts(CLEAN_PURE_FLOW, { fileName: "test.spore" });
+    const receipts = generateReceipts(CLEAN_PURE_FLOW, { fileName: "test.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     assert.ok(
@@ -182,7 +182,7 @@ describe("context-receipt: contract extraction", () => {
   });
 
   it("captures intent string for a secure flow", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     assert.ok(
@@ -198,7 +198,7 @@ describe("context-receipt: contract extraction", () => {
   });
 
   it("captures effects correctly for a secure flow", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     const effects = receipt.contract.effects;
@@ -213,7 +213,7 @@ describe("context-receipt: contract extraction", () => {
   });
 
   it("flags hasSecrets: true when secrets{} block present", () => {
-    const receipts = generateReceipts(FLOW_WITH_SECRETS_BLOCK, { fileName: "creds.spore" });
+    const receipts = generateReceipts(FLOW_WITH_SECRETS_BLOCK, { fileName: "creds.fungi" });
     assert.ok(receipts.receipts.length > 0, "Should have at least one receipt");
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
@@ -225,7 +225,7 @@ describe("context-receipt: contract extraction", () => {
   });
 
   it("flags hasEpilogue: true when epilogue{} block present", () => {
-    const receipts = generateReceipts(FLOW_WITH_EPILOGUE_BLOCK, { fileName: "payment.spore" });
+    const receipts = generateReceipts(FLOW_WITH_EPILOGUE_BLOCK, { fileName: "payment.fungi" });
     assert.ok(receipts.receipts.length > 0, "Should have at least one receipt");
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
@@ -243,7 +243,7 @@ describe("context-receipt: contract extraction", () => {
 
 describe("context-receipt: body omission", () => {
   it("receipt does not contain raw body implementation text", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     const json = JSON.stringify(receipt);
@@ -257,7 +257,7 @@ describe("context-receipt: body omission", () => {
 
   it("receipt JSON is substantially smaller than full source", () => {
     const source = SECURE_FLOW_WITH_CONTRACT;
-    const receipts = generateReceipts(source, { fileName: "auth.spore" });
+    const receipts = generateReceipts(source, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     const receiptBytes = JSON.stringify(receipt).length;
@@ -274,15 +274,15 @@ describe("context-receipt: body omission", () => {
 // ---------------------------------------------------------------------------
 
 describe("context-receipt: token reduction on real files", () => {
-  it("achieves >50% token reduction on verifyPassword.spore", () => {
+  it("achieves >50% token reduction on verifyPassword.fungi", () => {
     let source;
     try {
-      source = readFileSync(join(AUTH_SERVICE_DIR, "verifyPassword.spore"), "utf8");
+      source = readFileSync(join(AUTH_SERVICE_DIR, "verifyPassword.fungi"), "utf8");
     } catch {
       // Skip if file not accessible in test environment
       return;
     }
-    const receipts = generateReceipts(source, { fileName: "verifyPassword.spore" });
+    const receipts = generateReceipts(source, { fileName: "verifyPassword.fungi" });
     // Even for small files the body is stripped so we expect >=50%.
     // Larger files (>200 lines) typically hit 90-97%.
     // Note: small files near the boundary may hit exactly 50% — >= is the correct threshold.
@@ -297,11 +297,11 @@ describe("context-receipt: token reduction on real files", () => {
     // This validates that body stripping is working correctly regardless of file size.
     let source;
     try {
-      source = readFileSync(join(AUTH_SERVICE_DIR, "auditWriterService.spore"), "utf8");
+      source = readFileSync(join(AUTH_SERVICE_DIR, "auditWriterService.fungi"), "utf8");
     } catch {
       return;
     }
-    const receipts = generateReceipts(source, { fileName: "auditWriterService.spore" });
+    const receipts = generateReceipts(source, { fileName: "auditWriterService.fungi" });
     for (const rec of receipts.receipts) {
       assert.ok(
         rec.tokenEstimate.reductionPct > 50,
@@ -313,17 +313,17 @@ describe("context-receipt: token reduction on real files", () => {
   it("handles multi-flow file: produces correct flow count", () => {
     let source;
     try {
-      source = readFileSync(join(AUTH_SERVICE_DIR, "auditWriterService.spore"), "utf8");
+      source = readFileSync(join(AUTH_SERVICE_DIR, "auditWriterService.fungi"), "utf8");
     } catch {
       // Fall back to inline fixture with known 3 flows
-      const receipts = generateReceipts(MULTI_FLOW_SOURCE, { fileName: "multi.spore" });
+      const receipts = generateReceipts(MULTI_FLOW_SOURCE, { fileName: "multi.fungi" });
       assert.equal(receipts.flowCount, 3, `Expected 3 flows, got ${receipts.flowCount}`);
       return;
     }
-    const receipts = generateReceipts(source, { fileName: "auditWriterService.spore" });
-    // auditWriterService.spore has 3 flows: classifyAuditSeverity, validateAuditEvent, writeAuditEvent
+    const receipts = generateReceipts(source, { fileName: "auditWriterService.fungi" });
+    // auditWriterService.fungi has 3 flows: classifyAuditSeverity, validateAuditEvent, writeAuditEvent
     assert.ok(receipts.flowCount >= 2,
-      `Expected at least 2 flows in auditWriterService.spore, got ${receipts.flowCount}`
+      `Expected at least 2 flows in auditWriterService.fungi, got ${receipts.flowCount}`
     );
   });
 });
@@ -335,7 +335,7 @@ describe("context-receipt: token reduction on real files", () => {
 describe("context-receipt: flow filter", () => {
   it("--flow filter returns only the requested flow", () => {
     const receipts = generateReceipts(MULTI_FLOW_SOURCE, {
-      fileName: "multi.spore",
+      fileName: "multi.fungi",
       flowFilter: "double",
     });
     assert.equal(receipts.flowCount, 1, `Expected 1 flow after filter, got ${receipts.flowCount}`);
@@ -343,25 +343,25 @@ describe("context-receipt: flow filter", () => {
   });
 
   it("generateFlowReceiptByName returns a single named flow", () => {
-    const receipt = generateFlowReceiptByName(MULTI_FLOW_SOURCE, "square", "multi.spore");
+    const receipt = generateFlowReceiptByName(MULTI_FLOW_SOURCE, "square", "multi.fungi");
     assert.ok(receipt !== undefined, "Should find 'square' flow");
     assert.equal(receipt.flowName, "square");
     assert.equal(receipt.qualifier, "pure");
   });
 
   it("generateFlowReceiptByName returns undefined for unknown flow", () => {
-    const receipt = generateFlowReceiptByName(MULTI_FLOW_SOURCE, "doesNotExist", "multi.spore");
+    const receipt = generateFlowReceiptByName(MULTI_FLOW_SOURCE, "doesNotExist", "multi.fungi");
     assert.equal(receipt, undefined, "Should return undefined for unknown flow");
   });
 
   it("--flow filter on real file returns correct single receipt", () => {
     let source;
     try {
-      source = readFileSync(join(AUTH_SERVICE_DIR, "auditWriterService.spore"), "utf8");
+      source = readFileSync(join(AUTH_SERVICE_DIR, "auditWriterService.fungi"), "utf8");
     } catch {
       return;
     }
-    const receipt = generateFlowReceiptByName(source, "classifyAuditSeverity", "auditWriterService.spore");
+    const receipt = generateFlowReceiptByName(source, "classifyAuditSeverity", "auditWriterService.fungi");
     assert.ok(receipt !== undefined, "Should find classifyAuditSeverity");
     assert.equal(receipt.flowName, "classifyAuditSeverity");
     assert.equal(receipt.qualifier, "pure");
@@ -374,15 +374,15 @@ describe("context-receipt: flow filter", () => {
 
 describe("context-receipt: JSON output", () => {
   it("JSON output is valid and round-trips through JSON.parse", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const json = JSON.stringify(receipts, null, 2);
     const parsed = JSON.parse(json);
-    assert.equal(parsed.schemaVersion, "spore.context-receipt.v1");
+    assert.equal(parsed.schemaVersion, "fungi.context-receipt.v1");
     assert.ok(Array.isArray(parsed.receipts));
   });
 
   it("single-flow JSON output has all required fields", () => {
-    const receipt = generateFlowReceiptByName(SECURE_FLOW_WITH_CONTRACT, "verifyPassword", "auth.spore");
+    const receipt = generateFlowReceiptByName(SECURE_FLOW_WITH_CONTRACT, "verifyPassword", "auth.fungi");
     assert.ok(receipt !== undefined);
     const json = JSON.parse(JSON.stringify(receipt));
     // Check all required top-level fields
@@ -416,7 +416,7 @@ describe("context-receipt: JSON output", () => {
 
 describe("context-receipt: taint detection", () => {
   it("detects unsafe let bindings as taint sources", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     assert.ok(
@@ -432,7 +432,7 @@ describe("context-receipt: taint detection", () => {
   });
 
   it("pure flow with no unsafe bindings has empty taint sources", () => {
-    const receipts = generateReceipts(CLEAN_PURE_FLOW, { fileName: "test.spore" });
+    const receipts = generateReceipts(CLEAN_PURE_FLOW, { fileName: "test.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     assert.equal(
@@ -445,11 +445,11 @@ describe("context-receipt: taint detection", () => {
   it("detects multiple taint sources in economics service", () => {
     let source;
     try {
-      source = readFileSync(join(AUTH_SERVICE_DIR, "economicsService.spore"), "utf8");
+      source = readFileSync(join(AUTH_SERVICE_DIR, "economicsService.fungi"), "utf8");
     } catch {
       return;
     }
-    const receipt = generateFlowReceiptByName(source, "estimateCost", "economicsService.spore");
+    const receipt = generateFlowReceiptByName(source, "estimateCost", "economicsService.fungi");
     assert.ok(receipt !== undefined, "Should find estimateCost flow");
     assert.ok(
       receipt.governance.taintSources.length >= 2,
@@ -464,7 +464,7 @@ describe("context-receipt: taint detection", () => {
 
 describe("context-receipt: markdown rendering", () => {
   it("markdown output contains flow name header", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     const md = renderReceiptMarkdown(receipt);
@@ -472,7 +472,7 @@ describe("context-receipt: markdown rendering", () => {
   });
 
   it("markdown output contains qualifier and return type", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     const md = renderReceiptMarkdown(receipt);
@@ -480,7 +480,7 @@ describe("context-receipt: markdown rendering", () => {
   });
 
   it("markdown output contains Governance section", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     const md = renderReceiptMarkdown(receipt);
@@ -488,7 +488,7 @@ describe("context-receipt: markdown rendering", () => {
   });
 
   it("markdown output contains Contract section with intent", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     const md = renderReceiptMarkdown(receipt);
@@ -497,7 +497,7 @@ describe("context-receipt: markdown rendering", () => {
   });
 
   it("renderFileReceiptsMarkdown produces a document header with all flows", () => {
-    const receipts = generateReceipts(MULTI_FLOW_SOURCE, { fileName: "multi.spore" });
+    const receipts = generateReceipts(MULTI_FLOW_SOURCE, { fileName: "multi.fungi" });
     const md = renderFileReceiptsMarkdown(receipts);
     assert.ok(md.includes("# Context Receipts:"), `Expected document header`);
     assert.ok(md.includes("double"), `Expected 'double' flow in doc`);
@@ -511,26 +511,26 @@ describe("context-receipt: markdown rendering", () => {
 // ---------------------------------------------------------------------------
 
 describe("context-receipt: governance code inference", () => {
-  it("infers SPORE-GOV-010 for secure flow without intent", () => {
-    const receipts = generateReceipts(SECURE_FLOW_MISSING_INTENT, { fileName: "missing.spore" });
+  it("infers FUNGI-GOV-010 for secure flow without intent", () => {
+    const receipts = generateReceipts(SECURE_FLOW_MISSING_INTENT, { fileName: "missing.fungi" });
     assert.ok(receipts.receipts.length > 0);
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     const codes = receipt.governance.governanceCodes;
     assert.ok(
-      codes.includes("SPORE-GOV-010"),
-      `Expected SPORE-GOV-010 for secure flow without intent, got: ${codes.join(", ")}`,
+      codes.includes("FUNGI-GOV-010"),
+      `Expected FUNGI-GOV-010 for secure flow without intent, got: ${codes.join(", ")}`,
     );
   });
 
-  it("does NOT infer SPORE-GOV-010 when intent is present", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+  it("does NOT infer FUNGI-GOV-010 when intent is present", () => {
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     const codes = receipt.governance.governanceCodes;
     assert.ok(
-      !codes.includes("SPORE-GOV-010"),
-      `Should not have SPORE-GOV-010 when intent is declared, got: ${codes.join(", ")}`,
+      !codes.includes("FUNGI-GOV-010"),
+      `Should not have FUNGI-GOV-010 when intent is declared, got: ${codes.join(", ")}`,
     );
   });
 });
@@ -541,7 +541,7 @@ describe("context-receipt: governance code inference", () => {
 
 describe("context-receipt: --summary mode", () => {
   it("--summary output contains flow name and qualifier for a secure flow", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined, "Should have at least one receipt");
 
@@ -562,7 +562,7 @@ describe("context-receipt: --summary mode", () => {
   });
 
   it("--summary output contains has-intent flag when intent is present", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
 
@@ -579,7 +579,7 @@ describe("context-receipt: --summary mode", () => {
   });
 
   it("--summary for multi-flow file produces one line per flow with distinct names", () => {
-    const receipts = generateReceipts(MULTI_FLOW_SOURCE, { fileName: "multi.spore" });
+    const receipts = generateReceipts(MULTI_FLOW_SOURCE, { fileName: "multi.fungi" });
     const summaryLines = receipts.receipts.map(r =>
       [
         `${r.flowName} (${r.qualifier}) -> ${r.returnType}`,
@@ -602,7 +602,7 @@ describe("context-receipt: --summary mode", () => {
 
 describe("context-receipt: sink type detection", () => {
   it("detects AuditLog sink when audit.write declared", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     assert.ok(
@@ -612,7 +612,7 @@ describe("context-receipt: sink type detection", () => {
   });
 
   it("detects Database sink when database.read declared", () => {
-    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.spore" });
+    const receipts = generateReceipts(SECURE_FLOW_WITH_CONTRACT, { fileName: "auth.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     assert.ok(
@@ -622,7 +622,7 @@ describe("context-receipt: sink type detection", () => {
   });
 
   it("pure flow with no effects has no sinks", () => {
-    const receipts = generateReceipts(CLEAN_PURE_FLOW, { fileName: "test.spore" });
+    const receipts = generateReceipts(CLEAN_PURE_FLOW, { fileName: "test.fungi" });
     const receipt = receipts.receipts[0];
     assert.ok(receipt !== undefined);
     assert.equal(

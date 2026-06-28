@@ -45,7 +45,7 @@ Layer 5: Audit Proof
 
 ## Layer 1 — Galerina Source AST
 
-**What:** The `.spore` source file as parsed and checked.
+**What:** The `.fungi` source file as parsed and checked.
 
 **Contains:**
 - Governance labels: `protected`, `redacted`, `unsafe`, `safe`
@@ -57,7 +57,7 @@ Layer 5: Audit Proof
 
 **Owner:** Developer
 
-**Format:** `.spore` files → AST JSON (internal to compiler)
+**Format:** `.fungi` files → AST JSON (internal to compiler)
 
 **Key rule:** The source says **WHAT is allowed**. Not how to execute it.
 
@@ -141,7 +141,7 @@ If a declared effect is missing from the trace, that is a governance violation.
 - denialSha256: hash of the denial log (runtime governance rejections)
 - artefactSha256: hash of the compiled output
 
-**Owner:** Audit system (spore-graph `ExecutionProofChain`)
+**Owner:** Audit system (fungi-graph `ExecutionProofChain`)
 
 **Format:** Proof chain YAML — see `galerina-proof-chain-spec.md`
 
@@ -227,7 +227,7 @@ Sync HTTP allowed only as a dev/test mock adapter — never documented as canoni
 
 ### fn at Top Level — Permanently Invalid
 
-**Decision:** Top-level `fn` declarations remain invalid (SPORE-SYNTAX-005). Use `pure flow` for standalone utilities.
+**Decision:** Top-level `fn` declarations remain invalid (FUNGI-SYNTAX-005). Use `pure flow` for standalone utilities.
 
 ```text
 Top-level utility = pure flow
@@ -250,7 +250,7 @@ Stage B4: compare output against Stage A compiler
 Stage B5: type checker in Galerina (later)
 ```
 
-Success criterion: same `.spore` input → Stage A and Stage B outputs match.
+Success criterion: same `.fungi` input → Stage A and Stage B outputs match.
 
 ---
 
@@ -259,7 +259,7 @@ Success criterion: same `.spore` input → Stage A and Stage B outputs match.
 **Decision:** Phase 8A implements literal-only type inference. Full bottom-up expression inference is Phase 8B/8C.
 
 ```text
-Phase 8A: literal inference enables SPORE-TYPE-002/004/006/007/008
+Phase 8A: literal inference enables FUNGI-TYPE-002/004/006/007/008
 Phase 8B: expression-level inference enables all remaining type codes
 ```
 

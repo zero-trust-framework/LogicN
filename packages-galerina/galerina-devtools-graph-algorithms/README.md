@@ -1,7 +1,7 @@
 # @galerina/devtools-graph
 
 Internal graph data structures and algorithms for the Galerina compiler.
-Planned for extraction to a standalone `spore-graph` package when APIs stabilise.
+Planned for extraction to a standalone `fungi-graph` package when APIs stabilise.
 
 Apache 2.0.
 
@@ -35,10 +35,10 @@ const { order } = topoSort(g);
 
 ## Extraction criteria
 
-This package will be extracted to a standalone published `spore-graph` package when **all** of the following are true:
+This package will be extracted to a standalone published `fungi-graph` package when **all** of the following are true:
 
 1. **Two packages using the same code** — at least two Galerina sub-packages depend on this package's graph primitives or algorithms.
-2. **GIR schema stabilised** — the Graph Intermediate Representation (`GraphJSON` / `spore.graph.v1`) has not had a breaking change in at least one release cycle.
+2. **GIR schema stabilised** — the Graph Intermediate Representation (`GraphJSON` / `fungi.graph.v1`) has not had a breaking change in at least one release cycle.
 3. **Runtime report stabilised** — the runtime graph report format (used by `@galerina/core-reports`) is stable and no further schema revisions are planned.
 
 Until those criteria are met, this package remains `private: true` and is not published to npm.

@@ -172,8 +172,8 @@ attestation idiom rather than inventing a `.tmf`-specific PKI.
 - **Private-key custody:** signing keys live in an **HSM/KMS**, never in the repo, never in a `.tmf`, never
   in source. (Matches the "no secrets/private keys committed" rule.) The signer is a **vetted FIPS-204/Ed25519
   library invoked through the Galerina governance/capability boundary** (a host call — crypto cannot live in
-  `.spore`: `galerina check` rejects even bitwise `^`, see `..\..\tri-encription\spore\probe-no-bitwise.spore`); the key
-  never enters governed `.spore` code, and the engine language is **not** assumed to be Rust (directive: prefer
+  `.fungi`: `galerina check` rejects even bitwise `^`, see `..\..\tri-encription\fungi\probe-no-bitwise.fungi`); the key
+  never enters governed `.fungi` code, and the engine language is **not** assumed to be Rust (directive: prefer
   Galerina + a host crypto lib over a Rust engine, which is unusable in the main project).
 - **Public-key distribution:** published via the **Trust Capsule** (the SPIFFE/Sigstore-style attestation
   surface) or a keys endpoint (e.g. `keys.../tmf/{key_id}`). Verifiers resolve `key_id → trusted pubkey`

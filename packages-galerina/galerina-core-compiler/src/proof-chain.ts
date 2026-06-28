@@ -5,7 +5,7 @@
 // what was executed and audited.
 //
 // Spec: docs/Knowledge-Bases/galerina-proof-chain-spec.md
-// Schema version: spore.execution.proof.v1
+// Schema version: fungi.execution.proof.v1
 // =============================================================================
 
 import { createHash } from "node:crypto";
@@ -17,7 +17,7 @@ import { type GIRProgram } from "./gir-emitter.js";
 // ---------------------------------------------------------------------------
 
 export interface ExecutionProofChain {
-  readonly schemaVersion: "spore.execution.proof.v1";
+  readonly schemaVersion: "fungi.execution.proof.v1";
   readonly proofId: string;
   readonly generatedAt: string;
   readonly hashes: ProofHashes;
@@ -106,20 +106,20 @@ export function buildProofChain(inputs: ProofChainInputs): ExecutionProofChain {
   // Manifest hash — canonical GIR or source text
   const manifestContent = inputs.gir !== undefined
     ? canonical(inputs.gir)
-    : canonical({ schemaVersion: "spore.manifest.v1", source: inputs.source ?? "" });
+    : canonical({ schemaVersion: "fungi.manifest.v1", source: inputs.source ?? "" });
 
   // Audit hash — JSONL line order preserved (spec requirement)
   const auditContent = toJSONL(inputs.auditEvents);
 
   // Evidence hash — validation gates fired, redactions applied
   const evidenceContent = canonical({
-    schemaVersion: "spore.evidence.v1",
+    schemaVersion: "fungi.evidence.v1",
     records: inputs.evidence,
   });
 
   // Denial hash — runtime governance rejections
   const denialContent = canonical({
-    schemaVersion: "spore.denial.v1",
+    schemaVersion: "fungi.denial.v1",
     records: inputs.denials,
   });
 
@@ -127,7 +127,7 @@ export function buildProofChain(inputs: ProofChainInputs): ExecutionProofChain {
   const artefactContent = inputs.source ?? "";
 
   return {
-    schemaVersion: "spore.execution.proof.v1",
+    schemaVersion: "fungi.execution.proof.v1",
     proofId: `proof_${Date.now()}_${sha256(auditContent + evidenceContent).slice(0, 12)}`,
     generatedAt: new Date().toISOString(),
     hashes: {

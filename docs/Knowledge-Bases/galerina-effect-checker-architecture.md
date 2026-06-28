@@ -3,8 +3,8 @@
 ## Status
 
 ```
-Phase 5 baseline:   SPORE-EFFECT-001..004, EFFECT_REGISTRY, EFFECT_CALL_PATTERNS ✅
-Phase 18E:          EffectCheckerFlags, FlowEffectSummary bitsets, SPORE-EFFECT-005, EffectCheckerMode ✅
+Phase 5 baseline:   FUNGI-EFFECT-001..004, EFFECT_REGISTRY, EFFECT_CALL_PATTERNS ✅
+Phase 18E:          EffectCheckerFlags, FlowEffectSummary bitsets, FUNGI-EFFECT-005, EffectCheckerMode ✅
 Phase 19+:          Replace EFFECT_CALL_PATTERNS regex with AST/symbol-based inference
 Phase 20+:          BoundaryGraph, boundary depth/region proofs
 Phase 21+:          Runtime manifest generation from verified effect graph
@@ -98,11 +98,11 @@ These are distinct from:
 
 | Code | Name | Severity | Rule |
 |---|---|---|---|
-| `SPORE-EFFECT-001` | `MissingEffectDeclaration` | error | Flow uses an effect not declared in contract |
-| `SPORE-EFFECT-002` | `PureFlowWithEffect` | error | pure flow declares or infers a prohibited effect |
-| `SPORE-EFFECT-003` | `NonCanonicalEffectName` | warning | Effect name not in canonical registry |
-| `SPORE-EFFECT-004` | `UnknownEffectOperation` | info | Operation not in EFFECT_REGISTRY |
-| `SPORE-EFFECT-005` | `BroadAliasUsed` | warning | Effect name is a broad alias (`network` → use `network.outbound`) |
+| `FUNGI-EFFECT-001` | `MissingEffectDeclaration` | error | Flow uses an effect not declared in contract |
+| `FUNGI-EFFECT-002` | `PureFlowWithEffect` | error | pure flow declares or infers a prohibited effect |
+| `FUNGI-EFFECT-003` | `NonCanonicalEffectName` | warning | Effect name not in canonical registry |
+| `FUNGI-EFFECT-004` | `UnknownEffectOperation` | info | Operation not in EFFECT_REGISTRY |
+| `FUNGI-EFFECT-005` | `BroadAliasUsed` | warning | Effect name is a broad alias (`network` → use `network.outbound`) |
 
 ---
 
@@ -141,7 +141,7 @@ secret.read        secret.write
 payment.charge
 ```
 
-Demote broad aliases (`network`, `database`, `filesystem`) → SPORE-EFFECT-005.
+Demote broad aliases (`network`, `database`, `filesystem`) → FUNGI-EFFECT-005.
 
 Broad aliases still work but emit a warning and suggest the canonical form.
 
@@ -219,7 +219,7 @@ Orthogonal concerns — both must be satisfied.
 
 | Feature | Status |
 |---|---|
-| SPORE-EFFECT-001..004 | ✅ Phase 5 |
+| FUNGI-EFFECT-001..004 | ✅ Phase 5 |
 | EFFECT_REGISTRY | ✅ Phase 5 |
 | Transitive propagation (call graph + topoSort) | ✅ Phase 5 |
 | CANONICAL_EFFECTS + EFFECT_NAME_ALIASES | ✅ Phase 5 |
@@ -227,7 +227,7 @@ Orthogonal concerns — both must be satisfied.
 | EffectFlags bitsets (from type-registry.ts) | ✅ Phase 18D |
 | FlowEffectSummary bitset fields | ✅ Phase 18E |
 | EffectCheckerFlags (PureComputeCandidate, etc.) | ✅ Phase 18E |
-| SPORE-EFFECT-005 BroadAliasUsed | ✅ Phase 18E |
+| FUNGI-EFFECT-005 BroadAliasUsed | ✅ Phase 18E |
 | EffectCheckerMode (development/production) | ✅ Phase 18E |
 | Replace regex EFFECT_CALL_PATTERNS with AST | 📋 Phase 19 |
 | BoundaryGraph | 📋 Phase 20 |

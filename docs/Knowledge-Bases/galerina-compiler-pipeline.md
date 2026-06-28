@@ -36,7 +36,7 @@ inputs, outputs, diagnostic ownership, stopping rules, and execution modes.
 ## Overview
 
 ```text
-Source (.spore file)
+Source (.fungi file)
   |
   v
 Pass 1: Lexer
@@ -85,16 +85,16 @@ Pass 10: Runtime Execution
 
 | Pass | Name | Input | Output | Diagnostics | Status | Source file |
 |---|---|---|---|---|---|---|
-| 1 | Lexer | source text + file path | token stream + lexer diagnostics | `SPORE-SYNTAX-*`, `SPORE-CHAR-*`, parse-adjacent lexical diagnostics | implemented | `packages-galerina/galerina-core-compiler/src/lexer.ts` |
-| 2 | Parser | token stream | `AstNode`, `FlowMeta[]`, `ParseDiagnostic[]` | `SPORE-PARSE-*`, `SPORE-SYNTAX-*` | implemented | `packages-galerina/galerina-core-compiler/src/parser.ts` |
-| 3 | Symbol Resolver | AST | resolved AST metadata + `SymbolDiagnostic[]` | `SPORE-NAME-*` | Phase 7A | `packages-galerina/galerina-core-compiler/src/symbol-resolver.ts` |
-| 4 | Type Checker | AST | type-annotated AST metadata + `TypeDiagnostic[]` | `SPORE-TYPE-*`, `SPORE-MATCH-*` aliases where applicable | Phase 7A | `packages-galerina/galerina-core-compiler/src/type-checker.ts` |
-| 5 | Value-State Checker | AST | value-state diagnostics and binding-state evidence | `SPORE-VALUESTATE-*`, `SPORE-SECRET-*`, `SPORE-SAFETY-*` | Phase 7A | `packages-galerina/galerina-core-compiler/src/value-state-checker.ts` |
-| 6 | Effect Checker | `FlowMeta[]` + AST | `EffectCheckResult[]` | `SPORE-EFFECT-*` | Phase 7A | `packages-galerina/galerina-core-compiler/src/effect-checker.ts` |
-| 7 | Governance Verifier | checked AST + checker evidence | governance diagnostics and proof obligations | `SPORE-INTENT-*`, `SPORE-GOV-*`, `SPORE-PII-*`, `SPORE-PHI-*`, `SPORE-AUDIT-*` | prototype implemented | `packages-galerina/galerina-core-compiler/src/governance-verifier.ts` |
+| 1 | Lexer | source text + file path | token stream + lexer diagnostics | `FUNGI-SYNTAX-*`, `FUNGI-CHAR-*`, parse-adjacent lexical diagnostics | implemented | `packages-galerina/galerina-core-compiler/src/lexer.ts` |
+| 2 | Parser | token stream | `AstNode`, `FlowMeta[]`, `ParseDiagnostic[]` | `FUNGI-PARSE-*`, `FUNGI-SYNTAX-*` | implemented | `packages-galerina/galerina-core-compiler/src/parser.ts` |
+| 3 | Symbol Resolver | AST | resolved AST metadata + `SymbolDiagnostic[]` | `FUNGI-NAME-*` | Phase 7A | `packages-galerina/galerina-core-compiler/src/symbol-resolver.ts` |
+| 4 | Type Checker | AST | type-annotated AST metadata + `TypeDiagnostic[]` | `FUNGI-TYPE-*`, `FUNGI-MATCH-*` aliases where applicable | Phase 7A | `packages-galerina/galerina-core-compiler/src/type-checker.ts` |
+| 5 | Value-State Checker | AST | value-state diagnostics and binding-state evidence | `FUNGI-VALUESTATE-*`, `FUNGI-SECRET-*`, `FUNGI-SAFETY-*` | Phase 7A | `packages-galerina/galerina-core-compiler/src/value-state-checker.ts` |
+| 6 | Effect Checker | `FlowMeta[]` + AST | `EffectCheckResult[]` | `FUNGI-EFFECT-*` | Phase 7A | `packages-galerina/galerina-core-compiler/src/effect-checker.ts` |
+| 7 | Governance Verifier | checked AST + checker evidence | governance diagnostics and proof obligations | `FUNGI-INTENT-*`, `FUNGI-GOV-*`, `FUNGI-PII-*`, `FUNGI-PHI-*`, `FUNGI-AUDIT-*` | prototype implemented | `packages-galerina/galerina-core-compiler/src/governance-verifier.ts` |
 | 8 | GIR Emitter | clean checked AST + checker evidence | Governed IR YAML/JSON | emitter/report diagnostics only | prototype implemented | `packages-galerina/galerina-core-compiler/src/gir-emitter.ts` |
-| 9 | Backend Lowering (WAT) | GIR | WAT text + assembled WASM bytes | `SPORE-BACKEND-*`, `SPORE-TARGET-*`, `SPORE-NPU-*`, `SPORE-PHOTONIC-*` | prototype implemented | `packages-galerina/galerina-core-compiler/src/wat-emitter.ts`, `packages-galerina/galerina-core-compiler/src/wat-assembler.ts` |
-| 10 | Runtime Execution | backend IR + runtime manifest | execution result + audit/proof record | `SPORE-RUNTIME-*` | prototype implemented | `packages-galerina/galerina-core-compiler/src/runtime/index.ts` |
+| 9 | Backend Lowering (WAT) | GIR | WAT text + assembled WASM bytes | `FUNGI-BACKEND-*`, `FUNGI-TARGET-*`, `FUNGI-NPU-*`, `FUNGI-PHOTONIC-*` | prototype implemented | `packages-galerina/galerina-core-compiler/src/wat-emitter.ts`, `packages-galerina/galerina-core-compiler/src/wat-assembler.ts` |
+| 10 | Runtime Execution | backend IR + runtime manifest | execution result + audit/proof record | `FUNGI-RUNTIME-*` | prototype implemented | `packages-galerina/galerina-core-compiler/src/runtime/index.ts` |
 
 ---
 
@@ -119,9 +119,9 @@ lexical diagnostics
 Diagnostic series:
 
 ```text
-SPORE-SYNTAX-*
-SPORE-CHAR-*
-SPORE-PARSE-* for scanner-level parse-adjacent errors
+FUNGI-SYNTAX-*
+FUNGI-CHAR-*
+FUNGI-PARSE-* for scanner-level parse-adjacent errors
 ```
 
 Status:
@@ -161,8 +161,8 @@ interface ParseResult {
 Diagnostic series:
 
 ```text
-SPORE-PARSE-*
-SPORE-SYNTAX-*
+FUNGI-PARSE-*
+FUNGI-SYNTAX-*
 ```
 
 Status:
@@ -199,7 +199,7 @@ interface SymbolResolveResult {
 Diagnostic series:
 
 ```text
-SPORE-NAME-*
+FUNGI-NAME-*
 ```
 
 Status:
@@ -236,8 +236,8 @@ interface TypeCheckResult {
 Diagnostic series:
 
 ```text
-SPORE-TYPE-*
-SPORE-MATCH-* where surfaced as match aliases
+FUNGI-TYPE-*
+FUNGI-MATCH-* where surfaced as match aliases
 ```
 
 Status:
@@ -274,9 +274,9 @@ interface ValueStateCheckResult {
 Diagnostic series:
 
 ```text
-SPORE-VALUESTATE-*
-SPORE-SECRET-*
-SPORE-SAFETY-*
+FUNGI-VALUESTATE-*
+FUNGI-SECRET-*
+FUNGI-SAFETY-*
 ```
 
 Status:
@@ -312,7 +312,7 @@ readonly EffectCheckResult[]
 Diagnostic series:
 
 ```text
-SPORE-EFFECT-*
+FUNGI-EFFECT-*
 ```
 
 Status:
@@ -350,11 +350,11 @@ intent and policy status
 Diagnostic series:
 
 ```text
-SPORE-INTENT-*
-SPORE-GOV-*
-SPORE-PII-*
-SPORE-PHI-*
-SPORE-AUDIT-*
+FUNGI-INTENT-*
+FUNGI-GOV-*
+FUNGI-PII-*
+FUNGI-PHI-*
+FUNGI-AUDIT-*
 ```
 
 Status:
@@ -426,12 +426,12 @@ Backend IR or target package input
 Diagnostic series:
 
 ```text
-SPORE-BACKEND-*
-SPORE-TARGET-*
-SPORE-NPU-*
-SPORE-PHOTONIC-*
-SPORE-TENSOR-*
-SPORE-QUANT-*
+FUNGI-BACKEND-*
+FUNGI-TARGET-*
+FUNGI-NPU-*
+FUNGI-PHOTONIC-*
+FUNGI-TENSOR-*
+FUNGI-QUANT-*
 ```
 
 Status:
@@ -474,7 +474,7 @@ Runtime Proof
 Diagnostic series:
 
 ```text
-SPORE-RUNTIME-*
+FUNGI-RUNTIME-*
 ```
 
 Status:

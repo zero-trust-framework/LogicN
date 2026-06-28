@@ -35,10 +35,10 @@ a hardened, governance-first inference runtime.
 
 ### Phase 3: Runtime Maturity & WASM Integration
 * **Two-stage compiler:** Stage A (TypeScript reference compiler) + Stage B
-  (self-hosted `.spore` compiler emitting WASM, with Wasmtime as the only host).
-* **Self-Hosting push:** Drove runtime components toward 100% in `.spore` (Pre-P9),
+  (self-hosted `.fungi` compiler emitting WASM, with Wasmtime as the only host).
+* **Self-Hosting push:** Drove runtime components toward 100% in `.fungi` (Pre-P9),
   so Galerina compiles itself rather than relying on Node.js/TypeScript long-term.
-* **WASM Integration:** `.spore` → WAT → WASM. Benchmarked against Rust (incl. AVX2),
+* **WASM Integration:** `.fungi` → WAT → WASM. Benchmarked against Rust (incl. AVX2),
   Python, and Node.js across a multi-tier execution model
   (cache / passive plan / manifest / governed / WASM).
 * **Economic Model:** Introduced a cost/value graph and token-based accounting on
@@ -76,7 +76,7 @@ a hardened, governance-first inference runtime.
   ternary path.
 * **Efficiency rationale:** ternary weights cut memory bandwidth (the CPU "memory
   wall"); maps to integer add/sub/skip and (future) SIMD `v128` / Tensor Cores.
-* **Language surface unchanged:** TPL is *engine-internal* — `.spore` flows stay
+* **Language surface unchanged:** TPL is *engine-internal* — `.fungi` flows stay
   binary control-flow + governed contracts; ternary math lives inside the Tower.
 
 ### Phase 6: Runtime Wiring & The Sentinel Ecosystem (2026-06-06)

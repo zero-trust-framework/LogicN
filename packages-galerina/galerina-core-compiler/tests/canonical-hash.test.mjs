@@ -76,7 +76,7 @@ describe("canonicalHash — basic properties", () => {
     assert.equal(canonicalHash(obj1), canonicalHash(obj2));
   });
 
-  // #55 / SPORE-FLOAT-NAN-001: a non-finite number must FAIL CLOSED, not be laundered to null. The old
+  // #55 / FUNGI-FLOAT-NAN-001: a non-finite number must FAIL CLOSED, not be laundered to null. The old
   // null-normalization made {x: Infinity}, {x: NaN} and {x: null} collide to ONE signed fingerprint — a
   // wrong-but-plausible value signed into the proof-graph. Now it throws (matching manifest-generator / RFC 8785).
   it("Infinity FAILS CLOSED (not laundered to null — would collide with null/NaN in a signed fingerprint)", () => {
@@ -291,7 +291,7 @@ pure flow calculateVat(price: Money) -> Money {
   return price
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const errors = parsed.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, `Parse errors: ${errors.map((e) => e.message).join(", ")}`);
 
@@ -331,7 +331,7 @@ pure flow add(a: Int, b: Int) -> Int {
   return a
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const meta = parsed.flows.find((f) => f.name === "add");
     assert.ok(meta !== undefined);
 
@@ -350,7 +350,7 @@ pure flow add(a: Int, b: Int) -> Int {
     const { run } = await import("../dist/index.js");
     const result = await run(
       `pure flow greet() -> String { return "hello" }`,
-      "test.spore",
+      "test.fungi",
       "greet",
       new Map(),
       { emitSemanticGraph: true },
@@ -362,8 +362,8 @@ pure flow add(a: Int, b: Int) -> Int {
   it("semanticGraphHash is stable across two identical runs", async () => {
     const { run } = await import("../dist/index.js");
     const source = `pure flow greet() -> String { return "hello" }`;
-    const r1 = await run(source, "test.spore", "greet", new Map(), { emitSemanticGraph: true });
-    const r2 = await run(source, "test.spore", "greet", new Map(), { emitSemanticGraph: true });
+    const r1 = await run(source, "test.fungi", "greet", new Map(), { emitSemanticGraph: true });
+    const r2 = await run(source, "test.fungi", "greet", new Map(), { emitSemanticGraph: true });
     assert.equal(r1.semanticGraphHash, r2.semanticGraphHash, "semanticGraphHash must be deterministic");
   });
 });

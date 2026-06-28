@@ -53,7 +53,7 @@ be accepted as stable:
             "effects": ["network.external", "secret.read"],
             "capabilities": ["payment.charge"],
             "resources": ["PaymentProvider"],
-            "diagnostics": "SPORE-PAYMENTS-1000..1199"
+            "diagnostics": "FUNGI-PAYMENTS-1000..1199"
         },
         "./webhook": {
             "effects": ["secret.read"],
@@ -226,7 +226,7 @@ dependency graph hashes
 reproducible build metadata where available
 ```
 
-If downloaded package does not match lockfile hash → `SPORE-SUPPLY-001` → build fails.
+If downloaded package does not match lockfile hash → `FUNGI-SUPPLY-001` → build fails.
 
 ---
 
@@ -286,16 +286,16 @@ Exports:
 
 | Code | Meaning |
 |---|---|
-| `SPORE-MODULE-001` | Package governance manifest missing |
-| `SPORE-MODULE-002` | Package install scripts are forbidden |
-| `SPORE-MODULE-003` | Package authority not accepted |
-| `SPORE-MODULE-004` | Package manifest hash changed |
-| `SPORE-MODULE-005` | Package requested undeclared capability |
-| `SPORE-MODULE-006` | Package used effect not declared in manifest |
-| `SPORE-MODULE-007` | Package signature verification failed |
-| `SPORE-MODULE-008` | Package version is floating in production profile |
-| `SPORE-MODULE-009` | Transitive dependency authority changed |
-| `SPORE-MODULE-010` | Package export requires ungranted capability |
+| `FUNGI-MODULE-001` | Package governance manifest missing |
+| `FUNGI-MODULE-002` | Package install scripts are forbidden |
+| `FUNGI-MODULE-003` | Package authority not accepted |
+| `FUNGI-MODULE-004` | Package manifest hash changed |
+| `FUNGI-MODULE-005` | Package requested undeclared capability |
+| `FUNGI-MODULE-006` | Package used effect not declared in manifest |
+| `FUNGI-MODULE-007` | Package signature verification failed |
+| `FUNGI-MODULE-008` | Package version is floating in production profile |
+| `FUNGI-MODULE-009` | Transitive dependency authority changed |
+| `FUNGI-MODULE-010` | Package export requires ungranted capability |
 
 ---
 

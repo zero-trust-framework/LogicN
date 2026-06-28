@@ -1,6 +1,6 @@
 # The Untrusted Governed Lane
 
-**Date:** 2026-06-25 · **Posture:** Govern-Don't-Absorb · fail-closed · crypto-on-core (SPORE-SUBSTRATE-001)
+**Date:** 2026-06-25 · **Posture:** Govern-Don't-Absorb · fail-closed · crypto-on-core (FUNGI-SUBSTRATE-001)
 **Companions:** [`galerina-zero-trust-core-relaxation-analysis-2026-06-24.md`](galerina-zero-trust-core-relaxation-analysis-2026-06-24.md) · [`ai-as-untrusted-reasoning-worker.md`](ai-as-untrusted-reasoning-worker.md) · [`untrusted-file-asset-processing.md`](untrusted-file-asset-processing.md)
 
 > **One sentence:** the Untrusted Governed Lane is where Galerina runs fast, exotic, or externally-authored
@@ -142,7 +142,7 @@ A developer opts a flow's *work* onto the untrusted (low-trust) lane with a `sub
 contract. The block is the **declared guarantee** the runtime must verify; the lane is admitted, never
 trusted. This compiles + verifies today (the behaviour is pinned by `substrate-contracts.test.mjs`).
 
-```spore
+```fungi
 // The WORK runs on the photonic lane (fast, analog, NOT bit-exact). It carries the VALUE (a score),
 // never the DECISION. `tolerance` is the guarantee the runtime cheap-verifies; `redundancy` majority-votes
 // the noisy reads (NMR); the resilience handler degrades to exact digital fail-closed.
@@ -166,11 +166,11 @@ contract {
 
 The line the lane may **not** cross — the *decision* stays digital, enforced at compile time:
 
-```spore
+```fungi
 secure flow sealResult(score: Float) -> Result<Receipt, ApiError>
 contract {
   effects { crypto.sign }
-  substrate { lane: photonic  tolerance: 5e-3 }   // ← COMPILE ERROR: SPORE-SUBSTRATE-001
+  substrate { lane: photonic  tolerance: 5e-3 }   // ← COMPILE ERROR: FUNGI-SUBSTRATE-001
 }
 { return Ok(sign(score)) }
 // crypto.sign on a noisy (photonic) lane is REFUSED — "crypto stays on the digital, bit-exact lane".

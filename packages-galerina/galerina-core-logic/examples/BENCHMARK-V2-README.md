@@ -63,7 +63,7 @@ In timed-throughput mode, checksums do not need to match because each runtime co
 Galerina prototype:
 
 ```powershell
-node packages-galerina\galerina-core\compiler\galerina.js run packages-galerina\galerina-core\examples\compute-mix-throughput-benchmark.spore --target-ms 20000 --warmup-ms 2000 --batch-size 100000 --buffer-size 65536
+node packages-galerina\galerina-core\compiler\galerina.js run packages-galerina\galerina-core\examples\compute-mix-throughput-benchmark.fungi --target-ms 20000 --warmup-ms 2000 --batch-size 100000 --buffer-size 65536
 ```
 
 Direct Node.js:

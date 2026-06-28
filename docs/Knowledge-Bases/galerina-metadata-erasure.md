@@ -172,7 +172,7 @@ The compiler proves that redaction is applied correctly at compile time. The run
 Metadata is richest in source. It is progressively erased as it moves toward execution.
 
 ```text
-Source (.spore file)
+Source (.fungi file)
   full metadata — intent, comments, readable forms, effects, timeouts, limits, privacy
 
       ↓ Lexer + Parser

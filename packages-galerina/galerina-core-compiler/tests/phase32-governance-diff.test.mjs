@@ -11,8 +11,8 @@ import assert from "node:assert/strict";
 import { parseProgram, diffGovernance, renderGovernanceDiff } from "../dist/index.js";
 
 function diff(beforeSrc, afterSrc) {
-  const before = parseProgram(beforeSrc, "before.spore");
-  const after = parseProgram(afterSrc, "after.spore");
+  const before = parseProgram(beforeSrc, "before.fungi");
+  const after = parseProgram(afterSrc, "after.fungi");
   return diffGovernance(before.flows, after.flows);
 }
 
@@ -85,10 +85,10 @@ describe("Phase 32: governance diff — changed flows", () => {
 });
 
 describe("Phase 32: diff output + schema", () => {
-  it("schemaVersion is spore.govdiff.v1", () => {
+  it("schemaVersion is fungi.govdiff.v1", () => {
     const d = diff("pure flow a() -> Int contract { effects {} } { return 1 }",
                    "pure flow a() -> Int contract { effects {} } { return 1 }");
-    assert.equal(d.schemaVersion, "spore.govdiff.v1");
+    assert.equal(d.schemaVersion, "fungi.govdiff.v1");
   });
 
   it("renderGovernanceDiff produces readable text with warning flag", () => {

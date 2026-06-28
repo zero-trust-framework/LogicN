@@ -24,7 +24,7 @@ import { lex } from "../../dist/index.js";
 
 describe("// line comment: produces 'comment' token", () => {
   it("// text produces a token with kind 'comment'", () => {
-    const result = lex("// this is a code comment\nlet x = 1", "test.spore");
+    const result = lex("// this is a code comment\nlet x = 1", "test.fungi");
     const commentTok = result.tokens.find((t) => t.kind === "comment");
     assert.ok(commentTok !== undefined, "Expected a 'comment' token for //");
     assert.ok(
@@ -34,7 +34,7 @@ describe("// line comment: produces 'comment' token", () => {
   });
 
   it("// comment token appears before subsequent code tokens", () => {
-    const result = lex("// header\nflow", "test.spore");
+    const result = lex("// header\nflow", "test.fungi");
     const nonEof = result.tokens.filter(
       (t) => t.kind !== "eof" && t.kind !== "newline",
     );
@@ -45,7 +45,7 @@ describe("// line comment: produces 'comment' token", () => {
   });
 
   it("// comment does NOT produce a govComment token", () => {
-    const result = lex("// regular code comment\n", "test.spore");
+    const result = lex("// regular code comment\n", "test.fungi");
     const govCommentTok = result.tokens.find((t) => t.kind === "govComment");
     assert.equal(
       govCommentTok,
@@ -55,7 +55,7 @@ describe("// line comment: produces 'comment' token", () => {
   });
 
   it("multiple // comments each produce distinct comment tokens", () => {
-    const result = lex("// first\n// second\n// third\n", "test.spore");
+    const result = lex("// first\n// second\n// third\n", "test.fungi");
     const comments = result.tokens.filter((t) => t.kind === "comment");
     assert.equal(comments.length, 3, "Expected 3 comment tokens");
   });
@@ -67,13 +67,13 @@ describe("// line comment: produces 'comment' token", () => {
 
 describe(";; governance annotation: produces 'govComment' token", () => {
   it(";; text produces a token with kind 'govComment'", () => {
-    const result = lex(";; governance annotation\nlet x = 1", "test.spore");
+    const result = lex(";; governance annotation\nlet x = 1", "test.fungi");
     const govTok = result.tokens.find((t) => t.kind === "govComment");
     assert.ok(govTok !== undefined, "Expected a 'govComment' token for ;;");
   });
 
   it(";; govComment token value contains the annotation text", () => {
-    const result = lex(";; amount is validated\n", "test.spore");
+    const result = lex(";; amount is validated\n", "test.fungi");
     const govTok = result.tokens.find((t) => t.kind === "govComment");
     assert.ok(govTok !== undefined, "Expected govComment token");
     assert.ok(
@@ -83,7 +83,7 @@ describe(";; governance annotation: produces 'govComment' token", () => {
   });
 
   it(";; govComment does NOT produce an ordinary 'comment' token", () => {
-    const result = lex(";; governance annotation\n", "test.spore");
+    const result = lex(";; governance annotation\n", "test.fungi");
     const regularComment = result.tokens.find((t) => t.kind === "comment");
     assert.equal(
       regularComment,
@@ -93,7 +93,7 @@ describe(";; governance annotation: produces 'govComment' token", () => {
   });
 
   it(";; govComment and // comment coexist as distinct token kinds", () => {
-    const result = lex(";; security reasoning\n// code reasoning\n", "test.spore");
+    const result = lex(";; security reasoning\n// code reasoning\n", "test.fungi");
     const govTok = result.tokens.find((t) => t.kind === "govComment");
     const commentTok = result.tokens.find((t) => t.kind === "comment");
     assert.ok(govTok !== undefined, "Expected govComment token for ;;");
@@ -102,60 +102,60 @@ describe(";; governance annotation: produces 'govComment' token", () => {
   });
 
   it("govComment appears in the token stream at the correct line", () => {
-    const result = lex("flow\n;; validated here\nlet", "test.spore");
+    const result = lex("flow\n;; validated here\nlet", "test.fungi");
     const govTok = result.tokens.find((t) => t.kind === "govComment");
     assert.ok(govTok !== undefined, "Expected govComment token");
     assert.equal(govTok.line, 2, "govComment must be on line 2");
   });
 
   it("multiple ;; annotations each produce a govComment token", () => {
-    const result = lex(";; first annotation\n;; second annotation\n", "test.spore");
+    const result = lex(";; first annotation\n;; second annotation\n", "test.fungi");
     const govTokens = result.tokens.filter((t) => t.kind === "govComment");
     assert.equal(govTokens.length, 2, "Expected 2 govComment tokens");
   });
 });
 
 // ---------------------------------------------------------------------------
-// //spore: generated metadata → "genComment" token (CLI/compiler-owned, overwritable)
+// //fungi: generated metadata → "genComment" token (CLI/compiler-owned, overwritable)
 // ---------------------------------------------------------------------------
 
-describe("//spore: generated metadata: produces 'genComment' token (R&D 0045)", () => {
-  it("//spore: text produces a token with kind 'genComment'", () => {
-    const result = lex("//spore: DependsOn: [DbWrapper]\nlet x = 1", "test.spore");
+describe("//fungi: generated metadata: produces 'genComment' token (R&D 0045)", () => {
+  it("//fungi: text produces a token with kind 'genComment'", () => {
+    const result = lex("//fungi: DependsOn: [DbWrapper]\nlet x = 1", "test.fungi");
     const genTok = result.tokens.find((t) => t.kind === "genComment");
-    assert.ok(genTok !== undefined, "Expected a 'genComment' token for //spore:");
+    assert.ok(genTok !== undefined, "Expected a 'genComment' token for //fungi:");
     assert.ok(genTok.value.includes("DependsOn"), `genComment value must include the metadata, got: '${genTok.value}'`);
   });
 
-  it("//spore: does NOT collapse into a plain 'comment' token (fail-closed tier separation)", () => {
-    const result = lex("//spore: Volatility: LOW\n", "test.spore");
+  it("//fungi: does NOT collapse into a plain 'comment' token (fail-closed tier separation)", () => {
+    const result = lex("//fungi: Volatility: LOW\n", "test.fungi");
     const plain = result.tokens.find((t) => t.kind === "comment");
-    assert.equal(plain, undefined, "//spore: must NOT produce a human 'comment' token — the CLI owns this tier");
+    assert.equal(plain, undefined, "//fungi: must NOT produce a human 'comment' token — the CLI owns this tier");
     const genTok = result.tokens.find((t) => t.kind === "genComment");
     assert.ok(genTok !== undefined, "Expected a genComment token");
   });
 
-  it("a human // comment is NOT mistaken for a generated //spore: token", () => {
-    const result = lex("// just a human note\n", "test.spore");
+  it("a human // comment is NOT mistaken for a generated //fungi: token", () => {
+    const result = lex("// just a human note\n", "test.fungi");
     assert.ok(result.tokens.find((t) => t.kind === "comment") !== undefined, "// stays a human comment");
     assert.equal(result.tokens.find((t) => t.kind === "genComment"), undefined, "// must NOT become genComment");
   });
 
-  it("all four comment tiers coexist as distinct token kinds (// ;; /// //spore:)", () => {
-    const result = lex("// human\n//spore: gen\n/// doc\n;; gov\n", "test.spore");
+  it("all four comment tiers coexist as distinct token kinds (// ;; /// //fungi:)", () => {
+    const result = lex("// human\n//fungi: gen\n/// doc\n;; gov\n", "test.fungi");
     assert.equal(result.tokens.find((t) => t.kind === "comment")?.value, "// human");
-    assert.equal(result.tokens.find((t) => t.kind === "genComment")?.value, "//spore: gen");
+    assert.equal(result.tokens.find((t) => t.kind === "genComment")?.value, "//fungi: gen");
     assert.equal(result.tokens.find((t) => t.kind === "docComment")?.value, "/// doc");
     assert.equal(result.tokens.find((t) => t.kind === "govComment")?.value, ";; gov");
   });
 
-  it("//spore: is skipped during parse (no syntax error) — preserved in the token stream", () => {
-    const result = lex("//spore: Complexity: 4\nlet x = 1", "test.spore");
-    assert.equal(result.diagnostics.length, 0, "a //spore: line must not produce a lexer diagnostic");
+  it("//fungi: is skipped during parse (no syntax error) — preserved in the token stream", () => {
+    const result = lex("//fungi: Complexity: 4\nlet x = 1", "test.fungi");
+    assert.equal(result.diagnostics.length, 0, "a //fungi: line must not produce a lexer diagnostic");
   });
 
-  it("multiple //spore: lines each produce a genComment token", () => {
-    const result = lex("//spore: a\n//spore: b\n//spore: c\n", "test.spore");
+  it("multiple //fungi: lines each produce a genComment token", () => {
+    const result = lex("//fungi: a\n//fungi: b\n//fungi: c\n", "test.fungi");
     assert.equal(result.tokens.filter((t) => t.kind === "genComment").length, 3, "Expected 3 genComment tokens");
   });
 });
@@ -166,7 +166,7 @@ describe("//spore: generated metadata: produces 'genComment' token (R&D 0045)", 
 
 describe("/* */ block comment: produces 'comment' token", () => {
   it("/* single-line block */ produces a 'comment' token", () => {
-    const result = lex("/* single line block */\nflow", "test.spore");
+    const result = lex("/* single line block */\nflow", "test.fungi");
     const commentTok = result.tokens.find((t) => t.kind === "comment");
     assert.ok(commentTok !== undefined, "Expected a 'comment' token for /* */");
     assert.ok(
@@ -176,7 +176,7 @@ describe("/* */ block comment: produces 'comment' token", () => {
   });
 
   it("/* multi\nline\nblock */ spans multiple lines in one token", () => {
-    const result = lex("/* block\nmulti\nline */\nflow", "test.spore");
+    const result = lex("/* block\nmulti\nline */\nflow", "test.fungi");
     const commentTok = result.tokens.find((t) => t.kind === "comment");
     assert.ok(commentTok !== undefined, "Expected a comment token for block comment");
     assert.ok(
@@ -186,7 +186,7 @@ describe("/* */ block comment: produces 'comment' token", () => {
   });
 
   it("block comment does NOT produce a govComment token", () => {
-    const result = lex("/* a block comment */\n", "test.spore");
+    const result = lex("/* a block comment */\n", "test.fungi");
     const govTok = result.tokens.find((t) => t.kind === "govComment");
     assert.equal(
       govTok,
@@ -196,7 +196,7 @@ describe("/* */ block comment: produces 'comment' token", () => {
   });
 
   it("lexer produces no errors for a well-formed block comment", () => {
-    const result = lex("/* ok */\n", "test.spore");
+    const result = lex("/* ok */\n", "test.fungi");
     assert.equal(result.diagnostics.length, 0, "Expected 0 diagnostics for well-formed block comment");
   });
 });
@@ -210,7 +210,7 @@ describe("trailing ; produces newline-like separation, not a symbol", () => {
     // In Galerina, ; at end of line acts as a statement terminator / newline.
     // The lexer emits a newline token (or just moves to the next statement),
     // not a raw symbol ";". If it emits any token for ;, it should be newline.
-    const result = lex("let x = 1;", "test.spore");
+    const result = lex("let x = 1;", "test.fungi");
     const semiTokens = result.tokens.filter(
       (t) => t.kind === "symbol" && t.value === ";",
     );
@@ -222,7 +222,7 @@ describe("trailing ; produces newline-like separation, not a symbol", () => {
   });
 
   it(";; is lexed as a govComment, not as two separate ; symbols", () => {
-    const result = lex(";; annotation\n", "test.spore");
+    const result = lex(";; annotation\n", "test.fungi");
     // There must be NO symbol tokens with value ";"
     const semiSymbols = result.tokens.filter(
       (t) => t.kind === "symbol" && t.value === ";",

@@ -1,5 +1,5 @@
 none
-// SPORE-AUDIT-001 is the target diagnostic for this example.
+// FUNGI-AUDIT-001 is the target diagnostic for this example.
 // Audit-call-required enforcement is tracked for a future compiler wave.
-// The example is stable: SPORE-TYPE-001 is suppressed; SPORE-EFFECT-002 is a warning —
+// The example is stable: FUNGI-TYPE-001 is suppressed; FUNGI-EFFECT-002 is a warning —
 // no unsuppressed errors are produced by the current pipeline.

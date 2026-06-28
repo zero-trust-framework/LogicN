@@ -11,7 +11,7 @@
 // Design approved: 2026-06-04 (galerina-resilience-observability-design.md)
 //
 // Key rules:
-//   - SPORE-OBS-001: observability explicitly declared on pure flow is a warning
+//   - FUNGI-OBS-001: observability explicitly declared on pure flow is a warning
 //     (pure flows have no observable side effects — telemetry is pointless)
 //   - Sampling rate is float 0.0–1.0 (IEEE 754), consistent with economics {} primitives
 //   - Alert destinations are platform-agnostic (routing is deployment config)
@@ -156,17 +156,17 @@ export function inferFlowObservability(
 }
 
 // ---------------------------------------------------------------------------
-// Governance check (SPORE-OBS-001)
+// Governance check (FUNGI-OBS-001)
 // ---------------------------------------------------------------------------
 
 export interface ObservabilityWarning {
-  readonly code: "SPORE-OBS-001";
+  readonly code: "FUNGI-OBS-001";
   readonly message: string;
   readonly severity: "warning";
 }
 
 /**
- * SPORE-OBS-001: explicitly declaring observability {} on a pure flow is a warning.
+ * FUNGI-OBS-001: explicitly declaring observability {} on a pure flow is a warning.
  * Pure flows have no side effects — trace spans and error rates are meaningless.
  */
 export function checkObservabilityWarnings(
@@ -175,7 +175,7 @@ export function checkObservabilityWarnings(
 ): ObservabilityWarning[] {
   if (flow.qualifier === "pure" && hasExplicitObservability(flowNode)) {
     return [{
-      code: "SPORE-OBS-001",
+      code: "FUNGI-OBS-001",
       message:
         `Flow '${flow.name}' is a pure flow with an explicit observability {} block. ` +
         `Pure flows have no side effects — traces, error rates, and latency metrics ` +

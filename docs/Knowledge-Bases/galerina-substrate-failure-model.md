@@ -143,7 +143,7 @@ decision a **stable build artifact**.
 For `pBad < 0.5`, `nmrFailureProbability(pBad, N)` is **strictly decreasing in odd `N`** (von Neumann
 NMR), so a sufficient `N` always exists and **clears** the diagnostic; the `trace` reports the
 descending sequence (explainable, not asserted). **Honest boundary:** if `pBad ≥ 0.5`, redundancy does
-**not** help — the check sets `redundancyHelps=false` and emits `SPORE-SUBSTRATE-003` rather than
+**not** help — the check sets `redundancyHelps=false` and emits `FUNGI-SUBSTRATE-003` rather than
 implying more lanes fix it.
 
 ---
@@ -174,21 +174,21 @@ guarantee for free from `vAnd` + No-Coercion.
 
 ---
 
-## 5. Diagnostics — `SPORE-SUBSTRATE-*` (reconciled against `SPORE-PHOTONIC-*`)
+## 5. Diagnostics — `FUNGI-SUBSTRATE-*` (reconciled against `FUNGI-PHOTONIC-*`)
 
-`SPORE-PHOTONIC-001…010` already exist — **hardware-capability** codes (static device properties, e.g.
+`FUNGI-PHOTONIC-001…010` already exist — **hardware-capability** codes (static device properties, e.g.
 `-005` optical signal loss, `-008` interference unresolvable statically). The new family is
 **semantic-guarantee** codes (tolerance / redundancy / determinism proven against a *noise model*) —
-strictly complementary, no collision. They sit after `SPORE-PHOTONIC-*`, before `SPORE-RUNTIME-*`.
+strictly complementary, no collision. They sit after `FUNGI-PHOTONIC-*`, before `FUNGI-RUNTIME-*`.
 
 | Code | name | meaning | severity |
 |---|---|---|---|
-| `SPORE-SUBSTRATE-001` | `CRYPTO_ON_NOISY_LANE` | a `Hash`/`Sign`/crypto effect declared on a noisy lane. Integrity is **never tolerated** — forbidden outright (the durable B1 insight, registered now). | **error** (always) |
-| `SPORE-SUBSTRATE-002` | `TOLERANCE_UNACHIEVABLE_UNDER_NOISE` | `epsilonModeled > epsilonDeclared` at the declared `N`. | **error** in `production`/`deterministic`; **warning** in `dev` |
-| `SPORE-SUBSTRATE-003` | `REDUNDANCY_INSUFFICIENT` | redundancy declared but cannot meet tolerance under the model (incl. the `pBad ≥ 0.5` "voting won't help" case). | **error** (always) |
-| `SPORE-SUBSTRATE-004` | `UNVOTED_ANALOG_INTO_DETERMINISTIC` | an un-voted (`N=1`) noisy result feeds a context requiring determinism (strict profile / crypto boundary). | **error** (always) |
+| `FUNGI-SUBSTRATE-001` | `CRYPTO_ON_NOISY_LANE` | a `Hash`/`Sign`/crypto effect declared on a noisy lane. Integrity is **never tolerated** — forbidden outright (the durable B1 insight, registered now). | **error** (always) |
+| `FUNGI-SUBSTRATE-002` | `TOLERANCE_UNACHIEVABLE_UNDER_NOISE` | `epsilonModeled > epsilonDeclared` at the declared `N`. | **error** in `production`/`deterministic`; **warning** in `dev` |
+| `FUNGI-SUBSTRATE-003` | `REDUNDANCY_INSUFFICIENT` | redundancy declared but cannot meet tolerance under the model (incl. the `pBad ≥ 0.5` "voting won't help" case). | **error** (always) |
+| `FUNGI-SUBSTRATE-004` | `UNVOTED_ANALOG_INTO_DETERMINISTIC` | an un-voted (`N=1`) noisy result feeds a context requiring determinism (strict profile / crypto boundary). | **error** (always) |
 
-`SPORE-SUBSTRATE-*` are a **higher** severity category than Direction A's `SPORE-GOV-3VL-001` (`warning`,
+`FUNGI-SUBSTRATE-*` are a **higher** severity category than Direction A's `FUNGI-GOV-3VL-001` (`warning`,
 an expected/safe runtime collapse): these are *compile-time unproven-guarantee* assertions —
 correctness, not information. The diagnostic record uses the same `GovernanceDiagnostic` shape Direction
 A introduced (`{code, name, severity, message}`), kept local to tower-citizen (no new cross-package
@@ -206,12 +206,12 @@ results flow through Direction A's `decideAtBoundary`, so the fail-closed bounda
 Mapping to agenda §5 (1–3) **plus** the safety theorem and a determinism oracle:
 
 1. **Tolerance-unachievable flagged (agenda #1).** Non-trivial noise + tight `epsilonDeclared` at `N=1`
-   ⇒ `met=false` and `verifyToleranceUnderNoise` emits exactly one `SPORE-SUBSTRATE-002` whose
+   ⇒ `met=false` and `verifyToleranceUnderNoise` emits exactly one `FUNGI-SUBSTRATE-002` whose
    `epsilonModeled > epsilonDeclared` (severity = error in `production`, warning in `dev`).
 2. **Raising TMR clears it, monotonically (agenda #2).** Same `(params, epsilonDeclared)`, `pBad<0.5`:
    `trace` over `N=1,3,5,7` is **strictly decreasing**; a smallest `N*` flips `met false→true` and
    `002` stops; it **stays cleared** for `N>N*`. A separate `pBad≥0.5` case asserts `redundancyHelps=false`
-   + `SPORE-SUBSTRATE-003` and that the trace never clears.
+   + `FUNGI-SUBSTRATE-003` and that the trace never clears.
 3. **Deterministic / seeded / reproducible (agenda #3).** Same `seed` ⇒ byte-identical `NoisyLane.read`
    stream and byte-identical `SubstrateCheckResult`; different `seed`/`opId` ⇒ different but reproducible
    stream. (No non-seeded randomness / wall-clock reachable: the stream is built only from `(seed, opId)`.)
@@ -225,8 +225,8 @@ Mapping to agenda §5 (1–3) **plus** the safety theorem and a determinism orac
 6. **No-regression / noiseless.** All params `0` ⇒ `pBad=0` ⇒ `read` is the identity ⇒ `epsilonModeled=0`,
    `met=true` for any `epsilonDeclared≥0`, no diagnostic. Crypto on a clean (`laneFailureProb=0`) lane ⇒
    no `001`. Confirms existing/clean flows are unaffected.
-7. **Crypto-on-noisy + unvoted-sink.** `hasCrypto` on a noisy lane ⇒ `SPORE-SUBSTRATE-001` (error)
-   regardless of tolerance; `N=1` + deterministic sink + noise ⇒ `SPORE-SUBSTRATE-004`.
+7. **Crypto-on-noisy + unvoted-sink.** `hasCrypto` on a noisy lane ⇒ `FUNGI-SUBSTRATE-001` (error)
+   regardless of tolerance; `N=1` + deterministic sink + noise ⇒ `FUNGI-SUBSTRATE-004`.
 
 ---
 
@@ -243,10 +243,10 @@ export interface SubstrateGuarantee { resultId; epsilonDeclared; redundancyN; mu
 export interface SubstrateCheckResult { resultId; pBad; epsilonModeled; met; trace; redundancyHelps; }
 
 export const SUBSTRATE_DIAGNOSTICS = {
-  CRYPTO_ON_NOISY_LANE:               "SPORE-SUBSTRATE-001",
-  TOLERANCE_UNACHIEVABLE_UNDER_NOISE: "SPORE-SUBSTRATE-002",
-  REDUNDANCY_INSUFFICIENT:            "SPORE-SUBSTRATE-003",
-  UNVOTED_ANALOG_INTO_DETERMINISTIC:  "SPORE-SUBSTRATE-004",
+  CRYPTO_ON_NOISY_LANE:               "FUNGI-SUBSTRATE-001",
+  TOLERANCE_UNACHIEVABLE_UNDER_NOISE: "FUNGI-SUBSTRATE-002",
+  REDUNDANCY_INSUFFICIENT:            "FUNGI-SUBSTRATE-003",
+  UNVOTED_ANALOG_INTO_DETERMINISTIC:  "FUNGI-SUBSTRATE-004",
 } as const;
 
 export function singleLaneErrorProbability(p: SubstrateParameters): number;       // pBad
@@ -269,7 +269,7 @@ export function verifyToleranceUnderNoise(
 - **Direction B — substrate/tolerance contracts.** The `substrate { lane, tolerance, redundancy }`
   grammar (lean: its own block, like `resilience {}`/`observability {}`, `#58`); a `verifySubstrate()`
   pass in `galerina-core-compiler/src/governance-verifier.ts` consuming the parsed block + `effectResult`
-  and calling this module; `SPORE_SUBSTRATE_001..004` code constants registered in
+  and calling this module; `FUNGI_SUBSTRATE_001..004` code constants registered in
   `galerina-core-compiler/src/index.ts`; the B1 crypto-on-core invariant pulled forward; `routePrecision()`
   (precision-strategy.ts) gaining a lane/substrate axis.
 - **HMAC-bound `SubstrateModelSnapshot`** (sentinel-state pattern) so a backend signs against the exact
@@ -282,8 +282,8 @@ export function verifyToleranceUnderNoise(
 
 ## 9. Decisions taken (were the draft's open questions)
 
-1. **Numeric codes canonical** (`SPORE-SUBSTRATE-001..004`) with `screaming_snake` names — matches the
-   `SPORE-PHOTONIC-NNN` neighbourhood.
+1. **Numeric codes canonical** (`FUNGI-SUBSTRATE-001..004`) with `screaming_snake` names — matches the
+   `FUNGI-PHOTONIC-NNN` neighbourhood.
 2. **Closed-form NMR check canonical**, Monte-Carlo only as a cross-check — exact, no `TRIAL_BUDGET`
    ceiling, more honest for tight tolerances.
 3. **Conservative placeholder calibration gains** (`PHASE/XTALK/READOUT_GAIN`) — documented knobs; a
@@ -295,7 +295,7 @@ export function verifyToleranceUnderNoise(
 
 `galerina-photonic-tri-substrate-rd-agenda.md` (parent §5) · `galerina-three-valued-governance.md`
 (Direction A — `Verdict`, `vAnd`, `decideAtBoundary`, No-Coercion) · `tpl-simulator.ts`
-(`#173/#196` gates + `consensusTrit`, frozen) · `compiler-diagnostics.md` (`SPORE-PHOTONIC-*` neighbourhood
-+ new `SPORE-SUBSTRATE-*` subsection) · `hybrid-engine.ts` (seeded-PRNG idiom) · `sentinel-power`/`-time`
+(`#173/#196` gates + `consensusTrit`, frozen) · `compiler-diagnostics.md` (`FUNGI-PHOTONIC-*` neighbourhood
++ new `FUNGI-SUBSTRATE-*` subsection) · `hybrid-engine.ts` (seeded-PRNG idiom) · `sentinel-power`/`-time`
 (analog-health-signal analogy) · `precision-strategy.ts` (Direction B routing extension point) ·
 `tests/three-valued-governance.test.mjs` (oracle-test pattern) · `notes/31–33` (TMX boundary).

@@ -34,8 +34,8 @@ const SOURCE = `pure flow greet(name: String) -> String {
 
 describe("Audit proof — Suite 1: Deterministic hashes", () => {
   it("parseProgram twice produces the same number of flows with the same name", () => {
-    const p1 = parseProgram(SOURCE, "t.spore");
-    const p2 = parseProgram(SOURCE, "t.spore");
+    const p1 = parseProgram(SOURCE, "t.fungi");
+    const p2 = parseProgram(SOURCE, "t.fungi");
 
     assert.equal(p1.flows.length, p2.flows.length, "flows.length must be identical on repeated parse");
     assert.equal(
@@ -46,8 +46,8 @@ describe("Audit proof — Suite 1: Deterministic hashes", () => {
   });
 
   it("buildSemanticGraph twice produces identical nodes.length and edges.length", () => {
-    const p1 = parseProgram(SOURCE, "t.spore");
-    const p2 = parseProgram(SOURCE, "t.spore");
+    const p1 = parseProgram(SOURCE, "t.fungi");
+    const p2 = parseProgram(SOURCE, "t.fungi");
 
     const g1 = buildSemanticGraph(p1.ast, p1.flows);
     const g2 = buildSemanticGraph(p2.ast, p2.flows);
@@ -57,7 +57,7 @@ describe("Audit proof — Suite 1: Deterministic hashes", () => {
   });
 
   it("buildExecutionPlan twice on the same flow produces identical planHash", () => {
-    const parsed = parseProgram(SOURCE, "t.spore");
+    const parsed = parseProgram(SOURCE, "t.fungi");
     const flowMeta = parsed.flows[0];
     assert.ok(flowMeta !== undefined, "Expected at least one flow in SOURCE");
 

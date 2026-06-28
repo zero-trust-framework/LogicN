@@ -2,9 +2,9 @@
 // Galerina Phase 17A — Naming Policy Checker
 //
 // Enforces naming conventions as a compiler pass:
-//   - Flow/fn names → camelCase   (SPORE-STYLE-001)
-//   - Type/record/enum names → PascalCase  (SPORE-STYLE-002)
-//   - Sensitive binding names → suggest SecureString  (SPORE-STYLE-SEC-001)
+//   - Flow/fn names → camelCase   (FUNGI-STYLE-001)
+//   - Type/record/enum names → PascalCase  (FUNGI-STYLE-002)
+//   - Sensitive binding names → suggest SecureString  (FUNGI-STYLE-SEC-001)
 // =============================================================================
 
 import { type AstNode, type SourceLocation } from "./parser.js";
@@ -13,22 +13,22 @@ import { type AstNode, type SourceLocation } from "./parser.js";
 // Diagnostic codes (exported as named constants)
 // ---------------------------------------------------------------------------
 
-export const SPORE_STYLE_001 = {
-  code: "SPORE-STYLE-001",
+export const FUNGI_STYLE_001 = {
+  code: "FUNGI-STYLE-001",
   name: "FlowNameCamelCase",
   severity: "warning" as const,
   message: "Flow and fn names should use camelCase (e.g. getUser, createPatient).",
 } as const;
 
-export const SPORE_STYLE_002 = {
-  code: "SPORE-STYLE-002",
+export const FUNGI_STYLE_002 = {
+  code: "FUNGI-STYLE-002",
   name: "TypeNamePascalCase",
   severity: "warning" as const,
   message: "Type, record, and enum names should use PascalCase (e.g. UserId, PatientRecord).",
 } as const;
 
-export const SPORE_STYLE_SEC_001 = {
-  code: "SPORE-STYLE-SEC-001",
+export const FUNGI_STYLE_SEC_001 = {
+  code: "FUNGI-STYLE-SEC-001",
   name: "SensitiveBindingType",
   severity: "warning" as const,
   message: "Binding name looks sensitive. Use SecureString or protected String to enforce security constraints.",
@@ -53,9 +53,9 @@ const DEFAULT_NAMING_POLICY: NamingPolicyConfig = {
 };
 
 export type NamingPolicyDiagnosticCode =
-  | "SPORE-STYLE-001"
-  | "SPORE-STYLE-002"
-  | "SPORE-STYLE-SEC-001";
+  | "FUNGI-STYLE-001"
+  | "FUNGI-STYLE-002"
+  | "FUNGI-STYLE-SEC-001";
 
 export interface NamingPolicyDiagnostic {
   readonly code: NamingPolicyDiagnosticCode;
@@ -228,12 +228,12 @@ function walkNode(
   const name = extractDeclName(node);
 
   if (name !== undefined) {
-    // ── Flow/fn naming check (SPORE-STYLE-001) ──────────────────────────────
+    // ── Flow/fn naming check (FUNGI-STYLE-001) ──────────────────────────────
     if (FLOW_KINDS.has(node.kind) && config.flowNames !== "none") {
       if (!isCamelCase(name)) {
         const suggested = toCamelCase(name);
         const diag: NamingPolicyDiagnostic = {
-          code: "SPORE-STYLE-001",
+          code: "FUNGI-STYLE-001",
           severity: config.severity === "info" ? "warning" : config.severity,
           message: `Flow name '${name}' should be camelCase. Suggested: '${suggested}'`,
           suggestedFix: suggested,
@@ -243,12 +243,12 @@ function walkNode(
       }
     }
 
-    // ── Type/record/enum naming check (SPORE-STYLE-002) ─────────────────────
+    // ── Type/record/enum naming check (FUNGI-STYLE-002) ─────────────────────
     if (TYPE_KINDS.has(node.kind) && config.typeNames !== "none") {
       if (!isPascalCase(name)) {
         const suggested = toPascalCase(name);
         const diag: NamingPolicyDiagnostic = {
-          code: "SPORE-STYLE-002",
+          code: "FUNGI-STYLE-002",
           severity: config.severity === "info" ? "warning" : config.severity,
           message: `Type name '${name}' should be PascalCase. Suggested: '${suggested}'`,
           suggestedFix: suggested,
@@ -258,11 +258,11 @@ function walkNode(
       }
     }
 
-    // ── Sensitive binding check (SPORE-STYLE-SEC-001) — always checked ──────
+    // ── Sensitive binding check (FUNGI-STYLE-SEC-001) — always checked ──────
     if (BINDING_KINDS.has(node.kind)) {
       if (isSensitiveName(name) && !hasSafePrefix(name)) {
         const diag: NamingPolicyDiagnostic = {
-          code: "SPORE-STYLE-SEC-001",
+          code: "FUNGI-STYLE-SEC-001",
           severity: "warning",
           message: `Binding '${name}' looks sensitive. Use SecureString or protected String.`,
           suggestedFix: `Use 'unsafe let ${name}: SecureString' to acknowledge the security boundary, or prefix with 'raw' (e.g. 'raw${name[0]!.toUpperCase()}${name.slice(1)}').`,

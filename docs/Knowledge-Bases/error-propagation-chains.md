@@ -75,7 +75,7 @@ Invalid usage:
 
 ```galerina
 let value = 123?
-// SPORE-E2007: attempt operator requires Result<T,E>
+// FUNGI-E2007: attempt operator requires Result<T,E>
 ```
 
 ## Multi-Step Propagation
@@ -225,13 +225,13 @@ deployment identity
 ## Error Codes
 
 ```text
-SPORE-E2001 invalid Result type
-SPORE-E2002 unhandled Result
-SPORE-E2003 incompatible error type
-SPORE-E2004 invalid error conversion
-SPORE-E2005 non-exhaustive error match
-SPORE-E2006 invalid propagation boundary
-SPORE-E2007 invalid attempt operator usage
+FUNGI-E2001 invalid Result type
+FUNGI-E2002 unhandled Result
+FUNGI-E2003 incompatible error type
+FUNGI-E2004 invalid error conversion
+FUNGI-E2005 non-exhaustive error match
+FUNGI-E2006 invalid propagation boundary
+FUNGI-E2007 invalid attempt operator usage
 ```
 
 ## Recommended Practices

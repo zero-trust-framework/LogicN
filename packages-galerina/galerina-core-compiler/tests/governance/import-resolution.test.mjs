@@ -1,13 +1,13 @@
 // =============================================================================
-// Module Registry — import "./path.spore" DAG Merge Tests (task #94)
+// Module Registry — import "./path.fungi" DAG Merge Tests (task #94)
 //
 // Tests for file-based import resolution using the module registry.
 // The `gatherFileImports` function is available in dist/module-registry.js.
 //
 // Covers:
-//   - SPORE-IMPORT-001: file not found at the resolved path
-//   - SPORE-IMPORT-003: circular import detected (A imports B imports A)
-//   - SPORE-IMPORT-004: symbol collision warning (local + imported same name)
+//   - FUNGI-IMPORT-001: file not found at the resolved path
+//   - FUNGI-IMPORT-003: circular import detected (A imports B imports A)
+//   - FUNGI-IMPORT-004: symbol collision warning (local + imported same name)
 //   - Valid import resolves symbols from the imported file
 // =============================================================================
 
@@ -48,19 +48,19 @@ function cleanDir(dir) {
 // Valid import resolves symbols
 // ---------------------------------------------------------------------------
 
-describe("import './path.spore': valid import resolves symbols", () => {
+describe("import './path.fungi': valid import resolves symbols", () => {
   it("importing a file with a pure flow exposes it as a 'flow' symbol", () => {
     const dir = createTempDir();
     try {
-      const libPath = writeTempFile(dir, "lib.spore", `
+      const libPath = writeTempFile(dir, "lib.fungi", `
 pure flow addTwo(n: Int) -> Int
 contract { effects {} }
 { return n }
 `);
 
-      const mainSrc = `import "./lib.spore"\n`;
-      const { ast } = parseProgram(mainSrc, join(dir, "main.spore"));
-      const result = gatherFileImports(ast, join(dir, "main.spore"));
+      const mainSrc = `import "./lib.fungi"\n`;
+      const { ast } = parseProgram(mainSrc, join(dir, "main.fungi"));
+      const result = gatherFileImports(ast, join(dir, "main.fungi"));
 
       assert.equal(
         result.diagnostics.length,
@@ -79,7 +79,7 @@ contract { effects {} }
   it("importing a file with a guard exposes it as a 'guard' symbol", () => {
     const dir = createTempDir();
     try {
-      const libPath = writeTempFile(dir, "guards.spore", `
+      const libPath = writeTempFile(dir, "guards.fungi", `
 guard PayGuard {
   permitted_effects {
     gateway.charge
@@ -87,9 +87,9 @@ guard PayGuard {
 }
 `);
 
-      const mainSrc = `import "./guards.spore"\n`;
-      const { ast } = parseProgram(mainSrc, join(dir, "main.spore"));
-      const result = gatherFileImports(ast, join(dir, "main.spore"));
+      const mainSrc = `import "./guards.fungi"\n`;
+      const { ast } = parseProgram(mainSrc, join(dir, "main.fungi"));
+      const result = gatherFileImports(ast, join(dir, "main.fungi"));
 
       assert.equal(
         result.diagnostics.length,
@@ -107,23 +107,23 @@ guard PayGuard {
   it("resolved paths list includes the imported file path", () => {
     const dir = createTempDir();
     try {
-      const libPath = writeTempFile(dir, "utils.spore", `
+      const libPath = writeTempFile(dir, "utils.fungi", `
 pure flow identity(x: Int) -> Int
 contract { effects {} }
 { return x }
 `);
 
-      const mainSrc = `import "./utils.spore"\n`;
-      const { ast } = parseProgram(mainSrc, join(dir, "main.spore"));
-      const result = gatherFileImports(ast, join(dir, "main.spore"));
+      const mainSrc = `import "./utils.fungi"\n`;
+      const { ast } = parseProgram(mainSrc, join(dir, "main.fungi"));
+      const result = gatherFileImports(ast, join(dir, "main.fungi"));
 
       assert.ok(
         result.resolvedPaths.length > 0,
         "resolvedPaths must contain at least the imported file",
       );
       assert.ok(
-        result.resolvedPaths.some((p) => p.endsWith("utils.spore")),
-        `Expected utils.spore in resolvedPaths, got: ${result.resolvedPaths.join(", ")}`,
+        result.resolvedPaths.some((p) => p.endsWith("utils.fungi")),
+        `Expected utils.fungi in resolvedPaths, got: ${result.resolvedPaths.join(", ")}`,
       );
     } finally {
       cleanDir(dir);
@@ -132,50 +132,50 @@ contract { effects {} }
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-IMPORT-001: file not found
+// FUNGI-IMPORT-001: file not found
 // ---------------------------------------------------------------------------
 
-describe("SPORE-IMPORT-001: import of non-existent file", () => {
-  it("import './nonexistent.spore' produces SPORE-IMPORT-001 diagnostic", () => {
+describe("FUNGI-IMPORT-001: import of non-existent file", () => {
+  it("import './nonexistent.fungi' produces FUNGI-IMPORT-001 diagnostic", () => {
     const dir = createTempDir();
     try {
-      const mainSrc = `import "./nonexistent.spore"\n`;
-      const { ast } = parseProgram(mainSrc, join(dir, "main.spore"));
-      const result = gatherFileImports(ast, join(dir, "main.spore"));
+      const mainSrc = `import "./nonexistent.fungi"\n`;
+      const { ast } = parseProgram(mainSrc, join(dir, "main.fungi"));
+      const result = gatherFileImports(ast, join(dir, "main.fungi"));
 
-      const imp001 = result.diagnostics.filter((d) => d.code === "SPORE-IMPORT-001");
+      const imp001 = result.diagnostics.filter((d) => d.code === "FUNGI-IMPORT-001");
       assert.ok(
         imp001.length >= 1,
-        `Expected SPORE-IMPORT-001 for missing file, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+        `Expected FUNGI-IMPORT-001 for missing file, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
       );
       assert.equal(
         imp001[0].severity,
         "error",
-        "SPORE-IMPORT-001 must be an error",
+        "FUNGI-IMPORT-001 must be an error",
       );
       assert.ok(
-        imp001[0].message.includes("nonexistent.spore") || imp001[0].importedFrom?.includes("nonexistent"),
-        `SPORE-IMPORT-001 message must mention the missing file, got: ${imp001[0].message}`,
+        imp001[0].message.includes("nonexistent.fungi") || imp001[0].importedFrom?.includes("nonexistent"),
+        `FUNGI-IMPORT-001 message must mention the missing file, got: ${imp001[0].message}`,
       );
     } finally {
       cleanDir(dir);
     }
   });
 
-  it("import with valid package name (not relative) does not trigger SPORE-IMPORT-001", () => {
+  it("import with valid package name (not relative) does not trigger FUNGI-IMPORT-001", () => {
     // Package imports like `import Email from "@galerina/core-types"` are handled
     // by resolveImports, not gatherFileImports. Non-relative imports return no results.
     const dir = createTempDir();
     try {
       const mainSrc = `import Email from "@galerina/core-types"\n`;
-      const { ast } = parseProgram(mainSrc, join(dir, "main.spore"));
-      const result = gatherFileImports(ast, join(dir, "main.spore"));
+      const { ast } = parseProgram(mainSrc, join(dir, "main.fungi"));
+      const result = gatherFileImports(ast, join(dir, "main.fungi"));
 
-      const imp001 = result.diagnostics.filter((d) => d.code === "SPORE-IMPORT-001");
+      const imp001 = result.diagnostics.filter((d) => d.code === "FUNGI-IMPORT-001");
       assert.equal(
         imp001.length,
         0,
-        `Non-relative package import must not trigger SPORE-IMPORT-001`,
+        `Non-relative package import must not trigger FUNGI-IMPORT-001`,
       );
     } finally {
       cleanDir(dir);
@@ -184,32 +184,32 @@ describe("SPORE-IMPORT-001: import of non-existent file", () => {
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-IMPORT-003: circular import
+// FUNGI-IMPORT-003: circular import
 // ---------------------------------------------------------------------------
 
-describe("SPORE-IMPORT-003: circular import detected", () => {
-  it("file A imports file B which imports file A — SPORE-IMPORT-003", () => {
+describe("FUNGI-IMPORT-003: circular import detected", () => {
+  it("file A imports file B which imports file A — FUNGI-IMPORT-003", () => {
     const dir = createTempDir();
     try {
       // Write file B first (it imports A)
-      writeTempFile(dir, "b.spore", `import "./a.spore"\n\npure flow fromB() -> Int\ncontract { effects {} }\n{ return 1 }\n`);
+      writeTempFile(dir, "b.fungi", `import "./a.fungi"\n\npure flow fromB() -> Int\ncontract { effects {} }\n{ return 1 }\n`);
       // Write file A (it imports B)
-      writeTempFile(dir, "a.spore", `import "./b.spore"\n\npure flow fromA() -> Int\ncontract { effects {} }\n{ return 2 }\n`);
+      writeTempFile(dir, "a.fungi", `import "./b.fungi"\n\npure flow fromA() -> Int\ncontract { effects {} }\n{ return 2 }\n`);
 
-      // Parse the main entry point (a.spore imports b.spore imports a.spore → cycle)
-      const mainSrc = `import "./a.spore"\n`;
-      const { ast } = parseProgram(mainSrc, join(dir, "main.spore"));
-      const result = gatherFileImports(ast, join(dir, "main.spore"));
+      // Parse the main entry point (a.fungi imports b.fungi imports a.fungi → cycle)
+      const mainSrc = `import "./a.fungi"\n`;
+      const { ast } = parseProgram(mainSrc, join(dir, "main.fungi"));
+      const result = gatherFileImports(ast, join(dir, "main.fungi"));
 
-      const imp003 = result.diagnostics.filter((d) => d.code === "SPORE-IMPORT-003");
+      const imp003 = result.diagnostics.filter((d) => d.code === "FUNGI-IMPORT-003");
       assert.ok(
         imp003.length >= 1,
-        `Expected SPORE-IMPORT-003 for circular import, got: ${result.diagnostics.map((d) => `${d.code}: ${d.message}`).join("; ")}`,
+        `Expected FUNGI-IMPORT-003 for circular import, got: ${result.diagnostics.map((d) => `${d.code}: ${d.message}`).join("; ")}`,
       );
       assert.equal(
         imp003[0].severity,
         "error",
-        "SPORE-IMPORT-003 must be an error",
+        "FUNGI-IMPORT-003 must be an error",
       );
     } finally {
       cleanDir(dir);
@@ -218,65 +218,65 @@ describe("SPORE-IMPORT-003: circular import detected", () => {
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-IMPORT-004: symbol collision warning
+// FUNGI-IMPORT-004: symbol collision warning
 // ---------------------------------------------------------------------------
 
-describe("SPORE-IMPORT-004: symbol collision between imports", () => {
-  it("two imported files with the same flow name — SPORE-IMPORT-004 warning", () => {
-    // SPORE-IMPORT-004 is emitted by checkFileSymbolCollisions, not gatherFileImports.
+describe("FUNGI-IMPORT-004: symbol collision between imports", () => {
+  it("two imported files with the same flow name — FUNGI-IMPORT-004 warning", () => {
+    // FUNGI-IMPORT-004 is emitted by checkFileSymbolCollisions, not gatherFileImports.
     // gatherFileImports returns all symbols; the collision check is a separate step.
     const dir = createTempDir();
     try {
-      writeTempFile(dir, "lib1.spore", `pure flow helper() -> Int\ncontract { effects {} }\n{ return 1 }\n`);
-      writeTempFile(dir, "lib2.spore", `pure flow helper() -> Int\ncontract { effects {} }\n{ return 2 }\n`);
+      writeTempFile(dir, "lib1.fungi", `pure flow helper() -> Int\ncontract { effects {} }\n{ return 1 }\n`);
+      writeTempFile(dir, "lib2.fungi", `pure flow helper() -> Int\ncontract { effects {} }\n{ return 2 }\n`);
 
-      const mainSrc = `import "./lib1.spore"\nimport "./lib2.spore"\n`;
-      const { ast } = parseProgram(mainSrc, join(dir, "main.spore"));
-      const importResult = gatherFileImports(ast, join(dir, "main.spore"));
+      const mainSrc = `import "./lib1.fungi"\nimport "./lib2.fungi"\n`;
+      const { ast } = parseProgram(mainSrc, join(dir, "main.fungi"));
+      const importResult = gatherFileImports(ast, join(dir, "main.fungi"));
 
       // Run the symbol collision check with an empty local-name set
       const collisions = checkFileSymbolCollisions(
         importResult.symbols,
         new Set(),
-        join(dir, "main.spore"),
+        join(dir, "main.fungi"),
       );
 
-      const imp004 = collisions.filter((d) => d.code === "SPORE-IMPORT-004");
+      const imp004 = collisions.filter((d) => d.code === "FUNGI-IMPORT-004");
       assert.ok(
         imp004.length >= 1,
-        `Expected SPORE-IMPORT-004 for symbol collision on 'helper', got: ${collisions.map((d) => `${d.code}: ${d.message}`).join("; ")}`,
+        `Expected FUNGI-IMPORT-004 for symbol collision on 'helper', got: ${collisions.map((d) => `${d.code}: ${d.message}`).join("; ")}`,
       );
       assert.equal(
         imp004[0].severity,
         "warning",
-        "SPORE-IMPORT-004 must be a warning (not a hard error)",
+        "FUNGI-IMPORT-004 must be a warning (not a hard error)",
       );
     } finally {
       cleanDir(dir);
     }
   });
 
-  it("two imports with distinct symbol names — no SPORE-IMPORT-004", () => {
+  it("two imports with distinct symbol names — no FUNGI-IMPORT-004", () => {
     const dir = createTempDir();
     try {
-      writeTempFile(dir, "libA.spore", `pure flow alpha() -> Int\ncontract { effects {} }\n{ return 1 }\n`);
-      writeTempFile(dir, "libB.spore", `pure flow beta() -> Int\ncontract { effects {} }\n{ return 2 }\n`);
+      writeTempFile(dir, "libA.fungi", `pure flow alpha() -> Int\ncontract { effects {} }\n{ return 1 }\n`);
+      writeTempFile(dir, "libB.fungi", `pure flow beta() -> Int\ncontract { effects {} }\n{ return 2 }\n`);
 
-      const mainSrc = `import "./libA.spore"\nimport "./libB.spore"\n`;
-      const { ast } = parseProgram(mainSrc, join(dir, "main.spore"));
-      const importResult = gatherFileImports(ast, join(dir, "main.spore"));
+      const mainSrc = `import "./libA.fungi"\nimport "./libB.fungi"\n`;
+      const { ast } = parseProgram(mainSrc, join(dir, "main.fungi"));
+      const importResult = gatherFileImports(ast, join(dir, "main.fungi"));
 
       const collisions = checkFileSymbolCollisions(
         importResult.symbols,
         new Set(),
-        join(dir, "main.spore"),
+        join(dir, "main.fungi"),
       );
 
-      const imp004 = collisions.filter((d) => d.code === "SPORE-IMPORT-004");
+      const imp004 = collisions.filter((d) => d.code === "FUNGI-IMPORT-004");
       assert.equal(
         imp004.length,
         0,
-        `Expected no SPORE-IMPORT-004 for distinct symbol names, got: ${imp004.map((d) => d.message).join("; ")}`,
+        `Expected no FUNGI-IMPORT-004 for distinct symbol names, got: ${imp004.map((d) => d.message).join("; ")}`,
       );
     } finally {
       cleanDir(dir);

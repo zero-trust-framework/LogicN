@@ -217,7 +217,7 @@ export class ProtectedSecret<T> {
     unwrapForApprovedSink(sink: SecretSafeSink): T {
         if (!canSendSecretToSink(this.reference, sink)) {
             throw new SecretPolicyError(
-                "SPORE-SECRET-001",
+                "FUNGI-SECRET-001",
                 `Secret ${this.reference.name} cannot be sent to sink ${sink.id}`
             )
         }
@@ -315,7 +315,7 @@ export function checkStringConcat(input: {
 }): SecretDiagnostic[]
 ```
 
-Emits `SPORE-SECRET-002` when secret-tainted values flow into unsafe string
+Emits `FUNGI-SECRET-002` when secret-tainted values flow into unsafe string
 creation.
 
 ### checkSecretSink()
@@ -328,7 +328,7 @@ export function checkSecretSink(input: {
 }): SecretDiagnostic[]
 ```
 
-Emits `SPORE-SECRET-001` when a protected secret is sent to an unsafe sink.
+Emits `FUNGI-SECRET-001` when a protected secret is sent to an unsafe sink.
 
 ---
 
@@ -336,7 +336,7 @@ Emits `SPORE-SECRET-001` when a protected secret is sent to an unsafe sink.
 
 ```ts
 export interface SecretDiagnostic {
-    code: "SPORE-SECRET-001" | "SPORE-SECRET-002"
+    code: "FUNGI-SECRET-001" | "FUNGI-SECRET-002"
     severity: "error" | "warning"
     message: string
     secretName?: string
@@ -448,8 +448,8 @@ secret → approved database initialization
 
 | Code | Meaning |
 | --------------- | -------------------------------------------------------- |
-| `SPORE-SECRET-001` | Secret sent to unsafe sink |
-| `SPORE-SECRET-002` | Secret-tainted value flowed into unsafe string operation |
+| `FUNGI-SECRET-001` | Secret sent to unsafe sink |
+| `FUNGI-SECRET-002` | Secret-tainted value flowed into unsafe string operation |
 
 ---
 

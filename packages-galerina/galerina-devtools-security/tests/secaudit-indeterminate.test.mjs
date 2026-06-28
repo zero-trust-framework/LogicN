@@ -17,16 +17,16 @@ import { runSecurityAudit } from "../dist/index.js";
 // ---------------------------------------------------------------------------
 describe("0084-secaudit-unknown: blind audit denies-by-default", () => {
   it("an unparseable source is verdict=indeterminate and passed=false", async () => {
-    const report = await runSecurityAudit("@@@ not valid galerina %%% {{{ unterminated", { fileName: "x.spore" });
+    const report = await runSecurityAudit("@@@ not valid galerina %%% {{{ unterminated", { fileName: "x.fungi" });
     assert.equal(report.passed, false, "blind audit must not pass");
     assert.equal(report.verdict, "indeterminate", `expected indeterminate, got '${report.verdict}'`);
     // No checker ran on an unparseable program => all four are not-attested.
     assert.ok(report.indeterminate.length > 0, "indeterminate[] must list the not-attested checkers");
-    assert.ok(report.summary.includes("SPORE-GOV-3VL-001"), "summary must cite the undecided-collapse code");
+    assert.ok(report.summary.includes("FUNGI-GOV-3VL-001"), "summary must cite the undecided-collapse code");
   });
 
   it("unterminated block also denies (no passed=true on partial parse)", async () => {
-    const report = await runSecurityAudit("secure flow Pay { effects { audit.write ", { fileName: "x.spore" });
+    const report = await runSecurityAudit("secure flow Pay { effects { audit.write ", { fileName: "x.fungi" });
     assert.notEqual(report.passed, true, "a source that fails to parse must never report passed=true");
   });
 });
@@ -55,7 +55,7 @@ describe("0084-secaudit-unknown: a gate finding fails (not indeterminate)", () =
       "secure flow q(req: Request) -> Response contract { effects { database.read } }",
       "{ let r: String = Database.query(req.body)  return r }",
     ].join("\n"), { profiles: ["strict"] });
-    assert.ok(report.findings.some(f => f.code === "SPORE-TAINT-001"), `expected SPORE-TAINT-001, got: ${report.summary}`);
+    assert.ok(report.findings.some(f => f.code === "FUNGI-TAINT-001"), `expected FUNGI-TAINT-001, got: ${report.summary}`);
     assert.equal(report.verdict, "fail", "a gate finding must produce verdict=fail");
     assert.equal(report.passed, false, "should fail when injection is detected");
   });

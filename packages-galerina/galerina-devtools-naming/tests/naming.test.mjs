@@ -2,7 +2,7 @@
  * @galerina/devtools-naming — Integration Tests
  *
  * Tests the Zero-Ambiguity / Maximum-Semantics naming checker.
- * Covers all 5 diagnostic codes: SPORE-NAMING-001..005
+ * Covers all 5 diagnostic codes: FUNGI-NAMING-001..005
  */
 
 import { describe, it } from "node:test";
@@ -15,11 +15,11 @@ import { join } from "node:path";
 import { runNamingAudit } from "../dist/index.js";
 
 // ---------------------------------------------------------------------------
-// Helper: write a temp .spore file, run CLI, return output + exit code
+// Helper: write a temp .fungi file, run CLI, return output + exit code
 // ---------------------------------------------------------------------------
 
 function runCli(source, ...extraArgs) {
-  const file = join(tmpdir(), `spore-naming-test-${Date.now()}-${Math.random().toString(36).slice(2)}.spore`);
+  const file = join(tmpdir(), `fungi-naming-test-${Date.now()}-${Math.random().toString(36).slice(2)}.fungi`);
   writeFileSync(file, source, "utf8");
   try {
     const result = spawnSync(
@@ -42,11 +42,11 @@ function runCli(source, ...extraArgs) {
 }
 
 // ---------------------------------------------------------------------------
-// Test 1 — SPORE-NAMING-001: flow with abbreviated param `req: Request`
+// Test 1 — FUNGI-NAMING-001: flow with abbreviated param `req: Request`
 // ---------------------------------------------------------------------------
 
-describe("SPORE-NAMING-001: abbreviated param name", () => {
-  it("flow with param 'req: Request' emits SPORE-NAMING-001", () => {
+describe("FUNGI-NAMING-001: abbreviated param name", () => {
+  it("flow with param 'req: Request' emits FUNGI-NAMING-001", () => {
     const source = [
       "secure flow processUserRequest(req: Request) -> Response",
       "contract {",
@@ -56,21 +56,21 @@ describe("SPORE-NAMING-001: abbreviated param name", () => {
       "{ return Response.ok() }",
     ].join("\n");
 
-    const report = runNamingAudit(source, { fileName: "test.spore" });
-    const finding = report.findings.find(f => f.code === "SPORE-NAMING-001" && f.identifierName === "req");
+    const report = runNamingAudit(source, { fileName: "test.fungi" });
+    const finding = report.findings.find(f => f.code === "FUNGI-NAMING-001" && f.identifierName === "req");
     assert.ok(
       finding !== undefined,
-      `Expected SPORE-NAMING-001 for 'req', got: ${JSON.stringify(report.findings.map(f => f.code + ":" + f.identifierName))}`,
+      `Expected FUNGI-NAMING-001 for 'req', got: ${JSON.stringify(report.findings.map(f => f.code + ":" + f.identifierName))}`,
     );
   });
 });
 
 // ---------------------------------------------------------------------------
-// Test 2 — SPORE-NAMING-001: flow named 'hashPwd' (let binding with abbrev name)
+// Test 2 — FUNGI-NAMING-001: flow named 'hashPwd' (let binding with abbrev name)
 // ---------------------------------------------------------------------------
 
-describe("SPORE-NAMING-001: let binding with abbreviated name", () => {
-  it("let err = ... emits SPORE-NAMING-001 for 'err'", () => {
+describe("FUNGI-NAMING-001: let binding with abbreviated name", () => {
+  it("let err = ... emits FUNGI-NAMING-001 for 'err'", () => {
     const source = [
       "pure flow parseUserInput(userInput: String) -> Result<String, ParseError>",
       "contract { effects {} }",
@@ -80,58 +80,58 @@ describe("SPORE-NAMING-001: let binding with abbreviated name", () => {
       "}",
     ].join("\n");
 
-    const report = runNamingAudit(source, { fileName: "test.spore" });
+    const report = runNamingAudit(source, { fileName: "test.fungi" });
     const finding = report.findings.find(
-      f => f.code === "SPORE-NAMING-001" && f.identifierName === "err",
+      f => f.code === "FUNGI-NAMING-001" && f.identifierName === "err",
     );
     assert.ok(
       finding !== undefined,
-      `Expected SPORE-NAMING-001 for 'err', got: ${JSON.stringify(report.findings.map(f => `${f.code}:${f.identifierName}`))}`,
+      `Expected FUNGI-NAMING-001 for 'err', got: ${JSON.stringify(report.findings.map(f => `${f.code}:${f.identifierName}`))}`,
     );
   });
 });
 
 // ---------------------------------------------------------------------------
-// Test 3 — Clean: param named 'errorMessage' should NOT trigger SPORE-NAMING-001
+// Test 3 — Clean: param named 'errorMessage' should NOT trigger FUNGI-NAMING-001
 // ---------------------------------------------------------------------------
 
-describe("SPORE-NAMING-001: fully-spelled param name is clean", () => {
-  it("param 'errorMessage: String' produces no SPORE-NAMING-001", () => {
+describe("FUNGI-NAMING-001: fully-spelled param name is clean", () => {
+  it("param 'errorMessage: String' produces no FUNGI-NAMING-001", () => {
     const source = [
       "pure flow formatErrorMessage(errorMessage: String) -> String",
       "contract { effects {} }",
       "{ return errorMessage }",
     ].join("\n");
 
-    const report = runNamingAudit(source, { fileName: "test.spore" });
+    const report = runNamingAudit(source, { fileName: "test.fungi" });
     const naming001 = report.findings.filter(
-      f => f.code === "SPORE-NAMING-001",
+      f => f.code === "FUNGI-NAMING-001",
     );
     assert.equal(
       naming001.length,
       0,
-      `Expected no SPORE-NAMING-001, got: ${JSON.stringify(naming001.map(f => f.identifierName))}`,
+      `Expected no FUNGI-NAMING-001, got: ${JSON.stringify(naming001.map(f => f.identifierName))}`,
     );
   });
 });
 
 // ---------------------------------------------------------------------------
-// Test 4 — SPORE-NAMING-005: secure flow missing intent block
+// Test 4 — FUNGI-NAMING-005: secure flow missing intent block
 // ---------------------------------------------------------------------------
 
-describe("SPORE-NAMING-005: secure flow missing intent", () => {
-  it("secure flow with no contract intent block emits SPORE-NAMING-005", () => {
+describe("FUNGI-NAMING-005: secure flow missing intent", () => {
+  it("secure flow with no contract intent block emits FUNGI-NAMING-005", () => {
     const source = [
       "secure flow deleteUserAccount(userId: UserId) -> Result<Unit, AccountError>",
       "contract { effects { database.write audit.write } }",
       "{ return Ok(Unit) }",
     ].join("\n");
 
-    const report = runNamingAudit(source, { fileName: "test.spore" });
-    const finding = report.findings.find(f => f.code === "SPORE-NAMING-005");
+    const report = runNamingAudit(source, { fileName: "test.fungi" });
+    const finding = report.findings.find(f => f.code === "FUNGI-NAMING-005");
     assert.ok(
       finding !== undefined,
-      `Expected SPORE-NAMING-005, got: ${JSON.stringify(report.findings.map(f => f.code))}`,
+      `Expected FUNGI-NAMING-005, got: ${JSON.stringify(report.findings.map(f => f.code))}`,
     );
     assert.equal(finding.flowName, "deleteUserAccount");
   });
@@ -152,9 +152,9 @@ describe("Clean: well-named secure flow with intent", () => {
       "{ return AuthResult.verified() }",
     ].join("\n");
 
-    const report = runNamingAudit(source, { fileName: "test.spore" });
+    const report = runNamingAudit(source, { fileName: "test.fungi" });
     // Only check naming codes — we don't care if governance checker adds others
-    const namingFindings = report.findings.filter(f => f.code.startsWith("SPORE-NAMING-"));
+    const namingFindings = report.findings.filter(f => f.code.startsWith("FUNGI-NAMING-"));
     assert.equal(
       namingFindings.length,
       0,
@@ -164,34 +164,34 @@ describe("Clean: well-named secure flow with intent", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Test 6 — SPORE-NAMING-001: flow name 'hashPwd' — abbreviated via 'hash' name
+// Test 6 — FUNGI-NAMING-001: flow name 'hashPwd' — abbreviated via 'hash' name
 // (tests that a short standalone flow name like 'hash' is caught)
 // ---------------------------------------------------------------------------
 
-describe("SPORE-NAMING-001 + SPORE-NAMING-004: abbreviated identifiers in flow", () => {
-  it("flow named 'hash' triggers SPORE-NAMING-004 (abbreviated flow name)", () => {
+describe("FUNGI-NAMING-001 + FUNGI-NAMING-004: abbreviated identifiers in flow", () => {
+  it("flow named 'hash' triggers FUNGI-NAMING-004 (abbreviated flow name)", () => {
     const source = [
       "pure flow hash(inputValue: String) -> String",
       "contract { effects {} }",
       "{ return inputValue }",
     ].join("\n");
 
-    const report = runNamingAudit(source, { fileName: "test.spore" });
-    const finding004 = report.findings.find(f => f.code === "SPORE-NAMING-004");
+    const report = runNamingAudit(source, { fileName: "test.fungi" });
+    const finding004 = report.findings.find(f => f.code === "FUNGI-NAMING-004");
     assert.ok(
       finding004 !== undefined,
-      `Expected SPORE-NAMING-004 for 'hash', got: ${JSON.stringify(report.findings.map(f => f.code))}`,
+      `Expected FUNGI-NAMING-004 for 'hash', got: ${JSON.stringify(report.findings.map(f => f.code))}`,
     );
     assert.equal(finding004.flowName, "hash");
   });
 });
 
 // ---------------------------------------------------------------------------
-// Test 6b — SPORE-NAMING-001: loop counter `mut i: Int = 0` should NOT trigger
+// Test 6b — FUNGI-NAMING-001: loop counter `mut i: Int = 0` should NOT trigger
 // ---------------------------------------------------------------------------
 
-describe("SPORE-NAMING-001: loop counter exemption", () => {
-  it("mut i: Int = 0 inside a while loop body produces no SPORE-NAMING-001 for 'i'", () => {
+describe("FUNGI-NAMING-001: loop counter exemption", () => {
+  it("mut i: Int = 0 inside a while loop body produces no FUNGI-NAMING-001 for 'i'", () => {
     const source = [
       "pure flow sumRange(limit: Int) -> Int",
       "contract { effects {} }",
@@ -206,18 +206,18 @@ describe("SPORE-NAMING-001: loop counter exemption", () => {
       "}",
     ].join("\n");
 
-    const report = runNamingAudit(source, { fileName: "test.spore" });
+    const report = runNamingAudit(source, { fileName: "test.fungi" });
     const finding = report.findings.find(
-      f => f.code === "SPORE-NAMING-001" && f.identifierName === "i",
+      f => f.code === "FUNGI-NAMING-001" && f.identifierName === "i",
     );
     assert.equal(
       finding,
       undefined,
-      `Expected no SPORE-NAMING-001 for loop counter 'i', got: ${JSON.stringify(report.findings.map(f => `${f.code}:${f.identifierName}`))}`,
+      `Expected no FUNGI-NAMING-001 for loop counter 'i', got: ${JSON.stringify(report.findings.map(f => `${f.code}:${f.identifierName}`))}`,
     );
   });
 
-  it("mut j: Int = 0 loop counter is also exempt from SPORE-NAMING-001", () => {
+  it("mut j: Int = 0 loop counter is also exempt from FUNGI-NAMING-001", () => {
     const source = [
       "pure flow countDown(limit: Int) -> Int",
       "contract { effects {} }",
@@ -230,32 +230,32 @@ describe("SPORE-NAMING-001: loop counter exemption", () => {
       "}",
     ].join("\n");
 
-    const report = runNamingAudit(source, { fileName: "test.spore" });
+    const report = runNamingAudit(source, { fileName: "test.fungi" });
     const finding = report.findings.find(
-      f => f.code === "SPORE-NAMING-001" && f.identifierName === "j",
+      f => f.code === "FUNGI-NAMING-001" && f.identifierName === "j",
     );
     assert.equal(
       finding,
       undefined,
-      `Expected no SPORE-NAMING-001 for loop counter 'j', got: ${JSON.stringify(report.findings.map(f => `${f.code}:${f.identifierName}`))}`,
+      `Expected no FUNGI-NAMING-001 for loop counter 'j', got: ${JSON.stringify(report.findings.map(f => `${f.code}:${f.identifierName}`))}`,
     );
   });
 
-  it("let x: Float is exempt as geometry variable (no SPORE-NAMING-001)", () => {
+  it("let x: Float is exempt as geometry variable (no FUNGI-NAMING-001)", () => {
     const source = [
       "pure flow computeDistance(x: Float, y: Float) -> Float",
       "contract { effects {} }",
       "{ return x + y }",
     ].join("\n");
 
-    const report = runNamingAudit(source, { fileName: "test.spore" });
+    const report = runNamingAudit(source, { fileName: "test.fungi" });
     const findings001 = report.findings.filter(
-      f => f.code === "SPORE-NAMING-001" && (f.identifierName === "x" || f.identifierName === "y"),
+      f => f.code === "FUNGI-NAMING-001" && (f.identifierName === "x" || f.identifierName === "y"),
     );
     assert.equal(
       findings001.length,
       0,
-      `Expected no SPORE-NAMING-001 for geometry vars x/y, got: ${JSON.stringify(findings001.map(f => `${f.code}:${f.identifierName}`))}`,
+      `Expected no FUNGI-NAMING-001 for geometry vars x/y, got: ${JSON.stringify(findings001.map(f => `${f.code}:${f.identifierName}`))}`,
     );
   });
 });
@@ -265,7 +265,7 @@ describe("SPORE-NAMING-001: loop counter exemption", () => {
 // ---------------------------------------------------------------------------
 
 describe("CLI: parse error produces exit code 3", () => {
-  it("malformed .spore produces exit code 3", () => {
+  it("malformed .fungi produces exit code 3", () => {
     // Intentionally broken source — no valid flow keywords, pure lexer garbage
     // Parser produces 0 flows and errors, triggering exit code 3
     const source = "@@@ TOTALLY INVALID SOURCE @@@";
@@ -283,7 +283,7 @@ describe("CLI: parse error produces exit code 3", () => {
 // ---------------------------------------------------------------------------
 
 describe("CLI: --json output format", () => {
-  it("--json flag produces valid JSON with schemaVersion spore.naming.v1", () => {
+  it("--json flag produces valid JSON with schemaVersion fungi.naming.v1", () => {
     const source = [
       "pure flow computeSum(firstNumber: Int, secondNumber: Int) -> Int",
       "contract { effects {} }",
@@ -297,7 +297,7 @@ describe("CLI: --json output format", () => {
     } catch (e) {
       assert.fail(`--json output was not valid JSON: ${result.stdout}\nError: ${e.message}`);
     }
-    assert.equal(parsed.schemaVersion, "spore.naming.v1");
+    assert.equal(parsed.schemaVersion, "fungi.naming.v1");
     assert.ok(Array.isArray(parsed.findings), "findings should be an array");
     assert.ok(typeof parsed.summary === "string", "summary should be a string");
     assert.ok(typeof parsed.passed === "boolean", "passed should be boolean");
@@ -305,54 +305,54 @@ describe("CLI: --json output format", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Test 9 — SPORE-NAMING-002: implicit return type
+// Test 9 — FUNGI-NAMING-002: implicit return type
 // ---------------------------------------------------------------------------
 
-describe("SPORE-NAMING-002: implicit return type", () => {
-  it("pure flow with void return type emits SPORE-NAMING-002", () => {
+describe("FUNGI-NAMING-002: implicit return type", () => {
+  it("pure flow with void return type emits FUNGI-NAMING-002", () => {
     const source = [
       "pure flow logMessage(message: String) -> void",
       "contract { effects {} }",
       "{ return }",
     ].join("\n");
 
-    const report = runNamingAudit(source, { fileName: "test.spore" });
-    const finding = report.findings.find(f => f.code === "SPORE-NAMING-002");
+    const report = runNamingAudit(source, { fileName: "test.fungi" });
+    const finding = report.findings.find(f => f.code === "FUNGI-NAMING-002");
     assert.ok(
       finding !== undefined,
-      `Expected SPORE-NAMING-002, got: ${JSON.stringify(report.findings.map(f => f.code))}`,
+      `Expected FUNGI-NAMING-002, got: ${JSON.stringify(report.findings.map(f => f.code))}`,
     );
     assert.equal(finding.flowName, "logMessage");
   });
 });
 
 // ---------------------------------------------------------------------------
-// Test 10 — SPORE-NAMING-003: generic type param
+// Test 10 — FUNGI-NAMING-003: generic type param
 // ---------------------------------------------------------------------------
 
-describe("SPORE-NAMING-003: generic type name in parameter", () => {
-  it("param typed as 'Any' emits SPORE-NAMING-003", () => {
+describe("FUNGI-NAMING-003: generic type name in parameter", () => {
+  it("param typed as 'Any' emits FUNGI-NAMING-003", () => {
     const source = [
       "pure flow wrapValue(inputData: Any) -> WrappedValue",
       "contract { effects {} }",
       "{ return WrappedValue.of(inputData) }",
     ].join("\n");
 
-    const report = runNamingAudit(source, { fileName: "test.spore" });
-    const finding = report.findings.find(f => f.code === "SPORE-NAMING-003");
+    const report = runNamingAudit(source, { fileName: "test.fungi" });
+    const finding = report.findings.find(f => f.code === "FUNGI-NAMING-003");
     assert.ok(
       finding !== undefined,
-      `Expected SPORE-NAMING-003 for param typed Any, got: ${JSON.stringify(report.findings.map(f => f.code + ":" + f.identifierName))}`,
+      `Expected FUNGI-NAMING-003 for param typed Any, got: ${JSON.stringify(report.findings.map(f => f.code + ":" + f.identifierName))}`,
     );
   });
 });
 
 // ---------------------------------------------------------------------------
-// Test 11 — SPORE-NAMING-005 not emitted when intent IS present
+// Test 11 — FUNGI-NAMING-005 not emitted when intent IS present
 // ---------------------------------------------------------------------------
 
-describe("SPORE-NAMING-005: not emitted when intent is present", () => {
-  it("secure flow with contract intent { ... } produces no SPORE-NAMING-005", () => {
+describe("FUNGI-NAMING-005: not emitted when intent is present", () => {
+  it("secure flow with contract intent { ... } produces no FUNGI-NAMING-005", () => {
     const source = [
       "secure flow transferFunds(transferRequest: TransferRequest) -> TransferResult",
       "contract {",
@@ -362,12 +362,12 @@ describe("SPORE-NAMING-005: not emitted when intent is present", () => {
       "{ return TransferResult.success() }",
     ].join("\n");
 
-    const report = runNamingAudit(source, { fileName: "test.spore" });
-    const finding = report.findings.find(f => f.code === "SPORE-NAMING-005");
+    const report = runNamingAudit(source, { fileName: "test.fungi" });
+    const finding = report.findings.find(f => f.code === "FUNGI-NAMING-005");
     assert.equal(
       finding,
       undefined,
-      `Expected no SPORE-NAMING-005 when intent present, got: ${JSON.stringify(report.findings)}`,
+      `Expected no FUNGI-NAMING-005 when intent present, got: ${JSON.stringify(report.findings)}`,
     );
   });
 });

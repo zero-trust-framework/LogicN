@@ -1,9 +1,9 @@
-# 225 — Context missing (SPORE-CONTEXT-001)
+# 225 — Context missing (FUNGI-CONTEXT-001)
 
 ## What this example shows
 
 A flow that declares `context { require actor }` but never reads `context.actor`
-in the flow body. This triggers **SPORE-CONTEXT-001** (REQUIRED_CONTEXT_NOT_ACCESSED,
+in the flow body. This triggers **FUNGI-CONTEXT-001** (REQUIRED_CONTEXT_NOT_ACCESSED,
 warning).
 
 ## Why is this a problem?
@@ -32,6 +32,6 @@ with effects [database.read, audit.write] {
 
 ## Severity
 
-SPORE-CONTEXT-001 is a **warning**, not an error. The flow is not incorrect in a
+FUNGI-CONTEXT-001 is a **warning**, not an error. The flow is not incorrect in a
 type-safety sense, but the governance contract is unfulfilled. In a production
 profile or regulated environment, treat all warnings as errors.

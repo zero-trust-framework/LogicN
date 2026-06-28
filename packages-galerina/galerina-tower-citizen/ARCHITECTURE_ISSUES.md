@@ -22,11 +22,11 @@ not implemented**. Each needs a decision before it can land in the wider project
 - **Why not here:** The native addon build (CMake + node-gyp) and the BitNet library
   link belong in a dedicated `galerina-ext-bridge-*` package, not in this pure-TS plugin.
 
-## 2. governance.spore schema — `state_transition_policy` object
+## 2. governance.fungi schema — `state_transition_policy` object
 
 - **Status:** `GovernanceEnforcer` hardcodes the TPL v1.0 default policy
   (`0 → 1` requires `audit_signature` + `input_schema_validation`).
-- **Need:** This policy should be declared in `governance.spore` and parsed by the core
+- **Need:** This policy should be declared in `governance.fungi` and parsed by the core
   compiler, so the transition rules are governed source — not a TypeScript constant.
 - **TODO:** Add a `state_transition_policy { restricted_transitions { ... } }` block to
   the Galerina grammar + governance verifier (core compiler). Then `GovernanceEnforcer`

@@ -18,5 +18,5 @@ never "instant/free/O(1)"), and the analog lane can only **False-DENY, never Fal
 is a *governed substrate*, not a silicon product Galerina ships.
 
 ## Status
-DEFERRED. Overlaps the shipped substrate model (`SPORE-SUBSTRATE-001..004`) + three-valued governance — verify-before-build
+DEFERRED. Overlaps the shipped substrate model (`FUNGI-SUBSTRATE-001..004`) + three-valued governance — verify-before-build
 any claim. TritMesh-adjacent. See [[galerina-rd-0130-frontier-domains-positioning]] · [[galerina-substrate-failure-model]].

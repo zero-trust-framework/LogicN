@@ -107,7 +107,7 @@ describe("toJSON / fromJSON roundtrip", () => {
       .build();
 
     const json = original.toJSON();
-    assert.equal(json.schemaVersion, "spore.graph.v1");
+    assert.equal(json.schemaVersion, "fungi.graph.v1");
 
     const restored = GraphBuilder.fromJSON(json);
     assert.equal(restored.nodeCount, original.nodeCount);

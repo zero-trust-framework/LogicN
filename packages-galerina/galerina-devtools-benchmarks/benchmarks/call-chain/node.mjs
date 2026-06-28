@@ -1,7 +1,7 @@
 import { performance } from "node:perf_hooks";
 
 // call-chain benchmark — Node.js reference
-// Mirrors benchmark.spore exactly: an OOP call stack controller → service.method()
+// Mirrors benchmark.fungi exactly: an OOP call stack controller → service.method()
 // → util function, repeated per outer iteration. One iteration fans out to 7 calls
 // (1 service + 2 domain + 4 leaf), same arithmetic and salting as the Galerina flows.
 

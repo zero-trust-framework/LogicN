@@ -1,12 +1,12 @@
 // =============================================================================
-// Governance Verifier — emergency {} transition monotonicity (SPORE-MONO-001/002)
+// Governance Verifier — emergency {} transition monotonicity (FUNGI-MONO-001/002)
 //
-// Roadmap "Tri-Pipe fault-tolerance hardenings" — pin SPORE-MONO-001 at the parser.
+// Roadmap "Tri-Pipe fault-tolerance hardenings" — pin FUNGI-MONO-001 at the parser.
 //
 // THE GAP (fixed): parseEmergencyBlock() recognised only deny/quarantine/emergency/
 // halt; ANY other action token (incl. `allow`/`grant`) fell through to a silent
 // "consume and skip", so no `allow:` action node was ever created and the verifier's
-// SPORE-MONO-001 EMERGENCY_EXPANDS_CAPABILITY check could never fire — a fail-SILENT
+// FUNGI-MONO-001 EMERGENCY_EXPANDS_CAPABILITY check could never fire — a fail-SILENT
 // permission widening in the Binary governance core. The parser now SURFACES
 // `allow`/`grant` as an `allow:` node so the existing verifier error fires.
 //
@@ -24,7 +24,7 @@ import {
 } from "../../dist/index.js";
 
 function parseAndVerify(source, profile = "dev") {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effects = checkEffects(parsed.flows, parsed.ast);
   return verifyGovernance(parsed.ast, parsed.flows, effects, profile);
 }
@@ -35,8 +35,8 @@ function hasDiag(result, code, name) {
   );
 }
 
-describe("emergency {} monotonicity: SPORE-MONO-001 (the parser must surface `allow`)", () => {
-  it("REJECTS `allow X` in an emergency transition — SPORE-MONO-001 EMERGENCY_EXPANDS_CAPABILITY (error)", () => {
+describe("emergency {} monotonicity: FUNGI-MONO-001 (the parser must surface `allow`)", () => {
+  it("REJECTS `allow X` in an emergency transition — FUNGI-MONO-001 EMERGENCY_EXPANDS_CAPABILITY (error)", () => {
     const source = `
 policy {
   emergency {
@@ -48,11 +48,11 @@ policy {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      hasDiag(result, "SPORE-MONO-001", "EMERGENCY_EXPANDS_CAPABILITY"),
-      `Expected SPORE-MONO-001 for an emergency \`allow\`, got: ${result.diagnostics.map((d) => `${d.code}/${d.name}`).join(", ")}`,
+      hasDiag(result, "FUNGI-MONO-001", "EMERGENCY_EXPANDS_CAPABILITY"),
+      `Expected FUNGI-MONO-001 for an emergency \`allow\`, got: ${result.diagnostics.map((d) => `${d.code}/${d.name}`).join(", ")}`,
     );
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-MONO-001");
-    assert.equal(diag.severity, "error", "SPORE-MONO-001 must be a hard error");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-MONO-001");
+    assert.equal(diag.severity, "error", "FUNGI-MONO-001 must be a hard error");
     assert.ok(
       diag.message.includes("network.outbound"),
       `Message must name the widened capability, got: ${diag.message}`,
@@ -71,8 +71,8 @@ policy {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      hasDiag(result, "SPORE-MONO-001", "EMERGENCY_EXPANDS_CAPABILITY"),
-      `Expected SPORE-MONO-001 for an emergency \`grant\`, got: ${result.diagnostics.map((d) => `${d.code}/${d.name}`).join(", ")}`,
+      hasDiag(result, "FUNGI-MONO-001", "EMERGENCY_EXPANDS_CAPABILITY"),
+      `Expected FUNGI-MONO-001 for an emergency \`grant\`, got: ${result.diagnostics.map((d) => `${d.code}/${d.name}`).join(", ")}`,
     );
   });
 
@@ -87,15 +87,15 @@ policy {
 }
 `;
     const result = parseAndVerify(source);
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-MONO-001");
-    assert.ok(diag !== undefined, "SPORE-MONO-001 must fire");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-MONO-001");
+    assert.ok(diag !== undefined, "FUNGI-MONO-001 must fire");
     assert.ok(
       diag.message.includes("ai.inference"),
       `Dot-path capability must be reported intact, got: ${diag.message}`,
     );
   });
 
-  it("ACCEPTS deny/quarantine/emergency/halt transitions — NO SPORE-MONO-001 (monotone-decreasing is legal)", () => {
+  it("ACCEPTS deny/quarantine/emergency/halt transitions — NO FUNGI-MONO-001 (monotone-decreasing is legal)", () => {
     const source = `
 policy {
   emergency {
@@ -113,7 +113,7 @@ policy {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      !hasDiag(result, "SPORE-MONO-001"),
+      !hasDiag(result, "FUNGI-MONO-001"),
       `deny/quarantine/halt must not trip monotonicity, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -128,7 +128,7 @@ policy {
   }
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const policy = (ast.children ?? []).find((c) => c.kind === "policyDecl");
     assert.ok(policy !== undefined, "policyDecl must exist");
     const emergency = (policy.children ?? []).find(

@@ -19,7 +19,7 @@ contract { effects {} }
   return total }`;
 
 function parse(src) {
-  const p = L.parseProgram(src, "where.spore");
+  const p = L.parseProgram(src, "where.fungi");
   const errs = p.diagnostics.filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "parse errors: " + errs.map((e) => e.message).join("; "));
   return p;

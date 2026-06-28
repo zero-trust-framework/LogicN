@@ -13,17 +13,17 @@ const {
 
 describe("@galerina/core utility contracts", () => {
   it("createCompilerDiagnostic builds the canonical diagnostic shape", () => {
-    const loc = { file: "auth.spore", line: 12, column: 5 };
+    const loc = { file: "auth.fungi", line: 12, column: 5 };
 
     const d = createCompilerDiagnostic(
-      "SPORE-TEST-001",
+      "FUNGI-TEST-001",
       "TEST_DIAGNOSTIC",
       "error",
       "Something went wrong.",
       loc,
     );
 
-    assert.equal(d.code, "SPORE-TEST-001");
+    assert.equal(d.code, "FUNGI-TEST-001");
     assert.equal(d.name, "TEST_DIAGNOSTIC");
     assert.equal(d.severity, "error");
     assert.equal(d.message, "Something went wrong.");
@@ -33,16 +33,16 @@ describe("@galerina/core utility contracts", () => {
 
   it("createCompilerDiagnostic includes suggestedFix only when provided", () => {
     const withFix = createCompilerDiagnostic(
-      "SPORE-TEST-002",
+      "FUNGI-TEST-002",
       "FIX_ME",
       "warning",
       "Use let instead.",
-      { file: "x.spore", line: 1, column: 1 },
+      { file: "x.fungi", line: 1, column: 1 },
       "Replace var with let.",
     );
 
     const noFix = createCompilerDiagnostic(
-      "SPORE-TEST-002",
+      "FUNGI-TEST-002",
       "FIX_ME",
       "warning",
       "Use let instead.",
@@ -54,7 +54,7 @@ describe("@galerina/core utility contracts", () => {
 
   it("createCompilerDiagnostic omits location when not provided", () => {
     const d = createCompilerDiagnostic(
-      "SPORE-TEST-003",
+      "FUNGI-TEST-003",
       "NO_LOCATION",
       "info",
       "Informational note.",
@@ -65,9 +65,9 @@ describe("@galerina/core utility contracts", () => {
 
   it("hasErrors returns true when at least one diagnostic has severity error", () => {
     const diags = [
-      createCompilerDiagnostic("SPORE-A", "A", "info", "info msg"),
-      createCompilerDiagnostic("SPORE-B", "B", "warning", "warn msg"),
-      createCompilerDiagnostic("SPORE-C", "C", "error", "error msg"),
+      createCompilerDiagnostic("FUNGI-A", "A", "info", "info msg"),
+      createCompilerDiagnostic("FUNGI-B", "B", "warning", "warn msg"),
+      createCompilerDiagnostic("FUNGI-C", "C", "error", "error msg"),
     ];
 
     assert.equal(hasErrors(diags), true);
@@ -75,8 +75,8 @@ describe("@galerina/core utility contracts", () => {
 
   it("hasErrors returns false when no diagnostics have severity error", () => {
     const diags = [
-      createCompilerDiagnostic("SPORE-A", "A", "info", "info msg"),
-      createCompilerDiagnostic("SPORE-B", "B", "warning", "warn msg"),
+      createCompilerDiagnostic("FUNGI-A", "A", "info", "info msg"),
+      createCompilerDiagnostic("FUNGI-B", "B", "warning", "warn msg"),
     ];
 
     assert.equal(hasErrors(diags), false);
@@ -88,10 +88,10 @@ describe("@galerina/core utility contracts", () => {
 
   it("filterBySeverity returns only diagnostics matching the given severity", () => {
     const diags = [
-      createCompilerDiagnostic("SPORE-1", "ONE", "info", "i"),
-      createCompilerDiagnostic("SPORE-2", "TWO", "warning", "w"),
-      createCompilerDiagnostic("SPORE-3", "THREE", "error", "e"),
-      createCompilerDiagnostic("SPORE-4", "FOUR", "error", "e2"),
+      createCompilerDiagnostic("FUNGI-1", "ONE", "info", "i"),
+      createCompilerDiagnostic("FUNGI-2", "TWO", "warning", "w"),
+      createCompilerDiagnostic("FUNGI-3", "THREE", "error", "e"),
+      createCompilerDiagnostic("FUNGI-4", "FOUR", "error", "e2"),
     ];
 
     const errors = filterBySeverity(diags, "error");
@@ -100,16 +100,16 @@ describe("@galerina/core utility contracts", () => {
 
     const warnings = filterBySeverity(diags, "warning");
     assert.equal(warnings.length, 1);
-    assert.equal(warnings[0]?.code, "SPORE-2");
+    assert.equal(warnings[0]?.code, "FUNGI-2");
 
     const infos = filterBySeverity(diags, "info");
     assert.equal(infos.length, 1);
-    assert.equal(infos[0]?.code, "SPORE-1");
+    assert.equal(infos[0]?.code, "FUNGI-1");
   });
 
   it("filterBySeverity returns empty array when no diagnostics match", () => {
     const diags = [
-      createCompilerDiagnostic("SPORE-1", "ONE", "info", "i"),
+      createCompilerDiagnostic("FUNGI-1", "ONE", "info", "i"),
     ];
 
     assert.deepEqual(filterBySeverity(diags, "error"), []);

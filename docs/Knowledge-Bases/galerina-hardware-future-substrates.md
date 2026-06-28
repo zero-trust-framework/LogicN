@@ -72,7 +72,7 @@ Authority issuance     → Always CPU
 Encryption / hashing / integrity / signatures → Always CPU (deterministic core)
 ```
 
-> **Crypto-on-core (`SPORE-SUBSTRATE-001`).** Cryptography and integrity (encryption, hashing,
+> **Crypto-on-core (`FUNGI-SUBSTRATE-001`).** Cryptography and integrity (encryption, hashing,
 > signatures, the Merkle/TMX root) MUST run **bit-exact on the deterministic digital core** — analog
 > photonics is ~≤10-bit and error-tolerant, which breaks the zero-error avalanche that hashing/crypto
 > require. Photonics' honest crypto-adjacent roles (QRNG entropy, optical-PUF device root, optical-LSH

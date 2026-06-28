@@ -125,7 +125,7 @@ re-applying them would be a no-op. Recorded here so the roadmap never routes pha
   numbers in the 0001 report no longer reproduce *because the fix landed* — structural claim holds, the cited
   artifact was just never frozen (that freeze is the R&D close above).
 - **NMR formula in the KB** — `galerina-substrate-failure-model.md` + `substrate-math/src/index.ts:90-99` already
-  carry the corrected closed-form `nmrFailureProbability` (SPORE-SUBSTRATE-001..004 shipped). The broken note-38
+  carry the corrected closed-form `nmrFailureProbability` (FUNGI-SUBSTRATE-001..004 shipped). The broken note-38
   `n(R,τ)=⌈1/τ⌉·Complexity(R)` survives only in historical R&D notes.
 
 ---

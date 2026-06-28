@@ -33,7 +33,7 @@ function meta(name, qualifier, effects = []) {
     params: [],
     returnType: "Unit",
     declaredEffects: effects,
-    location: { line: 1, column: 1, file: "test.spore" },
+    location: { line: 1, column: 1, file: "test.fungi" },
   };
 }
 
@@ -129,7 +129,7 @@ test("flowGraphToJson produces valid JSON", () => {
   const g = graphFromMetas([meta("hello", "pure")]);
   const json = flowGraphToJson(g);
   const parsed = JSON.parse(json);
-  assert.equal(parsed.schemaVersion, "spore.flowgraph.v1");
+  assert.equal(parsed.schemaVersion, "fungi.flowgraph.v1");
   assert.ok(Array.isArray(parsed.nodes));
   assert.ok(Array.isArray(parsed.edges));
   assert.equal(typeof parsed.routes, "object");
@@ -146,7 +146,7 @@ test("flowGraphToJson includes all nodes", () => {
 test("flowGraphToJson includes schemaVersion field", () => {
   const g = graphFromMetas([]);
   const parsed = JSON.parse(flowGraphToJson(g));
-  assert.equal(parsed.schemaVersion, "spore.flowgraph.v1");
+  assert.equal(parsed.schemaVersion, "fungi.flowgraph.v1");
 });
 
 // ── flowGraphToMermaid ────────────────────────────────────────────────────────
@@ -170,14 +170,14 @@ test("flowGraphToMermaid includes edge arrows", () => {
   assert.ok(mermaid.includes("A --> B"));
 });
 
-// ── SPORE-GRAPH-001: Cycle detection ───────────────────────────────────────────
+// ── FUNGI-GRAPH-001: Cycle detection ───────────────────────────────────────────
 
 test("001: simple A→B→A cycle detected", () => {
   const metas = [meta("A", "flow"), meta("B", "flow")];
   const g = graphWithEdges(metas, [{ from: "A", to: "B" }, { from: "B", to: "A" }]);
   const diags = detectCycles(g);
   assert.ok(diags.length > 0, "Expected cycle diagnostic");
-  assert.equal(diags[0].code, "SPORE-GRAPH-001");
+  assert.equal(diags[0].code, "FUNGI-GRAPH-001");
   assert.equal(diags[0].severity, "error");
 });
 
@@ -188,7 +188,7 @@ test("001: A→B→C→A three-node cycle detected", () => {
   ]);
   const diags = detectCycles(g);
   assert.ok(diags.length > 0);
-  assert.equal(diags[0].code, "SPORE-GRAPH-001");
+  assert.equal(diags[0].code, "FUNGI-GRAPH-001");
 });
 
 test("001: no cycle in A→B→C", () => {
@@ -198,14 +198,14 @@ test("001: no cycle in A→B→C", () => {
   assert.equal(diags.length, 0);
 });
 
-// ── SPORE-GRAPH-002: Dead flows ─────────────────────────────────────────────────
+// ── FUNGI-GRAPH-002: Dead flows ─────────────────────────────────────────────────
 
 test("002: flow not reachable from any route is dead", () => {
   const metas = [meta("orphan", "flow")];
   const g = graphFromMetas(metas, new Map());
   const diags = detectDeadFlows(g);
   assert.ok(diags.length > 0);
-  assert.equal(diags[0].code, "SPORE-GRAPH-002");
+  assert.equal(diags[0].code, "FUNGI-GRAPH-002");
   assert.equal(diags[0].severity, "warning");
 });
 
@@ -232,7 +232,7 @@ test("002: transitively reachable flow is not dead", () => {
   assert.equal(diags.length, 0);
 });
 
-// ── SPORE-GRAPH-003: Authority escalation ──────────────────────────────────────
+// ── FUNGI-GRAPH-003: Authority escalation ──────────────────────────────────────
 
 test("003: plain flow calling database.write flow triggers escalation", () => {
   const metas = [
@@ -242,7 +242,7 @@ test("003: plain flow calling database.write flow triggers escalation", () => {
   const g = graphWithEdges(metas, [{ from: "publicHandler", to: "writeDb" }]);
   const diags = detectAuthorityEscalation(g);
   assert.ok(diags.length > 0);
-  assert.equal(diags[0].code, "SPORE-GRAPH-003");
+  assert.equal(diags[0].code, "FUNGI-GRAPH-003");
   assert.equal(diags[0].severity, "error");
 });
 
@@ -256,7 +256,7 @@ test("003: flow with matching authority does not trigger escalation", () => {
   assert.equal(diags.length, 0);
 });
 
-// ── SPORE-GRAPH-004: PII leakage paths ─────────────────────────────────────────
+// ── FUNGI-GRAPH-004: PII leakage paths ─────────────────────────────────────────
 
 test("004: pii flow → network.outbound without audit triggers leakage", () => {
   const metas = [
@@ -266,7 +266,7 @@ test("004: pii flow → network.outbound without audit triggers leakage", () => 
   const g = graphWithEdges(metas, [{ from: "getPatient", to: "sendReport" }]);
   const diags = detectPiiLeakagePaths(g);
   assert.ok(diags.length > 0);
-  assert.equal(diags[0].code, "SPORE-GRAPH-004");
+  assert.equal(diags[0].code, "FUNGI-GRAPH-004");
   assert.equal(diags[0].severity, "error");
 });
 
@@ -290,14 +290,14 @@ test("004: non-pii flow → network.outbound is clean", () => {
   assert.equal(diags.length, 0);
 });
 
-// ── SPORE-GRAPH-005: Missing audit coverage ────────────────────────────────────
+// ── FUNGI-GRAPH-005: Missing audit coverage ────────────────────────────────────
 
 test("005: database.write without audit.write triggers warning", () => {
   const metas = [meta("updateRecord", "secure", ["database.write"])];
   const g = graphFromMetas(metas);
   const diags = detectMissingAuditCoverage(g);
   assert.ok(diags.length > 0);
-  assert.equal(diags[0].code, "SPORE-GRAPH-005");
+  assert.equal(diags[0].code, "FUNGI-GRAPH-005");
   assert.equal(diags[0].severity, "warning");
 });
 
@@ -313,7 +313,7 @@ test("005: secret.read without audit.write triggers warning", () => {
   const g = graphFromMetas(metas);
   const diags = detectMissingAuditCoverage(g);
   assert.ok(diags.length > 0);
-  assert.equal(diags[0].code, "SPORE-GRAPH-005");
+  assert.equal(diags[0].code, "FUNGI-GRAPH-005");
 });
 
 test("005: filesystem.write without audit.write triggers warning", () => {
@@ -321,10 +321,10 @@ test("005: filesystem.write without audit.write triggers warning", () => {
   const g = graphFromMetas(metas);
   const diags = detectMissingAuditCoverage(g);
   assert.ok(diags.length > 0);
-  assert.equal(diags[0].code, "SPORE-GRAPH-005");
+  assert.equal(diags[0].code, "FUNGI-GRAPH-005");
 });
 
-// ── SPORE-GRAPH-006: Unbounded retry ───────────────────────────────────────────
+// ── FUNGI-GRAPH-006: Unbounded retry ───────────────────────────────────────────
 
 test("006: caller invoking same callee 3 times triggers warning", () => {
   const metas = [meta("caller", "flow"), meta("callee", "flow")];
@@ -342,7 +342,7 @@ test("006: caller invoking same callee 3 times triggers warning", () => {
   const g = buildFlowGraph(ast, metas);
   const diags = detectUnboundedRetry(g);
   assert.ok(diags.length > 0);
-  assert.equal(diags[0].code, "SPORE-GRAPH-006");
+  assert.equal(diags[0].code, "FUNGI-GRAPH-006");
   assert.equal(diags[0].severity, "warning");
 });
 
@@ -384,8 +384,8 @@ test("checkFlowGraph aggregates multiple diagnostic codes", () => {
   const g = graphFromMetas(metas, new Map());
   const diags = checkFlowGraph(g);
   const codes = diags.map(d => d.code);
-  assert.ok(codes.includes("SPORE-GRAPH-002"), "Expected dead flow diag");
-  assert.ok(codes.includes("SPORE-GRAPH-005"), "Expected missing audit diag");
+  assert.ok(codes.includes("FUNGI-GRAPH-002"), "Expected dead flow diag");
+  assert.ok(codes.includes("FUNGI-GRAPH-005"), "Expected missing audit diag");
 });
 
 test("each diagnostic has code, name, severity, message fields", () => {

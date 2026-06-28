@@ -38,7 +38,7 @@ export type { TransitionPolicy, RestrictedTransition } from "./governance-enforc
 
 // ── Three-valued governance verdicts (Direction A) — proved fail-closed ──
 // Kleene K3 over the trit (vAnd=minTrit ∧, vOr=maxTrit ∨, vNot=negTrit ¬); collapse
-// at the trust boundary (0,-1 → deny); SPORE-GOV-3VL-001 audits 0→deny. Never silent.
+// at the trust boundary (0,-1 → deny); FUNGI-GOV-3VL-001 audits 0→deny. Never silent.
 export {
   Verdict, vAnd, vOr, vNot, allOf, anyOf, collapse, authorize,
   decideAtBoundary, GOV_3VL_DIAGNOSTIC,
@@ -84,18 +84,18 @@ export type {
 
 // ── Fail-closed TTL capability lease (R&D 0109 G6) — bounded delegation that actually expires ──
 // checkLease admits a lease through the shipped K3 boundary: ALLOW only within (now < notAfter);
-// expired -> DENY; malformed/absent -> INDETERMINATE/SPORE-GOV-3VL-001. Pure (the caller passes now).
+// expired -> DENY; malformed/absent -> INDETERMINATE/FUNGI-GOV-3VL-001. Pure (the caller passes now).
 export { checkLease, isLeaseValid, leaseVerdict } from "./lease.js";
 export type { CapabilityLease, LeaseDecision, LeaseDenyReason } from "./lease.js";
 
 // ── Distinct-signer M-of-N threshold quorum (R&D 0109 G2, core half) — K3 custody DECISION ──
 // checkQuorum folds per-signer verdicts: ALLOW iff >= M DISTINCT signers approve (anti-Sybil,
-// no equivocation); clean shortfall -> DENY; malformed/equivocation -> INDETERMINATE/SPORE-GOV-3VL-001.
+// no equivocation); clean shortfall -> DENY; malformed/equivocation -> INDETERMINATE/FUNGI-GOV-3VL-001.
 // Governance only — the Shamir secret-share split/combine is custody EXECUTION (ext package).
 export { checkQuorum, meetsQuorum, quorumVerdict } from "./quorum.js";
 export type { SignerVote, QuorumDecision, QuorumDenyReason } from "./quorum.js";
 
-// ── SPORE-RETAIN-001 sound-erasure gate (R&D 0116/0118) — the Substrate Dispatch Gateway runtime defense ──
+// ── FUNGI-RETAIN-001 sound-erasure gate (R&D 0116/0118) — the Substrate Dispatch Gateway runtime defense ──
 // admitSubstrateWrite is fail-closed K3: an eraseModel is NEVER taken from a drive's self-report;
 // `overwrite` needs a verified signed attestation, else fail-closed to the stricter `crypto-only`.
 // A cleartext secret to crypto-only media is UNERASABLE (overwrite-erase impossible) -> DENY; seal
@@ -113,7 +113,7 @@ export type {
 // Models photonic/ternary noise (phase-drift/crosstalk/lane-failure/readout) in software.
 // effectiveVerdict = vAnd(ideal, reading): noise can cost availability, never safety.
 // Canonical check = closed-form von Neumann NMR; NoisyLane is the seeded fault-injector.
-// SPORE-SUBSTRATE-001..004. Compiler/substrate{}-grammar wiring is deferred to Direction B.
+// FUNGI-SUBSTRATE-001..004. Compiler/substrate{}-grammar wiring is deferred to Direction B.
 export {
   SubstrateParamError, singleLaneErrorProbability, nmrFailureProbability, majorityVote,
   NoisyLane, effectiveVerdict, checkGuarantee, verifyToleranceUnderNoise,

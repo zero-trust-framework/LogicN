@@ -1,7 +1,7 @@
 // =============================================================================
 // Faithful Int64 — interpreter Step 1 (literal coercion + fast-tier fail-closed bail).
 //
-// Runs whole Int64 flows through the interpreter via executeFlow (which bypasses the SPORE-NUMERIC-001
+// Runs whole Int64 flows through the interpreter via executeFlow (which bypasses the FUNGI-NUMERIC-001
 // gate — that gate is a SEPARATE pass — so the faithful tree-walker machinery can be exercised before
 // the gate is lifted). The exactness assertions above 2^53 are the proof the FAST tiers (bytecode VM,
 // sync fast-path) correctly BAILED to the faithful tree-walker: had bytecode/sync run, the value would
@@ -15,7 +15,7 @@ import { executeFlow, parseProgram } from "../dist/index.js";
 import { galerinaValuesEqual } from "../dist/stdlib.js";
 
 const run = (source, flowName, args = new Map()) => {
-  const p = parseProgram(source, "int64-step1.spore");
+  const p = parseProgram(source, "int64-step1.fungi");
   return executeFlow(flowName, args, p.ast, p.flows, undefined, undefined, {}, undefined, undefined);
 };
 

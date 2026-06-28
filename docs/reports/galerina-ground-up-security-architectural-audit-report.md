@@ -85,9 +85,9 @@ Required fix:
 The example says the V_DPM enforces `ai {}` constraints and that token cost is
 CostGraph-enforced:
 
-- `examples/foundations/ai-inference-governed.spore:28`
-- `examples/foundations/ai-inference-governed.spore:43`
-- `examples/foundations/ai-inference-governed.spore:46`
+- `examples/foundations/ai-inference-governed.fungi:28`
+- `examples/foundations/ai-inference-governed.fungi:43`
+- `examples/foundations/ai-inference-governed.fungi:46`
 
 The CLI parses `max_token_cost`, prints it, but does not pass it to the engine:
 
@@ -425,9 +425,9 @@ For certification, direct filesystem audit writes must be disabled in P9 mode.
 
 Examples contain many `unsafe let` boundary inputs:
 
-- `examples/ai-inference/classifyMessage.spore:64`
-- `examples/auth-service/manifestVerificationService.spore:28`
-- `examples/auth-service/verifyPassword.spore:40`
+- `examples/ai-inference/classifyMessage.fungi:64`
+- `examples/auth-service/manifestVerificationService.fungi:28`
+- `examples/auth-service/verifyPassword.fungi:40`
 
 Many examples validate after reading, but the audit did not prove all unsafe
 bindings are dominated by trap/validation before use. These examples should be

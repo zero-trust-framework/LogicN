@@ -7,7 +7,7 @@ import { lex } from "../dist/lexer.js";
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function parseOk(source) {
-  const result = parseProgram(source, "test.spore");
+  const result = parseProgram(source, "test.fungi");
   const errors = result.diagnostics.filter((d) => d.severity === "error");
   assert.equal(
     errors.length,
@@ -31,19 +31,19 @@ function findNode(node, kind) {
 
 describe("Lexer — resource keyword", () => {
   it("lexes 'resource' as a keyword token", () => {
-    const result = lex("resource UserProfile { }", "test.spore");
+    const result = lex("resource UserProfile { }", "test.fungi");
     const tok = result.tokens.find((t) => t.value === "resource");
     assert.ok(tok !== undefined, "Expected a 'resource' token");
     assert.equal(tok.kind, "keyword");
   });
 
   it("produces no lex errors for resource keyword", () => {
-    const result = lex("resource User { id: UserId }", "test.spore");
+    const result = lex("resource User { id: UserId }", "test.fungi");
     assert.equal(result.diagnostics.length, 0);
   });
 
   it("lexes 'operations' as an identifier (contextual keyword)", () => {
-    const result = lex("operations", "test.spore");
+    const result = lex("operations", "test.fungi");
     const tok = result.tokens.find((t) => t.value === "operations");
     assert.ok(tok !== undefined);
     assert.equal(tok.kind, "identifier");

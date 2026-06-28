@@ -37,7 +37,7 @@ pure flow rankDefault(c: Color) -> Int {
 `;
 
 async function instantiate() {
-  const prog = L.parseProgram(PROGRAM, "enum-match.spore");
+  const prog = L.parseProgram(PROGRAM, "enum-match.fungi");
   const fx = L.checkEffects(prog.flows, prog.ast);
   const { gir } = L.emitGIR(prog.ast, prog.flows, fx);
   const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "enum-match", prog.ast, true));

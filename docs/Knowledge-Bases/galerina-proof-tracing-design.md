@@ -13,7 +13,7 @@ flow that calls it should not need to re-inject the same WAT assertion gate. Wit
 proof-tracing, every flow that uses `amount` independently re-proves the same condition.
 
 **Without proof-tracing:**
-```spore
+```fungi
 pure flow validatePayment(amount: Int) -> Bool
 contract { invariant { ensure amount > 0; } }   ;; Gate injected here
 { return amount > 0 }
@@ -24,7 +24,7 @@ contract { invariant { ensure amount > 0; } }   ;; Same gate re-injected (redund
 ```
 
 **With proof-tracing (`assuming {}`):**
-```spore
+```fungi
 secure flow processPayment(amount: Int) -> Result<Receipt, Error>
 contract {
   ;; No invariant {} needed — proof is referenced from validatePayment's manifest
@@ -42,7 +42,7 @@ contract {
 
 ### Syntax
 
-```spore
+```fungi
 assuming(flowRef, "condition-expression") {
   // Code in this block has the named proof in scope as an axiom.
   // The compiler does NOT emit a WAT gate for the named condition here.
@@ -60,7 +60,7 @@ When the compiler encounters `assuming(flowRef, condition)`:
 4. **Verify the obligation is satisfied** → `verified` field must be `"static"` or `"runtime-precheck"` (NOT `"pending"`)
 5. **Verify manifest signature** → ML-DSA-65 signature over the manifest body must be valid
 6. **If all checks pass** → mark the condition as `assumed_via_manifest` in the ProofGraph; skip WAT gate
-7. **If any check fails** → emit `SPORE-ASSUME-001: ProofNotFoundInManifest` (hard error)
+7. **If any check fails** → emit `FUNGI-ASSUME-001: ProofNotFoundInManifest` (hard error)
 
 ### Security Properties
 
@@ -82,14 +82,14 @@ When the compiler encounters `assuming(flowRef, condition)`:
 
 Galerina's `assuming {}` is the only mechanism in this class that provides both a structured audit trail AND cryptographic proof verification. A developer cannot use `assuming {}` to bypass a proof — they can only reference a proof that already exists in a signed manifest.
 
-### New SPORE Diagnostic Codes
+### New FUNGI Diagnostic Codes
 
 | Code | Severity | Meaning |
 |---|---|---|
-| `SPORE-ASSUME-001` | ERROR | Condition not found in referenced flow's manifest ProofObligations |
-| `SPORE-ASSUME-002` | ERROR | Referenced manifest signature invalid or expired |
-| `SPORE-ASSUME-003` | ERROR | Manifest sourceHash mismatch — referenced flow has been modified |
-| `SPORE-ASSUME-004` | WARNING | Condition found but only as `runtime-precheck` (not `static`) — partial proof |
+| `FUNGI-ASSUME-001` | ERROR | Condition not found in referenced flow's manifest ProofObligations |
+| `FUNGI-ASSUME-002` | ERROR | Referenced manifest signature invalid or expired |
+| `FUNGI-ASSUME-003` | ERROR | Manifest sourceHash mismatch — referenced flow has been modified |
+| `FUNGI-ASSUME-004` | WARNING | Condition found but only as `runtime-precheck` (not `static`) — partial proof |
 
 ---
 
@@ -99,26 +99,26 @@ When a WAT `unreachable` instruction fires (from an invariant gate, capability v
 fuel exhaustion), the DSS.wasm supervisor intercepts the Wasmtime trap signal and records a
 structured Audit Event.
 
-### New Diagnostic Code: `SPORE-INV-000`
+### New Diagnostic Code: `FUNGI-INV-000`
 
-`SPORE-INV-000` is the **runtime governance violation** code — fired when an `unreachable` trap
+`FUNGI-INV-000` is the **runtime governance violation** code — fired when an `unreachable` trap
 reaches the DSS supervisor. It is distinct from compile-time codes:
 
 | Code | When | Layer |
 |---|---|---|
-| `SPORE-INV-001` | Compile time — statically proved false | Floor 3 (Proof Zone) |
-| `SPORE-INV-002` | Compile time — post-condition (Phase 4) | Floor 3 (Proof Zone) |
-| `SPORE-INV-003` | Compile time — empty block warning | Floor 3 (Proof Zone) |
-| `SPORE-INV-004` | Compile time — unresolved symbol | Floor 3 (Proof Zone) |
-| **`SPORE-INV-000`** | **Runtime — hardware trap fired** | **Floor 2 (Containment)** |
+| `FUNGI-INV-001` | Compile time — statically proved false | Floor 3 (Proof Zone) |
+| `FUNGI-INV-002` | Compile time — post-condition (Phase 4) | Floor 3 (Proof Zone) |
+| `FUNGI-INV-003` | Compile time — empty block warning | Floor 3 (Proof Zone) |
+| `FUNGI-INV-004` | Compile time — unresolved symbol | Floor 3 (Proof Zone) |
+| **`FUNGI-INV-000`** | **Runtime — hardware trap fired** | **Floor 2 (Containment)** |
 
 ### Audit Event Schema (CBOR Tag 410 — new)
 
-When `SPORE-INV-000` fires, the DSS supervisor records:
+When `FUNGI-INV-000` fires, the DSS supervisor records:
 
 ```
 AuditEvent (CBOR Tag 410) {
-  code:            "SPORE-INV-000",
+  code:            "FUNGI-INV-000",
   flowId:          string,         ;; the flow that was executing
   contractHash:    bytes,          ;; sha256 of the flow's contract block
   meterSnapshot:   uint,           ;; fuel consumed at time of trap
@@ -174,7 +174,7 @@ is a conceptual simplification. The content is consistent; only the labels diffe
 | **#73** | Parser: `assuming(flowRef, condition)` block — new AST node `assumingDecl` |
 | **#74** | Compiler: manifest-lookup proof verification for `assuming {}` blocks |
 | **#75** | Governance-as-Evidence: structured audit event schema (CBOR Tag 410) |
-| **#76** | SPORE-INV-000: DSS.wasm trap handler → Audit Event emission (DRCM Phase 5 gate) |
+| **#76** | FUNGI-INV-000: DSS.wasm trap handler → Audit Event emission (DRCM Phase 5 gate) |
 
 ---
 
@@ -199,6 +199,6 @@ that the `.lmanifest` itself is auditable — by any third party with the public
 |---|---|
 | `invariant {}` implementation | `galerina-floor3-proof-zone-graph.md` |
 | `.lmanifest` binary CBOR (ProofObligation Tag 403) | `galerina-cbor-manifest-spec.md` |
-| DSS.wasm supervisor (where SPORE-INV-000 fires) | `galerina-deterministic-runtime-containment.md` |
+| DSS.wasm supervisor (where FUNGI-INV-000 fires) | `galerina-deterministic-runtime-containment.md` |
 | Agile governance patterns | `galerina-agile-governance-pattern.md` |
 | Domain guard policies | `galerina-domain-guard-policies.md` |

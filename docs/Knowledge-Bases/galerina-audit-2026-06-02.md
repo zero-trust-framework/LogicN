@@ -32,7 +32,7 @@ Supersedes: `galerina-audit-2026-06-01.md`
 |---|---|---|
 | 25 | WAT real arithmetic (i32.add/sub/mul, let bindings) | ✅ |
 | 26 | WAT control flow (if/else, while, mut/assign) | ✅ |
-| 26B | ImmutableInputSeal, HardwareGovernanceClass, ProofLevel, SPORE-HW-001/002/003 | ✅ |
+| 26B | ImmutableInputSeal, HardwareGovernanceClass, ProofLevel, FUNGI-HW-001/002/003 | ✅ |
 | 27 | WASM instantiation (wabt) — 8/8 benchmarks, native speed | ✅ |
 | 27B | Sync fast-path — 14.3× tree-walker speedup | ✅ |
 | 28 | Profile enforcement (strict/high_integrity) + Tainted<T>/SafeFor<Context,T> | ✅ |
@@ -42,14 +42,14 @@ Supersedes: `galerina-audit-2026-06-01.md`
 | 31B | Bytecode VM auto-wired into executeFlow (220K calls/sec) | ✅ |
 | 32 | Governance diff CLI — exit 2 on authority widening | ✅ |
 | 33A | Tier telemetry — executionTier + fallbackReason on FlowExecutionResult | ✅ |
-| 34 | verifyPasswordService.spore — live governed HTTP service, POST /auth/verify | ✅ **Runtime=25%** |
+| 34 | verifyPasswordService.fungi — live governed HTTP service, POST /auth/verify | ✅ **Runtime=25%** |
 | 35 | Password.verify/hash/needsMigration — stable API facade | ✅ |
 | 36 | Argon2.hash/verify (Argon2id, OWASP preferred) | ✅ |
 | 37 | Password.migrate — verify+rehash bcrypt→Argon2id on successful verify | ✅ |
 | 38 | Deno WebGPU GPU benchmark live — RTX 2060 (4GB, confirmed via Win32_VideoController 2026-06-02), 3.99M ops/sec | ✅ |
 | 39 | GovernanceSignature Ed25519 — signProofGraph/verifyGovernanceSignature | ✅ |
-| 40 | Stage B executable — compiler.capabilities.spore (8 flows), lexer.spore | ✅ |
-| 41 | Phase 41 syntax: `when` guard arms, integer/string literal match, inline contract, `:` return type canonical, `else if` → SPORE-SYNTAX-010 hard error. Grammar v1.1. | ✅ |
+| 40 | Stage B executable — compiler.capabilities.fungi (8 flows), lexer.fungi | ✅ |
+| 41 | Phase 41 syntax: `when` guard arms, integer/string literal match, inline contract, `:` return type canonical, `else if` → FUNGI-SYNTAX-010 hard error. Grammar v1.1. | ✅ |
 | 45 | Bytecode VM Phase 45: `callExpr` support, callee AST threaded through compiler | ✅ (partial) |
 | 69 | Current phase | ✅ |
 
@@ -67,7 +67,7 @@ Supersedes: `galerina-audit-2026-06-01.md`
 | Inline contract style | ✅ implemented + documented |
 | `:` return type (modern preferred) | ✅ implemented + documented |
 | `effects {}` optional for pure flows | ✅ implemented + documented |
-| `else if` → SPORE-SYNTAX-010 hard error | ✅ implemented + documented |
+| `else if` → FUNGI-SYNTAX-010 hard error | ✅ implemented + documented |
 | `unsafe let` at HTTP boundary | ✅ implemented + documented |
 
 ---
@@ -78,14 +78,14 @@ Supersedes: `galerina-audit-2026-06-01.md`
 
 | File | Status |
 |---|---|
-| lexer.spore | ✅ scanWord works, makeKeywordTable=40kw |
-| parser.spore | ✅ flow headers; body parsing Phase 46 |
-| type-checker.spore | 🟡 partial — 3 checks (TYPE-001/002/004) executing, 13 tests (2026-06-02) |
-| effect-checker.spore | 🟡 partial — declared-vs-used reconciliation (EFFECT-001/003/004/005), 12 tests (2026-06-02) |
-| governance-verifier.spore | 🟡 partial — 3 checks (VAL-001/002, GOV-002) executing, 9 tests (2026-06-02) |
-| gir-emitter.spore | 🟡 partial — flow-decl + expression GIR (const/load/add/cmp), 13 tests (2026-06-02) |
-| runtime.spore | ⏳ Phase 60+ |
-| compiler.capabilities.spore | ✅ 8 flows |
+| lexer.fungi | ✅ scanWord works, makeKeywordTable=40kw |
+| parser.fungi | ✅ flow headers; body parsing Phase 46 |
+| type-checker.fungi | 🟡 partial — 3 checks (TYPE-001/002/004) executing, 13 tests (2026-06-02) |
+| effect-checker.fungi | 🟡 partial — declared-vs-used reconciliation (EFFECT-001/003/004/005), 12 tests (2026-06-02) |
+| governance-verifier.fungi | 🟡 partial — 3 checks (VAL-001/002, GOV-002) executing, 9 tests (2026-06-02) |
+| gir-emitter.fungi | 🟡 partial — flow-decl + expression GIR (const/load/add/cmp), 13 tests (2026-06-02) |
+| runtime.fungi | ⏳ Phase 60+ |
+| compiler.capabilities.fungi | ✅ 8 flows |
 
 ---
 
@@ -93,10 +93,10 @@ Supersedes: `galerina-audit-2026-06-01.md`
 
 - Phase 39: Ed25519 (`GovernanceSignature`) — ✅ complete
 - Phase 55: ML-DSA-65 (NIST FIPS 204) hybrid signing — ⏳ planned
-  - `spore.gov.sig.v2` artifact format (ed25519 + ml-dsa-65 dual signatures)
+  - `fungi.gov.sig.v2` artifact format (ed25519 + ml-dsa-65 dual signatures)
   - `generateHybridGovernanceKeyPair` function
   - Attestation profiles: `compat`, `hybrid`, `pq_strict`
-  - Diagnostics: SPORE-HW-101..104 (MissingRequiredAttestation, UnsupportedAttestationAlg, HybridAttestationIncomplete, AttestationEvidenceStale)
+  - Diagnostics: FUNGI-HW-101..104 (MissingRequiredAttestation, UnsupportedAttestationAlg, HybridAttestationIncomplete, AttestationEvidenceStale)
 
 ---
 
@@ -122,17 +122,17 @@ This audit also includes a documentation audit. Files updated today:
 | File | Changes |
 |---|---|
 | `galerina-glossary.md` | Added `when` guard arm, `match`, `inline contract`, `with effects` (REMOVED) entries; fixed `fn`/`flow` examples to use v1 syntax |
-| `compiler-diagnostics.md` | Added SPORE-SYNTAX-006..010, SPORE-SYNTAX-LEGACY-001/002, SPORE-STYLE-001/002, SPORE-TAINT-001..007, SPORE-PROFILE-001..007 (incl. 005B), SPORE-HW-001..003/101..104 |
-| `galerina-roadmap-next10-phases.md` | Updated test counts to 2,952; Phase 41 row corrected in progress table; Phase 41 entry includes SPORE-SYNTAX-010 note |
+| `compiler-diagnostics.md` | Added FUNGI-SYNTAX-006..010, FUNGI-SYNTAX-LEGACY-001/002, FUNGI-STYLE-001/002, FUNGI-TAINT-001..007, FUNGI-PROFILE-001..007 (incl. 005B), FUNGI-HW-001..003/101..104 |
+| `galerina-roadmap-next10-phases.md` | Updated test counts to 2,952; Phase 41 row corrected in progress table; Phase 41 entry includes FUNGI-SYNTAX-010 note |
 | `galerina-audit-2026-06-02.md` | This file — successor to 2026-06-01 audit |
 
 Files verified as current (no changes needed):
 
 | File | Verdict |
 |---|---|
-| `AI_INDEX.md` | ✅ Current — Phase 41 syntax, ML-DSA, SPORE-SYNTAX-010, `when` guard arms all documented |
+| `AI_INDEX.md` | ✅ Current — Phase 41 syntax, ML-DSA, FUNGI-SYNTAX-010, `when` guard arms all documented |
 | `galerina-spec-manifest.yaml` | ✅ Current — grammar_version v1.1, all Phase 41 additions listed |
-| `galerina-grammar.ebnf` | ✅ Current — `when_guard_arm`, integer/string literal arms, `else if` hard error (SPORE-SYNTAX-010), `:` return type, inline contract all present |
+| `galerina-grammar.ebnf` | ✅ Current — `when_guard_arm`, integer/string literal arms, `else if` hard error (FUNGI-SYNTAX-010), `:` return type, inline contract all present |
 
 ---
 

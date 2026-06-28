@@ -1,5 +1,5 @@
 none
-// SPORE-SECRET-001 is the target diagnostic for this example.
+// FUNGI-SECRET-001 is the target diagnostic for this example.
 // SecureString-in-AI-call detection is tracked for a future compiler wave.
-// The example is stable: SPORE-EFFECT-002 is a warning and SPORE-HINT-COMPUTE-001 is info —
+// The example is stable: FUNGI-EFFECT-002 is a warning and FUNGI-HINT-COMPUTE-001 is info —
 // no unsuppressed errors are produced by the current pipeline.

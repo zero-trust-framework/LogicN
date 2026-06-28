@@ -42,16 +42,16 @@ import { join, basename, resolve as resolvePath } from "node:path";
 // =============================================================================
 // galerina.check.json -- project-level configuration for `galerina check`
 //
-// Place galerina.check.json in the project root (next to the .spore files).
+// Place galerina.check.json in the project root (next to the .fungi files).
 // All fields are optional -- omitted = inherit defaults.
 //
 // Example:
 //   {
 //     "profile": "strict",
 //     "rules": {
-//       "SPORE-TAINT-001": "error",
-//       "SPORE-STYLE-001": "off",
-//       "SPORE-GRAPH-002": "warn"
+//       "FUNGI-TAINT-001": "error",
+//       "FUNGI-STYLE-001": "off",
+//       "FUNGI-GRAPH-002": "warn"
 //     },
 //     "ignore": ["tests/**", "examples/**"],
 //     "security": true,
@@ -112,8 +112,8 @@ function applySeverityOverride(
 // Per-file rule disabling -- // galerina-disable and // galerina-disable-next-line
 //
 // Source comments that suppress specific diagnostics:
-//   // galerina-disable SPORE-TAINT-001          -- disables for rest of file
-//   // galerina-disable-next-line SPORE-TAINT-001 -- disables on the NEXT line only
+//   // galerina-disable FUNGI-TAINT-001          -- disables for rest of file
+//   // galerina-disable-next-line FUNGI-TAINT-001 -- disables on the NEXT line only
 //   // galerina-disable                          -- disables ALL diagnostics in file
 // =============================================================================
 
@@ -207,8 +207,8 @@ function applyAutoFix(filePath: string, diagnostics: readonly CliDiagnostic[]): 
   return 0; // safe mode: report count but don't write
 }
 
-// SPORE-BUILD-001: Same source produced different output on repeated compilation.
-const SPORE_BUILD_001_CODE = "SPORE-BUILD-001";
+// FUNGI-BUILD-001: Same source produced different output on repeated compilation.
+const FUNGI_BUILD_001_CODE = "FUNGI-BUILD-001";
 
 // ---------------------------------------------------------------------------
 // Internal types
@@ -258,7 +258,7 @@ function findSporeFiles(dir: string): string[] {
         if (entry.name !== "node_modules" && !entry.name.startsWith(".")) {
           walk(full);
         }
-      } else if (entry.isFile() && entry.name.endsWith(".spore")) {
+      } else if (entry.isFile() && entry.name.endsWith(".fungi")) {
         results.push(full);
       }
     }
@@ -297,7 +297,7 @@ function pushDiag(
 }
 
 // ---------------------------------------------------------------------------
-// Compile a single .spore file and return diagnostics
+// Compile a single .fungi file and return diagnostics
 // ---------------------------------------------------------------------------
 
 interface FileCompileResult {
@@ -320,7 +320,7 @@ function compileFile(
     return {
       file: filePath,
       diagnostics: [{
-        code: "SPORE-BACKEND-001",
+        code: "FUNGI-BACKEND-001",
         severity: "error",
         message: `Cannot read file: ${msg}`,
         file: filePath,
@@ -344,7 +344,7 @@ function compileFile(
   }
 
   // ── Import resolution — DAG merge ────────────────────────────────────────
-  // Resolve `import "./path.spore"` declarations and surface any diagnostics.
+  // Resolve `import "./path.fungi"` declarations and surface any diagnostics.
   // Imported symbols are available for use in this file's flows.
   // This is additive — no existing behaviour is changed.
   const absoluteFilePath = resolvePath(filePath);
@@ -365,7 +365,7 @@ function compileFile(
     const symCount = importResult.symbols.length;
     pushDiag(
       diagnostics,
-      "SPORE-IMPORT-000",
+      "FUNGI-IMPORT-000",
       "info",
       `Resolved ${count} imported file(s), ${symCount} symbol(s) merged into scope.`,
       filePath,
@@ -401,13 +401,13 @@ function compileFile(
   }
 
   // Determine compile mode: production/deterministic builds enforce errors; dev/check/build
-  // downgrade migration-stage diagnostics (SPORE-VALUESTATE-008, SPORE-STDLIB-001) to warnings.
+  // downgrade migration-stage diagnostics (FUNGI-VALUESTATE-008, FUNGI-STDLIB-001) to warnings.
   const effectCheckerMode: "production" | "development" =
     (mode === "build-production" || mode === "build-deterministic")
       ? "production"
       : "development";
 
-  // SPORE-TIER-001 (landing B): the flow-kind tier floor is enforced ONLY on real production
+  // FUNGI-TIER-001 (landing B): the flow-kind tier floor is enforced ONLY on real production
   // builds (build-production / build-deterministic), never on check/dev. Default-off everywhere
   // else, so all other checkEffects call sites are unaffected.
   const enforceTierFloor =
@@ -429,10 +429,10 @@ function compileFile(
   const effectResults = checkEffects(parseResult.flows, parseResult.ast, effectCheckerMode, enforceTierFloor);
   for (const result of effectResults) {
     for (const d of result.diagnostics) {
-      // SPORE-EFFECT-001 and SPORE-STDLIB-001 are downgraded to warning in dev/check/build modes.
+      // FUNGI-EFFECT-001 and FUNGI-STDLIB-001 are downgraded to warning in dev/check/build modes.
       // In build-production and build-deterministic modes they remain errors (as emitted).
       const isDevDowngradable =
-        d.code === "SPORE-EFFECT-001" || d.code === "SPORE-STDLIB-001";
+        d.code === "FUNGI-EFFECT-001" || d.code === "FUNGI-STDLIB-001";
       const severity: CliDiagnostic["severity"] =
         isDevDowngradable && (mode === "check" || mode === "build")
           ? "warning"
@@ -567,7 +567,7 @@ pure flow verifySample(x: Int) -> Int {
 }
 
 /**
- * Compile a single .spore source string twice and return both GIR hashes.
+ * Compile a single .fungi source string twice and return both GIR hashes.
  * Used to prove that the GIR emitter is deterministic on repeated compilation.
  */
 function doubleCompileGirHash(source: string, fileName: string): { hash1: string; hash2: string } {
@@ -593,7 +593,7 @@ function runVerifySelfhost(): void {
 
   if (run1 !== run2) {
     process.stderr.write(
-      `[error] ${SPORE_BUILD_001_CODE} NonDeterministicBuild\n` +
+      `[error] ${FUNGI_BUILD_001_CODE} NonDeterministicBuild\n` +
       `  Run 1 hash: ${run1}\n` +
       `  Run 2 hash: ${run2}\n` +
       `  Same source produced different output on repeated compilation.\n` +
@@ -602,15 +602,15 @@ function runVerifySelfhost(): void {
     process.exit(1);
   }
 
-  // R7C: Double-compile each .spore file and compare GIR hashes.
-  // If any file produces different GIR hashes on two compilations, emit SPORE-BUILD-001.
-  process.stdout.write("Checking GIR determinism across .spore files...\n");
+  // R7C: Double-compile each .fungi file and compare GIR hashes.
+  // If any file produces different GIR hashes on two compilations, emit FUNGI-BUILD-001.
+  process.stdout.write("Checking GIR determinism across .fungi files...\n");
 
   const selfHostedDir = join(getSrcDir(), "self-hosted");
-  let sporeFiles: string[] = [];
+  let fungiFiles: string[] = [];
   try {
-    sporeFiles = readdirSync(selfHostedDir)
-      .filter((f) => f.endsWith(".spore"))
+    fungiFiles = readdirSync(selfHostedDir)
+      .filter((f) => f.endsWith(".fungi"))
       .map((f) => join(selfHostedDir, f));
   } catch {
     // self-hosted directory may not be present in all environments -- skip silently
@@ -619,7 +619,7 @@ function runVerifySelfhost(): void {
 
   let girDeterminismPassed = true;
 
-  for (const filePath of sporeFiles) {
+  for (const filePath of fungiFiles) {
     let source: string;
     try {
       source = readFileSync(filePath, "utf8");
@@ -632,7 +632,7 @@ function runVerifySelfhost(): void {
 
     if (hash1 !== hash2) {
       process.stderr.write(
-        `[error] ${SPORE_BUILD_001_CODE} NonDeterministicBuild\n` +
+        `[error] ${FUNGI_BUILD_001_CODE} NonDeterministicBuild\n` +
         `  File: ${filePath}\n` +
         `  GIR hash 1: ${hash1}\n` +
         `  GIR hash 2: ${hash2}\n` +
@@ -671,7 +671,7 @@ function getSrcDir(): string {
 function runFixEffects(targetDir: string): void {
   const files = findSporeFiles(targetDir);
   if (files.length === 0) {
-    process.stdout.write("No .spore files found.\n");
+    process.stdout.write("No .fungi files found.\n");
     return;
   }
 
@@ -688,7 +688,7 @@ function runFixEffects(targetDir: string): void {
 
     for (const result of effectResults) {
       const missing = result.diagnostics.filter(
-        (d) => d.code === "SPORE-EFFECT-001" && d.name === "UNDECLARED_EFFECT",
+        (d) => d.code === "FUNGI-EFFECT-001" && d.name === "UNDECLARED_EFFECT",
       );
       if (missing.length > 0) {
         for (const d of missing) {
@@ -786,9 +786,9 @@ function parseArgs(): { readonly mode: CliMode; readonly targetDir: string } {
       process.stderr.write(
         "Usage: galerina <command> [options] [path]\n" +
         "Commands:\n" +
-        "  check                        Check .spore files (dev mode)\n" +
-        "  check --strict               Check .spore files (strict mode)\n" +
-        "  build                        Build .spore files (JS bootstrap)\n" +
+        "  check                        Check .fungi files (dev mode)\n" +
+        "  check --strict               Check .fungi files (strict mode)\n" +
+        "  build                        Build .fungi files (JS bootstrap)\n" +
         "  build --production           Build with full governance enforcement\n" +
         "  build --deterministic        Build with strict reproducibility checks\n" +
         "  build --target=wasm-standalone  Emit WASM/WASI module (no JS required)\n" +
@@ -829,7 +829,7 @@ function checkWasmtime(): string | null {
 /**
  * Phase 26A: Build wasm-standalone target.
  *
- * For each .spore file:
+ * For each .fungi file:
  *   1. Parse + compile to WAT text.
  *   2. Write build/wasm/output.wat.
  *   3. Run JS assembler to produce build/wasm/output.wasm.
@@ -922,7 +922,7 @@ function runWasmStandaloneBuild(targetDir: string, files: string[]): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Compiles all .spore files, extracts contract.economics sub-blocks from each
+ * Compiles all .fungi files, extracts contract.economics sub-blocks from each
  * flow, and writes a JSON cost summary to build/cost-analysis.json.
  *
  * Economics extraction is best-effort: if a flow has no economics contract
@@ -941,7 +941,7 @@ function runGovernanceDiff(baseRefArg: string): void {
   const baseRef = baseRefArg === process.cwd() ? "HEAD" : baseRefArg.replace(/\.\.$/, "");
   const wantJson = process.argv.includes("--json");
 
-  // Collect all .spore files currently present
+  // Collect all .fungi files currently present
   const files = findSporeFiles(process.cwd());
   const beforeFlows: FlowMeta[] = [];
   const afterFlows: FlowMeta[] = [];
@@ -992,7 +992,7 @@ function runGovernanceDiff(baseRefArg: string): void {
 function runCostAnalysis(targetDir: string): void {
   const files = findSporeFiles(targetDir);
   if (files.length === 0) {
-    process.stdout.write("No .spore files found.\n");
+    process.stdout.write("No .fungi files found.\n");
     return;
   }
 
@@ -1157,7 +1157,7 @@ function main(): void {
 
   const files = findSporeFiles(targetDir);
   if (files.length === 0) {
-    process.stdout.write("No .spore files found.\n");
+    process.stdout.write("No .fungi files found.\n");
     process.exit(0);
   }
 
@@ -1224,7 +1224,7 @@ function main(): void {
     if (result.manifestJson !== undefined) {
       const outDir = join(targetDir, "build");
       try { mkdirSync(outDir, { recursive: true }); } catch { /* already exists */ }
-      const baseName = basename(filePath, ".spore");
+      const baseName = basename(filePath, ".fungi");
       const manifestPath = join(outDir, `${baseName}.lmanifest`);
       writeFileSync(manifestPath, result.manifestJson, "utf8");
       process.stdout.write(`[manifest] ${manifestPath}\n`);
@@ -1282,7 +1282,7 @@ function main(): void {
 // =============================================================================
 // Watch mode (--watch flag) -- galerina check --watch
 //
-// Re-runs galerina check on any .spore file change in the target directory.
+// Re-runs galerina check on any .fungi file change in the target directory.
 // Uses Node.js fs.watch (no external deps). Debounced at 200ms.
 // =============================================================================
 
@@ -1294,11 +1294,11 @@ function runWatch(targetDir: string): void {
     watch(p:string, o:{recursive:boolean}, cb:(e:string,f:string|null)=>void): void;
     watchFile(p:string, o:{interval:number}, cb:()=>void): void;
   };
-  process.stdout.write(`[galerina watch] Watching ${targetDir} for .spore changes...\n`);
+  process.stdout.write(`[galerina watch] Watching ${targetDir} for .fungi changes...\n`);
 
   let debounce: ReturnType<typeof setTimeout> | undefined;
   const recheck = (filename: string | null) => {
-    if (filename && !filename.endsWith(".spore")) return;
+    if (filename && !filename.endsWith(".fungi")) return;
     if (debounce) clearTimeout(debounce);
     debounce = setTimeout(() => {
       process.stdout.write(`\n[galerina watch] Change: ${filename ?? "unknown"} -- re-checking...\n`);
@@ -1309,7 +1309,7 @@ function runWatch(targetDir: string): void {
   try {
     fsW(targetDir, { recursive: true }, (_evt: string, filename: string | null) => recheck(filename));
   } catch {
-    // Fallback: watch individual .spore files using watchFile
+    // Fallback: watch individual .fungi files using watchFile
     const files = findSporeFiles(targetDir);
     for (const f of files) {
       fsWF(f, { interval: 500 }, () => recheck(f));

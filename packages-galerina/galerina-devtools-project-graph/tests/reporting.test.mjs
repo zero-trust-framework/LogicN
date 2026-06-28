@@ -27,7 +27,7 @@ const SAMPLE_BUFFERS = {
 describe("buildProofChainFromBuffers", () => {
   it("produces a valid v1 proof chain", () => {
     const chain = buildProofChainFromBuffers(SAMPLE_BUFFERS);
-    assert.equal(chain.schemaVersion, "spore.execution.proof.v1");
+    assert.equal(chain.schemaVersion, "fungi.execution.proof.v1");
     assert.ok(chain.proofId.length > 0);
     assert.ok(chain.generatedAt.length > 0);
     assert.ok(chain.hashes.manifestSha256.length === 64); // hex sha256
@@ -62,7 +62,7 @@ describe("upgradeExecutionProofV1ToV2", () => {
   it("produces schemaVersion v2 with 5 sections", () => {
     const v1 = buildProofChainFromBuffers(SAMPLE_BUFFERS);
     const v2 = upgradeExecutionProofV1ToV2(v1);
-    assert.equal(v2.schemaVersion, "spore.execution.proof.v2");
+    assert.equal(v2.schemaVersion, "fungi.execution.proof.v2");
     assert.equal(v2.proofId, v1.proofId);
     assert.ok(v2.sections !== undefined && v2.sections.length === 5);
   });
@@ -87,7 +87,7 @@ describe("upgradeExecutionProofV1ToV2", () => {
 
 function makeEvent(id, status, traceId, spanId, parentSpanId, timestamp) {
   return {
-    schemaVersion: "spore.runtime.audit.v1",
+    schemaVersion: "fungi.runtime.audit.v1",
     eventId: id,
     timestamp: timestamp ?? `2026-05-27T12:00:0${id.charCodeAt(0) % 10}.000Z`,
     category: "effect",
@@ -167,7 +167,7 @@ describe("buildEventDAG", () => {
 
 function makeAuditEvent(id, status = "allowed") {
   return {
-    schemaVersion: "spore.runtime.audit.v1",
+    schemaVersion: "fungi.runtime.audit.v1",
     eventId: id,
     timestamp: new Date().toISOString(),
     category: "effect",
@@ -186,10 +186,10 @@ describe("serializeAuditEvent", () => {
   });
 
   it("throws JsonlWriterError for wrong schemaVersion", () => {
-    const badEvent = { ...makeAuditEvent("x"), schemaVersion: "lln.runtime.audit.v0" };
+    const badEvent = { ...makeAuditEvent("x"), schemaVersion: "fungi-.runtime.audit.v0" };
     assert.throws(
       () => serializeAuditEvent(badEvent),
-      (err) => err instanceof JsonlWriterError && err.code === "SPORE-REPORT-001",
+      (err) => err instanceof JsonlWriterError && err.code === "FUNGI-REPORT-001",
     );
   });
 
@@ -200,7 +200,7 @@ describe("serializeAuditEvent", () => {
     };
     assert.throws(
       () => serializeAuditEvent(eventWithSecret),
-      (err) => err instanceof JsonlWriterError && err.code === "SPORE-AUDIT-003",
+      (err) => err instanceof JsonlWriterError && err.code === "FUNGI-AUDIT-003",
     );
   });
 
@@ -231,7 +231,7 @@ describe("InMemoryJsonlWriter", () => {
     const output = writer.toString();
     const lines = output.trim().split("\n");
     assert.equal(lines.length, 2);
-    assert.ok(lines.every((l) => JSON.parse(l).schemaVersion === "spore.runtime.audit.v1"));
+    assert.ok(lines.every((l) => JSON.parse(l).schemaVersion === "fungi.runtime.audit.v1"));
   });
 
   it("rejects appends after close()", async () => {

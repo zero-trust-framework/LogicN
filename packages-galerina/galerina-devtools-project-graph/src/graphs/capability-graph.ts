@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — CapabilityGraph
+// fungi-graph — CapabilityGraph
 //
 // Models capability grants and requirements across flows and packages.
 // Nodes are capabilities or flows; edges represent "requires" or "grants".
@@ -34,8 +34,8 @@ export type CapabilityGraph = Graph<CapabilityNodeData, CapabilityEdgeData>;
 // Diagnostic constant
 // ---------------------------------------------------------------------------
 
-export const LLN_PGRAPH_030 = {
-  code: "SPORE-PGRAPH-030",
+export const FUNGI_PGRAPH_030 = {
+  code: "FUNGI-PGRAPH-030",
   name: "CAPABILITY_NOT_GRANTED",
   severity: "error",
   message: "A flow requires a capability that has not been granted.",
@@ -123,7 +123,7 @@ export function validateCapabilities(graph: CapabilityGraph): LlnDiagnostic[] {
       if (edge.data.kind !== "requires") continue;
       if (!granted.has(edge.to)) {
         diagnostics.push({
-          ...LLN_PGRAPH_030,
+          ...FUNGI_PGRAPH_030,
           message: `Flow "${node.id}" requires capability "${edge.to}" which has not been granted.`,
         });
       }

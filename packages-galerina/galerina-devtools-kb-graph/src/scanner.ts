@@ -14,7 +14,7 @@ export interface KBDocNode {
   layer?: string;      // "Layer 0/1/2A/2B/3" from content
   status?: string;     // "Status: authoritative/draft/deprecated"
   wordCount: number;   // approximate
-  lnlCodes: string[];  // all "SPORE-XXX-NNN" codes mentioned
+  lnlCodes: string[];  // all "FUNGI-XXX-NNN" codes mentioned
   lastModified: Date;  // file mtime
 }
 
@@ -29,7 +29,7 @@ export interface ScanResult {
   edges: KBEdge[];
 }
 
-const SPORE_CODE_RE = /SPORE-[A-Z]+-\d+/g;
+const FUNGI_CODE_RE = /FUNGI-[A-Z]+-\d+/g;
 const MD_LINK_RE = /\[([^\]]*)\]\(([^)]+\.md)[^)]*\)/g;
 const BACKTICK_MD_RE = /`([a-zA-Z0-9_-]+\.md)`/g;
 const SEE_MD_RE = /[Ss]ee:?\s+([a-zA-Z0-9_-]+\.md)/g;
@@ -116,9 +116,9 @@ export function scanKBDirectory(kbDir: string): ScanResult {
     // Word count (approximate)
     const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
 
-    // SPORE codes
+    // FUNGI codes
     const lnlCodesSet = new Set<string>();
-    for (const m of content.matchAll(SPORE_CODE_RE)) {
+    for (const m of content.matchAll(FUNGI_CODE_RE)) {
       lnlCodesSet.add(m[0]);
     }
     const lnlCodes = [...lnlCodesSet].sort();

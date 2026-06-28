@@ -2,10 +2,10 @@
 // Stage B Report — Galerina self-hosting milestone tracker
 //
 // Tracks the four Stage B milestone files:
-//   1. lexer.spore
-//   2. parser.spore
-//   3. type-checker.spore
-//   4. compiler.capabilities.spore
+//   1. lexer.fungi
+//   2. parser.fungi
+//   3. type-checker.fungi
+//   4. compiler.capabilities.fungi
 //
 // Each milestone is tracked with a parse-error count and a parity status.
 // =============================================================================
@@ -28,10 +28,10 @@ export interface StageBReport {
 // ---------------------------------------------------------------------------
 
 const STAGE_B_MILESTONE_FILES: readonly { readonly name: string; readonly file: string }[] = [
-  { name: "lexer",                file: "lexer.spore"                  },
-  { name: "parser",               file: "parser.spore"                 },
-  { name: "type-checker",         file: "type-checker.spore"           },
-  { name: "compiler.capabilities",file: "compiler.capabilities.spore"  },
+  { name: "lexer",                file: "lexer.fungi"                  },
+  { name: "parser",               file: "parser.fungi"                 },
+  { name: "type-checker",         file: "type-checker.fungi"           },
+  { name: "compiler.capabilities",file: "compiler.capabilities.fungi"  },
 ] as const;
 
 function parityStatusFromErrors(errors: number): "pending" | "partial" | "complete" {

@@ -1,17 +1,17 @@
 # Galerina Browser, DOM and Web Platform Primitives
 
-Galerina, short for **Galerina**, is a programming language and compiler/toolchain. Galerina source files use the `.spore` extension.
+Galerina, short for **Galerina**, is a programming language and compiler/toolchain. Galerina source files use the `.fungi` extension.
 
 Example files:
 
 ```text
-boot.spore
-main.spore
-browser.spore
-dom.spore
-html.spore
-forms.spore
-notifications.spore
+boot.fungi
+main.fungi
+browser.fungi
+dom.fungi
+html.fungi
+forms.fungi
+notifications.fungi
 ```
 
 This document describes what Galerina should support for browser, DOM, HTML and web platform use cases **as a language**, not as a framework.
@@ -194,7 +194,7 @@ dom.setHtml("#content", safeHtml)
 
 ---
 
-# 4. HTML Policy in `boot.spore`
+# 4. HTML Policy in `boot.fungi`
 
 HTML security rules should be declared centrally.
 
@@ -358,7 +358,7 @@ This allows Galerina to generate security reports and block unsafe behaviour.
 
 ---
 
-# 8. Browser Permissions in `boot.spore`
+# 8. Browser Permissions in `boot.fungi`
 
 Browser permissions should be explicit.
 
@@ -757,7 +757,7 @@ effects [database.read, network.outbound] {
 }
 ```
 
-## Push Policy in `boot.spore`
+## Push Policy in `boot.fungi`
 
 ```Galerina
 browser {
@@ -907,7 +907,7 @@ Example:
     "domWrites": [
       {
         "flow": "updateTitle",
-        "source": "src/browser/page.spore:4",
+        "source": "src/browser/page.fungi:4",
         "method": "dom.setText",
         "safe": true
       }
@@ -980,19 +980,19 @@ Example:
     {
       "feature": "dom.write",
       "flow": "updateTitle",
-      "source": "src/browser/page.spore:4",
+      "source": "src/browser/page.fungi:4",
       "safeMethod": "dom.setText"
     },
     {
       "feature": "push.subscribe",
       "flow": "subscribeToPush",
-      "source": "src/browser/notifications.spore:8",
+      "source": "src/browser/notifications.fungi:8",
       "requiresPermission": true
     },
     {
       "feature": "service_worker.register",
       "flow": "registerServiceWorker",
-      "source": "src/browser/service-worker.spore:3",
+      "source": "src/browser/service-worker.fungi:3",
       "scope": "/"
     }
   ]
@@ -1011,7 +1011,7 @@ build/browser/app.wasm
 build/browser/app.source-map.json
 ```
 
-Error reports should map back to original `.spore` files.
+Error reports should map back to original `.fungi` files.
 
 Example:
 
@@ -1020,7 +1020,7 @@ Browser error:
 Unsafe HTML write blocked.
 
 Source:
-  src/browser/comments.spore:18
+  src/browser/comments.fungi:18
 
 Suggestion:
   Convert String to SafeHtml using html.sanitize().
@@ -1040,9 +1040,9 @@ javascript: URLs denied by default
 data: URLs denied by default
 eval denied by default
 inline scripts denied by default
-browser permissions declared in boot.spore
+browser permissions declared in boot.fungi
 push notifications require user permission
-service worker scope declared in boot.spore
+service worker scope declared in boot.fungi
 SecureString cannot be stored in localStorage
 external fetch origins must be allowlisted
 JS packages require permissions
@@ -1083,7 +1083,7 @@ network.fetch effect
 storage/cookie effects
 push/notification effects
 service worker effects
-browser permissions in boot.spore
+browser permissions in boot.fungi
 HTML sanitisation
 text escaping by default
 safe DOM updates
@@ -1124,7 +1124,7 @@ send sensitive data in notification payloads
 ```text
 Should SafeHtml be a built-in core type or standard-library type?
 Should Galerina compile browser code to WASM first, JavaScript first, or both?
-Should service worker files be generated from .spore files?
+Should service worker files be generated from .fungi files?
 Should push notifications require a standard Galerina package?
 Should localStorage access be denied by default?
 Should clipboard.write be allowed by default?

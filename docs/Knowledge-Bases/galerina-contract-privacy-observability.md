@@ -5,12 +5,12 @@
 ```
 Phase 10B — Specification
 Parser: Phase 10B
-Enforcement: SPORE-PRIVACY-001, SPORE-OBSERVE-001 (Phase 10C+)
+Enforcement: FUNGI-PRIVACY-001, FUNGI-OBSERVE-001 (Phase 10C+)
 ```
 
-> **Code namespace note (2026-06-16).** `SPORE-PRIVACY-001` is reserved for the *declarative*
+> **Code namespace note (2026-06-16).** `FUNGI-PRIVACY-001` is reserved for the *declarative*
 > `deny protected X to Y` clause of this `privacy {}` block (still Phase 10C+ — parsed, not yet
-> enforced). It is a DIFFERENT mechanism from `SPORE-PRIVACY-002`, the *dataflow* rule that blocks a
+> enforced). It is a DIFFERENT mechanism from `FUNGI-PRIVACY-002`, the *dataflow* rule that blocks a
 > cleartext semantic embedding from reaching a network sink (ENFORCED now, in `value-state-checker.ts` —
 > see [[galerina-privacy-embedding-egress]]). Keep the two distinct: 001 = contract-clause matcher,
 > 002 = embedding-taint egress.

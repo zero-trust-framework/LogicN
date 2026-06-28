@@ -34,10 +34,10 @@ Phase 8 implementation targets
 Every diagnostic that involves two separate source locations (declared here, used
 unsafely here) now carries a `relatedLocations` array.
 
-### Example: SPORE-VALUESTATE-003
+### Example: FUNGI-VALUESTATE-003
 
 ```text
-Error: SPORE-VALUESTATE-003 UnsafeValueReachedGovernedSink
+Error: FUNGI-VALUESTATE-003 UnsafeValueReachedGovernedSink
 
   Unsafe binding 'rawEmail' cannot flow into governed sink 'PatientsDB.insert'.
 
@@ -94,7 +94,7 @@ The new `why` and `risk` fields complete the Elm-style five-part pattern:
 
 ```typescript
 this.diagnostics.push(makeVSDiag(
-  "SPORE-SECRET-001",
+  "FUNGI-SECRET-001",
   "SecretValueLogged",
   `SecureString binding '${name}' must not be passed to '${callName}'.`,
   location,
@@ -119,7 +119,7 @@ Galerina should do the same.
 
 ```galerina
 guarded flow loadUser(id: UserId) -> Result<User, UserError> {
-  return Err(NetworkError.Timeout)   // SPORE-TYPE-XXX: Err type NetworkError does not match declared UserError
+  return Err(NetworkError.Timeout)   // FUNGI-TYPE-XXX: Err type NetworkError does not match declared UserError
 }
 ```
 
@@ -193,13 +193,13 @@ record PublicUser {
 
 ```galerina
 // Wrong — String is not CustomerId structurally
-let id: CustomerId = rawString    // SPORE-TYPE-003
+let id: CustomerId = rawString    // FUNGI-TYPE-003
 
 // Wrong — protected Email is not plain String
-let s: String = email             // SPORE-TYPE-002 (or SPORE-TYPE-003)
+let s: String = email             // FUNGI-TYPE-002 (or FUNGI-TYPE-003)
 
 // Wrong — Money<GBP> is not Money<USD>
-let m: Money<USD> = gbpAmount     // SPORE-TYPE-004
+let m: Money<USD> = gbpAmount     // FUNGI-TYPE-004
 ```
 
 ### Rule
@@ -266,7 +266,7 @@ complete enough to validate error set membership.
 
 ## See Also
 
-- `docs/Knowledge-Bases/compiler-diagnostics.md` — all SPORE-* diagnostic codes
+- `docs/Knowledge-Bases/compiler-diagnostics.md` — all FUNGI-* diagnostic codes
 - `docs/Knowledge-Bases/schemas/diagnostics/` — machine-readable diagnostic schemas
 - `docs/Knowledge-Bases/galerina-type-improvements-phase-8.md` — branded types, Money phantom types
 - `docs/Knowledge-Bases/galerina-developer-ux-phase-8.md` — error recovery, source spans, explain command

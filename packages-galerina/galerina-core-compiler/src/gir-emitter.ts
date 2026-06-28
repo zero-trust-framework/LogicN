@@ -129,7 +129,7 @@ export interface GIRFlow {
 }
 
 export interface GIRProgram {
-  readonly schemaVersion: "spore.gir.v1";
+  readonly schemaVersion: "fungi.gir.v1";
   readonly generatedAt: string;
   readonly flows: readonly GIRFlow[];
   /** SHA-256 of canonical GIR (set after emission). */
@@ -327,7 +327,7 @@ export function emitGIR(
 
   return {
     gir: {
-      schemaVersion: "spore.gir.v1",
+      schemaVersion: "fungi.gir.v1",
       generatedAt: new Date().toISOString(),
       flows: girFlows,
       entryPoints,
@@ -588,7 +588,7 @@ function extractTensors(flowNode: AstNode): GIRTensorInfo[] {
 }
 
 // ---------------------------------------------------------------------------
-// Effect → target affinity inference (SPORE-HINT-COMPUTE-001 planning)
+// Effect → target affinity inference (FUNGI-HINT-COMPUTE-001 planning)
 // ---------------------------------------------------------------------------
 
 /**

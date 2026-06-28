@@ -4,7 +4,7 @@
 
 ```
 Phase 7B prerequisite
-Source of truth for SPORE-TYPE-004 (InvalidBinaryOperation) and SPORE-TYPE-005 (InvalidUnaryOperation)
+Source of truth for FUNGI-TYPE-004 (InvalidBinaryOperation) and FUNGI-TYPE-005 (InvalidUnaryOperation)
 Machine-readable version: docs/Knowledge-Bases/operator-rules.schema.yaml
 ```
 
@@ -13,10 +13,10 @@ Machine-readable version: docs/Knowledge-Bases/operator-rules.schema.yaml
 ## Rules at a Glance
 
 - Operators are **built-in only** in v1 — no user-defined operator overloading
-- `String + String` is allowed; `String + Int` is `SPORE-TYPE-004` — use `format()` instead
-- `Money<GBP> + Money<GBP>` allowed; `Money<GBP> + Money<USD>` is `SPORE-TYPE-004`
+- `String + String` is allowed; `String + Int` is `FUNGI-TYPE-004` — use `format()` instead
+- `Money<GBP> + Money<GBP>` allowed; `Money<GBP> + Money<USD>` is `FUNGI-TYPE-004`
 - `Tri` cannot be used as a branch condition, with `&&`/`||`, or with `!` — use `match` with all three arms
-- `SecureString == x` is `SPORE-SECRET-002` — use `constantTimeEquals()` instead
+- `SecureString == x` is `FUNGI-SECRET-002` — use `constantTimeEquals()` instead
 - User-defined records do not support `==` by default — requires `derives Eq` (Phase 7+)
 - `!` only valid on `Bool`; unary `-` only valid on numeric types
 
@@ -42,7 +42,7 @@ happen first:
 - Explicit governance rules for operator declarations
 
 Until that proposal exists, any use of an operator on unsupported types emits
-`SPORE-TYPE-004`.
+`FUNGI-TYPE-004`.
 
 ---
 
@@ -58,7 +58,7 @@ Until that proposal exists, any use of an operator on unsupported types emits
 | `/` | numeric | same numeric | same numeric | Integer division truncates toward zero |
 | `%` | integer | integer | integer | Float modulo not permitted — use `Float.rem()` |
 | `+` | `String` | `String` | `String` | String concatenation only — no implicit conversion |
-| `+` | `Money<C>` | `Money<C>` | `Money<C>` | Same currency only — cross-currency is `SPORE-TYPE-004` |
+| `+` | `Money<C>` | `Money<C>` | `Money<C>` | Same currency only — cross-currency is `FUNGI-TYPE-004` |
 | `-` | `Money<C>` | `Money<C>` | `Money<C>` | Same currency only |
 
 **Numeric types:** `Int`, `Int8`, `Int16`, `Int32`, `Int64`, `UInt8`, `UInt16`, `UInt32`, `UInt64`, `Float`, `Float16`, `Float32`, `Float64`, `Decimal`
@@ -140,14 +140,14 @@ let same: Bool = decisionA == decisionB
 
 ```galerina
 // Denied: Tri as a branch condition
-if decision { return allow() }       // SPORE-TYPE-004 or SPORE-SAFETY-001
+if decision { return allow() }       // FUNGI-TYPE-004 or FUNGI-SAFETY-001
 
 // Denied: logical operators on Tri
-let result = decisionA && decisionB  // SPORE-TYPE-004
-let result = decisionA || decisionB  // SPORE-TYPE-004
+let result = decisionA && decisionB  // FUNGI-TYPE-004
+let result = decisionA || decisionB  // FUNGI-TYPE-004
 
 // Denied: unary negation of Tri
-let flipped = !decision              // SPORE-TYPE-004
+let flipped = !decision              // FUNGI-TYPE-004
 ```
 
 ### Reason
@@ -201,7 +201,7 @@ let name: String = "Logic" + "N"   // OK
 Implicit string conversion is denied:
 
 ```galerina
-let value = "count: " + 42         // SPORE-TYPE-004
+let value = "count: " + 42         // FUNGI-TYPE-004
 ```
 
 Use explicit formatting for mixed types:
@@ -224,7 +224,7 @@ Money<USD> - Money<USD>   // OK — result: Money<USD>
 Cross-currency arithmetic is denied:
 
 ```galerina
-Money<GBP> + Money<USD>   // SPORE-TYPE-004
+Money<GBP> + Money<USD>   // FUNGI-TYPE-004
 ```
 
 Currency conversion is an effectful domain operation, not a silent arithmetic one:
@@ -240,7 +240,7 @@ let usd: Money<USD> = fx.convert(gbp, USD)?  // correct explicit form
 Records do not have structural equality by default:
 
 ```galerina
-userA == userB   // SPORE-TYPE-004 — User does not derive Eq
+userA == userB   // FUNGI-TYPE-004 — User does not derive Eq
 ```
 
 Records must explicitly derive equality to use `==`:
@@ -262,7 +262,7 @@ Note: `derives Eq` is a Phase 7+ feature. Phase 7B defers record equality.
 
 ---
 
-## Diagnostic: `SPORE-TYPE-004 InvalidBinaryOperation`
+## Diagnostic: `FUNGI-TYPE-004 InvalidBinaryOperation`
 
 Emitted when a binary operator is applied to unsupported operand types.
 
@@ -273,7 +273,7 @@ let x = 1 + "hello"
 ```
 
 ```
-SPORE-TYPE-004: InvalidBinaryOperation
+FUNGI-TYPE-004: InvalidBinaryOperation
 
 Operator '+' is not valid for operands:
   left:  Int
@@ -284,7 +284,7 @@ Suggested fix: use String.format() or explicit conversion
 
 ---
 
-## Diagnostic: `SPORE-TYPE-005 InvalidUnaryOperation`
+## Diagnostic: `FUNGI-TYPE-005 InvalidUnaryOperation`
 
 Emitted when a unary operator is applied to an unsupported operand type.
 
@@ -295,7 +295,7 @@ let flipped = !someIntValue
 ```
 
 ```
-SPORE-TYPE-005: InvalidUnaryOperation
+FUNGI-TYPE-005: InvalidUnaryOperation
 
 Unary operator '!' requires Bool operand.
   received: Int
@@ -307,7 +307,7 @@ Suggested fix: use a comparison: someIntValue == 0
 
 ## Legacy Compatibility Policy
 
-Before Phase 7B enables `SPORE-TYPE-004`, existing examples should be audited
+Before Phase 7B enables `FUNGI-TYPE-004`, existing examples should be audited
 for operator usage and classified:
 
 | Classification | Meaning |

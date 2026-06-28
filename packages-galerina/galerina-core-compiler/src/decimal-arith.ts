@@ -15,7 +15,7 @@
  * Fail-closed: malformed input returns `"MalformedDecimal"` (never a guessed value).
  *
  * DIVISION/MODULO (the partial-operator resolution, #53/#54): exact decimal division is generally
- * non-terminating (1/3 = 0.333…), so `a / b` as a bare operator stays a COMPILE-REJECT (SPORE-NUMERIC-OP-001
+ * non-terminating (1/3 = 0.333…), so `a / b` as a bare operator stays a COMPILE-REJECT (FUNGI-NUMERIC-OP-001
  * redirects to the method form). The method `decDiv(a, b, scale, mode)` makes the obligation EXPLICIT — the
  * caller states the target scale AND the rounding policy, so there is no silent default-rounding on money (a
  * silent default would itself be a fail-open). `decRem` is exact (no policy needed). Divide-by-zero is a

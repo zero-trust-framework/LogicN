@@ -175,7 +175,7 @@ policy:
 Runtime rejects cloud fallback even if it would be faster:
 
 ```text
-SPORE-RUNTIME-201: Execution violates coordinated compute policy.
+FUNGI-RUNTIME-201: Execution violates coordinated compute policy.
   Remote execution denied. localExecutionOnly is enforced.
 ```
 
@@ -414,4 +414,4 @@ Coordinated compute is the *governed orchestration layer* — safely coordinatin
 | [Intent](galerina-concept-intent.md) | First pipeline stage |
 | [Governed Execution Plan](galerina-concept-governed-execution-plan.md) | Second stage — the contract coordinated compute executes against |
 | [Audit Proof](galerina-concept-audit-proof.md) | Fourth stage — consumes coordinated compute's runtime evidence |
-| [compiler-diagnostics.md](compiler-diagnostics.md) | Full `SPORE-*` diagnostic code table |
+| [compiler-diagnostics.md](compiler-diagnostics.md) | Full `FUNGI-*` diagnostic code table |

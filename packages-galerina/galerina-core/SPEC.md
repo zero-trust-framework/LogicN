@@ -93,9 +93,9 @@ Detailed examples and edge-case guidance live in `docs/language-rules.md`.
 
 ### Rule 1: Source Files
 
-Galerina source files must use the `.spore` extension.
+Galerina source files must use the `.fungi` extension.
 
-`boot.spore` is the preferred full-project entry and configuration file.
+`boot.fungi` is the preferred full-project entry and configuration file.
 Single-file scripts are allowed for small examples and learning material.
 
 ### Rule 2: Practical CPU Baseline

@@ -9,7 +9,7 @@ import { parseProgram } from "../dist/index.js";
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function parseOk(source, label) {
-  const result = parseProgram(source, label ?? "test.spore");
+  const result = parseProgram(source, label ?? "test.fungi");
   const errors = result.diagnostics.filter((d) => d.severity === "error");
   assert.equal(
     errors.length,
@@ -24,17 +24,17 @@ function parseOk(source, label) {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const getPatientSource = readFileSync(
-  join(__dirname, "../../../examples/healthcare/getPatient.spore"),
+  join(__dirname, "../../../examples/healthcare/getPatient.fungi"),
   "utf8",
 );
 
 describe("Phase 26: getPatient example parses correctly", () => {
   it("produces 0 parse errors", () => {
-    parseOk(getPatientSource, "getPatient.spore");
+    parseOk(getPatientSource, "getPatient.fungi");
   });
 
   it("effects include phi.read and audit.write", () => {
-    const result = parseOk(getPatientSource, "getPatient.spore");
+    const result = parseOk(getPatientSource, "getPatient.fungi");
     const flow = result.flows.find((f) => f.name === "getPatient");
     assert.ok(flow !== undefined, "Expected a flow named getPatient");
     const effects = flow.declaredEffects;

@@ -37,7 +37,7 @@ ok(fuse.length > 1000 && /\bthrow\b/.test(fuse) && /(revok|signature|attest|tamp
   "CLAIM 4(3) refuse-to-boot ships: fuse-loader throws on tamper/unsigned/revoked integrity failure");
 const lp = read("packages-galerina/galerina-core-compiler/src/leak-proof.ts");
 ok(/canonicalLeakProof/.test(lp), "CLAIM 3 deterministic leak receipt ships: canonicalLeakProof");
-ok(/spore\.leakproof\.v1/.test(lp), "CLAIM 3 stable schema ships: spore.leakproof.v1");
+ok(/fungi\.leakproof\.v1/.test(lp), "CLAIM 3 stable schema ships: fungi.leakproof.v1");
 const gv = read("packages-galerina/galerina-core-compiler/src/governance-verifier.ts");
 ok(/CAPABILITY INTERSECTION/i.test(gv) || /intersection/i.test(gv), "CLAIM 3 capability-intersection ships: governance-verifier.ts");
 

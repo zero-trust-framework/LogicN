@@ -116,7 +116,7 @@ test("E6: clean lane converges under NMR, noisy (pBad≥0.5) does NOT; degraded 
   const pPhot = singleLaneErrorProbability({ phaseDriftSigma: 0.02, crosstalkCoeff: 0, laneFailureProb: 0, readoutSigma: 0 });
   const pNoisy = singleLaneErrorProbability({ phaseDriftSigma: 0.60, crosstalkCoeff: 0, laneFailureProb: 0, readoutSigma: 0 });
   assert.ok(nmrFailureProbability(pPhot, 9) < nmrFailureProbability(pPhot, 3), "clean lane converges");
-  assert.ok(nmrFailureProbability(pNoisy, 9) >= nmrFailureProbability(pNoisy, 3), "noisy lane diverges (SPORE-SUBSTRATE-003)");
+  assert.ok(nmrFailureProbability(pNoisy, 9) >= nmrFailureProbability(pNoisy, 3), "noisy lane diverges (FUNGI-SUBSTRATE-003)");
 
   const rng = new Xorshift32(0x0e3a17c5), n = 64, tol = 0.05; let e = 0; const trials = 400;
   for (let t = 0; t < trials; t++) { const w = randTernary(rng, n), a = randActs(rng, n); const x = tmacExact(w, a, n, 1); e += Math.abs(tmacVoted(w, a, n, 1, NOISY, 25, rng) - x) / Math.max(1, Math.abs(x)); }

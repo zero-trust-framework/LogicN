@@ -4,7 +4,7 @@
 
 ```text
 Package manifest loading: specified - implementation Phase 8+
-Schema identifier:         spore.package.manifest.v1
+Schema identifier:         fungi.package.manifest.v1
 ```
 
 This document defines `galerina-package.json`, the governed package manifest that
@@ -43,7 +43,7 @@ package code does not gain hidden effects or capabilities.
 {
   "name": "galerina-db-postgres",
   "version": "1.0.0",
-  "schemaVersion": "spore.package.manifest.v1",
+  "schemaVersion": "fungi.package.manifest.v1",
   "effects": {
     "declares": ["database.read", "database.write"],
     "transitive": []
@@ -71,7 +71,7 @@ package code does not gain hidden effects or capabilities.
 |---|---|
 | `name` | Package name following `galerina-package-naming.md`. |
 | `version` | Exact package version. |
-| `schemaVersion` | Must be `spore.package.manifest.v1`. |
+| `schemaVersion` | Must be `fungi.package.manifest.v1`. |
 | `effects.declares` | Direct effects used by the package. |
 | `effects.transitive` | Effects inherited from dependencies. |
 | `capabilities` | Named runtime capabilities requested by the package. |
@@ -91,20 +91,20 @@ package code does not gain hidden effects or capabilities.
 - The compiler rejects imports that would introduce undeclared or unaccepted
   capability requirements.
 
-## SPORE-MODULE Diagnostics in Context
+## FUNGI-MODULE Diagnostics in Context
 
 | Code | Install or resolution condition |
 |---|---|
-| `SPORE-MODULE-001` | Package governance manifest is missing. |
-| `SPORE-MODULE-002` | Package contains install scripts or forbidden lifecycle hooks. |
-| `SPORE-MODULE-003` | User or profile rejects requested package authority. |
-| `SPORE-MODULE-004` | Package manifest hash differs from registry metadata. |
-| `SPORE-MODULE-005` | Package requests a capability not declared or not known. |
-| `SPORE-MODULE-006` | Package source uses an effect not declared in the manifest. |
-| `SPORE-MODULE-007` | Package signature verification fails. |
-| `SPORE-MODULE-008` | Package version is floating in a production profile. |
-| `SPORE-MODULE-009` | Transitive dependency authority changed since approval. |
-| `SPORE-MODULE-010` | Imported package export requires ungranted capability. |
+| `FUNGI-MODULE-001` | Package governance manifest is missing. |
+| `FUNGI-MODULE-002` | Package contains install scripts or forbidden lifecycle hooks. |
+| `FUNGI-MODULE-003` | User or profile rejects requested package authority. |
+| `FUNGI-MODULE-004` | Package manifest hash differs from registry metadata. |
+| `FUNGI-MODULE-005` | Package requests a capability not declared or not known. |
+| `FUNGI-MODULE-006` | Package source uses an effect not declared in the manifest. |
+| `FUNGI-MODULE-007` | Package signature verification fails. |
+| `FUNGI-MODULE-008` | Package version is floating in a production profile. |
+| `FUNGI-MODULE-009` | Transitive dependency authority changed since approval. |
+| `FUNGI-MODULE-010` | Imported package export requires ungranted capability. |
 
 `compiler-diagnostics.md` owns the canonical diagnostic index.
 
@@ -112,15 +112,15 @@ package code does not gain hidden effects or capabilities.
 
 Install sequence:
 
-1. Verify package signature. On failure, emit `SPORE-MODULE-007`.
+1. Verify package signature. On failure, emit `FUNGI-MODULE-007`.
 2. Check manifest hash against registry metadata. On mismatch, emit
-   `SPORE-MODULE-004`.
+   `FUNGI-MODULE-004`.
 3. Compare declared effects with observed effects in source. On mismatch, emit
-   `SPORE-MODULE-006`.
+   `FUNGI-MODULE-006`.
 4. Check no install scripts or forbidden lifecycle hooks exist. On violation,
-   emit `SPORE-MODULE-002`.
+   emit `FUNGI-MODULE-002`.
 5. Present requested authority to the user or policy engine.
-6. Accept authority and lock it, or reject with `SPORE-MODULE-003`.
+6. Accept authority and lock it, or reject with `FUNGI-MODULE-003`.
 
 Installed does not mean trusted. Certified does not mean unrestricted. Runtime
 policy still decides whether a package export may execute in a profile.

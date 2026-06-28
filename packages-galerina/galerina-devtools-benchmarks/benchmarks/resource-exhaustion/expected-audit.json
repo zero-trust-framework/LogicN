@@ -15,7 +15,7 @@
       "expectTrap": true,
       "expectedTrapKind": "ERR_PAYLOAD_EXCEEDS_DWI_CEILING",
       "expectedRollbackStatus": "clean",
-      "auditEventCode": "SPORE-INV-000",
+      "auditEventCode": "FUNGI-INV-000",
       "note": "Simulates DWI linear-memory exhaustion"
     },
     "compute over budget": {
@@ -24,7 +24,7 @@
       "expectTrap": true,
       "expectedTrapKind": "ERR_COMPUTE_BUDGET_EXCEEDED",
       "expectedRollbackStatus": "clean",
-      "auditEventCode": "SPORE-INV-000",
+      "auditEventCode": "FUNGI-INV-000",
       "note": "Simulates Wasmtime fuel exhaustion"
     }
   },

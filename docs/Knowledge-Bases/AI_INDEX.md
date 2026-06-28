@@ -28,7 +28,7 @@ paths used in prompt bootstrapping and tooling.
 | Language syntax — grammar (EBNF) | `galerina-grammar.ebnf` | Authoritative EBNF grammar; Phase 41: `when` guards, integer/string literal arms, inline contract, `:` return type, optional `effects {}`, no `else if` |
 | Language syntax — unified syntax | `unified-syntax-architecture.md` | How syntax constructs compose |
 | Effects | `effect-checker-and-boundary-checker.md` | Effect names, propagation rules, boundary checks |
-| Effects — canonical rule for fn vs flow | `flow-vs-fn-security-model.md` | `fn` cannot declare effects (`SPORE-SEC-014`); only `flow` variants can |
+| Effects — canonical rule for fn vs flow | `flow-vs-fn-security-model.md` | `fn` cannot declare effects (`FUNGI-SEC-014`); only `flow` variants can |
 | Effects — inference and tracking | `galerina-effect-inference-tracking.md` | How effects propagate through the call graph |
 | Capabilities | `capabilities.md` | Capability model, what capabilities exist |
 | Capabilities — governed modules | `governed-capability-modules.md` | How capabilities are packaged and governed |
@@ -39,7 +39,7 @@ paths used in prompt bootstrapping and tooling.
 | Governance — verifier spec | `galerina-governance-verifier-spec.md` | Pass 7 governance verifier specification |
 | Governance — scope | `galerina-governance-scope.md` | What is and is not governed |
 | Governance — hierarchy | `galerina-governance-hierarchy.md` | Authority and trust hierarchy |
-| Type system | `formal-type-system-spec.md` | Authoritative type rules, diagnostics (SPORE-TYPE-*) |
+| Type system | `formal-type-system-spec.md` | Authoritative type rules, diagnostics (FUNGI-TYPE-*) |
 | Type system — value-state | `value-state-annotations.md` | `unsafe let`, `safe mut`, gate functions, governed sinks |
 | Type system — compute extensions | `galerina-type-system-compute-extensions.md` | Tensor, compute types |
 | Type system — auto inference | `auto-type-inference.md` | `Auto` keyword behaviour |
@@ -48,13 +48,13 @@ paths used in prompt bootstrapping and tooling.
 | Security — value-state | `value-state-annotations.md` | Taint tracking, unsafe/safe transitions |
 | Security — secrets | `galerina-core-security-secret-reference-model.md` | `SecureString`, secret handling rules |
 | Security — taint types | `galerina-security-taint-types.md` | Taint propagation and declassification |
-| Security — post-quantum and hardware trust | `galerina-post-quantum-hardware-security.md` | ML-DSA attestation policy, CHERI/MTE/TEE eligibility constraints, `HardwareTrustProfile`, `SPORE-HW-*` diagnostics, proof-chain binding |
+| Security — post-quantum and hardware trust | `galerina-post-quantum-hardware-security.md` | ML-DSA attestation policy, CHERI/MTE/TEE eligibility constraints, `HardwareTrustProfile`, `FUNGI-HW-*` diagnostics, proof-chain binding |
 | Hardware targets | `galerina-hardware-targets.md` | CPU, GPU, NPU, WASM, photonic targets |
 | Hardware targets — compatibility | `galerina-hardware-compatibility-matrix.md` | Target compatibility matrix |
 | Hardware targets — WASM architecture | `galerina-hybrid-wasm-architecture.md` | WASM governance and native acceleration model |
-| Bridge plans (Phase 13) | `galerina-phase13-passive-plans-target-bridges.md` | `TargetBridgePlan`, `HardwareTrustProfile`, deterministic bridge selection, capability matrix, `SPORE-TARGET-*` diagnostics |
-| Ternary type — compiler contract | `galerina-photonic-ternary-bridge-spec.md` | `Tri` type enforcement, truth tables, match exhaustiveness, `SPORE-TYPE-031/032/033`, `GIRTriInfo` |
-| Photonic bridge — compiler contract | `galerina-photonic-ternary-bridge-spec.md` | Photonic eligibility predicate, balanced ternary encoding, `SPORE-PHOTONIC-001/002/003/004`, security invariants |
+| Bridge plans (Phase 13) | `galerina-phase13-passive-plans-target-bridges.md` | `TargetBridgePlan`, `HardwareTrustProfile`, deterministic bridge selection, capability matrix, `FUNGI-TARGET-*` diagnostics |
+| Ternary type — compiler contract | `galerina-photonic-ternary-bridge-spec.md` | `Tri` type enforcement, truth tables, match exhaustiveness, `FUNGI-TYPE-031/032/033`, `GIRTriInfo` |
+| Photonic bridge — compiler contract | `galerina-photonic-ternary-bridge-spec.md` | Photonic eligibility predicate, balanced ternary encoding, `FUNGI-PHOTONIC-001/002/003/004`, security invariants |
 | Ternary type — runtime logic | `galerina-core-logic-tri-decision-bool.md` | Runtime `TriState`, `Decision`, `decisionToRuntimeBool`, fail-closed rules |
 | Photonic — distinct compute model | `galerina-photonic-distinct-compute-model.md` | Photonic types (`Wavelength`, `Phase`, `OpticalSignal`), IR nodes, noise policy |
 | Photonic — backend architecture | `galerina-core-photonic-backend-architecture.md` | Governance-first photonic runtime architecture, capability model |
@@ -125,11 +125,11 @@ Key disambiguation rules:
 - `Auto` ≠ `Any` — `Auto` is compile-time inference; `Any` does not exist in Galerina v1
 - `unsafe let` = boundary input marking; `safe mut` = gate upgrade — not mutation modifiers
 - `->` and `:` are both valid return-type separators; `:` is the modern preferred form
-- `else if` is a **hard error** (SPORE-SYNTAX-010) — use `match` or sequential `if`
+- `else if` is a **hard error** (FUNGI-SYNTAX-010) — use `match` or sequential `if`
 - `when expr => body` is a guard arm in `match`; `200 => body` is an integer literal arm
 - `effects {}` is optional for `pure flow` — omission means no effects (pure)
-- `with effects [...]` is a **hard error** (SPORE-SYNTAX-LEGACY-001) — use `contract { effects {} }`
-- Phase 55 ML-DSA: `spore.gov.sig.v2` = dual-signature artifact (ed25519 + ml-dsa-65); `generateHybridGovernanceKeyPair` produces the key pair; SPORE-HW-101..104 are the post-quantum attestation diagnostics
+- `with effects [...]` is a **hard error** (FUNGI-SYNTAX-LEGACY-001) — use `contract { effects {} }`
+- Phase 55 ML-DSA: `fungi.gov.sig.v2` = dual-signature artifact (ed25519 + ml-dsa-65); `generateHybridGovernanceKeyPair` produces the key pair; FUNGI-HW-101..104 are the post-quantum attestation diagnostics
 
 ---
 

@@ -1,12 +1,12 @@
 /**
- * Self-hosted type checker (type-checker.spore) — execution tests.
+ * Self-hosted type checker (type-checker.fungi) — execution tests.
  *
- * Exercises the Stage B type checks by executing the .spore flows through the
+ * Exercises the Stage B type checks by executing the .fungi flows through the
  * production interpreter and asserting their diagnostics. Codes match the
  * Stage A compiler's canonical meanings:
- *   - SPORE-TYPE-001 (UnknownType)            — return/param type not a known type
- *   - SPORE-TYPE-002 (TypeMismatch)           — return expr type != declared return type
- *   - SPORE-TYPE-004 (InvalidBinaryOperation) — arithmetic operand not Int
+ *   - FUNGI-TYPE-001 (UnknownType)            — return/param type not a known type
+ *   - FUNGI-TYPE-002 (TypeMismatch)           — return expr type != declared return type
+ *   - FUNGI-TYPE-004 (InvalidBinaryOperation) — arithmetic operand not Int
  */
 
 import { describe, it } from "node:test";
@@ -17,9 +17,9 @@ import { dirname, join } from "node:path";
 import { parseProgram, executeFlow } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const TC_SPORE = join(__dir, "..", "src", "self-hosted", "type-checker.spore");
+const TC_FUNGI = join(__dir, "..", "src", "self-hosted", "type-checker.fungi");
 
-const program = parseProgram(readFileSync(TC_SPORE, "utf8"), "type-checker.spore");
+const program = parseProgram(readFileSync(TC_FUNGI, "utf8"), "type-checker.fungi");
 
 // ── value-model builders (interpreter takes tagged values / Maps) ──
 const vStr = (s) => ({ __tag: "string", value: String(s) });
@@ -68,26 +68,26 @@ async function check(flows) {
 const codesFor = (diags, flowName) =>
   diags.filter((d) => d.flowName === flowName).map((d) => d.code).sort();
 
-describe("type-checker.spore — parses clean", () => {
+describe("type-checker.fungi — parses clean", () => {
   it("has zero parse errors", () => {
     const errors = program.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, errors.map((e) => e.message).join(", "));
   });
 });
 
-describe("type-checker.spore — SPORE-TYPE-001 UnknownType", () => {
-  it("unknown return type → SPORE-TYPE-001", async () => {
+describe("type-checker.fungi — FUNGI-TYPE-001 UnknownType", () => {
+  it("unknown return type → FUNGI-TYPE-001", async () => {
     const { diags } = await check([
       flow({ name: "f", returnType: "Widget", returnExpr: retExpr("literal", "Int") }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-001"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-001"]);
   });
 
-  it("unknown parameter type → SPORE-TYPE-001", async () => {
+  it("unknown parameter type → FUNGI-TYPE-001", async () => {
     const { diags } = await check([
       flow({ name: "f", returnType: "Int", params: [param("x", "Widget")], returnExpr: retExpr("param", "Int") }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-001"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-001"]);
   });
 
   it("each known type is accepted (Int/Bool/String/Array)", async () => {
@@ -100,12 +100,12 @@ describe("type-checker.spore — SPORE-TYPE-001 UnknownType", () => {
   });
 });
 
-describe("type-checker.spore — SPORE-TYPE-002 TypeMismatch", () => {
-  it("declared Int but Bool literal returned → SPORE-TYPE-002", async () => {
+describe("type-checker.fungi — FUNGI-TYPE-002 TypeMismatch", () => {
+  it("declared Int but Bool literal returned → FUNGI-TYPE-002", async () => {
     const { diags } = await check([
       flow({ name: "f", returnType: "Int", returnExpr: retExpr("literal", "Bool") }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-002"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-002"]);
   });
 
   it("compare expr returns Bool — matching Bool declaration passes", async () => {
@@ -115,20 +115,20 @@ describe("type-checker.spore — SPORE-TYPE-002 TypeMismatch", () => {
     assert.deepEqual(codesFor(diags, "f"), []);
   });
 
-  it("compare expr (Bool) against Int declaration → SPORE-TYPE-002", async () => {
+  it("compare expr (Bool) against Int declaration → FUNGI-TYPE-002", async () => {
     const { diags } = await check([
       flow({ name: "f", returnType: "Int", returnExpr: retExpr("compare") }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-002"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-002"]);
   });
 });
 
-describe("type-checker.spore — SPORE-TYPE-004 InvalidBinaryOperation", () => {
-  it("arith with a String operand → SPORE-TYPE-004", async () => {
+describe("type-checker.fungi — FUNGI-TYPE-004 InvalidBinaryOperation", () => {
+  it("arith with a String operand → FUNGI-TYPE-004", async () => {
     const { diags } = await check([
       flow({ name: "f", returnType: "Int", returnExpr: retExpr("arith", "", "String", "Int") }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-004"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-004"]);
   });
 
   it("arith Int + Int returning Int passes", async () => {
@@ -143,16 +143,16 @@ describe("type-checker.spore — SPORE-TYPE-004 InvalidBinaryOperation", () => {
     const { diags } = await check([
       flow({ name: "f", returnType: "Bool", returnExpr: retExpr("arith", "", "String", "Int") }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-004"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-004"]);
   });
 });
 
-describe("type-checker.spore — combined & aggregate", () => {
+describe("type-checker.fungi — combined & aggregate", () => {
   it("unknown return type + unknown param both fire (two 001s)", async () => {
     const { diags } = await check([
       flow({ name: "f", returnType: "Widget", params: [param("x", "Gadget")], returnExpr: retExpr("literal", "Int") }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-001", "SPORE-TYPE-001"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-001", "FUNGI-TYPE-001"]);
   });
 
   it("flowCount counts every flow; diagnostics aggregate across flows", async () => {
@@ -162,7 +162,7 @@ describe("type-checker.spore — combined & aggregate", () => {
     ]);
     assert.equal(flowCount, 2);
     assert.deepEqual(codesFor(diags, "ok"), []);
-    assert.deepEqual(codesFor(diags, "bad"), ["SPORE-TYPE-002"]);
+    assert.deepEqual(codesFor(diags, "bad"), ["FUNGI-TYPE-002"]);
   });
 
   it("empty flow list → no diagnostics, flowCount 0", async () => {
@@ -174,7 +174,7 @@ describe("type-checker.spore — combined & aggregate", () => {
 
 // ── checkFlowBodies (Milestone M-B) ──────────────────────────────
 // Walks each flow's full statement BODY AST (let/mut bindings + nested
-// if/while), emitting SPORE-TYPE-001 (unknown declared type) and SPORE-TYPE-002
+// if/while), emitting FUNGI-TYPE-001 (unknown declared type) and FUNGI-TYPE-002
 // (declared type ≠ literal initializer type). Builds Stmt/Expr records by hand.
 
 const expr = (kind, value = "", litType = "", children = []) =>
@@ -215,14 +215,14 @@ async function checkBodies(flows) {
   return { flowCount: rec.fields.get("flowCount").value, diags };
 }
 
-describe("type-checker.spore — checkFlowBodies (M-B body AST)", () => {
-  it("let x: Int = \"s\" → exactly SPORE-TYPE-002", async () => {
+describe("type-checker.fungi — checkFlowBodies (M-B body AST)", () => {
+  it("let x: Int = \"s\" → exactly FUNGI-TYPE-002", async () => {
     const { diags } = await checkBodies([
       bodyFlow({ name: "f", body: [
         stmt({ kind: "let", name: "x", typeName: "Int", expr: [expr("lit", "s", "String")] }),
       ] }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-002"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-002"]);
   });
 
   it("let x: Int = 1 → no diagnostic", async () => {
@@ -243,13 +243,13 @@ describe("type-checker.spore — checkFlowBodies (M-B body AST)", () => {
     assert.deepEqual(codesFor(diags, "f"), []);
   });
 
-  it("unknown declared type: let w: Widget = 1 → SPORE-TYPE-001", async () => {
+  it("unknown declared type: let w: Widget = 1 → FUNGI-TYPE-001", async () => {
     const { diags } = await checkBodies([
       bodyFlow({ name: "f", body: [
         stmt({ kind: "let", name: "w", typeName: "Widget", expr: [expr("lit", "1", "Int")] }),
       ] }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-001"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-001"]);
   });
 
   it("mismatch nested inside an if body is caught (recursion)", async () => {
@@ -260,7 +260,7 @@ describe("type-checker.spore — checkFlowBodies (M-B body AST)", () => {
         ] }),
       ] }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-002"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-002"]);
   });
 
   it("mismatch nested inside a while body is caught (recursion)", async () => {
@@ -271,7 +271,7 @@ describe("type-checker.spore — checkFlowBodies (M-B body AST)", () => {
         ] }),
       ] }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-002"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-002"]);
   });
 
   it("empty body → no diagnostics", async () => {
@@ -310,7 +310,7 @@ describe("type-checker.spore — checkFlowBodies (M-B body AST)", () => {
         ] }),
       ] }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-002"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-002"]);
   });
 
   it("clean if else branch → no diagnostic", async () => {
@@ -334,6 +334,6 @@ describe("type-checker.spore — checkFlowBodies (M-B body AST)", () => {
         ], elseBody: [] }),
       ] }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-TYPE-002"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-TYPE-002"]);
   });
 });

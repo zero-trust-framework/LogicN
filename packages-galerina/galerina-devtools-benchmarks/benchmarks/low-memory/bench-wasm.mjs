@@ -11,7 +11,7 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 
 export async function runWasmBenchmark() {
   // opsPerRun: processStream(10000) does 10000 inner iterations per call
-  const base = await runWASMBenchmark(join(__dir, "benchmark.spore"), 10000);
+  const base = await runWASMBenchmark(join(__dir, "benchmark.fungi"), 10000);
   if (base.error) return base;
 
   // Add bytes-per-operation metric — WASM should be ~0

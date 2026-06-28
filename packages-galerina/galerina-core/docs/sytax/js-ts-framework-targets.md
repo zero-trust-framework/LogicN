@@ -185,7 +185,7 @@ WASM bridge functions
 worker transfer/clone decisions
 framework adapter files
 React Native native boundary files
-source-map links back to .spore files
+source-map links back to .fungi files
 ```
 
 ---

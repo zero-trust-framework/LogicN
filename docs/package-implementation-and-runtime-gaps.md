@@ -226,7 +226,7 @@ pub fn fetch_user(
 Compiler diagnostic:
 
 ```text
-SPORE-EFFECT-001: undeclared effect
+FUNGI-EFFECT-001: undeclared effect
 function: fetch_user
 required effect: network
 ```
@@ -279,7 +279,7 @@ import { InternalKey } from "app/auth/private-keys"
 Compiler error:
 
 ```text
-SPORE-BOUNDARY-001: import crosses restricted package boundary
+FUNGI-BOUNDARY-001: import crosses restricted package boundary
 module: app/auth/private-keys
 ```
 
@@ -300,7 +300,7 @@ pub fn export_token() -> SecretToken {
 Compiler error:
 
 ```text
-SPORE-BOUNDARY-002: public API exposes private secret-bearing type
+FUNGI-BOUNDARY-002: public API exposes private secret-bearing type
 ```
 
 ---

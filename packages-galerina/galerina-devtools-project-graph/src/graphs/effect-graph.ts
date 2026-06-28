@@ -1,12 +1,12 @@
 // =============================================================================
-// lln-graph — EffectGraph
+// fungi-graph — EffectGraph
 //
 // Models the flow call graph annotated with LogicN effect declarations.
 // Effect propagation uses the fixpoint algorithm so transitive effects
 // (effects inherited from callees) are always computed correctly.
 //
-// Diagnostic codes: SPORE-PGRAPH-010..013 — project-graph-owned, the effect-graph VIEW of
-// effect propagation; distinct from galerina-core-compiler's authoritative SPORE-EFFECT-* codes.
+// Diagnostic codes: FUNGI-PGRAPH-010..013 — project-graph-owned, the effect-graph VIEW of
+// effect propagation; distinct from galerina-core-compiler's authoritative FUNGI-EFFECT-* codes.
 // =============================================================================
 
 import { GraphBuilder } from "../core/builder.js";
@@ -47,40 +47,40 @@ export type EffectGraph = Graph<EffectNodeData, EffectEdgeData>;
 // Diagnostic constants (mirrored from galerina-core-compiler)
 // ---------------------------------------------------------------------------
 
-export const LLN_PGRAPH_010 = {
-  code: "SPORE-PGRAPH-010",
+export const FUNGI_PGRAPH_010 = {
+  code: "FUNGI-PGRAPH-010",
   name: "UNDECLARED_EFFECT_IN_GRAPH",
   severity: "error",
   message: "Flow performs an effect that is not declared in its effects list.",
 } as const satisfies LlnDiagnostic;
 
-export const LLN_PGRAPH_011 = {
-  code: "SPORE-PGRAPH-011",
+export const FUNGI_PGRAPH_011 = {
+  code: "FUNGI-PGRAPH-011",
   name: "EFFECT_NOT_INFERRED",
   severity: "error",
   message: "Flow declares an effect that cannot be inferred from its body or callees.",
 } as const satisfies LlnDiagnostic;
 
-export const LLN_PGRAPH_012 = {
-  code: "SPORE-PGRAPH-012",
+export const FUNGI_PGRAPH_012 = {
+  code: "FUNGI-PGRAPH-012",
   name: "UNSAFE_EFFECT_IN_SAFE_FLOW",
   severity: "error",
   message: "Flow with safety level 'safe' performs a side-effectful operation.",
 } as const satisfies LlnDiagnostic;
 
-export const LLN_PGRAPH_013 = {
-  code: "SPORE-PGRAPH-013",
+export const FUNGI_PGRAPH_013 = {
+  code: "FUNGI-PGRAPH-013",
   name: "TRANSITIVE_EFFECT_UNDECLARED",
   severity: "error",
   message:
     "Flow inherits a transitive effect from a callee that is not declared on the calling flow.",
 } as const satisfies LlnDiagnostic;
 
-export const LLN_PGRAPH_EFFECT_DIAGNOSTICS = [
-  LLN_PGRAPH_010,
-  LLN_PGRAPH_011,
-  LLN_PGRAPH_012,
-  LLN_PGRAPH_013,
+export const FUNGI_PGRAPH_EFFECT_DIAGNOSTICS = [
+  FUNGI_PGRAPH_010,
+  FUNGI_PGRAPH_011,
+  FUNGI_PGRAPH_012,
+  FUNGI_PGRAPH_013,
 ] as const;
 
 // ---------------------------------------------------------------------------
@@ -178,39 +178,39 @@ export function validateEffects(graph: EffectGraph): LlnDiagnostic[] {
     const { flowName, safetyLevel, declaredEffects, inferredEffects, transitiveEffects } =
       node.data;
 
-    // SPORE-PGRAPH-010: inferred effect not declared.
+    // FUNGI-PGRAPH-010: inferred effect not declared.
     for (const effect of inferredEffects) {
       if (!declaredEffects.includes(effect)) {
         diagnostics.push({
-          ...LLN_PGRAPH_010,
+          ...FUNGI_PGRAPH_010,
           message: `Flow "${flowName}" performs effect "${effect}" that is not declared.`,
         });
       }
     }
 
-    // SPORE-PGRAPH-011: declared effect not inferred (dead declaration).
+    // FUNGI-PGRAPH-011: declared effect not inferred (dead declaration).
     for (const effect of declaredEffects) {
       if (!inferredEffects.includes(effect) && !transitiveEffects.includes(effect)) {
         diagnostics.push({
-          ...LLN_PGRAPH_011,
+          ...FUNGI_PGRAPH_011,
           message: `Flow "${flowName}" declares effect "${effect}" but it cannot be inferred from the flow body or callees.`,
         });
       }
     }
 
-    // SPORE-PGRAPH-012: safe flow has any effects.
+    // FUNGI-PGRAPH-012: safe flow has any effects.
     if (safetyLevel === "safe" && inferredEffects.length > 0) {
       diagnostics.push({
-        ...LLN_PGRAPH_012,
+        ...FUNGI_PGRAPH_012,
         message: `Flow "${flowName}" is marked safe but performs effects: ${inferredEffects.join(", ")}.`,
       });
     }
 
-    // SPORE-PGRAPH-013: transitive effect not declared on caller.
+    // FUNGI-PGRAPH-013: transitive effect not declared on caller.
     for (const effect of transitiveEffects) {
       if (!declaredEffects.includes(effect)) {
         diagnostics.push({
-          ...LLN_PGRAPH_013,
+          ...FUNGI_PGRAPH_013,
           message: `Flow "${flowName}" inherits transitive effect "${effect}" from a callee but does not declare it.`,
         });
       }

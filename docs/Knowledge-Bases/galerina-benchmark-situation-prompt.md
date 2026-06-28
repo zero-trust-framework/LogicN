@@ -46,7 +46,7 @@ Sequential brute-force search for 6-digit code "042069" with Wordle-style bulls+
 
 ### Problem 1: Galerina benchmarks measure the wrong thing
 
-The `.spore` benchmark files use `Time.nowMs()` to control the timed loop:
+The `.fungi` benchmark files use `Time.nowMs()` to control the timed loop:
 ```galerina
 while Time.nowMs() - startedAt < targetMs {
   // ... operations ...
@@ -166,7 +166,7 @@ Pure flows with EffectCheckerFlags.EffectFree skip ContractEnforcer setup. Arith
 
 ### Short term (before next benchmark):
 1. Implement `Time.nowMs()` in Galerina stdlib
-2. Create fixed-iteration `.spore` benchmark variants
+2. Create fixed-iteration `.fungi` benchmark variants
 3. Deep-wire manifest fast-path in executeFlow()
 
 ### Medium term (next phases):
@@ -191,7 +191,7 @@ Pure flows with EffectCheckerFlags.EffectFree skip ContractEnforcer setup. Arith
 ```
 Benchmarks:
   packages-galerina/galerina-devtools-benchmarks/
-    benchmarks/compute-mix/      node.mjs, python.py, benchmark.spore, bench.cpp, bench.rs
+    benchmarks/compute-mix/      node.mjs, python.py, benchmark.fungi, bench.cpp, bench.rs
     benchmarks/arithmetic-threshold/   same
     benchmarks/six-digit-guess/        same
     src/runner.mjs               runs all runtimes, captures memory+CPU

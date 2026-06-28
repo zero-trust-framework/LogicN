@@ -21,9 +21,9 @@ import {
 // ---------------------------------------------------------------------------
 
 describe("emitBytecode: module schema and structure", () => {
-  it("returns a module with schemaVersion spore.bytecode.v1", () => {
+  it("returns a module with schemaVersion fungi.bytecode.v1", () => {
     const mod = emitBytecode([]);
-    assert.equal(mod.schemaVersion, "spore.bytecode.v1");
+    assert.equal(mod.schemaVersion, "fungi.bytecode.v1");
     assert.ok(Array.isArray(mod.functions), "functions must be an array");
     assert.ok(Array.isArray(mod.entryPoints), "entryPoints must be an array");
   });

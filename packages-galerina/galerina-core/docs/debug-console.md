@@ -75,7 +75,7 @@ secure flow createOrder(input: CreateOrderRequest) -> Result<Order, OrderError> 
 Possible output:
 
 ```text
-[debug] src/services/order-service.spore:6
+[debug] src/services/order-service.fungi:6
 flow: createOrder
 
 locals:
@@ -115,7 +115,7 @@ console.trace()
 `console.here()` should output:
 
 ```text
-file: src/services/order-service.spore
+file: src/services/order-service.fungi
 line: 42
 column: 7
 flow: createOrder
@@ -124,13 +124,13 @@ flow: createOrder
 If not inside a flow:
 
 ```text
-file: boot.spore
+file: boot.fungi
 line: 12
 column: 1
 flow: null
 ```
 
-Console output should respect source maps so generated JavaScript, WebAssembly or native output can still point back to original `.spore` source.
+Console output should respect source maps so generated JavaScript, WebAssembly or native output can still point back to original `.fungi` source.
 
 ---
 
@@ -318,7 +318,7 @@ Example:
     "diagnostics": [
       {
         "code": "galerina-WARN-CONSOLE-001",
-        "source": "src/orders/create-order.spore:6",
+        "source": "src/orders/create-order.fungi:6",
         "message": "console.scope() is development-only by default."
       }
     ]

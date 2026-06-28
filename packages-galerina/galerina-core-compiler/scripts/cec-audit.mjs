@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // CEC Promotion Audit Script
-// Runs the full pipeline on every example.spore and reports promotion candidates.
+// Runs the full pipeline on every example.fungi and reports promotion candidates.
 
 import { readFileSync, readdirSync, existsSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -22,18 +22,18 @@ const EXAMPLES_DIR = join(__dir, "../../../docs/Examples");
 
 // Standard suppression (same as cec-integration.test.mjs)
 const SUPPRESS = new Set([
-  "SPORE-TYPE-001",   // unknown type — domain types from imports
-  "SPORE-TYPE-009",   // generic arity — legacy Tensor<T>
-  "SPORE-NAME-001",   // undeclared name — stdlib from imports
-  "SPORE-GOV-002",    // missing audit — examples focused on other concepts
-  "SPORE-SYNTAX-003", // future-reserved keyword — remote.execution in deny blocks
-  "SPORE-SYNTAX-006", // top-level let — intro examples use top-level bindings
-  "SPORE-SYNTAX-007", // top-level mut — intro examples use top-level bindings
-  "SPORE-SYNTAX-008", // top-level binding variant
+  "FUNGI-TYPE-001",   // unknown type — domain types from imports
+  "FUNGI-TYPE-009",   // generic arity — legacy Tensor<T>
+  "FUNGI-NAME-001",   // undeclared name — stdlib from imports
+  "FUNGI-GOV-002",    // missing audit — examples focused on other concepts
+  "FUNGI-SYNTAX-003", // future-reserved keyword — remote.execution in deny blocks
+  "FUNGI-SYNTAX-006", // top-level let — intro examples use top-level bindings
+  "FUNGI-SYNTAX-007", // top-level mut — intro examples use top-level bindings
+  "FUNGI-SYNTAX-008", // top-level binding variant
 ]);
 
-// Suppression WITHOUT SPORE-TYPE-001 (for audit purposes)
-const SUPPRESS_NO_TYPE001 = new Set([...SUPPRESS].filter(c => c !== "SPORE-TYPE-001"));
+// Suppression WITHOUT FUNGI-TYPE-001 (for audit purposes)
+const SUPPRESS_NO_TYPE001 = new Set([...SUPPRESS].filter(c => c !== "FUNGI-TYPE-001"));
 
 function runPipeline(source, filePath) {
   const parsed = parseProgram(source, filePath);
@@ -62,7 +62,7 @@ function walkDir(dir) {
   for (const e of entries) {
     const full = join(dir, e.name);
     if (e.isDirectory()) found.push(...walkDir(full));
-    else if (e.name === "example.spore") found.push(full);
+    else if (e.name === "example.fungi") found.push(full);
   }
   return found;
 }
@@ -74,11 +74,11 @@ function parseTestStatus(source) {
 
 function loadExamples() {
   if (!existsSync(EXAMPLES_DIR)) { console.error("EXAMPLES_DIR not found:", EXAMPLES_DIR); return []; }
-  return walkDir(EXAMPLES_DIR).map((sporeFile) => {
-    const raw = readFileSync(sporeFile, "utf8");
+  return walkDir(EXAMPLES_DIR).map((fungiFile) => {
+    const raw = readFileSync(fungiFile, "utf8");
     const source = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
 
-    const diagFile = sporeFile.replace(/example\.spore$/, "expected.diagnostics.txt");
+    const diagFile = fungiFile.replace(/example\.fungi$/, "expected.diagnostics.txt");
     let rawExpected = "none";
     try { rawExpected = readFileSync(diagFile, "utf8").trim(); } catch {}
 
@@ -86,30 +86,30 @@ function loadExamples() {
       .filter((l) => l.length > 0 && !l.startsWith("//") && !l.startsWith("#"));
     const expectNone = lines.length === 0 || lines[0].toLowerCase() === "none";
     const expectedCodes = expectNone ? []
-      : lines.filter((l) => /^SPORE-[A-Z]+-\d+/.test(l)).map((l) => l.split(/\s/)[0]);
+      : lines.filter((l) => /^FUNGI-[A-Z]+-\d+/.test(l)).map((l) => l.split(/\s/)[0]);
 
-    // Check for placeholder codes (SPORE-XXX-NNN patterns that aren't real codes)
-    const hasPlaceholderCodes = expectedCodes.some(c => /SPORE-[A-Z]+-\d+/.test(c) && c.includes("XXX"));
+    // Check for placeholder codes (FUNGI-XXX-NNN patterns that aren't real codes)
+    const hasPlaceholderCodes = expectedCodes.some(c => /FUNGI-[A-Z]+-\d+/.test(c) && c.includes("XXX"));
 
     // Check for "result of X else Y" readable type syntax
     const hasReadableTypeSyntax = /result of \w+ else \w+/.test(source);
 
     // Check for future syntax proposals (from Proposed-Readable-Logic-Forms)
-    const isProposedSyntax = sporeFile.replace(/\\/g, "/").includes("Proposed-Readable-Logic-Forms");
+    const isProposedSyntax = fungiFile.replace(/\\/g, "/").includes("Proposed-Readable-Logic-Forms");
 
     // Check if it's level 8/9
-    const normalized = sporeFile.replace(/\\/g, "/");
+    const normalized = fungiFile.replace(/\\/g, "/");
     const isLevel89 = normalized.includes("Level-8") || normalized.includes("Level-9");
 
     const marker = "/Examples/";
     const afterExamples = normalized.slice(normalized.indexOf(marker) + marker.length);
-    const name = afterExamples.replace("/example.spore", "");
+    const name = afterExamples.replace("/example.fungi", "");
 
     const testStatus = parseTestStatus(source);
 
     return {
       name,
-      file: sporeFile,
+      file: fungiFile,
       source,
       expectNone,
       expectedCodes,
@@ -143,11 +143,11 @@ for (const ex of ALL) {
     continue;
   }
 
-  // Standard filtered (with SPORE-TYPE-001 suppressed)
+  // Standard filtered (with FUNGI-TYPE-001 suppressed)
   const filteredStd = diags.filter(d => !SUPPRESS.has(d.code));
   const errorsStd = filteredStd.filter(d => d.severity === "error");
 
-  // Filtered without SPORE-TYPE-001 suppression
+  // Filtered without FUNGI-TYPE-001 suppression
   const filteredNoType001 = diags.filter(d => !SUPPRESS_NO_TYPE001.has(d.code));
   const errorsNoType001 = filteredNoType001.filter(d => d.severity === "error");
 

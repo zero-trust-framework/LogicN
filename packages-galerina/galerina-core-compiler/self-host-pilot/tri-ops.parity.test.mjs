@@ -1,13 +1,13 @@
 // =============================================================================
 // STAGE-B tri-ops self-host parity test (node:test)
 //
-// Asserts that the .spore scalar-trit ops in ./tri-ops.spore produce EXACTLY the
+// Asserts that the .fungi scalar-trit ops in ./tri-ops.fungi produce EXACTLY the
 // same verdict as the reference TypeScript numeric `Tri` ops in
 //   packages-galerina/galerina-core-logic/src/index.ts  (built dist)
 // for every balanced-ternary input combination over {-1, 0, 1}.
 //
-// The .spore side is driven through the Stage path the CLI exposes:
-//   node galerina.mjs run <file.spore> --invoke <flow> <args...>
+// The .fungi side is driven through the Stage path the CLI exposes:
+//   node galerina.mjs run <file.fungi> --invoke <flow> <args...>
 // which compiles the pure Int flow and runs it, printing the integer result.
 //
 // Run:  node --test packages-galerina/galerina-core-compiler/self-host-pilot/tri-ops.parity.test.mjs
@@ -26,7 +26,7 @@ const require = createRequire(import.meta.url);
 // Repo root is four levels up: self-host-pilot -> galerina-core-compiler -> packages-galerina -> <root>
 const REPO_ROOT = resolve(__dirname, "..", "..", "..");
 const GALERINA_CLI = resolve(REPO_ROOT, "galerina.mjs");
-const SPORE_FILE = resolve(__dirname, "tri-ops.spore");
+const FUNGI_FILE = resolve(__dirname, "tri-ops.fungi");
 
 // ---------------------------------------------------------------------------
 // Reference implementation: the .ts numeric Tri ops (built dist).
@@ -38,12 +38,12 @@ const ts = require(
 const TRITS = [-1, 0, 1];
 
 // ---------------------------------------------------------------------------
-// Drive the .spore flow through the CLI and parse its integer verdict.
+// Drive the .fungi flow through the CLI and parse its integer verdict.
 // ---------------------------------------------------------------------------
 function runSpore(flow, ...args) {
   const out = execFileSync(
     process.execPath,
-    [GALERINA_CLI, "run", SPORE_FILE, "--invoke", flow, ...args.map(String)],
+    [GALERINA_CLI, "run", FUNGI_FILE, "--invoke", flow, ...args.map(String)],
     { cwd: REPO_ROOT, encoding: "utf8" },
   );
   // Output is the integer result on its own line; take the last non-empty line.
@@ -57,19 +57,19 @@ function runSpore(flow, ...args) {
   return n;
 }
 
-test("triNot parity (.spore vs .ts) over all trits", () => {
+test("triNot parity (.fungi vs .ts) over all trits", () => {
   for (const a of TRITS) {
     const expected = ts.triNot(a);
     const actual = runSpore("triNot", a);
     assert.equal(
       actual,
       expected,
-      `triNot(${a}): .spore=${actual} .ts=${expected}`,
+      `triNot(${a}): .fungi=${actual} .ts=${expected}`,
     );
   }
 });
 
-test("triAnd parity (.spore vs .ts) over all trit pairs", () => {
+test("triAnd parity (.fungi vs .ts) over all trit pairs", () => {
   for (const a of TRITS) {
     for (const b of TRITS) {
       const expected = ts.triAnd(a, b);
@@ -77,13 +77,13 @@ test("triAnd parity (.spore vs .ts) over all trit pairs", () => {
       assert.equal(
         actual,
         expected,
-        `triAnd(${a},${b}): .spore=${actual} .ts=${expected}`,
+        `triAnd(${a},${b}): .fungi=${actual} .ts=${expected}`,
       );
     }
   }
 });
 
-test("triOr parity (.spore vs .ts) over all trit pairs", () => {
+test("triOr parity (.fungi vs .ts) over all trit pairs", () => {
   for (const a of TRITS) {
     for (const b of TRITS) {
       const expected = ts.triOr(a, b);
@@ -91,13 +91,13 @@ test("triOr parity (.spore vs .ts) over all trit pairs", () => {
       assert.equal(
         actual,
         expected,
-        `triOr(${a},${b}): .spore=${actual} .ts=${expected}`,
+        `triOr(${a},${b}): .fungi=${actual} .ts=${expected}`,
       );
     }
   }
 });
 
-test("triNor parity (.spore vs .ts) over all trit pairs", () => {
+test("triNor parity (.fungi vs .ts) over all trit pairs", () => {
   for (const a of TRITS) {
     for (const b of TRITS) {
       const expected = ts.triNor(a, b);
@@ -105,7 +105,7 @@ test("triNor parity (.spore vs .ts) over all trit pairs", () => {
       assert.equal(
         actual,
         expected,
-        `triNor(${a},${b}): .spore=${actual} .ts=${expected}`,
+        `triNor(${a},${b}): .fungi=${actual} .ts=${expected}`,
       );
     }
   }

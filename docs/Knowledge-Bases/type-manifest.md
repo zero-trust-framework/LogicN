@@ -126,7 +126,7 @@ Do NOT create one package per type. A package may expose many related types.
 
 ## Why Not a Hand-Maintained Source Block
 
-A manually edited type list in `boot.spore` would become stale:
+A manually edited type list in `boot.fungi` would become stale:
 
 ```galerina
 // Avoid — becomes stale

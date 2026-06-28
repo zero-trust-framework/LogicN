@@ -1,21 +1,21 @@
-family: SPORE-MATCH
+family: FUNGI-MATCH
 description: "Match exhaustiveness diagnostics"
 diagnostics:
-  - code: SPORE-MATCH-001
+  - code: FUNGI-MATCH-001
     name: NON_EXHAUSTIVE_MATCH
     severity: error
     phase: type_checker
     message: "match is missing case(s): {missingCases}."
-    note: "Alias of SPORE-TYPE-021"
+    note: "Alias of FUNGI-TYPE-021"
     implemented: true
-  - code: SPORE-MATCH-002
+  - code: FUNGI-MATCH-002
     name: UNREACHABLE_PATTERN
     severity: error
     phase: type_checker
     message: "Pattern is unreachable."
-    note: "Alias of SPORE-TYPE-022"
+    note: "Alias of FUNGI-TYPE-022"
     implemented: true
-  - code: SPORE-MATCH-003
+  - code: FUNGI-MATCH-003
     name: INVALID_PATTERN_TYPE
     severity: error
     phase: type_checker

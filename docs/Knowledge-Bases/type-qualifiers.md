@@ -42,12 +42,12 @@ parseTypeString("redacted Email")  -> qualifier=redacted,  base=Email
 parseTypeString("Email protected") -> syntax/type qualifier placement error
 ```
 
-`SPORE-TYPE-001 UnknownType` must not fire for `protected` or `redacted`
+`FUNGI-TYPE-001 UnknownType` must not fire for `protected` or `redacted`
 themselves. It may fire for the stripped base type:
 
 ```galerina
 let x: protected MissingType = value
-// SPORE-TYPE-001 for MissingType, not for protected
+// FUNGI-TYPE-001 for MissingType, not for protected
 ```
 
 ## Compiler Enforcement
@@ -115,11 +115,11 @@ AuditLog.write({ email: auditEmail })
 
 | Rule | Diagnostic |
 |---|---|
-| Unknown stripped base type | `SPORE-TYPE-001` |
-| Direct assignment from unvalidated raw value to protected domain type | `SPORE-TYPE-002` or domain-specific validation diagnostic |
-| Direct assignment from protected value to redacted binding | `SPORE-TYPE-002` |
-| Protected value reaches audit/log/network output without redaction | `SPORE-SAFETY-*`, `SPORE-SECRET-*`, or sink-specific policy diagnostic |
-| Postfix `Email protected` or `Email redacted` | `SPORE-SYNTAX-*` qualifier placement diagnostic |
+| Unknown stripped base type | `FUNGI-TYPE-001` |
+| Direct assignment from unvalidated raw value to protected domain type | `FUNGI-TYPE-002` or domain-specific validation diagnostic |
+| Direct assignment from protected value to redacted binding | `FUNGI-TYPE-002` |
+| Protected value reaches audit/log/network output without redaction | `FUNGI-SAFETY-*`, `FUNGI-SECRET-*`, or sink-specific policy diagnostic |
+| Postfix `Email protected` or `Email redacted` | `FUNGI-SYNTAX-*` qualifier placement diagnostic |
 
 ## Rule
 

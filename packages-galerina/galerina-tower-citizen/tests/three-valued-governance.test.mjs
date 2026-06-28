@@ -115,7 +115,7 @@ test("anyOf authorizes ⇔ SOME clause is ALLOW (exhaustive, n=1..4)", () => {
 
 // ── 4. Undischarged obligation → audited deny (agenda acceptance #3) ───────────
 
-describe("indeterminate at a trust boundary → deny + SPORE-GOV-3VL-001 (never silent)", () => {
+describe("indeterminate at a trust boundary → deny + FUNGI-GOV-3VL-001 (never silent)", () => {
   it("decideAtBoundary(INDETERMINATE) denies, is unauthorized, and emits the diagnostic", () => {
     const seen = [];
     const d = decideAtBoundary(Verdict.INDETERMINATE, (diag) => seen.push(diag));
@@ -123,7 +123,7 @@ describe("indeterminate at a trust boundary → deny + SPORE-GOV-3VL-001 (never 
     assert.equal(d.authorized, false);
     assert.ok(d.diagnostic, "diagnostic must be present in the result (structurally non-silent)");
     assert.equal(d.diagnostic.code, GOV_3VL_DIAGNOSTIC);
-    assert.equal(d.diagnostic.code, "SPORE-GOV-3VL-001");
+    assert.equal(d.diagnostic.code, "FUNGI-GOV-3VL-001");
     assert.equal(d.diagnostic.name, "INDETERMINATE_COLLAPSED_TO_DENY");
     assert.equal(d.diagnostic.severity, "warning");
     assert.equal(seen.length, 1, "sink invoked exactly once");
@@ -142,7 +142,7 @@ describe("indeterminate at a trust boundary → deny + SPORE-GOV-3VL-001 (never 
     const d = decideAtBoundary(Verdict.DENY, (diag) => seen.push(diag));
     assert.equal(d.decision, "deny");
     assert.equal(d.authorized, false);
-    assert.equal(d.diagnostic, null, "DENY is definite — no SPORE-GOV-3VL-001");
+    assert.equal(d.diagnostic, null, "DENY is definite — no FUNGI-GOV-3VL-001");
     assert.equal(seen.length, 0);
   });
 
@@ -245,7 +245,7 @@ describe("no-coercion: 0 never becomes the +1 that authorizes (Theorem 2)", () =
 
 // ── 6. Differential / no-regression vs two-valued (agenda acceptance #4) ───────
 // With leaves restricted to {DENY, ALLOW} no 0 ever arises, and the calculus is
-// exactly classical Boolean — and NO SPORE-GOV-3VL-001 is ever emitted.
+// exactly classical Boolean — and NO FUNGI-GOV-3VL-001 is ever emitted.
 
 function boolEval(t) { // reference: plain JS booleans, leaf -1=false, +1=true
   switch (t.op) {

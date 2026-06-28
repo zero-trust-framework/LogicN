@@ -8,7 +8,7 @@
 //   4. zk_snark_receipt + halt_pipeline → zkReceiptStub contains "PENDING"
 //   5. sha256_seal is deterministic
 //   6. generateEpilogueReceipt with resultJson → outputSeal present
-//   7. invalid strategy → SPORE-GOV-015 fired, no receipt
+//   7. invalid strategy → FUNGI-GOV-015 fired, no receipt
 //   8. proofGraphs.get(flowName).epilogueReceipt is accessible via verifyGovernance
 // =============================================================================
 
@@ -47,7 +47,7 @@ flow testFlow(x: Int) -> Int
 }
 
 function parseAndVerify(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effectResults = checkEffects(parsed.flows, parsed.ast);
   const govResult = verifyGovernance(parsed.ast, parsed.flows, effectResults, "dev");
   return { parsed, govResult };
@@ -162,9 +162,9 @@ describe("epilogue-receipt", () => {
   });
 
   // -------------------------------------------------------------------------
-  // Test 7: invalid strategy → SPORE-GOV-015 fired, no receipt
+  // Test 7: invalid strategy → FUNGI-GOV-015 fired, no receipt
   // -------------------------------------------------------------------------
-  it("7. invalid strategy → SPORE-GOV-015 diagnostic, no receipt generated", () => {
+  it("7. invalid strategy → FUNGI-GOV-015 diagnostic, no receipt generated", () => {
     const { govResult } = parseAndVerify(
       makeSource("epilogue { generate_proof banana }"),
     );
@@ -176,9 +176,9 @@ describe("epilogue-receipt", () => {
       undefined,
       "epilogueReceipt should be absent when strategy is invalid",
     );
-    // SPORE-GOV-015 should have been emitted
-    const gov015 = govResult.diagnostics.find((d) => d.code === "SPORE-GOV-015");
-    assert.ok(gov015, "SPORE-GOV-015 should be fired for invalid strategy");
+    // FUNGI-GOV-015 should have been emitted
+    const gov015 = govResult.diagnostics.find((d) => d.code === "FUNGI-GOV-015");
+    assert.ok(gov015, "FUNGI-GOV-015 should be fired for invalid strategy");
   });
 
   // -------------------------------------------------------------------------
@@ -186,7 +186,7 @@ describe("epilogue-receipt", () => {
   // -------------------------------------------------------------------------
   it("8. proofGraphs.get(flowName).epilogueReceipt accessible via verifyGovernance result", () => {
     const source = makeSource("epilogue { generate_proof sha256_seal }");
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const effectResults = checkEffects(parsed.flows, parsed.ast);
     const result = verifyGovernance(parsed.ast, parsed.flows, effectResults, "dev");
 

@@ -5,9 +5,9 @@ compile time and runtime, all fail-closed (a trap = controlled deny, never a hos
 0032 liveness work), and the photonic lane sidesteps the question by construction.**
 
 ## Compile-time — prove termination before it runs
-**`decreases` annotation + `SPORE-TERM-001`** (`governance-verifier.ts:393`). A **recursive** flow in a
+**`decreases` annotation + `FUNGI-TERM-001`** (`governance-verifier.ts:393`). A **recursive** flow in a
 strict/deterministic profile **must** carry `decreases <metric>` — a well-founded ranking that strictly decreases
-on each recursive call (so it provably reaches a base case). Missing it → `SPORE-TERM-001
+on each recursive call (so it provably reaches a base case). Missing it → `FUNGI-TERM-001
 TERMINATION_ANNOTATION_MISSING`. This is the *mathematical* guarantee: the recursion can't loop forever because the
 metric can't decrease forever. (Tier-gated: required in strict/deterministic profiles.)
 
@@ -18,7 +18,7 @@ metric can't decrease forever. (Tier-gated: required in strict/deterministic pro
 | Per-loop iteration cap | **100,000** back-edges | a single runaway `while`/`for` | `bytecode-vm.ts:360` ("Loop exceeded maximum iteration count — fail-closed") |
 | **Global compute-step budget** | **1,000,000,000** steps | the *aggregate* runaway — the key one | `interpreter.ts:880` `chargeStep()` |
 | Recursion depth cap | **2,000** frames | infinite/deep recursion, stack blowout | `interpreter.ts:2128` |
-| Wall-clock deadline | declared `limits { request_time: 500ms }` | anything slow regardless of step count | `interpreter.ts:1152` → `SPORE-RUNTIME-006` |
+| Wall-clock deadline | declared `limits { request_time: 500ms }` | anything slow regardless of step count | `interpreter.ts:1152` → `FUNGI-RUNTIME-006` |
 
 **Why the global step budget exists** (the subtle one): a per-loop cap + per-call-depth cap alone leave a gap —
 the code comment notes `maxCallDepth × maxSteps = 2000 × 1e9 ≈ hours`. So the global budget is charged **once per
@@ -40,7 +40,7 @@ tiers**; a plain/dev flow can write an unannotated recursive loop and rely on th
 strict tiers get *proven* termination; every tier gets *bounded* termination. Tightening `decreases` toward more
 tiers is the same class of hardening as the [correctness-gate split](galerina-rd-syntax-7axis-sweep-2026-06-25.md) (#33).
 
-**One line:** strict-tier recursion must *prove* it terminates (`decreases`/SPORE-TERM-001), and *every* execution is
+**One line:** strict-tier recursion must *prove* it terminates (`decreases`/FUNGI-TERM-001), and *every* execution is
 bounded by four always-on fail-closed traps — a 100k per-loop cap, a 1-billion global step budget across the whole
 call tree, a 2,000-deep recursion cap, and a declared wall-clock `request_time` — while the photonic lane refuses
 control-flow entirely.

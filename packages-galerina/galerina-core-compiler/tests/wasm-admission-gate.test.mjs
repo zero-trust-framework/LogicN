@@ -22,7 +22,7 @@ import {
 const HOST_FLOW = "pure flow numStr(n: Int) -> String contract { effects {} } { return n.toStr() }";
 
 async function compileToWasm(src) {
-  const prog = parseProgram(src, "t.spore");
+  const prog = parseProgram(src, "t.fungi");
   const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
   if (errs.length) throw new Error("parse: " + errs.map((d) => d.message).join("; "));
   const fx = checkEffects(prog.flows, prog.ast);

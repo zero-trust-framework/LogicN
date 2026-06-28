@@ -59,7 +59,7 @@ test("parseProjectConfig: missing governance defaults to full, no diagnostic", (
   assert.equal(diagnostics.length, 0);
 });
 
-test("parseProjectConfig: invalid governance → full + SPORE-CONFIG-GOV-003 error", () => {
+test("parseProjectConfig: invalid governance → full + FUNGI-CONFIG-GOV-003 error", () => {
   const { project, diagnostics } = parseProjectConfig({
     name: "demo",
     version: "1.0.0",
@@ -67,7 +67,7 @@ test("parseProjectConfig: invalid governance → full + SPORE-CONFIG-GOV-003 err
   });
   assert.ok(project);
   assert.equal(project.governance, "full"); // fail-closed
-  const d = diagnostics.find((x) => x.code === "SPORE-CONFIG-GOV-003");
-  assert.ok(d, "expected SPORE-CONFIG-GOV-003");
+  const d = diagnostics.find((x) => x.code === "FUNGI-CONFIG-GOV-003");
+  assert.ok(d, "expected FUNGI-CONFIG-GOV-003");
   assert.equal(d.severity, "error");
 });

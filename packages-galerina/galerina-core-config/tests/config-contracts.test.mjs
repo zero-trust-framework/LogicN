@@ -10,11 +10,11 @@ import {
   isEnvironmentMode,
   defaultEnvironmentPolicy,
   getVaultEntry,
-  SPORE_VAULT_001,
-  SPORE_VAULT_002,
-  SPORE_VAULT_003,
-  SPORE_VAULT_004,
-  SPORE_VAULT_005,
+  FUNGI_VAULT_001,
+  FUNGI_VAULT_002,
+  FUNGI_VAULT_003,
+  FUNGI_VAULT_004,
+  FUNGI_VAULT_005,
   vaultDiagnosticSecretInVault,
   vaultDiagnosticKeyInvalid,
   vaultDiagnosticTypeMismatch,
@@ -29,7 +29,7 @@ describe("galerina-core-config contracts", () => {
         name: "galerina-app",
         version: "0.1.0",
         root: ".",
-        entryFiles: ["packages-galerina/galerina-framework-example-app/src/index.spore"],
+        entryFiles: ["packages-galerina/galerina-framework-example-app/src/index.fungi"],
         packages: ["packages-galerina/galerina-core", "packages-galerina/galerina-core-config", "packages-galerina/galerina-framework-example-app"],
         strict: true,
         targets: ["cpu", "wasm"],
@@ -72,7 +72,7 @@ describe("galerina-core-config contracts", () => {
     assert.equal(result.runtime?.canRun, false);
     assert.equal(
       result.diagnostics[0]?.code,
-      "SPORE-CONFIG-004",
+      "FUNGI-CONFIG-004",
     );
     assert.match(result.diagnostics[0]?.message ?? "", /GALERINA_APP_SECRET/);
     assert.doesNotMatch(result.diagnostics[0]?.message ?? "", /undefined|null|set/);
@@ -97,7 +97,7 @@ describe("galerina-core-config contracts", () => {
     assert.equal(result.runtime?.canRun, false);
     assert.equal(
       result.diagnostics[0]?.code,
-      "SPORE-CONFIG-005",
+      "FUNGI-CONFIG-005",
     );
   });
 
@@ -124,7 +124,7 @@ describe("galerina-core-config contracts", () => {
     assert.equal(result.runtime?.canRun, false);
     assert.equal(
       result.diagnostics.at(-1)?.code,
-      "SPORE-CONFIG-012",
+      "FUNGI-CONFIG-012",
     );
   });
 
@@ -196,7 +196,7 @@ describe("galerina-core-config contracts", () => {
     assert.equal(result.runtime?.canRun, false);
     assert.equal(
       result.diagnostics.at(-1)?.code,
-      "SPORE-CONFIG-013",
+      "FUNGI-CONFIG-013",
     );
   });
 
@@ -229,14 +229,14 @@ describe("galerina-core-config contracts", () => {
     assert.equal(
       diagnostics.some(
         (diagnostic) =>
-          diagnostic.code === "SPORE-CONFIG-007",
+          diagnostic.code === "FUNGI-CONFIG-007",
       ),
       true,
     );
     assert.equal(
       diagnostics.some(
         (diagnostic) =>
-          diagnostic.code === "SPORE-CONFIG-009",
+          diagnostic.code === "FUNGI-CONFIG-009",
       ),
       true,
     );
@@ -302,20 +302,20 @@ describe("galerina-core-config contracts", () => {
     assert.equal(getVaultEntry(vault, "missing.key"), undefined);
   });
 
-  it("vault diagnostic codes are correctly formatted SPORE-VAULT codes", () => {
-    assert.equal(SPORE_VAULT_001, "SPORE-VAULT-001");
-    assert.equal(SPORE_VAULT_002, "SPORE-VAULT-002");
-    assert.equal(SPORE_VAULT_003, "SPORE-VAULT-003");
-    assert.equal(SPORE_VAULT_004, "SPORE-VAULT-004");
-    assert.equal(SPORE_VAULT_005, "SPORE-VAULT-005");
+  it("vault diagnostic codes are correctly formatted FUNGI-VAULT codes", () => {
+    assert.equal(FUNGI_VAULT_001, "FUNGI-VAULT-001");
+    assert.equal(FUNGI_VAULT_002, "FUNGI-VAULT-002");
+    assert.equal(FUNGI_VAULT_003, "FUNGI-VAULT-003");
+    assert.equal(FUNGI_VAULT_004, "FUNGI-VAULT-004");
+    assert.equal(FUNGI_VAULT_005, "FUNGI-VAULT-005");
   });
 
   it("vault diagnostic constructors produce correct codes and error severity", () => {
-    assert.equal(vaultDiagnosticSecretInVault("auth.apiKey").code, SPORE_VAULT_001);
-    assert.equal(vaultDiagnosticKeyInvalid("INVALID_KEY").code, SPORE_VAULT_002);
-    assert.equal(vaultDiagnosticTypeMismatch("app.timeout", "number", "string").code, SPORE_VAULT_003);
-    assert.equal(vaultDiagnosticKeyMissing("app.region").code, SPORE_VAULT_004);
-    assert.equal(vaultDiagnosticMutationDenied("app.name").code, SPORE_VAULT_005);
+    assert.equal(vaultDiagnosticSecretInVault("auth.apiKey").code, FUNGI_VAULT_001);
+    assert.equal(vaultDiagnosticKeyInvalid("INVALID_KEY").code, FUNGI_VAULT_002);
+    assert.equal(vaultDiagnosticTypeMismatch("app.timeout", "number", "string").code, FUNGI_VAULT_003);
+    assert.equal(vaultDiagnosticKeyMissing("app.region").code, FUNGI_VAULT_004);
+    assert.equal(vaultDiagnosticMutationDenied("app.name").code, FUNGI_VAULT_005);
 
     const allDiags = [
       vaultDiagnosticSecretInVault("k"),

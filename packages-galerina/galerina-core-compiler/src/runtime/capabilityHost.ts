@@ -13,7 +13,7 @@
 //   email.send
 //   crypto.sign/verify
 //
-// R4A: SPORE-NET-001/002 — network destination and private-range checks.
+// R4A: FUNGI-NET-001/002 — network destination and private-range checks.
 // R4C: Per-flow call counters (networkCallCount, dbCallCount) — soft warning.
 // =============================================================================
 
@@ -24,8 +24,8 @@ import {
   isHostAllowed,
   parseNetworkDestinationPolicy,
   PRIVATE_IP_RANGES,
-  SPORE_NET_001,
-  SPORE_NET_002,
+  FUNGI_NET_001,
+  FUNGI_NET_002,
   type NetworkDestinationPolicy,
 } from "../security-policy.js";
 
@@ -143,30 +143,30 @@ export function createCapabilityHost(config: CapabilityHostConfig): CapabilityHo
     const hostname = extractHostname(urlStr);
     if (hostname === undefined) return undefined;
 
-    // Check 1: network destination policy (SPORE-NET-001)
+    // Check 1: network destination policy (FUNGI-NET-001)
     if (config.networkPolicy !== undefined) {
       const allowed = isHostAllowed(hostname, config.networkPolicy);
       if (!allowed) {
         console.warn(
-          `[CapabilityHost] ${SPORE_NET_001.code}: network.outbound denied — hostname "${hostname}" is not in the allowed list.`,
-          SPORE_NET_001.suggestedFix,
+          `[CapabilityHost] ${FUNGI_NET_001.code}: network.outbound denied — hostname "${hostname}" is not in the allowed list.`,
+          FUNGI_NET_001.suggestedFix,
         );
         return {
           allowed: false,
-          reason: `${SPORE_NET_001.code}: ${SPORE_NET_001.message} Host: "${hostname}". ${SPORE_NET_001.suggestedFix}`,
+          reason: `${FUNGI_NET_001.code}: ${FUNGI_NET_001.message} Host: "${hostname}". ${FUNGI_NET_001.suggestedFix}`,
         };
       }
     }
 
-    // Check 2: private/reserved IP ranges (SPORE-NET-002, soft check — string prefix only)
+    // Check 2: private/reserved IP ranges (FUNGI-NET-002, soft check — string prefix only)
     if (looksLikePrivateIp(hostname)) {
       console.warn(
-        `[CapabilityHost] ${SPORE_NET_002.code}: network.outbound denied — hostname "${hostname}" resolves to a private/reserved range.`,
-        SPORE_NET_002.suggestedFix,
+        `[CapabilityHost] ${FUNGI_NET_002.code}: network.outbound denied — hostname "${hostname}" resolves to a private/reserved range.`,
+        FUNGI_NET_002.suggestedFix,
       );
       return {
         allowed: false,
-        reason: `${SPORE_NET_002.code}: ${SPORE_NET_002.message} Host: "${hostname}". ${SPORE_NET_002.suggestedFix}`,
+        reason: `${FUNGI_NET_002.code}: ${FUNGI_NET_002.message} Host: "${hostname}". ${FUNGI_NET_002.suggestedFix}`,
       };
     }
 
@@ -174,7 +174,7 @@ export function createCapabilityHost(config: CapabilityHostConfig): CapabilityHo
   }
 
   // ---------------------------------------------------------------------------
-  // R4B: Increment per-flow counters and DENY when limit exceeded (SPORE-RUNTIME-006).
+  // R4B: Increment per-flow counters and DENY when limit exceeded (FUNGI-RUNTIME-006).
   // Returns a denial CapabilityCheckResult when limit is exceeded, undefined otherwise.
   // ---------------------------------------------------------------------------
   function trackCallCount(effect: string): CapabilityCheckResult | undefined {
@@ -186,7 +186,7 @@ export function createCapabilityHost(config: CapabilityHostConfig): CapabilityHo
       ) {
         return {
           allowed: false,
-          reason: `SPORE-RUNTIME-006: network call count ${counters.networkCallCount} exceeds declared limit ${config.networkCallLimit}`,
+          reason: `FUNGI-RUNTIME-006: network call count ${counters.networkCallCount} exceeds declared limit ${config.networkCallLimit}`,
         };
       }
     }
@@ -199,7 +199,7 @@ export function createCapabilityHost(config: CapabilityHostConfig): CapabilityHo
       ) {
         return {
           allowed: false,
-          reason: `SPORE-RUNTIME-006: database call count ${counters.dbCallCount} exceeds declared limit ${config.dbCallLimit}`,
+          reason: `FUNGI-RUNTIME-006: database call count ${counters.dbCallCount} exceeds declared limit ${config.dbCallLimit}`,
         };
       }
     }

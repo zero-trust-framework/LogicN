@@ -26,8 +26,8 @@
 > rebuild them.** TLS is just the place those primitives get *composed* on the wire; the substrate verdict is
 > inherited unchanged.
 > **Cross-refs:** charter §1 (the four lanes), `governed-trust-capsule-v0.md` (the COSE token that rides over
-> TLS), `signature-custody-v0.md` (the #34 hybrid Ed25519 + ML-DSA-65 sig), crypto-on-core `SPORE-SUBSTRATE-001`,
-> three-valued governance `SPORE-GOV-3VL-001`.
+> TLS), `signature-custody-v0.md` (the #34 hybrid Ed25519 + ML-DSA-65 sig), crypto-on-core `FUNGI-SUBSTRATE-001`,
+> three-valued governance `FUNGI-GOV-3VL-001`.
 > **Boundary:** R&D-only. `Galerina/packages-galerina` (production) and `Galerina-TritMesh` (product) are read-only
 > grounding; any change they need is recorded here as a recommendation, not an edit.
 
@@ -82,7 +82,7 @@ reference, so the rest of the note can lean on it:
   a photonic hash buys nothing. The TLS transcript hash and HKDF are Keccak/SHA-2; the same verdict applies
   verbatim. [[BRIEF]] [[SHA-NOTE]]
 
-The crypto-on-core invariant this enforces is Galerina's `SPORE-SUBSTRATE-001`: integrity/keying/signing **must**
+The crypto-on-core invariant this enforces is Galerina's `FUNGI-SUBSTRATE-001`: integrity/keying/signing **must**
 run on a deterministic, bit-exact lane; binding them to a noisy/photonic lane is a build error, every profile,
 and the fix is structural (move to a digital lane), never "raise redundancy." [[ENC-NOTE §1.3]]
 
@@ -193,7 +193,7 @@ invalid (−1) ⇐ signature fails  OR  expired  OR  name/constraint/EKU mismatc
 unknown (0)  ⇐ revocation status indeterminate (OCSP/CRL unreachable, no staple, stale)
               OR  chain incomplete  OR  policy/pin not yet resolvable
 
-collapse(unknown) = deny            ; K3 collapseDeny — the No-Coercion rule (SPORE-GOV-3VL-001)
+collapse(unknown) = deny            ; K3 collapseDeny — the No-Coercion rule (FUNGI-GOV-3VL-001)
 authorize(channel) ⇔ cert_verdict == +1
 ```
 
@@ -206,7 +206,7 @@ authorize(channel) ⇔ cert_verdict == +1
   revocation tri-state. Any branch that is not a definitive `+1` is `0` or `−1`, both → deny.
 - **Three-valued logic, not analog.** The trit here is a *governance verdict* (a decision), exactly like the
   encryption note's `deny/unknown/allow`. It is **not** a three-level optical signal and carries no substrate
-  claim — `SPORE-SUBSTRATE-001` is untouched. [[ENC-NOTE §6]]
+  claim — `FUNGI-SUBSTRATE-001` is untouched. [[ENC-NOTE §6]]
 
 > **Honest scope:** "revocation-unknown ⇒ deny" is a *strict* policy; on the public web it can cause
 > availability failures when responders are flaky (the reason browsers soft-fail). For Galerina's
@@ -336,7 +336,7 @@ Internal R&D (the reused proof — cite, do not re-derive):
   `Galerina-TritMesh/TritMesh/research/encryption-on-photonic-substrates.md` — **§2.1** (analog optics ≈4–8 ENOB,
   error-tolerant by design), **§2.2** (lattice crypto is exact-modular, FO fail-closed), **§4** (per-stage
   analog-eligible? table), **§5** (the ANN layer = photonics' one honest home, outside the gate), **§6**
-  (three-valued logic ≠ three-level analog signaling), **§1.3** (`SPORE-SUBSTRATE-001` crypto-on-core). *(Read-only
+  (three-valued logic ≠ three-level analog signaling), **§1.3** (`FUNGI-SUBSTRATE-001` crypto-on-core). *(Read-only
   grounding; not edited.)*
 - [[BRIEF]] *Encryption R&D full brief*, `../../ENCRYPTION-RND-FULL-BRIEF.md` — **§3** (crypto-on-core; no
   photonic SHA-256 / cipher), **§4** verdicts 2 (no photonic SHA-256), 3 (tri-logic in the gate, not the cipher),

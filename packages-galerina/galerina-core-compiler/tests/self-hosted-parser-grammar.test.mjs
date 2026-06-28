@@ -1,8 +1,8 @@
 /**
- * Self-hosted parser — grammar extensions (parser.spore).
+ * Self-hosted parser — grammar extensions (parser.fungi).
  *
  * Logical and/or (lowest precedence), unary prefix (! → "not", - → "neg"),
- * and if/else branches. Tokenizes real source with lexer.spore, parses a flow
+ * and if/else branches. Tokenizes real source with lexer.fungi, parses a flow
  * body via parseBlock, and asserts the resulting Stmt/Expr AST.
  */
 
@@ -26,8 +26,8 @@ function load(file) {
 
 let lexer, parser;
 before(() => {
-  lexer = load("lexer.spore");
-  parser = load("parser.spore");
+  lexer = load("lexer.fungi");
+  parser = load("parser.fungi");
 });
 
 const vStr = (s) => ({ __tag: "string", value: s });
@@ -67,7 +67,7 @@ async function exprOf(e) {
   return stmts.find((s) => s.kind === "return").expr[0];
 }
 
-describe("parser.spore grammar — logical and/or", () => {
+describe("parser.fungi grammar — logical and/or", () => {
   it("a and b → binary 'and'", async () => {
     const e = await exprOf("a and b");
     assert.equal(e.kind, "binary");
@@ -88,7 +88,7 @@ describe("parser.spore grammar — logical and/or", () => {
   });
 });
 
-describe("parser.spore grammar — unary prefix", () => {
+describe("parser.fungi grammar — unary prefix", () => {
   it("!x → unary 'not'", async () => {
     const e = await exprOf("!x");
     assert.equal(e.kind, "unary");
@@ -119,7 +119,7 @@ describe("parser.spore grammar — unary prefix", () => {
   });
 });
 
-describe("parser.spore grammar — if/else", () => {
+describe("parser.fungi grammar — if/else", () => {
   it("if without else → empty elseBody", async () => {
     const [s] = await bodyOf(`pure flow f() -> Int { if c { return 1 } }`);
     assert.equal(s.kind, "if");

@@ -511,7 +511,7 @@ console.log("\nRD-0159  Mycorrhizal Overlay — rebuild graph not data; border i
 // ─────────────────────────────────────────────────────────────────────────────
 const EXCLUDED = [
   ["X1", "Optical masking / holographic-crystal storage as the security primitive (note §3, 76-mesh-r-d-02)",
-        "obfuscation-as-security + photonic-crypto — REFUTED class. Crypto stays Binary on silicon (SPORE-SUBSTRATE-001/feedback-most-secure-default). R3 proves the sound discipline needs a real signature; the 'zero CPU decryption' light-lens is excluded."],
+        "obfuscation-as-security + photonic-crypto — REFUTED class. Crypto stays Binary on silicon (FUNGI-SUBSTRATE-001/feedback-most-secure-default). R3 proves the sound discipline needs a real signature; the 'zero CPU decryption' light-lens is excluded."],
   ["X2", "AVX-512 / true SIMD lane-level execution ('thousands of points in one clock cycle')",
         "this proof counts OPERATIONS and uses JS typed arrays (a scalar VM); the constant-factor win (V5) is real but the specific HW-lane throughput is a hardware claim, not modelled. Same posture as for/where-mask (software-sim, factor printed not asserted)."],
   ["X3", "Low-level AI auto-rewiring the border graph autonomously severing flows (note §2, RD-0159 tail)",

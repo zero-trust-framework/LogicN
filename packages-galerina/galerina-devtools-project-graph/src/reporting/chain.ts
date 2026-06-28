@@ -1,8 +1,8 @@
 // =============================================================================
-// lln-graph — ExecutionProofChain
+// fungi-graph — ExecutionProofChain
 //
 // Tamper-evident 5-hash chain for LogicN execution proofs.
-// schemaVersion: "spore.execution.proof.v1" (canonical from NOTES TO COVER / c)
+// schemaVersion: "fungi.execution.proof.v1" (canonical from NOTES TO COVER / c)
 // Uses Node.js crypto — no external dependency.
 // =============================================================================
 
@@ -28,7 +28,7 @@ export interface ExecutionProofHashes {
 }
 
 export interface ExecutionProofV1 {
-  readonly schemaVersion: "spore.execution.proof.v1";
+  readonly schemaVersion: "fungi.execution.proof.v1";
   readonly proofId: string;
   readonly generatedAt: string;
   readonly hashes: ExecutionProofHashes;
@@ -48,7 +48,7 @@ export interface ExecutionProofReference {
 }
 
 export interface ExecutionProofV2 {
-  readonly schemaVersion: "spore.execution.proof.v2";
+  readonly schemaVersion: "fungi.execution.proof.v2";
   readonly proofId: string;
   readonly generatedAt: string;
   /** Retained from v1 for backward compatibility. */
@@ -104,7 +104,7 @@ export async function buildProofChain(
     ]);
 
   return {
-    schemaVersion: "spore.execution.proof.v1",
+    schemaVersion: "fungi.execution.proof.v1",
     proofId: randomUUID(),
     generatedAt: new Date().toISOString(),
     hashes: {
@@ -129,7 +129,7 @@ export function buildProofChainFromBuffers(inputs: {
   readonly artefact: Uint8Array | string;
 }): ExecutionProofV1 {
   return {
-    schemaVersion: "spore.execution.proof.v1",
+    schemaVersion: "fungi.execution.proof.v1",
     proofId: randomUUID(),
     generatedAt: new Date().toISOString(),
     hashes: {
@@ -153,7 +153,7 @@ export function buildProofChainFromBuffers(inputs: {
  */
 export function upgradeExecutionProofV1ToV2(proof: ExecutionProofV1): ExecutionProofV2 {
   return {
-    schemaVersion: "spore.execution.proof.v2",
+    schemaVersion: "fungi.execution.proof.v2",
     proofId: proof.proofId,
     generatedAt: proof.generatedAt,
     hashes: proof.hashes,

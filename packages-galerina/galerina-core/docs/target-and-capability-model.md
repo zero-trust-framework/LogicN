@@ -812,7 +812,7 @@ Example:
 Recommended tiny compiler milestone:
 
 ```text
-parse boot.spore
+parse boot.fungi
 parse target browser
 parse simple imports
 classify browser-safe and server-only imports

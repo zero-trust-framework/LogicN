@@ -4,8 +4,8 @@
 // Covers:
 //   1. resolveImports() recognises importDecl nodes in the AST
 //   2. Names from @galerina/* packages are correctly classified as type/value
-//   3. Symbol resolver accepts imported value names without SPORE-NAME-001
-//   4. Type checker accepts imported type names without SPORE-TYPE-001
+//   3. Symbol resolver accepts imported value names without FUNGI-NAME-001
+//   4. Type checker accepts imported type names without FUNGI-TYPE-001
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -21,7 +21,7 @@ import {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function parse(source) {
-  return parseProgram(source, "test.spore");
+  return parseProgram(source, "test.fungi");
 }
 
 function hasDiag(diags, code) {
@@ -129,8 +129,8 @@ flow test(id: PatientId) -> String {
 
 // ── Type checker integration ──────────────────────────────────────────────────
 
-describe("Type checker — imported types do not emit SPORE-TYPE-001", () => {
-  it("no SPORE-TYPE-001 for Email when passed as importedTypes", () => {
+describe("Type checker — imported types do not emit FUNGI-TYPE-001", () => {
+  it("no FUNGI-TYPE-001 for Email when passed as importedTypes", () => {
     const { ast } = parse(`
 flow test(e: Email) -> String {
   return "ok"
@@ -138,12 +138,12 @@ flow test(e: Email) -> String {
 `);
     const result = checkTypes(ast, ["Email"]);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-TYPE-001"),
-      `Expected no SPORE-TYPE-001 for Email (imported), got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      !hasDiag(result.diagnostics, "FUNGI-TYPE-001"),
+      `Expected no FUNGI-TYPE-001 for Email (imported), got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("emits SPORE-TYPE-001 for Email when NOT passed as importedTypes", () => {
+  it("emits FUNGI-TYPE-001 for Email when NOT passed as importedTypes", () => {
     const { ast } = parse(`
 flow test(e: Email) -> String {
   return "ok"
@@ -153,12 +153,12 @@ flow test(e: Email) -> String {
     // that the built-in registry itself covers Email
     const result = checkTypes(ast);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-TYPE-001"),
+      !hasDiag(result.diagnostics, "FUNGI-TYPE-001"),
       `Email should be recognised as built-in after Phase 11E, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("no SPORE-TYPE-001 for PatientId (built-in after Phase 11E)", () => {
+  it("no FUNGI-TYPE-001 for PatientId (built-in after Phase 11E)", () => {
     const { ast } = parse(`
 flow test(id: PatientId) -> String {
   return "ok"
@@ -166,12 +166,12 @@ flow test(id: PatientId) -> String {
 `);
     const result = checkTypes(ast);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-TYPE-001"),
+      !hasDiag(result.diagnostics, "FUNGI-TYPE-001"),
       `PatientId should be built-in after Phase 11E`,
     );
   });
 
-  it("no SPORE-TYPE-001 for AiError (built-in after Phase 11E)", () => {
+  it("no FUNGI-TYPE-001 for AiError (built-in after Phase 11E)", () => {
     const { ast } = parse(`
 flow test(x: Int) -> Result<String, AiError> {
   return Ok("ok")
@@ -179,12 +179,12 @@ flow test(x: Int) -> Result<String, AiError> {
 `);
     const result = checkTypes(ast);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-TYPE-001"),
+      !hasDiag(result.diagnostics, "FUNGI-TYPE-001"),
       `AiError should be built-in after Phase 11E`,
     );
   });
 
-  it("no SPORE-TYPE-001 for Label (built-in after Phase 11E)", () => {
+  it("no FUNGI-TYPE-001 for Label (built-in after Phase 11E)", () => {
     const { ast } = parse(`
 flow test(x: String) -> Label {
   return "ok"
@@ -192,12 +192,12 @@ flow test(x: String) -> Label {
 `);
     const result = checkTypes(ast);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-TYPE-001"),
+      !hasDiag(result.diagnostics, "FUNGI-TYPE-001"),
       `Label should be built-in after Phase 11E`,
     );
   });
 
-  it("no SPORE-TYPE-001 for RiskScore (built-in after Phase 11E)", () => {
+  it("no FUNGI-TYPE-001 for RiskScore (built-in after Phase 11E)", () => {
     const { ast } = parse(`
 flow test(x: String) -> RiskScore {
   return "0.5"
@@ -205,12 +205,12 @@ flow test(x: String) -> RiskScore {
 `);
     const result = checkTypes(ast);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-TYPE-001"),
+      !hasDiag(result.diagnostics, "FUNGI-TYPE-001"),
       `RiskScore should be built-in after Phase 11E`,
     );
   });
 
-  it("no SPORE-TYPE-001 for importedTypes passed explicitly to checkTypes", () => {
+  it("no FUNGI-TYPE-001 for importedTypes passed explicitly to checkTypes", () => {
     const { ast } = parse(`
 flow test(x: MyCustomType) -> String {
   return "ok"
@@ -218,16 +218,16 @@ flow test(x: MyCustomType) -> String {
 `);
     const result = checkTypes(ast, ["MyCustomType"]);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-TYPE-001"),
-      `MyCustomType passed as importedType should not emit SPORE-TYPE-001`,
+      !hasDiag(result.diagnostics, "FUNGI-TYPE-001"),
+      `MyCustomType passed as importedType should not emit FUNGI-TYPE-001`,
     );
   });
 });
 
 // ── Symbol resolver integration ───────────────────────────────────────────────
 
-describe("Symbol resolver — imported value names do not emit SPORE-NAME-001", () => {
-  it("no SPORE-NAME-001 for PatientDB (in STANDARD_PRELUDE after Phase 11E)", () => {
+describe("Symbol resolver — imported value names do not emit FUNGI-NAME-001", () => {
+  it("no FUNGI-NAME-001 for PatientDB (in STANDARD_PRELUDE after Phase 11E)", () => {
     const { ast } = parse(`
 flow test(id: String) -> String {
   let r = PatientDB.find(id)?
@@ -236,12 +236,12 @@ flow test(id: String) -> String {
 `);
     const result = resolveSymbols(ast);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-NAME-001"),
+      !hasDiag(result.diagnostics, "FUNGI-NAME-001"),
       `PatientDB should be in prelude after Phase 11E`,
     );
   });
 
-  it("no SPORE-NAME-001 for EmbeddingModel (in STANDARD_PRELUDE after Phase 11E)", () => {
+  it("no FUNGI-NAME-001 for EmbeddingModel (in STANDARD_PRELUDE after Phase 11E)", () => {
     const { ast } = parse(`
 flow test(text: String) -> String {
   let r = EmbeddingModel.embed(text)?
@@ -250,12 +250,12 @@ flow test(text: String) -> String {
 `);
     const result = resolveSymbols(ast);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-NAME-001"),
+      !hasDiag(result.diagnostics, "FUNGI-NAME-001"),
       `EmbeddingModel should be in prelude after Phase 11E`,
     );
   });
 
-  it("no SPORE-NAME-001 for an imported value name passed explicitly", () => {
+  it("no FUNGI-NAME-001 for an imported value name passed explicitly", () => {
     const { ast } = parse(`
 flow test(id: String) -> String {
   let r = MyCustomDB.find(id)?
@@ -264,12 +264,12 @@ flow test(id: String) -> String {
 `);
     const result = resolveSymbols(ast, ["MyCustomDB"]);
     assert.ok(
-      !hasDiag(result.diagnostics, "SPORE-NAME-001"),
-      `MyCustomDB passed as importedName should not emit SPORE-NAME-001`,
+      !hasDiag(result.diagnostics, "FUNGI-NAME-001"),
+      `MyCustomDB passed as importedName should not emit FUNGI-NAME-001`,
     );
   });
 
-  it("SPORE-NAME-001 is still emitted for genuinely undeclared names", () => {
+  it("FUNGI-NAME-001 is still emitted for genuinely undeclared names", () => {
     const { ast } = parse(`
 flow test() -> String {
   return undeclaredVariable
@@ -277,8 +277,8 @@ flow test() -> String {
 `);
     const result = resolveSymbols(ast);
     assert.ok(
-      hasDiag(result.diagnostics, "SPORE-NAME-001"),
-      `Expected SPORE-NAME-001 for undeclaredVariable`,
+      hasDiag(result.diagnostics, "FUNGI-NAME-001"),
+      `Expected FUNGI-NAME-001 for undeclaredVariable`,
     );
   });
 });
@@ -286,7 +286,7 @@ flow test() -> String {
 // ── End-to-end: import → resolve → check ─────────────────────────────────────
 
 describe("Import resolver — end-to-end pipeline integration", () => {
-  it("full pipeline: import Email from @galerina/core-types → no SPORE-TYPE-001 for Email", () => {
+  it("full pipeline: import Email from @galerina/core-types → no FUNGI-TYPE-001 for Email", () => {
     const source = `import Email from "@galerina/core-types"
 
 flow sendEmail(addr: Email) -> String {
@@ -299,11 +299,11 @@ flow sendEmail(addr: Email) -> String {
     const symbolResult = resolveSymbols(ast, importResult.valueNames);
 
     const allDiags = [...typeResult.diagnostics, ...symbolResult.diagnostics];
-    const typeOneErrors = allDiags.filter((d) => d.code === "SPORE-TYPE-001");
+    const typeOneErrors = allDiags.filter((d) => d.code === "FUNGI-TYPE-001");
     assert.equal(
       typeOneErrors.length,
       0,
-      `Expected no SPORE-TYPE-001 errors, got: ${typeOneErrors.map((d) => d.message).join("; ")}`,
+      `Expected no FUNGI-TYPE-001 errors, got: ${typeOneErrors.map((d) => d.message).join("; ")}`,
     );
   });
 
@@ -338,12 +338,12 @@ flow classify(text: String) -> Result<Label, AiError> {
     const typeResult = checkTypes(ast, importResult.typeNames);
 
     const typeErrors = typeResult.diagnostics.filter(
-      (d) => d.severity === "error" && d.code === "SPORE-TYPE-001",
+      (d) => d.severity === "error" && d.code === "FUNGI-TYPE-001",
     );
     assert.equal(
       typeErrors.length,
       0,
-      `Expected no SPORE-TYPE-001 errors, got: ${typeErrors.map((d) => d.message).join("; ")}`,
+      `Expected no FUNGI-TYPE-001 errors, got: ${typeErrors.map((d) => d.message).join("; ")}`,
     );
   });
 });

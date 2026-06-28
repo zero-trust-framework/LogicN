@@ -5,24 +5,24 @@ import {
   checkEffects,
   verifyGovernance,
   extractArenaLimitMB,
-  SPORE_GOV_001,
-  SPORE_GOV_003,
-  SPORE_GOV_006,
-  SPORE_CONTEXT_001,
-  SPORE_GOV_011,
-  SPORE_GOV_012,
-  SPORE_GOV_019,
-  SPORE_GOV_020,
-  SPORE_TERM_001,
+  FUNGI_GOV_001,
+  FUNGI_GOV_003,
+  FUNGI_GOV_006,
+  FUNGI_CONTEXT_001,
+  FUNGI_GOV_011,
+  FUNGI_GOV_012,
+  FUNGI_GOV_019,
+  FUNGI_GOV_020,
+  FUNGI_TERM_001,
 } from "../dist/index.js";
 import {
-  SPORE_GOV_005,
-  SPORE_GOV_007,
-  SPORE_GOV_009,
+  FUNGI_GOV_005,
+  FUNGI_GOV_007,
+  FUNGI_GOV_009,
 } from "../dist/governance-verifier.js";
 
 function parseAndVerify(source, profile = "dev") {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effects = checkEffects(parsed.flows, parsed.ast);
   return verifyGovernance(parsed.ast, parsed.flows, effects, profile);
 }
@@ -31,8 +31,8 @@ function hasDiag(result, code) {
   return result.diagnostics.some((d) => d.code === code);
 }
 
-describe("Governance verifier — SPORE-GOV-010 intent missing on secure flow", () => {
-  it("emits SPORE-GOV-010 info when secure flow has no intent in dev mode", () => {
+describe("Governance verifier — FUNGI-GOV-010 intent missing on secure flow", () => {
+  it("emits FUNGI-GOV-010 info when secure flow has no intent in dev mode", () => {
     const result = parseAndVerify(`
 secure flow createOrder(request: Request) -> Result<Response, ApiError>
 contract { effects { database.write audit.write } }
@@ -40,10 +40,10 @@ contract { effects { database.write audit.write } }
   return Ok(Response.ok({}))
 }
 `, "dev");
-    assert.ok(hasDiag(result, "SPORE-GOV-010"), "Expected SPORE-GOV-010 for missing intent");
+    assert.ok(hasDiag(result, "FUNGI-GOV-010"), "Expected FUNGI-GOV-010 for missing intent");
   });
 
-  it("SPORE-GOV-010 is error severity in production", () => {
+  it("FUNGI-GOV-010 is error severity in production", () => {
     const result = parseAndVerify(`
 secure flow createOrder(request: Request) -> Result<Response, ApiError>
 contract { effects { database.write audit.write } }
@@ -51,23 +51,23 @@ contract { effects { database.write audit.write } }
   return Ok(Response.ok({}))
 }
 `, "production");
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-GOV-010");
-    assert.ok(diag !== undefined, "Expected SPORE-GOV-010");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-GOV-010");
+    assert.ok(diag !== undefined, "Expected FUNGI-GOV-010");
     assert.equal(diag.severity, "error");
   });
 
-  it("does not emit SPORE-GOV-010 for pure flow (only secure flows require intent)", () => {
+  it("does not emit FUNGI-GOV-010 for pure flow (only secure flows require intent)", () => {
     const result = parseAndVerify(`
 pure flow calculate(x: Int) -> Int {
   return x
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-GOV-010"), "Unexpected SPORE-GOV-010 for pure flow");
+    assert.ok(!hasDiag(result, "FUNGI-GOV-010"), "Unexpected FUNGI-GOV-010 for pure flow");
   });
 });
 
-describe("Governance verifier — SPORE-GOV-002 missing audit for governed sink", () => {
-  it("emits SPORE-GOV-002 when database.write declared but no audit.write", () => {
+describe("Governance verifier — FUNGI-GOV-002 missing audit for governed sink", () => {
+  it("emits FUNGI-GOV-002 when database.write declared but no audit.write", () => {
     const result = parseAndVerify(`
 guarded flow saveOrder(order: Order) -> Result<OrderId, OrderError>
 contract { effects { database.write } }
@@ -75,10 +75,10 @@ contract { effects { database.write } }
   return Ok(order.id)
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-GOV-002"), "Expected SPORE-GOV-002 for missing audit");
+    assert.ok(hasDiag(result, "FUNGI-GOV-002"), "Expected FUNGI-GOV-002 for missing audit");
   });
 
-  it("does not emit SPORE-GOV-002 when audit.write is declared", () => {
+  it("does not emit FUNGI-GOV-002 when audit.write is declared", () => {
     const result = parseAndVerify(`
 guarded flow saveOrder(order: Order) -> Result<OrderId, OrderError>
 contract { effects { database.write audit.write } }
@@ -86,16 +86,16 @@ contract { effects { database.write audit.write } }
   return Ok(order.id)
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-GOV-002"), "Unexpected SPORE-GOV-002 when audit.write declared");
+    assert.ok(!hasDiag(result, "FUNGI-GOV-002"), "Unexpected FUNGI-GOV-002 when audit.write declared");
   });
 
-  it("does not emit SPORE-GOV-002 for pure flow (no sinks)", () => {
+  it("does not emit FUNGI-GOV-002 for pure flow (no sinks)", () => {
     const result = parseAndVerify(`
 pure flow add(a: Int, b: Int) -> Int {
   return a + b
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-GOV-002"), "Unexpected SPORE-GOV-002 for pure flow");
+    assert.ok(!hasDiag(result, "FUNGI-GOV-002"), "Unexpected FUNGI-GOV-002 for pure flow");
   });
 });
 
@@ -141,11 +141,11 @@ intent "Create patient record" {
   });
 });
 
-describe("Governance verifier — SPORE-GOV-004 denied target", () => {
-  it("emits SPORE-GOV-004 when remote.execution denied but network.outbound declared", () => {
+describe("Governance verifier — FUNGI-GOV-004 denied target", () => {
+  it("emits FUNGI-GOV-004 when remote.execution denied but network.outbound declared", () => {
     // The parser currently skips compute target body content,
     // so this test confirms the verifier runs without throwing.
-    // Full SPORE-GOV-004 detection requires Phase 8 compute target body parsing.
+    // Full FUNGI-GOV-004 detection requires Phase 8 compute target body parsing.
     const result = parseAndVerify(`
 secure flow runModel(request: Request) -> Result<Response, AiError>
 contract { effects { ai.inference network.outbound } }
@@ -153,13 +153,13 @@ intent "Run model locally" {
   return Ok(Response.ok({}))
 }
 `);
-    // SPORE-GOV-001 may fire due to "locally" in intent + network.outbound
+    // FUNGI-GOV-001 may fire due to "locally" in intent + network.outbound
     assert.ok(typeof result.diagnostics === "object");
   });
 });
 
-describe("Governance verifier — SPORE-GOV-011 unknown contract set", () => {
-  it("emits SPORE-GOV-011 when use references an undeclared contract set", () => {
+describe("Governance verifier — FUNGI-GOV-011 unknown contract set", () => {
+  it("emits FUNGI-GOV-011 when use references an undeclared contract set", () => {
     const result = parseAndVerify(`
 flow createOrder(request: Request) -> Result<Response, ApiError>
 contract {
@@ -170,10 +170,10 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-GOV-011"), "Expected SPORE-GOV-011 for unknown contract set");
+    assert.ok(hasDiag(result, "FUNGI-GOV-011"), "Expected FUNGI-GOV-011 for unknown contract set");
   });
 
-  it("SPORE-GOV-011 is error severity", () => {
+  it("FUNGI-GOV-011 is error severity", () => {
     const result = parseAndVerify(`
 flow createOrder(request: Request) -> Result<Response, ApiError>
 contract {
@@ -184,12 +184,12 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-GOV-011");
-    assert.ok(diag !== undefined, "Expected SPORE-GOV-011 diagnostic");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-GOV-011");
+    assert.ok(diag !== undefined, "Expected FUNGI-GOV-011 diagnostic");
     assert.equal(diag.severity, "error");
   });
 
-  it("does not emit SPORE-GOV-011 when contract set is declared", () => {
+  it("does not emit FUNGI-GOV-011 when contract set is declared", () => {
     const result = parseAndVerify(`
 contract set OrderPolicy {
   rules {}
@@ -206,17 +206,17 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-GOV-011"), "Unexpected SPORE-GOV-011 when contract set is declared");
+    assert.ok(!hasDiag(result, "FUNGI-GOV-011"), "Unexpected FUNGI-GOV-011 when contract set is declared");
   });
 
-  it("SPORE-GOV-011 constant has correct code", () => {
-    assert.equal(SPORE_GOV_011.code, "SPORE-GOV-011");
-    assert.equal(SPORE_GOV_011.name, "UnknownContractSet");
+  it("FUNGI-GOV-011 constant has correct code", () => {
+    assert.equal(FUNGI_GOV_011.code, "FUNGI-GOV-011");
+    assert.equal(FUNGI_GOV_011.name, "UnknownContractSet");
   });
 });
 
-describe("Governance verifier — SPORE-GOV-012 contract set requirement not met", () => {
-  it("emits SPORE-GOV-012 when contract set has audit requirement and flow lacks audit.write", () => {
+describe("Governance verifier — FUNGI-GOV-012 contract set requirement not met", () => {
+  it("emits FUNGI-GOV-012 when contract set has audit requirement and flow lacks audit.write", () => {
     const result = parseAndVerify(`
 contract set AuditedPolicy {
   rules {}
@@ -234,10 +234,10 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-GOV-012"), "Expected SPORE-GOV-012 when audit requirement not met");
+    assert.ok(hasDiag(result, "FUNGI-GOV-012"), "Expected FUNGI-GOV-012 when audit requirement not met");
   });
 
-  it("SPORE-GOV-012 is warning severity", () => {
+  it("FUNGI-GOV-012 is warning severity", () => {
     const result = parseAndVerify(`
 contract set AuditedPolicy {
   audit {
@@ -254,12 +254,12 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-GOV-012");
-    assert.ok(diag !== undefined, "Expected SPORE-GOV-012 diagnostic");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-GOV-012");
+    assert.ok(diag !== undefined, "Expected FUNGI-GOV-012 diagnostic");
     assert.equal(diag.severity, "warning");
   });
 
-  it("does not emit SPORE-GOV-012 when flow declares audit.write", () => {
+  it("does not emit FUNGI-GOV-012 when flow declares audit.write", () => {
     const result = parseAndVerify(`
 contract set AuditedPolicy {
   audit {
@@ -276,10 +276,10 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-GOV-012"), "Unexpected SPORE-GOV-012 when audit.write is declared");
+    assert.ok(!hasDiag(result, "FUNGI-GOV-012"), "Unexpected FUNGI-GOV-012 when audit.write is declared");
   });
 
-  it("does not emit SPORE-GOV-012 when contract set audit block is empty", () => {
+  it("does not emit FUNGI-GOV-012 when contract set audit block is empty", () => {
     const result = parseAndVerify(`
 contract set SimplePolicy {
   rules {}
@@ -295,12 +295,12 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-GOV-012"), "Unexpected SPORE-GOV-012 when audit block is empty");
+    assert.ok(!hasDiag(result, "FUNGI-GOV-012"), "Unexpected FUNGI-GOV-012 when audit block is empty");
   });
 
-  it("SPORE-GOV-012 constant has correct code", () => {
-    assert.equal(SPORE_GOV_012.code, "SPORE-GOV-012");
-    assert.equal(SPORE_GOV_012.name, "ContractSetRequirementNotMet");
+  it("FUNGI-GOV-012 constant has correct code", () => {
+    assert.equal(FUNGI_GOV_012.code, "FUNGI-GOV-012");
+    assert.equal(FUNGI_GOV_012.name, "ContractSetRequirementNotMet");
   });
 });
 
@@ -309,7 +309,7 @@ describe("Governance verifier — runtime integration", () => {
     const { run } = await import("../dist/index.js");
     const result = await run(
       `pure flow greet() -> String { return "hello" }`,
-      "test.spore",
+      "test.fungi",
       "greet",
     );
     assert.ok(Array.isArray(result.governanceDiagnostics));
@@ -320,7 +320,7 @@ describe("Governance verifier — runtime integration", () => {
     const result = await run(
       `secure flow test(request: Request) -> Result<Response, ApiError>
 contract { effects { database.write } } { return Ok(Response.ok({})) }`,
-      "test.spore",
+      "test.fungi",
       "test",
       new Map(),
       { mode: "check-only" },
@@ -328,8 +328,8 @@ contract { effects { database.write } } { return Ok(Response.ok({})) }`,
     assert.ok(Array.isArray(result.governanceDiagnostics));
     // Should warn about missing intent on secure flow
     assert.ok(
-      result.governanceDiagnostics.some((d) => d.code === "SPORE-GOV-010"),
-      "Expected SPORE-GOV-010 in check-only result",
+      result.governanceDiagnostics.some((d) => d.code === "FUNGI-GOV-010"),
+      "Expected FUNGI-GOV-010 in check-only result",
     );
   });
 
@@ -337,20 +337,20 @@ contract { effects { database.write } } { return Ok(Response.ok({})) }`,
     const { run } = await import("../dist/index.js");
     const result = await run(
       `pure flow answer() -> Int { return 42 }`,
-      "test.spore",
+      "test.fungi",
       "answer",
       new Map(),
       { mode: "production" },
     );
     assert.ok(result.proofChain !== undefined, "Expected proofChain in production mode");
-    assert.equal(result.proofChain.schemaVersion, "spore.execution.proof.v1");
+    assert.equal(result.proofChain.schemaVersion, "fungi.execution.proof.v1");
   });
 
   it("dev mode does not generate proofChain", async () => {
     const { run } = await import("../dist/index.js");
     const result = await run(
       `pure flow answer() -> Int { return 42 }`,
-      "test.spore",
+      "test.fungi",
       "answer",
       new Map(),
       { mode: "dev" },
@@ -360,11 +360,11 @@ contract { effects { database.write } } { return Ok(Response.ok({})) }`,
 });
 
 // =============================================================================
-// Phase 10C — SPORE-GOV-003: response contract violation
+// Phase 10C — FUNGI-GOV-003: response contract violation
 // =============================================================================
 
-describe("Governance verifier — SPORE-GOV-003 response contract violation", () => {
-  it("emits SPORE-GOV-003 when a denied field appears in the response body", () => {
+describe("Governance verifier — FUNGI-GOV-003 response contract violation", () => {
+  it("emits FUNGI-GOV-003 when a denied field appears in the response body", () => {
     const result = parseAndVerify(`
 flow getPatient(readonly request: Request) -> GetPatientResult
 contract {
@@ -382,10 +382,10 @@ contract {
   return Ok(Response.ok({ patientId: patient.id, email: patient.email }))
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-GOV-003"), "Expected SPORE-GOV-003 when denied field appears in response body");
+    assert.ok(hasDiag(result, "FUNGI-GOV-003"), "Expected FUNGI-GOV-003 when denied field appears in response body");
   });
 
-  it("does not emit SPORE-GOV-003 when only allowed fields are returned", () => {
+  it("does not emit FUNGI-GOV-003 when only allowed fields are returned", () => {
     const result = parseAndVerify(`
 flow getPatient(readonly request: Request) -> GetPatientResult
 contract {
@@ -404,10 +404,10 @@ contract {
   return Ok(Response.ok({ patientId: patient.id, name: patient.name }))
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-GOV-003"), "Unexpected SPORE-GOV-003 when no denied fields are used");
+    assert.ok(!hasDiag(result, "FUNGI-GOV-003"), "Unexpected FUNGI-GOV-003 when no denied fields are used");
   });
 
-  it("does not emit SPORE-GOV-003 when there is no response section in the contract", () => {
+  it("does not emit FUNGI-GOV-003 when there is no response section in the contract", () => {
     const result = parseAndVerify(`
 flow getOrder(readonly request: Request) -> GetOrderResult
 contract {
@@ -420,22 +420,22 @@ contract {
   return Ok(Response.ok({ orderId: request.params.id, email: request.user.email }))
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-GOV-003"), "Unexpected SPORE-GOV-003 when no response contract section");
+    assert.ok(!hasDiag(result, "FUNGI-GOV-003"), "Unexpected FUNGI-GOV-003 when no response contract section");
   });
 
-  it("SPORE-GOV-003 constant has correct code and name", () => {
-    assert.equal(SPORE_GOV_003.code, "SPORE-GOV-003");
-    assert.equal(SPORE_GOV_003.name, "PROTECTED_DATA_IN_RESPONSE");
-    assert.equal(SPORE_GOV_003.severity, "error");
+  it("FUNGI-GOV-003 constant has correct code and name", () => {
+    assert.equal(FUNGI_GOV_003.code, "FUNGI-GOV-003");
+    assert.equal(FUNGI_GOV_003.name, "PROTECTED_DATA_IN_RESPONSE");
+    assert.equal(FUNGI_GOV_003.severity, "error");
   });
 });
 
 // =============================================================================
-// Phase 10C — SPORE-CONTEXT-001: required context field not accessed
+// Phase 10C — FUNGI-CONTEXT-001: required context field not accessed
 // =============================================================================
 
-describe("Governance verifier — SPORE-CONTEXT-001 required context not accessed", () => {
-  it("emits SPORE-CONTEXT-001 when context requires actor but body never accesses it", () => {
+describe("Governance verifier — FUNGI-CONTEXT-001 required context not accessed", () => {
+  it("emits FUNGI-CONTEXT-001 when context requires actor but body never accesses it", () => {
     const result = parseAndVerify(`
 flow getRecord(readonly request: Request) -> GetRecordResult
 contract {
@@ -452,10 +452,10 @@ contract {
   return Ok(Response.ok({ id: record.id }))
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-CONTEXT-001"), "Expected SPORE-CONTEXT-001 when context.actor is never accessed");
+    assert.ok(hasDiag(result, "FUNGI-CONTEXT-001"), "Expected FUNGI-CONTEXT-001 when context.actor is never accessed");
   });
 
-  it("does not emit SPORE-CONTEXT-001 when context.actor is accessed in body", () => {
+  it("does not emit FUNGI-CONTEXT-001 when context.actor is accessed in body", () => {
     const result = parseAndVerify(`
 flow getRecord(readonly request: Request) -> GetRecordResult
 contract {
@@ -473,10 +473,10 @@ contract {
   return Ok(Response.ok({ id: record.id }))
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-CONTEXT-001"), "Unexpected SPORE-CONTEXT-001 when context.actor is accessed");
+    assert.ok(!hasDiag(result, "FUNGI-CONTEXT-001"), "Unexpected FUNGI-CONTEXT-001 when context.actor is accessed");
   });
 
-  it("does not emit SPORE-CONTEXT-001 when there is no context section in the contract", () => {
+  it("does not emit FUNGI-CONTEXT-001 when there is no context section in the contract", () => {
     const result = parseAndVerify(`
 flow getOrder(readonly request: Request) -> GetOrderResult
 contract {
@@ -489,10 +489,10 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-CONTEXT-001"), "Unexpected SPORE-CONTEXT-001 when no context contract section");
+    assert.ok(!hasDiag(result, "FUNGI-CONTEXT-001"), "Unexpected FUNGI-CONTEXT-001 when no context contract section");
   });
 
-  it("SPORE-CONTEXT-001 is warning severity", () => {
+  it("FUNGI-CONTEXT-001 is warning severity", () => {
     const result = parseAndVerify(`
 flow getRecord(readonly request: Request) -> GetRecordResult
 contract {
@@ -508,24 +508,24 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-CONTEXT-001");
-    assert.ok(diag !== undefined, "Expected SPORE-CONTEXT-001 diagnostic");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-CONTEXT-001");
+    assert.ok(diag !== undefined, "Expected FUNGI-CONTEXT-001 diagnostic");
     assert.equal(diag.severity, "warning");
   });
 
-  it("SPORE-CONTEXT-001 constant has correct code and name", () => {
-    assert.equal(SPORE_CONTEXT_001.code, "SPORE-CONTEXT-001");
-    assert.equal(SPORE_CONTEXT_001.name, "REQUIRED_CONTEXT_NOT_ACCESSED");
-    assert.equal(SPORE_CONTEXT_001.severity, "warning");
+  it("FUNGI-CONTEXT-001 constant has correct code and name", () => {
+    assert.equal(FUNGI_CONTEXT_001.code, "FUNGI-CONTEXT-001");
+    assert.equal(FUNGI_CONTEXT_001.name, "REQUIRED_CONTEXT_NOT_ACCESSED");
+    assert.equal(FUNGI_CONTEXT_001.severity, "warning");
   });
 });
 
 // =============================================================================
-// SPORE-GOV-005: policy purpose mismatch
+// FUNGI-GOV-005: policy purpose mismatch
 // =============================================================================
 
-describe("Governance verifier — SPORE-GOV-005 policy purpose mismatch", () => {
-  it("emits SPORE-GOV-005 warning when purpose 'read-only' but database.write is declared", () => {
+describe("Governance verifier — FUNGI-GOV-005 policy purpose mismatch", () => {
+  it("emits FUNGI-GOV-005 warning when purpose 'read-only' but database.write is declared", () => {
     const result = parseAndVerify(`
 flow getPatient(readonly request: Request) -> GetPatientResult
 contract { effects { database.write } }
@@ -536,12 +536,12 @@ policy {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-GOV-005"), "Expected SPORE-GOV-005 when read-only purpose contradicts database.write");
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-GOV-005");
+    assert.ok(hasDiag(result, "FUNGI-GOV-005"), "Expected FUNGI-GOV-005 when read-only purpose contradicts database.write");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-GOV-005");
     assert.equal(diag.severity, "warning");
   });
 
-  it("does not emit SPORE-GOV-005 when purpose 'read-only' and no database.write", () => {
+  it("does not emit FUNGI-GOV-005 when purpose 'read-only' and no database.write", () => {
     const result = parseAndVerify(`
 flow getPatient(readonly request: Request) -> GetPatientResult
 contract { effects { database.read } }
@@ -552,10 +552,10 @@ policy {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-GOV-005"), "Unexpected SPORE-GOV-005 when effects are compatible with purpose");
+    assert.ok(!hasDiag(result, "FUNGI-GOV-005"), "Unexpected FUNGI-GOV-005 when effects are compatible with purpose");
   });
 
-  it("emits SPORE-GOV-005 warning when purpose 'internal' but network.outbound is declared", () => {
+  it("emits FUNGI-GOV-005 warning when purpose 'internal' but network.outbound is declared", () => {
     const result = parseAndVerify(`
 flow syncData(request: Request) -> SyncResult
 contract { effects { network.outbound } }
@@ -566,22 +566,22 @@ policy {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-GOV-005"), "Expected SPORE-GOV-005 when internal purpose contradicts network.outbound");
+    assert.ok(hasDiag(result, "FUNGI-GOV-005"), "Expected FUNGI-GOV-005 when internal purpose contradicts network.outbound");
   });
 
-  it("SPORE-GOV-005 constant has correct code and name", () => {
-    assert.equal(SPORE_GOV_005.code, "SPORE-GOV-005");
-    assert.equal(SPORE_GOV_005.name, "PolicyPurposeMismatch");
-    assert.equal(SPORE_GOV_005.severity, "warning");
+  it("FUNGI-GOV-005 constant has correct code and name", () => {
+    assert.equal(FUNGI_GOV_005.code, "FUNGI-GOV-005");
+    assert.equal(FUNGI_GOV_005.name, "PolicyPurposeMismatch");
+    assert.equal(FUNGI_GOV_005.severity, "warning");
   });
 });
 
 // =============================================================================
-// SPORE-GOV-007: authority block missing reason
+// FUNGI-GOV-007: authority block missing reason
 // =============================================================================
 
-describe("Governance verifier — SPORE-GOV-007 authority block missing reason", () => {
-  it("emits SPORE-GOV-007 error when authority block has no reason clause", () => {
+describe("Governance verifier — FUNGI-GOV-007 authority block missing reason", () => {
+  it("emits FUNGI-GOV-007 error when authority block has no reason clause", () => {
     // The authority block is a flow clause (between signature and body).
     const result = parseAndVerify(`
 flow sharePayments(request: Request) -> Result<Response, ApiError>
@@ -594,12 +594,12 @@ authority share Payments.processor {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(hasDiag(result, "SPORE-GOV-007"), "Expected SPORE-GOV-007 when authority block has no reason");
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-GOV-007");
+    assert.ok(hasDiag(result, "FUNGI-GOV-007"), "Expected FUNGI-GOV-007 when authority block has no reason");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-GOV-007");
     assert.equal(diag.severity, "error");
   });
 
-  it("does not emit SPORE-GOV-007 when authority block has a reason clause", () => {
+  it("does not emit FUNGI-GOV-007 when authority block has a reason clause", () => {
     const result = parseAndVerify(`
 flow sharePayments(request: Request) -> Result<Response, ApiError>
 contract { effects { database.read } }
@@ -612,22 +612,22 @@ authority share Payments.processor {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-GOV-007"), "Unexpected SPORE-GOV-007 when authority block has a reason");
+    assert.ok(!hasDiag(result, "FUNGI-GOV-007"), "Unexpected FUNGI-GOV-007 when authority block has a reason");
   });
 
-  it("SPORE-GOV-007 constant has correct code and name", () => {
-    assert.equal(SPORE_GOV_007.code, "SPORE-GOV-007");
-    assert.equal(SPORE_GOV_007.name, "AuthorityBlockMissingReason");
-    assert.equal(SPORE_GOV_007.severity, "error");
+  it("FUNGI-GOV-007 constant has correct code and name", () => {
+    assert.equal(FUNGI_GOV_007.code, "FUNGI-GOV-007");
+    assert.equal(FUNGI_GOV_007.name, "AuthorityBlockMissingReason");
+    assert.equal(FUNGI_GOV_007.severity, "error");
   });
 });
 
 // =============================================================================
-// SPORE-GOV-009: privileged flow missing capability
+// FUNGI-GOV-009: privileged flow missing capability
 // =============================================================================
 
-describe("Governance verifier — SPORE-GOV-009 privileged flow missing capability", () => {
-  it("emits SPORE-GOV-009 warning when privileged flow has no effects or contract", () => {
+describe("Governance verifier — FUNGI-GOV-009 privileged flow missing capability", () => {
+  it("emits FUNGI-GOV-009 warning when privileged flow has no effects or contract", () => {
     // Privileged flows are detected via identifier child with value "qualifier:privileged".
     // Since the parser does not yet emit a dedicated privilegedFlowDecl kind,
     // we build a minimal AST directly using the verifyGovernance function.
@@ -652,33 +652,33 @@ describe("Governance verifier — SPORE-GOV-009 privileged flow missing capabili
         params: [],
         returnType: "Void",
         declaredEffects: [],
-        location: { file: "test.spore", line: 1, column: 1 },
+        location: { file: "test.fungi", line: 1, column: 1 },
       },
     ];
     const result = verifyGovernance(ast, flows, [], "dev");
     assert.ok(
-      result.diagnostics.some((d) => d.code === "SPORE-GOV-009"),
-      "Expected SPORE-GOV-009 for privileged flow with no effects or contract",
+      result.diagnostics.some((d) => d.code === "FUNGI-GOV-009"),
+      "Expected FUNGI-GOV-009 for privileged flow with no effects or contract",
     );
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-GOV-009");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-GOV-009");
     assert.equal(diag.severity, "warning");
   });
 
-  it("SPORE-GOV-009 constant has correct code and name", () => {
-    assert.equal(SPORE_GOV_009.code, "SPORE-GOV-009");
-    assert.equal(SPORE_GOV_009.name, "PrivilegedFlowMissingCapability");
-    assert.equal(SPORE_GOV_009.severity, "warning");
+  it("FUNGI-GOV-009 constant has correct code and name", () => {
+    assert.equal(FUNGI_GOV_009.code, "FUNGI-GOV-009");
+    assert.equal(FUNGI_GOV_009.name, "PrivilegedFlowMissingCapability");
+    assert.equal(FUNGI_GOV_009.severity, "warning");
   });
 
   // RD-0122 tripwire: GOV-009 is RESERVED / unreachable on real source. The `privileged` flow qualifier is
   // not wired in the parser, so the test above can only fire GOV-009 on a SYNTHETIC AST. This documents the
-  // real behavior and is a tripwire: if someone wires `privileged` (this stops emitting SPORE-PARSE-001),
+  // real behavior and is a tripwire: if someone wires `privileged` (this stops emitting FUNGI-PARSE-001),
   // GOV-009 becomes reachable and will need genuine real-source coverage — and this test will start failing.
-  it("RD-0122: real `privileged flow` is rejected at parse (SPORE-PARSE-001) — GOV-009 is synthetic-only today", () => {
-    const { diagnostics } = parseProgram(`privileged flow doThing() -> Int {\n  return 1\n}`, "test.spore");
+  it("RD-0122: real `privileged flow` is rejected at parse (FUNGI-PARSE-001) — GOV-009 is synthetic-only today", () => {
+    const { diagnostics } = parseProgram(`privileged flow doThing() -> Int {\n  return 1\n}`, "test.fungi");
     assert.ok(
-      diagnostics.some((d) => d.code === "SPORE-PARSE-001"),
-      `real 'privileged flow' should emit SPORE-PARSE-001 (qualifier not wired), got: ${diagnostics.map((d) => d.code).join(", ")}`,
+      diagnostics.some((d) => d.code === "FUNGI-PARSE-001"),
+      `real 'privileged flow' should emit FUNGI-PARSE-001 (qualifier not wired), got: ${diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 });
@@ -744,7 +744,7 @@ describe("extractArenaLimitMB: contract.memory arena extraction", () => {
 // =============================================================================
 
 describe("Governance verifier — GOV-003 accuracy with redact()", () => {
-  it("does not emit SPORE-GOV-003 when denied field is wrapped in redact() call", () => {
+  it("does not emit FUNGI-GOV-003 when denied field is wrapped in redact() call", () => {
     const result = parseAndVerify(`
 flow getPatient(readonly request: Request) -> GetPatientResult
 contract {
@@ -762,42 +762,42 @@ contract {
   return Ok(Response.ok({ patientId: patient.id, email: redact(patient.email) }))
 }
 `);
-    assert.ok(!hasDiag(result, "SPORE-GOV-003"), "Unexpected SPORE-GOV-003 when email is wrapped in redact()");
+    assert.ok(!hasDiag(result, "FUNGI-GOV-003"), "Unexpected FUNGI-GOV-003 when email is wrapped in redact()");
   });
 });
 
-// ── SPORE-GOV-015/016: epilogue {} strategy validation ─────────────────────────
+// ── FUNGI-GOV-015/016: epilogue {} strategy validation ─────────────────────────
 describe("Governance verifier — epilogue {} strategy validation", () => {
   const mk = (epi) =>
     `secure flow f(x: Int) -> Int\ncontract { intent { "test" }  ${epi} }\n{ return x }`;
 
   it("a valid epilogue (sha256_seal + halt_pipeline) produces no diagnostic", () => {
     const r = parseAndVerify(mk("epilogue { generate_proof sha256_seal  on_verification_failure halt_pipeline }"), "production");
-    assert.ok(!hasDiag(r, "SPORE-GOV-015") && !hasDiag(r, "SPORE-GOV-016"), `unexpected: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.ok(!hasDiag(r, "FUNGI-GOV-015") && !hasDiag(r, "FUNGI-GOV-016"), `unexpected: ${r.diagnostics.map(d=>d.code).join(",")}`);
   });
 
   it("epilogue with generate_proof auto is valid", () => {
     const r = parseAndVerify(mk("epilogue { generate_proof auto }"), "production");
-    assert.ok(!hasDiag(r, "SPORE-GOV-015"));
+    assert.ok(!hasDiag(r, "FUNGI-GOV-015"));
   });
 
-  it("an unrecognised proof strategy → SPORE-GOV-015", () => {
+  it("an unrecognised proof strategy → FUNGI-GOV-015", () => {
     const r = parseAndVerify(mk("epilogue { generate_proof unknown_algo }"), "production");
-    assert.ok(hasDiag(r, "SPORE-GOV-015"), `expected GOV-015, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.ok(hasDiag(r, "FUNGI-GOV-015"), `expected GOV-015, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
   });
 
-  it("an unrecognised failure action → SPORE-GOV-016", () => {
+  it("an unrecognised failure action → FUNGI-GOV-016", () => {
     const r = parseAndVerify(mk("epilogue { generate_proof sha256_seal  on_verification_failure explode }"), "production");
-    assert.ok(hasDiag(r, "SPORE-GOV-016"), `expected GOV-016`);
+    assert.ok(hasDiag(r, "FUNGI-GOV-016"), `expected GOV-016`);
   });
 
   it("omitting the epilogue block entirely is auto-by-default (no diagnostic)", () => {
     const r = parseAndVerify(mk(""), "production");
-    assert.ok(!hasDiag(r, "SPORE-GOV-015") && !hasDiag(r, "SPORE-GOV-016"), `unexpected: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.ok(!hasDiag(r, "FUNGI-GOV-015") && !hasDiag(r, "FUNGI-GOV-016"), `unexpected: ${r.diagnostics.map(d=>d.code).join(",")}`);
   });
 });
 
-// ── SPORE-GOV-017/018: cyber_physical_hardening + liability validation ──────────
+// ── FUNGI-GOV-017/018: cyber_physical_hardening + liability validation ──────────
 describe("Governance verifier — cyber_physical_hardening + liability (auto-by-default)", () => {
   const mkSovereign = (extra = "") => `secure flow f(x: Int) -> Int
 contract { intent { "Sovereign transaction." }  effects { audit.write }
@@ -811,41 +811,41 @@ contract { intent { "Low risk." }  effects { audit.write }  ${extra} }
 
   it("valid cyber_physical_hardening on high-risk flow → clean", () => {
     const r = parseAndVerify(mkSovereign("cyber_physical_hardening { enclosure_shielding active_mesh  on_tamper_signal zeroize }"), "production");
-    assert.ok(!hasDiag(r, "SPORE-GOV-017"), `unexpected: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.ok(!hasDiag(r, "FUNGI-GOV-017"), `unexpected: ${r.diagnostics.map(d=>d.code).join(",")}`);
   });
 
-  it("cyber_physical_hardening on low-risk flow (no high economics) → SPORE-GOV-017 warning", () => {
+  it("cyber_physical_hardening on low-risk flow (no high economics) → FUNGI-GOV-017 warning", () => {
     const r = parseAndVerify(mkLow("cyber_physical_hardening { enclosure_shielding active_mesh  on_tamper_signal zeroize }"), "production");
-    assert.ok(hasDiag(r, "SPORE-GOV-017"), `expected GOV-017, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
-    assert.equal(r.diagnostics.find(d=>d.code==="SPORE-GOV-017")?.severity, "warning");
+    assert.ok(hasDiag(r, "FUNGI-GOV-017"), `expected GOV-017, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.equal(r.diagnostics.find(d=>d.code==="FUNGI-GOV-017")?.severity, "warning");
   });
 
-  it("invalid enclosure_shielding value → SPORE-GOV-017 error", () => {
+  it("invalid enclosure_shielding value → FUNGI-GOV-017 error", () => {
     const r = parseAndVerify(mkSovereign("cyber_physical_hardening { enclosure_shielding supershield }"), "production");
-    const errs = r.diagnostics.filter(d=>d.code==="SPORE-GOV-017" && d.severity==="error");
+    const errs = r.diagnostics.filter(d=>d.code==="FUNGI-GOV-017" && d.severity==="error");
     assert.ok(errs.length > 0, `expected GOV-017 error`);
   });
 
-  it("invalid on_tamper_signal value → SPORE-GOV-017 error", () => {
+  it("invalid on_tamper_signal value → FUNGI-GOV-017 error", () => {
     const r = parseAndVerify(mkSovereign("cyber_physical_hardening { enclosure_shielding active_mesh  on_tamper_signal explode }"), "production");
-    const errs = r.diagnostics.filter(d=>d.code==="SPORE-GOV-017" && d.severity==="error");
+    const errs = r.diagnostics.filter(d=>d.code==="FUNGI-GOV-017" && d.severity==="error");
     assert.ok(errs.length > 0, `expected GOV-017 error for invalid tamper signal`);
   });
 
   it("omitting cyber_physical_hardening entirely (auto-by-default) → clean", () => {
     const r = parseAndVerify(mkLow(""), "production");
-    assert.ok(!hasDiag(r, "SPORE-GOV-017"));
+    assert.ok(!hasDiag(r, "FUNGI-GOV-017"));
   });
 
-  it("manually writing liability {} → SPORE-GOV-018 warning", () => {
+  it("manually writing liability {} → FUNGI-GOV-018 warning", () => {
     const r = parseAndVerify(mkLow("liability { max_exposure 10000 }"), "production");
-    assert.ok(hasDiag(r, "SPORE-GOV-018"), `expected GOV-018`);
-    assert.equal(r.diagnostics.find(d=>d.code==="SPORE-GOV-018")?.severity, "warning");
+    assert.ok(hasDiag(r, "FUNGI-GOV-018"), `expected GOV-018`);
+    assert.equal(r.diagnostics.find(d=>d.code==="FUNGI-GOV-018")?.severity, "warning");
   });
 
-  it("not writing liability {} → no SPORE-GOV-018", () => {
+  it("not writing liability {} → no FUNGI-GOV-018", () => {
     const r = parseAndVerify(mkLow(""), "production");
-    assert.ok(!hasDiag(r, "SPORE-GOV-018"));
+    assert.ok(!hasDiag(r, "FUNGI-GOV-018"));
   });
 });
 
@@ -862,11 +862,11 @@ contract { intent { "Governed flow." }  effects { audit.write } }
 });
 
 // =============================================================================
-// Phase 2.1 — SPORE-GOV-019: limits {} field validation
+// Phase 2.1 — FUNGI-GOV-019: limits {} field validation
 // =============================================================================
 
-describe("Governance verifier — SPORE-GOV-019 limits unknown field", () => {
-  it("emits SPORE-GOV-019 warning for unrecognised field 'memmory' (typo)", () => {
+describe("Governance verifier — FUNGI-GOV-019 limits unknown field", () => {
+  it("emits FUNGI-GOV-019 warning for unrecognised field 'memmory' (typo)", () => {
     const r = parseAndVerify(`
 secure flow fetchData(req: Request) -> Result<Response, ApiError>
 contract {
@@ -876,11 +876,11 @@ contract {
 }
 { return Ok(Response.ok({})) }
 `);
-    assert.ok(hasDiag(r, "SPORE-GOV-019"), `Expected SPORE-GOV-019, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
-    assert.equal(r.diagnostics.find(d => d.code === "SPORE-GOV-019")?.severity, "warning");
+    assert.ok(hasDiag(r, "FUNGI-GOV-019"), `Expected FUNGI-GOV-019, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.equal(r.diagnostics.find(d => d.code === "FUNGI-GOV-019")?.severity, "warning");
   });
 
-  it("does not emit SPORE-GOV-019 for known fields: memory, request_time", () => {
+  it("does not emit FUNGI-GOV-019 for known fields: memory, request_time", () => {
     const r = parseAndVerify(`
 secure flow fetchData(req: Request) -> Result<Response, ApiError>
 contract {
@@ -890,29 +890,29 @@ contract {
 }
 { return Ok(Response.ok({})) }
 `);
-    assert.ok(!hasDiag(r, "SPORE-GOV-019"), `Unexpected SPORE-GOV-019: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.ok(!hasDiag(r, "FUNGI-GOV-019"), `Unexpected FUNGI-GOV-019: ${r.diagnostics.map(d=>d.code).join(",")}`);
   });
 
-  it("does not emit SPORE-GOV-019 when no limits block is present", () => {
+  it("does not emit FUNGI-GOV-019 when no limits block is present", () => {
     const r = parseAndVerify(`
 pure flow add(a: Int, b: Int) -> Int { return a + b }
 `);
-    assert.ok(!hasDiag(r, "SPORE-GOV-019"));
+    assert.ok(!hasDiag(r, "FUNGI-GOV-019"));
   });
 
-  it("SPORE-GOV-019 constant has correct code and name", () => {
-    assert.equal(SPORE_GOV_019.code, "SPORE-GOV-019");
-    assert.equal(SPORE_GOV_019.name, "LIMITS_UNKNOWN_FIELD");
-    assert.equal(SPORE_GOV_019.severity, "warning");
+  it("FUNGI-GOV-019 constant has correct code and name", () => {
+    assert.equal(FUNGI_GOV_019.code, "FUNGI-GOV-019");
+    assert.equal(FUNGI_GOV_019.name, "LIMITS_UNKNOWN_FIELD");
+    assert.equal(FUNGI_GOV_019.severity, "warning");
   });
 });
 
 // =============================================================================
-// Phase 2.2 — SPORE-GOV-020: authority overly-broad
+// Phase 2.2 — FUNGI-GOV-020: authority overly-broad
 // =============================================================================
 
-describe("Governance verifier — SPORE-GOV-020 authority overly broad", () => {
-  it("emits SPORE-GOV-020 warning when authority block contains 'require *'", () => {
+describe("Governance verifier — FUNGI-GOV-020 authority overly broad", () => {
+  it("emits FUNGI-GOV-020 warning when authority block contains 'require *'", () => {
     const r = parseAndVerify(`
 secure flow adminOp(req: Request) -> Result<Response, ApiError>
 contract {
@@ -925,11 +925,11 @@ authority grant AdminService {
 }
 { return Ok(Response.ok({})) }
 `);
-    assert.ok(hasDiag(r, "SPORE-GOV-020"), `Expected SPORE-GOV-020, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
-    assert.equal(r.diagnostics.find(d => d.code === "SPORE-GOV-020")?.severity, "warning");
+    assert.ok(hasDiag(r, "FUNGI-GOV-020"), `Expected FUNGI-GOV-020, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.equal(r.diagnostics.find(d => d.code === "FUNGI-GOV-020")?.severity, "warning");
   });
 
-  it("does not emit SPORE-GOV-020 when authority has specific capabilities", () => {
+  it("does not emit FUNGI-GOV-020 when authority has specific capabilities", () => {
     const r = parseAndVerify(`
 secure flow fetchRecord(req: Request) -> Result<Response, ApiError>
 contract {
@@ -942,13 +942,13 @@ authority share RecordService {
 }
 { return Ok(Response.ok({})) }
 `);
-    assert.ok(!hasDiag(r, "SPORE-GOV-020"), `Unexpected SPORE-GOV-020: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.ok(!hasDiag(r, "FUNGI-GOV-020"), `Unexpected FUNGI-GOV-020: ${r.diagnostics.map(d=>d.code).join(",")}`);
   });
 
-  it("SPORE-GOV-020 constant has correct code and name", () => {
-    assert.equal(SPORE_GOV_020.code, "SPORE-GOV-020");
-    assert.equal(SPORE_GOV_020.name, "AUTHORITY_OVERLY_BROAD");
-    assert.equal(SPORE_GOV_020.severity, "warning");
+  it("FUNGI-GOV-020 constant has correct code and name", () => {
+    assert.equal(FUNGI_GOV_020.code, "FUNGI-GOV-020");
+    assert.equal(FUNGI_GOV_020.name, "AUTHORITY_OVERLY_BROAD");
+    assert.equal(FUNGI_GOV_020.severity, "warning");
   });
 });
 
@@ -967,7 +967,7 @@ contract {
 }
 { return Ok(Response.ok({})) }
 `;
-    const parsed = parseProgram(src, "test.spore");
+    const parsed = parseProgram(src, "test.fungi");
     const effects = checkEffects(parsed.flows, parsed.ast);
     // Should not throw; governance verifier must handle the block gracefully
     const r = verifyGovernance(parsed.ast, parsed.flows, effects, "dev");
@@ -993,7 +993,7 @@ contract {
 }
 { return Ok(Response.ok({})) }
 `;
-    const parsed = parseProgram(src, "test.spore");
+    const parsed = parseProgram(src, "test.fungi");
     const effects = checkEffects(parsed.flows, parsed.ast);
     const r = verifyGovernance(parsed.ast, parsed.flows, effects, "dev");
     assert.ok(Array.isArray(r.diagnostics));
@@ -1005,11 +1005,11 @@ contract {
 });
 
 // =============================================================================
-// Phase 3.1 — SPORE-GOV-006: high-risk secure flow without epilogue
+// Phase 3.1 — FUNGI-GOV-006: high-risk secure flow without epilogue
 // =============================================================================
 
-describe("Governance verifier — SPORE-GOV-006 governance proof required but missing", () => {
-  it("emits SPORE-GOV-006 warning when secure flow has max_risk_liability >= 5000 and no epilogue", () => {
+describe("Governance verifier — FUNGI-GOV-006 governance proof required but missing", () => {
+  it("emits FUNGI-GOV-006 warning when secure flow has max_risk_liability >= 5000 and no epilogue", () => {
     const r = parseAndVerify(`
 secure flow processPayment(req: Request) -> Result<Response, ApiError>
 contract {
@@ -1019,11 +1019,11 @@ contract {
 }
 { return Ok(Response.ok({})) }
 `);
-    assert.ok(hasDiag(r, "SPORE-GOV-006"), `Expected SPORE-GOV-006, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
-    assert.equal(r.diagnostics.find(d => d.code === "SPORE-GOV-006")?.severity, "warning");
+    assert.ok(hasDiag(r, "FUNGI-GOV-006"), `Expected FUNGI-GOV-006, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.equal(r.diagnostics.find(d => d.code === "FUNGI-GOV-006")?.severity, "warning");
   });
 
-  it("does not emit SPORE-GOV-006 when high-risk secure flow has an explicit epilogue block", () => {
+  it("does not emit FUNGI-GOV-006 when high-risk secure flow has an explicit epilogue block", () => {
     const r = parseAndVerify(`
 secure flow processPayment(req: Request) -> Result<Response, ApiError>
 contract {
@@ -1034,10 +1034,10 @@ contract {
 }
 { return Ok(Response.ok({})) }
 `);
-    assert.ok(!hasDiag(r, "SPORE-GOV-006"), `Unexpected SPORE-GOV-006: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.ok(!hasDiag(r, "FUNGI-GOV-006"), `Unexpected FUNGI-GOV-006: ${r.diagnostics.map(d=>d.code).join(",")}`);
   });
 
-  it("does not emit SPORE-GOV-006 when max_risk_liability is below threshold (4000)", () => {
+  it("does not emit FUNGI-GOV-006 when max_risk_liability is below threshold (4000)", () => {
     const r = parseAndVerify(`
 secure flow smallPayment(req: Request) -> Result<Response, ApiError>
 contract {
@@ -1047,22 +1047,22 @@ contract {
 }
 { return Ok(Response.ok({})) }
 `);
-    assert.ok(!hasDiag(r, "SPORE-GOV-006"), `Unexpected SPORE-GOV-006`);
+    assert.ok(!hasDiag(r, "FUNGI-GOV-006"), `Unexpected FUNGI-GOV-006`);
   });
 
-  it("SPORE-GOV-006 constant has correct code and name", () => {
-    assert.equal(SPORE_GOV_006.code, "SPORE-GOV-006");
-    assert.equal(SPORE_GOV_006.name, "GOVERNANCE_PROOF_REQUIRED_BUT_MISSING");
-    assert.equal(SPORE_GOV_006.severity, "warning");
+  it("FUNGI-GOV-006 constant has correct code and name", () => {
+    assert.equal(FUNGI_GOV_006.code, "FUNGI-GOV-006");
+    assert.equal(FUNGI_GOV_006.name, "GOVERNANCE_PROOF_REQUIRED_BUT_MISSING");
+    assert.equal(FUNGI_GOV_006.severity, "warning");
   });
 });
 
 // =============================================================================
-// Phase 3.4 — SPORE-GOV-001: intent / behaviour mismatch (extended heuristic)
+// Phase 3.4 — FUNGI-GOV-001: intent / behaviour mismatch (extended heuristic)
 // =============================================================================
 
-describe("Governance verifier — SPORE-GOV-001 intent behaviour mismatch (extended)", () => {
-  it("emits SPORE-GOV-001 when intent says 'Read-only query' but effects include database.write", () => {
+describe("Governance verifier — FUNGI-GOV-001 intent behaviour mismatch (extended)", () => {
+  it("emits FUNGI-GOV-001 when intent says 'Read-only query' but effects include database.write", () => {
     const r = parseAndVerify(`
 secure flow queryOrders(req: Request) -> Result<Response, ApiError>
 contract {
@@ -1071,11 +1071,11 @@ contract {
 }
 { return Ok(Response.ok({})) }
 `);
-    assert.ok(hasDiag(r, "SPORE-GOV-001"), `Expected SPORE-GOV-001, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
-    assert.equal(r.diagnostics.find(d => d.code === "SPORE-GOV-001")?.severity, "warning");
+    assert.ok(hasDiag(r, "FUNGI-GOV-001"), `Expected FUNGI-GOV-001, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.equal(r.diagnostics.find(d => d.code === "FUNGI-GOV-001")?.severity, "warning");
   });
 
-  it("does not emit SPORE-GOV-001 when intent and effects are consistent (read intent + read effects)", () => {
+  it("does not emit FUNGI-GOV-001 when intent and effects are consistent (read intent + read effects)", () => {
     const r = parseAndVerify(`
 secure flow queryOrders(req: Request) -> Result<Response, ApiError>
 contract {
@@ -1084,10 +1084,10 @@ contract {
 }
 { return Ok(Response.ok({})) }
 `);
-    assert.ok(!hasDiag(r, "SPORE-GOV-001"), `Unexpected SPORE-GOV-001: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.ok(!hasDiag(r, "FUNGI-GOV-001"), `Unexpected FUNGI-GOV-001: ${r.diagnostics.map(d=>d.code).join(",")}`);
   });
 
-  it("emits SPORE-GOV-001 when intent claims pure/no side effects but effects are declared", () => {
+  it("emits FUNGI-GOV-001 when intent claims pure/no side effects but effects are declared", () => {
     const r = parseAndVerify(`
 secure flow computeHash(req: Request) -> Result<Response, ApiError>
 contract {
@@ -1096,10 +1096,10 @@ contract {
 }
 { return Ok(Response.ok({})) }
 `);
-    assert.ok(hasDiag(r, "SPORE-GOV-001"), `Expected SPORE-GOV-001 for pure intent + write effects`);
+    assert.ok(hasDiag(r, "FUNGI-GOV-001"), `Expected FUNGI-GOV-001 for pure intent + write effects`);
   });
 
-  it("does not emit SPORE-GOV-001 when intent has no contradiction keywords", () => {
+  it("does not emit FUNGI-GOV-001 when intent has no contradiction keywords", () => {
     const r = parseAndVerify(`
 secure flow createUser(req: Request) -> Result<Response, ApiError>
 contract {
@@ -1109,22 +1109,22 @@ contract {
 { return Ok(Response.ok({})) }
 `);
     // "create" with write effects is consistent — no GOV-001
-    assert.ok(!hasDiag(r, "SPORE-GOV-001"), `Unexpected SPORE-GOV-001 for non-contradictory intent`);
+    assert.ok(!hasDiag(r, "FUNGI-GOV-001"), `Unexpected FUNGI-GOV-001 for non-contradictory intent`);
   });
 
-  it("SPORE-GOV-001 constant has correct code and name", () => {
-    assert.equal(SPORE_GOV_001.code, "SPORE-GOV-001");
-    assert.equal(SPORE_GOV_001.name, "INTENT_BEHAVIOR_MISMATCH");
-    assert.equal(SPORE_GOV_001.severity, "warning");
+  it("FUNGI-GOV-001 constant has correct code and name", () => {
+    assert.equal(FUNGI_GOV_001.code, "FUNGI-GOV-001");
+    assert.equal(FUNGI_GOV_001.name, "INTENT_BEHAVIOR_MISMATCH");
+    assert.equal(FUNGI_GOV_001.severity, "warning");
   });
 });
 
 // =============================================================================
-// Phase 3.3 — SPORE-TERM-001: recursive flow without decreases annotation
+// Phase 3.3 — FUNGI-TERM-001: recursive flow without decreases annotation
 // =============================================================================
 
-describe("Governance verifier — SPORE-TERM-001 termination annotation missing", () => {
-  it("emits SPORE-TERM-001 when recursive secure flow in deterministic profile has no decreases", () => {
+describe("Governance verifier — FUNGI-TERM-001 termination annotation missing", () => {
+  it("emits FUNGI-TERM-001 when recursive secure flow in deterministic profile has no decreases", () => {
     // deterministic profile triggers strict treatment; the flow calls itself recursively
     const r = parseAndVerify(`
 secure flow countdown(n: Int) -> Int
@@ -1137,11 +1137,11 @@ contract {
   return countdown(n - 1)
 }
 `, "deterministic");
-    assert.ok(hasDiag(r, "SPORE-TERM-001"), `Expected SPORE-TERM-001, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
-    assert.equal(r.diagnostics.find(d => d.code === "SPORE-TERM-001")?.severity, "warning");
+    assert.ok(hasDiag(r, "FUNGI-TERM-001"), `Expected FUNGI-TERM-001, got: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.equal(r.diagnostics.find(d => d.code === "FUNGI-TERM-001")?.severity, "warning");
   });
 
-  it("does not emit SPORE-TERM-001 when decreases annotation is present", () => {
+  it("does not emit FUNGI-TERM-001 when decreases annotation is present", () => {
     const parsed = parseProgram(`
 secure flow countdown(n: Int) -> Int decreases n
 contract {
@@ -1152,17 +1152,17 @@ contract {
   if n <= 0 { return 0 }
   return countdown(n - 1)
 }
-`, "test.spore");
+`, "test.fungi");
     const effects = checkEffects(parsed.flows, parsed.ast);
     const r = verifyGovernance(parsed.ast, parsed.flows, effects, "deterministic");
-    assert.ok(!hasDiag(r, "SPORE-TERM-001"), `Unexpected SPORE-TERM-001: ${r.diagnostics.map(d=>d.code).join(",")}`);
+    assert.ok(!hasDiag(r, "FUNGI-TERM-001"), `Unexpected FUNGI-TERM-001: ${r.diagnostics.map(d=>d.code).join(",")}`);
     // Also verify decreasesMetric is captured in flow meta
     const flow = parsed.flows.find(f => f.name === "countdown");
     assert.ok(flow !== undefined, "flow 'countdown' should be parsed");
     assert.equal(flow.decreasesMetric, "n", "decreasesMetric should be 'n'");
   });
 
-  it("does not emit SPORE-TERM-001 for non-recursive secure flow", () => {
+  it("does not emit FUNGI-TERM-001 for non-recursive secure flow", () => {
     const r = parseAndVerify(`
 secure flow greet(name: String) -> String
 contract {
@@ -1171,13 +1171,13 @@ contract {
 }
 { return name }
 `, "deterministic");
-    assert.ok(!hasDiag(r, "SPORE-TERM-001"), `Unexpected SPORE-TERM-001 for non-recursive flow`);
+    assert.ok(!hasDiag(r, "FUNGI-TERM-001"), `Unexpected FUNGI-TERM-001 for non-recursive flow`);
   });
 
-  it("SPORE-TERM-001 constant has correct code and name", () => {
-    assert.equal(SPORE_TERM_001.code, "SPORE-TERM-001");
-    assert.equal(SPORE_TERM_001.name, "TERMINATION_ANNOTATION_MISSING");
-    assert.equal(SPORE_TERM_001.severity, "warning");
+  it("FUNGI-TERM-001 constant has correct code and name", () => {
+    assert.equal(FUNGI_TERM_001.code, "FUNGI-TERM-001");
+    assert.equal(FUNGI_TERM_001.name, "TERMINATION_ANNOTATION_MISSING");
+    assert.equal(FUNGI_TERM_001.severity, "warning");
   });
 });
 
@@ -1192,7 +1192,7 @@ pure flow factorial(n: Int) -> Int decreases n {
   if n <= 1 { return 1 }
   return n * factorial(n - 1)
 }
-`, "test.spore");
+`, "test.fungi");
     assert.equal(parsed.diagnostics.filter(d => d.severity === "error").length, 0,
       `Unexpected parse errors: ${parsed.diagnostics.map(d=>d.message).join("; ")}`);
     const flow = parsed.flows.find(f => f.name === "factorial");
@@ -1205,7 +1205,7 @@ pure flow factorial(n: Int) -> Int decreases n {
 pure flow gcd(m: Int, n: Int) -> Int decreases (m - n) {
   return m
 }
-`, "test.spore");
+`, "test.fungi");
     assert.equal(parsed.diagnostics.filter(d => d.severity === "error").length, 0,
       `Unexpected parse errors: ${parsed.diagnostics.map(d=>d.message).join("; ")}`);
     const flow = parsed.flows.find(f => f.name === "gcd");
@@ -1217,7 +1217,7 @@ pure flow gcd(m: Int, n: Int) -> Int decreases (m - n) {
   it("flow without decreases has undefined decreasesMetric", () => {
     const parsed = parseProgram(`
 pure flow add(a: Int, b: Int) -> Int { return a + b }
-`, "test.spore");
+`, "test.fungi");
     const flow = parsed.flows.find(f => f.name === "add");
     assert.ok(flow !== undefined);
     assert.equal(flow.decreasesMetric, undefined, "decreasesMetric should be undefined when not declared");
@@ -1226,7 +1226,7 @@ pure flow add(a: Int, b: Int) -> Int { return a + b }
 
 // ── Domain Guard Policies — task #56 ─────────────────────────────────────────
 
-describe("Governance Verifier — Domain Guard Policies (SPORE-GOV-004)", () => {
+describe("Governance Verifier — Domain Guard Policies (FUNGI-GOV-004)", () => {
   const GUARD_POLICY = `
 policy InvoicingDomainGuard {
   permitted_effects {
@@ -1239,7 +1239,7 @@ policy InvoicingDomainGuard {
 }
 `;
 
-  it("compliant contract passes cleanly — no SPORE-GOV-004", () => {
+  it("compliant contract passes cleanly — no FUNGI-GOV-004", () => {
     const result = parseAndVerify(GUARD_POLICY + `
 secure flow processInvoice(id: String) -> Result<String, String>
 contract [conforms_to: InvoicingDomainGuard] {
@@ -1249,10 +1249,10 @@ contract [conforms_to: InvoicingDomainGuard] {
 }
 { return Ok(id) }
 `);
-    assert.ok(!hasDiag(result, "SPORE-GOV-004"), `Expected no SPORE-GOV-004 but got: ${result.diagnostics.filter(d=>d.code==="SPORE-GOV-004").map(d=>d.message).join("; ")}`);
+    assert.ok(!hasDiag(result, "FUNGI-GOV-004"), `Expected no FUNGI-GOV-004 but got: ${result.diagnostics.filter(d=>d.code==="FUNGI-GOV-004").map(d=>d.message).join("; ")}`);
   });
 
-  it("forbidden effect triggers SPORE-GOV-004", () => {
+  it("forbidden effect triggers FUNGI-GOV-004", () => {
     const result = parseAndVerify(GUARD_POLICY + `
 secure flow badInvoice(id: String) -> Result<String, String>
 contract [conforms_to: InvoicingDomainGuard] {
@@ -1262,12 +1262,12 @@ contract [conforms_to: InvoicingDomainGuard] {
 }
 { return Ok(id) }
 `);
-    assert.ok(hasDiag(result, "SPORE-GOV-004"), "Expected SPORE-GOV-004 for filesystem.wipe_all");
-    const diag = result.diagnostics.find(d => d.code === "SPORE-GOV-004");
+    assert.ok(hasDiag(result, "FUNGI-GOV-004"), "Expected FUNGI-GOV-004 for filesystem.wipe_all");
+    const diag = result.diagnostics.find(d => d.code === "FUNGI-GOV-004");
     assert.ok(diag?.message.includes("filesystem.wipe_all"), `Expected message to mention 'filesystem.wipe_all': ${diag?.message}`);
   });
 
-  it("multiple forbidden effects each trigger SPORE-GOV-004", () => {
+  it("multiple forbidden effects each trigger FUNGI-GOV-004", () => {
     const result = parseAndVerify(GUARD_POLICY + `
 secure flow multiViolation(id: String) -> Result<String, String>
 contract [conforms_to: InvoicingDomainGuard] {
@@ -1276,8 +1276,8 @@ contract [conforms_to: InvoicingDomainGuard] {
 }
 { return Ok(id) }
 `);
-    const violations = result.diagnostics.filter(d => d.code === "SPORE-GOV-004");
-    assert.ok(violations.length >= 2, `Expected >=2 SPORE-GOV-004 violations, got ${violations.length}`);
+    const violations = result.diagnostics.filter(d => d.code === "FUNGI-GOV-004");
+    assert.ok(violations.length >= 2, `Expected >=2 FUNGI-GOV-004 violations, got ${violations.length}`);
   });
 
   it("contract without conforms_to is not checked against any policy", () => {
@@ -1289,8 +1289,8 @@ contract {
 }
 { return Ok(id) }
 `);
-    // Without [conforms_to: ...], no domain guard check runs — no SPORE-GOV-004
-    assert.ok(!hasDiag(result, "SPORE-GOV-004"), "Expected no SPORE-GOV-004 for unbound contract");
+    // Without [conforms_to: ...], no domain guard check runs — no FUNGI-GOV-004
+    assert.ok(!hasDiag(result, "FUNGI-GOV-004"), "Expected no FUNGI-GOV-004 for unbound contract");
   });
 
   it("conforms_to with missing policy emits a warning, not a hard error", () => {
@@ -1302,13 +1302,13 @@ contract [conforms_to: NonExistentPolicy] {
 }
 { return Ok(id) }
 `);
-    const diag = result.diagnostics.find(d => d.code === "SPORE-GOV-004");
-    assert.ok(diag !== undefined, "Expected SPORE-GOV-004 for missing policy reference");
+    const diag = result.diagnostics.find(d => d.code === "FUNGI-GOV-004");
+    assert.ok(diag !== undefined, "Expected FUNGI-GOV-004 for missing policy reference");
     assert.equal(diag?.severity, "warning", "Missing policy should be a warning, not an error");
   });
 
   it("policy parser — permitted_effects sub-block is parsed correctly", () => {
-    const { ast } = parseProgram(GUARD_POLICY, "test.spore");
+    const { ast } = parseProgram(GUARD_POLICY, "test.fungi");
     const policyNode = (ast.children ?? []).find(c => c.kind === "policyDecl" && c.value === "InvoicingDomainGuard");
     assert.ok(policyNode !== undefined, "Expected policyDecl for InvoicingDomainGuard");
     const permEffects = (policyNode.children ?? []).find(c => c.kind === "identifier" && c.value === "permitted_effects");
@@ -1326,7 +1326,7 @@ contract [conforms_to: InvoicingDomainGuard] {
   effects { gateway.charge }
 }
 { return Ok(id) }
-`, "test.spore");
+`, "test.fungi");
     // Find the contractDecl with conformsTo
     let found = false;
     function scan(node) {
@@ -1340,7 +1340,7 @@ contract [conforms_to: InvoicingDomainGuard] {
 
 // ── DRCM Phase 2: invariant {} block (task #36) ──────────────────────────────
 
-describe("Governance Verifier — DRCM Phase 2 invariant {} (SPORE-INV-001/002/003)", () => {
+describe("Governance Verifier — DRCM Phase 2 invariant {} (FUNGI-INV-001/002/003)", () => {
   it("runtime parameter ensure: no error (unknown at compile time → runtime-precheck)", () => {
     const result = parseAndVerify(`
 secure flow transfer(amount: Int) -> Result<String, String>
@@ -1351,10 +1351,10 @@ contract {
 }
 { return Ok("ok") }
 `);
-    assert.ok(!hasDiag(result, "SPORE-INV-001"), "No SPORE-INV-001 for runtime parameter");
+    assert.ok(!hasDiag(result, "FUNGI-INV-001"), "No FUNGI-INV-001 for runtime parameter");
   });
 
-  it("ensure false: SPORE-INV-001 (statically proved false — invariant can never be satisfied)", () => {
+  it("ensure false: FUNGI-INV-001 (statically proved false — invariant can never be satisfied)", () => {
     const result = parseAndVerify(`
 secure flow broken(n: Int) -> Result<String, String>
 contract {
@@ -1364,10 +1364,10 @@ contract {
 }
 { return Ok("ok") }
 `);
-    assert.ok(hasDiag(result, "SPORE-INV-001"), "Expected SPORE-INV-001 for ensure false");
+    assert.ok(hasDiag(result, "FUNGI-INV-001"), "Expected FUNGI-INV-001 for ensure false");
   });
 
-  it("ensure 1 > 5: SPORE-INV-001 (statically proved false — literal comparison)", () => {
+  it("ensure 1 > 5: FUNGI-INV-001 (statically proved false — literal comparison)", () => {
     const result = parseAndVerify(`
 pure flow impossible(x: Int) -> Int
 contract {
@@ -1376,7 +1376,7 @@ contract {
 }
 { return x }
 `);
-    assert.ok(hasDiag(result, "SPORE-INV-001"), "Expected SPORE-INV-001 for ensure 1 > 5");
+    assert.ok(hasDiag(result, "FUNGI-INV-001"), "Expected FUNGI-INV-001 for ensure 1 > 5");
   });
 
   it("ensure 5 > 0: clean (statically proved true — no error, no WAT gate needed)", () => {
@@ -1388,11 +1388,11 @@ contract {
 }
 { return x }
 `);
-    assert.ok(!hasDiag(result, "SPORE-INV-001"), "No error for statically proved true");
-    assert.ok(!hasDiag(result, "SPORE-INV-002"), "No post-condition error either");
+    assert.ok(!hasDiag(result, "FUNGI-INV-001"), "No error for statically proved true");
+    assert.ok(!hasDiag(result, "FUNGI-INV-002"), "No post-condition error either");
   });
 
-  it("empty invariant block: SPORE-INV-003 warning", () => {
+  it("empty invariant block: FUNGI-INV-003 warning", () => {
     const result = parseAndVerify(`
 pure flow emptyInv(x: Int) -> Int
 contract {
@@ -1401,12 +1401,12 @@ contract {
 }
 { return x }
 `);
-    const diag = result.diagnostics.find(d => d.code === "SPORE-INV-003");
-    assert.ok(diag !== undefined, "Expected SPORE-INV-003 for empty invariant block");
+    const diag = result.diagnostics.find(d => d.code === "FUNGI-INV-003");
+    assert.ok(diag !== undefined, "Expected FUNGI-INV-003 for empty invariant block");
     assert.equal(diag?.severity, "warning", "Should be a warning");
   });
 
-  it("SPORE-INV-004: undefined symbol in ensure → error (not silent WAT degradation)", () => {
+  it("FUNGI-INV-004: undefined symbol in ensure → error (not silent WAT degradation)", () => {
     const result = parseAndVerify(`
 pure flow t(amount: Int) -> Int
 contract {
@@ -1415,12 +1415,12 @@ contract {
 }
 { return amount }
 `);
-    assert.ok(hasDiag(result, "SPORE-INV-004"), "Expected SPORE-INV-004 for undefined symbol");
-    const diag = result.diagnostics.find(d => d.code === "SPORE-INV-004");
+    assert.ok(hasDiag(result, "FUNGI-INV-004"), "Expected FUNGI-INV-004 for undefined symbol");
+    const diag = result.diagnostics.find(d => d.code === "FUNGI-INV-004");
     assert.ok(diag?.message.includes("nonexistent"), "Message should name the unresolved symbol");
   });
 
-  it("SPORE-INV-004: flow parameter is in scope — no error", () => {
+  it("FUNGI-INV-004: flow parameter is in scope — no error", () => {
     const result = parseAndVerify(`
 pure flow t(amount: Int) -> Int
 contract {
@@ -1429,10 +1429,10 @@ contract {
 }
 { return amount }
 `);
-    assert.ok(!hasDiag(result, "SPORE-INV-004"), "No INV-004 for valid parameter ref");
+    assert.ok(!hasDiag(result, "FUNGI-INV-004"), "No INV-004 for valid parameter ref");
   });
 
-  it("0040/#70: `result` is in scope inside an ensure (output post-condition) — no SPORE-INV-004", () => {
+  it("0040/#70: `result` is in scope inside an ensure (output post-condition) — no FUNGI-INV-004", () => {
     const result = parseAndVerify(`
 pure flow t(amount: Int) -> Int
 contract {
@@ -1441,11 +1441,11 @@ contract {
 }
 { return amount }
 `);
-    assert.ok(!hasDiag(result, "SPORE-INV-004"), "`result` is the magic output symbol — accepted");
-    assert.ok(!hasDiag(result, "SPORE-INV-001"), "result-referencing ensure is not statically false");
+    assert.ok(!hasDiag(result, "FUNGI-INV-004"), "`result` is the magic output symbol — accepted");
+    assert.ok(!hasDiag(result, "FUNGI-INV-001"), "result-referencing ensure is not statically false");
   });
 
-  it("0040/#70: a typo alongside `result` is still rejected (SPORE-INV-004)", () => {
+  it("0040/#70: a typo alongside `result` is still rejected (FUNGI-INV-004)", () => {
     const result = parseAndVerify(`
 pure flow t(amount: Int) -> Int
 contract {
@@ -1454,18 +1454,18 @@ contract {
 }
 { return amount }
 `);
-    assert.ok(hasDiag(result, "SPORE-INV-004"), "unknown symbol next to result is still flagged");
-    const diag = result.diagnostics.find(d => d.code === "SPORE-INV-004");
+    assert.ok(hasDiag(result, "FUNGI-INV-004"), "unknown symbol next to result is still flagged");
+    const diag = result.diagnostics.find(d => d.code === "FUNGI-INV-004");
     assert.ok(diag?.message.includes("bogus"), "names the unresolved symbol, not result");
   });
 
-  it("SPORE-INV-004: builtins (true/false/None) are always in scope", () => {
+  it("FUNGI-INV-004: builtins (true/false/None) are always in scope", () => {
     const result = parseAndVerify(`
 pure flow t(x: Int) -> Int
 contract { intent { "Test." } invariant { ensure true; } }
 { return x }
 `);
-    assert.ok(!hasDiag(result, "SPORE-INV-004"), "No INV-004 for builtin 'true'");
+    assert.ok(!hasDiag(result, "FUNGI-INV-004"), "No INV-004 for builtin 'true'");
   });
 
   it("multiple ensure statements: each evaluated independently", () => {
@@ -1481,16 +1481,16 @@ contract {
 }
 { return x }
 `);
-    // 10 > 5 = true → clean; x >= 0 = unknown → clean; false → SPORE-INV-001
-    const inv001 = result.diagnostics.filter(d => d.code === "SPORE-INV-001");
-    assert.equal(inv001.length, 1, "Expected exactly one SPORE-INV-001 (for ensure false)");
+    // 10 > 5 = true → clean; x >= 0 = unknown → clean; false → FUNGI-INV-001
+    const inv001 = result.diagnostics.filter(d => d.code === "FUNGI-INV-001");
+    assert.equal(inv001.length, 1, "Expected exactly one FUNGI-INV-001 (for ensure false)");
   });
 });
 
 // ── DRCM Phase 1: Wildcard ban (task #30) + Prefix scan (task #31) ───────────
 
-describe("DRCM Phase 1 — SPORE-CAP-001 network wildcard ban (task #30)", () => {
-  it("emits SPORE-CAP-001 for effects { network.* }", () => {
+describe("DRCM Phase 1 — FUNGI-CAP-001 network wildcard ban (task #30)", () => {
+  it("emits FUNGI-CAP-001 for effects { network.* }", () => {
     const result = parseAndVerify(`
 secure flow bad(id: String) -> Result<String, String>
 contract {
@@ -1499,10 +1499,10 @@ contract {
 }
 { return Ok(id) }
 `);
-    assert.ok(hasDiag(result, "SPORE-CAP-001"), "Expected SPORE-CAP-001 for network.*");
+    assert.ok(hasDiag(result, "FUNGI-CAP-001"), "Expected FUNGI-CAP-001 for network.*");
   });
 
-  it("emits SPORE-CAP-001 for effects { * } (bare wildcard)", () => {
+  it("emits FUNGI-CAP-001 for effects { * } (bare wildcard)", () => {
     const result = parseAndVerify(`
 secure flow bad2(id: String) -> Result<String, String>
 contract {
@@ -1511,10 +1511,10 @@ contract {
 }
 { return Ok(id) }
 `);
-    assert.ok(hasDiag(result, "SPORE-CAP-001"), "Expected SPORE-CAP-001 for bare *");
+    assert.ok(hasDiag(result, "FUNGI-CAP-001"), "Expected FUNGI-CAP-001 for bare *");
   });
 
-  it("no SPORE-CAP-001 for specific effects (no wildcard)", () => {
+  it("no FUNGI-CAP-001 for specific effects (no wildcard)", () => {
     const result = parseAndVerify(`
 secure flow good(id: String) -> Result<String, String>
 contract {
@@ -1523,12 +1523,12 @@ contract {
 }
 { return Ok(id) }
 `);
-    assert.ok(!hasDiag(result, "SPORE-CAP-001"), "No SPORE-CAP-001 for specific effects");
+    assert.ok(!hasDiag(result, "FUNGI-CAP-001"), "No FUNGI-CAP-001 for specific effects");
   });
 });
 
 describe("DRCM Phase 1 — SecretSinkMonitor prefix scan (task #31)", () => {
-  it("scan detects secret prefix in payload (SPORE-SECRET-BREACH)", async () => {
+  it("scan detects secret prefix in payload (FUNGI-SECRET-BREACH)", async () => {
     const { activeSinkMonitor } = await import(
       "../dist/security-sink-monitor.js"
     );
@@ -1570,8 +1570,8 @@ describe("DRCM Phase 1 — SecretSinkMonitor prefix scan (task #31)", () => {
 
 // ── Resilience & Observability (task #58) ────────────────────────────────────
 
-describe("Governance Verifier — SPORE-RES-001 resilience retry on mutation", () => {
-  it("emits SPORE-RES-001 for retry + database.write without idempotent: true", () => {
+describe("Governance Verifier — FUNGI-RES-001 resilience retry on mutation", () => {
+  it("emits FUNGI-RES-001 for retry + database.write without idempotent: true", () => {
     const result = parseAndVerify(`
 secure flow badRetry(id: String) -> Result<String, String>
 contract {
@@ -1581,10 +1581,10 @@ contract {
 }
 { return Ok(id) }
 `);
-    assert.ok(hasDiag(result, "SPORE-RES-001"), "Expected SPORE-RES-001 for retry + database.write");
+    assert.ok(hasDiag(result, "FUNGI-RES-001"), "Expected FUNGI-RES-001 for retry + database.write");
   });
 
-  it("no SPORE-RES-001 when idempotent: true is declared", () => {
+  it("no FUNGI-RES-001 when idempotent: true is declared", () => {
     const result = parseAndVerify(`
 secure flow goodRetry(id: String) -> Result<String, String>
 contract {
@@ -1594,10 +1594,10 @@ contract {
 }
 { return Ok(id) }
 `);
-    assert.ok(!hasDiag(result, "SPORE-RES-001"), "No SPORE-RES-001 when idempotent: true");
+    assert.ok(!hasDiag(result, "FUNGI-RES-001"), "No FUNGI-RES-001 when idempotent: true");
   });
 
-  it("no SPORE-RES-001 for network-only flows (no mutation effects)", () => {
+  it("no FUNGI-RES-001 for network-only flows (no mutation effects)", () => {
     const result = parseAndVerify(`
 secure flow networkRetry(url: String) -> Result<String, String>
 contract {
@@ -1607,12 +1607,12 @@ contract {
 }
 { return Ok(url) }
 `);
-    assert.ok(!hasDiag(result, "SPORE-RES-001"), "No SPORE-RES-001 for network-only flow");
+    assert.ok(!hasDiag(result, "FUNGI-RES-001"), "No FUNGI-RES-001 for network-only flow");
   });
 });
 
-describe("Governance Verifier — SPORE-RES-CB-PENDING circuit_breaker fail-loud (R&D 0120)", () => {
-  it("emits SPORE-RES-CB-PENDING (warning) when a flow declares fallback circuit_breaker (parsed but inert)", () => {
+describe("Governance Verifier — FUNGI-RES-CB-PENDING circuit_breaker fail-loud (R&D 0120)", () => {
+  it("emits FUNGI-RES-CB-PENDING (warning) when a flow declares fallback circuit_breaker (parsed but inert)", () => {
     const result = parseAndVerify(`
 secure flow withBreaker(id: String) -> Result<String, String>
 contract {
@@ -1622,12 +1622,12 @@ contract {
 }
 { return Ok(id) }
 `);
-    assert.ok(hasDiag(result, "SPORE-RES-CB-PENDING"), "a declared-but-inert circuit_breaker must fail LOUD, not read as enforced");
-    const d = result.diagnostics.find((x) => x.code === "SPORE-RES-CB-PENDING");
+    assert.ok(hasDiag(result, "FUNGI-RES-CB-PENDING"), "a declared-but-inert circuit_breaker must fail LOUD, not read as enforced");
+    const d = result.diagnostics.find((x) => x.code === "FUNGI-RES-CB-PENDING");
     assert.equal(d.severity, "warning", "CB-PENDING is a posture-honesty warning (the declaration is valid, just not enforced)");
   });
 
-  it("an ENFORCED fallback (return_cached) does NOT emit SPORE-RES-CB-PENDING", () => {
+  it("an ENFORCED fallback (return_cached) does NOT emit FUNGI-RES-CB-PENDING", () => {
     const result = parseAndVerify(`
 secure flow withCache(id: String) -> Result<String, String>
 contract {
@@ -1637,12 +1637,12 @@ contract {
 }
 { return Ok(id) }
 `);
-    assert.ok(!hasDiag(result, "SPORE-RES-CB-PENDING"), "enforced fallbacks must not warn");
+    assert.ok(!hasDiag(result, "FUNGI-RES-CB-PENDING"), "enforced fallbacks must not warn");
   });
 });
 
-describe("Governance Verifier — SPORE-OBS-001 observability on pure flow", () => {
-  it("emits SPORE-OBS-001 warning for explicit observability on pure flow", () => {
+describe("Governance Verifier — FUNGI-OBS-001 observability on pure flow", () => {
+  it("emits FUNGI-OBS-001 warning for explicit observability on pure flow", () => {
     const result = parseAndVerify(`
 pure flow pureWithObs(x: Int) -> Int
 contract {
@@ -1651,12 +1651,12 @@ contract {
 }
 { return x + 1 }
 `);
-    const diag = result.diagnostics.find(d => d.code === "SPORE-OBS-001");
-    assert.ok(diag !== undefined, "Expected SPORE-OBS-001 warning");
+    const diag = result.diagnostics.find(d => d.code === "FUNGI-OBS-001");
+    assert.ok(diag !== undefined, "Expected FUNGI-OBS-001 warning");
     assert.equal(diag?.severity, "warning", "Should be a warning not an error");
   });
 
-  it("no SPORE-OBS-001 for secure flow with observability", () => {
+  it("no FUNGI-OBS-001 for secure flow with observability", () => {
     const result = parseAndVerify(`
 secure flow secureWithObs(id: String) -> Result<String, String>
 contract {
@@ -1666,6 +1666,6 @@ contract {
 }
 { return Ok(id) }
 `);
-    assert.ok(!hasDiag(result, "SPORE-OBS-001"), "No SPORE-OBS-001 for secure flow");
+    assert.ok(!hasDiag(result, "FUNGI-OBS-001"), "No FUNGI-OBS-001 for secure flow");
   });
 });

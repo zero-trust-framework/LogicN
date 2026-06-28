@@ -1,7 +1,7 @@
 # Galerina App Kernel TODO
 
 > Note (2026-06-16): the App-Kernel **P1 implementation shipped** — `src/{types,route-defaults,kernel,fuse-loader,index}.ts`
-> (the fail-closed request pipeline + fuse-loader), **38 tests**, and **3 `.spore` examples**
+> (the fail-closed request pipeline + fuse-loader), **38 tests**, and **3 `.fungi` examples**
 > (`typed-api-boundary`, `security-policy`, `job`). The unchecked `Define …` items below are the
 > remaining contract-spec backlog, not the implementation.
 

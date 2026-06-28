@@ -36,8 +36,8 @@ use    = use an approved package, standard library module or third-party depende
 This keeps the language clear.
 
 ```Galerina
-import "./types.spore"
-import "./routes.spore"
+import "./types.fungi"
+import "./routes.fungi"
 
 use GraphQL
 use std.json
@@ -49,7 +49,7 @@ Recommended rule:
 ```text
 Import local files.
 Use approved packages.
-Register packages in boot.spore.
+Register packages in boot.fungi.
 Use packages explicitly in source files.
 ```
 
@@ -58,7 +58,7 @@ Use packages explicitly in source files.
 ## Core Principle
 
 ```text
-boot.spore owns package approval.
+boot.fungi owns package approval.
 source files use approved packages.
 import remains for local Galerina files.
 the compiler owns dependency checking and reporting.
@@ -153,7 +153,7 @@ Installed does not mean trusted. Certified does not mean unrestricted.
 
 | Keyword | Purpose | Example |
 |---|---|---|
-| `import` | Import local Galerina source files/modules | `import "./types.spore"` |
+| `import` | Import local Galerina source files/modules | `import "./types.fungi"` |
 | `use` | Use approved packages or standard library modules | `use GraphQL` |
 | `use std.*` | Use Galerina standard library modules | `use std.json` |
 
@@ -163,26 +163,26 @@ Installed does not mean trusted. Certified does not mean unrestricted.
 
 ```text
 my-galerina-app/
-|-- boot.spore
+|-- boot.fungi
 `-- src/
-    |-- main.spore
-    |-- types.spore
+    |-- main.fungi
+    |-- types.fungi
     `-- routes/
-        `-- graphql.spore
+        `-- graphql.fungi
 ```
 
 ---
 
-## Example boot.spore
+## Example boot.fungi
 
 ```Galerina
 project "GraphQLDemo"
 
-entry "./src/main.spore"
+entry "./src/main.fungi"
 
 imports {
-  import "./src/types.spore"
-  import "./src/routes/graphql.spore"
+  import "./src/types.fungi"
+  import "./src/routes/graphql.fungi"
 }
 
 packages {
@@ -217,7 +217,7 @@ packages {
 ## Example Source File
 
 ```Galerina
-import "../types.spore"
+import "../types.fungi"
 
 use GraphQL
 use std.json
@@ -239,7 +239,7 @@ effects [network.inbound] {
 The source file uses:
 
 ```Galerina
-import "../types.spore"
+import "../types.fungi"
 ```
 
 for local files.
@@ -257,7 +257,7 @@ for an approved package.
 ## Package Approval Rule
 
 ```text
-A source file may only use external packages that are registered in boot.spore.
+A source file may only use external packages that are registered in boot.fungi.
 ```
 
 Valid:
@@ -286,13 +286,13 @@ Expected compiler error:
 
 ```text
 Use error:
-RandomUnknownPackage is not registered in boot.spore.
+RandomUnknownPackage is not registered in boot.fungi.
 
 Original source:
-  src/routes/example.spore:1:1
+  src/routes/example.fungi:1:1
 
 Suggestion:
-  Add the package to the packages registry in boot.spore with version, permissions and loading rules.
+  Add the package to the packages registry in boot.fungi with version, permissions and loading rules.
 ```
 
 ---
@@ -304,7 +304,7 @@ The compiler should parse package approval and file-level usage separately.
 Parser support:
 
 ```text
-parse boot.spore packages blocks
+parse boot.fungi packages blocks
 parse package aliases and source locations
 parse version declarations
 parse permissions blocks
@@ -337,14 +337,14 @@ Galerina should avoid magic global package access.
 Bad model:
 
 ```text
-Package is registered in boot.spore.
+Package is registered in boot.fungi.
 Package is automatically available in every source file.
 ```
 
 Better model:
 
 ```text
-Package is registered in boot.spore.
+Package is registered in boot.fungi.
 Each file uses the package explicitly.
 ```
 
@@ -388,9 +388,9 @@ This makes standard library usage clear and consistent.
 Local Galerina files should use `import`.
 
 ```Galerina
-import "./types.spore"
-import "./services/order-service.spore"
-import "./routes/orders.spore"
+import "./types.fungi"
+import "./services/order-service.fungi"
+import "./routes/orders.fungi"
 ```
 
 `import` should not be used for third-party packages.
@@ -469,10 +469,10 @@ Permission error example:
 
 ```text
 Package security warning:
-GraphQL requested environment access, but boot.spore denies it.
+GraphQL requested environment access, but boot.fungi denies it.
 
 Declared:
-  boot.spore:18:7
+  boot.fungi:18:7
 
 Suggestion:
   Keep environment access denied unless this package genuinely requires it.
@@ -599,7 +599,7 @@ Galerina should generate package reports.
         "unsafe": "deny"
       },
       "usedBy": [
-        "src/routes/graphql.spore"
+        "src/routes/graphql.fungi"
       ],
       "status": "approved"
     }
@@ -684,7 +684,7 @@ Permissions:
 - unsafe: denied
 
 Used by:
-- `src/routes/graphql.spore`
+- `src/routes/graphql.fungi`
 ```
 
 This helps AI assistants understand dependencies without scanning the whole
@@ -722,9 +722,9 @@ The map manifest should connect packages to source usage.
   "packageUsage": [
     {
       "alias": "GraphQL",
-      "registered": "boot.spore:12",
+      "registered": "boot.fungi:12",
       "usedBy": [
-        "src/routes/graphql.spore:1"
+        "src/routes/graphql.fungi:1"
       ]
     }
   ]
@@ -739,10 +739,10 @@ If a package is registered but never used, Galerina should warn.
 
 ```text
 Package warning:
-GraphQL is registered in boot.spore but never used.
+GraphQL is registered in boot.fungi but never used.
 
 Declared:
-  boot.spore:12:3
+  boot.fungi:12:3
 
 Suggestion:
   Remove the package registration or use it explicitly with `use GraphQL`.
@@ -758,13 +758,13 @@ Galerina should report:
 
 ```text
 Use error:
-Payments is not registered in boot.spore.
+Payments is not registered in boot.fungi.
 
 Original source:
-  src/payments/payment-service.spore:1:1
+  src/payments/payment-service.fungi:1:1
 
 Suggestion:
-  Register Payments in boot.spore under packages.
+  Register Payments in boot.fungi under packages.
 ```
 
 ---
@@ -791,8 +791,8 @@ secure by default
 Local files:
 
 ```Galerina
-import "./types.spore"
-import "./routes/orders.spore"
+import "./types.fungi"
+import "./routes/orders.fungi"
 ```
 
 Standard library:
@@ -854,7 +854,7 @@ make local file imports and package usage ambiguous
 ## Open Questions
 
 ```text
-Should standard library modules need registration in boot.spore?
+Should standard library modules need registration in boot.fungi?
 Should third-party packages require lock_hash in production?
 Should packages be aLOwed to request permissions themselves?
 Should transitive dependencies be listed in the report?
@@ -872,7 +872,7 @@ Version 0.1:
 ```text
 define import for local files
 define use for packages
-define packages registry in boot.spore
+define packages registry in boot.fungi
 require source files to use registered packages explicitly
 ```
 

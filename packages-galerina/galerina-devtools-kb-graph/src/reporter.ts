@@ -23,7 +23,7 @@ function nodeLabel(doc: KBDocNode): string {
   let label = safe(doc.title);
   if (doc.layer) label += `\\n(${safe(doc.layer)})`;
   if (doc.lnlCodes.length > 0) {
-    label += `\\n${doc.lnlCodes.length} SPORE code${doc.lnlCodes.length !== 1 ? "s" : ""}`;
+    label += `\\n${doc.lnlCodes.length} FUNGI code${doc.lnlCodes.length !== 1 ? "s" : ""}`;
   }
   return label;
 }
@@ -71,11 +71,11 @@ export function generateMarkdownReport(graph: KBGraph, generatedAt: string): str
     `Generated: ${generatedAt}`,
     "",
     "## Stats",
-    `- Docs: ${stats.totalDocs} | Edges: ${stats.totalEdges} | Orphans: ${stats.orphanCount} | Stale links: ${stats.staleLinkCount} | SPORE codes: ${stats.totalSporeCodes}`,
+    `- Docs: ${stats.totalDocs} | Edges: ${stats.totalEdges} | Orphans: ${stats.orphanCount} | Stale links: ${stats.staleLinkCount} | FUNGI codes: ${stats.totalSporeCodes}`,
     "",
     "## Document Registry (auto-generated)",
     "",
-    "| Doc | Layer | Version | Status | SPORE Codes |",
+    "| Doc | Layer | Version | Status | FUNGI Codes |",
     "|---|---|---|---|---|",
   ];
 

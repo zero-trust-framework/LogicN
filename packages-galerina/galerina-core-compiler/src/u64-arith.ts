@@ -8,7 +8,7 @@
  * (unsigned underflow), and every divide/modulo by zero is a `LOAD → TRAP → ERASE` event, exactly as for
  * i64/i32. There is no silent 2^64-1 + 1 = 0 wraparound — that boundary TRAPS.
  *
- * Why a layer SEPARATE from i64-arith (the split SPORE-NUMERIC-001 deliberately preserved): an unsigned
+ * Why a layer SEPARATE from i64-arith (the split FUNGI-NUMERIC-001 deliberately preserved): an unsigned
  * operand occupies [0, 2^64-1], so the same 64-bit pattern denotes a DIFFERENT value than signed i64 for
  * anything ≥ 2^63. That changes three things vs the i64.* ops:
  *   1. range is [0, 2^64-1], not [-2^63, 2^63-1];
@@ -18,11 +18,11 @@
  *      signed `INT64_MIN / -1` overflow case exists for unsigned division).
  *
  * Operands and results are `bigint` — a JS `number` cannot represent the u64 range exactly above 2^53,
- * which is the precise fail-open (silent precision loss) that gating scalar UInt64 behind SPORE-NUMERIC-001
+ * which is the precise fail-open (silent precision loss) that gating scalar UInt64 behind FUNGI-NUMERIC-001
  * guards against. Callers MUST hold in-range, NON-NEGATIVE u64 operands.
  *
  * NOTE (sequencing): this is the arithmetic layer only. It is additive and reachable from nothing yet —
- * UInt64 stays fail-closed under SPORE-NUMERIC-001 until the interpreter dispatch + gate-lift land. Building
+ * UInt64 stays fail-closed under FUNGI-NUMERIC-001 until the interpreter dispatch + gate-lift land. Building
  * and proving the math BEFORE admitting the type is the most-secure order (prove, then lift the gate).
  */
 

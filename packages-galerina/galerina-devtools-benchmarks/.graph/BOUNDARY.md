@@ -7,7 +7,7 @@
 
 > ⚠️ **Zero source files scanned.** The roots/extensions below matched nothing — this border is empty because nothing was inspected, NOT because the package has no dependencies. Check the package's source layout against `packageGraph.roots`/`extensions` in its package.json.
 
-**Scanned scope:** roots [`src`] · extensions [`.ts`, `.spore`]
+**Scanned scope:** roots [`src`] · extensions [`.ts`, `.fungi`]
 
 ## Summary
 

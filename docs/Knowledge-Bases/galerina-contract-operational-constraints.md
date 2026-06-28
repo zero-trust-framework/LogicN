@@ -5,7 +5,7 @@
 ```
 Phase 10B — Specification
 Parser: Phase 10B
-Enforcement: SPORE-TIMEOUT-001, SPORE-RETRY-001, SPORE-LIMIT-001 (Phase 10C+)
+Enforcement: FUNGI-TIMEOUT-001, FUNGI-RETRY-001, FUNGI-LIMIT-001 (Phase 10C+)
 ```
 
 ## TL;DR

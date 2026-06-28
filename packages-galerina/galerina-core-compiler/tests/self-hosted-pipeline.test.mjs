@@ -2,8 +2,8 @@
  * Self-hosted pipeline integration (M-A / M-B bridge).
  *
  * Proves the Stage-B compiler composes end-to-end IN Galerina: a source string is
- * lexed by lexer.spore, the token stream is parsed by parser.spore, and the resulting
- * flow records are type-checked by type-checker.spore — with the GalerinaValue outputs
+ * lexed by lexer.fungi, the token stream is parsed by parser.fungi, and the resulting
+ * flow records are type-checked by type-checker.fungi — with the GalerinaValue outputs
  * of each stage fed directly as the input of the next (no TypeScript stage in the
  * middle of the pipeline for the supported subset).
  *
@@ -31,29 +31,29 @@ function load(file) {
 
 let lexer, parser, checker, effect, govern, gir, runtime;
 before(() => {
-  lexer = load("lexer.spore");
-  parser = load("parser.spore");
-  checker = load("type-checker.spore");
-  effect = load("effect-checker.spore");
-  govern = load("governance-verifier.spore");
-  gir = load("gir-emitter.spore");
-  runtime = load("runtime.spore");
+  lexer = load("lexer.fungi");
+  parser = load("parser.fungi");
+  checker = load("type-checker.fungi");
+  effect = load("effect-checker.fungi");
+  govern = load("governance-verifier.fungi");
+  gir = load("gir-emitter.fungi");
+  runtime = load("runtime.fungi");
 });
 
 const vStr = (s) => ({ __tag: "string", value: s });
 
 async function pipeline(source) {
-  // 1. lexer.spore: source -> Result<Array<Token>>
+  // 1. lexer.fungi: source -> Result<Array<Token>>
   const lexRes = await executeFlow("tokenize", new Map([["source", vStr(source)]]), lexer.ast);
   let tokensVal = lexRes.value ?? lexRes;
   if (tokensVal.__tag === "ok") tokensVal = tokensVal.value;
 
-  // 2. parser.spore: tokens -> ParseResult { flows, errors }
+  // 2. parser.fungi: tokens -> ParseResult { flows, errors }
   const parseRes = await executeFlow("parseFlows", new Map([["tokens", tokensVal]]), parser.ast);
   const prRec = parseRes.value ?? parseRes;
   const flowsVal = prRec.fields.get("flows");
 
-  // 3. type-checker.spore: return-expr check (checkFlows) + full body check (checkFlowBodies)
+  // 3. type-checker.fungi: return-expr check (checkFlows) + full body check (checkFlowBodies)
   const readDiags = (res) =>
     (res.value ?? res).fields.get("diagnostics").items.map((d) => {
       const x = d.value ?? d;
@@ -90,11 +90,11 @@ describe("self-hosted pipeline — lexer → parser → type-checker (M-A/M-B)",
     assert.deepEqual(diags, []);
   });
 
-  it("a String returned where Int is declared is caught as SPORE-TYPE-002 by the self-hosted checker", async () => {
+  it("a String returned where Int is declared is caught as FUNGI-TYPE-002 by the self-hosted checker", async () => {
     const { flows, diags } = await pipeline(`pure flow bad() -> Int { return "hello" }`);
     assert.equal(flows[0].exprKind, "literal");
     assert.equal(flows[0].litType, "String");
-    assert.deepEqual(diags, [{ code: "SPORE-TYPE-002", flowName: "bad" }]);
+    assert.deepEqual(diags, [{ code: "FUNGI-TYPE-002", flowName: "bad" }]);
   });
 
   it("multiple flows: only the mismatching one is flagged (good passes, bad fails)", async () => {
@@ -102,7 +102,7 @@ describe("self-hosted pipeline — lexer → parser → type-checker (M-A/M-B)",
       `pure flow good(a: Int, b: Int) -> Int { return a }\npure flow bad() -> Int { return "hello" }`,
     );
     assert.equal(flows.length, 2);
-    assert.deepEqual(diags, [{ code: "SPORE-TYPE-002", flowName: "bad" }]);
+    assert.deepEqual(diags, [{ code: "FUNGI-TYPE-002", flowName: "bad" }]);
   });
 
   it("a literal return matching its declared type produces no diagnostic", async () => {
@@ -125,7 +125,7 @@ describe("self-hosted pipeline — full body AST + body type-check (M-A fold →
     const { bodyDiags } = await pipeline(
       `pure flow good() -> Int { let a: Int = 1\nreturn a }\npure flow bad() -> Int { let x: Int = "oops"\nreturn 0 }`,
     );
-    assert.deepEqual(bodyDiags, [{ code: "SPORE-TYPE-002", flowName: "bad" }]);
+    assert.deepEqual(bodyDiags, [{ code: "FUNGI-TYPE-002", flowName: "bad" }]);
   });
 
   it("a clean body produces no body diagnostics", async () => {
@@ -152,13 +152,13 @@ describe("self-hosted pipeline — effect + governance over the parsed body AST 
   it("effect-checker derives undeclared effect use from the body's calls", async () => {
     const flows = await flowsFrom(`secure flow charge() -> Int { dbWrite(amount)\nreturn 0 }`);
     const r = await executeFlow("checkBodyEffects", new Map([["flows", flows]]), effect.ast);
-    assert.deepEqual(codesOn(r), [{ code: "SPORE-EFFECT-001", flowName: "charge" }]);
+    assert.deepEqual(codesOn(r), [{ code: "FUNGI-EFFECT-001", flowName: "charge" }]);
   });
 
   it("governance flags a secure flow that never audits in its body", async () => {
     const flows = await flowsFrom(`secure flow charge() -> Int { dbWrite(amount)\nreturn 0 }`);
     const r = await executeFlow("checkBodyGovernance", new Map([["flows", flows]]), govern.ast);
-    assert.deepEqual(codesOn(r), [{ code: "SPORE-VAL-001", flowName: "charge" }]);
+    assert.deepEqual(codesOn(r), [{ code: "FUNGI-VAL-001", flowName: "charge" }]);
   });
 
   it("a secure flow that calls auditWrite in its body passes governance", async () => {
@@ -223,7 +223,7 @@ describe("self-hosted pipeline — new grammar forms reach all downstream stages
   it("effect-check: an effectful call in the ELSE branch is caught", async () => {
     const flows = await flowsFrom(`secure flow charge() -> Int { if ok { return 0 } else { dbWrite(amt)\nreturn 0 } }`);
     const r = await executeFlow("checkBodyEffects", new Map([["flows", flows]]), effect.ast);
-    assert.deepEqual(codesOn(r), [{ code: "SPORE-EFFECT-001", flowName: "charge" }]);
+    assert.deepEqual(codesOn(r), [{ code: "FUNGI-EFFECT-001", flowName: "charge" }]);
   });
 
   it("govern: an audit call in the ELSE branch satisfies a secure flow", async () => {
@@ -235,7 +235,7 @@ describe("self-hosted pipeline — new grammar forms reach all downstream stages
   it("govern: a secure flow with no audit in either branch is flagged", async () => {
     const flows = await flowsFrom(`secure flow bad() -> Int { if ok { return 0 } else { return 1 } }`);
     const r = await executeFlow("checkBodyGovernance", new Map([["flows", flows]]), govern.ast);
-    assert.deepEqual(codesOn(r), [{ code: "SPORE-VAL-001", flowName: "bad" }]);
+    assert.deepEqual(codesOn(r), [{ code: "FUNGI-VAL-001", flowName: "bad" }]);
   });
 });
 

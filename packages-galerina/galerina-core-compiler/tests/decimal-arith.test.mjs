@@ -112,7 +112,7 @@ test("malformed input fails closed (never a guessed value)", () => {
 // ── end-to-end through the tree-walker (the wired fix) ──
 async function runDecimal(expr, ret = "Decimal") {
   const SRC = `pure flow probe() -> ${ret} {\n  return ${expr}\n}`;
-  const parsed = parseProgram(SRC, "probe.spore");
+  const parsed = parseProgram(SRC, "probe.fungi");
   try { resolveSymbols(parsed.ast); checkTypes(parsed.ast); } catch { /* type pass best-effort */ }
   return await executeFlow("probe", new Map(), parsed.ast);
 }
@@ -132,27 +132,27 @@ test("interpreter: Decimal * Decimal exact (VAT-style 100.00 * 0.20)", async () 
 // ── the partial-operator resolution end-to-end (#53/#54): redirect + method form ──
 function tcDiags(expr, ret = "Decimal") {
   const SRC = `pure flow probe() -> ${ret} {\n  return ${expr}\n}`;
-  const p = parseProgram(SRC, "probe.spore");
+  const p = parseProgram(SRC, "probe.fungi");
   resolveSymbols(p.ast);
   const tc = checkTypes(p.ast);
   return [...(p.diagnostics ?? []), ...(tc?.diagnostics ?? [])];
 }
 
-test("Decimal '/' is a compile REDIRECT (SPORE-NUMERIC-OP-001) carrying the method suggestedCode", () => {
-  const d = tcDiags('Decimal("1") / Decimal("3")').find((x) => x.code === "SPORE-NUMERIC-OP-001");
-  assert.ok(d, "expected SPORE-NUMERIC-OP-001 on Decimal '/'");
+test("Decimal '/' is a compile REDIRECT (FUNGI-NUMERIC-OP-001) carrying the method suggestedCode", () => {
+  const d = tcDiags('Decimal("1") / Decimal("3")').find((x) => x.code === "FUNGI-NUMERIC-OP-001");
+  assert.ok(d, "expected FUNGI-NUMERIC-OP-001 on Decimal '/'");
   assert.equal(d.severity, "error");
   assert.equal(d.suggestedCode, 'total.divide(qty, 2, "halfEven")');
 });
 
 test("Decimal '%' redirects to a.remainder(b)", () => {
-  const d = tcDiags('Decimal("1") % Decimal("3")').find((x) => x.code === "SPORE-NUMERIC-OP-001");
-  assert.ok(d, "expected SPORE-NUMERIC-OP-001 on Decimal '%'");
+  const d = tcDiags('Decimal("1") % Decimal("3")').find((x) => x.code === "FUNGI-NUMERIC-OP-001");
+  assert.ok(d, "expected FUNGI-NUMERIC-OP-001 on Decimal '%'");
   assert.equal(d.suggestedCode, "total.remainder(qty)");
 });
 
 test("Money / Decimal is NOT redirected (legitimate scaling, not a partial Decimal op)", () => {
-  assert.ok(!tcDiags('gbp("100.00") / Decimal("3")', "Money").some((x) => x.code === "SPORE-NUMERIC-OP-001"));
+  assert.ok(!tcDiags('gbp("100.00") / Decimal("3")', "Money").some((x) => x.code === "FUNGI-NUMERIC-OP-001"));
 });
 
 test("a.divide(b, scale, mode) computes the exact rounded result end-to-end", async () => {

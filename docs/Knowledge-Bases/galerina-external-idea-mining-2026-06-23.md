@@ -14,12 +14,12 @@ honored throughout: crypto Binary, photonic = degrade-only/projected, fail-close
 1. **Transform-mode ordering DAG gate** *(nvidia / ModelOpt `mode.py:78-89`)* — a governed transform declares
    `next_modes` / `next_prohibited_modes` / a terminal `export_mode`; the compiler verifies legal **composition
    order** statically (e.g. quantize forbids sparsity-after; `real_quantize` is terminal). **Galerina has Static
-   Manifest Clamping but NO order/time-axis gate** (grep + KB empty). → proposed `SPORE-TRANSFORM-ORDER`,
+   Manifest Clamping but NO order/time-axis gate** (grep + KB empty). → proposed `FUNGI-TRANSFORM-ORDER`,
    deny-by-default, terminal-seal. *Invariant: n/a (pure compile-time check).*
 2. **Filtered-search-as-deny-by-default** *(linear-vec / turbovec `search.rs`)* — push the ACL/tenant allowlist
    **INTO** the tri-pipe vector kernel (block-granularity short-circuit: a 32-vector block with zero allowed slots
    never reaches scoring), instead of over-fetch-then-discard. **This is the missing RUNTIME half of the
-   `for/where`-mask verdict + `SPORE-PRIVACY-002`** — today they filter the OUTPUT, which is fail-OPEN if the discard
+   `for/where`-mask verdict + `FUNGI-PRIVACY-002`** — today they filter the OUTPUT, which is fail-OPEN if the discard
    is ever skipped. *Security-relevant; fits security-first.*
 3. **Signal-dependent erasure** *(photonic-nn / SPDNN `PhotonActivation.py:12`)* — the detector law `P(click) =
    1−exp(−|x|)` makes erasure probability scale with operand **magnitude**: a small-magnitude operand erases to
@@ -56,7 +56,7 @@ honored throughout: crypto Binary, photonic = degrade-only/projected, fail-close
 ## Re-derived / out-of-bounds (verify-before-build worked)
 ~80% as expected: the precision-routing / NVFP4-as-PrecisionTechnique / calibration-as-attestation / ternary-taxonomy
 / recipe{} / fidelity-oracle / carry-state-provenance bulk is already-mined-0615 or shipped (`precision_policy{}`,
-`galerina-precision-attestation.md`, `substrate-failure-model.ts` SPORE-SUBSTRATE-001..004). Refuted/out-of-bounds: the
+`galerina-precision-attestation.md`, `substrate-failure-model.ts` FUNGI-SUBSTRATE-001..004). Refuted/out-of-bounds: the
 SIMD/CUDA kernels themselves (host/ext perf code, not governance), speculative-decoding (re-frames the shipped
 typed-reducer/vAnd #4), PEFT/LoRA-as-mutation (subsumed by the unbuilt #1 attestation table).
 

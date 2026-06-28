@@ -13,7 +13,7 @@ import {
   parseProgram,
   createCapabilityHost,
   createContractEnforcer,
-  SPORE_VOID,
+  FUNGI_VOID,
 } from "../dist/index.js";
 
 // ---------------------------------------------------------------------------
@@ -22,12 +22,12 @@ import {
 
 function makePureFlow(flowName = "doWork", body = "return 42") {
   const source = `pure flow ${flowName}() -> Int { ${body} }`;
-  return parseProgram(source, "test.spore").ast;
+  return parseProgram(source, "test.fungi").ast;
 }
 
 function makeManifest(overrides = {}) {
   return {
-    schemaVersion: "spore.runtime.manifest.v1",
+    schemaVersion: "fungi.runtime.manifest.v1",
     flow: "doWork",
     qualifier: "pure",
     requiresAudit: false,
@@ -52,12 +52,12 @@ const DUMMY_CONTEXT = {
 };
 
 // ---------------------------------------------------------------------------
-// Test 1: request_time 0.001s triggers SPORE-RUNTIME-006
+// Test 1: request_time 0.001s triggers FUNGI-RUNTIME-006
 // ---------------------------------------------------------------------------
 
 describe("R4+R6 complete: full enforcement", () => {
 
-  it("1. Flow with very short request_time limit reports SPORE-RUNTIME-006", async () => {
+  it("1. Flow with very short request_time limit reports FUNGI-RUNTIME-006", async () => {
     // Use the correct parser format: contract block declared outside flow body.
     // A 0ms limit guarantees the diagnostic fires since any execution takes > 0ms.
     const source = `
@@ -71,21 +71,21 @@ contract {
   return 99
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
 
     // Delay 5ms so we definitely exceed the 0ms limit (even under load)
     await new Promise((resolve) => setTimeout(resolve, 5));
 
     const result = await executeFlow("zeroTimeout", new Map(), parsed.ast, parsed.flows);
-    const has006 = result.diagnostics.some((d) => d.code === "SPORE-RUNTIME-006");
-    assert.ok(has006, `Expected SPORE-RUNTIME-006 in diagnostics; got: ${JSON.stringify(result.diagnostics)}`);
+    const has006 = result.diagnostics.some((d) => d.code === "FUNGI-RUNTIME-006");
+    assert.ok(has006, `Expected FUNGI-RUNTIME-006 in diagnostics; got: ${JSON.stringify(result.diagnostics)}`);
   });
 
   // -------------------------------------------------------------------------
   // Test 2: network_requests: 0 limit + network call gets denied
   // -------------------------------------------------------------------------
 
-  it("2. CapabilityHost with networkCallLimit 0 denies network call with SPORE-RUNTIME-006", async () => {
+  it("2. CapabilityHost with networkCallLimit 0 denies network call with FUNGI-RUNTIME-006", async () => {
     const host = createCapabilityHost({
       declaredEffects: new Set(["network.outbound"]),
       enforcer: DUMMY_ENFORCER,
@@ -102,7 +102,7 @@ contract {
     let implCalled = false;
     const result = await host.execute(call, async (_args) => {
       implCalled = true;
-      return SPORE_VOID;
+      return FUNGI_VOID;
     });
 
     // The host should deny this call because networkCallLimit is 0 and we
@@ -111,8 +111,8 @@ contract {
     assert.equal(implCalled, false, "impl should NOT be called when rate limit exceeded");
     const reason = result.value.error?.value ?? "";
     assert.ok(
-      reason.includes("SPORE-RUNTIME-006"),
-      `Expected SPORE-RUNTIME-006 in denial reason; got: "${reason}"`,
+      reason.includes("FUNGI-RUNTIME-006"),
+      `Expected FUNGI-RUNTIME-006 in denial reason; got: "${reason}"`,
     );
   });
 
@@ -188,7 +188,7 @@ contract {
   // Test 5: manifest.requiresAudit = true triggers audit requirement diagnostic
   // -------------------------------------------------------------------------
 
-  it("5. manifest.requiresAudit = true triggers SPORE-RUNTIME-007 when AuditLog.write not called", async () => {
+  it("5. manifest.requiresAudit = true triggers FUNGI-RUNTIME-007 when AuditLog.write not called", async () => {
     const ast = makePureFlow("doWork", "return 3");
     const manifest = makeManifest({
       requiresAudit: true,
@@ -206,10 +206,10 @@ contract {
       manifest,
     );
 
-    const has007 = result.diagnostics.some((d) => d.code === "SPORE-RUNTIME-007");
+    const has007 = result.diagnostics.some((d) => d.code === "FUNGI-RUNTIME-007");
     assert.ok(
       has007,
-      `Expected SPORE-RUNTIME-007 diagnostic when requiresAudit=true and AuditLog.write not called; got: ${JSON.stringify(result.diagnostics)}`,
+      `Expected FUNGI-RUNTIME-007 diagnostic when requiresAudit=true and AuditLog.write not called; got: ${JSON.stringify(result.diagnostics)}`,
     );
   });
 

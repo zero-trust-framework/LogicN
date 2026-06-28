@@ -12,14 +12,14 @@
  *
  * Scope (roots × extensions):
  *   A Galerina package's real source is not always `src/**\/*.ts`. The canonical app
- *   template keeps its governed compute in `src/**\/*.spore` and its TypeScript host in
+ *   template keeps its governed compute in `src/**\/*.fungi` and its TypeScript host in
  *   `host/**\/*.ts` (see the framework example app). Hardcoding `src/*.ts` made those
  *   packages scan to ZERO files — a green Hardened Border over an UNSCANNED package,
- *   so import drift in `.spore` flows or in `host/` never reached the PR diff. So we
+ *   so import drift in `.fungi` flows or in `host/` never reached the PR diff. So we
  *   walk a configurable set of roots (default `src`, `host`) and extensions
- *   (default `.ts`, `.spore`). A package may override either via a `packageGraph`
+ *   (default `.ts`, `.fungi`). A package may override either via a `packageGraph`
  *   block in its package.json:
- *       "packageGraph": { "roots": ["src", "host"], "extensions": [".ts", ".spore"] }
+ *       "packageGraph": { "roots": ["src", "host"], "extensions": [".ts", ".fungi"] }
  *
  * Escaping relative imports are a BORDER edge, not internal:
  *   A relative import that resolves OUTSIDE the package root (e.g. host code importing
@@ -34,7 +34,7 @@
  * Regex-based (no TypeScript-compiler dependency) to keep the tool dependency-light
  * and aligned with the existing scan-and-report devtools pattern. It recognises:
  *   import ... from "spec"      import "spec"      export ... from "spec"
- *   import("spec")  (dynamic)   import plugin <mode> "spec" as Name { … }  (.spore)
+ *   import("spec")  (dynamic)   import plugin <mode> "spec" as Name { … }  (.fungi)
  */
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
@@ -66,7 +66,7 @@ export interface ScanResult {
 /** Default source roots — the canonical app template puts governed source in src/ and its host in host/. */
 const DEFAULT_ROOTS = ["src", "host"] as const;
 /** Default source extensions — TypeScript host code AND governed Galerina flows. */
-const DEFAULT_EXTENSIONS = [".ts", ".spore"] as const;
+const DEFAULT_EXTENSIONS = [".ts", ".fungi"] as const;
 
 const NODE_BUILTINS = new Set([
   "assert", "buffer", "child_process", "cluster", "console", "crypto", "dgram",
@@ -231,7 +231,7 @@ export function scanPackage(scopePath: string): ScanResult {
   const pkgCache = new Map<string, OwningPackage | null>();
 
   const files: ScannedFile[] = sourceFiles.map((abs) => {
-    const isSpore = abs.endsWith(".spore");
+    const isSpore = abs.endsWith(".fungi");
     const raw = stripComments(readFileSync(abs, "utf-8"), isSpore);
     const relPath = relative(scopePath, abs).split(sep).join("/");
 

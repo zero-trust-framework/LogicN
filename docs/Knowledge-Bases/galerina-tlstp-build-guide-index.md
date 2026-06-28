@@ -46,7 +46,7 @@ without a named-machine bench; honest tiering (buildable-now / substrate-gated #
 
 **Phase 4 — availability / metadata (each behind a named-machine bench).**
 - **S3 digital FEC** (under the AEAD) **+ S5 morphing** (opt-in capability). *Hard part (S3):* FEC must sit strictly
-  *under* the AEAD — repair ciphertext only, never "request missing entropy" (that re-opens `SPORE-PRIVACY-002`).
+  *under* the AEAD — repair ciphertext only, never "request missing entropy" (that re-opens `FUNGI-PRIVACY-002`).
   *Hard part (S5):* a morphed frame must *replace* any cleartext routing tag, never accompany it.
 
 **Phase 5 — defense-in-depth (governance side buildable; sensing aspirational).**

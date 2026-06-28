@@ -16,7 +16,7 @@ Today was **correctness + zero-trust hardening, not feature growth.** The day cl
 | Compiler core (lexer→governance→GIR) | ~92% | **3 live fail-opens fixed** (#163 inline-`;;`-swallows-paren → stub-returns-5; #165 `%`-on-Float; guarded-flow value-state omission) + regression tests; full compiler suite **3176/3176** |
 | Security & governance core | ~90% | **SEC-002 mutation: ALL gates killed** (every registered fail-closed gate genuinely guarded); `lint-wat-inline-comments` shipped as the first fail-open-class detector; native-bridge missing-authorization (CWE-862) fix verified (`5130111`, 16/16) |
 | Tests — full suite | 100% | **53/53 packages · 5,042 tests** (full-suite count; compiler subset 3176) |
-| Type / effect / value-state | ~90% | guarded-flow tier now value-state-walked; `SPORE-TIER-001` tier-floor designed + approved (not yet built) |
+| Type / effect / value-state | ~90% | guarded-flow tier now value-state-walked; `FUNGI-TIER-001` tier-floor designed + approved (not yet built) |
 | WASM emitter | ~90% | the 8 expression traps + static-const/bitfield now inline-safe block comments; lint-gated |
 | Runtime interpreter (Stage-A diagnostic) | ~87% | benchmark oracle; not the product |
 | Stage-B self-hosting (P9 WASM) | ~80% | `tokenize` byte-parity (#143); parser/checker/verifier flows remain |
@@ -47,8 +47,8 @@ Today was **correctness + zero-trust hardening, not feature growth.** The day cl
 
 ### NEAR — the approved security build queue (build, not research)
 1. **`canCommit()` Option A** — tighten `bitnet-cpu-bridge` to `checkTransition(0,1)` only (fail-closed-by-default; CWE-863). Grep all native callers + sign the positive test first. *(smallest; closes the inert-predicate)*
-2. **Value-state 34B-hole** — scoped VS-003-only auto-taint + new **`SPORE-VALUESTATE-008`** (warning→error migration; ~6.7% corpus breakage, scoping drops the false positives).
-3. **Flow-kind `SPORE-TIER-001` floor (S1–S4)** — infer min governance tier from the effect footprint; reject `declared < inferred`, escalate-only; + the dead `SPORE-DAG-002`; + the `//spore` propose-into-`//@` writer.
+2. **Value-state 34B-hole** — scoped VS-003-only auto-taint + new **`FUNGI-VALUESTATE-008`** (warning→error migration; ~6.7% corpus breakage, scoping drops the false positives).
+3. **Flow-kind `FUNGI-TIER-001` floor (S1–S4)** — infer min governance tier from the effect footprint; reject `declared < inferred`, escalate-only; + the dead `FUNGI-DAG-002`; + the `//fungi` propose-into-`//@` writer.
 4. **Fail-open-class detectors** (from `galerina-fail-open-taxonomy.md`, `lint-wat-inline-comments` is the template): bridge deny-by-default conformance test · cross-pass flow-kind exhaustiveness scan · fake-native-addon branch test (+ SEC-002 on the commit gate) · gate-defined-but-never-called call-graph scan.
 5. **`component-health.mjs`** — the owner-requested per-component roll-up (builds/tests/fail-open-lints/dangerous-path coverage); pure-read `--fast` so it can't repeat the shared-tree collision.
 6. **53 Black-Hole "intrusion-triggered arena fill"** — wire the shipped `memory.fill(0)` to a live K3 −1 + spec the revocation-gated mesh cascade.

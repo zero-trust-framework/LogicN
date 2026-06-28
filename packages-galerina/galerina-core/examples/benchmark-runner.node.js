@@ -154,7 +154,7 @@ function main() {
       args: [
         path.join(coreDir, "compiler", "galerina.js"),
         "run",
-        path.join(examplesDir, "compute-mix-throughput-benchmark.spore"),
+        path.join(examplesDir, "compute-mix-throughput-benchmark.fungi"),
         ...commonArgs
       ]
     },

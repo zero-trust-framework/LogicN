@@ -15,7 +15,7 @@ const SRC = join(dirname(fileURLToPath(import.meta.url)), "..", "src");
 
 async function run(body, ret = "Float") {
   const src = `pure flow f() -> ${ret}\ncontract { effects {} }\n{ ${body} }`;
-  const p = L.parseProgram(src, "t.spore");
+  const p = L.parseProgram(src, "t.fungi");
   const errs = p.diagnostics.filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "parse: " + errs.map((e) => e.message).join("; "));
   try { L.resolveSymbols(p.ast); L.checkTypes(p.ast); } catch { /* best-effort */ }
@@ -24,7 +24,7 @@ async function run(body, ret = "Float") {
 }
 function assertTrap(v, label) {
   assert.equal(v?.__tag, "runtimeError", `${label}: expected a fail-closed trap, got ${JSON.stringify(v)}`);
-  assert.equal(v.message, "NonFiniteFloat", `${label}: expected the NonFiniteFloat (SPORE-FLOAT-NAN-001) trap`);
+  assert.equal(v.message, "NonFiniteFloat", `${label}: expected the NonFiniteFloat (FUNGI-FLOAT-NAN-001) trap`);
 }
 
 test("0.0/0.0 (NaN) is a fail-closed trap, not a silent NaN float", async () => {
@@ -70,7 +70,7 @@ test("DETECTOR: the float factories still ENFORCE finiteness (a neutered guard r
   assert.match(interp, /function mkFloat\([\s\S]{0,200}?Number\.isFinite/, "mkFloat must gate on Number.isFinite");
   assert.match(stdlib, /function floatVal\([\s\S]{0,200}?Number\.isFinite/, "floatVal must gate on Number.isFinite");
   assert.match(interp, /m === FLOAT_NONFINITE_TRAP/, "isCheckedTrap must still propagate the NonFiniteFloat trap");
-  assert.match(wat, /\$spore_assert_finite_f64[\s\S]{0,200}?f64\.ne/, "the WASM finiteness helper must trap on non-finite");
+  assert.match(wat, /\$fungi_assert_finite_f64[\s\S]{0,200}?f64\.ne/, "the WASM finiteness helper must trap on non-finite");
 });
 
 test("stdlib minters fail closed on non-finite (sqrt(neg), log(0), pow overflow) — increment 3b", async () => {

@@ -9,7 +9,7 @@
 
 ## TL;DR
 
-- `galerina build app.spore` emits **one standalone `build/app.wasm`** plus a **signed manifest** and governance
+- `galerina build app.fungi` emits **one standalone `build/app.wasm`** plus a **signed manifest** and governance
   reports. So "a single `.wasm` in a `build/` folder" is **true for the app module**.
 - A Galerina **package** compiles to its *own* governed `dist/<name>.wasm` **+ a `.fuse.json` descriptor** that
   declares its seam and capability bound. Governed packages are designed to **AOT-fuse** into the app image.
@@ -26,7 +26,7 @@
 
 ## 1. What `galerina build` emits today (factual)
 
-`galerina build <file.spore>` writes, into `build/` (app) or `<pkg>/dist/` (package build):
+`galerina build <file.fungi>` writes, into `build/` (app) or `<pkg>/dist/` (package build):
 
 | Artifact | What it is | Source |
 |---|---|---|
@@ -47,7 +47,7 @@ Other `build/` subdirectories are **runtime/test scratch**, not the build produc
 ### The exact answer to the single-`.wasm` question
 
 ```
-galerina build app.spore
+galerina build app.fungi
   └─ build/
        ├─ app.wasm            ← ONE standalone module (the app's flows)
        ├─ app.wat             ← same module, readable
@@ -100,7 +100,7 @@ single monolith, and *not yet* an isolated sandbox for untrusted peers (that iso
 Galerina already treats `.env` as **secrets, not normal strings** (`docs/ENV_SECRETS.md`). The core rule:
 *"secrets are values that can be used, but not seen."*
 
-**Declaration (central, not ad-hoc).** In `boot.spore` / the app security policy:
+**Declaration (central, not ad-hoc).** In `boot.fungi` / the app security policy:
 
 ```galerina
 secrets {
@@ -112,14 +112,14 @@ secrets {
 **Typed + enforced.** Use `Env.secret<ApiKey>("…")` → a protected `Secret<T>`, **not** `Env.get(...)` →
 `String`. The compiler enforces (codes from `ENV_SECRETS.md`):
 
-- `SPORE-SECRET-001` — cannot `Log` a `Secret<T>` (use `Secret.name()` / `Secret.fingerprint()`).
-- `SPORE-SECRET-002` — a `Secret<T>` cannot be converted to `String` / returned from a function (shipped &
+- `FUNGI-SECRET-001` — cannot `Log` a `Secret<T>` (use `Secret.name()` / `Secret.fingerprint()`).
+- `FUNGI-SECRET-002` — a `Secret<T>` cannot be converted to `String` / returned from a function (shipped &
   hardened; see the secret-taint / egress work).
 - **Taint tracking** — anything a secret touches becomes `SecretDerived<T>` and inherits the bans.
 - **Safe-sink table** — `Build output: **Never**`; logs/errors/LLM/cache: denied by default; HTTP headers:
-  only to declared hosts (`SPORE-SECRET-HTTP-004`).
+  only to declared hosts (`FUNGI-SECRET-HTTP-004`).
 - **Scope** (`allow only PaymentsService`), **lifetime** (`with secret … { }`), **redaction** of known
-  sensitive names, and **hard-coded-secret scanning** (`SPORE-SECRET-HARDCODED-001`).
+  sensitive names, and **hard-coded-secret scanning** (`FUNGI-SECRET-HARDCODED-001`).
 
 **Never in the build.** `.env` values are **runtime-only** — *never* compiled into `app.wasm`, `app.js`,
 reports, source-maps, or AI context (`ENV_SECRETS.md` §"Runtime-Only Values"). The build instead emits a
@@ -167,8 +167,8 @@ GCP Secret Manager, K8s projected volumes) or **container runtime injection**. `
 | staging | no | no | yes |
 | production | no | no | yes |
 
-Diagnostics: `SPORE-CONFIG-WARN-001` (.env in prod -> warning), `SPORE-CONFIG-WARN-002` (.env forbidden in strict),
-`SPORE-SECRET-003` (a `development_only`-trusted secret referenced on a production path).
+Diagnostics: `FUNGI-CONFIG-WARN-001` (.env in prod -> warning), `FUNGI-CONFIG-WARN-002` (.env forbidden in strict),
+`FUNGI-SECRET-003` (a `development_only`-trusted secret referenced on a production path).
 
 ### 4.2 Source is not trust (the key idea to keep)
 
@@ -187,9 +187,9 @@ allowed/denied sinks — **never the value** (`SecretEnvironmentReference.redact
 
 - **A `.env` file is a runtime input, never a source/artifact** — `.gitignore`d, never committed, never fused
   into any `.wasm` (the safe-sink table already says *Build output: Never*). In the end-user project (Layout 3)
-  it sits beside `App.spore` as an *un-tracked* dev-only file, or is injected by the host/orchestrator in prod.
+  it sits beside `App.fungi` as an *un-tracked* dev-only file, or is injected by the host/orchestrator in prod.
   TARGET: the scaffold names it and `.gitignore`s it, and defaults prod to vault/KMS.
-- **The distribution manifest is `package-galerina.json` + `galerina.lock.json`** (prior research, `SPORE-CONFIG-010`)
+- **The distribution manifest is `package-galerina.json` + `galerina.lock.json`** (prior research, `FUNGI-CONFIG-010`)
   — the Galerina-specific equivalent of `composer.json` / `package.json` + lockfile, kept **separate** from any
   host `package.json` (which must not carry Galerina runtime policy). This is the "download the framework, then
   resolve the packages" manifest: `package-galerina.json` declares governed-package deps + required env/secrets +
@@ -218,7 +218,7 @@ allowed/denied sinks — **never the value** (`SecretEnvironmentReference.redact
 
 ## 5. One-line summary
 
-> Today: `galerina build app.spore` → **one signed `build/app.wasm`** (+ manifest + reports); governed packages are
+> Today: `galerina build app.fungi` → **one signed `build/app.wasm`** (+ manifest + reports); governed packages are
 > **fusable** (`.fuse.json`); untrusted code stays a **separate sandboxed symbiote**; and `.env` values are
 > **runtime-only secrets that never enter any artifact**. The architecture decision keeps all four properties
 > and makes the whole-program fuse + the symbiote sandbox + the manifest-declared (value-free) secret

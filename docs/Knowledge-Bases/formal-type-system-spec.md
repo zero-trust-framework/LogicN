@@ -14,19 +14,19 @@ type checker, diagnostic engine, schema generator, and later compiler phases.
 
 ## Rules at a Glance
 
-- `Auto` is an inference marker — never emit `SPORE-TYPE-001` for it; defer to the inference pass
-- `Tensor<T, Shape>` has arity 2 — bare `Tensor` emits `SPORE-TYPE-009`; use `AnyTensor` for erased form
-- `Money<C>` arithmetic requires the same currency `C` — cross-currency is `SPORE-TYPE-004`
-- `SecureString` cannot use `==`, `!=`, or appear in log calls — see SPORE-SECRET-001/002
+- `Auto` is an inference marker — never emit `FUNGI-TYPE-001` for it; defer to the inference pass
+- `Tensor<T, Shape>` has arity 2 — bare `Tensor` emits `FUNGI-TYPE-009`; use `AnyTensor` for erased form
+- `Money<C>` arithmetic requires the same currency `C` — cross-currency is `FUNGI-TYPE-004`
+- `SecureString` cannot use `==`, `!=`, or appear in log calls — see FUNGI-SECRET-001/002
 - `Option<T>` arity 1 · `Result<T,E>` arity 2 · `Map<K,V>` arity 2 · `Brand<T,Name>` arity 2
-- `null` and `undefined` are not in the language — any occurrence emits `SPORE-TYPE-008`
+- `null` and `undefined` are not in the language — any occurrence emits `FUNGI-TYPE-008`
 - Only `Bool` may appear as an `if`/`while` condition — `Tri` and all other types are errors
 
 ---
 
 ## TL;DR
-- `Auto` defers to inference — never emit SPORE-TYPE-001 for it
-- `Tensor<T, Shape>` has arity 2 — bare `Tensor` emits SPORE-TYPE-009
+- `Auto` defers to inference — never emit FUNGI-TYPE-001 for it
+- `Tensor<T, Shape>` has arity 2 — bare `Tensor` emits FUNGI-TYPE-009
 - `protected` / `redacted` are governance qualifiers, not type names — strip before lookup
 
 ---
@@ -173,7 +173,7 @@ User-defined
 
 | Type | Description |
 |---|---|
-| `Auto` | Compile-time inference marker — compiler resolves to a concrete type from the initializer. Not a normal nominal type. Do not emit `SPORE-TYPE-001` for `Auto`. |
+| `Auto` | Compile-time inference marker — compiler resolves to a concrete type from the initializer. Not a normal nominal type. Do not emit `FUNGI-TYPE-001` for `Auto`. |
 
 ### Branded types
 
@@ -216,11 +216,11 @@ let grid:   Matrix<Float32, 4, 4>
 Invalid:
 
 ```galerina
-let value: Option<String, Error>   // SPORE-TYPE-003: Option expects 1 type argument
-let map:   Map<String>             // SPORE-TYPE-003: Map expects 2 type arguments
+let value: Option<String, Error>   // FUNGI-TYPE-003: Option expects 1 type argument
+let map:   Map<String>             // FUNGI-TYPE-003: Map expects 2 type arguments
 ```
 
-Diagnostic: `SPORE-TYPE-003` (`ARITY_MISMATCH`)
+Diagnostic: `FUNGI-TYPE-003` (`ARITY_MISMATCH`)
 
 ---
 
@@ -236,7 +236,7 @@ A type reference is valid when it resolves to one of:
 
 A type reference that does not resolve to any of the above produces:
 
-Diagnostic: `SPORE-TYPE-002` (`UNKNOWN_TYPE`)
+Diagnostic: `FUNGI-TYPE-002` (`UNKNOWN_TYPE`)
 
 ---
 
@@ -266,7 +266,7 @@ let email: String = null
 let user = undefined
 ```
 
-Diagnostics: `SPORE-TYPE-008` (`SILENT_NULL_DENIED`), `SPORE-TYPE-008` (`UNDEFINED_DENIED`)
+Diagnostics: `FUNGI-TYPE-008` (`SILENT_NULL_DENIED`), `FUNGI-TYPE-008` (`UNDEFINED_DENIED`)
 
 ---
 
@@ -299,7 +299,7 @@ Assignment must **not** silently:
 - Convert `Decimal` to `Float` (lossy)
 - Convert `Money<GBP>` to `Money<USD>`
 
-Diagnostic: `SPORE-TYPE-001` (`TYPE_MISMATCH`)
+Diagnostic: `FUNGI-TYPE-001` (`TYPE_MISMATCH`)
 
 ---
 
@@ -321,7 +321,7 @@ Decimal arithmetic — mixing with Float is an error.
 `Money<C>` is not a plain number. It does not accept plain integer or float
 literals without an explicit constructor.
 
-Diagnostic for invalid narrowing: `SPORE-TYPE-001` (`TYPE_MISMATCH`)
+Diagnostic for invalid narrowing: `FUNGI-TYPE-001` (`TYPE_MISMATCH`)
 
 ---
 
@@ -342,7 +342,7 @@ if isReady {
 Invalid:
 
 ```galerina
-if userName {       // SPORE-TYPE-001: expected Bool, got String
+if userName {       // FUNGI-TYPE-001: expected Bool, got String
   return true
 }
 ```
@@ -392,7 +392,7 @@ match maybeUser {
 }
 ```
 
-Diagnostic: `SPORE-MATCH-001` (`NON_EXHAUSTIVE_MATCH`)
+Diagnostic: `FUNGI-MATCH-001` (`NON_EXHAUSTIVE_MATCH`)
 
 ---
 
@@ -428,7 +428,7 @@ match status {
 }
 ```
 
-Diagnostic: `SPORE-MATCH-001` (`NON_EXHAUSTIVE_MATCH`)
+Diagnostic: `FUNGI-MATCH-001` (`NON_EXHAUSTIVE_MATCH`)
 
 ---
 
@@ -474,59 +474,59 @@ Call .constantTimeEquals() for comparison.
 Call redact() to produce a redacted log-safe representation.
 ```
 
-Diagnostic: `SPORE-SECRET-001`, `SPORE-SECRET-002`, `SPORE-SECRET-003`
+Diagnostic: `FUNGI-SECRET-001`, `FUNGI-SECRET-002`, `FUNGI-SECRET-003`
 (see `docs/Knowledge-Bases/value-state-annotations.md`)
 
 ---
 
 ## 13. Required Diagnostics
 
-Full reference: `docs/Knowledge-Bases/compiler-diagnostics.md` (summaries only — defers to this document for SPORE-TYPE-* numbering)
+Full reference: `docs/Knowledge-Bases/compiler-diagnostics.md` (summaries only — defers to this document for FUNGI-TYPE-* numbering)
 Numbering strategy: `docs/Knowledge-Bases/galerina-diagnostic-numbering-strategy.md`
 
-### SPORE-TYPE-* series (22 codes)
+### FUNGI-TYPE-* series (22 codes)
 
 | Code | Name | Description |
 |---|---|---|
-| `SPORE-TYPE-001` | `UnknownType` | Referenced type does not exist in the current scope; emit fuzzy suggestions |
-| `SPORE-TYPE-002` | `TypeMismatch` | Cannot assign or convert type X to type Y |
-| `SPORE-TYPE-003` | `InvalidNominalConversion` | Cannot implicitly convert nominal alias (e.g. `String` → `Email` requires a validation gate) |
-| `SPORE-TYPE-004` | `InvalidBinaryOperation` | Operator `op` cannot be applied to operands of type X and Y |
-| `SPORE-TYPE-005` | `InvalidUnaryOperation` | Unary operator `op` requires operand of type X |
-| `SPORE-TYPE-006` | `InvalidCallArgument` | Argument N expected type X but received Y |
-| `SPORE-TYPE-007` | `InvalidArgumentCount` | Expected N arguments but received M |
-| `SPORE-TYPE-008` | `InvalidReturnType` | Flow declared return type X but returned Y |
-| `SPORE-TYPE-009` | `InvalidGenericInstantiation` | Generic type `G<T>` expects N type parameters but received M |
-| `SPORE-TYPE-010` | `UnsatisfiedGenericConstraint` | Type X does not satisfy constraint Y on type parameter |
-| `SPORE-TYPE-011` | `InvalidCollectionElement` | Collection `G<T>` cannot contain element of type X |
-| `SPORE-TYPE-012` | `InvalidResultType` | `Ok`/`Err` branch type does not match declared `Result<T, E>` |
-| `SPORE-TYPE-013` | `InvalidSecretOperation` | Protected secret value cannot use operator `op`; use `constantTimeEquals()` |
-| `SPORE-TYPE-014` | `MissingRequiredEffect` | Calling `f` requires effect `e`; current flow does not declare it |
-| `SPORE-TYPE-015` | `GovernedSinkViolation` | Governed sink requires a safe binding; received an `unsafe let` binding that has not been upgraded with `safe mut` |
-| `SPORE-TYPE-016` | `TensorShapeMismatch` | Tensor shapes incompatible for operation (e.g. `matmul` shape mismatch) |
-| `SPORE-TYPE-017` | `QuantizedPrecisionMismatch` | Cannot mix `Quantized<Int8>` with `Float32` without `dequantize()` |
-| `SPORE-TYPE-018` | `InvalidRuntimeTargetType` | Type X cannot exist in compute target Y (e.g. `CpuTensor` inside `gpu` block) |
-| `SPORE-TYPE-019` | `UnknownSymbol` | Symbol `x` is not defined in the current scope |
-| `SPORE-TYPE-020` | `ShadowedBinding` | Local binding `x` shadows outer-scope variable `x` (warning) |
-| `SPORE-TYPE-021` | `NonExhaustiveMatch` | _(retired — superseded by `SPORE-TYPE-023` mandatory wildcard)_ |
-| `SPORE-TYPE-022` | `UnreachablePattern` | Pattern is unreachable due to a previous wildcard (`_` or `else`) |
-| `SPORE-TYPE-023` | `MissingWildcardArm` | every `match` must end with a mandatory `_ =>` (or `else =>`) catch-all (fail-closed, task #174) |
+| `FUNGI-TYPE-001` | `UnknownType` | Referenced type does not exist in the current scope; emit fuzzy suggestions |
+| `FUNGI-TYPE-002` | `TypeMismatch` | Cannot assign or convert type X to type Y |
+| `FUNGI-TYPE-003` | `InvalidNominalConversion` | Cannot implicitly convert nominal alias (e.g. `String` → `Email` requires a validation gate) |
+| `FUNGI-TYPE-004` | `InvalidBinaryOperation` | Operator `op` cannot be applied to operands of type X and Y |
+| `FUNGI-TYPE-005` | `InvalidUnaryOperation` | Unary operator `op` requires operand of type X |
+| `FUNGI-TYPE-006` | `InvalidCallArgument` | Argument N expected type X but received Y |
+| `FUNGI-TYPE-007` | `InvalidArgumentCount` | Expected N arguments but received M |
+| `FUNGI-TYPE-008` | `InvalidReturnType` | Flow declared return type X but returned Y |
+| `FUNGI-TYPE-009` | `InvalidGenericInstantiation` | Generic type `G<T>` expects N type parameters but received M |
+| `FUNGI-TYPE-010` | `UnsatisfiedGenericConstraint` | Type X does not satisfy constraint Y on type parameter |
+| `FUNGI-TYPE-011` | `InvalidCollectionElement` | Collection `G<T>` cannot contain element of type X |
+| `FUNGI-TYPE-012` | `InvalidResultType` | `Ok`/`Err` branch type does not match declared `Result<T, E>` |
+| `FUNGI-TYPE-013` | `InvalidSecretOperation` | Protected secret value cannot use operator `op`; use `constantTimeEquals()` |
+| `FUNGI-TYPE-014` | `MissingRequiredEffect` | Calling `f` requires effect `e`; current flow does not declare it |
+| `FUNGI-TYPE-015` | `GovernedSinkViolation` | Governed sink requires a safe binding; received an `unsafe let` binding that has not been upgraded with `safe mut` |
+| `FUNGI-TYPE-016` | `TensorShapeMismatch` | Tensor shapes incompatible for operation (e.g. `matmul` shape mismatch) |
+| `FUNGI-TYPE-017` | `QuantizedPrecisionMismatch` | Cannot mix `Quantized<Int8>` with `Float32` without `dequantize()` |
+| `FUNGI-TYPE-018` | `InvalidRuntimeTargetType` | Type X cannot exist in compute target Y (e.g. `CpuTensor` inside `gpu` block) |
+| `FUNGI-TYPE-019` | `UnknownSymbol` | Symbol `x` is not defined in the current scope |
+| `FUNGI-TYPE-020` | `ShadowedBinding` | Local binding `x` shadows outer-scope variable `x` (warning) |
+| `FUNGI-TYPE-021` | `NonExhaustiveMatch` | _(retired — superseded by `FUNGI-TYPE-023` mandatory wildcard)_ |
+| `FUNGI-TYPE-022` | `UnreachablePattern` | Pattern is unreachable due to a previous wildcard (`_` or `else`) |
+| `FUNGI-TYPE-023` | `MissingWildcardArm` | every `match` must end with a mandatory `_ =>` (or `else =>`) catch-all (fail-closed, task #174) |
 
-### SPORE-NAME-* series
-
-| Code | Name | Description |
-|---|---|---|
-| `SPORE-NAME-001` | `UNDECLARED_NAME` | Name not defined in current scope |
-| `SPORE-NAME-002` | `DUPLICATE_NAME` | Name already declared in this scope |
-| `SPORE-NAME-003` | `USE_BEFORE_DECLARATION` | Name referenced before its declaration point |
-
-### SPORE-MATCH-* series
+### FUNGI-NAME-* series
 
 | Code | Name | Description |
 |---|---|---|
-| `SPORE-MATCH-001` | `NON_EXHAUSTIVE_MATCH` | match case coverage — now enforced by the mandatory wildcard (`SPORE-TYPE-023`) |
-| `SPORE-MATCH-002` | `UNREACHABLE_PATTERN` | Pattern is unreachable (alias of `SPORE-TYPE-022`) |
-| `SPORE-MATCH-003` | `INVALID_PATTERN_TYPE` | Pattern cannot match against this type |
+| `FUNGI-NAME-001` | `UNDECLARED_NAME` | Name not defined in current scope |
+| `FUNGI-NAME-002` | `DUPLICATE_NAME` | Name already declared in this scope |
+| `FUNGI-NAME-003` | `USE_BEFORE_DECLARATION` | Name referenced before its declaration point |
+
+### FUNGI-MATCH-* series
+
+| Code | Name | Description |
+|---|---|---|
+| `FUNGI-MATCH-001` | `NON_EXHAUSTIVE_MATCH` | match case coverage — now enforced by the mandatory wildcard (`FUNGI-TYPE-023`) |
+| `FUNGI-MATCH-002` | `UNREACHABLE_PATTERN` | Pattern is unreachable (alias of `FUNGI-TYPE-022`) |
+| `FUNGI-MATCH-003` | `INVALID_PATTERN_TYPE` | Pattern cannot match against this type |
 
 ### Compilation pipeline order
 
@@ -539,15 +539,15 @@ parser
     ↓
 AST
     ↓
-symbol resolution     ← SPORE-NAME-*
+symbol resolution     ← FUNGI-NAME-*
     ↓
-type checker          ← SPORE-TYPE-001..022
+type checker          ← FUNGI-TYPE-001..022
     ↓
-value-state checker   ← SPORE-VALUESTATE-001..005, SPORE-SECRET-001..003
+value-state checker   ← FUNGI-VALUESTATE-001..005, FUNGI-SECRET-001..003
     ↓
-effect checker        ← SPORE-EFFECT-001..006
+effect checker        ← FUNGI-EFFECT-001..006
     ↓
-governance verifier   ← SPORE-GOV-*
+governance verifier   ← FUNGI-GOV-*
     ↓
 IR generation
 ```

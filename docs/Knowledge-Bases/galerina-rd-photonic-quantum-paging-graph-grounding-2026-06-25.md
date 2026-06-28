@@ -5,7 +5,7 @@ Owner R&D batch, grounded against shipped code + physics under the **Absolute Ze
 reality check, not validation*. **Critic verdict: honesty bar HELD; 0 overclaims slipped through as SOUND;
 every refuted overclaim carries its lawful residue (R&D Standard #21); every shipped-code citation verified.**
 
-The two fences (never relaxed): **crypto + bit-exact determinism stay binary/digital (SPORE-SUBSTRATE-001);
+The two fences (never relaxed): **crypto + bit-exact determinism stay binary/digital (FUNGI-SUBSTRATE-001);
 the exotic substrate feeds only a degrade-only K3 verdict (vAnd=min, unknown→DENY), never carries keys/ledger,
 never manufactures an ALLOW.** And "latency is not work": parallel/optical throughput is real, but encode Θ(N)
 + readout Θ(N) + an ADC/demux bottleneck bind it — there is no free O(1)/instant/asymptotic-work win.
@@ -25,7 +25,7 @@ emulator already models this as an *m-channel bank*, not extra angles.
 | "Speeds silicon can't even theoretically match / instantly" | **HARD-WALL** | Silicon's ceiling is the *same* Θ(N²) I/O bound; measured realized speedup **median 1.9×** (Meech 2023), not unmatchable; "instant across rack" barred by no-signaling |
 | Nonlinear crosstalk (FWM/XPM/SRS) + demux/ADC readout walls | **HARD-WALL** | All-optical logic needs nonlinearity → packing intense beams couples colors; the ADC conversion boundary (not the optics) sets the ceiling. Already modeled + tested in code |
 | "More lanes do things that **weren't possible before**" | **OVERCLAIM** | No new computability (a mesh computes matrix-vector products silicon already does); only a new density/latency/energy *regime* for high-reuse dense MVM |
-| The waves carry security (entanglement self-proves / QKD un-tappable / drop the MAC) | **OVERCLAIM** | Adjacent trap: a lane never carries keys/ledger. QKD *needs* the classical MAC "drop the MAC" discards; crypto stays binary (SPORE-SUBSTRATE-001) |
+| The waves carry security (entanglement self-proves / QKD un-tappable / drop the MAC) | **OVERCLAIM** | Adjacent trap: a lane never carries keys/ledger. QKD *needs* the classical MAC "drop the MAC" discards; crypto stays binary (FUNGI-SUBSTRATE-001) |
 
 **Work-with-it:** add lanes as **compute-only Tier-3 data-parallel throughput** for *eligible* dense fixed-weight
 MVM (inference, many-vector semantic search), routed by the shipped `PartitionDecider` — defaults digital,
@@ -55,7 +55,7 @@ claims fail:
 entanglement gives no instant action but **is a tamper sensor** (QBER spike → K3 trit → TRAP→ERASE before any
 decrypted byte); ffsim wrapped out-of-process behind the Toxic Border with a subspace-dim pre-spawn gate +
 measured wall-time + signed toleranceWitness, results admitted degrade-only into modeling. **Maps to:**
-galerina-ext-bridge-quantum (SHIPPED) + the decideAtBoundary/lease K3 collapse rail + SPORE-SUBSTRATE-001.
+galerina-ext-bridge-quantum (SHIPPED) + the decideAtBoundary/lease K3 collapse rail + FUNGI-SUBSTRATE-001.
 
 ## Thread 3 — "Have I invented Secure Cryptographic Paging?" (ZT 88)
 
@@ -69,7 +69,7 @@ galerina-ext-bridge-quantum (SHIPPED) + the decideAtBoundary/lease K3 collapse r
 **Work-with-it:** for *secrets*, the better move is **don't page them at all** — `mlock`/`MADV_DONTDUMP` to pin
 the working set in locked RAM (galerina-ext-secrets-tmf already does this). The genuine Galerina-specific value is the
 **WASM-sandbox-managed spill** (not trusting host-OS swap) + a **governed, attested crypto-erase witness** bound
-to the .lmanifest — and that witness already ships (`substrate-erasure.ts`, `SPORE-RETAIN-001`). So: not invented,
+to the .lmanifest — and that witness already ships (`substrate-erasure.ts`, `FUNGI-RETAIN-001`). So: not invented,
 but the lawful core is real and largely built.
 
 ## Thread 4 — .graph hygiene: are they a public security risk / should they be gitignored? (ZT 93)

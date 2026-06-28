@@ -9,7 +9,7 @@
 Running a quantum-state simulator (e.g. IBM `ffsim`) **nested inside** the continuous "photonic" engine is **net-negative** as a production architecture:
 
 - **No speed win.** The continuous engine is a TypeScript/`Int32Array` *software simulator*, not real hardware. Nesting quantum amplitudes inside it adds an **emulation layer**; it does not remove one. The cost of a quantum state vector is `2ⁿ` complex amplitudes — that exponential wall is **substrate-invariant** (identical on silicon or on a *simulated* photonic substrate), so the wrapper cannot make it cheaper.
-- **No extra isolation.** Every governance primitive a nested quantum sim would need **already ships and is tested** in `galerina-ext-bridge-quantum` (Tier-3 Toxic Border, 21 in-package tests): the subspace-dimension memory governor, the `LOAD→TRAP→ERASE` kill-switch, crypto-exclusion (`SPORE-SUBSTRATE-001`), hybrid Ed25519+ML-DSA-65 attestation, and tolerance-determinism with pinned artifacts.
+- **No extra isolation.** Every governance primitive a nested quantum sim would need **already ships and is tested** in `galerina-ext-bridge-quantum` (Tier-3 Toxic Border, 21 in-package tests): the subspace-dimension memory governor, the `LOAD→TRAP→ERASE` kill-switch, crypto-exclusion (`FUNGI-SUBSTRATE-001`), hybrid Ed25519+ML-DSA-65 attestation, and tolerance-determinism with pinned artifacts.
 
 **Production quantum work → use the shipped `galerina-ext-bridge-quantum` bridge.** Do not nest.
 
@@ -17,7 +17,7 @@ Running a quantum-state simulator (e.g. IBM `ffsim`) **nested inside** the conti
 
 An **optional, OFF-BY-DEFAULT R&D / pedagogy module** — for *experimentation* (e.g. exploring continuous-state amplitude representations for a hypothetical future photonic substrate, or teaching), **never on any production path**. If a real future use of Galerina-as-an-app ever needs it, the gating is hub-specifiable over existing governance infra (no owner action to design):
 
-- a new `package.spore.json` `kind` value (e.g. `rnd-experimental`),
+- a new `package.fungi.json` `kind` value (e.g. `rnd-experimental`),
 - a `GALERINA_RND_QUANTUM_CONTINUOUS` opt-in flag (default off),
 - a capability-bit assignment, and
 - a **dev-only profile** (refused under `production`).

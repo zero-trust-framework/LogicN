@@ -2,7 +2,7 @@
 // i64-arith.ts — strict-trapping 64-bit integer arithmetic (sibling of i32-arith).
 //
 // The checked layer that makes faithful Int64 support possible: exact across the full i64 range via
-// BigInt (no silent precision loss above 2^53 — the exact fail-open SPORE-NUMERIC-001 guarded), traps
+// BigInt (no silent precision loss above 2^53 — the exact fail-open FUNGI-NUMERIC-001 guarded), traps
 // on overflow / div-by-zero / INT64_MIN÷-1, and matches WASM i64.div_s/rem_s (truncate-toward-zero,
 // sign-of-dividend remainder) so every execution tier stays differential-identical.
 // =============================================================================

@@ -8,7 +8,7 @@
  * Plugin folder structure (enforced by galerina promote):
  *   /plugins/<name>-v<version>/
  *     ├── manifest.json      ← security limits (CPU/RAM/time/memory)
- *     ├── governance.spore     ← capability declarations ([conforms_to: guard])
+ *     ├── governance.fungi     ← capability declarations ([conforms_to: guard])
  *     ├── plugin.wasm        ← signed compiled binary
  *     └── schemas/
  *         └── data_types.json ← strict input/output type contract
@@ -67,7 +67,7 @@ export function validatePluginInput(
     if (value === undefined || value === null) {
       if (field.required) {
         violations.push({
-          code: "SPORE-BORDER-001",
+          code: "FUNGI-BORDER-001",
           name: "MISSING_REQUIRED_FIELD",
           plugin: pluginName,
           field: field.name,
@@ -83,7 +83,7 @@ export function validatePluginInput(
     const actualType = inferType(value);
     if (actualType !== field.type && !isCompatibleType(actualType, field.type)) {
       violations.push({
-        code: "SPORE-BORDER-002",
+        code: "FUNGI-BORDER-002",
         name: "TYPE_MISMATCH",
         plugin: pluginName,
         field: field.name,
@@ -98,7 +98,7 @@ export function validatePluginInput(
       const str = String(value);
       if (field.maxLength !== undefined && str.length > field.maxLength) {
         violations.push({
-          code: "SPORE-BORDER-003",
+          code: "FUNGI-BORDER-003",
           name: "FIELD_TOO_LARGE",
           plugin: pluginName,
           field: field.name,
@@ -111,11 +111,11 @@ export function validatePluginInput(
 
     if ((field.type === "Int" || field.type === "Float") && typeof value === "number") {
       if (field.minValue !== undefined && value < field.minValue) {
-        violations.push({ code: "SPORE-BORDER-004", name: "VALUE_BELOW_MINIMUM", plugin: pluginName,
+        violations.push({ code: "FUNGI-BORDER-004", name: "VALUE_BELOW_MINIMUM", plugin: pluginName,
           field: field.name, message: `Value ${value} below minimum ${field.minValue}.`, severity: "error" });
       }
       if (field.maxValue !== undefined && value > field.maxValue) {
-        violations.push({ code: "SPORE-BORDER-004", name: "VALUE_ABOVE_MAXIMUM", plugin: pluginName,
+        violations.push({ code: "FUNGI-BORDER-004", name: "VALUE_ABOVE_MAXIMUM", plugin: pluginName,
           field: field.name, message: `Value ${value} above maximum ${field.maxValue}.`, severity: "error" });
       }
     }

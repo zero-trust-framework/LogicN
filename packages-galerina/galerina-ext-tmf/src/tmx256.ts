@@ -3,7 +3,7 @@
 // A 3-ary Merkle tree over coordinate-bound leaves; every node is a SHAKE256 XOF digest,
 // and the root binds the container header_core. Crypto-on-core: bit-exact, deterministic,
 // runs on a CPU via FIPS-202 SHAKE256 (node:crypto) — no photonic/ternary hardware, no
-// performance claim (SPORE-SUBSTRATE-001).
+// performance claim (FUNGI-SUBSTRATE-001).
 //
 // Spec (frozen): Galerina-R-AND-D/tmf/spec/tmx-256-construction-v0.md. This implementation is
 // verified byte-for-byte against that spec's golden vectors (tests/tmx256.test.mjs), i.e. it

@@ -38,7 +38,7 @@ reasonable. Conservative backup: **SLH-DSA (FIPS 205, hash-based)** — Stage-2 
 **Status (corrected 2026-06-16 — was overstated as "to finish"):** the hybrid algorithm is **SHIPPED for
 the ProofGraph governance signature** (Phase 55: `generateHybridGovernanceKeyPair`, `signProofGraphHybrid`,
 `verifyGovernanceSignatureHybrid` in `proof-graph.ts`, via `@noble/post-quantum` `ml_dsa65` — a real
-dependency, not "planned"). Signature tiers: `spore.gov.sig.v1` (Ed25519, compat) → `v2` (hybrid, both
+dependency, not "planned"). Signature tiers: `fungi.gov.sig.v1` (Ed25519, compat) → `v2` (hybrid, both
 required) → `v3` (pq_strict, future). It was **untested until 2026-06-16** (`tests/hybrid-pq-signature.test.mjs`,
 proves round-trip + fail-closed + both-required).
 
@@ -55,7 +55,7 @@ Tests: `attestation-hybrid.test.mjs` (+8), `bridge-attestation-hybrid.test.mjs` 
 
 **Remaining #34 gate:** only **production key custody** (long-lived signing-key storage/rotation in HSM/KMS,
 revocation⇒AuthError, out-of-band PKI for public keys — relates to `#149`). The algorithm + all signing surfaces
-are done. Candidate enforcement `SPORE-CRYPTO-PQ-001` (a `Sign` effect must declare a PQ/hybrid alg) still recorded.
+are done. Candidate enforcement `FUNGI-CRYPTO-PQ-001` (a `Sign` effect must declare a PQ/hybrid alg) still recorded.
 
 ### R3 — Key exchange / encryption: **ML-KEM only if/when confidentiality is added.**
 Galerina does **not** encrypt artifacts today (manifests are *signed*, not encrypted), so there is **no
@@ -67,19 +67,19 @@ PQ measures live on **cold paths** (build-time signing, attestation, admission) 
 **Do NOT PQ-harden per-request hot paths** for marginal benefit. (Corollary, from the GateCache analysis:
 a *cache key* is **not** security crypto and must stay cheap — not even SHA-256 there, let alone ML-DSA.)
 
-### R5 — Crypto-on-core complement *(already enforced — `SPORE-SUBSTRATE-001`).*
+### R5 — Crypto-on-core complement *(already enforced — `FUNGI-SUBSTRATE-001`).*
 Integrity / `Hash` / `Sign` effects must run on a **deterministic, bit-exact** lane. A PQ signature is
 worthless if computed on a non-bit-exact substrate, so the PQ posture (R1–R2) and the substrate posture
 reinforce each other.
 
 ## Enforcement (BUILT 2026-06-16)
-**`SPORE-CRYPTO-PQ-001` — IMPLEMENTED** (governance-verifier, certified profiles): a `crypto.sign` effect must
+**`FUNGI-CRYPTO-PQ-001` — IMPLEMENTED** (governance-verifier, certified profiles): a `crypto.sign` effect must
 declare a PQ/hybrid algorithm via a marker effect from the allowlist — `crypto.sign.hybrid` /
 `crypto.sign.mldsa65` / `crypto.sign.slhdsa`. Bare `crypto.sign` or a classical-only `crypto.sign.ed25519`
 is **denied (error)** in `production`/`deterministic` profiles (deny-by-default), allowed in `dev`. The marker
 is declared alongside the base effect: `effects { crypto.sign crypto.sign.hybrid }` (base handles call-matching;
 marker asserts the algorithm — no parser change, dotted effects already parse). This makes the R2 posture
-machine-checked. Companion: **`SPORE-SUBSTRATE-001` (crypto-on-core) now also covers `crypto.encrypt/decrypt/seal`**
+machine-checked. Companion: **`FUNGI-SUBSTRATE-001` (crypto-on-core) now also covers `crypto.encrypt/decrypt/seal`**
 (KEM-DEM/AEAD) — all crypto effects are held to a deterministic bit-exact lane.
 
 ## Net decision
@@ -88,4 +88,4 @@ machine-checked. Companion: **`SPORE-SUBSTRATE-001` (crypto-on-core) now also co
 a performance regression** — which is exactly the zero-trust posture asked for.
 
 **Cross-refs:** `notes/31–34` (TMX boundary: hash ≠ signature) · `galerina-task-ledger.md` #34/#107–109 ·
-`galerina-substrate-contracts.md` (SPORE-SUBSTRATE-001) · `manifest-generator.ts` / `attestation.ts`.
+`galerina-substrate-contracts.md` (FUNGI-SUBSTRATE-001) · `manifest-generator.ts` / `attestation.ts`.

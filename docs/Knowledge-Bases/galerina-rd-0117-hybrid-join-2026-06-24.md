@@ -1,7 +1,7 @@
 # R&D 0117 — The JOIN: 0110's reuse-crossover WHEN married to the shipped Tri-Pipe HOW, with a proved Safe-Floor Theorem
 
 **Date:** 2026-06-24 · **Workflow:** `w0w76fzt3` · **Status:** R&D record + **one build shipped** (the safe-floor proof, plan step 1)
-**Posture:** verify-before-build · trust the math · fail-safe to digital · crypto-on-core (SPORE-SUBSTRATE-001) · measured-negatives-only · **no measured photonic speedup until a named PIC** (aspirational constants stay labelled `partition-decider.ts:11-14`).
+**Posture:** verify-before-build · trust the math · fail-safe to digital · crypto-on-core (FUNGI-SUBSTRATE-001) · measured-negatives-only · **no measured photonic speedup until a named PIC** (aspirational constants stay labelled `partition-decider.ts:11-14`).
 **Named machine (== 0110/0115):** Intel i9-9900K @ 3.60 GHz · node v24.16.0 · win32 x64.
 **Companion docs:** [`galerina-rd-0115-hybrid-photonic-binary-placement-2026-06-24.md`](galerina-rd-0115-hybrid-photonic-binary-placement-2026-06-24.md) · [`galerina-rd-0110-photonic-matmul-refutation-deepened-2026-06-24.md`](galerina-rd-0110-photonic-matmul-refutation-deepened-2026-06-24.md) · [`galerina-rd-reference-index.md`](galerina-rd-reference-index.md)
 
@@ -39,10 +39,10 @@ Tphotonic(n,N,R) < Tdigital(n)  ⇔  R·[c_d·n³ − (c_opt+c_verify·k)·N·n�
 
 | # | Branch | Site | Guard | Returns |
 |---|--------|------|-------|---------|
-| B1 | crypto / control-flow | `:112-113` | `isCrypto ∥ isControlFlow` | **digital** (SPORE-SUBSTRATE-001) |
+| B1 | crypto / control-flow | `:112-113` | `isCrypto ∥ isControlFlow` | **digital** (FUNGI-SUBSTRATE-001) |
 | B2 | declared `lane:digital` | `:115-116` | `lane === "digital"` | **digital** |
 | B3 | garbage size | `:121-122` | `!isFinite(n) ∥ n<1` | **digital** (fail-closed) |
-| B4 | systematic ADC floor | `:132-133` | `!isFinite(feasibleN)` | **digital** (SPORE-SUBSTRATE-003; re-derived regardless of caller `redundancyN`) |
+| B4 | systematic ADC floor | `:132-133` | `!isFinite(feasibleN)` | **digital** (FUNGI-SUBSTRATE-003; re-derived regardless of caller `redundancyN`) |
 | B5 | cannot vote | `:136-137` | `!isFinite(N) ∥ N<1` | **digital** (fail-closed) |
 | **B6** | **net-win** | `:140-142` | `tphot < tdig` (**strict**) | **photonic** ← the only non-digital return |
 | B7 | no net win | `:143-144` | else | **digital** (REFUSE) |

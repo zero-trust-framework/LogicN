@@ -323,7 +323,7 @@ Scalar fallback is enabled.
 Compiler reports when fallback is used.
 ```
 
-Example `boot.spore`:
+Example `boot.fungi`:
 
 ```Galerina
 boot {
@@ -351,7 +351,7 @@ Example report:
     "fallbackBlocks": 1,
     "fallback": "scalar",
     "notes": [
-      "Vector block in src/checkout.spore:5 compiled to scalar fallback because vector execution is disabled for this target."
+      "Vector block in src/checkout.fungi:5 compiled to scalar fallback because vector execution is disabled for this target."
     ]
   }
 }
@@ -503,7 +503,7 @@ Galerina suggest vector
 Example output:
 
 ```text
-src/checkout.spore:4
+src/checkout.fungi:4
 
 This loop may be suitable for vector syntax.
 
@@ -909,15 +909,15 @@ if vector acceleration is unavailable, CPU nodes may use scalar fallback
 
 ## Example Files to Add Later
 
-Do not add these as executable `.spore` examples until parser support exists for `vector` blocks.
+Do not add these as executable `.fungi` examples until parser support exists for `vector` blocks.
 
 Recommended future examples:
 
 ```text
-examples/vector/checkout-vector.spore
-examples/vector/vector-disabled-scalar-fallback.spore
-examples/vector/vector-memory-safe-pipeline.spore
-examples/vector/vector-security-blocked-side-effect.spore
+examples/vector/checkout-vector.fungi
+examples/vector/vector-disabled-scalar-fallback.fungi
+examples/vector/vector-memory-safe-pipeline.fungi
+examples/vector/vector-security-blocked-side-effect.fungi
 ```
 
 Example checkout vector:
@@ -996,7 +996,7 @@ Example:
   },
   "suggestions": [
     {
-      "file": "src/checkout.spore",
+      "file": "src/checkout.fungi",
       "line": 8,
       "message": "Loop may be suitable for vector syntax."
     }

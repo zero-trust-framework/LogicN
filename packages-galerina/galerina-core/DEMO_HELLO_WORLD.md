@@ -13,7 +13,7 @@ This demo is intentionally simple. It is designed to show the expected developer
 The goal of this demo is to show:
 
 ```text
-a basic .spore file
+a basic .fungi file
 a simple secure flow
 strict return type
 Result-based success
@@ -41,7 +41,7 @@ If no compiler exists yet, this file should be treated as a design demo rather t
 The smallest possible Galerina demo should be a single file:
 
 ```text
-hello.spore
+hello.fungi
 ```
 
 Example:
@@ -56,7 +56,7 @@ secure flow main() -> Result<Void, Error> {
 Expected command:
 
 ```bash
-Galerina run hello.spore
+Galerina run hello.fungi
 ```
 
 Expected output:
@@ -106,16 +106,16 @@ A slightly larger hello World project should use this structure:
 
 ```text
 hello-Galerina/
-├── boot.spore
+├── boot.fungi
 ├── src/
-│   └── main.spore
+│   └── main.fungi
 ├── .env.example
 └── build/
 ```
 
 ---
 
-## Example `boot.spore`
+## Example `boot.fungi`
 
 ```Galerina
 project "helloLO"
@@ -126,7 +126,7 @@ language {
   compatibility "stable"
 }
 
-entry "./src/main.spore"
+entry "./src/main.fungi"
 
 targets {
   binary {
@@ -203,7 +203,7 @@ imports {
 
 ---
 
-## Example `src/main.spore`
+## Example `src/main.fungi`
 
 ```Galerina
 secure flow main() -> Result<Void, Error> {
@@ -231,7 +231,7 @@ Galerina run
 Run the single script version:
 
 ```bash
-Galerina run hello.spore
+Galerina run hello.fungi
 ```
 
 Check the project:
@@ -313,7 +313,7 @@ build/debug/
 | `app.target-report.json` | Target compatibility report |
 | `app.security-report.json` | Security settings and warnings |
 | `app.failure-report.json` | Build or runtime failure report |
-| `app.source-map.json` | Maps output back to original `.spore` files |
+| `app.source-map.json` | Maps output back to original `.fungi` files |
 | `app.ai-context.json` | Compact AI-readable project context |
 | `app.build-manifest.json` | Build metadata and hashes |
 
@@ -396,16 +396,16 @@ For this simple hello World program, the target report might look like this:
 ```json
 {
   "project": "helloLO",
-  "entry": "boot.spore",
+  "entry": "boot.fungi",
   "sourceFiles": [
-    "src/main.spore"
+    "src/main.fungi"
   ],
   "flows": [
     {
       "name": "main",
       "type": "secure flow",
       "returns": "Result<Void, Error>",
-      "file": "src/main.spore",
+      "file": "src/main.fungi",
       "line": 1
     }
   ],
@@ -442,7 +442,7 @@ For this simple hello World program, the target report might look like this:
             "offset": 128
           },
           "source": {
-            "file": "src/main.spore",
+            "file": "src/main.fungi",
             "line": 2,
             "column": 3
           },
@@ -476,7 +476,7 @@ Security error:
 SecureString cannot be printed.
 
 Original source:
-  src/main.spore:2:9
+  src/main.fungi:2:9
 
 Suggestion:
   Do not log secrets. Use redact(apiKey) if you need a safe placeholder.
@@ -489,7 +489,7 @@ Suggestion:
 ```json
 {
   "errorType": "SecurityError",
-  "file": "src/main.spore",
+  "file": "src/main.fungi",
   "line": 2,
   "column": 9,
   "problem": "SecureString cannot be printed.",
@@ -520,7 +520,7 @@ Type error:
 Cannot add String and Int.
 
 Original source:
-  src/main.spore:2:20
+  src/main.fungi:2:20
 
 Suggestion:
   Convert the String explicitly using toInt("10").
@@ -559,7 +559,7 @@ Option error:
 Cannot access field `name` on Option<Customer>.
 
 Original source:
-  src/main.spore:4:18
+  src/main.fungi:4:18
 
 Suggestion:
   Use map to check the Option value first.
@@ -659,7 +659,7 @@ Expected response:
 This demo is small, but it introduces important Galerina concepts:
 
 ```text
-.spore source files
+.fungi source files
 secure flow
 Result return type
 strict type checking

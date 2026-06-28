@@ -23,8 +23,8 @@ Bare `Tensor` without type parameters is not valid source syntax.
 
 ```
 Tensor<Float32, [1, 128]>   // valid
-Tensor                       // invalid — SPORE-TYPE-009
-Tensor<Float32>              // invalid — SPORE-TYPE-009 (expected 2 args)
+Tensor                       // invalid — FUNGI-TYPE-009
+Tensor<Float32>              // invalid — FUNGI-TYPE-009 (expected 2 args)
 ```
 
 ---
@@ -153,16 +153,16 @@ let input: Tensor<Float32, [Batch, 768]>
 
 | Source | Diagnostic |
 |---|---|
-| `Tensor` (bare, no args) | `SPORE-TYPE-009` — expects 2 type arguments |
-| `Tensor<Float32>` (one arg) | `SPORE-TYPE-009` — expects 2 type arguments |
-| `Tensor<Float32, [1,128], Gpu>` (three args) | `SPORE-TYPE-009` — expects 2 type arguments |
+| `Tensor` (bare, no args) | `FUNGI-TYPE-009` — expects 2 type arguments |
+| `Tensor<Float32>` (one arg) | `FUNGI-TYPE-009` — expects 2 type arguments |
+| `Tensor<Float32, [1,128], Gpu>` (three args) | `FUNGI-TYPE-009` — expects 2 type arguments |
 | `Tensor<Float32, [1, 128]>` | valid |
 | `Tensor<Int8, DynamicShape>` | valid |
 
 Suggested diagnostic message:
 
 ```
-SPORE-TYPE-009: InvalidGenericInstantiation
+FUNGI-TYPE-009: InvalidGenericInstantiation
 
 Tensor expects 2 type parameters: Tensor<ElementType, Shape>
 Received: Tensor

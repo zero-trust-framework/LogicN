@@ -16,7 +16,7 @@
  *   4. CAPABILITY   — the manifest declares `photonic.reprogram` AND the caller was granted it
  *                     (deny-by-default — an undeclared/ungranted reprogram has no admission).
  * Any failure collapses (decideAtBoundary) to DENY; "no attestation" is INDETERMINATE
- * (undischarged → SPORE-GOV-3VL-001). The PPU reprogram seam (e.g. a PhotonicOffloadPort) MUST
+ * (undischarged → FUNGI-GOV-3VL-001). The PPU reprogram seam (e.g. a PhotonicOffloadPort) MUST
  * call this first and reprogram ONLY if `admitted`.
  *
  * Invariants: crypto stays BINARY (this rail runs in the core; sha256/Ed25519 are bit-exact);

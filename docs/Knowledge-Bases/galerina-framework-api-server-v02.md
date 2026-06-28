@@ -420,11 +420,11 @@ function mapErrorToHttpResponse(
 
 | Code            | Meaning                           |
 | --------------- | --------------------------------- |
-| SPORE-NETWORK-001  | SSRF-protected destination denied |
-| SPORE-NETWORK-006  | Replay attack detected            |
-| SPORE-NETWORK-007  | Invalid webhook signature         |
-| SPORE-BOUNDARY-001 | Invalid runtime boundary          |
-| SPORE-EFFECT-002   | Effect propagation violation      |
+| FUNGI-NETWORK-001  | SSRF-protected destination denied |
+| FUNGI-NETWORK-006  | Replay attack detected            |
+| FUNGI-NETWORK-007  | Invalid webhook signature         |
+| FUNGI-BOUNDARY-001 | Invalid runtime boundary          |
+| FUNGI-EFFECT-002   | Effect propagation violation      |
 
 ---
 

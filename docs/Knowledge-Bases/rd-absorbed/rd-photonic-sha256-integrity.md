@@ -17,7 +17,7 @@
 > **Guardrails:** no invented crypto; sharply distinguish **cryptographic** (SHA-256/SHA-3-grade,
 > keyless, collision-resistant, bit-exact) vs **physical** (PUF/speckle) vs **approximate** (LSH/CAM) vs
 > **acceleration** (offload a sub-step). Builds on the crypto-on-core invariant
-> ([`SPORE-SUBSTRATE-001`](#9-reconciliation-with-the-galerina--tritmesh-framing)) and the companion
+> ([`FUNGI-SUBSTRATE-001`](#9-reconciliation-with-the-galerina--tritmesh-framing)) and the companion
 > [`quantum-resilient-tri-encryption.md`](quantum-resilient-tri-encryption.md).
 
 ---
@@ -287,7 +287,7 @@ motivated to build a photonic hash concluded the cryptographic part must stay di
 
 ## 9. Reconciliation with the Galerina / TritMesh framing
 
-- **Crypto-on-core, empirically reconfirmed.** This independently re-derives `SPORE-SUBSTRATE-001 /
+- **Crypto-on-core, empirically reconfirmed.** This independently re-derives `FUNGI-SUBSTRATE-001 /
   CRYPTO_ON_NOISY_LANE` from the photonic-hashing literature: integrity must run bit-exact on a deterministic
   lane; a noisy/photonic lane is forbidden. The rule isn't conservative caution — it's what the physics and
   the real photonic-crypto efforts both confirm.
@@ -354,4 +354,4 @@ motivated to build a photonic hash concluded the cryptographic part must stay di
 - [[QHash]] Ablayev et al., *Quantum Fingerprinting and Quantum Hashing* (2016/2017) — <https://www.intechopen.com/chapters/56986>
 - [[QRNG]] X. Huang et al., *18.8 Gbps real-time QRNG with a photonic integrated chip* (2021); ID Quantique Quantis; Quside
 
-**Internal cross-refs:** `quantum-resilient-tri-encryption.md` (companion) · `Galerina/docs/Knowledge-Bases/galerina-substrate-failure-model.md` (`SPORE-SUBSTRATE-001`) · `galerina-quantum-resistance-posture.md` (keep SHA-256; PQ the signature) · `galerina-ext-bridge-quantum-design.md` (FFSM #199 — sign `sha256(output)` on the deterministic core).
+**Internal cross-refs:** `quantum-resilient-tri-encryption.md` (companion) · `Galerina/docs/Knowledge-Bases/galerina-substrate-failure-model.md` (`FUNGI-SUBSTRATE-001`) · `galerina-quantum-resistance-posture.md` (keep SHA-256; PQ the signature) · `galerina-ext-bridge-quantum-design.md` (FFSM #199 — sign `sha256(output)` on the deterministic core).

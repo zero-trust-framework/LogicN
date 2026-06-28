@@ -5,7 +5,7 @@
 //   - Task 1: executePlan() for pure flow PurePlan
 //   - Task 2: Better runtime error messages (flow name included)
 //   - Task 3: Context propagation (context.actor accessible in flow body)
-//   - Task 4: SPORE-RUNTIME-006 emitted on deadline exceeded
+//   - Task 4: FUNGI-RUNTIME-006 emitted on deadline exceeded
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -32,7 +32,7 @@ pure flow computeTotal(price: Int) -> Int {
   return price
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const meta = parsed.flows.find((f) => f.name === "computeTotal");
     assert.ok(meta !== undefined, "Flow meta should be found");
 
@@ -60,7 +60,7 @@ pure flow add(a: Int, b: Int) -> Int {
   return a
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const meta = parsed.flows.find((f) => f.name === "add");
     assert.ok(meta !== undefined);
 
@@ -85,7 +85,7 @@ contract { effects { database.write } }
   return Ok(name)
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const meta = parsed.flows.find((f) => f.name === "registerUser");
     assert.ok(meta !== undefined);
 
@@ -114,7 +114,7 @@ pure flow greet(name: String) -> String {
   return name
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const meta = parsed.flows.find((f) => f.name === "greet");
     assert.ok(meta !== undefined);
 
@@ -143,7 +143,7 @@ pure flow greet(name: String) -> String {
   return name
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const meta = parsed.flows.find((f) => f.name === "greet");
     assert.ok(meta !== undefined);
 
@@ -174,7 +174,7 @@ describe("Phase 16 — Better runtime error messages", () => {
 pure flow existing() -> Int {
   return 1
 }
-`, "test.spore", "nonExistentFlow");
+`, "test.fungi", "nonExistentFlow");
 
     assert.equal(result.ok, false);
     // The diagnostic message or the execution should reference the flow name
@@ -190,7 +190,7 @@ pure flow crashFlow(x: Int) -> Int {
   return x
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     // Execute a flow that doesn't exist to get a flow-name-including error
     const result = await executeFlow(
       "missingFlow",
@@ -220,7 +220,7 @@ pure flow whoAmI() -> String {
   return actor
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const result = await executeFlow(
       "whoAmI",
       new Map(),
@@ -244,7 +244,7 @@ pure flow getTrace() -> String {
   return tid
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const result = await executeFlow(
       "getTrace",
       new Map(),
@@ -265,7 +265,7 @@ pure flow simple() -> Int {
   return 42
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const result = await executeFlow(
       "simple",
       new Map(),
@@ -287,7 +287,7 @@ pure flow getActor() -> String {
     // run() goes through runtime.ts which creates the interpreter; we pass actor
     // via runtimeOptions through the executeFlow path (this tests integration).
     // We'll use executeFlow directly here since run() doesn't expose runtimeOptions yet.
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const result = await executeFlow(
       "getActor",
       new Map(),
@@ -304,28 +304,28 @@ pure flow getActor() -> String {
 });
 
 // ---------------------------------------------------------------------------
-// Task 4: SPORE-RUNTIME-006 — Flow execution deadline exceeded
+// Task 4: FUNGI-RUNTIME-006 — Flow execution deadline exceeded
 // ---------------------------------------------------------------------------
 
-describe("Phase 16 — SPORE-RUNTIME-006 FlowDeadlineExceeded", () => {
-  it("deadline exceeded emits SPORE-RUNTIME-006 diagnostic code", async () => {
+describe("Phase 16 — FUNGI-RUNTIME-006 FlowDeadlineExceeded", () => {
+  it("deadline exceeded emits FUNGI-RUNTIME-006 diagnostic code", async () => {
     // Use a negative deadlineMs so runtime.ts computes Date.now() + (-10000),
     // which is 10 seconds in the past — guaranteed to be expired.
     const result = await run(`
 pure flow slow() -> Int {
   return 1
 }
-`, "test.spore", "slow", new Map(), {
+`, "test.fungi", "slow", new Map(), {
       deadlineMs: -10_000,
     });
 
-    // The diagnostics should contain SPORE-RUNTIME-006
+    // The diagnostics should contain FUNGI-RUNTIME-006
     const hasDeadlineDiag = result.diagnostics.some(
-      (d) => d.code === "SPORE-RUNTIME-006",
+      (d) => d.code === "FUNGI-RUNTIME-006",
     );
     assert.ok(
       hasDeadlineDiag,
-      `Expected SPORE-RUNTIME-006 diagnostic but got: ${JSON.stringify(result.diagnostics.map((d) => d.code))}`,
+      `Expected FUNGI-RUNTIME-006 diagnostic but got: ${JSON.stringify(result.diagnostics.map((d) => d.code))}`,
     );
   });
 
@@ -334,34 +334,34 @@ pure flow slow() -> Int {
 pure flow targetFlow() -> Int {
   return 1
 }
-`, "test.spore", "targetFlow", new Map(), {
+`, "test.fungi", "targetFlow", new Map(), {
       deadlineMs: -10_000,
     });
 
     const deadlineDiag = result.diagnostics.find(
-      (d) => d.code === "SPORE-RUNTIME-006",
+      (d) => d.code === "FUNGI-RUNTIME-006",
     );
-    assert.ok(deadlineDiag !== undefined, "Should have SPORE-RUNTIME-006 diagnostic");
+    assert.ok(deadlineDiag !== undefined, "Should have FUNGI-RUNTIME-006 diagnostic");
     assert.ok(
       deadlineDiag.message.includes("targetFlow"),
       `Deadline message should include flow name 'targetFlow', got: ${deadlineDiag.message}`,
     );
   });
 
-  it("non-expired deadline does not emit SPORE-RUNTIME-006", async () => {
+  it("non-expired deadline does not emit FUNGI-RUNTIME-006", async () => {
     const result = await run(`
 pure flow fast() -> Int {
   return 99
 }
-`, "test.spore", "fast", new Map(), {
+`, "test.fungi", "fast", new Map(), {
       // 10 second deadline — more than enough
       deadlineMs: 10_000,
     });
 
     assert.equal(result.ok, true);
     const hasDeadlineDiag = result.diagnostics.some(
-      (d) => d.code === "SPORE-RUNTIME-006",
+      (d) => d.code === "FUNGI-RUNTIME-006",
     );
-    assert.equal(hasDeadlineDiag, false, "Should not emit SPORE-RUNTIME-006 for a fresh deadline");
+    assert.equal(hasDeadlineDiag, false, "Should not emit FUNGI-RUNTIME-006 for a fresh deadline");
   });
 });

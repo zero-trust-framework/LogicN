@@ -256,6 +256,6 @@ which routes require idempotency or request proof
 which replay/nonce policy exists
 which hardware proof settings are experimental
 which post-quantum or hybrid crypto policy exists
-which report entries map back to .spore source
+which report entries map back to .fungi source
 ```
 

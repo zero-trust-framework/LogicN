@@ -13,9 +13,9 @@ Area: Tri logic, Decision logic, Bool boundary rules
 Version target: v0.2
 Implementation status: fully specified, implementation pending
 Canonical diagnostics:
-  - SPORE-TRI-001 through SPORE-TRI-005
-  - SPORE-DECISION-001 through SPORE-DECISION-005
-  - SPORE-BOOL-BOUNDARY-001 through SPORE-BOOL-BOUNDARY-005
+  - FUNGI-TRI-001 through FUNGI-TRI-005
+  - FUNGI-DECISION-001 through FUNGI-DECISION-005
+  - FUNGI-BOOL-BOUNDARY-001 through FUNGI-BOOL-BOUNDARY-005
 ```
 
 Tri logic, Decision logic, and Bool boundary rules form Galerina's deterministic governance logic layer.
@@ -311,7 +311,7 @@ export function validateBoolBoundary(
       allowed: false,
       value: false,
       diagnostics: [{
-        code: "SPORE-BOOL-BOUNDARY-001",
+        code: "FUNGI-BOOL-BOUNDARY-001",
         severity: "error",
         message: "Tri unknown cannot cross runtime Bool boundary as true."
       }],
@@ -323,7 +323,7 @@ export function validateBoolBoundary(
     allowed: input.kind === "allow",
     value: decisionToRuntimeBool(input),
     diagnostics: input.kind === "allow" ? [] : [{
-      code: "SPORE-BOOL-BOUNDARY-002",
+      code: "FUNGI-BOOL-BOUNDARY-002",
       severity: "error",
       message: `Decision ${input.kind} converted to runtime Bool false.`
     }],
@@ -403,35 +403,35 @@ export function evaluateCapability(
 
 # Diagnostic Codes
 
-## SPORE-TRI
+## FUNGI-TRI
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-TRI-001` | Invalid TriState shape |
-| `SPORE-TRI-002` | Unknown state missing reason |
-| `SPORE-TRI-003` | Invalid Tri operation |
-| `SPORE-TRI-004` | Tri converted to Bool without boundary validation |
-| `SPORE-TRI-005` | Tri report contains unsafe value |
+| `FUNGI-TRI-001` | Invalid TriState shape |
+| `FUNGI-TRI-002` | Unknown state missing reason |
+| `FUNGI-TRI-003` | Invalid Tri operation |
+| `FUNGI-TRI-004` | Tri converted to Bool without boundary validation |
+| `FUNGI-TRI-005` | Tri report contains unsafe value |
 
-## SPORE-DECISION
-
-| Code | Meaning |
-| --- | --- |
-| `SPORE-DECISION-001` | Invalid Decision shape |
-| `SPORE-DECISION-002` | Decision missing evidence |
-| `SPORE-DECISION-003` | Non-deny decision used despite denial evidence |
-| `SPORE-DECISION-004` | Decision converted to Bool without fail-closed policy |
-| `SPORE-DECISION-005` | Unknown decision lacks unknown reasons |
-
-## SPORE-BOOL-BOUNDARY
+## FUNGI-DECISION
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-BOOL-BOUNDARY-001` | Tri unknown attempted to cross Bool boundary |
-| `SPORE-BOOL-BOUNDARY-002` | Non-allow Decision converted to Bool false |
-| `SPORE-BOOL-BOUNDARY-003` | Implicit truthy/falsy conversion attempted |
-| `SPORE-BOOL-BOUNDARY-004` | Review decision used as runtime true |
-| `SPORE-BOOL-BOUNDARY-005` | Bool boundary result missing diagnostics or reason |
+| `FUNGI-DECISION-001` | Invalid Decision shape |
+| `FUNGI-DECISION-002` | Decision missing evidence |
+| `FUNGI-DECISION-003` | Non-deny decision used despite denial evidence |
+| `FUNGI-DECISION-004` | Decision converted to Bool without fail-closed policy |
+| `FUNGI-DECISION-005` | Unknown decision lacks unknown reasons |
+
+## FUNGI-BOOL-BOUNDARY
+
+| Code | Meaning |
+| --- | --- |
+| `FUNGI-BOOL-BOUNDARY-001` | Tri unknown attempted to cross Bool boundary |
+| `FUNGI-BOOL-BOUNDARY-002` | Non-allow Decision converted to Bool false |
+| `FUNGI-BOOL-BOUNDARY-003` | Implicit truthy/falsy conversion attempted |
+| `FUNGI-BOOL-BOUNDARY-004` | Review decision used as runtime true |
+| `FUNGI-BOOL-BOUNDARY-005` | Bool boundary result missing diagnostics or reason |
 
 ---
 

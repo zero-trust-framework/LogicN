@@ -9,7 +9,7 @@
 //   2. effect-egress     — one "no unsafe egress" obligation per governed sink (SINK_REQUIREMENTS).
 //   3. capability-denial — withhold a required capability → the V_DPM gate denies (fail-closed).
 //   4. boundary/fuzz     — per typed parameter: edge values (i32 min/max → trap; empty/NaN/Inf/NUL).
-//   5. substrate-violation — a crypto effect on a noisy/photonic lane → SPORE-SUBSTRATE-001.
+//   5. substrate-violation — a crypto effect on a noisy/photonic lane → FUNGI-SUBSTRATE-001.
 //
 // Output is an IR (one *TestCase[] per dimension) renderable to any concrete format; a minimal
 // TAP renderer is included. Design: docs/Knowledge-Bases/galerina-contract-driven-generation.md.
@@ -17,7 +17,7 @@
 // Tracked follow-ons (NOT yet built): the full K3 capability MATRIX (+1 allow / 0 indeterminate→deny
 // / −1 deny — this module covers only the −1 deny path); structural fuzz for record/enum/Option params;
 // and the senior-dev infra — Contract-Coverage metric, deterministic seed, escape-hatch
-// (SPORE-GEN-TEST-005), JUnit output, mock infra, and a property/shrinker engine.
+// (FUNGI-GEN-TEST-005), JUnit output, mock infra, and a property/shrinker engine.
 // =============================================================================
 
 import { type GIRFlow } from "./gir-emitter.js";
@@ -99,7 +99,7 @@ export function generateFaultInjectionSuite(
 // =============================================================================
 // Effect-egress dimension — every governed sink a flow declares becomes a "no unsafe
 // egress" obligation: a value that does not meet the sink's required state must be
-// REJECTED before it leaves through that sink (the SPORE-SECRET / SPORE-PRIVACY / SPORE-TYPE-015
+// REJECTED before it leaves through that sink (the FUNGI-SECRET / FUNGI-PRIVACY / FUNGI-TYPE-015
 // governance, exercised at runtime). Reuses the shipped SINK_REQUIREMENTS registry.
 // =============================================================================
 
@@ -258,7 +258,7 @@ export function generateBoundaryTests(flow: GIRFlow): BoundaryTestCase[] {
 
 // =============================================================================
 // Substrate-violation dimension — every crypto effect a flow declares becomes an obligation
-// that the op CANNOT run on a noisy/photonic lane (crypto-on-core, SPORE-SUBSTRATE-001).
+// that the op CANNOT run on a noisy/photonic lane (crypto-on-core, FUNGI-SUBSTRATE-001).
 // =============================================================================
 
 // `(\.|$)` (not bare `$`) so PQ/algorithm-suffixed variants — crypto.sign.hybrid / .mldsa65 /
@@ -287,7 +287,7 @@ export function generateSubstrateViolationTests(flow: GIRFlow): SubstrateViolati
       flow: flow.name,
       cryptoEffect: effect,
       assertion:
-        `route '${effect}' onto a noisy/photonic substrate lane: it must be REJECTED with SPORE-SUBSTRATE-001 ` +
+        `route '${effect}' onto a noisy/photonic substrate lane: it must be REJECTED with FUNGI-SUBSTRATE-001 ` +
         `(crypto-on-core — bit-exact crypto stays on the deterministic digital lane) — fail-closed`,
     });
   }

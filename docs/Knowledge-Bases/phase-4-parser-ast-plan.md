@@ -22,7 +22,7 @@ Which package owns the Galerina grammar definition?
 ```text
 Recommended: galerina-core-compiler
 The grammar file (.galerina.peg, .lark, or hand-written recursive descent) lives in
-galerina-core-compiler/src/parser/grammar.ts (or grammar.spore.peg).
+galerina-core-compiler/src/parser/grammar.ts (or grammar.fungi.peg).
 galerina-core owns the AstNodeKind enum and AST node types, but not the parsing logic.
 ```
 
@@ -133,18 +133,18 @@ These must be in the lexer before any code that uses them is processed.
 │  STAGE 4.4: Parser Error Recovery                                           │
 │  ─────────────────────────────────                                          │
 │  • Synchronize at declaration boundaries on error                           │
-│  • Emit SPORE-PARSE-* diagnostics with source spans                          │
+│  • Emit FUNGI-PARSE-* diagnostics with source spans                          │
 │  • Partial AST is safe to walk (no null dereferences in checkers)          │
 │  • Test: every diagnostic code has at least one rejection test              │
 │                                                                             │
 │  STAGE 4.5: Published AST JSON Schema                                       │
 │  ────────────────────────────────────                                       │
 │  • `galerina ast --json` emits versioned JSON schema                          │
-│  • Schema version: "spore.ast.v1"                                             │
+│  • Schema version: "fungi.ast.v1"                                             │
 │  • Every node has: kind, span, children                                     │
 │  • Modes: --syntax-only, --resolved, --include-trivia, --compact            │
 │  • Schema published to build/ast-schema.json                                │
-│  • SPORE-AST-001..006 diagnostics                                             │
+│  • FUNGI-AST-001..006 diagnostics                                             │
 │                                                                             │
 │  STAGE 4.6: Symbol Table (basic, no type resolution)                        │
 │  ─────────────────────────────────────────────────                          │
@@ -287,8 +287,8 @@ NeuralOp                — neural op (matmul, attention, etc.)
 □ Every AST node interface has a span field
 □ Parser covers all grammar productions (see Stage 4.3)
 □ Error recovery at declaration boundaries
-□ SPORE-PARSE-001..010 diagnostics defined and testable
-□ `galerina ast --json` emits spore.ast.v1 schema
+□ FUNGI-PARSE-001..010 diagnostics defined and testable
+□ `galerina ast --json` emits fungi.ast.v1 schema
 □ AST JSON schema published to build/
 □ Symbol table: flow/type name resolution, duplicate detection
 □ ≥80 parser tests (valid + rejection + span correctness)
@@ -296,7 +296,7 @@ NeuralOp                — neural op (matmul, attention, etc.)
 □ galerina-core-cli: --syntax-only uses new parser
 □ galerina-devtools-project-graph: updated for new node kinds
 □ intent graph updated for new AST kinds
-□ SPORE-PARSE diagnostics in compiler-diagnostics.md
+□ FUNGI-PARSE diagnostics in compiler-diagnostics.md
 ```
 
 ---
@@ -304,20 +304,20 @@ NeuralOp                — neural op (matmul, attention, etc.)
 ## Phase 4 Parser Diagnostic Codes
 
 ```text
-SPORE-PARSE-001  Unexpected token
-SPORE-PARSE-002  Expected declaration keyword
-SPORE-PARSE-003  Unterminated string literal
-SPORE-PARSE-004  Invalid numeric literal
-SPORE-PARSE-005  Unclosed block or bracket
-SPORE-PARSE-006  Missing return type annotation
-SPORE-PARSE-007  Duplicate declaration in same scope
-SPORE-PARSE-008  Invalid escape sequence
-SPORE-PARSE-009  Reserved keyword used as identifier
-SPORE-PARSE-010  Placement hint on non-flow/non-alloc context
-SPORE-PARSE-011  Ownership expression outside allowed context
-SPORE-PARSE-012  GPU stream used in non-compute context
-SPORE-PARSE-013  Atomic operation on non-atomic memory region (parse-level)
-SPORE-PARSE-014  Quantized type used outside neural/AI context (parse-level)
+FUNGI-PARSE-001  Unexpected token
+FUNGI-PARSE-002  Expected declaration keyword
+FUNGI-PARSE-003  Unterminated string literal
+FUNGI-PARSE-004  Invalid numeric literal
+FUNGI-PARSE-005  Unclosed block or bracket
+FUNGI-PARSE-006  Missing return type annotation
+FUNGI-PARSE-007  Duplicate declaration in same scope
+FUNGI-PARSE-008  Invalid escape sequence
+FUNGI-PARSE-009  Reserved keyword used as identifier
+FUNGI-PARSE-010  Placement hint on non-flow/non-alloc context
+FUNGI-PARSE-011  Ownership expression outside allowed context
+FUNGI-PARSE-012  GPU stream used in non-compute context
+FUNGI-PARSE-013  Atomic operation on non-atomic memory region (parse-level)
+FUNGI-PARSE-014  Quantized type used outside neural/AI context (parse-level)
 ```
 
 ---
@@ -361,7 +361,7 @@ the parser from becoming untestable. Required test kinds per production:
 
 ```text
 1 valid parse test (passes)
-1 rejection test (fails with SPORE-PARSE-NNN)
+1 rejection test (fails with FUNGI-PARSE-NNN)
 1 span test (verifies start/end line/col)
 ```
 
@@ -495,8 +495,8 @@ Phase 4 is complete when:
 ```text
 1. All Phase 4 checklist items above are ticked
 2. galerina-core-compiler tests: ≥80 tests, all passing
-3. `galerina ast --json` on any fixture file produces valid spore.ast.v1 JSON
-4. `galerina check --syntax-only` reports SPORE-PARSE-NNN on all invalid fixtures
+3. `galerina ast --json` on any fixture file produces valid fungi.ast.v1 JSON
+4. `galerina check --syntax-only` reports FUNGI-PARSE-NNN on all invalid fixtures
 5. No grammar production is without at least one rejection test
 6. AstNodeKind enum is frozen and documented
 7. Published AST JSON schema matches actual output

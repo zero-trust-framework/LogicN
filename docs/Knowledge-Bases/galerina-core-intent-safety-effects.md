@@ -37,7 +37,7 @@ Declared on the flow or block header keyword.
 | `experimental` | `experimental flow` | Non-production; blocked in production targets |
 
 > **Legacy qualifiers removed:** `safe flow`, `guard flow`, and `unsafe flow` as top-level
-> qualifiers are not valid v1 syntax. They emit SPORE-SYNTAX-LEGACY-002 (warning) if
+> qualifiers are not valid v1 syntax. They emit FUNGI-SYNTAX-LEGACY-002 (warning) if
 > encountered. Use `pure flow`, `guarded flow`, or `secure flow` respectively.
 
 Unqualified `flow` defaults to governed behavior with no extra constraints — same as the existing `flow` keyword.
@@ -162,25 +162,25 @@ contract {
 
 ---
 
-## 5. Diagnostic Codes — SPORE-INTENT-*
+## 5. Diagnostic Codes — FUNGI-INTENT-*
 
-Defined in `@galerina/core-compiler` as `SPORE_INTENT_001` through `SPORE_INTENT_005`.
+Defined in `@galerina/core-compiler` as `FUNGI_INTENT_001` through `FUNGI_INTENT_005`.
 
 | Code | Name | Condition |
 |---|---|---|
-| `SPORE-INTENT-001` | `INTENT_BEHAVIOR_MISMATCH` | Declared intent conflicts with inferred behavior |
-| `SPORE-INTENT-002` | `MISSING_REQUIRED_INTENT` | Governed surface (API, webhook, payment, etc.) is missing an intent declaration |
-| `SPORE-INTENT-003` | `UNSAFE_MISSING_REASON_OR_FALLBACK` | Unsafe block/flow is missing reason, approval, or fallback |
-| `SPORE-INTENT-004` | `PRIVILEGED_MISSING_CAPABILITY` | Privileged flow does not declare required capability |
-| `SPORE-INTENT-005` | `EXPERIMENTAL_IN_PRODUCTION` | Experimental code included in production build target without explicit approval |
+| `FUNGI-INTENT-001` | `INTENT_BEHAVIOR_MISMATCH` | Declared intent conflicts with inferred behavior |
+| `FUNGI-INTENT-002` | `MISSING_REQUIRED_INTENT` | Governed surface (API, webhook, payment, etc.) is missing an intent declaration |
+| `FUNGI-INTENT-003` | `UNSAFE_MISSING_REASON_OR_FALLBACK` | Unsafe block/flow is missing reason, approval, or fallback |
+| `FUNGI-INTENT-004` | `PRIVILEGED_MISSING_CAPABILITY` | Privileged flow does not declare required capability |
+| `FUNGI-INTENT-005` | `EXPERIMENTAL_IN_PRODUCTION` | Experimental code included in production build target without explicit approval |
 
-**Note:** The source design document uses `LN-INTENT-*`. The canonical format in this repo is `SPORE-INTENT-*` (matching `SPORE-CONFIG-*`, `SPORE-LOGIC-*`, `SPORE-STRING-*`, etc.).
+**Note:** The source design document uses `LN-INTENT-*`. The canonical format in this repo is `FUNGI-INTENT-*` (matching `FUNGI-CONFIG-*`, `FUNGI-LOGIC-*`, `FUNGI-STRING-*`, etc.).
 
 ### Example Diagnostic Output
 
 ```json
 {
-  "code": "SPORE-INTENT-002",
+  "code": "FUNGI-INTENT-002",
   "name": "MISSING_REQUIRED_INTENT",
   "severity": "error",
   "message": "Governed surface requires an intent declaration.",
@@ -196,7 +196,7 @@ If a flow declares intent and effects, the compiler checks for mismatches:
 
 ```galerina
 // Bad: declared intent says "send receipt" but body performs delete.
-// @legacy: 'safe flow' is invalid v1 syntax (SPORE-SYNTAX-LEGACY-002).
+// @legacy: 'safe flow' is invalid v1 syntax (FUNGI-SYNTAX-LEGACY-002).
 // Use 'guarded flow' instead.
 guarded flow sendReceipt(order: Order) -> Result<Unit, ApiError>
 contract {
@@ -206,7 +206,7 @@ contract {
 {
   database.delete(order.id)
 }
-// ^ SPORE-INTENT-001: Declared intent conflicts with inferred behavior.
+// ^ FUNGI-INTENT-001: Declared intent conflicts with inferred behavior.
 //   Flow declared intent "send customer receipt" but performs destructive database.delete.
 //   Declare database.delete explicitly or move it to a different flow.
 ```
@@ -218,8 +218,8 @@ contract {
 ### In `@galerina/core`
 
 ```ts
-// Note: "safe" maps to the legacy 'safe flow' qualifier (SPORE-SYNTAX-LEGACY-002).
-// In SPORE syntax use 'pure flow'. "unsafe" as a top-level qualifier is also legacy;
+// Note: "safe" maps to the legacy 'safe flow' qualifier (FUNGI-SYNTAX-LEGACY-002).
+// In FUNGI syntax use 'pure flow'. "unsafe" as a top-level qualifier is also legacy;
 // use 'secure flow' or 'unsafe block' in source. These type values remain in the
 // compiler AST for backward-compatibility with parsed legacy files only.
 export type SafetyLevel =
@@ -319,7 +319,7 @@ New node kinds added to `AstNodeKind` in `@galerina/core`:
 |---|---|---|
 | `guardedFlowDecl` | `guarded flow Name(...)` | Active v1 qualifier |
 | `privilegedFlowDecl` | `privileged flow Name(...)` | Active v1 qualifier |
-| `unsafeFlowDecl` | `unsafe flow Name(...)` | @legacy — SPORE-SYNTAX-LEGACY-002 (warning); use `secure flow` or `unsafe block` |
+| `unsafeFlowDecl` | `unsafe flow Name(...)` | @legacy — FUNGI-SYNTAX-LEGACY-002 (warning); use `secure flow` or `unsafe block` |
 | `experimentalFlowDecl` | `experimental flow Name(...)` | Active v1 qualifier |
 | `unsafeBlock` | `unsafe block Name { ... }` | Active v1 form for bounded unsafe scope |
 | `intentDecl` | `intent "..."` inside `contract { intent {} }` | Use contract form only |
@@ -427,7 +427,7 @@ let count = orders.count()
 | `FlowTraceEvent` type | ✅ | `@galerina/core/src/index.ts` |
 | AstNodeKind additions | ✅ | 8 new node kinds in `@galerina/core` |
 | `IntentCheckResult`, `IntentMismatch` | ✅ | `@galerina/core-compiler` |
-| `SPORE-INTENT-001..005` constants | ✅ | `@galerina/core-compiler` |
+| `FUNGI-INTENT-001..005` constants | ✅ | `@galerina/core-compiler` |
 | `CompilerSafetyLevel`, `GovernedSurfaceKind` | ✅ | `@galerina/core-compiler` |
 | `FlowScope` extended to all safety levels | ✅ | `@galerina/core-compiler` (internal) |
 | `parseFlowStart()` regex extended | ✅ | Recognises guarded/privileged/unsafe/experimental/unsafe block |

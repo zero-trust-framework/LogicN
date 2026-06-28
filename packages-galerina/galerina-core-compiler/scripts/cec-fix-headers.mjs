@@ -16,7 +16,7 @@ function walkDir(dir) {
   for (const e of entries) {
     const full = join(dir, e.name);
     if (e.isDirectory()) found.push(...walkDir(full));
-    else if (e.name === "example.spore") found.push(full);
+    else if (e.name === "example.fungi") found.push(full);
   }
   return found;
 }

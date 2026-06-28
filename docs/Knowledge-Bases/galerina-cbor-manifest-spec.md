@@ -93,7 +93,7 @@ CBOR Tag = Major Type 6, followed by the tagged value.
 
 | Tag | Galerina Type | Status | Purpose |
 |---|---|---|---|
-| **Tag 410** | `AuditEvent` | **runtime-only (NOT in manifest)** | SPORE-INV-000 runtime governance violation record — emitted by DSS.wasm when `unreachable` trap fires (flowId, contractHash, meterSnapshot, trapKind, vdpmAtTrap, rollbackStatus, timestamp). Lives in the audit log, by design. |
+| **Tag 410** | `AuditEvent` | **runtime-only (NOT in manifest)** | FUNGI-INV-000 runtime governance violation record — emitted by DSS.wasm when `unreachable` trap fires (flowId, contractHash, meterSnapshot, trapKind, vdpmAtTrap, rollbackStatus, timestamp). Lives in the audit log, by design. |
 | Tag 411 | `ZkProofEvidence` | reserved | Zero-knowledge proof bundle (ZKP audit workflows, future) |
 | Tag 412 | `FheCircuitRef` | reserved | Fully Homomorphic Encryption circuit descriptor (future) |
 | Tag 413 | `AgentCapabilityToken` | reserved | V_DPM bitmask as unforgeable agent identity token (DRCM Phase 5) |
@@ -105,9 +105,9 @@ CBOR Tag = Major Type 6, followed by the tagged value.
 
 ### Tag Implementation Rules
 
-1. **Registry-as-Code:** Define tag numbers in `governance/core-tags.spore` — imported by both the compiler and DSS.wasm. No magic numbers hardcoded in supervisor logic.
+1. **Registry-as-Code:** Define tag numbers in `governance/core-tags.fungi` — imported by both the compiler and DSS.wasm. No magic numbers hardcoded in supervisor logic.
 
-2. **Unknown Tag Rule:** If `DSS.wasm` encounters a tag NOT in 400-499, it must emit `SPORE-MANIFEST-UNKNOWN-TAG` and reject the manifest. This prevents "shadow fields" hiding malicious data.
+2. **Unknown Tag Rule:** If `DSS.wasm` encounters a tag NOT in 400-499, it must emit `FUNGI-MANIFEST-UNKNOWN-TAG` and reject the manifest. This prevents "shadow fields" hiding malicious data.
 
 3. **Zero-Copy Dispatch:** `DSS.wasm` tag handler uses `switch(tag)` — O(1) per field, no string parsing.
 
@@ -120,26 +120,26 @@ A tag 400 (Capability) always requires V_DPM check; tag 402 (SecretHandle) alway
 The `governanceSignature` field (CBOR Tag 404) binds the rest of the manifest. Two
 on-disk shapes exist; the **default is still Ed25519**, with an opt-in hybrid.
 
-### Default (Ed25519) — `schemaVersion: "spore.manifest.v1"`
+### Default (Ed25519) — `schemaVersion: "fungi.manifest.v1"`
 
 The classical signature: a `keyId` plus a single base64 Ed25519 `signature` over
 the canonical body. This is the unchanged default path — nothing about it changed
 when hybrid signing shipped.
 
-### Opt-in hybrid (Ed25519 + ML-DSA-65) — `schemaVersion: "spore.manifest.v2"`
+### Opt-in hybrid (Ed25519 + ML-DSA-65) — `schemaVersion: "fungi.manifest.v2"`
 
 > **Status: SHIPPED (opt-in).** Persisted when a hybrid signing key is present;
 > **mandatory and fail-closed** under `GALERINA_MANIFEST_PROFILE=certified` (no
 > post-quantum downgrade). A persisted hybrid signature is a durable on-disk
-> crypto fact, so the manifest `schemaVersion` bumps to `spore.manifest.v2` (the
-> Ed25519 default path stays `spore.manifest.v1`).
+> crypto fact, so the manifest `schemaVersion` bumps to `fungi.manifest.v2` (the
+> Ed25519 default path stays `fungi.manifest.v1`).
 
 The persisted `governanceSignature` object for a hybrid manifest is:
 
 ```json
 {
   "algorithm": "Ed25519+ML-DSA-65",     // hybrid, both required (NIST FIPS 204)
-  "sigAlgorithm": "spore.gov.sig.v2",      // envelope sig version — verifiers DISPATCH on this
+  "sigAlgorithm": "fungi.gov.sig.v2",      // envelope sig version — verifiers DISPATCH on this
   "keyId": "<signing key id>",
   "canon": "<body canon id (RFC 8785 JCS)>",
   "bodyHash": "sha256:<hex>",            // explicit body binding (defence-in-depth only)
@@ -148,7 +148,7 @@ The persisted `governanceSignature` object for a hybrid manifest is:
 }
 ```
 
-**Both halves required.** A `spore.gov.sig.v2` signature carries the two halves
+**Both halves required.** A `fungi.gov.sig.v2` signature carries the two halves
 joined by `|`. Because base64url never contains `|`, a classical Ed25519 value can
 never be mistaken for a hybrid one — verifiers dispatch on `sigAlgorithm` /
 `algorithm` / the pipe FIRST so a hybrid signature is never decoded by the
@@ -175,11 +175,11 @@ trusting the persisted `bodyHash` field as the signed input) and reject on misma
 
 | Diagnostic | Fires when |
 |---|---|
-| `SPORE-MANIFEST-PQ-REQUIRED` | Incomplete / inconsistent / non-both-half hybrid (v2) signature, or hybrid signing did not produce a both-half v2 result — refuses to run or to write a downgraded manifest |
-| `SPORE-MANIFEST-PUBKEY-MISSING` | The Ed25519 and/or ML-DSA-65 published public key for the `keyId` is absent — cannot verify both halves |
-| `SPORE-MANIFEST-TAMPER` | Recomputed `bodyHash` does not match, or hybrid verification fails (both halves required) — manifest may be tampered or PQ-downgraded |
+| `FUNGI-MANIFEST-PQ-REQUIRED` | Incomplete / inconsistent / non-both-half hybrid (v2) signature, or hybrid signing did not produce a both-half v2 result — refuses to run or to write a downgraded manifest |
+| `FUNGI-MANIFEST-PUBKEY-MISSING` | The Ed25519 and/or ML-DSA-65 published public key for the `keyId` is absent — cannot verify both halves |
+| `FUNGI-MANIFEST-TAMPER` | Recomputed `bodyHash` does not match, or hybrid verification fails (both halves required) — manifest may be tampered or PQ-downgraded |
 
-See `galerina-governance-signature.md` for the `spore.gov.sig.v2` ProofGraph type and
+See `galerina-governance-signature.md` for the `fungi.gov.sig.v2` ProofGraph type and
 `galerina-signed-attestation.md` for the attestation-surface hybrid path.
 
 ---
@@ -219,13 +219,13 @@ CBOR allows nested maps/arrays. A 300-byte file could expand into gigabytes.
 
 CBOR permits duplicate keys. Attacker injects hidden permission that auditor misses (first-key semantics) but runtime enforces (last-key semantics).
 
-**Control:** Reject any CBOR map containing duplicate keys. This is a hard requirement — first occurrence of a duplicate key → immediate manifest rejection + `SPORE-MANIFEST-DUPLICATE-KEY`.
+**Control:** Reject any CBOR map containing duplicate keys. This is a hard requirement — first occurrence of a duplicate key → immediate manifest rejection + `FUNGI-MANIFEST-DUPLICATE-KEY`.
 
 ### 3. Integer/Length Overflow
 
 CBOR handles arbitrary-length integers. A `$2^{64}$` byte string claim causes heap overflow.
 
-**Control:** Always use checked arithmetic when decoding lengths. Maximum single-field size: **4MB** (DWI linear memory ceiling). Reject any length claim exceeding this bound → `SPORE-MANIFEST-LENGTH-OVERFLOW`.
+**Control:** Always use checked arithmetic when decoding lengths. Maximum single-field size: **4MB** (DWI linear memory ceiling). Reject any length claim exceeding this bound → `FUNGI-MANIFEST-LENGTH-OVERFLOW`.
 
 ### 4. Canonicalization Non-Determinism
 
@@ -245,17 +245,17 @@ Parser expects `Integer` for `max_memory` but receives `String "4194304"`.
 **Control:** Strict schema validation immediately after decoding. Before any value is used:
 - `limit` MUST be `Major Type 0` (unsigned int) — never string
 - `effect` MUST be `Major Type 3` (text string) — never int
-- Any schema mismatch → `SPORE-MANIFEST-TYPE-ERROR`
+- Any schema mismatch → `FUNGI-MANIFEST-TYPE-ERROR`
 
 ### Secure Parser Checklist
 
-| Threat | Control | SPORE Code |
+| Threat | Control | FUNGI Code |
 |---|---|---|
-| Nested depth exhaustion | Max 8 levels recursion depth | `SPORE-MANIFEST-DEPTH` |
-| Duplicate map keys | Reject first duplicate key | `SPORE-MANIFEST-DUPLICATE-KEY` |
-| Memory exhaustion | Max 4MB per field allocation | `SPORE-MANIFEST-LENGTH-OVERFLOW` |
-| Non-canonical encoding | Round-trip re-encode + byte compare | `SPORE-MANIFEST-NONCANONICAL` |
-| Schema mismatch | Post-decode type validation | `SPORE-MANIFEST-TYPE-ERROR` |
+| Nested depth exhaustion | Max 8 levels recursion depth | `FUNGI-MANIFEST-DEPTH` |
+| Duplicate map keys | Reject first duplicate key | `FUNGI-MANIFEST-DUPLICATE-KEY` |
+| Memory exhaustion | Max 4MB per field allocation | `FUNGI-MANIFEST-LENGTH-OVERFLOW` |
+| Non-canonical encoding | Round-trip re-encode + byte compare | `FUNGI-MANIFEST-NONCANONICAL` |
+| Schema mismatch | Post-decode type validation | `FUNGI-MANIFEST-TYPE-ERROR` |
 
 ---
 

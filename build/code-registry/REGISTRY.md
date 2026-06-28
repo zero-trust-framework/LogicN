@@ -17,14 +17,14 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 ## RESERVED — defined but not emitted (std #1: tag wire-or-retire)
 
-- `SPORE-BLOCK-003`
-- `SPORE-BYTE-002`
-- `SPORE-BYTE-003`
-- `SPORE-BYTE-005`
-- `SPORE-CHAR-002`
-- `SPORE-CHAR-004`
-- `SPORE-STRING-003`
-- `SPORE-STRING-004`
+- `FUNGI-BLOCK-003`
+- `FUNGI-BYTE-002`
+- `FUNGI-BYTE-003`
+- `FUNGI-BYTE-005`
+- `FUNGI-CHAR-002`
+- `FUNGI-CHAR-004`
+- `FUNGI-STRING-003`
+- `FUNGI-STRING-004`
 
 ## Catalog (by family)
 
@@ -32,491 +32,491 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-ACCESS-001 | inline | ACCESS_UNKNOWN_CAPABILITY | — |
-| SPORE-ACCESS-002 | inline | ACCESS_GRANT_WITHOUT_EFFECT | — |
+| FUNGI-ACCESS-001 | inline | ACCESS_UNKNOWN_CAPABILITY | — |
+| FUNGI-ACCESS-002 | inline | ACCESS_GRANT_WITHOUT_EFFECT | — |
 
 ### AFFINE (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-AFFINE-001 | inline | PassportConsumedTwice | — |
+| FUNGI-AFFINE-001 | inline | PassportConsumedTwice | — |
 
 ### AI (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-AI-003 | phantom | — | — |
+| FUNGI-AI-003 | phantom | — | — |
 
 ### AMD (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-AMD-024 | phantom | — | — |
+| FUNGI-AMD-024 | phantom | — | — |
 
 ### ANTI (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-ANTI-ABUSE-001 | referenced | UngovernesBackgroundExecution | error |
+| FUNGI-ANTI-ABUSE-001 | referenced | UngovernesBackgroundExecution | error |
 
 ### ARCH (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-ARCH-001 | inline | InvalidVolatility | — |
-| SPORE-ARCH-002 | inline | StableDependencyViolation | — |
+| FUNGI-ARCH-001 | inline | InvalidVolatility | — |
+| FUNGI-ARCH-002 | inline | StableDependencyViolation | — |
 
 ### ASSIMILATE (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-ASSIMILATE-001 | inline | ASSIMILATE_OUTSIDE_BOOT | — |
-| SPORE-ASSIMILATE-002 | inline | — | — |
-| SPORE-ASSIMILATE-003 | inline | ASSIMILATE_MISSING_CAPABILITY_GRANTS | — |
+| FUNGI-ASSIMILATE-001 | inline | ASSIMILATE_OUTSIDE_BOOT | — |
+| FUNGI-ASSIMILATE-002 | inline | — | — |
+| FUNGI-ASSIMILATE-003 | inline | ASSIMILATE_MISSING_CAPABILITY_GRANTS | — |
 
 ### ASSUME (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-ASSUME-001 | inline | ASSUMING_MISSING_FLOW_REF / ASSUMING_MISSING_CLAIM | — |
-| SPORE-ASSUME-002 | inline | ASSUMING_NO_CONTRACT / ASSUMING_CLAIM_NOT_FOUND | — |
-| SPORE-ASSUME-003 | ref | — | — |
-| SPORE-ASSUME-004 | inline | ASSUMING_EXTERNAL_FLOW | — |
+| FUNGI-ASSUME-001 | inline | ASSUMING_MISSING_FLOW_REF / ASSUMING_MISSING_CLAIM | — |
+| FUNGI-ASSUME-002 | inline | ASSUMING_NO_CONTRACT / ASSUMING_CLAIM_NOT_FOUND | — |
+| FUNGI-ASSUME-003 | ref | — | — |
+| FUNGI-ASSUME-004 | inline | ASSUMING_EXTERNAL_FLOW | — |
 
 ### AST (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-AST-001 | phantom | — | — |
-| SPORE-AST-002 | phantom | — | — |
-| SPORE-AST-003 | phantom | — | — |
-| SPORE-AST-004 | phantom | — | — |
-| SPORE-AST-005 | phantom | — | — |
-| SPORE-AST-006 | phantom | — | — |
+| FUNGI-AST-001 | phantom | — | — |
+| FUNGI-AST-002 | phantom | — | — |
+| FUNGI-AST-003 | phantom | — | — |
+| FUNGI-AST-004 | phantom | — | — |
+| FUNGI-AST-005 | phantom | — | — |
+| FUNGI-AST-006 | phantom | — | — |
 
 ### AU (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-AU-001 | referenced | EPILOGUE_NONE_ON_HIGH_TRUST | error |
-| SPORE-AU-002 | phantom | — | — |
+| FUNGI-AU-001 | referenced | EPILOGUE_NONE_ON_HIGH_TRUST | error |
+| FUNGI-AU-002 | phantom | — | — |
 
 ### AUDIT (7)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-AUDIT-001 | ref | — | — |
-| SPORE-AUDIT-002 | phantom | — | — |
-| SPORE-AUDIT-003 | phantom | — | — |
-| SPORE-AUDIT-004 | phantom | — | — |
-| SPORE-AUDIT-005 | phantom | — | — |
-| SPORE-AUDIT-006 | phantom | — | — |
-| SPORE-AUDIT-007 | phantom | — | — |
+| FUNGI-AUDIT-001 | ref | — | — |
+| FUNGI-AUDIT-002 | phantom | — | — |
+| FUNGI-AUDIT-003 | phantom | — | — |
+| FUNGI-AUDIT-004 | phantom | — | — |
+| FUNGI-AUDIT-005 | phantom | — | — |
+| FUNGI-AUDIT-006 | phantom | — | — |
+| FUNGI-AUDIT-007 | phantom | — | — |
 
 ### AUTH (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-AUTH-003 | phantom | — | — |
+| FUNGI-AUTH-003 | phantom | — | — |
 
 ### BACKEND (7)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-BACKEND-001 | live | BackendError | error |
-| SPORE-BACKEND-002 | phantom | — | — |
-| SPORE-BACKEND-003 | phantom | — | — |
-| SPORE-BACKEND-004 | phantom | — | — |
-| SPORE-BACKEND-005 | phantom | — | — |
-| SPORE-BACKEND-006 | phantom | — | — |
-| SPORE-BACKEND-007 | phantom | — | — |
+| FUNGI-BACKEND-001 | live | BackendError | error |
+| FUNGI-BACKEND-002 | phantom | — | — |
+| FUNGI-BACKEND-003 | phantom | — | — |
+| FUNGI-BACKEND-004 | phantom | — | — |
+| FUNGI-BACKEND-005 | phantom | — | — |
+| FUNGI-BACKEND-006 | phantom | — | — |
+| FUNGI-BACKEND-007 | phantom | — | — |
 
 ### BF (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-BF-001 | inline | BITFIELD_BIT_OVERLAP | — |
-| SPORE-BF-002 | inline | BITFIELD_BIT_OUT_OF_RANGE | — |
+| FUNGI-BF-001 | inline | BITFIELD_BIT_OVERLAP | — |
+| FUNGI-BF-002 | inline | BITFIELD_BIT_OUT_OF_RANGE | — |
 
 ### BINDING (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-BINDING-001 | live | IMMUTABLE_LET_REASSIGNMENT | error |
-| SPORE-BINDING-002 | live | READONLY_REASSIGNMENT | error |
-| SPORE-BINDING-003 | live | READONLY_PROPERTY_MUTATION | error |
-| SPORE-BINDING-004 | live | MUT_IN_PURE_CONTEXT | error |
-| SPORE-BINDING-005 | live | IMMUTABLE_BINDING_REASSIGNED | error |
-| SPORE-BINDING-006 | referenced | MUT_TYPE_CHANGE | error |
+| FUNGI-BINDING-001 | live | IMMUTABLE_LET_REASSIGNMENT | error |
+| FUNGI-BINDING-002 | live | READONLY_REASSIGNMENT | error |
+| FUNGI-BINDING-003 | live | READONLY_PROPERTY_MUTATION | error |
+| FUNGI-BINDING-004 | live | MUT_IN_PURE_CONTEXT | error |
+| FUNGI-BINDING-005 | live | IMMUTABLE_BINDING_REASSIGNED | error |
+| FUNGI-BINDING-006 | referenced | MUT_TYPE_CHANGE | error |
 
 ### BLOCK (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-BLOCK-001 | live | UNKNOWN_CONTENT_BLOCK_TYPE | error |
-| SPORE-BLOCK-002 | live | UNCLOSED_CONTENT_BLOCK | error |
-| SPORE-BLOCK-003 | dead | MISMATCHED_CONTENT_BLOCK_MARKER | error |
-| SPORE-BLOCK-004 | referenced | SECRET_IN_CONTENT_BLOCK | error |
+| FUNGI-BLOCK-001 | live | UNKNOWN_CONTENT_BLOCK_TYPE | error |
+| FUNGI-BLOCK-002 | live | UNCLOSED_CONTENT_BLOCK | error |
+| FUNGI-BLOCK-003 | dead | MISMATCHED_CONTENT_BLOCK_MARKER | error |
+| FUNGI-BLOCK-004 | referenced | SECRET_IN_CONTENT_BLOCK | error |
 
 ### BOOL (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-BOOL-BOUNDARY-001 | live | — | — |
-| SPORE-BOOL-BOUNDARY-002 | live | — | — |
-| SPORE-BOOL-BOUNDARY-003 | live | — | — |
-| SPORE-BOOL-BOUNDARY-004 | live | — | — |
-| SPORE-BOOL-BOUNDARY-005 | live | — | — |
+| FUNGI-BOOL-BOUNDARY-001 | live | — | — |
+| FUNGI-BOOL-BOUNDARY-002 | live | — | — |
+| FUNGI-BOOL-BOUNDARY-003 | live | — | — |
+| FUNGI-BOOL-BOUNDARY-004 | live | — | — |
+| FUNGI-BOOL-BOUNDARY-005 | live | — | — |
 
 ### BORDER (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-BORDER-001 | inline | MISSING_REQUIRED_FIELD | — |
-| SPORE-BORDER-002 | inline | TYPE_MISMATCH | — |
-| SPORE-BORDER-003 | inline | FIELD_TOO_LARGE | — |
-| SPORE-BORDER-004 | inline | VALUE_BELOW_MINIMUM / VALUE_ABOVE_MAXIMUM | error |
-| SPORE-BORDER-005 | ref | — | — |
+| FUNGI-BORDER-001 | inline | MISSING_REQUIRED_FIELD | — |
+| FUNGI-BORDER-002 | inline | TYPE_MISMATCH | — |
+| FUNGI-BORDER-003 | inline | FIELD_TOO_LARGE | — |
+| FUNGI-BORDER-004 | inline | VALUE_BELOW_MINIMUM / VALUE_ABOVE_MAXIMUM | error |
+| FUNGI-BORDER-005 | ref | — | — |
 
 ### BOUNDARY (9)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-BOUNDARY-001 | phantom | — | — |
-| SPORE-BOUNDARY-002 | phantom | — | — |
-| SPORE-BOUNDARY-003 | phantom | — | — |
-| SPORE-BOUNDARY-004 | phantom | — | — |
-| SPORE-BOUNDARY-005 | phantom | — | — |
-| SPORE-BOUNDARY-006 | phantom | — | — |
-| SPORE-BOUNDARY-007 | phantom | — | — |
-| SPORE-BOUNDARY-008 | phantom | — | — |
-| SPORE-BOUNDARY-009 | phantom | — | — |
+| FUNGI-BOUNDARY-001 | phantom | — | — |
+| FUNGI-BOUNDARY-002 | phantom | — | — |
+| FUNGI-BOUNDARY-003 | phantom | — | — |
+| FUNGI-BOUNDARY-004 | phantom | — | — |
+| FUNGI-BOUNDARY-005 | phantom | — | — |
+| FUNGI-BOUNDARY-006 | phantom | — | — |
+| FUNGI-BOUNDARY-007 | phantom | — | — |
+| FUNGI-BOUNDARY-008 | phantom | — | — |
+| FUNGI-BOUNDARY-009 | phantom | — | — |
 
 ### BOUNDS (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-BOUNDS-001 | phantom | — | — |
-| SPORE-BOUNDS-002 | phantom | — | — |
-| SPORE-BOUNDS-003 | phantom | — | — |
-| SPORE-BOUNDS-004 | phantom | — | — |
-| SPORE-BOUNDS-005 | phantom | — | — |
-| SPORE-BOUNDS-006 | phantom | — | — |
+| FUNGI-BOUNDS-001 | phantom | — | — |
+| FUNGI-BOUNDS-002 | phantom | — | — |
+| FUNGI-BOUNDS-003 | phantom | — | — |
+| FUNGI-BOUNDS-004 | phantom | — | — |
+| FUNGI-BOUNDS-005 | phantom | — | — |
+| FUNGI-BOUNDS-006 | phantom | — | — |
 
 ### BUDGET (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-BUDGET-001 | phantom | — | — |
-| SPORE-BUDGET-002 | phantom | — | — |
-| SPORE-BUDGET-003 | phantom | — | — |
-| SPORE-BUDGET-004 | phantom | — | — |
+| FUNGI-BUDGET-001 | phantom | — | — |
+| FUNGI-BUDGET-002 | phantom | — | — |
+| FUNGI-BUDGET-003 | phantom | — | — |
+| FUNGI-BUDGET-004 | phantom | — | — |
 
 ### BUILD (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-BUILD-001 | referenced | NonDeterministicBuild | error |
-| SPORE-BUILD-005 | phantom | — | — |
+| FUNGI-BUILD-001 | referenced | NonDeterministicBuild | error |
+| FUNGI-BUILD-005 | phantom | — | — |
 
 ### BYTE (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-BYTE-001 | referenced | BYTE_OUT_OF_RANGE | error |
-| SPORE-BYTE-002 | dead | BYTE_OVERFLOW | error |
-| SPORE-BYTE-003 | dead | IMPLICIT_BYTE_STRING_CONVERSION | error |
-| SPORE-BYTE-004 | referenced | RAW_BYTES_LOGGED | error |
-| SPORE-BYTE-005 | dead | UNBOUNDED_BYTES_READ | error |
+| FUNGI-BYTE-001 | referenced | BYTE_OUT_OF_RANGE | error |
+| FUNGI-BYTE-002 | dead | BYTE_OVERFLOW | error |
+| FUNGI-BYTE-003 | dead | IMPLICIT_BYTE_STRING_CONVERSION | error |
+| FUNGI-BYTE-004 | referenced | RAW_BYTES_LOGGED | error |
+| FUNGI-BYTE-005 | dead | UNBOUNDED_BYTES_READ | error |
 
 ### CAP (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-CAP-001 | inline | NETWORK_WILDCARD_BANNED | — |
-| SPORE-CAP-002 | phantom | — | — |
-| SPORE-CAP-003 | phantom | — | — |
-| SPORE-CAP-004 | phantom | — | — |
+| FUNGI-CAP-001 | inline | NETWORK_WILDCARD_BANNED | — |
+| FUNGI-CAP-002 | phantom | — | — |
+| FUNGI-CAP-003 | phantom | — | — |
+| FUNGI-CAP-004 | phantom | — | — |
 
 ### CAPABILITY (9)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-CAPABILITY-001 | phantom | — | — |
-| SPORE-CAPABILITY-003 | phantom | — | — |
-| SPORE-CAPABILITY-IMPORT-001 | phantom | — | — |
-| SPORE-CAPABILITY-IMPORT-002 | phantom | — | — |
-| SPORE-CAPABILITY-IMPORT-003 | phantom | — | — |
-| SPORE-CAPABILITY-IMPORT-004 | phantom | — | — |
-| SPORE-CAPABILITY-IMPORT-005 | phantom | — | — |
-| SPORE-CAPABILITY-IMPORT-006 | phantom | — | — |
-| SPORE-CAPABILITY-IMPORT-007 | phantom | — | — |
+| FUNGI-CAPABILITY-001 | phantom | — | — |
+| FUNGI-CAPABILITY-003 | phantom | — | — |
+| FUNGI-CAPABILITY-IMPORT-001 | phantom | — | — |
+| FUNGI-CAPABILITY-IMPORT-002 | phantom | — | — |
+| FUNGI-CAPABILITY-IMPORT-003 | phantom | — | — |
+| FUNGI-CAPABILITY-IMPORT-004 | phantom | — | — |
+| FUNGI-CAPABILITY-IMPORT-005 | phantom | — | — |
+| FUNGI-CAPABILITY-IMPORT-006 | phantom | — | — |
+| FUNGI-CAPABILITY-IMPORT-007 | phantom | — | — |
 
 ### CHAR (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-CHAR-001 | referenced | CHAR_BYTE_CONFUSION | error |
-| SPORE-CHAR-002 | dead | INVALID_CHAR_LITERAL | error |
-| SPORE-CHAR-003 | referenced | MULTI_CHAR_LITERAL | error |
-| SPORE-CHAR-004 | dead | IMPLICIT_CHAR_NUMBER_CONVERSION | error |
+| FUNGI-CHAR-001 | referenced | CHAR_BYTE_CONFUSION | error |
+| FUNGI-CHAR-002 | dead | INVALID_CHAR_LITERAL | error |
+| FUNGI-CHAR-003 | referenced | MULTI_CHAR_LITERAL | error |
+| FUNGI-CHAR-004 | dead | IMPLICIT_CHAR_NUMBER_CONVERSION | error |
 
 ### CHERI (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-CHERI-001 | phantom | — | — |
+| FUNGI-CHERI-001 | phantom | — | — |
 
 ### CLI (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-CLI-REDACT-001 | referenced | — | — |
+| FUNGI-CLI-REDACT-001 | referenced | — | — |
 
 ### COMMAND (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-COMMAND-001 | phantom | — | — |
-| SPORE-COMMAND-002 | phantom | — | — |
+| FUNGI-COMMAND-001 | phantom | — | — |
+| FUNGI-COMMAND-002 | phantom | — | — |
 
 ### COMPAT (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-COMPAT-001 | phantom | — | — |
-| SPORE-COMPAT-002 | phantom | — | — |
-| SPORE-COMPAT-003 | phantom | — | — |
-| SPORE-COMPAT-004 | phantom | — | — |
-| SPORE-COMPAT-005 | phantom | — | — |
+| FUNGI-COMPAT-001 | phantom | — | — |
+| FUNGI-COMPAT-002 | phantom | — | — |
+| FUNGI-COMPAT-003 | phantom | — | — |
+| FUNGI-COMPAT-004 | phantom | — | — |
+| FUNGI-COMPAT-005 | phantom | — | — |
 
 ### COMPTIME (8)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-COMPTIME-001 | phantom | — | — |
-| SPORE-COMPTIME-002 | phantom | — | — |
-| SPORE-COMPTIME-003 | phantom | — | — |
-| SPORE-COMPTIME-004 | phantom | — | — |
-| SPORE-COMPTIME-005 | phantom | — | — |
-| SPORE-COMPTIME-006 | phantom | — | — |
-| SPORE-COMPTIME-007 | phantom | — | — |
-| SPORE-COMPTIME-008 | phantom | — | — |
+| FUNGI-COMPTIME-001 | phantom | — | — |
+| FUNGI-COMPTIME-002 | phantom | — | — |
+| FUNGI-COMPTIME-003 | phantom | — | — |
+| FUNGI-COMPTIME-004 | phantom | — | — |
+| FUNGI-COMPTIME-005 | phantom | — | — |
+| FUNGI-COMPTIME-006 | phantom | — | — |
+| FUNGI-COMPTIME-007 | phantom | — | — |
+| FUNGI-COMPTIME-008 | phantom | — | — |
 
 ### COMPUTE (7)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-COMPUTE-001 | referenced | ComputeTargetIncompatiblePattern | warning |
-| SPORE-COMPUTE-002 | phantom | — | — |
-| SPORE-COMPUTE-003 | phantom | — | — |
-| SPORE-COMPUTE-004 | phantom | — | — |
-| SPORE-COMPUTE-005 | phantom | — | — |
-| SPORE-COMPUTE-006 | phantom | — | — |
-| SPORE-COMPUTE-007 | phantom | — | — |
+| FUNGI-COMPUTE-001 | referenced | ComputeTargetIncompatiblePattern | warning |
+| FUNGI-COMPUTE-002 | phantom | — | — |
+| FUNGI-COMPUTE-003 | phantom | — | — |
+| FUNGI-COMPUTE-004 | phantom | — | — |
+| FUNGI-COMPUTE-005 | phantom | — | — |
+| FUNGI-COMPUTE-006 | phantom | — | — |
+| FUNGI-COMPUTE-007 | phantom | — | — |
 
 ### CONFIG (32)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-CONFIG-001 | ref | — | — |
-| SPORE-CONFIG-002 | ref | — | — |
-| SPORE-CONFIG-003 | ref | — | — |
-| SPORE-CONFIG-004 | ref | — | — |
-| SPORE-CONFIG-005 | ref | — | — |
-| SPORE-CONFIG-006 | ref | — | — |
-| SPORE-CONFIG-007 | ref | — | — |
-| SPORE-CONFIG-008 | ref | — | — |
-| SPORE-CONFIG-009 | ref | — | — |
-| SPORE-CONFIG-010 | ref | — | — |
-| SPORE-CONFIG-011 | ref | — | — |
-| SPORE-CONFIG-012 | ref | — | — |
-| SPORE-CONFIG-013 | ref | — | — |
-| SPORE-CONFIG-014 | ref | — | — |
-| SPORE-CONFIG-015 | ref | — | — |
-| SPORE-CONFIG-016 | ref | — | — |
-| SPORE-CONFIG-017 | ref | — | — |
-| SPORE-CONFIG-018 | ref | — | — |
-| SPORE-CONFIG-019 | ref | — | — |
-| SPORE-CONFIG-020 | ref | — | — |
-| SPORE-CONFIG-021 | ref | — | — |
-| SPORE-CONFIG-022 | ref | — | — |
-| SPORE-CONFIG-023 | ref | — | — |
-| SPORE-CONFIG-024 | ref | — | — |
-| SPORE-CONFIG-025 | ref | — | — |
-| SPORE-CONFIG-026 | ref | — | — |
-| SPORE-CONFIG-027 | ref | — | — |
-| SPORE-CONFIG-GOV-001 | ref | — | — |
-| SPORE-CONFIG-GOV-002 | ref | — | — |
-| SPORE-CONFIG-GOV-003 | ref | — | — |
-| SPORE-CONFIG-WARN-001 | phantom | — | — |
-| SPORE-CONFIG-WARN-002 | phantom | — | — |
+| FUNGI-CONFIG-001 | ref | — | — |
+| FUNGI-CONFIG-002 | ref | — | — |
+| FUNGI-CONFIG-003 | ref | — | — |
+| FUNGI-CONFIG-004 | ref | — | — |
+| FUNGI-CONFIG-005 | ref | — | — |
+| FUNGI-CONFIG-006 | ref | — | — |
+| FUNGI-CONFIG-007 | ref | — | — |
+| FUNGI-CONFIG-008 | ref | — | — |
+| FUNGI-CONFIG-009 | ref | — | — |
+| FUNGI-CONFIG-010 | ref | — | — |
+| FUNGI-CONFIG-011 | ref | — | — |
+| FUNGI-CONFIG-012 | ref | — | — |
+| FUNGI-CONFIG-013 | ref | — | — |
+| FUNGI-CONFIG-014 | ref | — | — |
+| FUNGI-CONFIG-015 | ref | — | — |
+| FUNGI-CONFIG-016 | ref | — | — |
+| FUNGI-CONFIG-017 | ref | — | — |
+| FUNGI-CONFIG-018 | ref | — | — |
+| FUNGI-CONFIG-019 | ref | — | — |
+| FUNGI-CONFIG-020 | ref | — | — |
+| FUNGI-CONFIG-021 | ref | — | — |
+| FUNGI-CONFIG-022 | ref | — | — |
+| FUNGI-CONFIG-023 | ref | — | — |
+| FUNGI-CONFIG-024 | ref | — | — |
+| FUNGI-CONFIG-025 | ref | — | — |
+| FUNGI-CONFIG-026 | ref | — | — |
+| FUNGI-CONFIG-027 | ref | — | — |
+| FUNGI-CONFIG-GOV-001 | ref | — | — |
+| FUNGI-CONFIG-GOV-002 | ref | — | — |
+| FUNGI-CONFIG-GOV-003 | ref | — | — |
+| FUNGI-CONFIG-WARN-001 | phantom | — | — |
+| FUNGI-CONFIG-WARN-002 | phantom | — | — |
 
 ### CONSENT (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-CONSENT-001 | phantom | — | — |
+| FUNGI-CONSENT-001 | phantom | — | — |
 
 ### CONSTRAINT (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-CONSTRAINT-001 | phantom | — | — |
-| SPORE-CONSTRAINT-002 | phantom | — | — |
-| SPORE-CONSTRAINT-003 | phantom | — | — |
-| SPORE-CONSTRAINT-004 | phantom | — | — |
-| SPORE-CONSTRAINT-005 | phantom | — | — |
+| FUNGI-CONSTRAINT-001 | phantom | — | — |
+| FUNGI-CONSTRAINT-002 | phantom | — | — |
+| FUNGI-CONSTRAINT-003 | phantom | — | — |
+| FUNGI-CONSTRAINT-004 | phantom | — | — |
+| FUNGI-CONSTRAINT-005 | phantom | — | — |
 
 ### CONTEXT (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-CONTEXT-001 | live | REQUIRED_CONTEXT_NOT_ACCESSED | warning |
+| FUNGI-CONTEXT-001 | live | REQUIRED_CONTEXT_NOT_ACCESSED | warning |
 
 ### CONTRACT (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-CONTRACT-001 | phantom | — | — |
-| SPORE-CONTRACT-003 | phantom | — | — |
-| SPORE-CONTRACT-004 | phantom | — | — |
-| SPORE-CONTRACT-005 | phantom | — | — |
+| FUNGI-CONTRACT-001 | phantom | — | — |
+| FUNGI-CONTRACT-003 | phantom | — | — |
+| FUNGI-CONTRACT-004 | phantom | — | — |
+| FUNGI-CONTRACT-005 | phantom | — | — |
 
 ### CORE (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-CORE-0000 | phantom | — | — |
+| FUNGI-CORE-0000 | phantom | — | — |
 
 ### CRYPTO (9)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-CRYPTO-001 | phantom | — | — |
-| SPORE-CRYPTO-002 | phantom | — | — |
-| SPORE-CRYPTO-003 | phantom | — | — |
-| SPORE-CRYPTO-004 | phantom | — | — |
-| SPORE-CRYPTO-005 | phantom | — | — |
-| SPORE-CRYPTO-006 | phantom | — | — |
-| SPORE-CRYPTO-007 | phantom | — | — |
-| SPORE-CRYPTO-008 | phantom | — | — |
-| SPORE-CRYPTO-PQ-001 | live | SIGN_EFFECT_NOT_POST_QUANTUM | error |
+| FUNGI-CRYPTO-001 | phantom | — | — |
+| FUNGI-CRYPTO-002 | phantom | — | — |
+| FUNGI-CRYPTO-003 | phantom | — | — |
+| FUNGI-CRYPTO-004 | phantom | — | — |
+| FUNGI-CRYPTO-005 | phantom | — | — |
+| FUNGI-CRYPTO-006 | phantom | — | — |
+| FUNGI-CRYPTO-007 | phantom | — | — |
+| FUNGI-CRYPTO-008 | phantom | — | — |
+| FUNGI-CRYPTO-PQ-001 | live | SIGN_EFFECT_NOT_POST_QUANTUM | error |
 
 ### DAG (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-DAG-001 | inline | GOVERNED_FLOW_UNKNOWN_FLOOR | — |
-| SPORE-DAG-002 | ref | — | — |
+| FUNGI-DAG-001 | inline | GOVERNED_FLOW_UNKNOWN_FLOOR | — |
+| FUNGI-DAG-002 | ref | — | — |
 
 ### DECISION (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-DECISION-001 | live | — | — |
-| SPORE-DECISION-002 | live | — | — |
-| SPORE-DECISION-003 | live | — | — |
-| SPORE-DECISION-004 | live | — | — |
-| SPORE-DECISION-005 | live | — | — |
+| FUNGI-DECISION-001 | live | — | — |
+| FUNGI-DECISION-002 | live | — | — |
+| FUNGI-DECISION-003 | live | — | — |
+| FUNGI-DECISION-004 | live | — | — |
+| FUNGI-DECISION-005 | live | — | — |
 
 ### DENIAL (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-DENIAL-001 | phantom | — | — |
-| SPORE-DENIAL-002 | phantom | — | — |
-| SPORE-DENIAL-003 | phantom | — | — |
-| SPORE-DENIAL-004 | phantom | — | — |
-| SPORE-DENIAL-005 | phantom | — | — |
+| FUNGI-DENIAL-001 | phantom | — | — |
+| FUNGI-DENIAL-002 | phantom | — | — |
+| FUNGI-DENIAL-003 | phantom | — | — |
+| FUNGI-DENIAL-004 | phantom | — | — |
+| FUNGI-DENIAL-005 | phantom | — | — |
 
 ### DEP (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-DEP-001 | phantom | — | — |
+| FUNGI-DEP-001 | phantom | — | — |
 
 ### DEPLOY (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-DEPLOY-001 | phantom | — | — |
-| SPORE-DEPLOY-005 | phantom | — | — |
+| FUNGI-DEPLOY-001 | phantom | — | — |
+| FUNGI-DEPLOY-005 | phantom | — | — |
 
 ### DIFF (9)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-DIFF-001 | phantom | — | — |
-| SPORE-DIFF-002 | phantom | — | — |
-| SPORE-DIFF-003 | phantom | — | — |
-| SPORE-DIFF-004 | phantom | — | — |
-| SPORE-DIFF-005 | phantom | — | — |
-| SPORE-DIFF-006 | phantom | — | — |
-| SPORE-DIFF-007 | phantom | — | — |
-| SPORE-DIFF-008 | phantom | — | — |
-| SPORE-DIFF-009 | phantom | — | — |
+| FUNGI-DIFF-001 | phantom | — | — |
+| FUNGI-DIFF-002 | phantom | — | — |
+| FUNGI-DIFF-003 | phantom | — | — |
+| FUNGI-DIFF-004 | phantom | — | — |
+| FUNGI-DIFF-005 | phantom | — | — |
+| FUNGI-DIFF-006 | phantom | — | — |
+| FUNGI-DIFF-007 | phantom | — | — |
+| FUNGI-DIFF-008 | phantom | — | — |
+| FUNGI-DIFF-009 | phantom | — | — |
 
 ### DP (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-DP-001 | phantom | — | — |
-| SPORE-DP-002 | phantom | — | — |
-| SPORE-DP-003 | phantom | — | — |
-| SPORE-DP-004 | phantom | — | — |
+| FUNGI-DP-001 | phantom | — | — |
+| FUNGI-DP-002 | phantom | — | — |
+| FUNGI-DP-003 | phantom | — | — |
+| FUNGI-DP-004 | phantom | — | — |
 
 ### EC (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-EC-001 | referenced | ECONOMICS_COST_OVERFLOW | error |
-| SPORE-EC-002 | referenced | ECONOMICS_FAILURE_TOLERANCE_BREACHED | error |
+| FUNGI-EC-001 | referenced | ECONOMICS_COST_OVERFLOW | error |
+| FUNGI-EC-002 | referenced | ECONOMICS_FAILURE_TOLERANCE_BREACHED | error |
 
 ### ECON (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-ECON-001 | referenced | BudgetExceeded | warning |
-| SPORE-ECON-002 | referenced | LineageMissing | info |
-| SPORE-ECON-003 | referenced | AiModelUnapproved | error |
+| FUNGI-ECON-001 | referenced | BudgetExceeded | warning |
+| FUNGI-ECON-002 | referenced | LineageMissing | info |
+| FUNGI-ECON-003 | referenced | AiModelUnapproved | error |
 
 ### EFFECT (7)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-EFFECT-001 | inline | UNDECLARED_EFFECT | error/warning |
-| SPORE-EFFECT-002 | inline | OVERDECLARED_EFFECT / TRANSITIVE_EFFECT_NOT_DECLARED | warning/error |
-| SPORE-EFFECT-003 | inline | EFFECT_BOUNDARY_VIOLATION | error |
-| SPORE-EFFECT-004 | inline | NON_CANONICAL_EFFECT / UNKNOWN_EFFECT | error |
-| SPORE-EFFECT-005 | live | BroadAliasUsed | warning |
-| SPORE-EFFECT-006 | phantom | — | — |
-| SPORE-EFFECT-2000 | phantom | — | — |
+| FUNGI-EFFECT-001 | inline | UNDECLARED_EFFECT | error/warning |
+| FUNGI-EFFECT-002 | inline | OVERDECLARED_EFFECT / TRANSITIVE_EFFECT_NOT_DECLARED | warning/error |
+| FUNGI-EFFECT-003 | inline | EFFECT_BOUNDARY_VIOLATION | error |
+| FUNGI-EFFECT-004 | inline | NON_CANONICAL_EFFECT / UNKNOWN_EFFECT | error |
+| FUNGI-EFFECT-005 | live | BroadAliasUsed | warning |
+| FUNGI-EFFECT-006 | phantom | — | — |
+| FUNGI-EFFECT-2000 | phantom | — | — |
 
 ### ENCAP (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-ENCAP-001 | phantom | — | — |
+| FUNGI-ENCAP-001 | phantom | — | — |
 
 ### ENTROPY (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-ENTROPY-001 | phantom | — | — |
-| SPORE-ENTROPY-002 | phantom | — | — |
+| FUNGI-ENTROPY-001 | phantom | — | — |
+| FUNGI-ENTROPY-002 | phantom | — | — |
 
 ### ENTRY (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-ENTRY-001 | phantom | — | — |
+| FUNGI-ENTRY-001 | phantom | — | — |
 
 ### ERROR (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-ERROR-001 | phantom | — | — |
+| FUNGI-ERROR-001 | phantom | — | — |
 
 ### ERR_* (105)
 
@@ -632,1280 +632,1280 @@ Universal-coverage anchor (#219 std 1): every code below is registered by constr
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-EVENT-001 | live | EventNotDeclared | error |
-| SPORE-EVENT-002 | live | EventNeverEmitted | warning |
-| SPORE-EVENT-003 | live | ContractEmitsUndeclaredEvent | error |
-| SPORE-EVENT-004 | live | DuplicateEventEmission | warning |
-| SPORE-EVENT-005 | live | EventEmittedNotInContract | warning |
+| FUNGI-EVENT-001 | live | EventNotDeclared | error |
+| FUNGI-EVENT-002 | live | EventNeverEmitted | warning |
+| FUNGI-EVENT-003 | live | ContractEmitsUndeclaredEvent | error |
+| FUNGI-EVENT-004 | live | DuplicateEventEmission | warning |
+| FUNGI-EVENT-005 | live | EventEmittedNotInContract | warning |
 
 ### EVIDENCE (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-EVIDENCE-001 | phantom | — | — |
-| SPORE-EVIDENCE-002 | phantom | — | — |
-| SPORE-EVIDENCE-003 | phantom | — | — |
-| SPORE-EVIDENCE-004 | phantom | — | — |
-| SPORE-EVIDENCE-005 | phantom | — | — |
+| FUNGI-EVIDENCE-001 | phantom | — | — |
+| FUNGI-EVIDENCE-002 | phantom | — | — |
+| FUNGI-EVIDENCE-003 | phantom | — | — |
+| FUNGI-EVIDENCE-004 | phantom | — | — |
+| FUNGI-EVIDENCE-005 | phantom | — | — |
 
 ### EXPLAIN (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-EXPLAIN-001 | phantom | — | — |
-| SPORE-EXPLAIN-004 | phantom | — | — |
+| FUNGI-EXPLAIN-001 | phantom | — | — |
+| FUNGI-EXPLAIN-004 | phantom | — | — |
 
 ### EXPR (7)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-EXPR-001 | phantom | — | — |
-| SPORE-EXPR-002 | phantom | — | — |
-| SPORE-EXPR-003 | phantom | — | — |
-| SPORE-EXPR-004 | phantom | — | — |
-| SPORE-EXPR-005 | phantom | — | — |
-| SPORE-EXPR-006 | phantom | — | — |
-| SPORE-EXPR-007 | phantom | — | — |
+| FUNGI-EXPR-001 | phantom | — | — |
+| FUNGI-EXPR-002 | phantom | — | — |
+| FUNGI-EXPR-003 | phantom | — | — |
+| FUNGI-EXPR-004 | phantom | — | — |
+| FUNGI-EXPR-005 | phantom | — | — |
+| FUNGI-EXPR-006 | phantom | — | — |
+| FUNGI-EXPR-007 | phantom | — | — |
 
 ### FAULT (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-FAULT-001 | inline | — | — |
-| SPORE-FAULT-002 | phantom | — | — |
-| SPORE-FAULT-003 | inline | FAULT_HANDLER_FAIL_OPEN | — |
-| SPORE-FAULT-004 | phantom | — | — |
-| SPORE-FAULT-005 | phantom | — | — |
+| FUNGI-FAULT-001 | inline | — | — |
+| FUNGI-FAULT-002 | phantom | — | — |
+| FUNGI-FAULT-003 | inline | FAULT_HANDLER_FAIL_OPEN | — |
+| FUNGI-FAULT-004 | phantom | — | — |
+| FUNGI-FAULT-005 | phantom | — | — |
 
 ### FED (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-FED-001 | phantom | — | — |
+| FUNGI-FED-001 | phantom | — | — |
 
 ### FG (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-FG-001 | phantom | — | — |
+| FUNGI-FG-001 | phantom | — | — |
 
 ### FLOAT (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-FLOAT-NAN-001 | inline | — | — |
+| FUNGI-FLOAT-NAN-001 | inline | — | — |
 
 ### FOO (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-FOO-001 | ref | — | — |
+| FUNGI-FOO-001 | ref | — | — |
 
 ### FUSE (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-FUSE-001 | phantom | — | — |
-| SPORE-FUSE-002 | phantom | — | — |
-| SPORE-FUSE-003 | phantom | — | — |
-| SPORE-FUSE-004 | phantom | — | — |
-| SPORE-FUSE-005 | phantom | — | — |
-| SPORE-FUSE-006 | phantom | — | — |
+| FUNGI-FUSE-001 | phantom | — | — |
+| FUNGI-FUSE-002 | phantom | — | — |
+| FUNGI-FUSE-003 | phantom | — | — |
+| FUNGI-FUSE-004 | phantom | — | — |
+| FUNGI-FUSE-005 | phantom | — | — |
+| FUNGI-FUSE-006 | phantom | — | — |
 
 ### FX (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-FX-001 | ref | — | — |
-| SPORE-FX-002 | ref | — | — |
-| SPORE-FX-005 | ref | — | — |
-| SPORE-FX-005B | ref | — | — |
-| SPORE-FX-050 | ref | — | — |
-| SPORE-FX-099 | ref | — | — |
+| FUNGI-FX-001 | ref | — | — |
+| FUNGI-FX-002 | ref | — | — |
+| FUNGI-FX-005 | ref | — | — |
+| FUNGI-FX-005B | ref | — | — |
+| FUNGI-FX-050 | ref | — | — |
+| FUNGI-FX-099 | ref | — | — |
 
 ### GATE (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-GATE-001 | live | GATE_UNKNOWN_CONDITION / GateAnnotationRequired | error |
-| SPORE-GATE-002 | inline | GATE_WRAPS_PURE_FLOW | — |
+| FUNGI-GATE-001 | live | GATE_UNKNOWN_CONDITION / GateAnnotationRequired | error |
+| FUNGI-GATE-002 | inline | GATE_WRAPS_PURE_FLOW | — |
 
 ### GDCE (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-GDCE-001 | phantom | — | — |
+| FUNGI-GDCE-001 | phantom | — | — |
 
 ### GEN (7)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-GEN-TEST-001 | phantom | — | — |
-| SPORE-GEN-TEST-002 | phantom | — | — |
-| SPORE-GEN-TEST-003 | phantom | — | — |
-| SPORE-GEN-TEST-004 | phantom | — | — |
-| SPORE-GEN-TEST-005 | ref | — | — |
-| SPORE-GEN-TEST-006 | phantom | — | — |
-| SPORE-GEN-TEST-007 | phantom | — | — |
+| FUNGI-GEN-TEST-001 | phantom | — | — |
+| FUNGI-GEN-TEST-002 | phantom | — | — |
+| FUNGI-GEN-TEST-003 | phantom | — | — |
+| FUNGI-GEN-TEST-004 | phantom | — | — |
+| FUNGI-GEN-TEST-005 | ref | — | — |
+| FUNGI-GEN-TEST-006 | phantom | — | — |
+| FUNGI-GEN-TEST-007 | phantom | — | — |
 
 ### GOV (36)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-GOV-001 | live | INTENT_BEHAVIOR_MISMATCH | warning |
-| SPORE-GOV-002 | inline | MISSING_AUDIT_FOR_GOVERNED_SINK | — |
-| SPORE-GOV-003 | live | PROTECTED_DATA_IN_RESPONSE | error |
-| SPORE-GOV-004 | inline | DENIED_TARGET_SELECTED / DOMAIN_GUARD_NOT_FOUND / DOMAIN_GUARD_POLICY_VIOLATION | — |
-| SPORE-GOV-005 | live | PolicyPurposeMismatch | warning |
-| SPORE-GOV-006 | live | GOVERNANCE_PROOF_REQUIRED_BUT_MISSING | warning |
-| SPORE-GOV-007 | live | AuthorityBlockMissingReason | error |
-| SPORE-GOV-008 | ref | — | — |
-| SPORE-GOV-009 | live | PrivilegedFlowMissingCapability | warning |
-| SPORE-GOV-010 | inline | INTENT_MISSING_ON_SECURE_FLOW | — |
-| SPORE-GOV-011 | live | UnknownContractSet | error |
-| SPORE-GOV-012 | live | ContractSetRequirementNotMet | warning |
-| SPORE-GOV-013 | live | BoundaryViolation | error |
-| SPORE-GOV-014 | referenced | MissingFallbackTarget | warning |
-| SPORE-GOV-015 | inline | EpilogueInvalidStrategy | — |
-| SPORE-GOV-016 | inline | EpilogueInvalidFailureAction | — |
-| SPORE-GOV-017 | inline | InvalidPhysicalHardeningValue / PhysicalHardeningOnLowRiskFlow | — |
-| SPORE-GOV-018 | inline | ManualLiabilityDeclaration | — |
-| SPORE-GOV-019 | live | LIMITS_UNKNOWN_FIELD | warning |
-| SPORE-GOV-020 | live | AUTHORITY_OVERLY_BROAD | warning |
-| SPORE-GOV-3V | phantom | — | — |
-| SPORE-GOV-3VL-001 | live | INDETERMINATE_COLLAPSED_TO_DENY | — |
-| SPORE-GOV-3VL-002 | phantom | — | — |
-| SPORE-GOV-DOMAIN-001 | phantom | — | — |
-| SPORE-GOV-ERROR-001 | phantom | — | — |
-| SPORE-GOV-FEDERATED-001 | phantom | — | — |
-| SPORE-GOV-FEDERATED-002 | phantom | — | — |
-| SPORE-GOV-HIPAA-001 | phantom | — | — |
-| SPORE-GOV-MONOTONE-MIN-001 | phantom | — | — |
-| SPORE-GOV-PCI-001 | phantom | — | — |
-| SPORE-GOV-SIG-001 | phantom | — | — |
-| SPORE-GOV-SUMMARY-001 | phantom | — | — |
-| SPORE-GOV-SUMMARY-002 | phantom | — | — |
-| SPORE-GOV-SUMMARY-003 | phantom | — | — |
-| SPORE-GOV-SUMMARY-004 | phantom | — | — |
-| SPORE-GOV-SUMMARY-005 | phantom | — | — |
+| FUNGI-GOV-001 | live | INTENT_BEHAVIOR_MISMATCH | warning |
+| FUNGI-GOV-002 | inline | MISSING_AUDIT_FOR_GOVERNED_SINK | — |
+| FUNGI-GOV-003 | live | PROTECTED_DATA_IN_RESPONSE | error |
+| FUNGI-GOV-004 | inline | DENIED_TARGET_SELECTED / DOMAIN_GUARD_NOT_FOUND / DOMAIN_GUARD_POLICY_VIOLATION | — |
+| FUNGI-GOV-005 | live | PolicyPurposeMismatch | warning |
+| FUNGI-GOV-006 | live | GOVERNANCE_PROOF_REQUIRED_BUT_MISSING | warning |
+| FUNGI-GOV-007 | live | AuthorityBlockMissingReason | error |
+| FUNGI-GOV-008 | ref | — | — |
+| FUNGI-GOV-009 | live | PrivilegedFlowMissingCapability | warning |
+| FUNGI-GOV-010 | inline | INTENT_MISSING_ON_SECURE_FLOW | — |
+| FUNGI-GOV-011 | live | UnknownContractSet | error |
+| FUNGI-GOV-012 | live | ContractSetRequirementNotMet | warning |
+| FUNGI-GOV-013 | live | BoundaryViolation | error |
+| FUNGI-GOV-014 | referenced | MissingFallbackTarget | warning |
+| FUNGI-GOV-015 | inline | EpilogueInvalidStrategy | — |
+| FUNGI-GOV-016 | inline | EpilogueInvalidFailureAction | — |
+| FUNGI-GOV-017 | inline | InvalidPhysicalHardeningValue / PhysicalHardeningOnLowRiskFlow | — |
+| FUNGI-GOV-018 | inline | ManualLiabilityDeclaration | — |
+| FUNGI-GOV-019 | live | LIMITS_UNKNOWN_FIELD | warning |
+| FUNGI-GOV-020 | live | AUTHORITY_OVERLY_BROAD | warning |
+| FUNGI-GOV-3V | phantom | — | — |
+| FUNGI-GOV-3VL-001 | live | INDETERMINATE_COLLAPSED_TO_DENY | — |
+| FUNGI-GOV-3VL-002 | phantom | — | — |
+| FUNGI-GOV-DOMAIN-001 | phantom | — | — |
+| FUNGI-GOV-ERROR-001 | phantom | — | — |
+| FUNGI-GOV-FEDERATED-001 | phantom | — | — |
+| FUNGI-GOV-FEDERATED-002 | phantom | — | — |
+| FUNGI-GOV-HIPAA-001 | phantom | — | — |
+| FUNGI-GOV-MONOTONE-MIN-001 | phantom | — | — |
+| FUNGI-GOV-PCI-001 | phantom | — | — |
+| FUNGI-GOV-SIG-001 | phantom | — | — |
+| FUNGI-GOV-SUMMARY-001 | phantom | — | — |
+| FUNGI-GOV-SUMMARY-002 | phantom | — | — |
+| FUNGI-GOV-SUMMARY-003 | phantom | — | — |
+| FUNGI-GOV-SUMMARY-004 | phantom | — | — |
+| FUNGI-GOV-SUMMARY-005 | phantom | — | — |
 
 ### GPU (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-GPU-SYNC-001 | phantom | — | — |
-| SPORE-GPU-SYNC-002 | phantom | — | — |
-| SPORE-GPU-SYNC-003 | phantom | — | — |
-| SPORE-GPU-SYNC-004 | phantom | — | — |
-| SPORE-GPU-SYNC-005 | phantom | — | — |
+| FUNGI-GPU-SYNC-001 | phantom | — | — |
+| FUNGI-GPU-SYNC-002 | phantom | — | — |
+| FUNGI-GPU-SYNC-003 | phantom | — | — |
+| FUNGI-GPU-SYNC-004 | phantom | — | — |
+| FUNGI-GPU-SYNC-005 | phantom | — | — |
 
 ### GRAPH (7)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-GRAPH-001 | inline | CycleDetected | error |
-| SPORE-GRAPH-002 | inline | DeadFlow | warning |
-| SPORE-GRAPH-003 | inline | AuthorityEscalation | error |
-| SPORE-GRAPH-004 | inline | PiiLeakagePath | error |
-| SPORE-GRAPH-005 | inline | MissingAuditCoverage | warning |
-| SPORE-GRAPH-006 | inline | UnboundedRetry | warning |
-| SPORE-GRAPH-BORDER-001 | phantom | — | — |
+| FUNGI-GRAPH-001 | inline | CycleDetected | error |
+| FUNGI-GRAPH-002 | inline | DeadFlow | warning |
+| FUNGI-GRAPH-003 | inline | AuthorityEscalation | error |
+| FUNGI-GRAPH-004 | inline | PiiLeakagePath | error |
+| FUNGI-GRAPH-005 | inline | MissingAuditCoverage | warning |
+| FUNGI-GRAPH-006 | inline | UnboundedRetry | warning |
+| FUNGI-GRAPH-BORDER-001 | phantom | — | — |
 
 ### HINT (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-HINT-COMPUTE-001 | inline | COMPUTE_TARGET_MISSING_FOR_AI_INFERENCE | — |
+| FUNGI-HINT-COMPUTE-001 | inline | COMPUTE_TARGET_MISSING_FOR_AI_INFERENCE | — |
 
 ### HW (14)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-HW-001 | referenced | QuantumTargetRequiresFormalProof | error |
-| SPORE-HW-002 | referenced | SealedTargetRequiresAuditTrace | warning |
-| SPORE-HW-003 | referenced | AcceleratorPlaneRequiresAttestation | warning |
-| SPORE-HW-004 | referenced | UnknownHardwareTarget | warning |
-| SPORE-HW-101 | phantom | — | — |
-| SPORE-HW-102 | phantom | — | — |
-| SPORE-HW-103 | phantom | — | — |
-| SPORE-HW-104 | phantom | — | — |
-| SPORE-HW-201 | phantom | — | — |
-| SPORE-HW-301 | phantom | — | — |
-| SPORE-HW-302 | phantom | — | — |
-| SPORE-HW-401 | phantom | — | — |
-| SPORE-HW-402 | phantom | — | — |
-| SPORE-HW-403 | phantom | — | — |
+| FUNGI-HW-001 | referenced | QuantumTargetRequiresFormalProof | error |
+| FUNGI-HW-002 | referenced | SealedTargetRequiresAuditTrace | warning |
+| FUNGI-HW-003 | referenced | AcceleratorPlaneRequiresAttestation | warning |
+| FUNGI-HW-004 | referenced | UnknownHardwareTarget | warning |
+| FUNGI-HW-101 | phantom | — | — |
+| FUNGI-HW-102 | phantom | — | — |
+| FUNGI-HW-103 | phantom | — | — |
+| FUNGI-HW-104 | phantom | — | — |
+| FUNGI-HW-201 | phantom | — | — |
+| FUNGI-HW-301 | phantom | — | — |
+| FUNGI-HW-302 | phantom | — | — |
+| FUNGI-HW-401 | phantom | — | — |
+| FUNGI-HW-402 | phantom | — | — |
+| FUNGI-HW-403 | phantom | — | — |
 
 ### ID (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-ID-001 | referenced | MANIFEST_VERIFICATION_FAILED | error |
-| SPORE-ID-002 | phantom | — | — |
-| SPORE-ID-003 | phantom | — | — |
+| FUNGI-ID-001 | referenced | MANIFEST_VERIFICATION_FAILED | error |
+| FUNGI-ID-002 | phantom | — | — |
+| FUNGI-ID-003 | phantom | — | — |
 
 ### IMPORT (7)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-IMPORT-000 | ref | — | — |
-| SPORE-IMPORT-001 | inline | — | error |
-| SPORE-IMPORT-002 | inline | — | error |
-| SPORE-IMPORT-003 | inline | — | error |
-| SPORE-IMPORT-004 | inline | — | warning |
-| SPORE-IMPORT-005 | inline | — | error |
-| SPORE-IMPORT-006 | inline | — | error |
+| FUNGI-IMPORT-000 | ref | — | — |
+| FUNGI-IMPORT-001 | inline | — | error |
+| FUNGI-IMPORT-002 | inline | — | error |
+| FUNGI-IMPORT-003 | inline | — | error |
+| FUNGI-IMPORT-004 | inline | — | warning |
+| FUNGI-IMPORT-005 | inline | — | error |
+| FUNGI-IMPORT-006 | inline | — | error |
 
 ### INCR (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-INCR-001 | phantom | — | — |
-| SPORE-INCR-002 | phantom | — | — |
-| SPORE-INCR-003 | phantom | — | — |
-| SPORE-INCR-004 | phantom | — | — |
+| FUNGI-INCR-001 | phantom | — | — |
+| FUNGI-INCR-002 | phantom | — | — |
+| FUNGI-INCR-003 | phantom | — | — |
+| FUNGI-INCR-004 | phantom | — | — |
 
 ### INHERIT (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-INHERIT-001 | inline | PARENT_POLICY_NOT_FOUND | — |
-| SPORE-INHERIT-002 | inline | CHILD_POLICY_EXCEEDS_PARENT | — |
+| FUNGI-INHERIT-001 | inline | PARENT_POLICY_NOT_FOUND | — |
+| FUNGI-INHERIT-002 | inline | CHILD_POLICY_EXCEEDS_PARENT | — |
 
 ### INTEL (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-INTEL-001 | ref | — | — |
-| SPORE-INTEL-002 | inline | — | — |
+| FUNGI-INTEL-001 | ref | — | — |
+| FUNGI-INTEL-002 | inline | — | — |
 
 ### INTENT (11)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-INTENT-001 | referenced | INTENT_BEHAVIOR_MISMATCH | error |
-| SPORE-INTENT-002 | referenced | MISSING_REQUIRED_INTENT | error |
-| SPORE-INTENT-003 | referenced | UNSAFE_MISSING_REASON_OR_FALLBACK | error |
-| SPORE-INTENT-004 | referenced | PRIVILEGED_MISSING_CAPABILITY | error |
-| SPORE-INTENT-005 | referenced | EXPERIMENTAL_IN_PRODUCTION | error |
-| SPORE-INTENT-GRAPH-001 | phantom | — | — |
-| SPORE-INTENT-GRAPH-002 | phantom | — | — |
-| SPORE-INTENT-GRAPH-003 | phantom | — | — |
-| SPORE-INTENT-GRAPH-004 | phantom | — | — |
-| SPORE-INTENT-GRAPH-005 | phantom | — | — |
-| SPORE-INTENT-GRAPH-006 | phantom | — | — |
+| FUNGI-INTENT-001 | referenced | INTENT_BEHAVIOR_MISMATCH | error |
+| FUNGI-INTENT-002 | referenced | MISSING_REQUIRED_INTENT | error |
+| FUNGI-INTENT-003 | referenced | UNSAFE_MISSING_REASON_OR_FALLBACK | error |
+| FUNGI-INTENT-004 | referenced | PRIVILEGED_MISSING_CAPABILITY | error |
+| FUNGI-INTENT-005 | referenced | EXPERIMENTAL_IN_PRODUCTION | error |
+| FUNGI-INTENT-GRAPH-001 | phantom | — | — |
+| FUNGI-INTENT-GRAPH-002 | phantom | — | — |
+| FUNGI-INTENT-GRAPH-003 | phantom | — | — |
+| FUNGI-INTENT-GRAPH-004 | phantom | — | — |
+| FUNGI-INTENT-GRAPH-005 | phantom | — | — |
+| FUNGI-INTENT-GRAPH-006 | phantom | — | — |
 
 ### INV (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-INV-000 | inline | — | — |
-| SPORE-INV-001 | inline | PRE_CONDITION_STATICALLY_FALSE | — |
-| SPORE-INV-002 | inline | — | — |
-| SPORE-INV-003 | inline | INVARIANT_BLOCK_EMPTY | — |
-| SPORE-INV-004 | inline | SYMBOL_UNRESOLVED_IN_INVARIANT | — |
-| SPORE-INV-MODULE-001 | phantom | — | — |
+| FUNGI-INV-000 | inline | — | — |
+| FUNGI-INV-001 | inline | PRE_CONDITION_STATICALLY_FALSE | — |
+| FUNGI-INV-002 | inline | — | — |
+| FUNGI-INV-003 | inline | INVARIANT_BLOCK_EMPTY | — |
+| FUNGI-INV-004 | inline | SYMBOL_UNRESOLVED_IN_INVARIANT | — |
+| FUNGI-INV-MODULE-001 | phantom | — | — |
 
 ### K8S (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-K8S-001 | phantom | — | — |
+| FUNGI-K8S-001 | phantom | — | — |
 
 ### KEY (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-KEY-001 | phantom | — | — |
-| SPORE-KEY-002 | phantom | — | — |
-| SPORE-KEY-004 | phantom | — | — |
-| SPORE-KEY-005 | phantom | — | — |
-| SPORE-KEY-010 | phantom | — | — |
+| FUNGI-KEY-001 | phantom | — | — |
+| FUNGI-KEY-002 | phantom | — | — |
+| FUNGI-KEY-004 | phantom | — | — |
+| FUNGI-KEY-005 | phantom | — | — |
+| FUNGI-KEY-010 | phantom | — | — |
 
 ### LEX (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-LEX-001 | referenced | ExcessiveNesting | error |
-| SPORE-LEX-002 | referenced | OversizedToken | error |
-| SPORE-LEX-003 | referenced | InvalidUnicodeEscape | error |
-| SPORE-LEX-004 | live | FileTooLarge | error |
-| SPORE-LEX-005 | live | LineTooLong | warning |
-| SPORE-LEX-006 | live | TooManyDiagnostics | error |
+| FUNGI-LEX-001 | referenced | ExcessiveNesting | error |
+| FUNGI-LEX-002 | referenced | OversizedToken | error |
+| FUNGI-LEX-003 | referenced | InvalidUnicodeEscape | error |
+| FUNGI-LEX-004 | live | FileTooLarge | error |
+| FUNGI-LEX-005 | live | LineTooLong | warning |
+| FUNGI-LEX-006 | live | TooManyDiagnostics | error |
 
 ### LIMIT (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-LIMIT-001 | ref | — | — |
+| FUNGI-LIMIT-001 | ref | — | — |
 
 ### LOGIC (14)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-LOGIC-001 | inline | INVALID_NAME | error |
-| SPORE-LOGIC-002 | inline | INVALID_WIDTH | error |
-| SPORE-LOGIC-003 | inline | STATE_COUNT_MISMATCH | error |
-| SPORE-LOGIC-004 | inline | INVALID_STATE_NAME | error |
-| SPORE-LOGIC-005 | inline | DUPLICATE_STATE | error |
-| SPORE-LOGIC-006 | inline | OMNI_MUST_BE_BOUNDED | error |
-| SPORE-LOGIC-007 | inline | OMNI_WIDTH_TOO_LARGE | error |
-| SPORE-LOGIC-008 | inline | EMPTY_TRUTH_TABLE | warning |
-| SPORE-LOGIC-009 | inline | EMPTY_TRUTH_TABLE_INPUTS | error |
-| SPORE-LOGIC-010 | inline | TRUTH_TABLE_ARITY_MISMATCH | error |
-| SPORE-LOGIC-011 | inline | INVALID_INPUT_STATE | error |
-| SPORE-LOGIC-012 | inline | INVALID_OUTPUT_STATE | error |
-| SPORE-LOGIC-013 | inline | DUPLICATE_TRUTH_TABLE_ROW | error |
-| SPORE-LOGIC-014 | inline | INCOMPLETE_TRUTH_TABLE | warning |
+| FUNGI-LOGIC-001 | inline | INVALID_NAME | error |
+| FUNGI-LOGIC-002 | inline | INVALID_WIDTH | error |
+| FUNGI-LOGIC-003 | inline | STATE_COUNT_MISMATCH | error |
+| FUNGI-LOGIC-004 | inline | INVALID_STATE_NAME | error |
+| FUNGI-LOGIC-005 | inline | DUPLICATE_STATE | error |
+| FUNGI-LOGIC-006 | inline | OMNI_MUST_BE_BOUNDED | error |
+| FUNGI-LOGIC-007 | inline | OMNI_WIDTH_TOO_LARGE | error |
+| FUNGI-LOGIC-008 | inline | EMPTY_TRUTH_TABLE | warning |
+| FUNGI-LOGIC-009 | inline | EMPTY_TRUTH_TABLE_INPUTS | error |
+| FUNGI-LOGIC-010 | inline | TRUTH_TABLE_ARITY_MISMATCH | error |
+| FUNGI-LOGIC-011 | inline | INVALID_INPUT_STATE | error |
+| FUNGI-LOGIC-012 | inline | INVALID_OUTPUT_STATE | error |
+| FUNGI-LOGIC-013 | inline | DUPLICATE_TRUTH_TABLE_ROW | error |
+| FUNGI-LOGIC-014 | inline | INCOMPLETE_TRUTH_TABLE | warning |
 
 ### MANIFEST (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-MANIFEST-001 | phantom | — | — |
-| SPORE-MANIFEST-002 | phantom | — | — |
-| SPORE-MANIFEST-003 | phantom | — | — |
-| SPORE-MANIFEST-004 | phantom | — | — |
-| SPORE-MANIFEST-005 | phantom | — | — |
+| FUNGI-MANIFEST-001 | phantom | — | — |
+| FUNGI-MANIFEST-002 | phantom | — | — |
+| FUNGI-MANIFEST-003 | phantom | — | — |
+| FUNGI-MANIFEST-004 | phantom | — | — |
+| FUNGI-MANIFEST-005 | phantom | — | — |
 
 ### MATCH (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-MATCH-001 | inline | MATCH_NON_EXHAUSTIVE | — |
-| SPORE-MATCH-002 | phantom | — | — |
-| SPORE-MATCH-003 | phantom | — | — |
-| SPORE-MATCH-004 | phantom | — | — |
+| FUNGI-MATCH-001 | inline | MATCH_NON_EXHAUSTIVE | — |
+| FUNGI-MATCH-002 | phantom | — | — |
+| FUNGI-MATCH-003 | phantom | — | — |
+| FUNGI-MATCH-004 | phantom | — | — |
 
 ### MEMORY (15)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-MEMORY-001 | referenced | USE_AFTER_MOVE | error |
-| SPORE-MEMORY-002 | referenced | BORROW_AFTER_MOVE | error |
-| SPORE-MEMORY-003 | referenced | BORROW_ESCAPES_SCOPE | error |
-| SPORE-MEMORY-004 | referenced | READONLY_MUTATION | error |
-| SPORE-MEMORY-005 | referenced | MUTABLE_ALIAS | error |
-| SPORE-MEMORY-006 | referenced | BOUNDS_VIOLATION | error |
-| SPORE-MEMORY-007 | referenced | UNCHECKED_ACCESS_OUTSIDE_UNSAFE | error |
-| SPORE-MEMORY-008 | live | UNSAFE_MEMORY_REQUIRES_FALLBACK | error |
-| SPORE-MEMORY-SCOPE-001 | phantom | — | — |
-| SPORE-MEMORY-SCOPE-002 | phantom | — | — |
-| SPORE-MEMORY-SCOPE-003 | phantom | — | — |
-| SPORE-MEMORY-SCOPE-004 | phantom | — | — |
-| SPORE-MEMORY-SCOPE-005 | phantom | — | — |
-| SPORE-MEMORY-SCOPE-006 | phantom | — | — |
-| SPORE-MEMORY-SCOPE-007 | phantom | — | — |
+| FUNGI-MEMORY-001 | referenced | USE_AFTER_MOVE | error |
+| FUNGI-MEMORY-002 | referenced | BORROW_AFTER_MOVE | error |
+| FUNGI-MEMORY-003 | referenced | BORROW_ESCAPES_SCOPE | error |
+| FUNGI-MEMORY-004 | referenced | READONLY_MUTATION | error |
+| FUNGI-MEMORY-005 | referenced | MUTABLE_ALIAS | error |
+| FUNGI-MEMORY-006 | referenced | BOUNDS_VIOLATION | error |
+| FUNGI-MEMORY-007 | referenced | UNCHECKED_ACCESS_OUTSIDE_UNSAFE | error |
+| FUNGI-MEMORY-008 | live | UNSAFE_MEMORY_REQUIRES_FALLBACK | error |
+| FUNGI-MEMORY-SCOPE-001 | phantom | — | — |
+| FUNGI-MEMORY-SCOPE-002 | phantom | — | — |
+| FUNGI-MEMORY-SCOPE-003 | phantom | — | — |
+| FUNGI-MEMORY-SCOPE-004 | phantom | — | — |
+| FUNGI-MEMORY-SCOPE-005 | phantom | — | — |
+| FUNGI-MEMORY-SCOPE-006 | phantom | — | — |
+| FUNGI-MEMORY-SCOPE-007 | phantom | — | — |
 
 ### META (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-META-001 | phantom | — | — |
+| FUNGI-META-001 | phantom | — | — |
 
 ### MODULE (10)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-MODULE-001 | phantom | — | — |
-| SPORE-MODULE-002 | phantom | — | — |
-| SPORE-MODULE-003 | phantom | — | — |
-| SPORE-MODULE-004 | phantom | — | — |
-| SPORE-MODULE-005 | ref | — | — |
-| SPORE-MODULE-006 | phantom | — | — |
-| SPORE-MODULE-007 | phantom | — | — |
-| SPORE-MODULE-008 | phantom | — | — |
-| SPORE-MODULE-009 | phantom | — | — |
-| SPORE-MODULE-010 | phantom | — | — |
+| FUNGI-MODULE-001 | phantom | — | — |
+| FUNGI-MODULE-002 | phantom | — | — |
+| FUNGI-MODULE-003 | phantom | — | — |
+| FUNGI-MODULE-004 | phantom | — | — |
+| FUNGI-MODULE-005 | ref | — | — |
+| FUNGI-MODULE-006 | phantom | — | — |
+| FUNGI-MODULE-007 | phantom | — | — |
+| FUNGI-MODULE-008 | phantom | — | — |
+| FUNGI-MODULE-009 | phantom | — | — |
+| FUNGI-MODULE-010 | phantom | — | — |
 
 ### MONO (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-MONO-001 | inline | EMERGENCY_EXPANDS_CAPABILITY / EMERGENCY_UNKNOWN_ACTION | — |
-| SPORE-MONO-002 | inline | UNKNOWN_EMERGENCY_SIGNAL | — |
-| SPORE-MONO-003 | phantom | — | — |
+| FUNGI-MONO-001 | inline | EMERGENCY_EXPANDS_CAPABILITY / EMERGENCY_UNKNOWN_ACTION | — |
+| FUNGI-MONO-002 | inline | UNKNOWN_EMERGENCY_SIGNAL | — |
+| FUNGI-MONO-003 | phantom | — | — |
 
 ### MUTATION (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-MUTATION-001 | ref | — | — |
-| SPORE-MUTATION-002 | ref | — | — |
+| FUNGI-MUTATION-001 | ref | — | — |
+| FUNGI-MUTATION-002 | ref | — | — |
 
 ### NAME (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-NAME-001 | inline | UndeclaredName | error |
-| SPORE-NAME-002 | inline | DuplicateName | error |
-| SPORE-NAME-003 | live | CrossModuleShadow | warning |
-| SPORE-NAME-004 | phantom | — | — |
-| SPORE-NAME-005 | phantom | — | — |
+| FUNGI-NAME-001 | inline | UndeclaredName | error |
+| FUNGI-NAME-002 | inline | DuplicateName | error |
+| FUNGI-NAME-003 | live | CrossModuleShadow | warning |
+| FUNGI-NAME-004 | phantom | — | — |
+| FUNGI-NAME-005 | phantom | — | — |
 
 ### NAMING (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-NAMING-001 | inline | AbbreviatedIdentifier | warning |
-| SPORE-NAMING-002 | inline | ImplicitReturnType | warning |
-| SPORE-NAMING-003 | inline | GenericTypeName | warning |
-| SPORE-NAMING-004 | inline | AbbreviatedFlowName | warning |
-| SPORE-NAMING-005 | inline | MissingIntentOnPublicFlow | warning |
+| FUNGI-NAMING-001 | inline | AbbreviatedIdentifier | warning |
+| FUNGI-NAMING-002 | inline | ImplicitReturnType | warning |
+| FUNGI-NAMING-003 | inline | GenericTypeName | warning |
+| FUNGI-NAMING-004 | inline | AbbreviatedFlowName | warning |
+| FUNGI-NAMING-005 | inline | MissingIntentOnPublicFlow | warning |
 
 ### NET (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-NET-001 | referenced | NetworkDestinationDenied | error |
-| SPORE-NET-002 | referenced | PrivateRangeAccess | error |
-| SPORE-NET-003 | phantom | — | — |
+| FUNGI-NET-001 | referenced | NetworkDestinationDenied | error |
+| FUNGI-NET-002 | referenced | PrivateRangeAccess | error |
+| FUNGI-NET-003 | phantom | — | — |
 
 ### NETWORK (8)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-NETWORK-001 | phantom | — | — |
-| SPORE-NETWORK-002 | phantom | — | — |
-| SPORE-NETWORK-003 | phantom | — | — |
-| SPORE-NETWORK-004 | phantom | — | — |
-| SPORE-NETWORK-005 | phantom | — | — |
-| SPORE-NETWORK-006 | phantom | — | — |
-| SPORE-NETWORK-007 | phantom | — | — |
-| SPORE-NETWORK-008 | phantom | — | — |
+| FUNGI-NETWORK-001 | phantom | — | — |
+| FUNGI-NETWORK-002 | phantom | — | — |
+| FUNGI-NETWORK-003 | phantom | — | — |
+| FUNGI-NETWORK-004 | phantom | — | — |
+| FUNGI-NETWORK-005 | phantom | — | — |
+| FUNGI-NETWORK-006 | phantom | — | — |
+| FUNGI-NETWORK-007 | phantom | — | — |
+| FUNGI-NETWORK-008 | phantom | — | — |
 
 ### NO (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-NO-COERCION-001 | phantom | — | — |
+| FUNGI-NO-COERCION-001 | phantom | — | — |
 
 ### NPU (10)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-NPU-001 | phantom | — | — |
-| SPORE-NPU-002 | phantom | — | — |
-| SPORE-NPU-003 | phantom | — | — |
-| SPORE-NPU-004 | phantom | — | — |
-| SPORE-NPU-005 | phantom | — | — |
-| SPORE-NPU-006 | phantom | — | — |
-| SPORE-NPU-007 | phantom | — | — |
-| SPORE-NPU-008 | phantom | — | — |
-| SPORE-NPU-009 | phantom | — | — |
-| SPORE-NPU-010 | phantom | — | — |
+| FUNGI-NPU-001 | phantom | — | — |
+| FUNGI-NPU-002 | phantom | — | — |
+| FUNGI-NPU-003 | phantom | — | — |
+| FUNGI-NPU-004 | phantom | — | — |
+| FUNGI-NPU-005 | phantom | — | — |
+| FUNGI-NPU-006 | phantom | — | — |
+| FUNGI-NPU-007 | phantom | — | — |
+| FUNGI-NPU-008 | phantom | — | — |
+| FUNGI-NPU-009 | phantom | — | — |
+| FUNGI-NPU-010 | phantom | — | — |
 
 ### NUMERIC (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-NUMERIC-001 | inline | UnsupportedNumericWidth | error |
-| SPORE-NUMERIC-OP-001 | inline | PartialDecimalOperator | — |
+| FUNGI-NUMERIC-001 | inline | UnsupportedNumericWidth | error |
+| FUNGI-NUMERIC-OP-001 | inline | PartialDecimalOperator | — |
 
 ### OBS (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-OBS-001 | live | OBSERVABILITY_ON_PURE_FLOW | warning |
-| SPORE-OBS-002 | inline | OBSERVABILITY_ACCESSES_PRIVACY_SCOPE | — |
+| FUNGI-OBS-001 | live | OBSERVABILITY_ON_PURE_FLOW | warning |
+| FUNGI-OBS-002 | inline | OBSERVABILITY_ACCESSES_PRIVACY_SCOPE | — |
 
 ### OBSERVE (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-OBSERVE-001 | phantom | — | — |
+| FUNGI-OBSERVE-001 | phantom | — | — |
 
 ### OMNI (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-OMNI-001 | live | — | — |
-| SPORE-OMNI-002 | live | — | — |
-| SPORE-OMNI-003 | live | — | — |
-| SPORE-OMNI-004 | live | — | — |
-| SPORE-OMNI-005 | live | — | — |
+| FUNGI-OMNI-001 | live | — | — |
+| FUNGI-OMNI-002 | live | — | — |
+| FUNGI-OMNI-003 | live | — | — |
+| FUNGI-OMNI-004 | live | — | — |
+| FUNGI-OMNI-005 | live | — | — |
 
 ### OWN (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-OWN-001 | phantom | — | — |
-| SPORE-OWN-002 | phantom | — | — |
-| SPORE-OWN-003 | phantom | — | — |
-| SPORE-OWN-004 | phantom | — | — |
-| SPORE-OWN-005 | phantom | — | — |
-| SPORE-OWN-006 | phantom | — | — |
+| FUNGI-OWN-001 | phantom | — | — |
+| FUNGI-OWN-002 | phantom | — | — |
+| FUNGI-OWN-003 | phantom | — | — |
+| FUNGI-OWN-004 | phantom | — | — |
+| FUNGI-OWN-005 | phantom | — | — |
+| FUNGI-OWN-006 | phantom | — | — |
 
 ### PACKAGE (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PACKAGE-001 | phantom | — | — |
-| SPORE-PACKAGE-4000 | phantom | — | — |
+| FUNGI-PACKAGE-001 | phantom | — | — |
+| FUNGI-PACKAGE-4000 | phantom | — | — |
 
 ### PARSE (15)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PARSE-001 | ref | — | — |
-| SPORE-PARSE-002 | ref | — | — |
-| SPORE-PARSE-003 | ref | — | — |
-| SPORE-PARSE-004 | phantom | — | — |
-| SPORE-PARSE-005 | phantom | — | — |
-| SPORE-PARSE-006 | phantom | — | — |
-| SPORE-PARSE-007 | phantom | — | — |
-| SPORE-PARSE-008 | phantom | — | — |
-| SPORE-PARSE-009 | phantom | — | — |
-| SPORE-PARSE-010 | phantom | — | — |
-| SPORE-PARSE-011 | phantom | — | — |
-| SPORE-PARSE-012 | phantom | — | — |
-| SPORE-PARSE-013 | phantom | — | — |
-| SPORE-PARSE-014 | phantom | — | — |
-| SPORE-PARSE-DEPTH-001 | ref | — | — |
+| FUNGI-PARSE-001 | ref | — | — |
+| FUNGI-PARSE-002 | ref | — | — |
+| FUNGI-PARSE-003 | ref | — | — |
+| FUNGI-PARSE-004 | phantom | — | — |
+| FUNGI-PARSE-005 | phantom | — | — |
+| FUNGI-PARSE-006 | phantom | — | — |
+| FUNGI-PARSE-007 | phantom | — | — |
+| FUNGI-PARSE-008 | phantom | — | — |
+| FUNGI-PARSE-009 | phantom | — | — |
+| FUNGI-PARSE-010 | phantom | — | — |
+| FUNGI-PARSE-011 | phantom | — | — |
+| FUNGI-PARSE-012 | phantom | — | — |
+| FUNGI-PARSE-013 | phantom | — | — |
+| FUNGI-PARSE-014 | phantom | — | — |
+| FUNGI-PARSE-DEPTH-001 | ref | — | — |
 
 ### PASSPORT (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PASSPORT-002 | inline | PassportStateSkip | — |
+| FUNGI-PASSPORT-002 | inline | PassportStateSkip | — |
 
 ### PAYMENTS (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PAYMENTS-1000 | phantom | — | — |
+| FUNGI-PAYMENTS-1000 | phantom | — | — |
 
 ### PCI (11)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PCI-000 | ref | — | — |
-| SPORE-PCI-001 | ref | — | — |
-| SPORE-PCI-002 | ref | — | — |
-| SPORE-PCI-003 | ref | — | — |
-| SPORE-PCI-004 | ref | — | — |
-| SPORE-PCI-005 | ref | — | — |
-| SPORE-PCI-006 | ref | — | — |
-| SPORE-PCI-007 | ref | — | — |
-| SPORE-PCI-008 | ref | — | — |
-| SPORE-PCI-009 | ref | — | — |
-| SPORE-PCI-010 | ref | — | — |
+| FUNGI-PCI-000 | ref | — | — |
+| FUNGI-PCI-001 | ref | — | — |
+| FUNGI-PCI-002 | ref | — | — |
+| FUNGI-PCI-003 | ref | — | — |
+| FUNGI-PCI-004 | ref | — | — |
+| FUNGI-PCI-005 | ref | — | — |
+| FUNGI-PCI-006 | ref | — | — |
+| FUNGI-PCI-007 | ref | — | — |
+| FUNGI-PCI-008 | ref | — | — |
+| FUNGI-PCI-009 | ref | — | — |
+| FUNGI-PCI-010 | ref | — | — |
 
 ### PERM (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PERM-001 | phantom | — | — |
-| SPORE-PERM-002 | phantom | — | — |
-| SPORE-PERM-003 | phantom | — | — |
-| SPORE-PERM-004 | phantom | — | — |
-| SPORE-PERM-005 | phantom | — | — |
-| SPORE-PERM-006 | phantom | — | — |
+| FUNGI-PERM-001 | phantom | — | — |
+| FUNGI-PERM-002 | phantom | — | — |
+| FUNGI-PERM-003 | phantom | — | — |
+| FUNGI-PERM-004 | phantom | — | — |
+| FUNGI-PERM-005 | phantom | — | — |
+| FUNGI-PERM-006 | phantom | — | — |
 
 ### PGO (8)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PGO-001 | phantom | — | — |
-| SPORE-PGO-002 | phantom | — | — |
-| SPORE-PGO-003 | phantom | — | — |
-| SPORE-PGO-004 | phantom | — | — |
-| SPORE-PGO-005 | phantom | — | — |
-| SPORE-PGO-006 | phantom | — | — |
-| SPORE-PGO-007 | phantom | — | — |
-| SPORE-PGO-008 | phantom | — | — |
+| FUNGI-PGO-001 | phantom | — | — |
+| FUNGI-PGO-002 | phantom | — | — |
+| FUNGI-PGO-003 | phantom | — | — |
+| FUNGI-PGO-004 | phantom | — | — |
+| FUNGI-PGO-005 | phantom | — | — |
+| FUNGI-PGO-006 | phantom | — | — |
+| FUNGI-PGO-007 | phantom | — | — |
+| FUNGI-PGO-008 | phantom | — | — |
 
 ### PHI (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PHI-001 | ref | — | — |
-| SPORE-PHI-002 | phantom | — | — |
+| FUNGI-PHI-001 | ref | — | — |
+| FUNGI-PHI-002 | phantom | — | — |
 
 ### PHOTONIC (10)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PHOTONIC-001 | phantom | — | — |
-| SPORE-PHOTONIC-002 | phantom | — | — |
-| SPORE-PHOTONIC-003 | phantom | — | — |
-| SPORE-PHOTONIC-004 | phantom | — | — |
-| SPORE-PHOTONIC-005 | phantom | — | — |
-| SPORE-PHOTONIC-006 | phantom | — | — |
-| SPORE-PHOTONIC-007 | phantom | — | — |
-| SPORE-PHOTONIC-008 | phantom | — | — |
-| SPORE-PHOTONIC-009 | phantom | — | — |
-| SPORE-PHOTONIC-010 | phantom | — | — |
+| FUNGI-PHOTONIC-001 | phantom | — | — |
+| FUNGI-PHOTONIC-002 | phantom | — | — |
+| FUNGI-PHOTONIC-003 | phantom | — | — |
+| FUNGI-PHOTONIC-004 | phantom | — | — |
+| FUNGI-PHOTONIC-005 | phantom | — | — |
+| FUNGI-PHOTONIC-006 | phantom | — | — |
+| FUNGI-PHOTONIC-007 | phantom | — | — |
+| FUNGI-PHOTONIC-008 | phantom | — | — |
+| FUNGI-PHOTONIC-009 | phantom | — | — |
+| FUNGI-PHOTONIC-010 | phantom | — | — |
 
 ### PII (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PII-001 | ref | — | — |
-| SPORE-PII-002 | phantom | — | — |
-| SPORE-PII-003 | phantom | — | — |
+| FUNGI-PII-001 | ref | — | — |
+| FUNGI-PII-002 | phantom | — | — |
+| FUNGI-PII-003 | phantom | — | — |
 
 ### PIPELINE (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PIPELINE-001 | referenced | UNKNOWN_PIPELINE_METHOD | error |
-| SPORE-PIPELINE-002 | referenced | PIPELINE_TYPE_MISMATCH | error |
-| SPORE-PIPELINE-003 | referenced | UNHANDLED_FALLIBLE_PIPELINE | error |
-| SPORE-PIPELINE-004 | referenced | PIPELINE_UNDECLARED_EFFECT | error |
-| SPORE-PIPELINE-005 | referenced | PIPELINE_READONLY_MUTATION | error |
-| SPORE-PIPELINE-006 | phantom | — | — |
+| FUNGI-PIPELINE-001 | referenced | UNKNOWN_PIPELINE_METHOD | error |
+| FUNGI-PIPELINE-002 | referenced | PIPELINE_TYPE_MISMATCH | error |
+| FUNGI-PIPELINE-003 | referenced | UNHANDLED_FALLIBLE_PIPELINE | error |
+| FUNGI-PIPELINE-004 | referenced | PIPELINE_UNDECLARED_EFFECT | error |
+| FUNGI-PIPELINE-005 | referenced | PIPELINE_READONLY_MUTATION | error |
+| FUNGI-PIPELINE-006 | phantom | — | — |
 
 ### PKG (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PKG-001 | live | CapabilityExpanded | error |
-| SPORE-PKG-002 | live | UntrustedRegistry | error |
-| SPORE-PKG-003 | live | MissingHash | warning |
-| SPORE-PKG-004 | live | InstallScriptDenied | error |
-| SPORE-PKG-005 | live | MissingSignature | warning |
-| SPORE-PKG-006 | live | RevokedSigner | error |
+| FUNGI-PKG-001 | live | CapabilityExpanded | error |
+| FUNGI-PKG-002 | live | UntrustedRegistry | error |
+| FUNGI-PKG-003 | live | MissingHash | warning |
+| FUNGI-PKG-004 | live | InstallScriptDenied | error |
+| FUNGI-PKG-005 | live | MissingSignature | warning |
+| FUNGI-PKG-006 | live | RevokedSigner | error |
 
 ### PLAN (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PLAN-001 | phantom | — | — |
-| SPORE-PLAN-004 | phantom | — | — |
+| FUNGI-PLAN-001 | phantom | — | — |
+| FUNGI-PLAN-004 | phantom | — | — |
 
 ### PLUGIN (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PLUGIN-001 | ref | — | — |
+| FUNGI-PLUGIN-001 | ref | — | — |
 
 ### POLICY (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-POLICY-001 | phantom | — | — |
+| FUNGI-POLICY-001 | phantom | — | — |
 
 ### PRIVACY (9)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PRIVACY-00 | phantom | — | — |
-| SPORE-PRIVACY-001 | phantom | — | — |
-| SPORE-PRIVACY-002 | inline | EmbeddingCrossesFlowBoundary / EmbeddingEgressDenied | — |
-| SPORE-PRIVACY-003 | phantom | — | — |
-| SPORE-PRIVACY-005 | phantom | — | — |
-| SPORE-PRIVACY-010 | phantom | — | — |
-| SPORE-PRIVACY-011 | phantom | — | — |
-| SPORE-PRIVACY-012 | phantom | — | — |
-| SPORE-PRIVACY-013 | phantom | — | — |
+| FUNGI-PRIVACY-00 | phantom | — | — |
+| FUNGI-PRIVACY-001 | phantom | — | — |
+| FUNGI-PRIVACY-002 | inline | EmbeddingCrossesFlowBoundary / EmbeddingEgressDenied | — |
+| FUNGI-PRIVACY-003 | phantom | — | — |
+| FUNGI-PRIVACY-005 | phantom | — | — |
+| FUNGI-PRIVACY-010 | phantom | — | — |
+| FUNGI-PRIVACY-011 | phantom | — | — |
+| FUNGI-PRIVACY-012 | phantom | — | — |
+| FUNGI-PRIVACY-013 | phantom | — | — |
 
 ### PROFILE (8)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PROFILE-001 | referenced | RecursionInRestrictedProfile | error |
-| SPORE-PROFILE-002 | referenced | UnboundedLoopInStrictProfile | error |
-| SPORE-PROFILE-003 | referenced | ExceptionControlFlowProhibited | error |
-| SPORE-PROFILE-004 | referenced | JitProhibitedInStrictProfile | error |
-| SPORE-PROFILE-005 | referenced | DynamicPackageLoadProhibited | error |
-| SPORE-PROFILE-005B | referenced | DynamicRegexInStrictProfile | error |
-| SPORE-PROFILE-006 | referenced | MissingRuntimeBudget | warning |
-| SPORE-PROFILE-007 | referenced | DynamicRuntimeMutationProhibited | error |
+| FUNGI-PROFILE-001 | referenced | RecursionInRestrictedProfile | error |
+| FUNGI-PROFILE-002 | referenced | UnboundedLoopInStrictProfile | error |
+| FUNGI-PROFILE-003 | referenced | ExceptionControlFlowProhibited | error |
+| FUNGI-PROFILE-004 | referenced | JitProhibitedInStrictProfile | error |
+| FUNGI-PROFILE-005 | referenced | DynamicPackageLoadProhibited | error |
+| FUNGI-PROFILE-005B | referenced | DynamicRegexInStrictProfile | error |
+| FUNGI-PROFILE-006 | referenced | MissingRuntimeBudget | warning |
+| FUNGI-PROFILE-007 | referenced | DynamicRuntimeMutationProhibited | error |
 
 ### PROOF (8)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PROOF-001 | phantom | — | — |
-| SPORE-PROOF-002 | phantom | — | — |
-| SPORE-PROOF-003 | phantom | — | — |
-| SPORE-PROOF-004 | phantom | — | — |
-| SPORE-PROOF-005 | phantom | — | — |
-| SPORE-PROOF-CERT-00 | ref | — | — |
-| SPORE-PROOF-CERT-001 | referenced | — | — |
-| SPORE-PROOF-CERT-002 | referenced | — | — |
+| FUNGI-PROOF-001 | phantom | — | — |
+| FUNGI-PROOF-002 | phantom | — | — |
+| FUNGI-PROOF-003 | phantom | — | — |
+| FUNGI-PROOF-004 | phantom | — | — |
+| FUNGI-PROOF-005 | phantom | — | — |
+| FUNGI-PROOF-CERT-00 | ref | — | — |
+| FUNGI-PROOF-CERT-001 | referenced | — | — |
+| FUNGI-PROOF-CERT-002 | referenced | — | — |
 
 ### PROTECTED (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PROTECTED-001 | phantom | — | — |
+| FUNGI-PROTECTED-001 | phantom | — | — |
 
 ### PROV (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-PROV-001 | ref | — | — |
+| FUNGI-PROV-001 | ref | — | — |
 
 ### QUANT (10)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-QUANT-001 | phantom | — | — |
-| SPORE-QUANT-002 | phantom | — | — |
-| SPORE-QUANT-003 | phantom | — | — |
-| SPORE-QUANT-004 | phantom | — | — |
-| SPORE-QUANT-005 | phantom | — | — |
-| SPORE-QUANT-006 | phantom | — | — |
-| SPORE-QUANT-007 | phantom | — | — |
-| SPORE-QUANT-008 | phantom | — | — |
-| SPORE-QUANT-009 | phantom | — | — |
-| SPORE-QUANT-010 | phantom | — | — |
+| FUNGI-QUANT-001 | phantom | — | — |
+| FUNGI-QUANT-002 | phantom | — | — |
+| FUNGI-QUANT-003 | phantom | — | — |
+| FUNGI-QUANT-004 | phantom | — | — |
+| FUNGI-QUANT-005 | phantom | — | — |
+| FUNGI-QUANT-006 | phantom | — | — |
+| FUNGI-QUANT-007 | phantom | — | — |
+| FUNGI-QUANT-008 | phantom | — | — |
+| FUNGI-QUANT-009 | phantom | — | — |
+| FUNGI-QUANT-010 | phantom | — | — |
 
 ### QUERY (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-QUERY-001 | phantom | — | — |
-| SPORE-QUERY-002 | phantom | — | — |
-| SPORE-QUERY-003 | phantom | — | — |
-| SPORE-QUERY-004 | phantom | — | — |
+| FUNGI-QUERY-001 | phantom | — | — |
+| FUNGI-QUERY-002 | phantom | — | — |
+| FUNGI-QUERY-003 | phantom | — | — |
+| FUNGI-QUERY-004 | phantom | — | — |
 
 ### QUORUM (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-QUORUM-001 | phantom | — | — |
+| FUNGI-QUORUM-001 | phantom | — | — |
 
 ### RAWPTR (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-RAWPTR-001 | live | RAW_POINTER_OUTSIDE_UNSAFE | error |
+| FUNGI-RAWPTR-001 | live | RAW_POINTER_OUTSIDE_UNSAFE | error |
 
 ### READABLE (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-READABLE-001 | phantom | — | — |
-| SPORE-READABLE-002 | phantom | — | — |
+| FUNGI-READABLE-001 | phantom | — | — |
+| FUNGI-READABLE-002 | phantom | — | — |
 
 ### REPL (8)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-REPL-001 | phantom | — | — |
-| SPORE-REPL-002 | phantom | — | — |
-| SPORE-REPL-003 | phantom | — | — |
-| SPORE-REPL-004 | phantom | — | — |
-| SPORE-REPL-005 | phantom | — | — |
-| SPORE-REPL-006 | phantom | — | — |
-| SPORE-REPL-007 | phantom | — | — |
-| SPORE-REPL-008 | phantom | — | — |
+| FUNGI-REPL-001 | phantom | — | — |
+| FUNGI-REPL-002 | phantom | — | — |
+| FUNGI-REPL-003 | phantom | — | — |
+| FUNGI-REPL-004 | phantom | — | — |
+| FUNGI-REPL-005 | phantom | — | — |
+| FUNGI-REPL-006 | phantom | — | — |
+| FUNGI-REPL-007 | phantom | — | — |
+| FUNGI-REPL-008 | phantom | — | — |
 
 ### REPORT (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-REPORT-001 | phantom | — | — |
-| SPORE-REPORT-002 | phantom | — | — |
-| SPORE-REPORT-003 | phantom | — | — |
-| SPORE-REPORT-004 | phantom | — | — |
-| SPORE-REPORT-005 | phantom | — | — |
+| FUNGI-REPORT-001 | phantom | — | — |
+| FUNGI-REPORT-002 | phantom | — | — |
+| FUNGI-REPORT-003 | phantom | — | — |
+| FUNGI-REPORT-004 | phantom | — | — |
+| FUNGI-REPORT-005 | phantom | — | — |
 
 ### RES (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-RES-001 | live | RESILIENCE_RETRY_ON_MUTATION | error |
+| FUNGI-RES-001 | live | RESILIENCE_RETRY_ON_MUTATION | error |
 
 ### RESOURCE (10)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-RESOURCE-001 | phantom | — | — |
-| SPORE-RESOURCE-002 | phantom | — | — |
-| SPORE-RESOURCE-003 | phantom | — | — |
-| SPORE-RESOURCE-004 | phantom | — | — |
-| SPORE-RESOURCE-005 | phantom | — | — |
-| SPORE-RESOURCE-006 | phantom | — | — |
-| SPORE-RESOURCE-007 | phantom | — | — |
-| SPORE-RESOURCE-008 | phantom | — | — |
-| SPORE-RESOURCE-009 | phantom | — | — |
-| SPORE-RESOURCE-010 | phantom | — | — |
+| FUNGI-RESOURCE-001 | phantom | — | — |
+| FUNGI-RESOURCE-002 | phantom | — | — |
+| FUNGI-RESOURCE-003 | phantom | — | — |
+| FUNGI-RESOURCE-004 | phantom | — | — |
+| FUNGI-RESOURCE-005 | phantom | — | — |
+| FUNGI-RESOURCE-006 | phantom | — | — |
+| FUNGI-RESOURCE-007 | phantom | — | — |
+| FUNGI-RESOURCE-008 | phantom | — | — |
+| FUNGI-RESOURCE-009 | phantom | — | — |
+| FUNGI-RESOURCE-010 | phantom | — | — |
 
 ### RETAIN (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-RETAIN-001 | ref | — | — |
+| FUNGI-RETAIN-001 | ref | — | — |
 
 ### RETENTION (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-RETENTION-001 | phantom | — | — |
+| FUNGI-RETENTION-001 | phantom | — | — |
 
 ### RETRY (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-RETRY-001 | phantom | — | — |
+| FUNGI-RETRY-001 | phantom | — | — |
 
 ### ROUTE (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-ROUTE-001 | phantom | — | — |
-| SPORE-ROUTE-002 | phantom | — | — |
-| SPORE-ROUTE-003 | phantom | — | — |
+| FUNGI-ROUTE-001 | phantom | — | — |
+| FUNGI-ROUTE-002 | phantom | — | — |
+| FUNGI-ROUTE-003 | phantom | — | — |
 
 ### RUNTIME (15)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-RUNTIME-001 | phantom | — | — |
-| SPORE-RUNTIME-002 | inline | — | — |
-| SPORE-RUNTIME-003 | inline | — | — |
-| SPORE-RUNTIME-004 | inline | — | — |
-| SPORE-RUNTIME-005 | live | UnauthorizedGovernedValueAccess | error |
-| SPORE-RUNTIME-006 | live | RateLimitExceeded | error |
-| SPORE-RUNTIME-007 | inline | — | — |
-| SPORE-RUNTIME-009 | phantom | — | — |
-| SPORE-RUNTIME-010 | phantom | — | — |
-| SPORE-RUNTIME-201 | phantom | — | — |
-| SPORE-RUNTIME-RESOURCE-001 | phantom | — | — |
-| SPORE-RUNTIME-RESOURCE-002 | phantom | — | — |
-| SPORE-RUNTIME-RESOURCE-003 | phantom | — | — |
-| SPORE-RUNTIME-RESOURCE-004 | phantom | — | — |
-| SPORE-RUNTIME-RESOURCE-005 | phantom | — | — |
+| FUNGI-RUNTIME-001 | phantom | — | — |
+| FUNGI-RUNTIME-002 | inline | — | — |
+| FUNGI-RUNTIME-003 | inline | — | — |
+| FUNGI-RUNTIME-004 | inline | — | — |
+| FUNGI-RUNTIME-005 | live | UnauthorizedGovernedValueAccess | error |
+| FUNGI-RUNTIME-006 | live | RateLimitExceeded | error |
+| FUNGI-RUNTIME-007 | inline | — | — |
+| FUNGI-RUNTIME-009 | phantom | — | — |
+| FUNGI-RUNTIME-010 | phantom | — | — |
+| FUNGI-RUNTIME-201 | phantom | — | — |
+| FUNGI-RUNTIME-RESOURCE-001 | phantom | — | — |
+| FUNGI-RUNTIME-RESOURCE-002 | phantom | — | — |
+| FUNGI-RUNTIME-RESOURCE-003 | phantom | — | — |
+| FUNGI-RUNTIME-RESOURCE-004 | phantom | — | — |
+| FUNGI-RUNTIME-RESOURCE-005 | phantom | — | — |
 
 ### SAFETY (12)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-SAFETY-001 | live | TRI_BRANCH_CONDITION | error |
-| SPORE-SAFETY-002 | live | UNSAFE_LOGIC_ASSIGNMENT | error |
-| SPORE-SAFETY-003 | live | TRI_UNKNOWN_AS_TRUE | error |
-| SPORE-SAFETY-004 | live | SECRET_LITERAL | error |
-| SPORE-SAFETY-005 | live | UNSAFE_DYNAMIC_CODE | error |
-| SPORE-SAFETY-006 | live | TRI_MATCH_NOT_EXHAUSTIVE | error |
-| SPORE-SAFETY-007 | phantom | — | — |
-| SPORE-SAFETY-008 | phantom | — | — |
-| SPORE-SAFETY-AGE-001 | phantom | — | — |
-| SPORE-SAFETY-AGE-002 | phantom | — | — |
-| SPORE-SAFETY-AGE-003 | phantom | — | — |
-| SPORE-SAFETY-AUDIT-001 | phantom | — | — |
+| FUNGI-SAFETY-001 | live | TRI_BRANCH_CONDITION | error |
+| FUNGI-SAFETY-002 | live | UNSAFE_LOGIC_ASSIGNMENT | error |
+| FUNGI-SAFETY-003 | live | TRI_UNKNOWN_AS_TRUE | error |
+| FUNGI-SAFETY-004 | live | SECRET_LITERAL | error |
+| FUNGI-SAFETY-005 | live | UNSAFE_DYNAMIC_CODE | error |
+| FUNGI-SAFETY-006 | live | TRI_MATCH_NOT_EXHAUSTIVE | error |
+| FUNGI-SAFETY-007 | phantom | — | — |
+| FUNGI-SAFETY-008 | phantom | — | — |
+| FUNGI-SAFETY-AGE-001 | phantom | — | — |
+| FUNGI-SAFETY-AGE-002 | phantom | — | — |
+| FUNGI-SAFETY-AGE-003 | phantom | — | — |
+| FUNGI-SAFETY-AUDIT-001 | phantom | — | — |
 
 ### SBOM (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-SBOM-001 | inline | — | error |
+| FUNGI-SBOM-001 | inline | — | error |
 
 ### SEC (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-SEC-014 | ref | — | — |
-| SPORE-SEC-020 | live | RuntimeMutation / RuntimeMutationProhibited | error |
-| SPORE-SEC-021 | live | PrototypeMutation / PrototypeMutationProhibited | error |
-| SPORE-SEC-PATCH-001 | phantom | — | — |
+| FUNGI-SEC-014 | ref | — | — |
+| FUNGI-SEC-020 | live | RuntimeMutation / RuntimeMutationProhibited | error |
+| FUNGI-SEC-021 | live | PrototypeMutation / PrototypeMutationProhibited | error |
+| FUNGI-SEC-PATCH-001 | phantom | — | — |
 
 ### SECRET (8)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-SECRET-001 | inline | SecretValueLogged | — |
-| SPORE-SECRET-002 | inline | SecretCrossesFlowBoundary / SecretSentToNetwork / SecretComparisonDenied | — |
-| SPORE-SECRET-003 | inline | SecretSerializationDenied | — |
-| SPORE-SECRET-004 | inline | SecretDependentBranch | warning |
-| SPORE-SECRET-005 | phantom | — | — |
-| SPORE-SECRET-DISK-00 | phantom | — | — |
-| SPORE-SECRET-HARDCODED-001 | phantom | — | — |
-| SPORE-SECRET-HTTP-004 | phantom | — | — |
+| FUNGI-SECRET-001 | inline | SecretValueLogged | — |
+| FUNGI-SECRET-002 | inline | SecretCrossesFlowBoundary / SecretSentToNetwork / SecretComparisonDenied | — |
+| FUNGI-SECRET-003 | inline | SecretSerializationDenied | — |
+| FUNGI-SECRET-004 | inline | SecretDependentBranch | warning |
+| FUNGI-SECRET-005 | phantom | — | — |
+| FUNGI-SECRET-DISK-00 | phantom | — | — |
+| FUNGI-SECRET-HARDCODED-001 | phantom | — | — |
+| FUNGI-SECRET-HTTP-004 | phantom | — | — |
 
 ### SECURITY (9)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-SECURITY-001 | phantom | — | — |
-| SPORE-SECURITY-3000 | phantom | — | — |
-| SPORE-SECURITY-HSM-001 | phantom | — | — |
-| SPORE-SECURITY-HSM-002 | phantom | — | — |
-| SPORE-SECURITY-HSM-003 | phantom | — | — |
-| SPORE-SECURITY-HSM-004 | phantom | — | — |
-| SPORE-SECURITY-HSM-005 | phantom | — | — |
-| SPORE-SECURITY-HSM-006 | phantom | — | — |
-| SPORE-SECURITY-HSM-007 | phantom | — | — |
+| FUNGI-SECURITY-001 | phantom | — | — |
+| FUNGI-SECURITY-3000 | phantom | — | — |
+| FUNGI-SECURITY-HSM-001 | phantom | — | — |
+| FUNGI-SECURITY-HSM-002 | phantom | — | — |
+| FUNGI-SECURITY-HSM-003 | phantom | — | — |
+| FUNGI-SECURITY-HSM-004 | phantom | — | — |
+| FUNGI-SECURITY-HSM-005 | phantom | — | — |
+| FUNGI-SECURITY-HSM-006 | phantom | — | — |
+| FUNGI-SECURITY-HSM-007 | phantom | — | — |
 
 ### SOURCE (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-SOURCE-ESCAPE-001 | live | SourceLevelEvalEscape | error |
+| FUNGI-SOURCE-ESCAPE-001 | live | SourceLevelEvalEscape | error |
 
 ### STATE (6)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-STATE-001 | phantom | — | — |
-| SPORE-STATE-002 | phantom | — | — |
-| SPORE-STATE-003 | phantom | — | — |
-| SPORE-STATE-004 | phantom | — | — |
-| SPORE-STATE-005 | phantom | — | — |
-| SPORE-STATE-006 | phantom | — | — |
+| FUNGI-STATE-001 | phantom | — | — |
+| FUNGI-STATE-002 | phantom | — | — |
+| FUNGI-STATE-003 | phantom | — | — |
+| FUNGI-STATE-004 | phantom | — | — |
+| FUNGI-STATE-005 | phantom | — | — |
+| FUNGI-STATE-006 | phantom | — | — |
 
 ### STATIC (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-STATIC-001 | inline | STATIC_NOT_CONSTANT | — |
-| SPORE-STATIC-002 | inline | STATIC_REDECLARATION | — |
+| FUNGI-STATIC-001 | inline | STATIC_NOT_CONSTANT | — |
+| FUNGI-STATIC-002 | inline | STATIC_REDECLARATION | — |
 
 ### STDLIB (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-STDLIB-001 | live | StdlibEffectNotDeclared | error |
-| SPORE-STDLIB-002 | inline | UnknownEffectfulStdlibCall | — |
+| FUNGI-STDLIB-001 | live | StdlibEffectNotDeclared | error |
+| FUNGI-STDLIB-002 | inline | UnknownEffectfulStdlibCall | — |
 
 ### STEP (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-STEP-001 | ref | — | — |
-| SPORE-STEP-002 | phantom | — | — |
+| FUNGI-STEP-001 | ref | — | — |
+| FUNGI-STEP-002 | phantom | — | — |
 
 ### STORAGE (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-STORAGE-001 | phantom | — | — |
+| FUNGI-STORAGE-001 | phantom | — | — |
 
 ### STRING (4)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-STRING-001 | referenced | INVALID_UTF8_DECODE | error |
-| SPORE-STRING-002 | referenced | SECRET_STORED_AS_STRING | error |
-| SPORE-STRING-003 | dead | IMPLICIT_STRING_BYTE_CONVERSION | error |
-| SPORE-STRING-004 | dead | AMBIGUOUS_STRING_LENGTH | warning |
+| FUNGI-STRING-001 | referenced | INVALID_UTF8_DECODE | error |
+| FUNGI-STRING-002 | referenced | SECRET_STORED_AS_STRING | error |
+| FUNGI-STRING-003 | dead | IMPLICIT_STRING_BYTE_CONVERSION | error |
+| FUNGI-STRING-004 | dead | AMBIGUOUS_STRING_LENGTH | warning |
 
 ### STYLE (9)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-STYLE-001 | live | FlowNameCamelCase | warning |
-| SPORE-STYLE-002 | live | TypeNamePascalCase | warning |
-| SPORE-STYLE-003 | phantom | — | — |
-| SPORE-STYLE-004 | phantom | — | — |
-| SPORE-STYLE-SEC-001 | live | SensitiveBindingType | warning |
-| SPORE-STYLE-SEC-002 | phantom | — | — |
-| SPORE-STYLE-SEC-003 | phantom | — | — |
-| SPORE-STYLE-SEC-004 | phantom | — | — |
-| SPORE-STYLE-SEC-005 | phantom | — | — |
+| FUNGI-STYLE-001 | live | FlowNameCamelCase | warning |
+| FUNGI-STYLE-002 | live | TypeNamePascalCase | warning |
+| FUNGI-STYLE-003 | phantom | — | — |
+| FUNGI-STYLE-004 | phantom | — | — |
+| FUNGI-STYLE-SEC-001 | live | SensitiveBindingType | warning |
+| FUNGI-STYLE-SEC-002 | phantom | — | — |
+| FUNGI-STYLE-SEC-003 | phantom | — | — |
+| FUNGI-STYLE-SEC-004 | phantom | — | — |
+| FUNGI-STYLE-SEC-005 | phantom | — | — |
 
 ### SUBSTRATE (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-SUBSTRATE-001 | live | CRYPTO_ON_NOISY_LANE | error |
-| SPORE-SUBSTRATE-002 | live | TOLERANCE_UNACHIEVABLE_UNDER_NOISE | error |
-| SPORE-SUBSTRATE-003 | live | REDUNDANCY_INSUFFICIENT | error |
-| SPORE-SUBSTRATE-004 | live | UNVOTED_ANALOG_INTO_DETERMINISTIC | error |
-| SPORE-SUBSTRATE-005 | live | REACH_EFFECT_ON_COMPUTE_ONLY_LANE | error |
+| FUNGI-SUBSTRATE-001 | live | CRYPTO_ON_NOISY_LANE | error |
+| FUNGI-SUBSTRATE-002 | live | TOLERANCE_UNACHIEVABLE_UNDER_NOISE | error |
+| FUNGI-SUBSTRATE-003 | live | REDUNDANCY_INSUFFICIENT | error |
+| FUNGI-SUBSTRATE-004 | live | UNVOTED_ANALOG_INTO_DETERMINISTIC | error |
+| FUNGI-SUBSTRATE-005 | live | REACH_EFFECT_ON_COMPUTE_ONLY_LANE | error |
 
 ### SUPPLY (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-SUPPLY-001 | phantom | — | — |
-| SPORE-SUPPLY-002 | phantom | — | — |
-| SPORE-SUPPLY-003 | phantom | — | — |
-| SPORE-SUPPLY-004 | phantom | — | — |
-| SPORE-SUPPLY-005 | phantom | — | — |
+| FUNGI-SUPPLY-001 | phantom | — | — |
+| FUNGI-SUPPLY-002 | phantom | — | — |
+| FUNGI-SUPPLY-003 | phantom | — | — |
+| FUNGI-SUPPLY-004 | phantom | — | — |
+| FUNGI-SUPPLY-005 | phantom | — | — |
 
 ### SYNTAX (14)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-SYNTAX-001 | live | VAR_NOT_SUPPORTED | error |
-| SPORE-SYNTAX-002 | live | CONST_NOT_SUPPORTED | error |
-| SPORE-SYNTAX-003 | ref | — | — |
-| SPORE-SYNTAX-004 | phantom | — | — |
-| SPORE-SYNTAX-005 | ref | — | — |
-| SPORE-SYNTAX-006 | referenced | LET_AT_TOP_LEVEL | error |
-| SPORE-SYNTAX-007 | referenced | MUT_AT_TOP_LEVEL | error |
-| SPORE-SYNTAX-008 | referenced | UNSAFE_LET_AT_TOP_LEVEL | error |
-| SPORE-SYNTAX-009 | referenced | EMIT_AT_TOP_LEVEL | error |
-| SPORE-SYNTAX-010 | ref | — | — |
-| SPORE-SYNTAX-LEGACY-001 | referenced | LegacyEffectsSyntax | warning |
-| SPORE-SYNTAX-LEGACY-002 | ref | — | — |
-| SPORE-SYNTAX-LEGACY-003 | ref | — | — |
-| SPORE-SYNTAX-RLF-001 | phantom | — | — |
+| FUNGI-SYNTAX-001 | live | VAR_NOT_SUPPORTED | error |
+| FUNGI-SYNTAX-002 | live | CONST_NOT_SUPPORTED | error |
+| FUNGI-SYNTAX-003 | ref | — | — |
+| FUNGI-SYNTAX-004 | phantom | — | — |
+| FUNGI-SYNTAX-005 | ref | — | — |
+| FUNGI-SYNTAX-006 | referenced | LET_AT_TOP_LEVEL | error |
+| FUNGI-SYNTAX-007 | referenced | MUT_AT_TOP_LEVEL | error |
+| FUNGI-SYNTAX-008 | referenced | UNSAFE_LET_AT_TOP_LEVEL | error |
+| FUNGI-SYNTAX-009 | referenced | EMIT_AT_TOP_LEVEL | error |
+| FUNGI-SYNTAX-010 | ref | — | — |
+| FUNGI-SYNTAX-LEGACY-001 | referenced | LegacyEffectsSyntax | warning |
+| FUNGI-SYNTAX-LEGACY-002 | ref | — | — |
+| FUNGI-SYNTAX-LEGACY-003 | ref | — | — |
+| FUNGI-SYNTAX-RLF-001 | phantom | — | — |
 
 ### TAINT (7)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TAINT-001 | referenced | TaintedValueAtInjectionSink | error |
-| SPORE-TAINT-002 | referenced | UnvalidatedValueAtLogicSink | warning |
-| SPORE-TAINT-003 | referenced | WrongContextUntaint | error |
-| SPORE-TAINT-004 | referenced | DiscouragedSanitiser | warning |
-| SPORE-TAINT-005 | referenced | TaintedValueAtHeaderSink | error |
-| SPORE-TAINT-006 | referenced | SsrfPolicyInsufficient | warning |
-| SPORE-TAINT-007 | phantom | — | — |
+| FUNGI-TAINT-001 | referenced | TaintedValueAtInjectionSink | error |
+| FUNGI-TAINT-002 | referenced | UnvalidatedValueAtLogicSink | warning |
+| FUNGI-TAINT-003 | referenced | WrongContextUntaint | error |
+| FUNGI-TAINT-004 | referenced | DiscouragedSanitiser | warning |
+| FUNGI-TAINT-005 | referenced | TaintedValueAtHeaderSink | error |
+| FUNGI-TAINT-006 | referenced | SsrfPolicyInsufficient | warning |
+| FUNGI-TAINT-007 | phantom | — | — |
 
 ### TARGET (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TARGET-001 | ref | — | — |
-| SPORE-TARGET-101 | phantom | — | — |
-| SPORE-TARGET-103 | phantom | — | — |
-| SPORE-TARGET-CAP-001 | phantom | — | — |
-| SPORE-TARGET-CAP-002 | phantom | — | — |
+| FUNGI-TARGET-001 | ref | — | — |
+| FUNGI-TARGET-101 | phantom | — | — |
+| FUNGI-TARGET-103 | phantom | — | — |
+| FUNGI-TARGET-CAP-001 | phantom | — | — |
+| FUNGI-TARGET-CAP-002 | phantom | — | — |
 
 ### TENANT (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TENANT-001 | live | DANGLING_TENANT_SCOPE_BINDING | warning |
-| SPORE-TENANT-002 | live | UNSCOPED_TENANT_DATA_ACCESS | error |
-| SPORE-TENANT-003 | ref | — | — |
+| FUNGI-TENANT-001 | live | DANGLING_TENANT_SCOPE_BINDING | warning |
+| FUNGI-TENANT-002 | live | UNSCOPED_TENANT_DATA_ACCESS | error |
+| FUNGI-TENANT-003 | ref | — | — |
 
 ### TENSOR (10)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TENSOR-001 | phantom | — | — |
-| SPORE-TENSOR-002 | phantom | — | — |
-| SPORE-TENSOR-003 | phantom | — | — |
-| SPORE-TENSOR-004 | phantom | — | — |
-| SPORE-TENSOR-005 | phantom | — | — |
-| SPORE-TENSOR-006 | phantom | — | — |
-| SPORE-TENSOR-007 | phantom | — | — |
-| SPORE-TENSOR-008 | phantom | — | — |
-| SPORE-TENSOR-009 | phantom | — | — |
-| SPORE-TENSOR-010 | phantom | — | — |
+| FUNGI-TENSOR-001 | phantom | — | — |
+| FUNGI-TENSOR-002 | phantom | — | — |
+| FUNGI-TENSOR-003 | phantom | — | — |
+| FUNGI-TENSOR-004 | phantom | — | — |
+| FUNGI-TENSOR-005 | phantom | — | — |
+| FUNGI-TENSOR-006 | phantom | — | — |
+| FUNGI-TENSOR-007 | phantom | — | — |
+| FUNGI-TENSOR-008 | phantom | — | — |
+| FUNGI-TENSOR-009 | phantom | — | — |
+| FUNGI-TENSOR-010 | phantom | — | — |
 
 ### TERM (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TERM-001 | live | TERMINATION_ANNOTATION_MISSING | warning |
-| SPORE-TERM-002 | phantom | — | — |
-| SPORE-TERM-003 | phantom | — | — |
+| FUNGI-TERM-001 | live | TERMINATION_ANNOTATION_MISSING | warning |
+| FUNGI-TERM-002 | phantom | — | — |
+| FUNGI-TERM-003 | phantom | — | — |
 
 ### TEST (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TEST-001 | ref | — | — |
-| SPORE-TEST-002 | ref | — | — |
-| SPORE-TEST-003 | ref | — | — |
+| FUNGI-TEST-001 | ref | — | — |
+| FUNGI-TEST-002 | ref | — | — |
+| FUNGI-TEST-003 | ref | — | — |
 
 ### TIER (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TIER-001 | inline | UNDER_DECLARED_FLOW_TIER | — |
-| SPORE-TIER-002 | phantom | — | — |
+| FUNGI-TIER-001 | inline | UNDER_DECLARED_FLOW_TIER | — |
+| FUNGI-TIER-002 | phantom | — | — |
 
 ### TIMEOUT (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TIMEOUT-001 | phantom | — | — |
+| FUNGI-TIMEOUT-001 | phantom | — | — |
 
 ### TOLERANCE (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TOLERANCE-MONOTONE-001 | phantom | — | — |
+| FUNGI-TOLERANCE-MONOTONE-001 | phantom | — | — |
 
 ### TRACE (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TRACE-001 | phantom | — | — |
-| SPORE-TRACE-002 | phantom | — | — |
-| SPORE-TRACE-003 | phantom | — | — |
-| SPORE-TRACE-004 | phantom | — | — |
-| SPORE-TRACE-005 | phantom | — | — |
+| FUNGI-TRACE-001 | phantom | — | — |
+| FUNGI-TRACE-002 | phantom | — | — |
+| FUNGI-TRACE-003 | phantom | — | — |
+| FUNGI-TRACE-004 | phantom | — | — |
+| FUNGI-TRACE-005 | phantom | — | — |
 
 ### TRAP (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TRAP-001 | inline | TRAP_INVALID_ERROR_CODE | — |
-| SPORE-TRAP-002 | inline | TRAP_SYMBOL_UNRESOLVED | — |
+| FUNGI-TRAP-001 | inline | TRAP_INVALID_ERROR_CODE | — |
+| FUNGI-TRAP-002 | inline | TRAP_SYMBOL_UNRESOLVED | — |
 
 ### TRI (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TRI-001 | live | — | — |
-| SPORE-TRI-002 | live | — | — |
-| SPORE-TRI-003 | live | — | — |
-| SPORE-TRI-004 | live | — | — |
-| SPORE-TRI-005 | live | — | — |
+| FUNGI-TRI-001 | live | — | — |
+| FUNGI-TRI-002 | live | — | — |
+| FUNGI-TRI-003 | live | — | — |
+| FUNGI-TRI-004 | live | — | — |
+| FUNGI-TRI-005 | live | — | — |
 
 ### TYPE (34)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-TYPE-0 | ref | — | — |
-| SPORE-TYPE-001 | inline | UnknownType | — |
-| SPORE-TYPE-002 | live | QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol / TypeMismatch | warning/error |
-| SPORE-TYPE-003 | live | InvalidNominalConversion | error |
-| SPORE-TYPE-004 | inline | InvalidBinaryOperation | — |
-| SPORE-TYPE-005 | inline | InvalidCallArgType | — |
-| SPORE-TYPE-006 | ref | — | — |
-| SPORE-TYPE-007 | inline | InvalidArgumentCount | — |
-| SPORE-TYPE-008 | inline | InvalidReturnType / SilentNullDenied | — |
-| SPORE-TYPE-009 | inline | InvalidGenericInstantiation | — |
-| SPORE-TYPE-010 | referenced | UnsatisfiedGenericConstraint / InvalidCollectionElement / InvalidResultType / InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation | error |
-| SPORE-TYPE-011 | live | InvalidCollectionElement / InvalidResultType / InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch | error |
-| SPORE-TYPE-012 | referenced | InvalidResultType / InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch | error/warning |
-| SPORE-TYPE-013 | referenced | InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType | error/warning |
-| SPORE-TYPE-014 | live | MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | error/warning |
-| SPORE-TYPE-015 | referenced | GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | error/warning |
-| SPORE-TYPE-016 | live | TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | error/warning |
-| SPORE-TYPE-017 | live | QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | warning/error |
-| SPORE-TYPE-018 | referenced | InvalidRuntimeTargetType / UnknownSymbol | error |
-| SPORE-TYPE-019 | referenced | UnknownSymbol | error |
-| SPORE-TYPE-020 | inline | ShadowedBinding | warning |
-| SPORE-TYPE-021 | ref | — | — |
-| SPORE-TYPE-022 | inline | UnreachablePattern | — |
-| SPORE-TYPE-023 | inline | DeferredTypeCheck / MissingWildcardArm | warning |
-| SPORE-TYPE-030 | live | TensorElementTypeMismatch | error |
-| SPORE-TYPE-031 | referenced | TensorDimensionMismatch | error |
-| SPORE-TYPE-032 | phantom | — | — |
-| SPORE-TYPE-033 | phantom | — | — |
-| SPORE-TYPE-1000 | phantom | — | — |
-| SPORE-TYPE-NUMERIC-001 | phantom | — | — |
-| SPORE-TYPE-NUMERIC-002 | phantom | — | — |
-| SPORE-TYPE-NUMERIC-003 | phantom | — | — |
-| SPORE-TYPE-NUMERIC-004 | phantom | — | — |
-| SPORE-TYPE-NUMERIC-005 | phantom | — | — |
+| FUNGI-TYPE-0 | ref | — | — |
+| FUNGI-TYPE-001 | inline | UnknownType | — |
+| FUNGI-TYPE-002 | live | QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol / TypeMismatch | warning/error |
+| FUNGI-TYPE-003 | live | InvalidNominalConversion | error |
+| FUNGI-TYPE-004 | inline | InvalidBinaryOperation | — |
+| FUNGI-TYPE-005 | inline | InvalidCallArgType | — |
+| FUNGI-TYPE-006 | ref | — | — |
+| FUNGI-TYPE-007 | inline | InvalidArgumentCount | — |
+| FUNGI-TYPE-008 | inline | InvalidReturnType / SilentNullDenied | — |
+| FUNGI-TYPE-009 | inline | InvalidGenericInstantiation | — |
+| FUNGI-TYPE-010 | referenced | UnsatisfiedGenericConstraint / InvalidCollectionElement / InvalidResultType / InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation | error |
+| FUNGI-TYPE-011 | live | InvalidCollectionElement / InvalidResultType / InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch | error |
+| FUNGI-TYPE-012 | referenced | InvalidResultType / InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch | error/warning |
+| FUNGI-TYPE-013 | referenced | InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType | error/warning |
+| FUNGI-TYPE-014 | live | MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | error/warning |
+| FUNGI-TYPE-015 | referenced | GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | error/warning |
+| FUNGI-TYPE-016 | live | TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | error/warning |
+| FUNGI-TYPE-017 | live | QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | warning/error |
+| FUNGI-TYPE-018 | referenced | InvalidRuntimeTargetType / UnknownSymbol | error |
+| FUNGI-TYPE-019 | referenced | UnknownSymbol | error |
+| FUNGI-TYPE-020 | inline | ShadowedBinding | warning |
+| FUNGI-TYPE-021 | ref | — | — |
+| FUNGI-TYPE-022 | inline | UnreachablePattern | — |
+| FUNGI-TYPE-023 | inline | DeferredTypeCheck / MissingWildcardArm | warning |
+| FUNGI-TYPE-030 | live | TensorElementTypeMismatch | error |
+| FUNGI-TYPE-031 | referenced | TensorDimensionMismatch | error |
+| FUNGI-TYPE-032 | phantom | — | — |
+| FUNGI-TYPE-033 | phantom | — | — |
+| FUNGI-TYPE-1000 | phantom | — | — |
+| FUNGI-TYPE-NUMERIC-001 | phantom | — | — |
+| FUNGI-TYPE-NUMERIC-002 | phantom | — | — |
+| FUNGI-TYPE-NUMERIC-003 | phantom | — | — |
+| FUNGI-TYPE-NUMERIC-004 | phantom | — | — |
+| FUNGI-TYPE-NUMERIC-005 | phantom | — | — |
 
 ### UNIV (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-UNIV-001 | phantom | — | — |
-| SPORE-UNIV-002 | phantom | — | — |
+| FUNGI-UNIV-001 | phantom | — | — |
+| FUNGI-UNIV-002 | phantom | — | — |
 
 ### VAL (12)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-VAL-00 | ref | — | — |
-| SPORE-VAL-001 | referenced | SafetyCriticalMissingAudit | error |
-| SPORE-VAL-002 | referenced | SafetyCriticalMissingDeterminism | error |
-| SPORE-VAL-003 | referenced | UnknownValueClassification | error |
-| SPORE-VAL-004 | phantom | — | — |
-| SPORE-VAL-005 | phantom | — | — |
-| SPORE-VAL-006 | phantom | — | — |
-| SPORE-VAL-007 | phantom | — | — |
-| SPORE-VAL-008 | phantom | — | — |
-| SPORE-VAL-009 | phantom | — | — |
-| SPORE-VAL-010 | phantom | — | — |
-| SPORE-VAL-011 | phantom | — | — |
+| FUNGI-VAL-00 | ref | — | — |
+| FUNGI-VAL-001 | referenced | SafetyCriticalMissingAudit | error |
+| FUNGI-VAL-002 | referenced | SafetyCriticalMissingDeterminism | error |
+| FUNGI-VAL-003 | referenced | UnknownValueClassification | error |
+| FUNGI-VAL-004 | phantom | — | — |
+| FUNGI-VAL-005 | phantom | — | — |
+| FUNGI-VAL-006 | phantom | — | — |
+| FUNGI-VAL-007 | phantom | — | — |
+| FUNGI-VAL-008 | phantom | — | — |
+| FUNGI-VAL-009 | phantom | — | — |
+| FUNGI-VAL-010 | phantom | — | — |
+| FUNGI-VAL-011 | phantom | — | — |
 
 ### VALIDATE (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-VALIDATE-001 | phantom | — | — |
+| FUNGI-VALIDATE-001 | phantom | — | — |
 
 ### VALUE (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-VALUE-STATE-001 | phantom | — | — |
+| FUNGI-VALUE-STATE-001 | phantom | — | — |
 
 ### VALUESTATE (9)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-VALUESTATE-00 | ref | — | — |
-| SPORE-VALUESTATE-001 | inline | UnsafeToSafeTransitionDenied | — |
-| SPORE-VALUESTATE-002 | inline | UnsafeConditionalUpgrade | — |
-| SPORE-VALUESTATE-003 | inline | UnsafeValueReachedGovernedSink | — |
-| SPORE-VALUESTATE-004 | inline | TaintedValuePropagation | error |
-| SPORE-VALUESTATE-005 | live | DERIVED_UNSAFE_VALUE_AT_SINK / DerivedUnsafeValueAtSink | error |
-| SPORE-VALUESTATE-006 | live | ProtectedBoundaryViolation / ProtectedValueAtAuditLog | error |
-| SPORE-VALUESTATE-007 | live | RedactedBoundaryViolation | error |
-| SPORE-VALUESTATE-008 | inline | BoundaryInputUnclean | — |
+| FUNGI-VALUESTATE-00 | ref | — | — |
+| FUNGI-VALUESTATE-001 | inline | UnsafeToSafeTransitionDenied | — |
+| FUNGI-VALUESTATE-002 | inline | UnsafeConditionalUpgrade | — |
+| FUNGI-VALUESTATE-003 | inline | UnsafeValueReachedGovernedSink | — |
+| FUNGI-VALUESTATE-004 | inline | TaintedValuePropagation | error |
+| FUNGI-VALUESTATE-005 | live | DERIVED_UNSAFE_VALUE_AT_SINK / DerivedUnsafeValueAtSink | error |
+| FUNGI-VALUESTATE-006 | live | ProtectedBoundaryViolation / ProtectedValueAtAuditLog | error |
+| FUNGI-VALUESTATE-007 | live | RedactedBoundaryViolation | error |
+| FUNGI-VALUESTATE-008 | inline | BoundaryInputUnclean | — |
 
 ### VAULT (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-VAULT-001 | live | — | — |
-| SPORE-VAULT-002 | live | — | — |
-| SPORE-VAULT-003 | live | — | — |
-| SPORE-VAULT-004 | live | — | — |
-| SPORE-VAULT-005 | live | — | — |
+| FUNGI-VAULT-001 | live | — | — |
+| FUNGI-VAULT-002 | live | — | — |
+| FUNGI-VAULT-003 | live | — | — |
+| FUNGI-VAULT-004 | live | — | — |
+| FUNGI-VAULT-005 | live | — | — |
 
 ### VERIFY (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-VERIFY-001 | phantom | — | — |
-| SPORE-VERIFY-002 | phantom | — | — |
-| SPORE-VERIFY-005 | phantom | — | — |
+| FUNGI-VERIFY-001 | phantom | — | — |
+| FUNGI-VERIFY-002 | phantom | — | — |
+| FUNGI-VERIFY-005 | phantom | — | — |
 
 ### VIS (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-VIS-001 | phantom | — | — |
-| SPORE-VIS-002 | phantom | — | — |
-| SPORE-VIS-003 | phantom | — | — |
-| SPORE-VIS-004 | phantom | — | — |
-| SPORE-VIS-005 | phantom | — | — |
+| FUNGI-VIS-001 | phantom | — | — |
+| FUNGI-VIS-002 | phantom | — | — |
+| FUNGI-VIS-003 | phantom | — | — |
+| FUNGI-VIS-004 | phantom | — | — |
+| FUNGI-VIS-005 | phantom | — | — |
 
 ### WASM (5)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-WASM-001 | phantom | — | — |
-| SPORE-WASM-002 | phantom | — | — |
-| SPORE-WASM-003 | phantom | — | — |
-| SPORE-WASM-004 | phantom | — | — |
-| SPORE-WASM-005 | phantom | — | — |
+| FUNGI-WASM-001 | phantom | — | — |
+| FUNGI-WASM-002 | phantom | — | — |
+| FUNGI-WASM-003 | phantom | — | — |
+| FUNGI-WASM-004 | phantom | — | — |
+| FUNGI-WASM-005 | phantom | — | — |
 
 ### WEB (14)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-WEB-001 | phantom | — | — |
-| SPORE-WEB-002 | phantom | — | — |
-| SPORE-WEB-003 | phantom | — | — |
-| SPORE-WEB-010 | phantom | — | — |
-| SPORE-WEB-011 | phantom | — | — |
-| SPORE-WEB-020 | phantom | — | — |
-| SPORE-WEB-021 | phantom | — | — |
-| SPORE-WEB-022 | phantom | — | — |
-| SPORE-WEB-030 | phantom | — | — |
-| SPORE-WEB-031 | phantom | — | — |
-| SPORE-WEB-040 | phantom | — | — |
-| SPORE-WEB-041 | phantom | — | — |
-| SPORE-WEB-042 | phantom | — | — |
-| SPORE-WEB-050 | phantom | — | — |
+| FUNGI-WEB-001 | phantom | — | — |
+| FUNGI-WEB-002 | phantom | — | — |
+| FUNGI-WEB-003 | phantom | — | — |
+| FUNGI-WEB-010 | phantom | — | — |
+| FUNGI-WEB-011 | phantom | — | — |
+| FUNGI-WEB-020 | phantom | — | — |
+| FUNGI-WEB-021 | phantom | — | — |
+| FUNGI-WEB-022 | phantom | — | — |
+| FUNGI-WEB-030 | phantom | — | — |
+| FUNGI-WEB-031 | phantom | — | — |
+| FUNGI-WEB-040 | phantom | — | — |
+| FUNGI-WEB-041 | phantom | — | — |
+| FUNGI-WEB-042 | phantom | — | — |
+| FUNGI-WEB-050 | phantom | — | — |
 
 ### WORKFLOW (3)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-WORKFLOW-001 | phantom | — | — |
-| SPORE-WORKFLOW-002 | phantom | — | — |
-| SPORE-WORKFLOW-003 | phantom | — | — |
+| FUNGI-WORKFLOW-001 | phantom | — | — |
+| FUNGI-WORKFLOW-002 | phantom | — | — |
+| FUNGI-WORKFLOW-003 | phantom | — | — |
 
 ### X (2)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-X-001 | referenced | Foo | — |
-| SPORE-X-002 | referenced | — | — |
+| FUNGI-X-001 | referenced | Foo | — |
+| FUNGI-X-002 | referenced | — | — |
 
 ### Y (1)
 
 | code | status | name(s) | severity |
 |---|---|---|---|
-| SPORE-Y-007 | inline | — | — |
+| FUNGI-Y-007 | inline | — | — |

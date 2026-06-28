@@ -1003,13 +1003,13 @@ non-auditable execution
 
 | Code | Meaning |
 |---|---|
-| `SPORE-COMPUTE-001` | requested compute target unavailable |
-| `SPORE-COMPUTE-002` | accelerator effect denied by policy |
-| `SPORE-COMPUTE-003` | optical transport unavailable |
-| `SPORE-COMPUTE-004` | distributed scheduler unavailable |
-| `SPORE-COMPUTE-005` | runtime fallback occurred |
-| `SPORE-COMPUTE-006` | GPU memory pressure exceeded |
-| `SPORE-COMPUTE-007` | backend adapter failure |
+| `FUNGI-COMPUTE-001` | requested compute target unavailable |
+| `FUNGI-COMPUTE-002` | accelerator effect denied by policy |
+| `FUNGI-COMPUTE-003` | optical transport unavailable |
+| `FUNGI-COMPUTE-004` | distributed scheduler unavailable |
+| `FUNGI-COMPUTE-005` | runtime fallback occurred |
+| `FUNGI-COMPUTE-006` | GPU memory pressure exceeded |
+| `FUNGI-COMPUTE-007` | backend adapter failure |
 
 ---
 

@@ -1,7 +1,7 @@
 // Diagnostic-namespace ownership — the CHECKED invariant (avoid semantic drift).
 // Spec: docs/Knowledge-Bases/galerina-diagnostic-namespace-ownership.md
 //
-// Every SPORE-* code emitted in the compiler source (`code: "SPORE-..."` literals) must be REGISTERED
+// Every FUNGI-* code emitted in the compiler source (`code: "FUNGI-..."` literals) must be REGISTERED
 // in a registry doc (compiler-diagnostics.md OR governance-rules.md), OR be on the explicit
 // PENDING_REGISTRATION allowlist (the baseline backlog captured at adoption). A NEW unregistered,
 // non-allowlisted code fails this test — that is what makes namespace ownership machine-checked.
@@ -36,11 +36,11 @@ function codesFrom(text, re) {
 
 const emitted = new Set();
 for (const f of walkTs(SRC)) {
-  for (const m of readFileSync(f, "utf8").matchAll(/code:\s*"(SPORE-[A-Z0-9-]+)"/g)) emitted.add(m[1]);
+  for (const m of readFileSync(f, "utf8").matchAll(/code:\s*"(FUNGI-[A-Z0-9-]+)"/g)) emitted.add(m[1]);
 }
 const registered = new Set();
 for (const d of REGISTRY_DOCS) {
-  for (const c of codesFrom(readFileSync(d, "utf8"), /SPORE-[A-Z0-9-]+/g)) registered.add(c);
+  for (const c of codesFrom(readFileSync(d, "utf8"), /FUNGI-[A-Z0-9-]+/g)) registered.add(c);
 }
 const allowlist = new Set(
   readFileSync(ALLOWLIST_FILE, "utf8")
@@ -49,7 +49,7 @@ const allowlist = new Set(
 );
 
 describe("Diagnostic-namespace ownership (checked invariant)", () => {
-  it("emits at least the expected number of SPORE-* codes (sanity)", () => {
+  it("emits at least the expected number of FUNGI-* codes (sanity)", () => {
     assert.ok(emitted.size >= 150, `expected ≥150 emitted codes, found ${emitted.size}`);
   });
 

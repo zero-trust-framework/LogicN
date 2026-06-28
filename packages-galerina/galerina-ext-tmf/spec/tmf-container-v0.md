@@ -80,7 +80,7 @@ verifies them) but their semantics are application-defined. `kind` is bound into
 `DATA→INDEX` relabel breaks verification.
 
 ### 4.2 `modality` (payload plane) — u16, mirrors the data model
-`0`=Vector · `1`=Graph · `2`=Attribute · `3`=Blob · `4`=Relation (matches `entity.spore`). Bound into the leaf.
+`0`=Vector · `1`=Graph · `2`=Attribute · `3`=Blob · `4`=Relation (matches `entity.fungi`). Bound into the leaf.
 **Modality selects the payload codec; TMX hashes the bytes opaquely either way.**
 
 ### 4.3 Modality codecs (informative) — where NVFP4 fits, as an *option*

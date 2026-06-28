@@ -1,12 +1,12 @@
 # Galerina v1 Memory Model
 
 > **⚠️ SUPERSEDED in part (0034 verdict, 2026-06-18).** The "compiler-checked move/borrow rules" advanced
-> tier below is **design-only and not enforced** — the borrow checker was never built (`SPORE-MEMORY-001..008`
+> tier below is **design-only and not enforced** — the borrow checker was never built (`FUNGI-MEMORY-001..008`
 > are not emitted; `borrow`/`move` examples parse/compile clean but are unenforced — corrected #65). Galerina's canonical memory-safety model is
 > **"Governed Capability + Ternary-Tagged Memory"** (value-state/taint + effect/capability + runtime
 > generation-tag UAF guards) — see **`galerina-memory-safety-model.md`**. The *binding hierarchy*
 > (`let`/`mut`/`readonly`), bounds checks, and the `unsafe` boundary in this doc are real and shipped; the
-> borrow/move ownership tier is a **non-goal**; `USE_AFTER_MOVE` (SPORE-MEMORY-001) was honest-retired as RESERVED in #65 — consume-once already ships as `SPORE-AFFINE-001`.
+> borrow/move ownership tier is a **non-goal**; `USE_AFTER_MOVE` (FUNGI-MEMORY-001) was honest-retired as RESERVED in #65 — consume-once already ships as `FUNGI-AFFINE-001`.
 
 **Status:** Canonical v1 decision (memory-safety stance superseded — see banner)  
 **Scope:** `@galerina/core`, `@galerina/core-compiler` — binding rules, ownership, borrows, bounds checks, unsafe boundary  
@@ -41,7 +41,7 @@ borrow   — temporary access; does not transfer ownership
 copy     — explicit duplication; both owner and caller hold independent values
 ```
 
-`var` and `const` are rejected (`SPORE-SYNTAX-001`, `SPORE-SYNTAX-002`).  
+`var` and `const` are rejected (`FUNGI-SYNTAX-001`, `FUNGI-SYNTAX-002`).  
 `borrow`, `move`, `copy` are used at call sites, not as declaration keywords.
 
 ---
@@ -58,7 +58,7 @@ let data = Buffer.from(input)
 processBuffer(move data)
 ```
 
-After `move data`, any use of `data` is `SPORE-MEMORY-001` (`USE_AFTER_MOVE`).
+After `move data`, any use of `data` is `FUNGI-MEMORY-001` (`USE_AFTER_MOVE`).
 
 ### Readonly Borrow
 
@@ -104,7 +104,7 @@ A mutable borrow cannot escape the current scope unless explicitly returned as a
 ```galerina
 fn bad() -> Borrow<User> {
   let user = User { name: "Ada" }
-  return borrow user   // SPORE-MEMORY-003: borrow escapes owner scope
+  return borrow user   // FUNGI-MEMORY-003: borrow escapes owner scope
 }
 ```
 
@@ -152,18 +152,18 @@ unsafe block FastVectorRead
 
 ---
 
-## 7. Memory Diagnostic Codes — SPORE-MEMORY-001..008
+## 7. Memory Diagnostic Codes — FUNGI-MEMORY-001..008
 
 | Code | Name | Description |
 |---|---|---|
-| `SPORE-MEMORY-001` | `USE_AFTER_MOVE` | A moved value was used again |
-| `SPORE-MEMORY-002` | `BORROW_AFTER_MOVE` | A value was borrowed after ownership moved |
-| `SPORE-MEMORY-003` | `BORROW_ESCAPES_SCOPE` | Borrowed reference outlives its owner |
-| `SPORE-MEMORY-004` | `READONLY_MUTATION` | Attempted mutation through a readonly reference |
-| `SPORE-MEMORY-005` | `MUTABLE_ALIAS` | A mutable borrow exists while another borrow/alias is active |
-| `SPORE-MEMORY-006` | `BOUNDS_VIOLATION` | Index may be outside collection bounds |
-| `SPORE-MEMORY-007` | `UNCHECKED_ACCESS_OUTSIDE_UNSAFE` | `unchecked` access used outside an approved unsafe block |
-| `SPORE-MEMORY-008` | `UNSAFE_MEMORY_REQUIRES_FALLBACK` | Unsafe memory operation has no declared safe fallback |
+| `FUNGI-MEMORY-001` | `USE_AFTER_MOVE` | A moved value was used again |
+| `FUNGI-MEMORY-002` | `BORROW_AFTER_MOVE` | A value was borrowed after ownership moved |
+| `FUNGI-MEMORY-003` | `BORROW_ESCAPES_SCOPE` | Borrowed reference outlives its owner |
+| `FUNGI-MEMORY-004` | `READONLY_MUTATION` | Attempted mutation through a readonly reference |
+| `FUNGI-MEMORY-005` | `MUTABLE_ALIAS` | A mutable borrow exists while another borrow/alias is active |
+| `FUNGI-MEMORY-006` | `BOUNDS_VIOLATION` | Index may be outside collection bounds |
+| `FUNGI-MEMORY-007` | `UNCHECKED_ACCESS_OUTSIDE_UNSAFE` | `unchecked` access used outside an approved unsafe block |
+| `FUNGI-MEMORY-008` | `UNSAFE_MEMORY_REQUIRES_FALLBACK` | Unsafe memory operation has no declared safe fallback |
 
 All eight codes have severity `"error"`.
 
@@ -248,7 +248,7 @@ copy types:  Int, Float, Bool, Char, Byte, small value types
 move types:  Buffer, Bytes, File handles, network streams, secrets
 ```
 
-Copying a `ProtectedSecret` is `SPORE-SECURITY-*` — secrets must move, not copy.
+Copying a `ProtectedSecret` is `FUNGI-SECURITY-*` — secrets must move, not copy.
 
 ---
 
@@ -269,10 +269,10 @@ pinned            → post-v1 — required for DMA transfers
 
 ```text
 [x] let / mut / readonly — in compiler and AstNodeKind (2026-05-26)
-[x] SPORE-SYNTAX-001 (var) / SPORE-SYNTAX-002 (const) enforced
-[x] SPORE-BINDING-001..004 — binding reassignment/mutation diagnostics
+[x] FUNGI-SYNTAX-001 (var) / FUNGI-SYNTAX-002 (const) enforced
+[x] FUNGI-BINDING-001..004 — binding reassignment/mutation diagnostics
 [ ] move / borrow / copy — call-site keywords in parser
-[ ] SPORE-MEMORY-001..008 — diagnostic constants in @galerina/core-compiler
+[ ] FUNGI-MEMORY-001..008 — diagnostic constants in @galerina/core-compiler
 [ ] borrow checker — symbol table + scope tracking in compiler passes
 [ ] bounds check enforcement — runtime check injection in code gen
 [ ] unsafe block FFI interface — native interface declaration in parser

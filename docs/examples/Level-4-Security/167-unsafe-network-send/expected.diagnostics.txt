@@ -1,4 +1,4 @@
-SPORE-VALUESTATE-003 (UnsafeValueReachedGovernedSink)
+FUNGI-VALUESTATE-003 (UnsafeValueReachedGovernedSink)
 
 Unsafe value crossing trust boundary via http.post.
 Validate rawEmail before sending:

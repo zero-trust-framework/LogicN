@@ -9,14 +9,14 @@
 
 | Phase | Delivered |
 |---|---|
-| 34 | verifyPasswordService.spore — first live .spore HTTP service. **Runtime = 25%** |
+| 34 | verifyPasswordService.fungi — first live .fungi HTTP service. **Runtime = 25%** |
 | 35 | Password.verify/hash — stable API facade (bcrypt now, Argon2 later) |
 | 36 | Argon2id + Deno WebGPU GPU benchmark live |
 | 37 | Password.migrate — auto rehash bcrypt→Argon2id on successful verify |
 | 38 | Deno WebGPU: RTX 3050 Ti, 3.99M ops/sec — first real GPU number |
 | 39 | GovernanceSignature Ed25519 — signProofGraph/verifyGovernanceSignature |
-| 40 | Stage B executable — compiler.capabilities.spore + lexer.spore running |
-| 41 | healthCheck.spore (GET /health) + rateStatus.spore (GET /rate-status) — second and third live .spore HTTP services. **Runtime = 27%** |
+| 40 | Stage B executable — compiler.capabilities.fungi + lexer.fungi running |
+| 41 | healthCheck.fungi (GET /health) + rateStatus.fungi (GET /rate-status) — second and third live .fungi HTTP services. **Runtime = 27%** |
 
 ---
 
@@ -25,7 +25,7 @@
 These phases run across four parallel concerns that must advance together:
 
 ```
-A: Deployment surface      — more live .spore files, more runtime %
+A: Deployment surface      — more live .fungi files, more runtime %
 B: Stage B self-hosting    — Galerina compiling Galerina
 C: Performance             — close the tree-walker black gap
 D: Security/compliance     — post-quantum, hardware trust, OWASP complete
@@ -52,7 +52,7 @@ parallel-value work. Phases are ordered to unblock each other correctly.
 | `:` preferred return type | `pure flow foo(x: Int) : String` |
 | `effects {}` optional | Omission on `pure flow` means no effects |
 | Top-level public result types | `type FooResult = Result<X, E>` at compilation unit level |
-| `else if` hard error | SPORE-SYNTAX-010 — use `match` or sequential `if` |
+| `else if` hard error | FUNGI-SYNTAX-010 — use `match` or sequential `if` |
 | `unsafe let` at boundary | `unsafe let rawId: String = request.params.id` |
 
 ```galerina
@@ -77,8 +77,8 @@ route GET "/health" {
 }
 ```
 
-Also: `rateStatus.spore` — returns current rate-limit counters for the IP.
-Two new .spore routes = ~2% runtime increment.
+Also: `rateStatus.fungi` — returns current rate-limit counters for the IP.
+Two new .fungi routes = ~2% runtime increment.
 
 **Tests:** route parsing, healthCheck execution, multi-route server, JSON response shape.
 
@@ -90,7 +90,7 @@ Two new .spore routes = ~2% runtime increment.
 **Stream: A**
 
 ```bash
-galerina build --target wasm-wasi -o verifyPassword.wasm services/auth/verifyPassword.spore
+galerina build --target wasm-wasi -o verifyPassword.wasm services/auth/verifyPassword.fungi
 wasmtime run verifyPassword.wasm
 ```
 
@@ -100,7 +100,7 @@ wasmtime run verifyPassword.wasm
 - Flush audit entries to file before shutdown (WASI `fd_write`)
 
 **Why now:** Standalone WASM removes Node.js from the production path for pure flows.
-Runtime % increases because the *WASM binary is compiled from .spore source* — that IS
+Runtime % increases because the *WASM binary is compiled from .fungi source* — that IS
 the runtime in Galerina.
 
 **Research needed:** Confirm wasmtime 1.x WASI HTTP proposal status. Use shim if unstable.
@@ -113,7 +113,7 @@ the runtime in Galerina.
 **Stream: A**
 **Status: Infrastructure ready — Deno adapter created, full bridge Phase 54**
 
-- Deploy `verifyPasswordService.spore` to Deno Deploy via `deno deploy`
+- Deploy `verifyPasswordService.fungi` to Deno Deploy via `deno deploy`
 - Audit → Deno KV (persistent, replicated)
 - ProofGraph downloadable from `GET /governance/proof` → JSON
 - Cold-start target: <100ms on Deno Deploy free tier
@@ -176,7 +176,7 @@ determinism, benchmark regression ceiling.
 **Runtime %: 33%**
 **Stream: B**
 
-`parser.spore` currently handles flow headers only. Extend to parse:
+`parser.fungi` currently handles flow headers only. Extend to parse:
 
 - `contract { ... }` blocks (all sections: effects, economics, privacy, audit)
 - Flow bodies: `let`, `mut`, `if`, `match`, `return`
@@ -184,9 +184,9 @@ determinism, benchmark regression ceiling.
 - Record literals `{ field: value }`
 - `route` declarations
 
-Target: `parser.spore` can parse all 223 CEC examples with 0 errors.
+Target: `parser.fungi` can parse all 223 CEC examples with 0 errors.
 
-**Gate:** Stage B parser parity test suite — TS parser vs parser.spore output on all CEC files.
+**Gate:** Stage B parser parity test suite — TS parser vs parser.fungi output on all CEC files.
 
 ---
 
@@ -195,10 +195,10 @@ Target: `parser.spore` can parse all 223 CEC examples with 0 errors.
 **Runtime %: 33%**
 **Stream: B**
 
-`type-checker.spore` — minimal type inference engine that:
+`type-checker.fungi` — minimal type inference engine that:
 - Resolves flow names to their declared return types
 - Checks call argument counts
-- Emits `SPORE-TYPE-001` (UnknownType) and `SPORE-TYPE-005` (InvalidCallArgType)
+- Emits `FUNGI-TYPE-001` (UnknownType) and `FUNGI-TYPE-005` (InvalidCallArgType)
 
 Not a complete type checker — a bootstrap stub that can validate simple flows
 without needing the full type algebra.
@@ -217,7 +217,7 @@ Currently `request.body` must be manually untainted. Auto-taint at HTTP boundary
 - Any value accessed via `request.body`, `request.params`, `request.headers`,
   or `request.query` is automatically `Tainted<String>` without explicit annotation
 - No opt-out — this is the security invariant at the HTTP boundary
-- SPORE-TAINT-007: `UntrustedHttpParam` — fired when route param used without sanitiser
+- FUNGI-TAINT-007: `UntrustedHttpParam` — fired when route param used without sanitiser
 
 **Why now:** Phase 34 built the HTTP service. Phase 48 makes it safe by default.
 
@@ -246,7 +246,7 @@ Two runtime security fixes identified in Phase 34 security review:
 
 Stage B pipeline is now:
 ```
-lexer.spore → parser.spore → type-checker.spore → output IR
+lexer.fungi → parser.fungi → type-checker.fungi → output IR
 ```
 
 Milestone: compile `pure flow add(a: Int, b: Int) -> Int contract { effects {} } { return a + b }`
@@ -266,7 +266,7 @@ recursive flow, effectful flow, all produce matching results.
 **Runtime %: 38%**
 **Stream: A**
 
-The first internal runtime component expressed as a `.spore` file:
+The first internal runtime component expressed as a `.fungi` file:
 
 ```galerina
 secure flow resolveCapability(name: String, request: Request) -> CapabilityResult
@@ -278,7 +278,7 @@ contract {
 ```
 
 This replaces the TypeScript `CapabilityHost` class for the subset of capabilities
-used by verifyPasswordService.spore. The .spore file IS the capability host for
+used by verifyPasswordService.fungi. The .fungi file IS the capability host for
 those flows — not a wrapper.
 
 ---
@@ -289,7 +289,7 @@ those flows — not a wrapper.
 **Stream: A**
 
 ```galerina
-// audit-writer.spore
+// audit-writer.fungi
 secure flow appendAuditEvent(event: AuditEvent) -> Result<Unit, AuditError>
 contract {
   effects { filesystem.write audit.write }
@@ -306,7 +306,7 @@ The governed audit path IS Galerina source. The TypeScript `audit-writer.ts` bec
 the Stage A bootstrap — Stage B will eventually replace it entirely.
 
 **Why now:** Every governed execution writes audit events. Making the audit writer
-a .spore file directly grows the Runtime % by a meaningful amount.
+a .fungi file directly grows the Runtime % by a meaningful amount.
 
 ---
 
@@ -315,16 +315,16 @@ a .spore file directly grows the Runtime % by a meaningful amount.
 **Runtime %: 46%**
 **Stream: A**
 
-Express the most-called stdlib functions as `.spore` files:
+Express the most-called stdlib functions as `.fungi` files:
 
 ```galerina
-// stdlib-string.spore
+// stdlib-string.fungi
 pure flow String.contains(s: String, sub: String) -> Bool
 pure flow String.startsWith(s: String, prefix: String) -> Bool
 pure flow String.slice(s: String, start: Int, end: Int) -> String
 ...
 
-// stdlib-math.spore
+// stdlib-math.fungi
 pure flow Math.min(a: Int, b: Int) -> Int
 pure flow Math.max(a: Int, b: Int) -> Int
 pure flow Math.clamp(n: Int, lo: Int, hi: Int) -> Int
@@ -342,7 +342,7 @@ The TypeScript implementations remain as fallbacks for the bootstrap period.
 **Stream: A**
 
 ```galerina
-// route-dispatcher.spore
+// route-dispatcher.fungi
 secure flow dispatch(request: Request, routes: RouteRegistry) -> Response
 contract {
   effects { network.inbound audit.write }
@@ -352,7 +352,7 @@ contract {
 ```
 
 The route dispatch path — previously TypeScript — is now a governed Galerina flow.
-HTTP request arrives → `dispatch.spore` → matched flow → governed execution → response.
+HTTP request arrives → `dispatch.fungi` → matched flow → governed execution → response.
 
 **This is the 50% milestone.** The core request/response cycle lives in Galerina.
 
@@ -369,7 +369,7 @@ Phase 39 shipped Ed25519 signing. Phase 55 adds ML-DSA (NIST FIPS 204):
 - Dual-signature transition: `ed25519 + ml-dsa-65` in hybrid mode
 - `GovernanceSignature.algorithm: "ed25519" | "ml-dsa-65" | "hybrid"`
 - Attestation policy: `pq_strict` profile requires ML-DSA only
-- `SPORE-HW-101` through `SPORE-HW-104` diagnostics (from post-quantum hardware security spec)
+- `FUNGI-HW-101` through `FUNGI-HW-104` diagnostics (from post-quantum hardware security spec)
 
 **Why now:** Phase 39 built the signing infrastructure. ML-DSA is a drop-in addition.
 
@@ -381,7 +381,7 @@ Phase 39 shipped Ed25519 signing. Phase 55 adds ML-DSA (NIST FIPS 204):
 **Stream: A + B**
 
 ```galerina
-// governance-verifier.spore
+// governance-verifier.fungi
 secure flow verifyFlow(flowMeta: FlowMeta, profile: String) -> VerificationResult
 contract {
   effects { audit.write }
@@ -390,7 +390,7 @@ contract {
 { ... }
 ```
 
-The TypeScript `governance-verifier.ts` is the reference. The .spore version handles
+The TypeScript `governance-verifier.ts` is the reference. The .fungi version handles
 the subset of checks needed for the live HTTP flows. Stage B is used to compile it.
 
 ---
@@ -401,7 +401,7 @@ the subset of checks needed for the live HTTP flows. Stage B is used to compile 
 **Stream: A + B**
 
 ```galerina
-// effect-checker.spore
+// effect-checker.fungi
 pure flow checkFlowEffects(flow: FlowDecl, ast: AST) -> Array<EffectDiagnostic>
 contract {
   effects {}
@@ -438,12 +438,12 @@ on the RTX 3050 Ti. Real CUDA should be 25-100× faster for integer compute.
 **Stream: A**
 
 All capability resolution moves to Galerina:
-- `resolveCapability.spore` handles all registered effects
-- `auditWriter.spore`, `networkCapability.spore`, `cryptoCapability.spore`
+- `resolveCapability.fungi` handles all registered effects
+- `auditWriter.fungi`, `networkCapability.fungi`, `cryptoCapability.fungi`
 - TypeScript becomes a thin loader that bootstraps the Stage A executor and
   feeds it the capability host flows
 
-The TypeScript shell is now purely a bootstrap mechanism — all logic is .spore.
+The TypeScript shell is now purely a bootstrap mechanism — all logic is .fungi.
 
 **Major milestone.** The "capability host in Galerina = 75%" goal from the original
 roadmap is reached.
@@ -504,9 +504,9 @@ Phase 60: v1.0 Release Candidate                       → Runtime 80%
 | Standalone WASM | 42 | 30% | `galerina build --target wasm-wasi` |
 | Live traffic | 43 | 32% | Deno Deploy endpoint |
 | Self-hosting bootstrap | 50 | 35% | Stage B compiles a flow |
-| Core dispatch in Galerina | 54 | **50%** | Route dispatcher .spore |
-| Checker in Galerina | 57 | **60%** | Effect checker .spore |
-| Capability host | 59 | **75%** | All capability resolution in .spore |
+| Core dispatch in Galerina | 54 | **50%** | Route dispatcher .fungi |
+| Checker in Galerina | 57 | **60%** | Effect checker .fungi |
+| Capability host | 59 | **75%** | All capability resolution in .fungi |
 | v1.0 RC | 60 | 80% | Full governed stack |
 | v1.0 final | ~75 | 100% | Stage B replaces Stage A |
 
@@ -516,8 +516,8 @@ Phase 60: v1.0 Release Candidate                       → Runtime 80%
 
 | Decision | Rationale |
 |---|---|
-| `else if` → hard error (SPORE-SYNTAX-010) | Galerina uses `match`; no TS baggage |
-| `with effects [...]` → hard error (SPORE-SYNTAX-LEGACY-001) | `contract { effects {} }` is canonical |
+| `else if` → hard error (FUNGI-SYNTAX-010) | Galerina uses `match`; no TS baggage |
+| `with effects [...]` → hard error (FUNGI-SYNTAX-LEGACY-001) | `contract { effects {} }` is canonical |
 | `:` return type is modern preferred form | Cleaner, TypeScript-familiar; `->` still accepted |
 | `safe flow`/`guard flow` → warning | Migration path, not immediate break |
 | `effects {}` optional for `pure flow` | Omission = pure; no boilerplate for simple flows |

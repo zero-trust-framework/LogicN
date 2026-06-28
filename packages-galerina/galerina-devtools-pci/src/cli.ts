@@ -2,7 +2,7 @@
 // =============================================================================
 // @galerina/devtools-pci — CLI
 //
-// galerina-pci audit <file.spore> [--json]
+// galerina-pci audit <file.fungi> [--json]
 // galerina-pci audit <directory> [--json]
 //
 // Exit codes:
@@ -25,7 +25,7 @@ async function main(): Promise<number> {
     case "audit": {
       const target = args[1];
       if (!target) {
-        process.stderr.write("Usage: galerina-pci audit <file.spore|directory> [--json]\n");
+        process.stderr.write("Usage: galerina-pci audit <file.fungi|directory> [--json]\n");
         return 1;
       }
       const wantJson = args.includes("--json");
@@ -75,7 +75,7 @@ async function main(): Promise<number> {
     default:
       process.stdout.write(`galerina-pci — PCI DSS 4.0.1 Compliance Audit for Galerina\n\n`);
       process.stdout.write(`Commands:\n`);
-      process.stdout.write(`  audit <file.spore|directory> [--json]   Run PCI compliance audit\n`);
+      process.stdout.write(`  audit <file.fungi|directory> [--json]   Run PCI compliance audit\n`);
       process.stdout.write(`  ledger <egress-dir> [--json]          Build hash-linked compliance report from audit-egress\n\n`);
       process.stdout.write(`Exit codes: 0=passed, 2=findings present, 3=parse/read error\n`);
       return 0;
@@ -99,25 +99,25 @@ function auditFile(filePath: string, wantJson: boolean): number {
 }
 
 function auditDirectory(dirPath: string, wantJson: boolean): number {
-  let sporeFiles: string[];
+  let fungiFiles: string[];
   try {
-    sporeFiles = readdirSync(dirPath)
-      .filter(f => f.endsWith(".spore"))
+    fungiFiles = readdirSync(dirPath)
+      .filter(f => f.endsWith(".fungi"))
       .map(f => join(dirPath, f));
   } catch {
     process.stderr.write(`Cannot read directory '${dirPath}'\n`);
     return 3;
   }
 
-  if (sporeFiles.length === 0) {
-    process.stderr.write(`No .spore files found in '${dirPath}'\n`);
+  if (fungiFiles.length === 0) {
+    process.stderr.write(`No .fungi files found in '${dirPath}'\n`);
     return 0;
   }
 
   const reports: PciAuditReport[] = [];
   let anyFail = false;
 
-  for (const filePath of sporeFiles) {
+  for (const filePath of fungiFiles) {
     let source: string;
     try { source = readFileSync(filePath, "utf8"); }
     catch { process.stderr.write(`Cannot read '${filePath}'\n`); continue; }

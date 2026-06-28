@@ -59,7 +59,7 @@ enforcement. Every `ensure expr` in an `invariant {}` block follows one of two p
 - ProofObligation recorded as `runtime-precheck` (CBOR Tag 403)
 - `unreachable` fires atomically before the next CPU instruction — no TOCTOU window
 
-**Symbol Resolution Gate (SPORE-INV-004):**
+**Symbol Resolution Gate (FUNGI-INV-004):**
 All identifiers in `ensure` expressions must be in the flow's parameter scope. The Governance
 Verifier (Floor 3) catches unresolved symbols before they reach the emitter. The emitter is
 "dumb" — it assumes the AST is valid.
@@ -83,7 +83,7 @@ allocation time. Zero overhead in JIT output for simple flows.
 Instead of complex auto-propagation, Galerina uses **Explicit Assertion Bridging**. The
 developer signals that a proof was established in a parent flow:
 
-```spore
+```fungi
 assuming(validatePayment, "ensure amount > 0") {
   // Compiler verifies: validatePayment's .lmanifest contains
   // ProofObligation { claim: "ensure amount > 0", verified: "static" }
@@ -118,7 +118,7 @@ Every runtime failure is not a crash — it is **structured evidence**:
 
 ```cbor
 AuditEvent (Tag 410) {
-  code:           "SPORE-INV-000",
+  code:           "FUNGI-INV-000",
   flowId:         string,
   contractHash:   bytes,
   meterSnapshot:  uint,    // fuel at time of trap
@@ -218,13 +218,13 @@ foundation for every other component in the supervisor.
 |---|---|---|
 | Invariant parser + static eval | 3 | ✅ DRCM Phase 2 (#36) |
 | WAT assertion gate injection | 2/3 | ✅ DRCM Phase 2 (#36) |
-| SPORE-INV-001/003/004 diagnostics | 3 | ✅ ENFORCED |
+| FUNGI-INV-001/003/004 diagnostics | 3 | ✅ ENFORCED |
 | Binary CBOR .lmanifest (RFC 8949) | 4 | ✅ DRCM Phase 3 (#67) |
 | Domain Guard Differential Proof | 3 | ✅ (#56) |
 | resilience {} + observability {} | 3 | ✅ (#58) |
 | `assuming {}` proof-tracing | 3 | ⬜ Tasks #73-#74 |
 | Governance-as-Evidence (Tag 410) | 2 | ⬜ Task #75 |
-| SPORE-INV-000 runtime trap handler | 2 | ⬜ Task #76 (Phase 5 gate) |
+| FUNGI-INV-000 runtime trap handler | 2 | ⬜ Task #76 (Phase 5 gate) |
 | emergency {} overlay parser | 3 | ⬜ DRCM Phase 4 (#39) |
 | V_DPM structure + bit layout | 2 | ⬜ DRCM Phase 5 (#40-#41) |
 | DSS.wasm supervisor (self-hosted) | 2 | ⬜ DRCM Phase 5 (#41) |
@@ -240,7 +240,7 @@ foundation for every other component in the supervisor.
 | Layer | Document |
 |---|---|
 | **Layer 0 — Principles** | `architecture-charter.md` |
-| **Layer 1 — Rules** | `galerina-governance-rules.md` — 37+ SPORE codes |
+| **Layer 1 — Rules** | `galerina-governance-rules.md` — 37+ FUNGI codes |
 | **Layer 2A — Patterns** | `galerina-architecture-patterns.md` |
 | **Layer 2B — Syntax** | `galerina-contract-authoring-guide.md`, `galerina-contract-clause-reference.md` |
 | **Layer 3 — Runtime** | `galerina-deterministic-runtime-containment.md` |

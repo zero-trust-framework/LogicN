@@ -5,12 +5,12 @@
 // `resilience {}` / `observability {}` (the #58 inferred-block family). The
 // verifier reads it and holds the flow to the Direction-C noise model *before any
 // silicon exists*, fail-closed:
-//   B1  crypto/hash/sign effect on a noisy lane            → SPORE-SUBSTRATE-001 (always error)
-//   B0  network/persistence/secret/process effect on a     → SPORE-SUBSTRATE-005 (always error)
+//   B1  crypto/hash/sign effect on a noisy lane            → FUNGI-SUBSTRATE-001 (always error)
+//   B0  network/persistence/secret/process effect on a     → FUNGI-SUBSTRATE-005 (always error)
 //       noisy/photonic lane (the compute-only fence)
-//   B2  declared tolerance unprovable at declared N        → SPORE-SUBSTRATE-002 (warn dev / err prod)
-//       declared N insufficient, or pBad ≥ 0.5             → SPORE-SUBSTRATE-003 (always error)
-//   B3  un-voted (N=1) noisy result into a determ. sink    → SPORE-SUBSTRATE-004 (always error)
+//   B2  declared tolerance unprovable at declared N        → FUNGI-SUBSTRATE-002 (warn dev / err prod)
+//       declared N insufficient, or pBad ≥ 0.5             → FUNGI-SUBSTRATE-003 (always error)
+//   B3  un-voted (N=1) noisy result into a determ. sink    → FUNGI-SUBSTRATE-004 (always error)
 // Priority when several fire: 001 > 005 > 004 > 003 > 002 (mirrors substrate-model.ts
 // verifyToleranceUnderNoise). Safety (a noisy reading can never manufacture an ALLOW)
 // is inherited structurally from Direction A's vAnd/No-Coercion — not re-proved here.
@@ -61,23 +61,23 @@ const LANE_PROFILES: Record<SubstrateLane, SubstrateNoiseParams> = {
   noisy: { phaseDriftSigma: 0.60, crosstalkCoeff: 0, laneFailureProb: 0, readoutSigma: 0 }, // pBad 0.60 — degraded lane, voting cannot converge (pBad ≥ 0.5)
 };
 
-// Crypto/integrity effects that must run bit-exact on a deterministic core (SPORE-SUBSTRATE-001)
+// Crypto/integrity effects that must run bit-exact on a deterministic core (FUNGI-SUBSTRATE-001)
 // — extended for #34 confidentiality (encrypt/decrypt/seal) so a KEM-DEM/AEAD op on a noisy
 // or analog (photonic) lane is rejected, exactly as sign/verify/hash already are.
 // The `(\.|$)` tail (NOT a bare `$`) is load-bearing: it also matches the PQ/algorithm-suffixed
 // variants — crypto.sign.hybrid / crypto.sign.mldsa65 / crypto.sign.slhdsa / crypto.seal.* — which
-// a certified profile MANDATES (SPORE-CRYPTO-PQ-001 rejects bare crypto.sign). A `$`-anchored match
+// a certified profile MANDATES (FUNGI-CRYPTO-PQ-001 rejects bare crypto.sign). A `$`-anchored match
 // let the mandatory PQ form escape the crypto-on-noisy-lane gate in exactly the certified posture
 // where it matters most. Match the whole crypto.<head>.* family fail-closed; integrity is never
 // tolerance-bounded, so there is no crypto sub-variant that is legitimate on a noisy lane.
 const CRYPTO_EFFECT = /^crypto\.(hash|sign|verify|encrypt|decrypt|seal)(\.|$)/;
 
-// The compute-only fence (SPORE-SUBSTRATE-005), DENY-BY-DEFAULT. A noisy/photonic lane is an untrusted Tier-3
+// The compute-only fence (FUNGI-SUBSTRATE-005), DENY-BY-DEFAULT. A noisy/photonic lane is an untrusted Tier-3
 // compute accelerator (degrade-only); it may declare ONLY genuine compute effects — every other canonical
 // effect is external reach (network / persistence / secret / ledger / exec / sensitive-data) and would make
 // the untrusted lane a confused deputy into trusted resources. An allowlist (not a reach blocklist) is the
 // fail-closed choice: a NEW effect family added to the vocabulary later is denied on a noisy lane by default
-// until explicitly admitted here. crypto.* is owned separately by B1/SPORE-SUBSTRATE-001 (and is never compute).
+// until explicitly admitted here. crypto.* is owned separately by B1/FUNGI-SUBSTRATE-001 (and is never compute).
 const COMPUTE_LANE_ALLOWED_EFFECTS = new Set<string>([
   "compute.cpu", "compute.gpu", "compute.npu", // the lane's own MAC/compute
   "ai.inference",                               // the inference workload the photonic MAC accelerates
@@ -208,7 +208,7 @@ export function inferFlowSubstrate(flowNode: AstNode, _flow: FlowMeta): Inferred
 }
 
 // ---------------------------------------------------------------------------
-// Governance check (SPORE-SUBSTRATE-001..004) — fail-closed, priority 001 > 004 > 003 > 002
+// Governance check (FUNGI-SUBSTRATE-001..004) — fail-closed, priority 001 > 004 > 003 > 002
 // ---------------------------------------------------------------------------
 
 export interface SubstrateViolation {
@@ -237,7 +237,7 @@ export function checkSubstrateViolations(
   // crypto-on-noisy gate — a fail-open. Spec §8: malformed never silently coerces to a default.
   if (inf.malformed) {
     return [{
-      code: "SPORE-SUBSTRATE-002",
+      code: "FUNGI-SUBSTRATE-002",
       name: "TOLERANCE_UNACHIEVABLE_UNDER_NOISE",
       severity: "error",
       message: `Flow '${flow.name}' substrate {} has a malformed value. lane must be photonic | noisy | digital; tolerance must be in [0,1]; redundancy must be an odd integer ≥ 1 or 'tmr'; on_indeterminate must be trap | revote:N | fallback_digital.`,
@@ -260,7 +260,7 @@ export function checkSubstrateViolations(
   // B1 — crypto on a noisy lane: integrity is never tolerance-bounded (highest priority).
   if (hasCrypto && laneIsNoisy) {
     return [{
-      code: "SPORE-SUBSTRATE-001",
+      code: "FUNGI-SUBSTRATE-001",
       name: "CRYPTO_ON_NOISY_LANE",
       severity: "error",
       message: `Flow '${flow.name}' declares a crypto effect on lane '${inf.lane}'. Integrity requires bit-exactness and cannot be tolerance-bounded.`,
@@ -268,7 +268,7 @@ export function checkSubstrateViolations(
     }];
   }
 
-  // B0 — compute-only fence (SPORE-SUBSTRATE-005): a noisy/photonic lane is an untrusted Tier-3 compute
+  // B0 — compute-only fence (FUNGI-SUBSTRATE-005): a noisy/photonic lane is an untrusted Tier-3 compute
   // accelerator with ZERO external reach. Any network/persistence/secret/process/ledger effect on it makes
   // the untrusted lane a confused deputy into trusted resources — deny-by-default, fail-closed. (Crypto is
   // already owned by B1 above; this catches the broader reach a crypto-only gate left open.)
@@ -280,7 +280,7 @@ export function checkSubstrateViolations(
     );
     if (reach.length > 0) {
       return [{
-        code: "SPORE-SUBSTRATE-005",
+        code: "FUNGI-SUBSTRATE-005",
         name: "REACH_EFFECT_ON_COMPUTE_ONLY_LANE",
         severity: "error",
         message: `Flow '${flow.name}' declares external-reach effect(s) [${reach.join(", ")}] on lane '${inf.lane}'. A noisy/photonic lane is an untrusted compute-only accelerator with no network/persistence/secret/process reach.`,
@@ -297,7 +297,7 @@ export function checkSubstrateViolations(
   const sinkRequiresDeterminism = profile === "deterministic" || externalDeterminismSink;
   if (laneIsNoisy && isUnvoted && sinkRequiresDeterminism) {
     return [{
-      code: "SPORE-SUBSTRATE-004",
+      code: "FUNGI-SUBSTRATE-004",
       name: "UNVOTED_ANALOG_INTO_DETERMINISTIC",
       severity: "error",
       message: `Flow '${flow.name}' feeds an un-voted (redundancy: 1) result from noisy lane '${inf.lane}' into a context requiring determinism.`,
@@ -309,7 +309,7 @@ export function checkSubstrateViolations(
   if (!met) {
     if (!redundancyHelps) {
       return [{
-        code: "SPORE-SUBSTRATE-003",
+        code: "FUNGI-SUBSTRATE-003",
         name: "REDUNDANCY_INSUFFICIENT",
         severity: "error",
         message: `Flow '${flow.name}': lane '${inf.lane}' single-lane error pBad=${pBad} ≥ 0.5 — majority voting cannot converge; redundancy will not help.`,
@@ -318,7 +318,7 @@ export function checkSubstrateViolations(
     }
     if (inf.redundancyN > 1) {
       return [{
-        code: "SPORE-SUBSTRATE-003",
+        code: "FUNGI-SUBSTRATE-003",
         name: "REDUNDANCY_INSUFFICIENT",
         severity: "error",
         message: `Flow '${flow.name}': declared redundancy N=${inf.redundancyN} is insufficient — modeled error ${epsilonModeled} > tolerance ${inf.tolerance}. Raise N.`,
@@ -327,7 +327,7 @@ export function checkSubstrateViolations(
     }
     const severity = profile === "production" || profile === "deterministic" ? "error" : "warning";
     return [{
-      code: "SPORE-SUBSTRATE-002",
+      code: "FUNGI-SUBSTRATE-002",
       name: "TOLERANCE_UNACHIEVABLE_UNDER_NOISE",
       severity,
       message: `Flow '${flow.name}': tolerance ${inf.tolerance} is unachievable on lane '${inf.lane}' at redundancy 1 — modeled error ${epsilonModeled}.`,

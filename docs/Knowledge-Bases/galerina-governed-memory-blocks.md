@@ -77,7 +77,7 @@ The runtime checks every operation that touches a Governed Memory Block:
 | Unauthorised read | Caller not in `permissions.read` | Access denied, audit event written |
 | Unauthorised write | `permissions.write` is empty | Mutation rejected |
 | Memory tampering | Block hash does not match content | Runtime integrity violation |
-| Unexpected export | `permissions.export` is `denied` | Export blocked, SPORE-GOV-003 |
+| Unexpected export | `permissions.export` is `denied` | Export blocked, FUNGI-GOV-003 |
 | Runtime injection | Foreign code attempts access to a GMB | Access denied |
 | Cross-flow access | Flow not listed in `permissions.read` attempts read | Access denied |
 
@@ -109,7 +109,7 @@ summary of all GMBs accessed during the run. This feeds the signed attestation
 produced by `src/attestation.ts`.
 
 ```
-Compile-time:   value-state checks      (SPORE-VALUESTATE-*)
+Compile-time:   value-state checks      (FUNGI-VALUESTATE-*)
 Runtime:        memory tagging + capability checks   (hot path)
 Checkpoint:     hash/sign runtime blocks             (periodic)
 Audit:          sign runtime report                  (at flow completion)

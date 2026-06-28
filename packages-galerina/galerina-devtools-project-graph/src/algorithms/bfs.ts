@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — Breadth-First Search algorithms
+// fungi-graph — Breadth-First Search algorithms
 // =============================================================================
 
 import type { Graph, NodeId } from "../core/types.js";

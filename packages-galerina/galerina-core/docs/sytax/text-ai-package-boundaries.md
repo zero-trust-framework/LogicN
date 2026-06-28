@@ -142,7 +142,7 @@ prompt safety settings
 PII and secret redaction settings
 external provider/network use
 generated-output executable status
-source-map links back to .spore files
+source-map links back to .fungi files
 ```
 
 ---

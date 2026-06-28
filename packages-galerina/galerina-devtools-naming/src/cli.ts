@@ -2,7 +2,7 @@
 // =============================================================================
 // @galerina/devtools-naming — CLI
 //
-// galerina-naming check <file.spore> [--json] [--strict]
+// galerina-naming check <file.fungi> [--json] [--strict]
 //
 // Exit codes:
 //   0 — clean (no findings)
@@ -23,7 +23,7 @@ async function main(): Promise<number> {
       const filePath = args[1];
       if (!filePath) {
         process.stderr.write(
-          "Usage: galerina-naming check <file.spore> [--json] [--strict]\n",
+          "Usage: galerina-naming check <file.fungi> [--json] [--strict]\n",
         );
         return 1;
       }
@@ -82,7 +82,7 @@ async function main(): Promise<number> {
       process.stdout.write("galerina-naming — Galerina Naming Devtools\n\n");
       process.stdout.write("Commands:\n");
       process.stdout.write(
-        "  check <file.spore> [--json] [--strict]   Check naming conventions\n\n",
+        "  check <file.fungi> [--json] [--strict]   Check naming conventions\n\n",
       );
       process.stdout.write(
         "Exit codes: 0=clean, 2=findings present, 3=parse error\n",

@@ -40,7 +40,7 @@ pure flow grade(score: Int) -> Int {
 `;
 
 async function instantiate() {
-  const prog = L.parseProgram(PROGRAM, "result-match.spore");
+  const prog = L.parseProgram(PROGRAM, "result-match.fungi");
   const fx = L.checkEffects(prog.flows, prog.ast);
   const { gir } = L.emitGIR(prog.ast, prog.flows, fx);
   const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "result-match", prog.ast, true));

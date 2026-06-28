@@ -643,7 +643,7 @@ If the compiler cannot prove a reference is valid for the needed lifetime, it mu
 
 ## Runtime Memory Pressure
 
-Galerina should let projects declare runtime memory pressure rules in `boot.spore`.
+Galerina should let projects declare runtime memory pressure rules in `boot.fungi`.
 
 ```Galerina
 runtime {
@@ -1140,7 +1140,7 @@ Runtime error:
 Array index out of bounds.
 
 Original source:
-  src/order-service.spore:28:14
+  src/order-service.fungi:28:14
 
 Code:
   let item = items[10]

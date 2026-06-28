@@ -178,7 +178,7 @@ export interface WATMemory {
 
 /** A complete WAT module ready for rendering to text or passing to wat2wasm. */
 export interface WATModule {
-  readonly schemaVersion: "spore.wat.v1";
+  readonly schemaVersion: "fungi.wat.v1";
   readonly sourceHash: string;
   readonly girHash: string;
   readonly imports: readonly WATImport[];
@@ -335,7 +335,7 @@ export const WAT_REC_FIELD_SIZE = 4;
  * Per-flow record-construction scratch. emitWATFromFlowAST sets this before walking
  * the body and clears it after; the `#record` case in emitWATExpr appends a unique
  * `(local …)` decl here (so nested records and record-returning calls each get their
- * OWN base local — no shared-global clobbering) and references the `$__spore_heap`
+ * OWN base local — no shared-global clobbering) and references the `$__fungi_heap`
  * pointer. null outside a flow-body walk → records fall back to the i32.const 0
  * placeholder (preserving every non-WAT-emitter code path unchanged).
  */
@@ -486,8 +486,8 @@ export function renderWAT(module: WATModule): string {
   // restores the clean module shape for simple flows while preserving the host
   // bridge for string/array/char flows (the self-hosted compiler).
   const allBodyText = module.functions.map((fn) => fn.body ?? "").join("\n");
-  const usesTmpArr = allBodyText.includes("$__spore_tmp_arr");
-  const usesHeap = allBodyText.includes("$__spore_heap"); // P9.4b: record bump-allocator
+  const usesTmpArr = allBodyText.includes("$__fungi_tmp_arr");
+  const usesHeap = allBodyText.includes("$__fungi_heap"); // P9.4b: record bump-allocator
 
   const lines: string[] = ["(module"];
 
@@ -527,7 +527,7 @@ export function renderWAT(module: WATModule): string {
   // listLiteral global: only emitted when a body references it.
   if (usesTmpArr) {
     lines.push(`  ;; P9.3: temporary array ID register for listLiteral WAT emission`);
-    lines.push(`  (global $__spore_tmp_arr (mut i32) (i32.const 0))`);
+    lines.push(`  (global $__fungi_tmp_arr (mut i32) (i32.const 0))`);
     lines.push(``);
   }
 
@@ -535,7 +535,7 @@ export function renderWAT(module: WATModule): string {
   // a record. Records allocate above WAT_HEAP_BASE; the low region stays null/scratch.
   if (usesHeap) {
     lines.push(`  ;; P9.4b: bump-allocator heap pointer for record struct layout`);
-    lines.push(`  (global $__spore_heap (mut i32) (i32.const ${WAT_HEAP_BASE}))`);
+    lines.push(`  (global $__fungi_heap (mut i32) (i32.const ${WAT_HEAP_BASE}))`);
     lines.push(``);
   }
 
@@ -554,7 +554,7 @@ export function renderWAT(module: WATModule): string {
     lines.push("");
   }
 
-  // B2 (R&D 0055): per-flow arena reset. The bump pointer $__spore_heap is monotone — it is NEVER reset, so
+  // B2 (R&D 0055): per-flow arena reset. The bump pointer $__fungi_heap is monotone — it is NEVER reset, so
   // it leaks for the life of the WASM instance (traps at maxPages). We reset it to WAT_HEAP_BASE at the
   // ENTRY of each *leaf* entry-point — exported AND not called by any other flow — reclaiming the PREVIOUS
   // top-level invocation's arena. Leaf-only is the safety guard: a reset inside a flow that another flow
@@ -602,7 +602,7 @@ export function renderWAT(module: WATModule): string {
       // runtime invariant/trap breach it is treated as a potential intrusion — scrub secret remanence from
       // linear memory with the SAME bulk-memory `memory.fill` as part-a, IMMEDIATELY BEFORE the fail-closed
       // `unreachable` aborts the module, so secrets are not recoverable from a post-mortem memory image.
-      // GATE: emitArenaReset (⇒ usesHeap ⇒ the $__spore_heap global IS declared and in scope) AND this flow
+      // GATE: emitArenaReset (⇒ usesHeap ⇒ the $__fungi_heap global IS declared and in scope) AND this flow
       // handlesSecrets. Non-secret flows are byte-identical — `flowBody` is `fn.body` unchanged. We rewrite
       // ONLY the runtime-guard `(then unreachable)` breach token (trap + ensure pre/post gates emitted into
       // the body); the compile-time `(unreachable) (; … emitter cannot lower …` lowering stubs carry no
@@ -612,7 +612,7 @@ export function renderWAT(module: WATModule): string {
       const flowBody = wipeSecretsOnBreach
         ? fn.body.replace(
             /\(then unreachable\)/g,
-            `(then (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__spore_heap) (i32.const ${WAT_HEAP_BASE}))) unreachable (; G5b intrusion-wipe before trap ;))`,
+            `(then (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__fungi_heap) (i32.const ${WAT_HEAP_BASE}))) unreachable (; G5b intrusion-wipe before trap ;))`,
           )
         : fn.body;
 
@@ -633,29 +633,29 @@ export function renderWAT(module: WATModule): string {
         && !bodyHasEarlyReturn && (bodyArr.length - locEnd) > 0;
 
       if (emitZeroOnExit) {
-        // G5 (Intrusion-Triggered Arena Fill): the reclaimed/secret region [WAT_HEAP_BASE, $__spore_heap) is
+        // G5 (Intrusion-Triggered Arena Fill): the reclaimed/secret region [WAT_HEAP_BASE, $__fungi_heap) is
         // zeroed with the WASM bulk-memory `memory.fill` primitive — ONE atomic instruction in place of the
         // per-i32 store loop (no counter local, no bounded trip-count for an interrupt to race). The
-        // $__spore_zd/$__spore_zl ($__spore_xd/$__spore_xl on exit) marker tokens are retained in the comment so the
-        // existing "$__spore_zl/$__spore_xl emitted" secret-zeroing recognition still holds. memory.fill reads
-        // the LIVE $__spore_heap for its length, so it MUST run before the rebase. wabt encodes it as 0xFC 0x0B
+        // $__fungi_zd/$__fungi_zl ($__fungi_xd/$__fungi_xl on exit) marker tokens are retained in the comment so the
+        // existing "$__fungi_zl/$__fungi_xl emitted" secret-zeroing recognition still holds. memory.fill reads
+        // the LIVE $__fungi_heap for its length, so it MUST run before the rebase. wabt encodes it as 0xFC 0x0B
         // (bulk-memory, default-on); an OOB fill traps cleanly — fail-closed.
         const zloop = (zd: string, zl: string) => [
           `    ;; ${zd} ${zl} — bulk-memory zero-fill [base, heap) (G5 memory.fill, was an i32.store loop)`,
-          `    (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__spore_heap) (i32.const ${WAT_HEAP_BASE})))`,
+          `    (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__fungi_heap) (i32.const ${WAT_HEAP_BASE})))`,
         ];
         for (const l of bodyArr.slice(0, locEnd)) lines.push(`    ${l}`);            // the body's own locals
-        lines.push(`    (local $__spore_ret i32)`);
-        if (emitZeroing) { lines.push(`    ;; B2b on-entry: zero the reclaimed previous arena`); for (const z of zloop("$__spore_zd", "$__spore_zl")) lines.push(z); }
+        lines.push(`    (local $__fungi_ret i32)`);
+        if (emitZeroing) { lines.push(`    ;; B2b on-entry: zero the reclaimed previous arena`); for (const z of zloop("$__fungi_zd", "$__fungi_zl")) lines.push(z); }
         lines.push(`    ;; B2 per-flow arena reset (rebase the bump pointer before this call allocates)`);
-        lines.push(`    (global.set $__spore_heap (i32.const ${WAT_HEAP_BASE}))`);
+        lines.push(`    (global.set $__fungi_heap (i32.const ${WAT_HEAP_BASE}))`);
         lines.push(`    ;; capture the PRIMITIVE result, then DESTROY this call's secret records before returning`);
-        lines.push(`    (local.set $__spore_ret (block (result i32)`);
+        lines.push(`    (local.set $__fungi_ret (block (result i32)`);
         for (const l of bodyArr.slice(locEnd)) lines.push(`      ${l}`);
         lines.push(`    ))`);
         lines.push(`    ;; B2b on-EXIT (owner-chosen): no host-readable secret remanence window after return`);
-        for (const z of zloop("$__spore_xd", "$__spore_xl")) lines.push(z);
-        lines.push(`    (local.get $__spore_ret)`);
+        for (const z of zloop("$__fungi_xd", "$__fungi_xl")) lines.push(z);
+        lines.push(`    (local.get $__fungi_ret)`);
         lines.push(`  )`);
         if (fn.isEntryPoint) lines.push(`  (export "${fn.name}" (func $${fn.name}))`);
         lines.push("");
@@ -664,17 +664,17 @@ export function renderWAT(module: WATModule): string {
 
       // G5 (Intrusion-Triggered Arena Fill): zero the reclaimed arena with the WASM bulk-memory
       // `memory.fill` primitive (one atomic instruction) instead of the per-i32 store loop — no counter
-      // local. The $__spore_zd/$__spore_zl marker tokens are kept in the comment for the secret-zeroing checks.
+      // local. The $__fungi_zd/$__fungi_zl marker tokens are kept in the comment for the secret-zeroing checks.
       const resetBlock: string[] = [];
       if (emitZeroing) {
         resetBlock.push(`    ;; B2b (R&D 0055)/G5: zero the reclaimed arena [base, prev-heap) before rebasing — the WASM`);
         resetBlock.push(`    ;; module exports its memory, so an un-zeroed reclaimed secret arena is host-readable remanence.`);
-        resetBlock.push(`    ;; $__spore_zd $__spore_zl — bulk-memory zero-fill (G5 memory.fill, was an i32.store loop)`);
-        resetBlock.push(`    (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__spore_heap) (i32.const ${WAT_HEAP_BASE})))`);
+        resetBlock.push(`    ;; $__fungi_zd $__fungi_zl — bulk-memory zero-fill (G5 memory.fill, was an i32.store loop)`);
+        resetBlock.push(`    (memory.fill (i32.const ${WAT_HEAP_BASE}) (i32.const 0) (i32.sub (global.get $__fungi_heap) (i32.const ${WAT_HEAP_BASE})))`);
       }
       if (emitArenaReset) {
         resetBlock.push(`    ;; B2 (R&D 0055): per-flow arena reset — reclaim the previous invocation's heap (leaf entry-point)`);
-        resetBlock.push(`    (global.set $__spore_heap (i32.const ${WAT_HEAP_BASE}))`);
+        resetBlock.push(`    (global.set $__fungi_heap (i32.const ${WAT_HEAP_BASE}))`);
       }
       let resetInjected = false;
       // Indent each instruction line with 4 spaces inside the function.
@@ -786,9 +786,9 @@ const BINARY_OP_TO_WAT: ReadonlyMap<string, string> = new Map([
   // below. /,% stay native and match i32-arith.ts exactly: i32.div_s traps on /0 AND INT32_MIN/-1
   // (overflow); i32.rem_s traps on /0 ONLY — INT32_MIN % -1 returns 0 (no trap), exactly like
   // i32ModChecked. So div traps the overflow edge, rem returns 0 there — both byte-exact with the VM/walker.
-  ["+",  "call $spore_checked_add_i32"],
-  ["-",  "call $spore_checked_sub_i32"],
-  ["*",  "call $spore_checked_mul_i32"],
+  ["+",  "call $fungi_checked_add_i32"],
+  ["-",  "call $fungi_checked_sub_i32"],
+  ["*",  "call $fungi_checked_mul_i32"],
   ["/",  "i32.div_s"],
   ["%",  "i32.rem_s"],
   ["<",  "i32.lt_s"],
@@ -811,9 +811,9 @@ const FLOAT_CMP_WAT: Readonly<Record<string, string>> = { "==": "f64.eq", "!=": 
 // Int64 — the lifted 64-bit signed width (verified i64 plan, Steps 3a/4c). `+`/`-`/`*` route to the
 // strict-trapping checked i64 helpers (Fork A=TRAP); `/`/`%` use native i64.div_s/rem_s (div_s traps /0
 // AND INT64_MIN/-1; rem_s traps /0 only). Comparisons yield an i32 bool. UInt64 is NOT here — unsigned
-// needs i64.div_u/lt_u + its own helpers and stays fail-closed under SPORE-NUMERIC-001.
+// needs i64.div_u/lt_u + its own helpers and stays fail-closed under FUNGI-NUMERIC-001.
 const INT64_WAT_TYPES = new Set<string>(["Int64"]);
-const INT64_ARITH_WAT: Readonly<Record<string, string>> = { "+": "call $spore_checked_add_i64", "-": "call $spore_checked_sub_i64", "*": "call $spore_checked_mul_i64", "/": "i64.div_s", "%": "i64.rem_s" };
+const INT64_ARITH_WAT: Readonly<Record<string, string>> = { "+": "call $fungi_checked_add_i64", "-": "call $fungi_checked_sub_i64", "*": "call $fungi_checked_mul_i64", "/": "i64.div_s", "%": "i64.rem_s" };
 const INT64_CMP_WAT: Readonly<Record<string, string>> = { "==": "i64.eq", "!=": "i64.ne", "<": "i64.lt_s", ">": "i64.gt_s", "<=": "i64.le_s", ">=": "i64.ge_s" };
 
 // UInt64 — the lifted 64-bit UNSIGNED width (#52). Same i64 storage, but UNSIGNED semantics: `+`/`-`/`*`
@@ -822,7 +822,7 @@ const INT64_CMP_WAT: Readonly<Record<string, string>> = { "==": "i64.eq", "!=": 
 // comparisons are UNSIGNED (i64.lt_u/…). Byte-exact with the tree-walker's u64-arith. Lowered ONLY for
 // uint64×uint64 — a mixed UInt64×Int operand declines to the walker (the sign promotion is subtle).
 const UINT64_WAT_TYPES = new Set<string>(["UInt64"]);
-const UINT64_ARITH_WAT: Readonly<Record<string, string>> = { "+": "call $spore_checked_add_u64", "-": "call $spore_checked_sub_u64", "*": "call $spore_checked_mul_u64", "/": "i64.div_u", "%": "i64.rem_u" };
+const UINT64_ARITH_WAT: Readonly<Record<string, string>> = { "+": "call $fungi_checked_add_u64", "-": "call $fungi_checked_sub_u64", "*": "call $fungi_checked_mul_u64", "/": "i64.div_u", "%": "i64.rem_u" };
 const UINT64_CMP_WAT: Readonly<Record<string, string>> = { "==": "i64.eq", "!=": "i64.ne", "<": "i64.lt_u", ">": "i64.gt_u", "<=": "i64.le_u", ">=": "i64.ge_u" };
 
 /** True for a 64-bit WAT-i64 numeric base (Int64 OR UInt64) — both store as i64 (galerinaTypeToWAT), so a
@@ -843,10 +843,10 @@ function watStackType(expr: string): WATValType {
   // Step 3d: a checked-i64 helper call leaves an i64 on the stack. The generic match below requires a `.`
   // after the head, so `(call $…` falls through to the i32 default — correct for the i32 helpers, WRONG
   // for the i64 ones (an Int64 local declared from it would get an i32 valtype → a truncating/invalid store).
-  if (/^\(call \$spore_checked_(add|sub|mul)_(i64|u64)\b/.test(t)) return "i64";
+  if (/^\(call \$fungi_checked_(add|sub|mul)_(i64|u64)\b/.test(t)) return "i64";
   // #55: the float finiteness guard returns its f64 argument — a `let x = a / b` local declared from it
   // must be f64, not the i32 default (which would mistype the store).
-  if (/^\(call \$spore_assert_finite_f64\b/.test(t)) return "f64";
+  if (/^\(call \$fungi_assert_finite_f64\b/.test(t)) return "f64";
   const m = t.match(/^\(([a-z0-9]+)\.([a-z0-9_]+)/);
   if (m === null) return "i32";
   const prefix = m[1]!, op = m[2]!;
@@ -867,24 +867,24 @@ function watStackType(expr: string): WATValType {
  * Emitted into a module only when a flow body actually references them.
  */
 const I32_CHECKED_HELPERS: Readonly<Record<string, string>> = {
-  $spore_checked_add_i32: [
-    "(func $spore_checked_add_i32 (param $a i32) (param $b i32) (result i32)",
+  $fungi_checked_add_i32: [
+    "(func $fungi_checked_add_i32 (param $a i32) (param $b i32) (result i32)",
     "  (local $r i32)",
     "  (local.set $r (i32.add (local.get $a) (local.get $b)))",
     "  ;; signed overflow iff (a^r) & (b^r) < 0",
     "  (if (i32.lt_s (i32.and (i32.xor (local.get $a) (local.get $r)) (i32.xor (local.get $b) (local.get $r))) (i32.const 0)) (then unreachable))",
     "  (local.get $r))",
   ].join("\n"),
-  $spore_checked_sub_i32: [
-    "(func $spore_checked_sub_i32 (param $a i32) (param $b i32) (result i32)",
+  $fungi_checked_sub_i32: [
+    "(func $fungi_checked_sub_i32 (param $a i32) (param $b i32) (result i32)",
     "  (local $r i32)",
     "  (local.set $r (i32.sub (local.get $a) (local.get $b)))",
     "  ;; signed overflow iff (a^b) & (a^r) < 0",
     "  (if (i32.lt_s (i32.and (i32.xor (local.get $a) (local.get $b)) (i32.xor (local.get $a) (local.get $r))) (i32.const 0)) (then unreachable))",
     "  (local.get $r))",
   ].join("\n"),
-  $spore_checked_mul_i32: [
-    "(func $spore_checked_mul_i32 (param $a i32) (param $b i32) (result i32)",
+  $fungi_checked_mul_i32: [
+    "(func $fungi_checked_mul_i32 (param $a i32) (param $b i32) (result i32)",
     "  (local $r i64)",
     "  (local.set $r (i64.mul (i64.extend_i32_s (local.get $a)) (i64.extend_i32_s (local.get $b))))",
     "  ;; overflow iff the exact i64 product leaves [-2^31, 2^31-1]",
@@ -905,24 +905,24 @@ const I32_CHECKED_HELPERS: Readonly<Record<string, string>> = {
  * (Step 4c) that calls them is the next 2b increment; until then this is inert, and the gate stays closed.
  */
 const INT64_CHECKED_HELPERS: Readonly<Record<string, string>> = {
-  $spore_checked_add_i64: [
-    "(func $spore_checked_add_i64 (param $a i64) (param $b i64) (result i64)",
+  $fungi_checked_add_i64: [
+    "(func $fungi_checked_add_i64 (param $a i64) (param $b i64) (result i64)",
     "  (local $r i64)",
     "  (local.set $r (i64.add (local.get $a) (local.get $b)))",
     "  ;; signed overflow iff (a^r) & (b^r) < 0",
     "  (if (i64.lt_s (i64.and (i64.xor (local.get $a) (local.get $r)) (i64.xor (local.get $b) (local.get $r))) (i64.const 0)) (then unreachable))",
     "  (local.get $r))",
   ].join("\n"),
-  $spore_checked_sub_i64: [
-    "(func $spore_checked_sub_i64 (param $a i64) (param $b i64) (result i64)",
+  $fungi_checked_sub_i64: [
+    "(func $fungi_checked_sub_i64 (param $a i64) (param $b i64) (result i64)",
     "  (local $r i64)",
     "  (local.set $r (i64.sub (local.get $a) (local.get $b)))",
     "  ;; signed overflow iff (a^b) & (a^r) < 0",
     "  (if (i64.lt_s (i64.and (i64.xor (local.get $a) (local.get $b)) (i64.xor (local.get $a) (local.get $r))) (i64.const 0)) (then unreachable))",
     "  (local.get $r))",
   ].join("\n"),
-  $spore_checked_mul_i64: [
-    "(func $spore_checked_mul_i64 (param $a i64) (param $b i64) (result i64)",
+  $fungi_checked_mul_i64: [
+    "(func $fungi_checked_mul_i64 (param $a i64) (param $b i64) (result i64)",
     "  (local $r i64)",
     "  (local.set $r (i64.mul (local.get $a) (local.get $b)))",
     "  ;; no type is wider than i64 → detect overflow by dividing the product back; nested if guards a!=0.",
@@ -939,22 +939,22 @@ const INT64_CHECKED_HELPERS: Readonly<Record<string, string>> = {
  * i64.div_u/rem_u (trap /0; unsigned has no INT_MIN/-1 case). Emitted only when a body references one.
  */
 const UINT64_CHECKED_HELPERS: Readonly<Record<string, string>> = {
-  $spore_checked_add_u64: [
-    "(func $spore_checked_add_u64 (param $a i64) (param $b i64) (result i64)",
+  $fungi_checked_add_u64: [
+    "(func $fungi_checked_add_u64 (param $a i64) (param $b i64) (result i64)",
     "  (local $r i64)",
     "  (local.set $r (i64.add (local.get $a) (local.get $b)))",
     "  ;; unsigned overflow iff the sum wrapped below a  →  r <_u a",
     "  (if (i64.lt_u (local.get $r) (local.get $a)) (then unreachable))",
     "  (local.get $r))",
   ].join("\n"),
-  $spore_checked_sub_u64: [
-    "(func $spore_checked_sub_u64 (param $a i64) (param $b i64) (result i64)",
+  $fungi_checked_sub_u64: [
+    "(func $fungi_checked_sub_u64 (param $a i64) (param $b i64) (result i64)",
     "  ;; unsigned underflow iff a <_u b (the result would be negative)",
     "  (if (i64.lt_u (local.get $a) (local.get $b)) (then unreachable))",
     "  (i64.sub (local.get $a) (local.get $b)))",
   ].join("\n"),
-  $spore_checked_mul_u64: [
-    "(func $spore_checked_mul_u64 (param $a i64) (param $b i64) (result i64)",
+  $fungi_checked_mul_u64: [
+    "(func $fungi_checked_mul_u64 (param $a i64) (param $b i64) (result i64)",
     "  (local $r i64)",
     "  (local.set $r (i64.mul (local.get $a) (local.get $b)))",
     "  ;; no type is wider than i64 → detect overflow by dividing the product back UNSIGNED; nested if guards a!=0.",
@@ -965,7 +965,7 @@ const UINT64_CHECKED_HELPERS: Readonly<Record<string, string>> = {
 };
 
 /**
- * Float finiteness guard (#55 / SPORE-FLOAT-NAN-001). WASM f64.div/add/sub/mul SILENTLY produce NaN (0/0) or
+ * Float finiteness guard (#55 / FUNGI-FLOAT-NAN-001). WASM f64.div/add/sub/mul SILENTLY produce NaN (0/0) or
  * ±Inf (x/0, overflow) — a non-finite that passes EVERY range compare (every NaN compare is false) and could
  * be signed into a manifest. This makes the WASM tier fail-closed IDENTICALLY to the tree-walker's mkFloat:
  * `(v - v)` is 0 for a finite v but NaN for NaN/±Inf, so `f64.ne (v - v) 0` traps (unreachable) on any
@@ -973,8 +973,8 @@ const UINT64_CHECKED_HELPERS: Readonly<Record<string, string>> = {
  * only when a flow body references it (usage-gated → wasmHash stays a deterministic function of the bodies).
  */
 const FLOAT_CHECKED_HELPERS: Readonly<Record<string, string>> = {
-  $spore_assert_finite_f64: [
-    "(func $spore_assert_finite_f64 (param $v f64) (result f64)",
+  $fungi_assert_finite_f64: [
+    "(func $fungi_assert_finite_f64 (param $v f64) (result f64)",
     "  ;; (v - v) = 0 for a finite v but NaN for NaN/±Inf → f64.ne(…,0) traps on any non-finite value",
     "  (if (f64.ne (f64.sub (local.get $v) (local.get $v)) (f64.const 0)) (then unreachable))",
     "  (local.get $v))",
@@ -988,7 +988,7 @@ const ALL_CHECKED_HELPERS: Readonly<Record<string, string>> = { ...I32_CHECKED_H
 // ---------------------------------------------------------------------------
 // P9.3 — Stdlib method → host import bridge
 //
-// The self-hosted lexer (lexer.spore) calls stdlib methods like `s.charAt(i)`,
+// The self-hosted lexer (lexer.fungi) calls stdlib methods like `s.charAt(i)`,
 // `arr.append(x)`, `c.isLetter()`, `opt.unwrapOr(d)`. These parse as method-style
 // callExpr nodes (value = method name, callStyle = "method", children = [receiver, ...args]).
 //
@@ -1274,7 +1274,7 @@ export function emitWATExpr(
         // #55: a literal that overflows f64 to ±Inf (e.g. 1e400) must NOT emit a non-finite (f64.const …) —
         // it would pass range guards / be signed. Fail-closed (matches the walker's mkFloat on the literal).
         if (!Number.isFinite(parseFloat(raw))) {
-          return `(unreachable) (; non-finite float literal '${raw}' overflows f64 to ±Inf — fail-closed (#55/SPORE-FLOAT-NAN-001) ;)`;
+          return `(unreachable) (; non-finite float literal '${raw}' overflows f64 to ±Inf — fail-closed (#55/FUNGI-FLOAT-NAN-001) ;)`;
         }
         return `(f64.const ${raw})`;
       }
@@ -1341,8 +1341,8 @@ export function emitWATExpr(
         if (arithOp !== undefined) {
           // #55: trap a non-finite RESULT (NaN from 0/0, ±Inf from x/0 or overflow) — fail-closed, byte-for-byte
           // with the tree-walker's mkFloat. Without this WASM silently produced a NaN/Inf that passed range
-          // guards or was signed into a manifest. (SPORE-FLOAT-NAN-001.)
-          return `(call $spore_assert_finite_f64 (${arithOp} ${L} ${R}))`;
+          // guards or was signed into a manifest. (FUNGI-FLOAT-NAN-001.)
+          return `(call $fungi_assert_finite_f64 (${arithOp} ${L} ${R}))`;
         }
         const cmpOp = FLOAT_CMP_WAT[op];
         if (cmpOp !== undefined) {
@@ -1350,7 +1350,7 @@ export function emitWATExpr(
           // operand otherwise made the compare silently `false`, passing both `> upper` and `< lower` guards.
           // == / != stay raw (equality fails CLOSED with a NaN; not a range bound).
           if (op === "==" || op === "!=") return `(${cmpOp} ${L} ${R})`;
-          return `(${cmpOp} (call $spore_assert_finite_f64 ${L}) (call $spore_assert_finite_f64 ${R}))`;
+          return `(${cmpOp} (call $fungi_assert_finite_f64 ${L}) (call $fungi_assert_finite_f64 ${R}))`;
         }
         // #165 fail-open fix: a float operand with an i32-only op (`%`, bitwise) has no
         // f64 lowering. Falling through to the `watOp` path below would emit an i32 op
@@ -1429,10 +1429,10 @@ export function emitWATExpr(
         // negate an i64 value via the CHECKED i64 sub so -INT64_MIN traps; sign-extend an i32 operand first.
         const inner = child ? emitWATExpr(child, vars, staticConsts, "Int64") : "(i64.const 0)";
         const innerI64 = childInt64 ? inner : `(i64.extend_i32_s ${inner})`;
-        return `(call $spore_checked_sub_i64 (i64.const 0) ${innerI64})`;
+        return `(call $fungi_checked_sub_i64 (i64.const 0) ${innerI64})`;
       }
       const operand = child ? emitWATExpr(child, vars, staticConsts) : "(i32.const 0)";
-      if (op === "-") return `(call $spore_checked_sub_i32 (i32.const 0) ${operand})`; // -INT32_MIN overflows → trap
+      if (op === "-") return `(call $fungi_checked_sub_i32 (i32.const 0) ${operand})`; // -INT32_MIN overflows → trap
       if (op === "!")  return `(i32.eqz ${operand})`;
       return `(unreachable) (; unknown unary: ${op} — fail-closed (emitter cannot lower; #128-sibling) ;)`;
     }
@@ -1448,7 +1448,7 @@ export function emitWATExpr(
       if (name === "#record") {
         const fields = node.children ?? [];
         if (recordCtx !== null && fields.length > 0) {
-          const recLocal = `$__spore_rec_${recordCtx.counter.n++}`;
+          const recLocal = `$__fungi_rec_${recordCtx.counter.n++}`;
           recordCtx.localDecls.push(`(local ${recLocal} i32)`);
           // #32 fail-open fix: store each field at its DECLARED-layout offset — the SAME map the read uses
           // (recordLayouts, line ~1183) — NOT the literal child index. An out-of-declared-order literal
@@ -1476,8 +1476,8 @@ export function emitWATExpr(
           const size = (declaredLayout?.length ?? fields.length) * WAT_REC_FIELD_SIZE;
           const parts: string[] = [`(block (result i32)`];
           // base = heap; heap += size  (per-record local → safe under nesting + calls)
-          parts.push(`  (local.set ${recLocal} (global.get $__spore_heap))`);
-          parts.push(`  (global.set $__spore_heap (i32.add (global.get $__spore_heap) (i32.const ${size})))`);
+          parts.push(`  (local.set ${recLocal} (global.get $__fungi_heap))`);
+          parts.push(`  (global.set $__fungi_heap (i32.add (global.get $__fungi_heap) (i32.const ${size})))`);
           fields.forEach((f, i) => {
             const valNode = f.children?.[0];
             const valWat = valNode ? emitWATExpr(valNode, vars, staticConsts) : "(i32.const 0)";
@@ -1502,16 +1502,16 @@ export function emitWATExpr(
         const baseType = spreadBase !== undefined ? inferExprType(spreadBase) : undefined;
         const layout = (baseType !== undefined && recordLayouts !== null) ? recordLayouts.get(baseType) : undefined;
         if (recordCtx !== null && spreadBase !== undefined && layout !== undefined) {
-          const recLocal  = `$__spore_rec_${recordCtx.counter.n++}`;
-          const baseLocal = `$__spore_rec_${recordCtx.counter.n++}`;
+          const recLocal  = `$__fungi_rec_${recordCtx.counter.n++}`;
+          const baseLocal = `$__fungi_rec_${recordCtx.counter.n++}`;
           recordCtx.localDecls.push(`(local ${recLocal} i32)`);
           recordCtx.localDecls.push(`(local ${baseLocal} i32)`);
           const size = layout.length * WAT_REC_FIELD_SIZE;
           const baseWat = emitWATExpr(spreadBase, vars, staticConsts);
           const parts: string[] = [`(block (result i32)`];
           parts.push(`  (local.set ${baseLocal} ${baseWat})`);
-          parts.push(`  (local.set ${recLocal} (global.get $__spore_heap))`);
-          parts.push(`  (global.set $__spore_heap (i32.add (global.get $__spore_heap) (i32.const ${size})))`);
+          parts.push(`  (local.set ${recLocal} (global.get $__fungi_heap))`);
+          parts.push(`  (global.set $__fungi_heap (i32.add (global.get $__fungi_heap) (i32.const ${size})))`);
           // Copy every base slot, then overwrite the updated fields by slot index.
           layout.forEach((fname, i) => {
             const off = i * WAT_REC_FIELD_SIZE;
@@ -1687,18 +1687,18 @@ export function emitWATExpr(
       // Emit: append all items to a newly created array, return its ID.
       // Because WAT doesn't have a clean "do this then return that" for expressions,
       // we use: (block (result i32) create set-global append... get-global)
-      // using global $__spore_tmp_arr as a mutable temporary.
+      // using global $__fungi_tmp_arr as a mutable temporary.
       const appends = items.map(item => {
         const itemWat = emitWATExpr(item, vars, staticConsts);
         // #145a: __array_append now returns the array handle; here it is used as a
-        // statement (the temp array is tracked via $__spore_tmp_arr), so drop the result.
-        return `(drop (call $host___array_append (global.get $__spore_tmp_arr) ${itemWat}))`;
+        // statement (the temp array is tracked via $__fungi_tmp_arr), so drop the result.
+        return `(drop (call $host___array_append (global.get $__fungi_tmp_arr) ${itemWat}))`;
       }).join("\n  ");
       return [
         `(block (result i32)`,
-        `  (global.set $__spore_tmp_arr (call $host___array_create))`,
+        `  (global.set $__fungi_tmp_arr (call $host___array_create))`,
         `  ${appends}`,
-        `  (global.get $__spore_tmp_arr)`,
+        `  (global.get $__fungi_tmp_arr)`,
         `)`,
       ].join("\n");
     }
@@ -1739,7 +1739,7 @@ export function emitWATExpr(
       const noneArm = arms.find(a => a.value === "None");
       const someArm = arms.find(a => a.value === "Some");
       if ((noneArm !== undefined || someArm !== undefined) && recordCtx !== null) {
-        const scratch = `$__spore_match_${recordCtx.counter.n++}`;
+        const scratch = `$__fungi_match_${recordCtx.counter.n++}`;
         recordCtx.localDecls.push(`(local ${scratch} i32)`);
         const someBind = ((): string | undefined => {
           const ch = someArm?.children ?? [];
@@ -2141,7 +2141,7 @@ function emitBlockStatements(
 
           // Evaluate the subject once into a scratch local so it can be both tested
           // (sign check) and bound (Some value). Negative ⇒ None, else ⇒ Some.
-          const scratch = `$__spore_match_${labelCounter.n++}`;
+          const scratch = `$__fungi_match_${labelCounter.n++}`;
           localDecls.push(`(local ${scratch} i32)`);
           bodyLines.push(`(local.set ${scratch} ${subjectWat})`);
 
@@ -2197,8 +2197,8 @@ function emitBlockStatements(
           };
           // #164: the Ok binding's scalar type = the Result's first type arg (Result<T,E> ⇒ T).
           const okBindType = optionInnerType(inferExprType(matchSubject));
-          const scratch = `$__spore_match_${labelCounter.n++}`;
-          const valLocal = `$__spore_match_${labelCounter.n++}`;
+          const scratch = `$__fungi_match_${labelCounter.n++}`;
+          const valLocal = `$__fungi_match_${labelCounter.n++}`;
           localDecls.push(`(local ${scratch} i32)`);
           localDecls.push(`(local ${valLocal} i32)`);
           bodyLines.push(`(local.set ${scratch} ${subjectWat})`);
@@ -2310,7 +2310,7 @@ function emitBlockStatements(
           // Unlike ensureDecl which uses (i32.eqz cond), trapDecl fires when cond is true
           bodyLines.push(`    ;; trap: ${errorCode} — fires if condition is TRUE`);
           bodyLines.push(`    (if ${condWat}`);
-          bodyLines.push(`      (then unreachable) ;; SPORE-INV-000 trapKind=${errorCode}`);
+          bodyLines.push(`      (then unreachable) ;; FUNGI-INV-000 trapKind=${errorCode}`);
           bodyLines.push(`    )`);
         }
         break;
@@ -2486,7 +2486,7 @@ export function emitWATFromFlowAST(
   // Emit pre-condition assertion gates for `runtime-precheck` invariants.
   // `statically_verified` invariants emit NOTHING (Goal A: zero runtime overhead).
   //
-  // PHASE 2 SCOPE (parameter-only invariants, enforced by SPORE-INV-004):
+  // PHASE 2 SCOPE (parameter-only invariants, enforced by FUNGI-INV-004):
   //   Parameters are immutable (local.get never changes them). The pre-condition
   //   gate at entry is sufficient — if `ensure max > min` passes at entry, it will
   //   pass at any exit point because max and min haven't changed.
@@ -2524,11 +2524,11 @@ export function emitWATFromFlowAST(
   }
 
   if (preGates.length > 0) {
-    bodyLines.push(`  ;; --- invariant pre-conditions (SPORE-INV-001 gate) ---`);
+    bodyLines.push(`  ;; --- invariant pre-conditions (FUNGI-INV-001 gate) ---`);
     bodyLines.push(...preGates);
   }
   // P9.4b: activate record-construction lowering for this flow body. Record locals
-  // (`$__spore_rec_N`) are appended to localDecls so they render at the top of the
+  // (`$__fungi_rec_N`) are appended to localDecls so they render at the top of the
   // function (WASM requires all locals before instructions). Cleared in finally so
   // a thrown body never leaks scratch into the next flow.
   const prevRecordCtx = recordCtx;
@@ -2545,7 +2545,7 @@ export function emitWATFromFlowAST(
     currentReturnBase = prevReturnBase;
   }
   if (postGates.length > 0) {
-    bodyLines.push(`  ;; --- invariant post-conditions (SPORE-INV-002 gate) ---`);
+    bodyLines.push(`  ;; --- invariant post-conditions (FUNGI-INV-002 gate) ---`);
     bodyLines.push(...postGates);
   }
 
@@ -2553,7 +2553,7 @@ export function emitWATFromFlowAST(
   // (no nested returns — excluded above); capture it, gate each result post-condition against
   // it (fail-closed: a violation traps), then return it.
   if (singleExit) {
-    bodyLines.push(`  ;; --- output post-conditions (SPORE-INV-002, single-exit on $galerina_result) ---`);
+    bodyLines.push(`  ;; --- output post-conditions (FUNGI-INV-002, single-exit on $galerina_result) ---`);
     bodyLines.push(`  (local.set ${RESULT_LOCAL})`);
     bodyLines.push(...resultPostGates);
     bodyLines.push(`  (local.get ${RESULT_LOCAL})`);
@@ -2623,7 +2623,7 @@ function extractInvariantEnsures(flowNode: AstNode): AstNode[] {
     // Skip statically provable TRUE (constant fold = true) — no WAT gate needed
     const staticResult = tryConstantFold(expr);
     if (staticResult === true) continue;
-    // Skip statically FALSE — governance verifier already emitted SPORE-INV-001
+    // Skip statically FALSE — governance verifier already emitted FUNGI-INV-001
     if (staticResult === false) continue;
     // Unknown → runtime-precheck → inject WAT gate
     ensures.push(expr);
@@ -3125,7 +3125,7 @@ export function buildWATModule(
   // String operations: the host registers the intern table and provides ops.
   //   All strings are opaque i32 IDs in WASM; host resolves them to real strings.
   //
-  // These are always included so Stage B .spore files can call them freely.
+  // These are always included so Stage B .fungi files can call them freely.
   // In production Stage A runs, the host provides implementations.
   // In production Stage B WASM-only runs, DSS.wasm provides them via WASI imports.
   const HOST_RUNTIME_IMPORTS: WATImport[] = [
@@ -3360,7 +3360,7 @@ export function buildWATModule(
   flowParamBases = prevFlowParamBases;   // 0115: restore
 
   return {
-    schemaVersion: "spore.wat.v1",
+    schemaVersion: "fungi.wat.v1",
     sourceHash: gir.sourceHash ?? "",
     girHash: gir.girHash ?? "",
     imports,
@@ -3523,7 +3523,7 @@ export function emitWAT(
   // Phase 19: build a minimal WATModule — no capability map available at this
   // level, so imports are empty. Full population in Phase 22.
   const module: WATModule = {
-    schemaVersion: "spore.wat.v1",
+    schemaVersion: "fungi.wat.v1",
     sourceHash: _sourceHash,
     girHash: _girHash,
     imports: [],   // Phase 22: populated via buildWATModule + STDLIB_CAPABILITY_MAP
@@ -3543,7 +3543,7 @@ export function emitWAT(
     module,
     wat: renderWAT(module),
     diagnostics: [{
-      code: "SPORE-WAT-STUB",
+      code: "FUNGI-WAT-STUB",
       message: `WAT emitter Phase 19 stub. Full emission in Phase 22. Target: ${target}. Source hash: ${_sourceHash.slice(0, 20)}...`,
     }],
   };

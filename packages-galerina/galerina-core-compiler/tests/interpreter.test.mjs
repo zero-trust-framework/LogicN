@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { parseProgram, checkTypes, resolveSymbols, executeFlow, SPORE_VOID, SPORE_NONE } from "../dist/index.js";
+import { parseProgram, checkTypes, resolveSymbols, executeFlow, FUNGI_VOID, FUNGI_NONE } from "../dist/index.js";
 
 async function parseAndRun(source, flowName, args = new Map()) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   resolveSymbols(parsed.ast);
   checkTypes(parsed.ast);
   return await executeFlow(flowName, args, parsed.ast);
@@ -12,8 +12,8 @@ async function parseAndRun(source, flowName, args = new Map()) {
 
 describe("Interpreter - basic execution", () => {
   it("exports canonical void and none constants", () => {
-    assert.equal(SPORE_VOID.__tag, "void");
-    assert.equal(SPORE_NONE.__tag, "none");
+    assert.equal(FUNGI_VOID.__tag, "void");
+    assert.equal(FUNGI_NONE.__tag, "none");
   });
 
   it("returns a string literal from a pure flow", async () => {
@@ -262,7 +262,7 @@ pure flow greet() -> String {
 }
 `, "greet");
 
-    assert.equal(result.audit.schemaVersion, "spore.runtime.audit.v1");
+    assert.equal(result.audit.schemaVersion, "fungi.runtime.audit.v1");
   });
 
   it("records AuditLog.write calls", async () => {

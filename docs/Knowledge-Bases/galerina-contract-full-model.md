@@ -223,7 +223,7 @@ Parameters in `params` use value-state prefixes (`unsafe`, `safe`,
 requires a validation gate before it can reach a governed sink.
 
 `requires` declarations are checked by the governance verifier in Phase 10B
-(see `SPORE-CONTEXT-001`).
+(see `FUNGI-CONTEXT-001`).
 
 ---
 
@@ -257,10 +257,10 @@ response {
 | `denies { fields }` | Fields that must NOT appear in the response body |
 
 If a `protected` field appears in the response body without being listed in
-`exposes`, the governance verifier emits `SPORE-GOV-003` (Phase 10B).
+`exposes`, the governance verifier emits `FUNGI-GOV-003` (Phase 10B).
 
 `denies` is an explicit blocklist. A field in `denies` that appears in the
-response body triggers `SPORE-GOV-003` regardless of its type.
+response body triggers `FUNGI-GOV-003` regardless of its type.
 
 ---
 
@@ -280,7 +280,7 @@ context {
 Each `require` line names a field from the runtime execution context. The
 governance verifier checks (Phase 10B) that each required field is accessed
 before the first protected operation in the flow body. A required field that
-is never read emits `SPORE-CONTEXT-001`.
+is never read emits `FUNGI-CONTEXT-001`.
 
 ---
 
@@ -328,7 +328,7 @@ effects {
 ```
 
 `with effects [...]` at the flow signature level is a **hard error**
-(SPORE-SYNTAX-LEGACY-001) and must not appear in new or existing source files.
+(FUNGI-SYNTAX-LEGACY-001) and must not appear in new or existing source files.
 The canonical form is `contract { effects {} }`.
 
 **Phase 41 rule — `effects {}` is optional for pure flows.**
@@ -366,7 +366,7 @@ pure flow httpStatus(code: Int) : String {
   }
 }
 
-// ERROR — SPORE-SYNTAX-LEGACY-001 (hard error, will not compile):
+// ERROR — FUNGI-SYNTAX-LEGACY-001 (hard error, will not compile):
 // secure flow getPatient(...) -> Result<Response, ApiError>
 // with effects [database.read, audit.write] { ... }
 ```
@@ -567,12 +567,12 @@ New diagnostics introduced by the Phase 10A contract model.
 
 | Code | Meaning | Phase |
 |---|---|---|
-| `SPORE-GOV-003` | Protected field returned in response without an `exposes` declaration | Phase 10B |
-| `SPORE-CONTEXT-001` | Required context field not accessed before protected work begins | Phase 10B |
-| `SPORE-CONTRACT-001` | Contract section order violation (formatter only; not a compiler error) | Phase 10B |
+| `FUNGI-GOV-003` | Protected field returned in response without an `exposes` declaration | Phase 10B |
+| `FUNGI-CONTEXT-001` | Required context field not accessed before protected work begins | Phase 10B |
+| `FUNGI-CONTRACT-001` | Contract section order violation (formatter only; not a compiler error) | Phase 10B |
 
 These diagnostics are specified in Phase 10A and enforced in Phase 10B.
-Existing `SPORE-GOV-*` and `SPORE-EFFECT-*` codes from Phase 9 are unchanged.
+Existing `FUNGI-GOV-*` and `FUNGI-EFFECT-*` codes from Phase 9 are unchanged.
 
 ---
 
@@ -593,9 +593,9 @@ A flow with a body and no contract is allowed but ungoverned.
 - The formatter enforces section order; the compiler does not error on order violations in Phase 10A
 - `response.denies` fields must not appear in the response body — enforced in Phase 10B
 - `context.require` fields must be read before the first protected operation — enforced in Phase 10B
-- `with effects [...]` is a **hard error** (SPORE-SYNTAX-LEGACY-001); use `contract { effects {} }` only
+- `with effects [...]` is a **hard error** (FUNGI-SYNTAX-LEGACY-001); use `contract { effects {} }` only
 - `effects {}` is **optional** for `pure flow` — omission means no effects declared
-- `else if` is a **hard error** (SPORE-SYNTAX-010) — use `match` or sequential `if`
+- `else if` is a **hard error** (FUNGI-SYNTAX-010) — use `match` or sequential `if`
 - `:` is the modern preferred return-type separator; `->` is still accepted
 - Top-level `type` declarations are preferred over `contract.types {}` for public result types
 - `contract {}` may appear inline as the first item in the flow body (modern preferred style)
@@ -616,7 +616,7 @@ These rules were formalised or added in Phase 41 and apply to all new Galerina s
 | Integer/string literal arms | `200 => return "ok"` — no `when` needed for constant values |
 | `effects {}` optional | Pure flow without `effects {}` = no effects (pure) |
 | Top-level result types | `type FooResult = Result<X, E>` at compilation unit level |
-| No `else if` | Hard error SPORE-SYNTAX-010; use `match` or sequential `if` statements |
+| No `else if` | Hard error FUNGI-SYNTAX-010; use `match` or sequential `if` statements |
 | `unsafe let` at boundary | `unsafe let rawId: String = request.params.id` — marks untrusted input |
 
 **Phase 41 canonical style example:**

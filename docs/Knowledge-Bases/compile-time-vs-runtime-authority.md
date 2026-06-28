@@ -49,7 +49,7 @@ readonly SIZE = 1024
 
 The compiler fully resolves this value before runtime. No runtime context
 is required. Note: Galerina uses `readonly` for immutable/compile-time values.
-`const` is not a supported keyword — see `SPORE-SYNTAX-002`.
+`const` is not a supported keyword — see `FUNGI-SYNTAX-002`.
 
 ### Compile-Time Restrictions
 
@@ -98,7 +98,7 @@ system at execution time.
 
 ## Capability Declarations
 
-`.spore` restricts runtime capabilities unless explicitly declared.
+`.fungi` restricts runtime capabilities unless explicitly declared.
 
 ```galerina
 capability fs
@@ -164,7 +164,7 @@ The effect checker enforces compile-time/runtime separation:
 compile flow generateSchema() {
     network.fetch("https://example.com/schema")
 }
-// SPORE-E4004: compile-time/runtime boundary violation
+// FUNGI-E4004: compile-time/runtime boundary violation
 // Compile-time function attempted runtime-only operation `network.fetch`
 ```
 

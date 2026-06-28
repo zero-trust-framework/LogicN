@@ -25,19 +25,19 @@ unscheduled).
 | **0082** | 16-packages photonic/tri verdicts + **missing/incomplete/stub package status** | 📤 |
 | **0083** | Closed-capabilities photonic/tri variant (or confirm n/a) | 📤 |
 | **0084** | Security standards × K3 three-valued — **PCI/DSS + full OWASP (Top10/ASVS/API/LLM) + CWE/NIST/MITRE/SLSA** (unknown→INDETERMINATE fail-closed) | 📤 |
-| **0085** | **RAG-vulnerabilities rulebook-curator** (`E:\projects\RAG-vulnerabilities`) → reconcile `GALERINA_SECURITY_RULEBOOK` with the SPORE registry + RAG/LLM-retrieval threat class | 📤 |
+| **0085** | **RAG-vulnerabilities rulebook-curator** (`E:\projects\RAG-vulnerabilities`) → reconcile `GALERINA_SECURITY_RULEBOOK` with the FUNGI registry + RAG/LLM-retrieval threat class | 📤 |
 
 ## B. R&D designed (in KB; build pending) — [galerina-architecture-rd-2026-06-23.md](galerina-architecture-rd-2026-06-23.md)
 | Item | Where | Status |
 |---|---|---|
-| `contract.permissions { hardware.camera }` device-permission clause (V_PERM + SPORE-PERM-001..006) | [galerina-contract-permissions-design.md](galerina-contract-permissions-design.md) | 🧪 |
+| `contract.permissions { hardware.camera }` device-permission clause (V_PERM + FUNGI-PERM-001..006) | [galerina-contract-permissions-design.md](galerina-contract-permissions-design.md) | 🧪 |
 | DRCM degrade-only photonic-confidence operand (keep V_DPM Binary) | arch-rd #13 | 🧪 |
 | CBOR `.lmanifest` SubstrateAttestation tag (Tag 418) | arch-rd #7 | 🧪 |
 | core-economics photonic ExecutionTarget + degrade-only cost axis (brake-only) | arch-rd #14 | 🧪 |
 | core-security photonic-lane taint/egress rule | arch-rd #15 | 🧪 |
 | Standardise `withSideSignal`/`vAnd` as the ONLY photonic/sentinel→verdict channel | arch-rd #6 | 🧪 |
 | Per-package Tri-Pipe coverage as machine-checkable metadata | arch-rd #16 | 🧪 |
-| **Compiler Intelligence (Doc 005)** — §2 Governance DCE pass (`SPORE-GDCE-001`) · §3a `substrate{photonic}` envelope keyword · §3b value-level substrate-taint · §4 auto-resilience AST→GIR wrap | [compiler-intelligence](galerina-compiler-intelligence-deterministic-foresight.md) (wf `w2gzcbx9d`) | 🧪 design-complete → build |
+| **Compiler Intelligence (Doc 005)** — §2 Governance DCE pass (`FUNGI-GDCE-001`) · §3a `substrate{photonic}` envelope keyword · §3b value-level substrate-taint · §4 auto-resilience AST→GIR wrap | [compiler-intelligence](galerina-compiler-intelligence-deterministic-foresight.md) (wf `w2gzcbx9d`) | 🧪 design-complete → build |
 
 ### 2026-06-27 — net-new ADOPTABLES from the "automate the defence" R&D (RD-0137..0153)
 
@@ -53,7 +53,7 @@ we will adopt** (design-only, **owner-gated** — ask before building). Proven: 
 | Item | What / why | Status |
 |---|---|---|
 | **RD-0150 — graph as the data spine (API/DB I/O)** | ZT 7. HYBRID property-graph: graph SPINE (reachability/capability/K3-verdict/provenance — "no edge = no reach", IDOR structurally closed) + columnar/SoA PAYLOAD (bulk scans). Win security+org, mixed speed. **Next step: prototype the SPINE against a columnar payload behind a RED/perf harness**; carry the 0037 separate-presence-channel discipline + a mandatory traversal-budget gate (CWE-400); do NOT claim crypto-sharding or any perf number until benchmarked. Hardest open = cross-tenant edge crypto custody. | 🧪 design → prototype, **owner-gated** |
-| **Lane-0 declassifier rail** (`SPORE-DECLASSIFY-*`) | The cross-cutting net-new: formalize "Tri-Pipe Lane 0 = mask-and-continue" as a typed, signed, AUDITED declassifier over the shipped `partialReturn`/`maskByVerdict`, so mask-and-continue is reachable ONLY through it (never a silent safety bypass). Sound form of every note's Lane-0 idea. | 🧪 design → build, **owner-gated** |
+| **Lane-0 declassifier rail** (`FUNGI-DECLASSIFY-*`) | The cross-cutting net-new: formalize "Tri-Pipe Lane 0 = mask-and-continue" as a typed, signed, AUDITED declassifier over the shipped `partialReturn`/`maskByVerdict`, so mask-and-continue is reachable ONLY through it (never a silent safety bypass). Sound form of every note's Lane-0 idea. | 🧪 design → build, **owner-gated** |
 | **Shadow/canary AI-proposal deploy** | RD-0149 lead: fork live traffic to an AI proposal SAFELY = the note-54 data-plane border (shipped this session, `tower-citizen/data-plane-border.ts`) + attenuated capability tokens + Freivalds verify + the Lane-0 declassifier rail. Proven (V3) it must sit behind the border or it leaks. | 🧪 design → build, **owner-gated** |
 | **Hardware Citizen attestation** (RD-0151) | Attest a hot-plugged substrate (accelerator/FPGA/quantum/neuromorphic) before it gets a capability charter. Re-derives bridge-attestation, extended to dynamic HW. | 🔒 design, **HW-gated** (DRCM Ph5 / #102-106) |
 | **Model Weight Charter + anti-poisoning invariant** (RD-0153) | Signed charter over a model's weights so a capability-adding weight drift is denied (No-Coercion at the tensor admission boundary). The sound in-core half of "governed AI"; activation-clamping stays in the ext-bridge. | 🧪 design → build, **owner-gated** |
@@ -98,48 +98,48 @@ auth (cert-gate unwired) → closed by C#1. Full detail: task output `wj6vrjkmg.
 - ✅ **Egress allow-list AUDIT + operator SSRF warning** (`2aed510`) — discharges the worker's gap-A suggestion
   (audit-log of admitted hosts + operator-doc warning) for `GALERINA_EGRESS_ALLOWED_HOSTS`. Full suite 60/60 · 5,948.
 - ✅ **Memory index cleaned** (0 dangling / 0 orphan); dup note `75-improvments-r-d-11` deleted (clears the 📋 above).
-- ✅ **R&D RD-0154..0167 absorbed** — TritMesh/`.spore` mesh-database, 8 notes → 14 branches, all proven. KB:
+- ✅ **R&D RD-0154..0167 absorbed** — TritMesh/`.fungi` mesh-database, 8 notes → 14 branches, all proven. KB:
   [tritmesh-mesh-database](galerina-rd-0154-0167-tritmesh-mesh-database.md) + results-log rows.
 
 **Net-new owner-gated build leads (from RD-0154..0167):**
 | Item | What / why | Status |
 |---|---|---|
-| **Graph as a SIGNED primary index in `.spore`** (RD-0167) | In-passport adjacency index that speeds I/O — proven: UNSIGNED = silent read-redirection vuln, so signing is mandatory. Prototype behind a RED/perf harness; overlaps RD-0150. Defensive-pub worthy. | 🧪 design → prototype, **owner-gated** |
+| **Graph as a SIGNED primary index in `.fungi`** (RD-0167) | In-passport adjacency index that speeds I/O — proven: UNSIGNED = silent read-redirection vuln, so signing is mandatory. Prototype behind a RED/perf harness; overlaps RD-0150. Defensive-pub worthy. | 🧪 design → prototype, **owner-gated** |
 | **Cross-language ternary PRE-FILTER lib** (RD-0163, note-04 ask) | New repo under `C:\wwwprojects` (php/node/c++/c#/java/ts) exposing the bit-packed SIMD dot-product as a deny-only PERF gate **in front of** real crypto. NOT a security boundary — ship with the forgery caveat. | 🧪 design → build, **owner-gated** |
 | **Zero-copy data plane** (RD-0161/0162) | NVMe-DMA + io_uring + stream-backpressure for the egress path. The engineering is the win (not "O(1)"). | 📋 todo |
-| **TritMesh deployment taxonomy** | Core / Symbiotic / Wavefront naming + decoupled/headless `.spore`-stream-back architecture. | 📋 todo |
+| **TritMesh deployment taxonomy** | Core / Symbiotic / Wavefront naming + decoupled/headless `.fungi`-stream-back architecture. | 📋 todo |
 
 **New R&D / tooling:**
 - 🧪 **RD-0168 — graph-driven PCI/DSS + security compliance scanner** (owner ask) — extends `galerina-devtools-pci`
   with graph reachability (PAN/secret → egress/log sinks lacking an encrypt/redact/audit edge → fail-closed; K3
   unknown→INDETERMINATE). PoC `scripts/rd-0168-graph-pci-compliance-scanner-proof.mjs`.
 - ⚠️ **Rules-registry reconciliation (HIGH-VALUE finding):** the consolidated
-  [rules-master-registry](galerina-rules-master-registry.md) found **~350 `SPORE-*` codes ENFORCED in `src` but
+  [rules-master-registry](galerina-rules-master-registry.md) found **~350 `FUNGI-*` codes ENFORCED in `src` but
   ABSENT from any rules doc** (CONFIG/LOGIC/TYPE/TAINT/VAULT/VALUESTATE/FUSE/PKG/PCI/MEMORY/… families). The
   governance-rules registry is materially incomplete vs what the compiler actually enforces — worth a reconcile pass.
 - 📋 Rules exported to markdown: [governance rules](galerina-rules-master-registry.md) + [R&D rules](galerina-rnd-rules-and-standards.md).
 
 ## 2026-06-28 (cont.) — dev-tooling housekeeping
 
-- ✅ **fuse-rebuild fix** (`c8343cd`): `scripts/rebuild-fusable-packages.mjs` now SKIPS packages with no `.spore`
-  source — an ext-bridge with a `.ts` entry (e.g. `galerina-ext-bridge-quantum`) carries a `package.spore.json`
-  descriptor but is not a fusable `.spore` module, so handing it to `galerina build` failed with SPORE-PARSE-001
+- ✅ **fuse-rebuild fix** (`c8343cd`): `scripts/rebuild-fusable-packages.mjs` now SKIPS packages with no `.fungi`
+  source — an ext-bridge with a `.ts` entry (e.g. `galerina-ext-bridge-quantum`) carries a `package.fungi.json`
+  descriptor but is not a fusable `.fungi` module, so handing it to `galerina build` failed with FUNGI-PARSE-001
   ("Unexpected token }"). Reports "N skipped" instead of a false failure.
 - ✅ **Memory dangling `[[links]]` trimmed** 28→0 (2 real renames fixed: `parallel-worker-cadence`→
   `feedback-parallel-worker-cadence`, `logicn-contract-authoring-guide`→`project-logicn-contract-authoring`;
   26 dead forward-refs de-linked, text kept). memory-graph now 0 dangling / 0 orphan / 0 dangling-links.
-- ✅ **New dev tool `scripts/audit-syntax.mjs`** (`ed3d919`, error→tooling rule) — scans ALL `.spore` (shipped
+- ✅ **New dev tool `scripts/audit-syntax.mjs`** (`ed3d919`, error→tooling rule) — scans ALL `.fungi` (shipped
   `parseProgram`) + `.ts` (TS parse-diagnostics) for parse / bad-syntax errors ("Unexpected token }" and kin)
   IN-PROCESS, no `galerina build`; `--summary` / `--json` / `--all`. Heartbeat baseline = **1** real finding; `--all`
   = 28 (per-package example / `tests/` fixture / `docs/examples` draft corpora excluded by default). **NOT auto-wired
   into the Stop cadence** — the auto-mode classifier gated adding an unrequested executable hook; wire on owner GO.
-- ⚠️ **Real finding (audit-syntax) — `packages-galerina/galerina-core-security/src/interim.spore`** fails to parse
-  (7× SPORE-PARSE-001: anonymous record literals at top level + `target` as a reserved-word parameter). WIP/draft in
+- ⚠️ **Real finding (audit-syntax) — `packages-galerina/galerina-core-security/src/interim.fungi`** fails to parse
+  (7× FUNGI-PARSE-001: anonymous record literals at top level + `target` as a reserved-word parameter). WIP/draft in
   `src/`; fix it or move it out of the build path.
-- 📋 **Rebrand cruft:** **5** stale `package.lln.json` files (pre-rebrand), each byte-identical to its
-  `package.spore.json` sibling (api-protocol-rest · ext-bridge-quantum · app-kernel compose fixtures ×2 ·
-  example-app/greeting) — safe `git rm` once confirmed nothing reads `.lln`; owner-gated `.lln`→`.spore` cleanup.
-- ⚠️ **Hook tree-churn (FYI):** the project Stop hooks (`rebuild-fusable-packages` + `lint-spore`/phase-close)
-  regenerate `dist/` and add `//spore: IMPACT/COMPLEXITY` metadata to example `src/index.spore` on every Stop, so
+- 📋 **Rebrand cruft:** **5** stale `package.fungi-.json` files (pre-rebrand), each byte-identical to its
+  `package.fungi.json` sibling (api-protocol-rest · ext-bridge-quantum · app-kernel compose fixtures ×2 ·
+  example-app/greeting) — safe `git rm` once confirmed nothing reads `.fungi-`; owner-gated `.fungi-`→`.fungi` cleanup.
+- ⚠️ **Hook tree-churn (FYI):** the project Stop hooks (`rebuild-fusable-packages` + `lint-fungi`/phase-close)
+  regenerate `dist/` and add `//fungi: IMPACT/COMPLEXITY` metadata to example `src/index.fungi` on every Stop, so
   the working tree re-dirties by design. The regenerated `.lmanifest` (1270→5632 B = a signing/format change) is
   NOT auto-committed — needs an owner call given the offline-key / re-sign-owed posture.

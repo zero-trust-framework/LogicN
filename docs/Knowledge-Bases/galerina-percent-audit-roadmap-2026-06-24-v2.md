@@ -28,7 +28,7 @@ These read as "done" but require an asterisk. Saying them without the caveat is 
 
 1. **"Compiles to / runs in WASM"** — TRUE for pure-i32 (some f64/string) flows (real binaries, real VM, byte-exact). FALSE end-to-end: effectful flows are TS-interpreted; **self-hosting in WASM is tokenize-only**.
 2. **"PQ-signed end to end"** — FALSE at the runtime borders. Hybrid is real on compiler/attestation/bridge/verify surfaces; the **app-fusion border + both substrate admission rails are Ed25519-only**.
-3. **"Enforces memory safety in production"** — **FALSE for the substantive checks.** SPORE-MEMORY-001/002/003/007 are PRODUCTION_BLOCKERS with **no emitter**; only the 008 line-lint fires. ← *single most important.*
+3. **"Enforces memory safety in production"** — **FALSE for the substantive checks.** FUNGI-MEMORY-001/002/003/007 are PRODUCTION_BLOCKERS with **no emitter**; only the 008 line-lint fires. ← *single most important.*
 4. **"Zero-trust egress is fail-closed"** — TRUE intra-flow; **cross-flow** secret/embedding propagation is hardcoded `warning` with no production escalation. A residual exfiltration hole.
 5. **"CI enforces quality gates"** — partly report-only (`--soft` over 291 baseline); SEC-002 mutation + gate-injection wired into zero workflows.
 6. **"#149 (no-CI) closed"** — only secret-scan done; full per-package test CI deferred.
@@ -45,28 +45,28 @@ These read as "done" but require an asterisk. Saying them without the caveat is 
 ### NOW (unblocked, highest zero-trust leverage)
 
 > **STATUS — 2026-06-25 session close: NOW-1/2/3/5/6 DONE; only NOW-4 remains.**
-> - **NOW-1 ✅** false production memory-gate fixed (SPORE-MEMORY-001/002/003/007 RESERVED, no emitter) + `scripts/audit-production-blockers.mjs` enforcing CI cross-ref so it can't recur (`69b2769`, `7e784a5`).
-> - **NOW-2 ✅** cross-flow SPORE-SECRET-002 / SPORE-PRIVACY-002 now fail-CLOSED (error) in production (`c66955a`).
+> - **NOW-1 ✅** false production memory-gate fixed (FUNGI-MEMORY-001/002/003/007 RESERVED, no emitter) + `scripts/audit-production-blockers.mjs` enforcing CI cross-ref so it can't recur (`69b2769`, `7e784a5`).
+> - **NOW-2 ✅** cross-flow FUNGI-SECRET-002 / FUNGI-PRIVACY-002 now fail-CLOSED (error) in production (`c66955a`).
 > - **NOW-3 ✅** `check-gate-injection.mjs` wired enforcing in conventions.yml + self-test (`3d146e7`).
 > - **NOW-4 ⬜ OPEN** — quarantine the env-local signing-key CLI test behind a clean-key fixture + wire the compiler suite into CI. *The last NOW item; CI/test-hygiene, no security hole.*
 > - **NOW-5 ✅** `ext-tmf/src/inclusion.ts` TMX-256 Merkle inclusion proofs (selective disclosure) — golden-verified vs root `43386e64…`, full suite 61/61 (`6a1ac1c`).
 > - **NOW-6 ✅** the 2 RED r6-corpus fixtures gated with explicit `validate.*` (demonstrates the pattern, not a silence) → r6-parity 10/10 (`5adc99e`).
 > - **Also this session:** RD-0126 **A-2 built** (PartitionDecider derives isCrypto from effects, `8d8bdd7`) / **A-1 refuted** (false gap — per-flow lanes, `6738e94`); **5 new enforcing CI lints** (doc-drift · name-collisions · graph-integrity · production-blockers · gate-injection) + `governance/name-registry.json` + `scripts/graph-all.mjs` (all 3 graph generators); the measured-negatives written as a **defensive-pub note** (`docs/scientific-papers/latency-is-not-work-…-2026-06-25.md` — NOT a flagship: would harm credibility per the repo standard; external submission gated on a native/SIMD `f` re-measurement); cross-platform `.env.tmf` brief + 3D-spatial-photonics brief sent to R&D.
 
-1. **Fix the FALSE production memory-gate** — mark SPORE-MEMORY-001/002/003/007 RESERVED + drop from PRODUCTION_BLOCKERS (they have no emitter), OR wire real move/borrow detectors; **add a CI cross-ref that fails when any production-blocking code is non-emittable.** *The gate advertises memory-safety it cannot detect — truth-in-capability is the foundation of every other claim.* ← **single most important.**
-2. **Escalate cross-flow SPORE-SECRET-002 / SPORE-PRIVACY-002 warning→error in production** (mirror the boundary-input escalation ~L1716) or add inter-procedural seal/redact discharge. *Closes the residual credential/embedding exfiltration path.*
+1. **Fix the FALSE production memory-gate** — mark FUNGI-MEMORY-001/002/003/007 RESERVED + drop from PRODUCTION_BLOCKERS (they have no emitter), OR wire real move/borrow detectors; **add a CI cross-ref that fails when any production-blocking code is non-emittable.** *The gate advertises memory-safety it cannot detect — truth-in-capability is the foundation of every other claim.* ← **single most important.**
+2. **Escalate cross-flow FUNGI-SECRET-002 / FUNGI-PRIVACY-002 warning→error in production** (mirror the boundary-input escalation ~L1716) or add inter-procedural seal/redact discharge. *Closes the residual credential/embedding exfiltration path.*
 3. **Wire `check-gate-injection.mjs` into conventions.yml as an enforcing job** (version.json already mandates it). *Makes "a caller that skips revocationCheck" fail CI — highest-leverage unblocked CI hardening.*
 4. **Quarantine the env-local signing-key CLI test + add WAT-emitter test isolation, then wire the compiler suite into CI.** *Makes every "gate runs clean" claim self-defending.*
 5. **Build `ext-tmf/src/inclusion.ts`** to the inclusion-proof-v0 spec + golden vectors (no #34/HW dep). *Selective-disclosure / verify-one-section — the core .tmf zero-trust value prop.*
-6. **Repair the 2 RED root r6-corpus assertions** (r6-03, r6-05 trip SPORE-VALUESTATE-008) with a real gate that discharges the boundary input before AuditLog.write; add tests/r6-corpus to CI. *Closes a genuine taint hole + self-defends the self-hosting parity gate.*
+6. **Repair the 2 RED root r6-corpus assertions** (r6-03, r6-05 trip FUNGI-VALUESTATE-008) with a real gate that discharges the boundary input before AuditLog.write; add tests/r6-corpus to CI. *Closes a genuine taint hole + self-defends the self-hosting parity gate.*
 
 ### NEXT
 - ML-DSA-65 hybrid verify on the fuse-loader border + both substrate rails (no-silent-downgrade, `certified` profile) — last Ed25519-only quantum-vulnerable LIVE admission surface.
 - Wire the signed central registry e2e into the example-app host fuse path + a "forked-but-signed pkg REFUSED" test — closes a supply-chain hole.
 - Security-tier CI job running `audit-mutation.mjs --full` — the only proof the fail-closed gates STAY fail-closed under edit.
-- Execute the baseline→0 plan (131 V5 name-case + 105 spore-quality + 28 doc-drift via #150 + 3 provenance), then drop `--soft`.
+- Execute the baseline→0 plan (131 V5 name-case + 105 fungi-quality + 28 doc-drift via #150 + 3 provenance), then drop `--soft`.
 - Implement Shamir M-of-N split/combine + schedule revocation-registry v3 (trust-anchor rotation).
-- Surface SPORE-VALUESTATE-008 / SPORE-TIER-001 as dev escalate-only + wire declared-tier⊇inferred-min; fix the dead SPORE-DAG-002.
+- Surface FUNGI-VALUESTATE-008 / FUNGI-TIER-001 as dev escalate-only + wire declared-tier⊇inferred-min; fix the dead FUNGI-DAG-002.
 - Declare ext-tmf's @noble deps instead of borrowing from a sibling node_modules (supply-chain/reproducibility).
 
 ### LATER

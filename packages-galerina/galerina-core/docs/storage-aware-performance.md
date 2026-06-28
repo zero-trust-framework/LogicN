@@ -163,7 +163,7 @@ inputs.
 IDE indexes should be local, bounded and rebuildable:
 
 ```text
-.spore-cache/
+.fungi-cache/
   symbols.index
   types.index
   imports.index

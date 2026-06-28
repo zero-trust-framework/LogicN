@@ -124,7 +124,7 @@ guarded flow getUser(id: UserId)
 
 ```galerina
 flow getUser(id: UserId) {
-  return Database.users.find(id)   // SPORE-RESOURCE-001
+  return Database.users.find(id)   // FUNGI-RESOURCE-001
 }
 ```
 
@@ -289,7 +289,7 @@ Build output must include a resource manifest:
 
 ```ts
 export interface ResourceManifest {
-  schemaVersion: "spore.resource.manifest.v1";
+  schemaVersion: "fungi.resource.manifest.v1";
   resources: ResourceManifestEntry[];
 }
 
@@ -307,7 +307,7 @@ Example:
 
 ```json
 {
-  "schemaVersion": "spore.resource.manifest.v1",
+  "schemaVersion": "fungi.resource.manifest.v1",
   "resources": [
     {
       "name": "Database",
@@ -329,7 +329,7 @@ Runtime emits resource lifecycle evidence:
 
 ```json
 {
-  "schemaVersion": "spore.resource.report.v1",
+  "schemaVersion": "fungi.resource.report.v1",
   "runtimeId": "runtime_001",
   "resources": [
     {
@@ -345,20 +345,20 @@ Runtime emits resource lifecycle evidence:
 
 ---
 
-## 12. Resource Diagnostic Codes — SPORE-RESOURCE-001..010
+## 12. Resource Diagnostic Codes — FUNGI-RESOURCE-001..010
 
 | Code | Name | Description |
 |---|---|---|
-| `SPORE-RESOURCE-001` | `RESOURCE_USED_WITHOUT_DECLARATION` | Resource accessed without `uses` declaration |
-| `SPORE-RESOURCE-002` | `RESOURCE_SCOPE_VIOLATION` | Resource used outside its declared scope |
-| `SPORE-RESOURCE-003` | `RESOURCE_EFFECT_NOT_DECLARED` | Flow uses a resource that requires an effect not declared by the flow |
-| `SPORE-RESOURCE-004` | `RESOURCE_CAPABILITY_MISSING` | Flow lacks the capability required by a resource it uses |
-| `SPORE-RESOURCE-005` | `RESOURCE_INITIALIZATION_FAILED` | Resource failed to initialize at startup |
-| `SPORE-RESOURCE-006` | `RESOURCE_SHUTDOWN_FAILED` | Resource failed to shut down cleanly |
-| `SPORE-RESOURCE-007` | `MUTABLE_RESOURCE_REQUIRES_POLICY` | Mutable runtime resource used without explicit policy approval |
-| `SPORE-RESOURCE-008` | `REQUEST_RESOURCE_SCOPE_ESCAPE` | Request-scoped resource reference escaped the request scope |
-| `SPORE-RESOURCE-009` | `RESOURCE_OVERRIDE_DENIED_IN_PRODUCTION` | Test resource override used in a production build target |
-| `SPORE-RESOURCE-010` | `RESOURCE_CONCURRENCY_UNSAFE_FOR_TARGET` | Resource concurrency mode is unsafe for the selected compute target |
+| `FUNGI-RESOURCE-001` | `RESOURCE_USED_WITHOUT_DECLARATION` | Resource accessed without `uses` declaration |
+| `FUNGI-RESOURCE-002` | `RESOURCE_SCOPE_VIOLATION` | Resource used outside its declared scope |
+| `FUNGI-RESOURCE-003` | `RESOURCE_EFFECT_NOT_DECLARED` | Flow uses a resource that requires an effect not declared by the flow |
+| `FUNGI-RESOURCE-004` | `RESOURCE_CAPABILITY_MISSING` | Flow lacks the capability required by a resource it uses |
+| `FUNGI-RESOURCE-005` | `RESOURCE_INITIALIZATION_FAILED` | Resource failed to initialize at startup |
+| `FUNGI-RESOURCE-006` | `RESOURCE_SHUTDOWN_FAILED` | Resource failed to shut down cleanly |
+| `FUNGI-RESOURCE-007` | `MUTABLE_RESOURCE_REQUIRES_POLICY` | Mutable runtime resource used without explicit policy approval |
+| `FUNGI-RESOURCE-008` | `REQUEST_RESOURCE_SCOPE_ESCAPE` | Request-scoped resource reference escaped the request scope |
+| `FUNGI-RESOURCE-009` | `RESOURCE_OVERRIDE_DENIED_IN_PRODUCTION` | Test resource override used in a production build target |
+| `FUNGI-RESOURCE-010` | `RESOURCE_CONCURRENCY_UNSAFE_FOR_TARGET` | Resource concurrency mode is unsafe for the selected compute target |
 
 All ten codes have severity `"error"`.
 
@@ -460,7 +460,7 @@ resource RequestContext
 }
 ```
 
-Request-scoped resources must not leak across requests (`SPORE-RESOURCE-008`).
+Request-scoped resources must not leak across requests (`FUNGI-RESOURCE-008`).
 
 ---
 
@@ -503,7 +503,7 @@ test "getUser returns user" {
 }
 ```
 
-Resource overrides are not permitted in production targets (`SPORE-RESOURCE-009`).
+Resource overrides are not permitted in production targets (`FUNGI-RESOURCE-009`).
 
 ---
 
@@ -518,7 +518,7 @@ export function checkResourceUse(input: {
 
   if (!input.flow.usedResources.includes(input.resource.name)) {
     diagnostics.push({
-      code: "SPORE-RESOURCE-001",
+      code: "FUNGI-RESOURCE-001",
       name: "RESOURCE_USED_WITHOUT_DECLARATION",
       severity: "error",
       message: `Resource ${input.resource.name} is used but not declared in uses list.`,
@@ -528,7 +528,7 @@ export function checkResourceUse(input: {
   for (const effect of input.resource.effects) {
     if (!input.flow.effects.includes(effect)) {
       diagnostics.push({
-        code: "SPORE-RESOURCE-003",
+        code: "FUNGI-RESOURCE-003",
         name: "RESOURCE_EFFECT_NOT_DECLARED",
         severity: "error",
         message: `Resource ${input.resource.name} requires effect ${effect}.`,
@@ -563,7 +563,7 @@ usesDecl              — uses ResourceName in flow header
 [ ] usesDecl — add to AstNodeKind (flow header sub-declaration)
 [ ] ResourceDeclaration type shape — add to @galerina/core
 [ ] ResourceManifest / ResourceManifestEntry — add to @galerina/core
-[ ] SPORE-RESOURCE-001..010 — add diagnostic constants to @galerina/core-compiler
+[ ] FUNGI-RESOURCE-001..010 — add diagnostic constants to @galerina/core-compiler
 [ ] checkResourceUse() stub — add to @galerina/core-compiler
 [ ] RuntimeResourceRegistry interface — add to @galerina/core-runtime
 [ ] Resource report schema — add to @galerina/core-reports
@@ -581,7 +581,7 @@ readonly resource · resource
 scope runtime · scope request
 uses ResourceName
 resource manifests
-resource diagnostics (SPORE-RESOURCE-001..010)
+resource diagnostics (FUNGI-RESOURCE-001..010)
 test overrides
 ```
 

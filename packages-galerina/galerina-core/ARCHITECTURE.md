@@ -6,7 +6,7 @@ Galerina is a strict, memory-safe, security-first, JSON-native, API-native and a
 
 The architecture is designed around one main goal:
 
-> One `.spore` source project should be able to produce multiple checked, secure and traceable outputs.
+> One `.fungi` source project should be able to produce multiple checked, secure and traceable outputs.
 
 Galerina architecture should be AI-understandable. AI tools should read stable
 concept definitions, package ownership, generated project graph data, report
@@ -21,7 +21,7 @@ names. The detailed policy lives in
 Galerina should be built as a layered system.
 
 ```text
-.spore source files
+.fungi source files
    â†“
 lexer
    â†“
@@ -209,8 +209,8 @@ Galerina must remain useful without photonic hardware.
 
 ```text
                  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                 â”‚    .spore source      â”‚
-                 â”‚ boot.spore / src/*.sporeâ”‚
+                 â”‚    .fungi source      â”‚
+                 â”‚ boot.fungi / src/*.fungiâ”‚
                  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
                            â”‚
                            â–¼
@@ -293,14 +293,14 @@ Galerina/
 â”œâ”€â”€ .gitignore
 â”‚
 â”œâ”€â”€ examples/
-â”‚   â”œâ”€â”€ hello.spore
-â”‚   â”œâ”€â”€ boot.spore
-â”‚   â”œâ”€â”€ api-orders.spore
-â”‚   â”œâ”€â”€ payment-webhook.spore
-â”‚   â”œâ”€â”€ json-decode.spore
-â”‚   â”œâ”€â”€ rollback.spore
-â”‚   â”œâ”€â”€ compute-block.spore
-â”‚   â””â”€â”€ ternary-decision.spore
+â”‚   â”œâ”€â”€ hello.fungi
+â”‚   â”œâ”€â”€ boot.fungi
+â”‚   â”œâ”€â”€ api-orders.fungi
+â”‚   â”œâ”€â”€ payment-webhook.fungi
+â”‚   â”œâ”€â”€ json-decode.fungi
+â”‚   â”œâ”€â”€ rollback.fungi
+â”‚   â”œâ”€â”€ compute-block.fungi
+â”‚   â””â”€â”€ ternary-decision.fungi
 â”‚
 â”œâ”€â”€ compiler/
 â”‚   â”œâ”€â”€ lexer/
@@ -382,19 +382,19 @@ A normal Galerina application should look like this:
 
 ```text
 my-galerina-app/
-â”œâ”€â”€ boot.spore
+â”œâ”€â”€ boot.fungi
 â”œâ”€â”€ Galerina.config
 â”œâ”€â”€ Galerina.lock
 â”œâ”€â”€ .env.example
 â”œâ”€â”€ .gitignore
 â”‚
 â”œâ”€â”€ src/
-â”‚   â”œâ”€â”€ main.spore
-â”‚   â”œâ”€â”€ routes.spore
+â”‚   â”œâ”€â”€ main.fungi
+â”‚   â”œâ”€â”€ routes.fungi
 â”‚   â””â”€â”€ services/
-â”‚       â”œâ”€â”€ order-service.spore
-â”‚       â”œâ”€â”€ payment-service.spore
-â”‚       â””â”€â”€ fraud-service.spore
+â”‚       â”œâ”€â”€ order-service.fungi
+â”‚       â”œâ”€â”€ payment-service.fungi
+â”‚       â””â”€â”€ fraud-service.fungi
 â”‚
 â”œâ”€â”€ app/
 â”‚   â”œâ”€â”€ controllers/
@@ -422,13 +422,13 @@ Galerina must also support short scripts.
 Example:
 
 ```text
-hello.spore
+hello.fungi
 ```
 
 Command:
 
 ```bash
-Galerina run hello.spore
+Galerina run hello.fungi
 ```
 
 Short scripts should not require a full MVC-style structure.
@@ -452,10 +452,10 @@ CPU target enabled
 The default entry file should be:
 
 ```text
-boot.spore
+boot.fungi
 ```
 
-`boot.spore` should define:
+`boot.fungi` should define:
 
 ```text
 project name
@@ -479,7 +479,7 @@ language {
   compatibility "stable"
 }
 
-entry "./src/main.spore"
+entry "./src/main.fungi"
 
 targets {
   binary {
@@ -549,7 +549,7 @@ AI context generator
 
 ## Lexer
 
-The lexer reads `.spore` source text and produces tokens.
+The lexer reads `.fungi` source text and produces tokens.
 
 Input:
 
@@ -665,7 +665,7 @@ Example:
   "nodeType": "FlowNode",
   "name": "processOrder",
   "source": {
-    "file": "src/order-service.spore",
+    "file": "src/order-service.fungi",
     "line": 12,
     "column": 1
   }
@@ -738,7 +738,7 @@ Type error:
 Cannot add String and Int.
 
 Original source:
-  src/main.spore:8:13
+  src/main.fungi:8:13
 
 Suggestion:
   Convert the String explicitly using toInt().
@@ -809,7 +809,7 @@ Security error:
 SecureString cannot be printed.
 
 Original source:
-  src/main.spore:14:7
+  src/main.fungi:14:7
 
 Suggestion:
   Do not log secrets. Use safe redaction if required.
@@ -881,7 +881,7 @@ POST /orders expects CreateOrderResponse.
 Handler createOrder returns Order.
 
 Original source:
-  src/routes.spore:18:5
+  src/routes.fungi:18:5
 
 Suggestion:
   Return JsonResponse<CreateOrderResponse>.
@@ -896,7 +896,7 @@ Galerina should lower source code into an intermediate representation.
 Pipeline:
 
 ```text
-.spore source
+.fungi source
    â†“
 AST
    â†“
@@ -1493,7 +1493,7 @@ Example:
 {
   "errorType": "TargetCompatibilityError",
   "target": "photonic",
-  "file": "src/fraud-check.spore",
+  "file": "src/fraud-check.fungi",
   "line": 18,
   "column": 12,
   "problem": "readFile cannot run inside a photonic compute block.",
@@ -1732,7 +1732,7 @@ interpreter prototype
 source-map schema
 report schemas
 AI context schema
-example .spore files
+example .fungi files
 ```
 
 Not required:

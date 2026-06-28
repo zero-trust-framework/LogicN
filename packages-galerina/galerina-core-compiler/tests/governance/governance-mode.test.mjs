@@ -32,7 +32,7 @@ test("project full + flow requests lean → rejected (opt-down past ceiling), st
   const r = resolveGovernanceMode({ projectDefault: "full", flowRequest: "lean", effectFree: true, taintClean: true });
   assert.equal(r.tier, "full");
   assert.equal(r.optDownRejected, true);
-  assert.ok(r.diagnostics.some((d) => d.includes("SPORE-CONFIG-GOV-001")));
+  assert.ok(r.diagnostics.some((d) => d.includes("FUNGI-CONFIG-GOV-001")));
 });
 
 test("project auto + flow opts UP to full → full, no rejection", () => {
@@ -46,10 +46,10 @@ test("project lean + flow lean + EffectFree+clean → lean", () => {
   assert.equal(r.tier, "lean");
 });
 
-test("explicit lean but has-effect → safety override to full (SPORE-CONFIG-GOV-002)", () => {
+test("explicit lean but has-effect → safety override to full (FUNGI-CONFIG-GOV-002)", () => {
   const r = resolveGovernanceMode({ projectDefault: "lean", flowRequest: "lean", effectFree: false, taintClean: true });
   assert.equal(r.tier, "full");
-  assert.ok(r.diagnostics.some((d) => d.includes("SPORE-CONFIG-GOV-002")));
+  assert.ok(r.diagnostics.some((d) => d.includes("FUNGI-CONFIG-GOV-002")));
 });
 
 test("MONOTONE-SAFETY INVARIANT: tier==='lean' ⟹ EffectFree ∧ taint-clean (all combinations)", () => {

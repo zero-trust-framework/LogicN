@@ -3,17 +3,17 @@
 Status: Draft.
 
 Galerina, short for **Galerina**, is a programming language and
-compiler/toolchain. Galerina source files use the `.spore` extension.
+compiler/toolchain. Galerina source files use the `.fungi` extension.
 
 Example files:
 
 ```text
-boot.spore
-main.spore
-api.spore
-routes.spore
-webhooks.spore
-external-apis.spore
+boot.fungi
+main.fungi
+api.fungi
+routes.fungi
+webhooks.fungi
+external-apis.fungi
 ```
 
 This document describes how Galerina should help detect duplicate API problems and
@@ -185,10 +185,10 @@ API route conflict:
 POST /orders is declared more than once.
 
 First:
-  src/api/orders.spore:4
+  src/api/orders.fungi:4
 
 Second:
-  src/api/admin-orders.spore:6
+  src/api/admin-orders.fungi:6
 
 Suggestion:
   Rename the route, version it, or merge the handlers.
@@ -217,7 +217,7 @@ Example:
       "method": "POST",
       "path": "/orders",
       "handler": "createOrder",
-      "source": "src/api/orders.spore:4",
+      "source": "src/api/orders.fungi:4",
       "request": "CreateOrderRequest",
       "response": "CreateOrderResponse",
       "idempotency": true
@@ -395,7 +395,7 @@ Example:
     "routes": [
       {
         "route": "POST /orders",
-        "source": "src/api/orders.spore:4",
+        "source": "src/api/orders.fungi:4",
         "key": "header:Idempotency-Key",
         "ttl": "24h",
         "conflict": "return_previous_response"
@@ -431,7 +431,7 @@ API idempotency warning:
 POST /orders performs database.write but has no idempotency policy.
 
 Source:
-  src/api/orders.spore:4
+  src/api/orders.fungi:4
 
 Suggestion:
   Add an idempotency block or mark as intentionally non-idempotent.
@@ -502,7 +502,7 @@ Event id:
   evt_123
 
 Source:
-  src/api/webhooks.spore:3
+  src/api/webhooks.fungi:3
 
 Action:
   Previous successful result returned.
@@ -579,7 +579,7 @@ Duplicate outbound API warning:
 Same payload sent to PaymentProvider.capture 3 times in 10 seconds.
 
 Source:
-  src/payments/capture.spore:22
+  src/payments/capture.fungi:22
 
 Suggestion:
   Check retry logic or add idempotency key.
@@ -630,7 +630,7 @@ Suggestion:
 
 ---
 
-## 15. API Policy in `boot.spore`
+## 15. API Policy in `boot.fungi`
 
 Example policy:
 
@@ -692,8 +692,8 @@ Example:
       {
         "typeA": "CreateCustomerRequest",
         "typeB": "NewCustomerRequest",
-        "sourceA": "src/api/customers.spore:3",
-        "sourceB": "src/api/users.spore:8",
+        "sourceA": "src/api/customers.fungi:3",
+        "sourceB": "src/api/users.fungi:8",
         "severity": "warning",
         "recommendation": "Reuse one type or mark intentionally separate."
       }
@@ -721,7 +721,7 @@ Example:
         "recommendedRoutesMissing": [
           {
             "route": "POST /contact",
-            "source": "src/api/contact.spore:4",
+            "source": "src/api/contact.fungi:4",
             "severity": "info"
           }
         ]
@@ -778,7 +778,7 @@ Example:
       "method": "POST",
       "path": "/orders",
       "handler": "createOrder",
-      "source": "src/api/orders.spore:4",
+      "source": "src/api/orders.fungi:4",
       "request": "CreateOrderRequest",
       "response": "CreateOrderResponse",
       "idempotency": {
@@ -792,7 +792,7 @@ Example:
       "name": "PaymentWebhook",
       "method": "POST",
       "path": "/webhooks/payment",
-      "source": "src/api/webhooks.spore:3",
+      "source": "src/api/webhooks.fungi:3",
       "signatureRequired": true,
       "replayProtection": true,
       "idempotencyKey": "json.path:$.id"
@@ -967,7 +967,7 @@ Galerina's advantage should be:
 
 ```text
 the compiler/toolchain can check API declarations consistently
-the reports are source-mapped back to .spore files
+the reports are source-mapped back to .fungi files
 security/idempotency guidance is generated automatically
 AI tools can understand the API map
 ```
@@ -1001,7 +1001,7 @@ Should duplicate type shapes be warnings only?
 Should idempotency be required for all POST routes or only risky routes?
 Should PATCH and DELETE require idempotency by default?
 Should webhooks always require replay protection?
-Should idempotency storage be declared in boot.spore?
+Should idempotency storage be declared in boot.fungi?
 Should payload mismatch reject by default?
 Should duplicate outbound API detection be runtime-only or also static where possible?
 Should the API manifest generate OpenAPI directly or feed an OpenAPI package?
@@ -1062,6 +1062,6 @@ Require or recommend idempotency for risky side effects.
 Protect webhooks from replay.
 Warn about duplicate outbound calls.
 Generate API manifests.
-Map every warning back to .spore source.
+Map every warning back to .fungi source.
 Leave actual routing and storage implementation to frameworks/packages.
 ```

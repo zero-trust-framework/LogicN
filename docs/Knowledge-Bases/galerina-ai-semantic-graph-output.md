@@ -1,7 +1,7 @@
 # Galerina — AI Semantic Graph Output (--emit-ai-graph)
 
 **Status:** Phase 13A — Implementation target
-**Depends on:** [galerina-semantic-graph-system](galerina-semantic-graph-system.md), SPORE-Graph, `galerina-core-compiler`
+**Depends on:** [galerina-semantic-graph-system](galerina-semantic-graph-system.md), FUNGI-Graph, `galerina-core-compiler`
 
 ---
 
@@ -79,7 +79,7 @@ galerina check --emit-semantic-graph --emit-ai-graph
 
 ## Example: Source and AI Graph Output
 
-### Source (users.spore)
+### Source (users.fungi)
 
 ```galerina
 intent UserLookup {
@@ -159,7 +159,7 @@ contract {
         { "parameter": "id", "from": "UNVALIDATED", "to": "VALIDATED", "at": "db.query" }
       ],
       "diagnostics": [],
-      "source": { "file": "users.spore", "startLine": 8, "endLine": 18 }
+      "source": { "file": "users.fungi", "startLine": 8, "endLine": 18 }
     }
   ],
   "types": [
@@ -170,7 +170,7 @@ contract {
         { "name": "email", "type": "Email", "valueState": "protected" },
         { "name": "createdAt", "type": "Timestamp" }
       ],
-      "source": { "file": "users.spore", "startLine": 1 }
+      "source": { "file": "users.fungi", "startLine": 1 }
     }
   ],
   "diagnostics": []
@@ -235,14 +235,14 @@ Trust boundaries, capability requirements, value-state transitions, and privacy 
 
 ---
 
-## Relationship to SPORE-Graph
+## Relationship to FUNGI-Graph
 
-The AI semantic graph is one export format derived from the SemanticGraph built by SPORE-Graph. The pipeline is:
+The AI semantic graph is one export format derived from the SemanticGraph built by FUNGI-Graph. The pipeline is:
 
 ```
 Source
   → Compiler Pipeline
-    → SemanticGraph (SPORE-Graph)     ← canonical shared semantic model
+    → SemanticGraph (FUNGI-Graph)     ← canonical shared semantic model
       → --emit-semantic-graph       → build/semantic/semantic-graph.json
       → --emit-ai-graph             → build/semantic/galerina.ai.json
 ```
@@ -318,7 +318,7 @@ A structured export of governance proof chains — the sequence of compiler deci
 
 ## See Also
 
-- [galerina-semantic-graph-system](galerina-semantic-graph-system.md) — SemanticGraph architecture and SPORE-Graph integration
+- [galerina-semantic-graph-system](galerina-semantic-graph-system.md) — SemanticGraph architecture and FUNGI-Graph integration
 - [galerina-intent-graph](galerina-intent-graph.md) — intent declaration and IntentGraph
 - [galerina-compiler-pipeline](galerina-compiler-pipeline.md) — full compiler phase sequence
 - [galerina-ide-tooling](galerina-ide-tooling.md) — how IDEs consume the AI graph

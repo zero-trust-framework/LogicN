@@ -57,7 +57,7 @@ re-opens an egress/SSRF path. Therefore:
 ### Audit trail (shipped — security follow-up to `b6033e1`)
 The outbound dial (`stdlib.ts` `auditAllowlistedEgress`) emits one **audit line to stderr the first time each
 host is admitted via the allow-list** (per process), tagged
-`[galerina:egress-audit] SPORE-NET-001 … admitted via GALERINA_EGRESS_ALLOWED_HOSTS`. It fires only on the
+`[galerina:egress-audit] FUNGI-NET-001 … admitted via GALERINA_EGRESS_ALLOWED_HOSTS`. It fires only on the
 bypass path (guard code `Galerina_NETWORK_EGRESS_ALLOWLISTED`, incl. redirect hops) — normal public-HTTPS egress
 (`EGRESS_ALLOWED`) is **not** audited — so an unexpected allow-listed host that actually gets dialed is visible
 in the logs. Collect stderr in production and alert on this tag. (A richer structured `AuditLogger` via

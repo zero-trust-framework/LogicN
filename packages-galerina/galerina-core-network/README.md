@@ -417,14 +417,14 @@ audit requirements
 ```ts
 export interface NetworkDiagnostic {
     code:
-        | "SPORE-NETWORK-001"
-        | "SPORE-NETWORK-002"
-        | "SPORE-NETWORK-003"
-        | "SPORE-NETWORK-004"
-        | "SPORE-NETWORK-005"
-        | "SPORE-NETWORK-006"
-        | "SPORE-NETWORK-007"
-        | "SPORE-NETWORK-008"
+        | "FUNGI-NETWORK-001"
+        | "FUNGI-NETWORK-002"
+        | "FUNGI-NETWORK-003"
+        | "FUNGI-NETWORK-004"
+        | "FUNGI-NETWORK-005"
+        | "FUNGI-NETWORK-006"
+        | "FUNGI-NETWORK-007"
+        | "FUNGI-NETWORK-008"
 
     severity: "error" | "warning" | "info"
 
@@ -436,18 +436,18 @@ export interface NetworkDiagnostic {
 }
 ```
 
-## Diagnostic Codes (SPORE-NETWORK-001–008)
+## Diagnostic Codes (FUNGI-NETWORK-001–008)
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-NETWORK-001` | undeclared network destination |
-| `SPORE-NETWORK-002` | capability missing for network operation |
-| `SPORE-NETWORK-003` | insecure transport denied |
-| `SPORE-NETWORK-004` | raw socket denied |
-| `SPORE-NETWORK-005` | destination not allowlisted |
-| `SPORE-NETWORK-006` | secret flow to unapproved destination |
-| `SPORE-NETWORK-007` | AI provider not approved |
-| `SPORE-NETWORK-008` | runtime network policy unavailable, replay violation or governance metadata missing |
+| `FUNGI-NETWORK-001` | undeclared network destination |
+| `FUNGI-NETWORK-002` | capability missing for network operation |
+| `FUNGI-NETWORK-003` | insecure transport denied |
+| `FUNGI-NETWORK-004` | raw socket denied |
+| `FUNGI-NETWORK-005` | destination not allowlisted |
+| `FUNGI-NETWORK-006` | secret flow to unapproved destination |
+| `FUNGI-NETWORK-007` | AI provider not approved |
+| `FUNGI-NETWORK-008` | runtime network policy unavailable, replay violation or governance metadata missing |
 
 ## NetworkPolicyReport
 

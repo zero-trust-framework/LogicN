@@ -151,10 +151,10 @@ Advanced: explicit control, same governance, better performance
 This principle directly informs:
 
 - **Stdlib**: `STDLIB_CAPABILITY_MAP` makes every effectful stdlib function explicit
-- **Effect checker**: `SPORE-STDLIB-001` catches hidden effectful calls
+- **Effect checker**: `FUNGI-STDLIB-001` catches hidden effectful calls
 - **GIR**: `allowedEffectsMask`, `entryPoints`, `sourceHash` make the program's authority explicit
 - **RuntimeManifest**: the runtime does not guess governance — it receives a verified manifest
-- **PackageResolver**: `SPORE-PKG-003/004/005` catch hidden capabilities, install scripts, unsigned packages
+- **PackageResolver**: `FUNGI-PKG-003/004/005` catch hidden capabilities, install scripts, unsigned packages
 - **ValueStateFlags**: taint tracking makes PII flow visible
 - **NodeFlags**: structural properties made explicit at parse time
 

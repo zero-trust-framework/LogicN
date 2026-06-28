@@ -2,7 +2,7 @@
 //
 // Proves: ALLOW strictly within the window (now < notAfter); DENY exactly AT and after notAfter
 // (half-open window, hard expiry); malformed/absent lease → INDETERMINATE collapse → deny-by-default
-// carrying + sinking SPORE-GOV-3VL-001; purity/determinism (same (lease, now) → same decision, no
+// carrying + sinking FUNGI-GOV-3VL-001; purity/determinism (same (lease, now) → same decision, no
 // clock read); and the soundness invariant that no non-ALLOW path authorizes.
 
 import { test } from "node:test";
@@ -36,7 +36,7 @@ test("AT notAfter → DENY (half-open window, hard expiry)", () => {
   assert.equal(d.decision, "deny");
   assert.equal(d.authorized, false);
   assert.equal(d.reason, "expired");
-  assert.equal(d.diagnostic, null, "expiry is an ordinary DENY, not SPORE-GOV-3VL-001");
+  assert.equal(d.diagnostic, null, "expiry is an ordinary DENY, not FUNGI-GOV-3VL-001");
   assert.equal(isLeaseValid(lease(), 100), false);
 });
 
@@ -56,7 +56,7 @@ test("malformed / absent lease → INDETERMINATE collapse → deny-by-default, a
   assert.equal(d.authorized, false);
   assert.equal(d.reason, "malformed");
   assert.equal(d.lease, null);
-  assert.ok(d.diagnostic && d.diagnostic.code === GOV_3VL_DIAGNOSTIC, "carries SPORE-GOV-3VL-001");
+  assert.ok(d.diagnostic && d.diagnostic.code === GOV_3VL_DIAGNOSTIC, "carries FUNGI-GOV-3VL-001");
   assert.ok(sunk && sunk.code === GOV_3VL_DIAGNOSTIC, "forwarded to onDiagnostic sink");
 
   // each malformed shape independently denies

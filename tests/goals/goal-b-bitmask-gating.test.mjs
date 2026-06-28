@@ -35,7 +35,7 @@ describe("T-007: Goal B — Single-Cycle Bitmask Capability Gating", () => {
     //    a. Call is trapped before any data exits the sandbox
     //    b. Trap fires in ≤ 1 CPU instruction cycle (Wasmtime trap metrics)
     //    c. V_DPM is unchanged: still 0b11111110 (trap ≠ permission grant)
-    //    d. DSS emits SPORE-CAP-003 diagnostic
+    //    d. DSS emits FUNGI-CAP-003 diagnostic
     //
     // 5. Set V_DPM = 0b11111111 (all bits active)
     // 6. Attempt the same network.outbound call

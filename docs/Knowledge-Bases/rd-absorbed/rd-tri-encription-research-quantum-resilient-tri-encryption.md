@@ -63,7 +63,7 @@
 
 7. **One internal KB contradiction to fix (the "check"):** `KB/galerina-hardware-future-substrates.md:63`
    lists *"Encryption → Photonic matrix operations"* — which **directly contradicts** the canonical
-   crypto-on-core invariant **`SPORE-SUBSTRATE-001 / CRYPTO_ON_NOISY_LANE`** (always-error;
+   crypto-on-core invariant **`FUNGI-SUBSTRATE-001 / CRYPTO_ON_NOISY_LANE`** (always-error;
    `KB/galerina-substrate-failure-model.md:186,247`). The future-substrates file is the superseded 2026-06-01
    outlier (it assumes photonic = "Full" determinism, `:42`); the 2026-06-15 substrate model overturns that.
    **Recommend correcting line 63.** (§6.3)
@@ -74,7 +74,7 @@
 |---|---|---|
 | Confidentiality at rest / in transit | **ADD** ML-KEM-768 (hybrid) + AEAD (KEM-DEM/HPKE) | deterministic digital core |
 | Quantum-resilience | KEM = ML-KEM (FIPS 203); sig = ML-DSA-65 (FIPS 204); hash = SHA-256/SHAKE (keep) | digital core |
-| Zero-trust | verify-before-decrypt, fail-closed; tri-logic `unknown→deny` key-release | `.spore` governance + engine |
+| Zero-trust | verify-before-decrypt, fail-closed; tri-logic `unknown→deny` key-release | `.fungi` governance + engine |
 | Tri-logic in crypto | adopt NTRU/Kyber ternary polynomials (exact, digital) | digital core |
 | Compute-on-encrypted (FHE) | research track only; digital; not a near-term `.tmf` feature | digital core |
 | Self-heal | erasure coding + re-verify vs signed root, **outside** the gate | engine, fail-closed |
@@ -133,17 +133,17 @@ defend.)
   - Constant-time only: no `==`, only `.constantTimeEquals()`; secrets may not drive branches/indices/loops
     (`:24-46,88-114`).
   - Fail-closed release: runtime *"must NOT silently translate `hsm → env → string`"*; diagnostics
-    `SPORE-SECURITY-HSM-002/003/005/006` deny downgrade/reveal/fallback (`:228-249`).
+    `FUNGI-SECURITY-HSM-002/003/005/006` deny downgrade/reveal/fallback (`:228-249`).
   - Compile-time crypto: cipher suite / min key bits / AEAD mode are **compile-time constants**, *"a tampered
     config file must not be able to downgrade encryption"*, fallback **must fail closed**
-    (`KB/galerina-security-compile-time-crypto.md:5-9,82-98`; `SPORE-CRYPTO-007`).
+    (`KB/galerina-security-compile-time-crypto.md:5-9,82-98`; `FUNGI-CRYPTO-007`).
   - Scoped vaults (request/flow/session/service/secure), owner-checked, TTL'd, audited
     (`KB/scoped-vaults.md:48-56,308-320`); session cookie holds only a UUID — *"the SessionVault holds the
     authority"* (`KB/session-vault.md:122-138`).
 
 > **Implication.** Galerina gives us a production-grade *key-custody and constant-time discipline* to plug an
 > encryption layer into — but the encryption layer itself (KEM + AEAD) does not exist and must be built
-> (engine-side, governed by `.spore` — §10).
+> (engine-side, governed by `.fungi` — §10).
 
 ### 2.2 The `.tmf` notes today: integrity + authenticity, **payload in clear**
 
@@ -294,7 +294,7 @@ crypto. This is where tri-logic is *earned*, not decorative:
   `+1=ALLOW`; `min`=Kleene ∧ ("more-cautious input wins, fail-closed"), `max`=∨, `neg` (where `¬0=0` — *"a
   negation never turns 'we don't know' into a definite verdict"*, `:100-101`), and majority `consensusTrit`.
 - **The release rule:** `authorizeDecrypt(caller, object) → {allow,deny,unknown}`; **`collapse(0)=deny`**
-  (audited `SPORE-GOV-3VL-001`, `:124-128`); the `KeyHandle` runs `Decaps`/`Open` **only** when the verdict is
+  (audited `FUNGI-GOV-3VL-001`, `:124-128`); the `KeyHandle` runs `Decaps`/`Open` **only** when the verdict is
   `+1`. Mirrors Galerina's existing *Secret Access* example where `revealSecret()` requires definite `true` and
   *"unknown fails closed"* (`KB/galerina-core-logic-tristate-developer-guide.md:32-33,668-700`).
 - **Why it satisfies zero-trust (provably):**
@@ -307,7 +307,7 @@ crypto. This is where tri-logic is *earned*, not decorative:
     erasure-to-`0`** all collapse to **deny key release**. A literal analog `0` from a noisy lane is *itself*
     `unknown` (`:24,55`) → deny.
 - **Crucially, tri-logic governs *whether* the cipher runs, never *how* it computes.** The KEM/AEAD math stays
-  bit-exact binary/modular on the deterministic core (`SPORE-SUBSTRATE-001`, §6). Advisory/uncertain reasoning
+  bit-exact binary/modular on the deterministic core (`FUNGI-SUBSTRATE-001`, §6). Advisory/uncertain reasoning
   (e.g. an AI risk score) is **barred from authority** — *Omni Logic* "must never … grant runtime authority
   directly … convert uncertainty into allow", downgrading to `review` (`KB/galerina-core-logic-omni-logic.md:30-32,160-171`).
 
@@ -361,11 +361,11 @@ honest findings settle it:
   ±1 coefficient error propagates through the NTT and yields the wrong key / a failed re-encryption check
   → **fail closed**. [[FIPS-203]] [[FIPS-204]] Error tolerance is *zero*; analog precision is ≤~10 bits. The
   gap is unbridgeable for the crypto math.
-- Galerina already encodes this as a **rule, not an opinion**: **`SPORE-SUBSTRATE-001 / CRYPTO_ON_NOISY_LANE`** —
+- Galerina already encodes this as a **rule, not an opinion**: **`FUNGI-SUBSTRATE-001 / CRYPTO_ON_NOISY_LANE`** —
   *"a Hash/Sign/crypto effect declared on a noisy lane. Integrity is **never tolerated** — forbidden outright …
   **error** (always)"* (`KB/galerina-substrate-failure-model.md:186,247`); *"**Crypto cannot be analog.** …
   hashing/signing must be bit-exact, so it cannot run on a noisy lane"* (`KB/galerina-photonic-tri-substrate-rd-agenda.md:58-59`).
-  Un-voted analog into a deterministic/crypto sink is `SPORE-SUBSTRATE-004` (`:189`).
+  Un-voted analog into a deterministic/crypto sink is `FUNGI-SUBSTRATE-004` (`:189`).
 
 ### 6.2 What photonics *legitimately* accelerates (outside the crypto)
 
@@ -386,11 +386,11 @@ honest findings settle it:
 ### 6.3 The KB contradiction to fix (the "check")
 
 `KB/galerina-hardware-future-substrates.md:63` lists **"Encryption → Photonic matrix operations"** as an
-accelerated-math use. This **contradicts `SPORE-SUBSTRATE-001`**. The future-substrates file is the **superseded
+accelerated-math use. This **contradicts `FUNGI-SUBSTRATE-001`**. The future-substrates file is the **superseded
 2026-06-01 outlier**: it assumes photonic = *"Full"* determinism (`:42`), an assumption the 2026-06-15
 substrate-failure model explicitly overturns (photonic is analog/probabilistic;
 `KB/galerina-photonic-tri-substrate-rd-agenda.md:48-51`). **Recommendation:** correct `future-substrates:63` to
-move "Encryption" out of the photonic plane and add a pointer to `SPORE-SUBSTRATE-001` — and keep its own correct
+move "Encryption" out of the photonic plane and add a pointer to `FUNGI-SUBSTRATE-001` — and keep its own correct
 rule that photonic is *"Suitable only for mathematical operations (never governance logic)"* (`:54`) and *"No
 hardware may become a source of authority"* (`:304-324`).
 
@@ -473,7 +473,7 @@ cost availability … never safety"* (`vAnd(t*,r) ≤ t*`, `KB/galerina-substrat
   Galerina's *"hashes re-checked at effect boundaries"* (`KB/galerina-governed-memory-blocks.md:219`) and
   *"recovered/cached evidence requires re-verification before reuse"* (`KB/galerina-adaptive-runtime-profiles.md:234`).
 - **Tri-logic ties in:** a segment whose reconstruction does not verify is `unknown(0)` → **deny** → re-fetch;
-  it never silently enters the store. This is the `SPORE-SUBSTRATE` *erasure-to-`0`* discipline applied to
+  it never silently enters the store. This is the `FUNGI-SUBSTRATE` *erasure-to-`0`* discipline applied to
   storage (`KB/galerina-substrate-failure-model.md:48,71`).
 
 This delivers everything the notes wanted from "self-heal" (data survives bit-rot / dropped sub-vectors /
@@ -493,14 +493,14 @@ degraded lanes) **without** fabricating data, decrypting prematurely, or opening
 | `0` stored in **"0 bits"** via "hardware-level bypass" (`1.md:53-59`) while layout is "fixed-width, non-variable" (`1.md:67`) | **Self-contradictory** | Can't be both O(1) fixed-width-indexable *and* zero-allocation-sparse; pick one (fixed-width OR sparse+index) |
 | Payload is **NVFP4** 4-bit float blocks (`1.md:100-116`) but file is a "balanced ternary substrate" (`1.md:24`) | **Incoherent** | NVFP4 ≠ trits; choose representation per modality, don't claim both |
 | In-cache **convolution self-heal** hot-committed live (`3.md:160-168`) | **Unsafe** | Replace with erasure-coding + re-verify vs signed root, §8 |
-| `SPORE-SUBSTRATE-001` crypto-on-core (from Galerina) | **Sound** | Adopt — keep all crypto on the deterministic core |
+| `FUNGI-SUBSTRATE-001` crypto-on-core (from Galerina) | **Sound** | Adopt — keep all crypto on the deterministic core |
 | `future-substrates.md:63` "Encryption → Photonic" | **Contradiction** | Correct the KB (superseded outlier), §6.3 |
 
 ---
 
 ## 10. Concrete recommendation — how to *extend* the `.tmf` spec
 
-**Add a confidentiality layer, engine-side, governed by `.spore`, leaving the integrity/authenticity gate intact:**
+**Add a confidentiality layer, engine-side, governed by `.fungi`, leaving the integrity/authenticity gate intact:**
 
 1. **Container changes (`.tmf`):**
    - Header `flags` **bit1 = encrypted** (alongside existing `bit0 = signed`); a **`crypto_profile`** field
@@ -511,22 +511,22 @@ degraded lanes) **without** fabricating data, decrypting prematurely, or opening
    - **Streaming AEAD** layout for large-media sections (segment size, per-segment nonce, last-segment flag).
    - **`+1` history**: per-epoch key, KDF ratchet, hash-linked segment roots; crypto-erasure tombstones.
 2. **Placement (non-negotiable):** all KEM/AEAD/hash math on the **deterministic digital core**
-   (`SPORE-SUBSTRATE-001`). **Tri-logic key-release gate** in `.spore` governance (`collapse_deny`). **Erasure-code
+   (`FUNGI-SUBSTRATE-001`). **Tri-logic key-release gate** in `.fungi` governance (`collapse_deny`). **Erasure-code
    self-heal outside the gate**, re-verify vs signed root.
 3. **Defaults:** ML-KEM-768 (hybrid X25519+ML-KEM-768 during transition); AES-256-GCM / streaming AEAD;
    HKDF-SHA256 or SHAKE256 KDF; suite pinned at compile time; fail-closed downgrade.
 
 **Galerina gaps this surfaces** (noted here since the deliverable is doc-only; candidates to file under
-purpose #2 if/when the `.spore` governance side is built):
+purpose #2 if/when the `.fungi` governance side is built):
 
-- **No encryption / KEM / AEAD effect** exposed to `.spore` (only `Hash`/`Sign`) — the core gap.
-- **No bytes/buffer primitive** to assemble container bytes from `.spore` (already a known TritMesh blocker).
+- **No encryption / KEM / AEAD effect** exposed to `.fungi` (only `Hash`/`Sign`) — the core gap.
+- **No bytes/buffer primitive** to assemble container bytes from `.fungi` (already a known TritMesh blocker).
 - **No streaming-AEAD abstraction** for large media.
 - *(Optional, optimization not security)* **No balanced-ternary arithmetic** — only needed if a digital-ternary
   NTRU/ML-KEM backend is ever pursued.
 
 The crypto itself stays **engine-side** (per the Galerina↔TritMesh boundary: *Galerina governs, the engine
-stores/computes*); `.spore` makes the **policy/key-release** decisions only.
+stores/computes*); `.fungi` makes the **policy/key-release** decisions only.
 
 ---
 
@@ -608,11 +608,11 @@ never the notes' fabricating in-cache convolution.
 **Galerina Knowledge-Bases** (`C:\wwwprojects\Galerina\docs\Knowledge-Bases\`)
 - `galerina-quantum-resistance-posture.md` (Shor/Grover; keep SHA-256; ML-KEM deferred; PQ cold-paths) ·
   `galerina-three-valued-governance.md` (K3 operators; fail-closed + no-coercion theorems; collapse) ·
-  `galerina-substrate-failure-model.md` (`SPORE-SUBSTRATE-001..004`; noise model; TMR; "cannot fail open") ·
+  `galerina-substrate-failure-model.md` (`FUNGI-SUBSTRATE-001..004`; noise model; TMR; "cannot fail open") ·
   `galerina-photonic-tri-substrate-rd-agenda.md` ("crypto cannot be analog"; no invented crypto) ·
   `galerina-substrate-contracts.md` (substrate `{lane/tolerance/redundancy}`; crypto-on-core fix) ·
   `galerina-security-secret-safety.md` (HSM/KMS; `KeyHandle`/`ProtectedSecret`; constant-time; fail-closed) ·
-  `galerina-security-compile-time-crypto.md` (sealed crypto policy; no downgrade; `SPORE-CRYPTO-*`) ·
+  `galerina-security-compile-time-crypto.md` (sealed crypto policy; no downgrade; `FUNGI-CRYPTO-*`) ·
   `scoped-vaults.md` / `session-vault.md` (scoped, audited custody) ·
   `galerina-signed-attestation.md` (Ed25519→ML-DSA-65; "signs what it proves") ·
   `hybrid-electronic-optical-compute.md` (good vs bad optical candidates; governance stays electronic) ·

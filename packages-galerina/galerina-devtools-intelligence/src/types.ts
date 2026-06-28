@@ -17,7 +17,7 @@ export interface IndexedFlow {
   declaredEffects: string[];
   economicsHints: string[];          // raw contract.economics content strings
   hasTaint: boolean;
-  governanceCodes: string[];         // SPORE-GOV-xxx etc codes that fire
+  governanceCodes: string[];         // FUNGI-GOV-xxx etc codes that fire
   hasSecrets: boolean;
   qualifier_tags: string[];          // ['secure', 'has-intent', 'has-economics'] etc
   // Source info
@@ -57,7 +57,7 @@ export interface WorkspaceIndex {
   /** Number of files skipped (content unchanged) in the last build */
   skippedFiles?: number;
   /**
-   * SPORE-INTEL-001 integrity tag over the canonical index (all fields except this one).
+   * FUNGI-INTEL-001 integrity tag over the canonical index (all fields except this one).
    * `hmac-sha256:<hex>` when GALERINA_INDEX_HMAC_KEY is set (tamper-RESISTANT), else `sha256:<hex>`
    * (tamper-EVIDENT). Verified on load; any mismatch / absence → the cached index is DISCARDED and
    * the workspace is fully re-parsed (fail-closed — a poisoned/corrupt cache is never trusted).

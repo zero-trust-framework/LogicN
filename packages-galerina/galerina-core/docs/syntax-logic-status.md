@@ -7,7 +7,7 @@ Status key:
 
 | Status | Meaning |
 |---|---|
-| Implemented prototype | Covered by current `.spore` examples and prototype checks. |
+| Implemented prototype | Covered by current `.fungi` examples and prototype checks. |
 | Documented draft | Described in language docs, but parser/checker coverage is incomplete. |
 | Package-owned | Belongs in a reusable package, not the core language. |
 | TODO | Needed for v1 or production maturity, but not yet implemented. |
@@ -29,8 +29,8 @@ HTML or CSS badges may be added later by the documentation renderer.
 
 | Concept | Galerina form or decision | Status | Security risk | Short reason |
 |---|---|---|---|---|
-| Source file | `.spore` | Implemented prototype | OK | Galerina source examples and prototype CLI use `.spore`. |
-| Entry point | `boot.spore` / `secure flow main()` | Implemented prototype | Managed | Keeps startup explicit and policy-checkable. |
+| Source file | `.fungi` | Implemented prototype | OK | Galerina source examples and prototype CLI use `.fungi`. |
+| Entry point | `boot.fungi` / `secure flow main()` | Implemented prototype | Managed | Keeps startup explicit and policy-checkable. |
 | Function | `flow name(...) -> Type` | Implemented prototype | Managed | Flows may carry effects, reports and target planning. |
 | Syntax governance | every syntax feature starts untrusted until typed, effect-checked, permissioned and reportable | Documented draft | Managed | Prevents parser acceptance from becoming implicit trust. |
 | Secure function | `secure flow` | Implemented prototype | Managed | Security-sensitive work is visible in the signature. |
@@ -50,7 +50,7 @@ HTML or CSS badges may be added later by the documentation renderer.
 | Loops | `for`, `while`, `wait until` | Documented draft | Potential | Needs bounds, termination and resource diagnostics. |
 | For-each | typed collection iteration | Documented draft | Potential | Element types and mutation rules must be checked. |
 | Pattern matching | `match value { Case => ... }` | Implemented prototype | Managed | Used for enums, `Option`, `Result`, `Tri` and `Decision`. Replaces `match`, `switch`, `case`. |
-| Result match | `match result { Ok(value) => ... Err(error) => ... }` | Implemented prototype | Managed | Covered by `examples/result.spore`. |
+| Result match | `match result { Ok(value) => ... Err(error) => ... }` | Implemented prototype | Managed | Covered by `examples/result.fungi`. |
 | Option match | `match value { Some(v) => ... None => ... }` | Implemented prototype | Managed | Makes missing values explicit. |
 | Enum match | `match enumValue { Case => ... }` | Implemented prototype | Managed | Exhaustiveness diagnostics are part of the checker direction. |
 | Boolean | `Bool` | Documented draft | Potential | Full conversion rules are still being finalised. |
@@ -121,8 +121,8 @@ invented as core syntax later.
 | Functions | lambda/closure | TODO | Deferred until capture, lifetime and effect rules are clear. |
 | Branching | `if` / `else` | Documented draft | Must preserve strict condition rules. |
 | Branching | pattern matching | Implemented prototype | Used for enums, `Option`, `Result`, `Tri`, `Decision`. |
-| Branching | `match result` | Implemented prototype | `examples/result.spore` uses `Ok` and `Err`. |
-| Branching | `match option` | Implemented prototype | `examples/option.spore` uses `Some` and `None`. |
+| Branching | `match result` | Implemented prototype | `examples/result.fungi` uses `Ok` and `Err`. |
+| Branching | `match option` | Implemented prototype | `examples/option.fungi` uses `Some` and `None`. |
 | Branching | catch-all arm (`_ => ...`) | Documented draft | `_ =>` inside the match block is the catch-all; security-sensitive fallbacks must be explicit, observable and safe. |
 | Loops | counted `for` | Documented draft | Planned with bounds and mutation checks. |
 | Loops | foreach | Documented draft | Prefer explicit collection iteration with element type checks. |

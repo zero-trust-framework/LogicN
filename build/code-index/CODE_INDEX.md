@@ -7,491 +7,491 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-ACCESS-001 | ACCESS_UNKNOWN_CAPABILITY | — | — | 1 | 16 | 6 |
-| SPORE-ACCESS-002 | ACCESS_GRANT_WITHOUT_EFFECT | — | — | 1 | 17 | 5 |
+| FUNGI-ACCESS-001 | ACCESS_UNKNOWN_CAPABILITY | — | — | 1 | 16 | 6 |
+| FUNGI-ACCESS-002 | ACCESS_GRANT_WITHOUT_EFFECT | — | — | 1 | 17 | 5 |
 
 ## AFFINE (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-AFFINE-001 | PassportConsumedTwice | — | — | 1 | 3 | 10 |
+| FUNGI-AFFINE-001 | PassportConsumedTwice | — | — | 1 | 3 | 10 |
 
 ## AI (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-AI-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-AI-003 | — | — | — | 0 | 0 | 1 |
 
 ## AMD (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-AMD-024 | — | — | — | 0 | 0 | 33 |
+| FUNGI-AMD-024 | — | — | — | 0 | 0 | 33 |
 
 ## ANTI (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-ANTI-ABUSE-001 | UngovernesBackgroundExecution | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:158 | 0 | 1 | 4 |
+| FUNGI-ANTI-ABUSE-001 | UngovernesBackgroundExecution | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:158 | 0 | 1 | 4 |
 
 ## ARCH (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-ARCH-001 | InvalidVolatility | — | — | 1 | 5 | 4 |
-| SPORE-ARCH-002 | StableDependencyViolation | — | — | 1 | 3 | 3 |
+| FUNGI-ARCH-001 | InvalidVolatility | — | — | 1 | 5 | 4 |
+| FUNGI-ARCH-002 | StableDependencyViolation | — | — | 1 | 3 | 3 |
 
 ## ASSIMILATE (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-ASSIMILATE-001 | ASSIMILATE_OUTSIDE_BOOT | — | — | 1 | 0 | 5 |
-| SPORE-ASSIMILATE-002 | — | — | — | 2 | 1 | 4 |
-| SPORE-ASSIMILATE-003 | ASSIMILATE_MISSING_CAPABILITY_GRANTS | — | — | 1 | 0 | 6 |
+| FUNGI-ASSIMILATE-001 | ASSIMILATE_OUTSIDE_BOOT | — | — | 1 | 0 | 5 |
+| FUNGI-ASSIMILATE-002 | — | — | — | 2 | 1 | 4 |
+| FUNGI-ASSIMILATE-003 | ASSIMILATE_MISSING_CAPABILITY_GRANTS | — | — | 1 | 0 | 6 |
 
 ## ASSUME (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-ASSUME-001 | ASSUMING_MISSING_FLOW_REF / ASSUMING_MISSING_CLAIM | — | — | 2 | 0 | 5 |
-| SPORE-ASSUME-002 | ASSUMING_NO_CONTRACT / ASSUMING_CLAIM_NOT_FOUND | — | — | 2 | 0 | 3 |
-| SPORE-ASSUME-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-ASSUME-004 | ASSUMING_EXTERNAL_FLOW | — | — | 1 | 3 | 3 |
+| FUNGI-ASSUME-001 | ASSUMING_MISSING_FLOW_REF / ASSUMING_MISSING_CLAIM | — | — | 2 | 0 | 5 |
+| FUNGI-ASSUME-002 | ASSUMING_NO_CONTRACT / ASSUMING_CLAIM_NOT_FOUND | — | — | 2 | 0 | 3 |
+| FUNGI-ASSUME-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-ASSUME-004 | ASSUMING_EXTERNAL_FLOW | — | — | 1 | 3 | 3 |
 
 ## AST (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-AST-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-AST-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-AST-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-AST-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-AST-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-AST-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-AST-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-AST-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-AST-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-AST-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-AST-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-AST-006 | — | — | — | 0 | 0 | 2 |
 
 ## AU (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-AU-001 | EPILOGUE_NONE_ON_HIGH_TRUST | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:594 | 0 | 0 | 5 |
-| SPORE-AU-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-AU-001 | EPILOGUE_NONE_ON_HIGH_TRUST | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:594 | 0 | 0 | 5 |
+| FUNGI-AU-002 | — | — | — | 0 | 0 | 1 |
 
 ## AUDIT (7)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-AUDIT-001 | — | — | — | 0 | 0 | 15 |
-| SPORE-AUDIT-002 | — | — | — | 0 | 0 | 7 |
-| SPORE-AUDIT-003 | — | — | — | 0 | 0 | 4 |
-| SPORE-AUDIT-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-AUDIT-005 | — | — | — | 0 | 0 | 3 |
-| SPORE-AUDIT-006 | — | — | — | 0 | 0 | 1 |
-| SPORE-AUDIT-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-AUDIT-001 | — | — | — | 0 | 0 | 15 |
+| FUNGI-AUDIT-002 | — | — | — | 0 | 0 | 7 |
+| FUNGI-AUDIT-003 | — | — | — | 0 | 0 | 4 |
+| FUNGI-AUDIT-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-AUDIT-005 | — | — | — | 0 | 0 | 3 |
+| FUNGI-AUDIT-006 | — | — | — | 0 | 0 | 1 |
+| FUNGI-AUDIT-007 | — | — | — | 0 | 0 | 2 |
 
 ## AUTH (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-AUTH-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-AUTH-003 | — | — | — | 0 | 0 | 1 |
 
 ## BACKEND (7)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-BACKEND-001 | BackendError | error | packages-galerina/galerina-core-compiler/src/index.ts:1763 | 1 | 2 | 13 |
-| SPORE-BACKEND-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-BACKEND-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-BACKEND-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-BACKEND-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-BACKEND-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-BACKEND-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BACKEND-001 | BackendError | error | packages-galerina/galerina-core-compiler/src/index.ts:1763 | 1 | 2 | 13 |
+| FUNGI-BACKEND-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BACKEND-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BACKEND-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BACKEND-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BACKEND-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BACKEND-007 | — | — | — | 0 | 0 | 2 |
 
 ## BF (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-BF-001 | BITFIELD_BIT_OVERLAP | — | — | 1 | 11 | 5 |
-| SPORE-BF-002 | BITFIELD_BIT_OUT_OF_RANGE | — | — | 1 | 11 | 5 |
+| FUNGI-BF-001 | BITFIELD_BIT_OVERLAP | — | — | 1 | 11 | 5 |
+| FUNGI-BF-002 | BITFIELD_BIT_OUT_OF_RANGE | — | — | 1 | 11 | 5 |
 
 ## BINDING (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-BINDING-001 | IMMUTABLE_LET_REASSIGNMENT | error | packages-galerina/galerina-core-compiler/src/index.ts:1298 | 1 | 1 | 15 |
-| SPORE-BINDING-002 | READONLY_REASSIGNMENT | error | packages-galerina/galerina-core-compiler/src/index.ts:1306 | 1 | 1 | 6 |
-| SPORE-BINDING-003 | READONLY_PROPERTY_MUTATION | error | packages-galerina/galerina-core-compiler/src/index.ts:1314 | 1 | 1 | 7 |
-| SPORE-BINDING-004 | MUT_IN_PURE_CONTEXT | error | packages-galerina/galerina-core-compiler/src/index.ts:1322 | 2 | 6 | 11 |
-| SPORE-BINDING-005 | IMMUTABLE_BINDING_REASSIGNED | error | packages-galerina/galerina-core-compiler/src/index.ts:1330 | 1 | 39 | 8 |
-| SPORE-BINDING-006 | MUT_TYPE_CHANGE | error | packages-galerina/galerina-core-compiler/src/index.ts:1338 | 0 | 1 | 2 |
+| FUNGI-BINDING-001 | IMMUTABLE_LET_REASSIGNMENT | error | packages-galerina/galerina-core-compiler/src/index.ts:1298 | 1 | 1 | 15 |
+| FUNGI-BINDING-002 | READONLY_REASSIGNMENT | error | packages-galerina/galerina-core-compiler/src/index.ts:1306 | 1 | 1 | 6 |
+| FUNGI-BINDING-003 | READONLY_PROPERTY_MUTATION | error | packages-galerina/galerina-core-compiler/src/index.ts:1314 | 1 | 1 | 7 |
+| FUNGI-BINDING-004 | MUT_IN_PURE_CONTEXT | error | packages-galerina/galerina-core-compiler/src/index.ts:1322 | 2 | 6 | 11 |
+| FUNGI-BINDING-005 | IMMUTABLE_BINDING_REASSIGNED | error | packages-galerina/galerina-core-compiler/src/index.ts:1330 | 1 | 39 | 8 |
+| FUNGI-BINDING-006 | MUT_TYPE_CHANGE | error | packages-galerina/galerina-core-compiler/src/index.ts:1338 | 0 | 1 | 2 |
 
 ## BLOCK (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-BLOCK-001 | UNKNOWN_CONTENT_BLOCK_TYPE | error | packages-galerina/galerina-core-compiler/src/index.ts:1430 | 1 | 2 | 8 |
-| SPORE-BLOCK-002 | UNCLOSED_CONTENT_BLOCK | error | packages-galerina/galerina-core-compiler/src/index.ts:1438 | 1 | 2 | 5 |
-| SPORE-BLOCK-003 | MISMATCHED_CONTENT_BLOCK_MARKER | error | packages-galerina/galerina-core-compiler/src/index.ts:1446 | 0 | 0 | 3 |
-| SPORE-BLOCK-004 | SECRET_IN_CONTENT_BLOCK | error | packages-galerina/galerina-core-compiler/src/index.ts:1454 | 0 | 0 | 8 |
+| FUNGI-BLOCK-001 | UNKNOWN_CONTENT_BLOCK_TYPE | error | packages-galerina/galerina-core-compiler/src/index.ts:1430 | 1 | 2 | 8 |
+| FUNGI-BLOCK-002 | UNCLOSED_CONTENT_BLOCK | error | packages-galerina/galerina-core-compiler/src/index.ts:1438 | 1 | 2 | 5 |
+| FUNGI-BLOCK-003 | MISMATCHED_CONTENT_BLOCK_MARKER | error | packages-galerina/galerina-core-compiler/src/index.ts:1446 | 0 | 0 | 3 |
+| FUNGI-BLOCK-004 | SECRET_IN_CONTENT_BLOCK | error | packages-galerina/galerina-core-compiler/src/index.ts:1454 | 0 | 0 | 8 |
 
 ## BOOL (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-BOOL-BOUNDARY-001 | — | — | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:12 | 2 | 2 | 14 |
-| SPORE-BOOL-BOUNDARY-002 | — | — | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:15 | 1 | 1 | 4 |
-| SPORE-BOOL-BOUNDARY-003 | — | — | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:18 | 1 | 1 | 3 |
-| SPORE-BOOL-BOUNDARY-004 | — | — | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:21 | 1 | 1 | 1 |
-| SPORE-BOOL-BOUNDARY-005 | — | — | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:24 | 1 | 1 | 4 |
+| FUNGI-BOOL-BOUNDARY-001 | — | — | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:12 | 2 | 2 | 14 |
+| FUNGI-BOOL-BOUNDARY-002 | — | — | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:15 | 1 | 1 | 4 |
+| FUNGI-BOOL-BOUNDARY-003 | — | — | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:18 | 1 | 1 | 3 |
+| FUNGI-BOOL-BOUNDARY-004 | — | — | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:21 | 1 | 1 | 1 |
+| FUNGI-BOOL-BOUNDARY-005 | — | — | packages-galerina/galerina-core-logic/src/bool-boundary/bool-diagnostics.ts:24 | 1 | 1 | 4 |
 
 ## BORDER (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-BORDER-001 | MISSING_REQUIRED_FIELD | — | — | 1 | 0 | 6 |
-| SPORE-BORDER-002 | TYPE_MISMATCH | — | — | 1 | 0 | 2 |
-| SPORE-BORDER-003 | FIELD_TOO_LARGE | — | — | 1 | 0 | 2 |
-| SPORE-BORDER-004 | VALUE_BELOW_MINIMUM / VALUE_ABOVE_MAXIMUM | error | — | 2 | 0 | 3 |
-| SPORE-BORDER-005 | — | — | — | 0 | 0 | 6 |
+| FUNGI-BORDER-001 | MISSING_REQUIRED_FIELD | — | — | 1 | 0 | 6 |
+| FUNGI-BORDER-002 | TYPE_MISMATCH | — | — | 1 | 0 | 2 |
+| FUNGI-BORDER-003 | FIELD_TOO_LARGE | — | — | 1 | 0 | 2 |
+| FUNGI-BORDER-004 | VALUE_BELOW_MINIMUM / VALUE_ABOVE_MAXIMUM | error | — | 2 | 0 | 3 |
+| FUNGI-BORDER-005 | — | — | — | 0 | 0 | 6 |
 
 ## BOUNDARY (9)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-BOUNDARY-001 | — | — | — | 0 | 0 | 21 |
-| SPORE-BOUNDARY-002 | — | — | — | 0 | 0 | 12 |
-| SPORE-BOUNDARY-003 | — | — | — | 0 | 0 | 11 |
-| SPORE-BOUNDARY-004 | — | — | — | 0 | 0 | 13 |
-| SPORE-BOUNDARY-005 | — | — | — | 0 | 0 | 4 |
-| SPORE-BOUNDARY-006 | — | — | — | 0 | 0 | 4 |
-| SPORE-BOUNDARY-007 | — | — | — | 0 | 0 | 5 |
-| SPORE-BOUNDARY-008 | — | — | — | 0 | 0 | 3 |
-| SPORE-BOUNDARY-009 | — | — | — | 0 | 0 | 3 |
+| FUNGI-BOUNDARY-001 | — | — | — | 0 | 0 | 21 |
+| FUNGI-BOUNDARY-002 | — | — | — | 0 | 0 | 12 |
+| FUNGI-BOUNDARY-003 | — | — | — | 0 | 0 | 11 |
+| FUNGI-BOUNDARY-004 | — | — | — | 0 | 0 | 13 |
+| FUNGI-BOUNDARY-005 | — | — | — | 0 | 0 | 4 |
+| FUNGI-BOUNDARY-006 | — | — | — | 0 | 0 | 4 |
+| FUNGI-BOUNDARY-007 | — | — | — | 0 | 0 | 5 |
+| FUNGI-BOUNDARY-008 | — | — | — | 0 | 0 | 3 |
+| FUNGI-BOUNDARY-009 | — | — | — | 0 | 0 | 3 |
 
 ## BOUNDS (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-BOUNDS-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-BOUNDS-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-BOUNDS-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-BOUNDS-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-BOUNDS-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-BOUNDS-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BOUNDS-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BOUNDS-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BOUNDS-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BOUNDS-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BOUNDS-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BOUNDS-006 | — | — | — | 0 | 0 | 2 |
 
 ## BUDGET (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-BUDGET-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-BUDGET-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-BUDGET-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-BUDGET-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BUDGET-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BUDGET-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BUDGET-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BUDGET-004 | — | — | — | 0 | 0 | 2 |
 
 ## BUILD (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-BUILD-001 | NonDeterministicBuild | error | packages-galerina/galerina-core-compiler/src/index.ts:1754 | 0 | 4 | 25 |
-| SPORE-BUILD-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-BUILD-001 | NonDeterministicBuild | error | packages-galerina/galerina-core-compiler/src/index.ts:1754 | 0 | 4 | 25 |
+| FUNGI-BUILD-005 | — | — | — | 0 | 0 | 2 |
 
 ## BYTE (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-BYTE-001 | BYTE_OUT_OF_RANGE | error | packages-galerina/galerina-core-compiler/src/index.ts:1559 | 0 | 1 | 8 |
-| SPORE-BYTE-002 | BYTE_OVERFLOW | error | packages-galerina/galerina-core-compiler/src/index.ts:1567 | 0 | 0 | 2 |
-| SPORE-BYTE-003 | IMPLICIT_BYTE_STRING_CONVERSION | error | packages-galerina/galerina-core-compiler/src/index.ts:1575 | 0 | 0 | 2 |
-| SPORE-BYTE-004 | RAW_BYTES_LOGGED | error | packages-galerina/galerina-core-compiler/src/index.ts:1583 | 0 | 1 | 2 |
-| SPORE-BYTE-005 | UNBOUNDED_BYTES_READ | error | packages-galerina/galerina-core-compiler/src/index.ts:1591 | 0 | 0 | 2 |
+| FUNGI-BYTE-001 | BYTE_OUT_OF_RANGE | error | packages-galerina/galerina-core-compiler/src/index.ts:1559 | 0 | 1 | 8 |
+| FUNGI-BYTE-002 | BYTE_OVERFLOW | error | packages-galerina/galerina-core-compiler/src/index.ts:1567 | 0 | 0 | 2 |
+| FUNGI-BYTE-003 | IMPLICIT_BYTE_STRING_CONVERSION | error | packages-galerina/galerina-core-compiler/src/index.ts:1575 | 0 | 0 | 2 |
+| FUNGI-BYTE-004 | RAW_BYTES_LOGGED | error | packages-galerina/galerina-core-compiler/src/index.ts:1583 | 0 | 1 | 2 |
+| FUNGI-BYTE-005 | UNBOUNDED_BYTES_READ | error | packages-galerina/galerina-core-compiler/src/index.ts:1591 | 0 | 0 | 2 |
 
 ## CAP (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-CAP-001 | NETWORK_WILDCARD_BANNED | — | — | 2 | 7 | 20 |
-| SPORE-CAP-002 | — | — | — | 0 | 0 | 5 |
-| SPORE-CAP-003 | — | — | — | 0 | 0 | 4 |
-| SPORE-CAP-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CAP-001 | NETWORK_WILDCARD_BANNED | — | — | 2 | 7 | 20 |
+| FUNGI-CAP-002 | — | — | — | 0 | 0 | 5 |
+| FUNGI-CAP-003 | — | — | — | 0 | 0 | 4 |
+| FUNGI-CAP-004 | — | — | — | 0 | 0 | 2 |
 
 ## CAPABILITY (9)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-CAPABILITY-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-CAPABILITY-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-CAPABILITY-IMPORT-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-CAPABILITY-IMPORT-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-CAPABILITY-IMPORT-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-CAPABILITY-IMPORT-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-CAPABILITY-IMPORT-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-CAPABILITY-IMPORT-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-CAPABILITY-IMPORT-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CAPABILITY-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-CAPABILITY-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-CAPABILITY-IMPORT-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-CAPABILITY-IMPORT-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CAPABILITY-IMPORT-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CAPABILITY-IMPORT-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CAPABILITY-IMPORT-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CAPABILITY-IMPORT-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CAPABILITY-IMPORT-007 | — | — | — | 0 | 0 | 2 |
 
 ## CHAR (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-CHAR-001 | CHAR_BYTE_CONFUSION | error | packages-galerina/galerina-core-compiler/src/index.ts:1516 | 0 | 1 | 8 |
-| SPORE-CHAR-002 | INVALID_CHAR_LITERAL | error | packages-galerina/galerina-core-compiler/src/index.ts:1524 | 0 | 0 | 2 |
-| SPORE-CHAR-003 | MULTI_CHAR_LITERAL | error | packages-galerina/galerina-core-compiler/src/index.ts:1532 | 0 | 4 | 3 |
-| SPORE-CHAR-004 | IMPLICIT_CHAR_NUMBER_CONVERSION | error | packages-galerina/galerina-core-compiler/src/index.ts:1540 | 0 | 0 | 2 |
+| FUNGI-CHAR-001 | CHAR_BYTE_CONFUSION | error | packages-galerina/galerina-core-compiler/src/index.ts:1516 | 0 | 1 | 8 |
+| FUNGI-CHAR-002 | INVALID_CHAR_LITERAL | error | packages-galerina/galerina-core-compiler/src/index.ts:1524 | 0 | 0 | 2 |
+| FUNGI-CHAR-003 | MULTI_CHAR_LITERAL | error | packages-galerina/galerina-core-compiler/src/index.ts:1532 | 0 | 4 | 3 |
+| FUNGI-CHAR-004 | IMPLICIT_CHAR_NUMBER_CONVERSION | error | packages-galerina/galerina-core-compiler/src/index.ts:1540 | 0 | 0 | 2 |
 
 ## CHERI (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-CHERI-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CHERI-001 | — | — | — | 0 | 0 | 2 |
 
 ## CLI (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-CLI-REDACT-001 | — | — | packages-galerina/galerina-core-cli/src/security.ts:15 | 0 | 1 | 3 |
+| FUNGI-CLI-REDACT-001 | — | — | packages-galerina/galerina-core-cli/src/security.ts:15 | 0 | 1 | 3 |
 
 ## COMMAND (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-COMMAND-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-COMMAND-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-COMMAND-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-COMMAND-002 | — | — | — | 0 | 0 | 1 |
 
 ## COMPAT (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-COMPAT-001 | — | — | — | 0 | 0 | 8 |
-| SPORE-COMPAT-002 | — | — | — | 0 | 0 | 3 |
-| SPORE-COMPAT-003 | — | — | — | 0 | 0 | 3 |
-| SPORE-COMPAT-004 | — | — | — | 0 | 0 | 3 |
-| SPORE-COMPAT-005 | — | — | — | 0 | 0 | 3 |
+| FUNGI-COMPAT-001 | — | — | — | 0 | 0 | 8 |
+| FUNGI-COMPAT-002 | — | — | — | 0 | 0 | 3 |
+| FUNGI-COMPAT-003 | — | — | — | 0 | 0 | 3 |
+| FUNGI-COMPAT-004 | — | — | — | 0 | 0 | 3 |
+| FUNGI-COMPAT-005 | — | — | — | 0 | 0 | 3 |
 
 ## COMPTIME (8)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-COMPTIME-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-COMPTIME-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-COMPTIME-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-COMPTIME-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-COMPTIME-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-COMPTIME-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-COMPTIME-007 | — | — | — | 0 | 0 | 2 |
-| SPORE-COMPTIME-008 | — | — | — | 0 | 0 | 2 |
+| FUNGI-COMPTIME-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-COMPTIME-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-COMPTIME-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-COMPTIME-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-COMPTIME-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-COMPTIME-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-COMPTIME-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-COMPTIME-008 | — | — | — | 0 | 0 | 2 |
 
 ## COMPUTE (7)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-COMPUTE-001 | ComputeTargetIncompatiblePattern | warning | packages-galerina/galerina-core-compiler/src/index.ts:1733 | 0 | 2 | 12 |
-| SPORE-COMPUTE-002 | — | — | — | 0 | 0 | 3 |
-| SPORE-COMPUTE-003 | — | — | — | 0 | 0 | 3 |
-| SPORE-COMPUTE-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-COMPUTE-005 | — | — | — | 0 | 0 | 4 |
-| SPORE-COMPUTE-006 | — | — | — | 0 | 0 | 1 |
-| SPORE-COMPUTE-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-COMPUTE-001 | ComputeTargetIncompatiblePattern | warning | packages-galerina/galerina-core-compiler/src/index.ts:1733 | 0 | 2 | 12 |
+| FUNGI-COMPUTE-002 | — | — | — | 0 | 0 | 3 |
+| FUNGI-COMPUTE-003 | — | — | — | 0 | 0 | 3 |
+| FUNGI-COMPUTE-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-COMPUTE-005 | — | — | — | 0 | 0 | 4 |
+| FUNGI-COMPUTE-006 | — | — | — | 0 | 0 | 1 |
+| FUNGI-COMPUTE-007 | — | — | — | 0 | 0 | 2 |
 
 ## CONFIG (32)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-CONFIG-001 | — | — | — | 0 | 0 | 13 |
-| SPORE-CONFIG-002 | — | — | — | 0 | 0 | 7 |
-| SPORE-CONFIG-003 | — | — | — | 0 | 0 | 7 |
-| SPORE-CONFIG-004 | — | — | — | 0 | 1 | 3 |
-| SPORE-CONFIG-005 | — | — | — | 0 | 1 | 2 |
-| SPORE-CONFIG-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-CONFIG-007 | — | — | — | 0 | 1 | 0 |
-| SPORE-CONFIG-008 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-009 | — | — | — | 0 | 1 | 0 |
-| SPORE-CONFIG-010 | — | — | — | 0 | 0 | 5 |
-| SPORE-CONFIG-011 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-012 | — | — | — | 0 | 1 | 0 |
-| SPORE-CONFIG-013 | — | — | — | 0 | 1 | 0 |
-| SPORE-CONFIG-014 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-015 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-016 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-017 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-018 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-019 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-020 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-021 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-022 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-023 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-024 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-025 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-026 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-027 | — | — | — | 0 | 0 | 0 |
-| SPORE-CONFIG-GOV-001 | — | — | — | 0 | 1 | 3 |
-| SPORE-CONFIG-GOV-002 | — | — | — | 0 | 6 | 1 |
-| SPORE-CONFIG-GOV-003 | — | — | — | 0 | 3 | 3 |
-| SPORE-CONFIG-WARN-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-CONFIG-WARN-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CONFIG-001 | — | — | — | 0 | 0 | 13 |
+| FUNGI-CONFIG-002 | — | — | — | 0 | 0 | 7 |
+| FUNGI-CONFIG-003 | — | — | — | 0 | 0 | 7 |
+| FUNGI-CONFIG-004 | — | — | — | 0 | 1 | 3 |
+| FUNGI-CONFIG-005 | — | — | — | 0 | 1 | 2 |
+| FUNGI-CONFIG-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CONFIG-007 | — | — | — | 0 | 1 | 0 |
+| FUNGI-CONFIG-008 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-009 | — | — | — | 0 | 1 | 0 |
+| FUNGI-CONFIG-010 | — | — | — | 0 | 0 | 5 |
+| FUNGI-CONFIG-011 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-012 | — | — | — | 0 | 1 | 0 |
+| FUNGI-CONFIG-013 | — | — | — | 0 | 1 | 0 |
+| FUNGI-CONFIG-014 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-015 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-016 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-017 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-018 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-019 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-020 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-021 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-022 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-023 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-024 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-025 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-026 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-027 | — | — | — | 0 | 0 | 0 |
+| FUNGI-CONFIG-GOV-001 | — | — | — | 0 | 1 | 3 |
+| FUNGI-CONFIG-GOV-002 | — | — | — | 0 | 6 | 1 |
+| FUNGI-CONFIG-GOV-003 | — | — | — | 0 | 3 | 3 |
+| FUNGI-CONFIG-WARN-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CONFIG-WARN-002 | — | — | — | 0 | 0 | 2 |
 
 ## CONSENT (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-CONSENT-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CONSENT-001 | — | — | — | 0 | 0 | 2 |
 
 ## CONSTRAINT (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-CONSTRAINT-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-CONSTRAINT-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-CONSTRAINT-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-CONSTRAINT-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-CONSTRAINT-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CONSTRAINT-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-CONSTRAINT-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CONSTRAINT-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CONSTRAINT-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CONSTRAINT-005 | — | — | — | 0 | 0 | 2 |
 
 ## CONTEXT (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-CONTEXT-001 | REQUIRED_CONTEXT_NOT_ACCESSED | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:196 | 1 | 35 | 25 |
+| FUNGI-CONTEXT-001 | REQUIRED_CONTEXT_NOT_ACCESSED | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:196 | 1 | 35 | 25 |
 
 ## CONTRACT (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-CONTRACT-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-CONTRACT-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-CONTRACT-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-CONTRACT-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-CONTRACT-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-CONTRACT-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CONTRACT-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CONTRACT-005 | — | — | — | 0 | 0 | 1 |
 
 ## CORE (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-CORE-0000 | — | — | — | 0 | 0 | 1 |
+| FUNGI-CORE-0000 | — | — | — | 0 | 0 | 1 |
 
 ## CRYPTO (9)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-CRYPTO-001 | — | — | — | 0 | 0 | 5 |
-| SPORE-CRYPTO-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-CRYPTO-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-CRYPTO-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-CRYPTO-005 | — | — | — | 0 | 0 | 1 |
-| SPORE-CRYPTO-006 | — | — | — | 0 | 0 | 1 |
-| SPORE-CRYPTO-007 | — | — | — | 0 | 0 | 2 |
-| SPORE-CRYPTO-008 | — | — | — | 0 | 0 | 1 |
-| SPORE-CRYPTO-PQ-001 | SIGN_EFFECT_NOT_POST_QUANTUM | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:279 | 1 | 6 | 15 |
+| FUNGI-CRYPTO-001 | — | — | — | 0 | 0 | 5 |
+| FUNGI-CRYPTO-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-CRYPTO-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-CRYPTO-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-CRYPTO-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-CRYPTO-006 | — | — | — | 0 | 0 | 1 |
+| FUNGI-CRYPTO-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-CRYPTO-008 | — | — | — | 0 | 0 | 1 |
+| FUNGI-CRYPTO-PQ-001 | SIGN_EFFECT_NOT_POST_QUANTUM | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:279 | 1 | 6 | 15 |
 
 ## DAG (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-DAG-001 | GOVERNED_FLOW_UNKNOWN_FLOOR | — | — | 1 | 0 | 1 |
-| SPORE-DAG-002 | — | — | — | 0 | 0 | 13 |
+| FUNGI-DAG-001 | GOVERNED_FLOW_UNKNOWN_FLOOR | — | — | 1 | 0 | 1 |
+| FUNGI-DAG-002 | — | — | — | 0 | 0 | 13 |
 
 ## DECISION (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-DECISION-001 | — | — | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:12 | 1 | 1 | 7 |
-| SPORE-DECISION-002 | — | — | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:15 | 1 | 1 | 4 |
-| SPORE-DECISION-003 | — | — | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:18 | 1 | 1 | 2 |
-| SPORE-DECISION-004 | — | — | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:21 | 1 | 1 | 1 |
-| SPORE-DECISION-005 | — | — | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:24 | 1 | 1 | 4 |
+| FUNGI-DECISION-001 | — | — | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:12 | 1 | 1 | 7 |
+| FUNGI-DECISION-002 | — | — | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:15 | 1 | 1 | 4 |
+| FUNGI-DECISION-003 | — | — | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:18 | 1 | 1 | 2 |
+| FUNGI-DECISION-004 | — | — | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:21 | 1 | 1 | 1 |
+| FUNGI-DECISION-005 | — | — | packages-galerina/galerina-core-logic/src/decision/decision-diagnostics.ts:24 | 1 | 1 | 4 |
 
 ## DENIAL (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-DENIAL-001 | — | — | — | 0 | 0 | 8 |
-| SPORE-DENIAL-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-DENIAL-003 | — | — | — | 0 | 0 | 3 |
-| SPORE-DENIAL-004 | — | — | — | 0 | 0 | 3 |
-| SPORE-DENIAL-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-DENIAL-001 | — | — | — | 0 | 0 | 8 |
+| FUNGI-DENIAL-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-DENIAL-003 | — | — | — | 0 | 0 | 3 |
+| FUNGI-DENIAL-004 | — | — | — | 0 | 0 | 3 |
+| FUNGI-DENIAL-005 | — | — | — | 0 | 0 | 2 |
 
 ## DEP (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-DEP-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-DEP-001 | — | — | — | 0 | 0 | 1 |
 
 ## DEPLOY (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-DEPLOY-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-DEPLOY-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-DEPLOY-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-DEPLOY-005 | — | — | — | 0 | 0 | 2 |
 
 ## DIFF (9)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-DIFF-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-DIFF-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-DIFF-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-DIFF-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-DIFF-005 | — | — | — | 0 | 0 | 1 |
-| SPORE-DIFF-006 | — | — | — | 0 | 0 | 1 |
-| SPORE-DIFF-007 | — | — | — | 0 | 0 | 1 |
-| SPORE-DIFF-008 | — | — | — | 0 | 0 | 1 |
-| SPORE-DIFF-009 | — | — | — | 0 | 0 | 1 |
+| FUNGI-DIFF-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-DIFF-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-DIFF-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-DIFF-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-DIFF-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-DIFF-006 | — | — | — | 0 | 0 | 1 |
+| FUNGI-DIFF-007 | — | — | — | 0 | 0 | 1 |
+| FUNGI-DIFF-008 | — | — | — | 0 | 0 | 1 |
+| FUNGI-DIFF-009 | — | — | — | 0 | 0 | 1 |
 
 ## DP (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-DP-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-DP-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-DP-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-DP-004 | — | — | — | 0 | 0 | 3 |
+| FUNGI-DP-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-DP-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-DP-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-DP-004 | — | — | — | 0 | 0 | 3 |
 
 ## EC (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-EC-001 | ECONOMICS_COST_OVERFLOW | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:570 | 0 | 0 | 4 |
-| SPORE-EC-002 | ECONOMICS_FAILURE_TOLERANCE_BREACHED | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:578 | 0 | 0 | 3 |
+| FUNGI-EC-001 | ECONOMICS_COST_OVERFLOW | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:570 | 0 | 0 | 4 |
+| FUNGI-EC-002 | ECONOMICS_FAILURE_TOLERANCE_BREACHED | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:578 | 0 | 0 | 3 |
 
 ## ECON (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-ECON-001 | BudgetExceeded | warning | packages-galerina/galerina-core-compiler/src/index.ts:832 | 0 | 3 | 2 |
-| SPORE-ECON-002 | LineageMissing | info | packages-galerina/galerina-core-compiler/src/index.ts:842 | 0 | 0 | 1 |
-| SPORE-ECON-003 | AiModelUnapproved | error | packages-galerina/galerina-core-compiler/src/index.ts:852 | 0 | 0 | 1 |
+| FUNGI-ECON-001 | BudgetExceeded | warning | packages-galerina/galerina-core-compiler/src/index.ts:832 | 0 | 3 | 2 |
+| FUNGI-ECON-002 | LineageMissing | info | packages-galerina/galerina-core-compiler/src/index.ts:842 | 0 | 0 | 1 |
+| FUNGI-ECON-003 | AiModelUnapproved | error | packages-galerina/galerina-core-compiler/src/index.ts:852 | 0 | 0 | 1 |
 
 ## EFFECT (7)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-EFFECT-001 | UNDECLARED_EFFECT | error/warning | — | 2 | 72 | 100 |
-| SPORE-EFFECT-002 | OVERDECLARED_EFFECT / TRANSITIVE_EFFECT_NOT_DECLARED | warning/error | — | 3 | 21 | 51 |
-| SPORE-EFFECT-003 | EFFECT_BOUNDARY_VIOLATION | error | — | 3 | 37 | 28 |
-| SPORE-EFFECT-004 | NON_CANONICAL_EFFECT / UNKNOWN_EFFECT | error | — | 2 | 47 | 21 |
-| SPORE-EFFECT-005 | BroadAliasUsed | warning | packages-galerina/galerina-core-compiler/src/index.ts:892 | 1 | 42 | 15 |
-| SPORE-EFFECT-006 | — | — | — | 0 | 0 | 11 |
-| SPORE-EFFECT-2000 | — | — | — | 0 | 0 | 1 |
+| FUNGI-EFFECT-001 | UNDECLARED_EFFECT | error/warning | — | 2 | 72 | 100 |
+| FUNGI-EFFECT-002 | OVERDECLARED_EFFECT / TRANSITIVE_EFFECT_NOT_DECLARED | warning/error | — | 3 | 21 | 51 |
+| FUNGI-EFFECT-003 | EFFECT_BOUNDARY_VIOLATION | error | — | 3 | 37 | 28 |
+| FUNGI-EFFECT-004 | NON_CANONICAL_EFFECT / UNKNOWN_EFFECT | error | — | 2 | 47 | 21 |
+| FUNGI-EFFECT-005 | BroadAliasUsed | warning | packages-galerina/galerina-core-compiler/src/index.ts:892 | 1 | 42 | 15 |
+| FUNGI-EFFECT-006 | — | — | — | 0 | 0 | 11 |
+| FUNGI-EFFECT-2000 | — | — | — | 0 | 0 | 1 |
 
 ## ENCAP (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-ENCAP-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-ENCAP-001 | — | — | — | 0 | 0 | 1 |
 
 ## ENTROPY (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-ENTROPY-001 | — | — | — | 0 | 0 | 10 |
-| SPORE-ENTROPY-002 | — | — | — | 0 | 0 | 3 |
+| FUNGI-ENTROPY-001 | — | — | — | 0 | 0 | 10 |
+| FUNGI-ENTROPY-002 | — | — | — | 0 | 0 | 3 |
 
 ## ENTRY (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-ENTRY-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-ENTRY-001 | — | — | — | 0 | 0 | 2 |
 
 ## ERROR (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-ERROR-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-ERROR-001 | — | — | — | 0 | 0 | 1 |
 
 ## ERR_* (105)
 
@@ -607,1280 +607,1280 @@ Query this instead of grepping. Regenerate: `node scripts/code-index.mjs`.
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-EVENT-001 | EventNotDeclared | error | packages-galerina/galerina-core-compiler/src/event-checker.ts:39 | 1 | 35 | 9 |
-| SPORE-EVENT-002 | EventNeverEmitted | warning | packages-galerina/galerina-core-compiler/src/event-checker.ts:46 | 1 | 28 | 5 |
-| SPORE-EVENT-003 | ContractEmitsUndeclaredEvent | error | packages-galerina/galerina-core-compiler/src/event-checker.ts:53 | 1 | 13 | 3 |
-| SPORE-EVENT-004 | DuplicateEventEmission | warning | packages-galerina/galerina-core-compiler/src/event-checker.ts:60 | 1 | 14 | 3 |
-| SPORE-EVENT-005 | EventEmittedNotInContract | warning | packages-galerina/galerina-core-compiler/src/event-checker.ts:67 | 1 | 15 | 1 |
+| FUNGI-EVENT-001 | EventNotDeclared | error | packages-galerina/galerina-core-compiler/src/event-checker.ts:39 | 1 | 35 | 9 |
+| FUNGI-EVENT-002 | EventNeverEmitted | warning | packages-galerina/galerina-core-compiler/src/event-checker.ts:46 | 1 | 28 | 5 |
+| FUNGI-EVENT-003 | ContractEmitsUndeclaredEvent | error | packages-galerina/galerina-core-compiler/src/event-checker.ts:53 | 1 | 13 | 3 |
+| FUNGI-EVENT-004 | DuplicateEventEmission | warning | packages-galerina/galerina-core-compiler/src/event-checker.ts:60 | 1 | 14 | 3 |
+| FUNGI-EVENT-005 | EventEmittedNotInContract | warning | packages-galerina/galerina-core-compiler/src/event-checker.ts:67 | 1 | 15 | 1 |
 
 ## EVIDENCE (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-EVIDENCE-001 | — | — | — | 0 | 0 | 6 |
-| SPORE-EVIDENCE-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-EVIDENCE-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-EVIDENCE-004 | — | — | — | 0 | 0 | 3 |
-| SPORE-EVIDENCE-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-EVIDENCE-001 | — | — | — | 0 | 0 | 6 |
+| FUNGI-EVIDENCE-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-EVIDENCE-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-EVIDENCE-004 | — | — | — | 0 | 0 | 3 |
+| FUNGI-EVIDENCE-005 | — | — | — | 0 | 0 | 2 |
 
 ## EXPLAIN (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-EXPLAIN-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-EXPLAIN-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-EXPLAIN-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-EXPLAIN-004 | — | — | — | 0 | 0 | 2 |
 
 ## EXPR (7)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-EXPR-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-EXPR-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-EXPR-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-EXPR-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-EXPR-005 | — | — | — | 0 | 0 | 1 |
-| SPORE-EXPR-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-EXPR-007 | — | — | — | 0 | 0 | 1 |
+| FUNGI-EXPR-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-EXPR-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-EXPR-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-EXPR-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-EXPR-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-EXPR-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-EXPR-007 | — | — | — | 0 | 0 | 1 |
 
 ## FAULT (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-FAULT-001 | — | — | — | 1 | 4 | 3 |
-| SPORE-FAULT-002 | — | — | — | 0 | 0 | 3 |
-| SPORE-FAULT-003 | FAULT_HANDLER_FAIL_OPEN | — | — | 2 | 7 | 1 |
-| SPORE-FAULT-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-FAULT-005 | — | — | — | 0 | 0 | 7 |
+| FUNGI-FAULT-001 | — | — | — | 1 | 4 | 3 |
+| FUNGI-FAULT-002 | — | — | — | 0 | 0 | 3 |
+| FUNGI-FAULT-003 | FAULT_HANDLER_FAIL_OPEN | — | — | 2 | 7 | 1 |
+| FUNGI-FAULT-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-FAULT-005 | — | — | — | 0 | 0 | 7 |
 
 ## FED (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-FED-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-FED-001 | — | — | — | 0 | 0 | 1 |
 
 ## FG (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-FG-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-FG-001 | — | — | — | 0 | 0 | 2 |
 
 ## FLOAT (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-FLOAT-NAN-001 | — | — | — | 1 | 3 | 2 |
+| FUNGI-FLOAT-NAN-001 | — | — | — | 1 | 3 | 2 |
 
 ## FOO (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-FOO-001 | — | — | — | 0 | 3 | 0 |
+| FUNGI-FOO-001 | — | — | — | 0 | 3 | 0 |
 
 ## FUSE (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-FUSE-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-FUSE-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-FUSE-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-FUSE-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-FUSE-005 | — | — | — | 0 | 0 | 1 |
-| SPORE-FUSE-006 | — | — | — | 0 | 0 | 1 |
+| FUNGI-FUSE-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-FUSE-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-FUSE-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-FUSE-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-FUSE-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-FUSE-006 | — | — | — | 0 | 0 | 1 |
 
 ## FX (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-FX-001 | — | — | — | 0 | 3 | 0 |
-| SPORE-FX-002 | — | — | — | 0 | 4 | 0 |
-| SPORE-FX-005 | — | — | — | 0 | 2 | 0 |
-| SPORE-FX-005B | — | — | — | 0 | 2 | 0 |
-| SPORE-FX-050 | — | — | — | 0 | 4 | 0 |
-| SPORE-FX-099 | — | — | — | 0 | 5 | 0 |
+| FUNGI-FX-001 | — | — | — | 0 | 3 | 0 |
+| FUNGI-FX-002 | — | — | — | 0 | 4 | 0 |
+| FUNGI-FX-005 | — | — | — | 0 | 2 | 0 |
+| FUNGI-FX-005B | — | — | — | 0 | 2 | 0 |
+| FUNGI-FX-050 | — | — | — | 0 | 4 | 0 |
+| FUNGI-FX-099 | — | — | — | 0 | 5 | 0 |
 
 ## GATE (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-GATE-001 | GATE_UNKNOWN_CONDITION / GateAnnotationRequired | error | packages-galerina/galerina-core-compiler/src/index.ts:229 | 1 | 14 | 13 |
-| SPORE-GATE-002 | GATE_WRAPS_PURE_FLOW | — | — | 1 | 12 | 6 |
+| FUNGI-GATE-001 | GATE_UNKNOWN_CONDITION / GateAnnotationRequired | error | packages-galerina/galerina-core-compiler/src/index.ts:229 | 1 | 14 | 13 |
+| FUNGI-GATE-002 | GATE_WRAPS_PURE_FLOW | — | — | 1 | 12 | 6 |
 
 ## GDCE (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-GDCE-001 | — | — | — | 0 | 0 | 5 |
+| FUNGI-GDCE-001 | — | — | — | 0 | 0 | 5 |
 
 ## GEN (7)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-GEN-TEST-001 | — | — | — | 0 | 0 | 5 |
-| SPORE-GEN-TEST-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-GEN-TEST-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-GEN-TEST-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-GEN-TEST-005 | — | — | — | 0 | 0 | 3 |
-| SPORE-GEN-TEST-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-GEN-TEST-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GEN-TEST-001 | — | — | — | 0 | 0 | 5 |
+| FUNGI-GEN-TEST-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GEN-TEST-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GEN-TEST-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GEN-TEST-005 | — | — | — | 0 | 0 | 3 |
+| FUNGI-GEN-TEST-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GEN-TEST-007 | — | — | — | 0 | 0 | 2 |
 
 ## GOV (36)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-GOV-001 | INTENT_BEHAVIOR_MISMATCH | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:400 | 2 | 23 | 11 |
-| SPORE-GOV-002 | MISSING_AUDIT_FOR_GOVERNED_SINK | — | — | 2 | 30 | 18 |
-| SPORE-GOV-003 | PROTECTED_DATA_IN_RESPONSE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:188 | 1 | 53 | 50 |
-| SPORE-GOV-004 | DENIED_TARGET_SELECTED / DOMAIN_GUARD_NOT_FOUND / DOMAIN_GUARD_POLICY_VIOLATION | — | — | 3 | 42 | 22 |
-| SPORE-GOV-005 | PolicyPurposeMismatch | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:426 | 1 | 11 | 15 |
-| SPORE-GOV-006 | GOVERNANCE_PROOF_REQUIRED_BUT_MISSING | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:392 | 1 | 11 | 4 |
-| SPORE-GOV-007 | AuthorityBlockMissingReason | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:434 | 2 | 10 | 6 |
-| SPORE-GOV-008 | — | — | — | 0 | 0 | 3 |
-| SPORE-GOV-009 | PrivilegedFlowMissingCapability | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:447 | 1 | 8 | 5 |
-| SPORE-GOV-010 | INTENT_MISSING_ON_SECURE_FLOW | — | — | 3 | 31 | 16 |
-| SPORE-GOV-011 | UnknownContractSet | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:204 | 1 | 29 | 7 |
-| SPORE-GOV-012 | ContractSetRequirementNotMet | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:212 | 1 | 29 | 8 |
-| SPORE-GOV-013 | BoundaryViolation | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:416 | 1 | 1 | 7 |
-| SPORE-GOV-014 | MissingFallbackTarget | warning | packages-galerina/galerina-core-compiler/src/index.ts:862 | 0 | 4 | 6 |
-| SPORE-GOV-015 | EpilogueInvalidStrategy | — | — | 1 | 12 | 2 |
-| SPORE-GOV-016 | EpilogueInvalidFailureAction | — | — | 1 | 4 | 0 |
-| SPORE-GOV-017 | InvalidPhysicalHardeningValue / PhysicalHardeningOnLowRiskFlow | — | — | 3 | 14 | 7 |
-| SPORE-GOV-018 | ManualLiabilityDeclaration | — | — | 1 | 9 | 6 |
-| SPORE-GOV-019 | LIMITS_UNKNOWN_FIELD | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:376 | 1 | 11 | 6 |
-| SPORE-GOV-020 | AUTHORITY_OVERLY_BROAD | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:384 | 1 | 9 | 4 |
-| SPORE-GOV-3V | — | — | — | 0 | 0 | 2 |
-| SPORE-GOV-3VL-001 | INDETERMINATE_COLLAPSED_TO_DENY | — | packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts:102 | 1 | 32 | 80 |
-| SPORE-GOV-3VL-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-GOV-DOMAIN-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-GOV-ERROR-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-GOV-FEDERATED-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-GOV-FEDERATED-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-GOV-HIPAA-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-GOV-MONOTONE-MIN-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-GOV-PCI-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-GOV-SIG-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-GOV-SUMMARY-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-GOV-SUMMARY-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-GOV-SUMMARY-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-GOV-SUMMARY-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-GOV-SUMMARY-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GOV-001 | INTENT_BEHAVIOR_MISMATCH | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:400 | 2 | 23 | 11 |
+| FUNGI-GOV-002 | MISSING_AUDIT_FOR_GOVERNED_SINK | — | — | 2 | 30 | 18 |
+| FUNGI-GOV-003 | PROTECTED_DATA_IN_RESPONSE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:188 | 1 | 53 | 50 |
+| FUNGI-GOV-004 | DENIED_TARGET_SELECTED / DOMAIN_GUARD_NOT_FOUND / DOMAIN_GUARD_POLICY_VIOLATION | — | — | 3 | 42 | 22 |
+| FUNGI-GOV-005 | PolicyPurposeMismatch | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:426 | 1 | 11 | 15 |
+| FUNGI-GOV-006 | GOVERNANCE_PROOF_REQUIRED_BUT_MISSING | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:392 | 1 | 11 | 4 |
+| FUNGI-GOV-007 | AuthorityBlockMissingReason | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:434 | 2 | 10 | 6 |
+| FUNGI-GOV-008 | — | — | — | 0 | 0 | 3 |
+| FUNGI-GOV-009 | PrivilegedFlowMissingCapability | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:447 | 1 | 8 | 5 |
+| FUNGI-GOV-010 | INTENT_MISSING_ON_SECURE_FLOW | — | — | 3 | 31 | 16 |
+| FUNGI-GOV-011 | UnknownContractSet | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:204 | 1 | 29 | 7 |
+| FUNGI-GOV-012 | ContractSetRequirementNotMet | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:212 | 1 | 29 | 8 |
+| FUNGI-GOV-013 | BoundaryViolation | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:416 | 1 | 1 | 7 |
+| FUNGI-GOV-014 | MissingFallbackTarget | warning | packages-galerina/galerina-core-compiler/src/index.ts:862 | 0 | 4 | 6 |
+| FUNGI-GOV-015 | EpilogueInvalidStrategy | — | — | 1 | 12 | 2 |
+| FUNGI-GOV-016 | EpilogueInvalidFailureAction | — | — | 1 | 4 | 0 |
+| FUNGI-GOV-017 | InvalidPhysicalHardeningValue / PhysicalHardeningOnLowRiskFlow | — | — | 3 | 14 | 7 |
+| FUNGI-GOV-018 | ManualLiabilityDeclaration | — | — | 1 | 9 | 6 |
+| FUNGI-GOV-019 | LIMITS_UNKNOWN_FIELD | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:376 | 1 | 11 | 6 |
+| FUNGI-GOV-020 | AUTHORITY_OVERLY_BROAD | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:384 | 1 | 9 | 4 |
+| FUNGI-GOV-3V | — | — | — | 0 | 0 | 2 |
+| FUNGI-GOV-3VL-001 | INDETERMINATE_COLLAPSED_TO_DENY | — | packages-galerina/galerina-tower-citizen/src/three-valued-governance.ts:102 | 1 | 32 | 80 |
+| FUNGI-GOV-3VL-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GOV-DOMAIN-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-GOV-ERROR-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GOV-FEDERATED-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-GOV-FEDERATED-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-GOV-HIPAA-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-GOV-MONOTONE-MIN-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-GOV-PCI-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-GOV-SIG-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-GOV-SUMMARY-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GOV-SUMMARY-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GOV-SUMMARY-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GOV-SUMMARY-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GOV-SUMMARY-005 | — | — | — | 0 | 0 | 2 |
 
 ## GPU (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-GPU-SYNC-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-GPU-SYNC-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-GPU-SYNC-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-GPU-SYNC-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-GPU-SYNC-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GPU-SYNC-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GPU-SYNC-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GPU-SYNC-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GPU-SYNC-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GPU-SYNC-005 | — | — | — | 0 | 0 | 2 |
 
 ## GRAPH (7)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-GRAPH-001 | CycleDetected | error | — | 1 | 3 | 3 |
-| SPORE-GRAPH-002 | DeadFlow | warning | — | 1 | 3 | 2 |
-| SPORE-GRAPH-003 | AuthorityEscalation | error | — | 1 | 2 | 1 |
-| SPORE-GRAPH-004 | PiiLeakagePath | error | — | 1 | 2 | 1 |
-| SPORE-GRAPH-005 | MissingAuditCoverage | warning | — | 1 | 5 | 2 |
-| SPORE-GRAPH-006 | UnboundedRetry | warning | — | 1 | 2 | 0 |
-| SPORE-GRAPH-BORDER-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-GRAPH-001 | CycleDetected | error | — | 1 | 3 | 3 |
+| FUNGI-GRAPH-002 | DeadFlow | warning | — | 1 | 3 | 2 |
+| FUNGI-GRAPH-003 | AuthorityEscalation | error | — | 1 | 2 | 1 |
+| FUNGI-GRAPH-004 | PiiLeakagePath | error | — | 1 | 2 | 1 |
+| FUNGI-GRAPH-005 | MissingAuditCoverage | warning | — | 1 | 5 | 2 |
+| FUNGI-GRAPH-006 | UnboundedRetry | warning | — | 1 | 2 | 0 |
+| FUNGI-GRAPH-BORDER-001 | — | — | — | 0 | 0 | 2 |
 
 ## HINT (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-HINT-COMPUTE-001 | COMPUTE_TARGET_MISSING_FOR_AI_INFERENCE | — | — | 1 | 29 | 15 |
+| FUNGI-HINT-COMPUTE-001 | COMPUTE_TARGET_MISSING_FOR_AI_INFERENCE | — | — | 1 | 29 | 15 |
 
 ## HW (14)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-HW-001 | QuantumTargetRequiresFormalProof | error | packages-galerina/galerina-core-compiler/src/proof-graph.ts:420 | 0 | 23 | 9 |
-| SPORE-HW-002 | SealedTargetRequiresAuditTrace | warning | packages-galerina/galerina-core-compiler/src/proof-graph.ts:434 | 0 | 22 | 4 |
-| SPORE-HW-003 | AcceleratorPlaneRequiresAttestation | warning | packages-galerina/galerina-core-compiler/src/proof-graph.ts:448 | 0 | 2 | 4 |
-| SPORE-HW-004 | UnknownHardwareTarget | warning | packages-galerina/galerina-core-compiler/src/proof-graph.ts:464 | 0 | 9 | 17 |
-| SPORE-HW-101 | — | — | — | 0 | 0 | 5 |
-| SPORE-HW-102 | — | — | — | 0 | 0 | 2 |
-| SPORE-HW-103 | — | — | — | 0 | 0 | 2 |
-| SPORE-HW-104 | — | — | — | 0 | 0 | 3 |
-| SPORE-HW-201 | — | — | — | 0 | 0 | 1 |
-| SPORE-HW-301 | — | — | — | 0 | 0 | 1 |
-| SPORE-HW-302 | — | — | — | 0 | 0 | 1 |
-| SPORE-HW-401 | — | — | — | 0 | 0 | 1 |
-| SPORE-HW-402 | — | — | — | 0 | 0 | 1 |
-| SPORE-HW-403 | — | — | — | 0 | 0 | 1 |
+| FUNGI-HW-001 | QuantumTargetRequiresFormalProof | error | packages-galerina/galerina-core-compiler/src/proof-graph.ts:420 | 0 | 23 | 9 |
+| FUNGI-HW-002 | SealedTargetRequiresAuditTrace | warning | packages-galerina/galerina-core-compiler/src/proof-graph.ts:434 | 0 | 22 | 4 |
+| FUNGI-HW-003 | AcceleratorPlaneRequiresAttestation | warning | packages-galerina/galerina-core-compiler/src/proof-graph.ts:448 | 0 | 2 | 4 |
+| FUNGI-HW-004 | UnknownHardwareTarget | warning | packages-galerina/galerina-core-compiler/src/proof-graph.ts:464 | 0 | 9 | 17 |
+| FUNGI-HW-101 | — | — | — | 0 | 0 | 5 |
+| FUNGI-HW-102 | — | — | — | 0 | 0 | 2 |
+| FUNGI-HW-103 | — | — | — | 0 | 0 | 2 |
+| FUNGI-HW-104 | — | — | — | 0 | 0 | 3 |
+| FUNGI-HW-201 | — | — | — | 0 | 0 | 1 |
+| FUNGI-HW-301 | — | — | — | 0 | 0 | 1 |
+| FUNGI-HW-302 | — | — | — | 0 | 0 | 1 |
+| FUNGI-HW-401 | — | — | — | 0 | 0 | 1 |
+| FUNGI-HW-402 | — | — | — | 0 | 0 | 1 |
+| FUNGI-HW-403 | — | — | — | 0 | 0 | 1 |
 
 ## ID (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-ID-001 | MANIFEST_VERIFICATION_FAILED | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:586 | 0 | 0 | 2 |
-| SPORE-ID-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-ID-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-ID-001 | MANIFEST_VERIFICATION_FAILED | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:586 | 0 | 0 | 2 |
+| FUNGI-ID-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-ID-003 | — | — | — | 0 | 0 | 1 |
 
 ## IMPORT (7)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-IMPORT-000 | — | — | — | 0 | 0 | 1 |
-| SPORE-IMPORT-001 | — | error | — | 2 | 14 | 5 |
-| SPORE-IMPORT-002 | — | error | — | 1 | 0 | 3 |
-| SPORE-IMPORT-003 | — | error | — | 1 | 7 | 4 |
-| SPORE-IMPORT-004 | — | warning | — | 2 | 11 | 6 |
-| SPORE-IMPORT-005 | — | error | — | 1 | 9 | 3 |
-| SPORE-IMPORT-006 | — | error | — | 1 | 4 | 3 |
+| FUNGI-IMPORT-000 | — | — | — | 0 | 0 | 1 |
+| FUNGI-IMPORT-001 | — | error | — | 2 | 14 | 5 |
+| FUNGI-IMPORT-002 | — | error | — | 1 | 0 | 3 |
+| FUNGI-IMPORT-003 | — | error | — | 1 | 7 | 4 |
+| FUNGI-IMPORT-004 | — | warning | — | 2 | 11 | 6 |
+| FUNGI-IMPORT-005 | — | error | — | 1 | 9 | 3 |
+| FUNGI-IMPORT-006 | — | error | — | 1 | 4 | 3 |
 
 ## INCR (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-INCR-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-INCR-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-INCR-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-INCR-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-INCR-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-INCR-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-INCR-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-INCR-004 | — | — | — | 0 | 0 | 1 |
 
 ## INHERIT (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-INHERIT-001 | PARENT_POLICY_NOT_FOUND | — | — | 1 | 7 | 4 |
-| SPORE-INHERIT-002 | CHILD_POLICY_EXCEEDS_PARENT | — | — | 1 | 6 | 0 |
+| FUNGI-INHERIT-001 | PARENT_POLICY_NOT_FOUND | — | — | 1 | 7 | 4 |
+| FUNGI-INHERIT-002 | CHILD_POLICY_EXCEEDS_PARENT | — | — | 1 | 6 | 0 |
 
 ## INTEL (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-INTEL-001 | — | — | — | 0 | 1 | 2 |
-| SPORE-INTEL-002 | — | — | — | 1 | 4 | 2 |
+| FUNGI-INTEL-001 | — | — | — | 0 | 1 | 2 |
+| FUNGI-INTEL-002 | — | — | — | 1 | 4 | 2 |
 
 ## INTENT (11)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-INTENT-001 | INTENT_BEHAVIOR_MISMATCH | error | packages-galerina/galerina-core-compiler/src/index.ts:1165 | 0 | 0 | 22 |
-| SPORE-INTENT-002 | MISSING_REQUIRED_INTENT | error | packages-galerina/galerina-core-compiler/src/index.ts:1173 | 0 | 0 | 4 |
-| SPORE-INTENT-003 | UNSAFE_MISSING_REASON_OR_FALLBACK | error | packages-galerina/galerina-core-compiler/src/index.ts:1181 | 0 | 0 | 3 |
-| SPORE-INTENT-004 | PRIVILEGED_MISSING_CAPABILITY | error | packages-galerina/galerina-core-compiler/src/index.ts:1189 | 0 | 0 | 3 |
-| SPORE-INTENT-005 | EXPERIMENTAL_IN_PRODUCTION | error | packages-galerina/galerina-core-compiler/src/index.ts:1197 | 0 | 0 | 3 |
-| SPORE-INTENT-GRAPH-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-INTENT-GRAPH-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-INTENT-GRAPH-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-INTENT-GRAPH-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-INTENT-GRAPH-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-INTENT-GRAPH-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-INTENT-001 | INTENT_BEHAVIOR_MISMATCH | error | packages-galerina/galerina-core-compiler/src/index.ts:1165 | 0 | 0 | 22 |
+| FUNGI-INTENT-002 | MISSING_REQUIRED_INTENT | error | packages-galerina/galerina-core-compiler/src/index.ts:1173 | 0 | 0 | 4 |
+| FUNGI-INTENT-003 | UNSAFE_MISSING_REASON_OR_FALLBACK | error | packages-galerina/galerina-core-compiler/src/index.ts:1181 | 0 | 0 | 3 |
+| FUNGI-INTENT-004 | PRIVILEGED_MISSING_CAPABILITY | error | packages-galerina/galerina-core-compiler/src/index.ts:1189 | 0 | 0 | 3 |
+| FUNGI-INTENT-005 | EXPERIMENTAL_IN_PRODUCTION | error | packages-galerina/galerina-core-compiler/src/index.ts:1197 | 0 | 0 | 3 |
+| FUNGI-INTENT-GRAPH-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-INTENT-GRAPH-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-INTENT-GRAPH-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-INTENT-GRAPH-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-INTENT-GRAPH-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-INTENT-GRAPH-006 | — | — | — | 0 | 0 | 2 |
 
 ## INV (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-INV-000 | — | — | — | 1 | 3 | 22 |
-| SPORE-INV-001 | PRE_CONDITION_STATICALLY_FALSE | — | — | 2 | 11 | 29 |
-| SPORE-INV-002 | — | — | — | 3 | 4 | 12 |
-| SPORE-INV-003 | INVARIANT_BLOCK_EMPTY | — | — | 1 | 3 | 9 |
-| SPORE-INV-004 | SYMBOL_UNRESOLVED_IN_INVARIANT | — | — | 1 | 15 | 6 |
-| SPORE-INV-MODULE-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-INV-000 | — | — | — | 1 | 3 | 22 |
+| FUNGI-INV-001 | PRE_CONDITION_STATICALLY_FALSE | — | — | 2 | 11 | 29 |
+| FUNGI-INV-002 | — | — | — | 3 | 4 | 12 |
+| FUNGI-INV-003 | INVARIANT_BLOCK_EMPTY | — | — | 1 | 3 | 9 |
+| FUNGI-INV-004 | SYMBOL_UNRESOLVED_IN_INVARIANT | — | — | 1 | 15 | 6 |
+| FUNGI-INV-MODULE-001 | — | — | — | 0 | 0 | 1 |
 
 ## K8S (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-K8S-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-K8S-001 | — | — | — | 0 | 0 | 1 |
 
 ## KEY (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-KEY-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-KEY-002 | — | — | — | 0 | 0 | 3 |
-| SPORE-KEY-004 | — | — | — | 0 | 0 | 3 |
-| SPORE-KEY-005 | — | — | — | 0 | 0 | 3 |
-| SPORE-KEY-010 | — | — | — | 0 | 0 | 3 |
+| FUNGI-KEY-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-KEY-002 | — | — | — | 0 | 0 | 3 |
+| FUNGI-KEY-004 | — | — | — | 0 | 0 | 3 |
+| FUNGI-KEY-005 | — | — | — | 0 | 0 | 3 |
+| FUNGI-KEY-010 | — | — | — | 0 | 0 | 3 |
 
 ## LEX (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-LEX-001 | ExcessiveNesting | error | packages-galerina/galerina-core-compiler/src/index.ts:29 | 0 | 23 | 12 |
-| SPORE-LEX-002 | OversizedToken | error | packages-galerina/galerina-core-compiler/src/index.ts:38 | 0 | 12 | 6 |
-| SPORE-LEX-003 | InvalidUnicodeEscape | error | packages-galerina/galerina-core-compiler/src/index.ts:47 | 0 | 11 | 4 |
-| SPORE-LEX-004 | FileTooLarge | error | packages-galerina/galerina-core-compiler/src/index.ts:56 | 2 | 5 | 10 |
-| SPORE-LEX-005 | LineTooLong | warning | packages-galerina/galerina-core-compiler/src/index.ts:64 | 1 | 9 | 7 |
-| SPORE-LEX-006 | TooManyDiagnostics | error | packages-galerina/galerina-core-compiler/src/index.ts:72 | 1 | 0 | 4 |
+| FUNGI-LEX-001 | ExcessiveNesting | error | packages-galerina/galerina-core-compiler/src/index.ts:29 | 0 | 23 | 12 |
+| FUNGI-LEX-002 | OversizedToken | error | packages-galerina/galerina-core-compiler/src/index.ts:38 | 0 | 12 | 6 |
+| FUNGI-LEX-003 | InvalidUnicodeEscape | error | packages-galerina/galerina-core-compiler/src/index.ts:47 | 0 | 11 | 4 |
+| FUNGI-LEX-004 | FileTooLarge | error | packages-galerina/galerina-core-compiler/src/index.ts:56 | 2 | 5 | 10 |
+| FUNGI-LEX-005 | LineTooLong | warning | packages-galerina/galerina-core-compiler/src/index.ts:64 | 1 | 9 | 7 |
+| FUNGI-LEX-006 | TooManyDiagnostics | error | packages-galerina/galerina-core-compiler/src/index.ts:72 | 1 | 0 | 4 |
 
 ## LIMIT (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-LIMIT-001 | — | — | — | 0 | 0 | 7 |
+| FUNGI-LIMIT-001 | — | — | — | 0 | 0 | 7 |
 
 ## LOGIC (14)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-LOGIC-001 | INVALID_NAME | error | — | 1 | 0 | 0 |
-| SPORE-LOGIC-002 | INVALID_WIDTH | error | — | 1 | 0 | 0 |
-| SPORE-LOGIC-003 | STATE_COUNT_MISMATCH | error | — | 1 | 0 | 0 |
-| SPORE-LOGIC-004 | INVALID_STATE_NAME | error | — | 1 | 0 | 0 |
-| SPORE-LOGIC-005 | DUPLICATE_STATE | error | — | 1 | 1 | 0 |
-| SPORE-LOGIC-006 | OMNI_MUST_BE_BOUNDED | error | — | 1 | 0 | 0 |
-| SPORE-LOGIC-007 | OMNI_WIDTH_TOO_LARGE | error | — | 1 | 0 | 0 |
-| SPORE-LOGIC-008 | EMPTY_TRUTH_TABLE | warning | — | 1 | 0 | 0 |
-| SPORE-LOGIC-009 | EMPTY_TRUTH_TABLE_INPUTS | error | — | 1 | 0 | 0 |
-| SPORE-LOGIC-010 | TRUTH_TABLE_ARITY_MISMATCH | error | — | 1 | 0 | 0 |
-| SPORE-LOGIC-011 | INVALID_INPUT_STATE | error | — | 1 | 1 | 0 |
-| SPORE-LOGIC-012 | INVALID_OUTPUT_STATE | error | — | 1 | 0 | 0 |
-| SPORE-LOGIC-013 | DUPLICATE_TRUTH_TABLE_ROW | error | — | 1 | 1 | 0 |
-| SPORE-LOGIC-014 | INCOMPLETE_TRUTH_TABLE | warning | — | 1 | 1 | 0 |
+| FUNGI-LOGIC-001 | INVALID_NAME | error | — | 1 | 0 | 0 |
+| FUNGI-LOGIC-002 | INVALID_WIDTH | error | — | 1 | 0 | 0 |
+| FUNGI-LOGIC-003 | STATE_COUNT_MISMATCH | error | — | 1 | 0 | 0 |
+| FUNGI-LOGIC-004 | INVALID_STATE_NAME | error | — | 1 | 0 | 0 |
+| FUNGI-LOGIC-005 | DUPLICATE_STATE | error | — | 1 | 1 | 0 |
+| FUNGI-LOGIC-006 | OMNI_MUST_BE_BOUNDED | error | — | 1 | 0 | 0 |
+| FUNGI-LOGIC-007 | OMNI_WIDTH_TOO_LARGE | error | — | 1 | 0 | 0 |
+| FUNGI-LOGIC-008 | EMPTY_TRUTH_TABLE | warning | — | 1 | 0 | 0 |
+| FUNGI-LOGIC-009 | EMPTY_TRUTH_TABLE_INPUTS | error | — | 1 | 0 | 0 |
+| FUNGI-LOGIC-010 | TRUTH_TABLE_ARITY_MISMATCH | error | — | 1 | 0 | 0 |
+| FUNGI-LOGIC-011 | INVALID_INPUT_STATE | error | — | 1 | 1 | 0 |
+| FUNGI-LOGIC-012 | INVALID_OUTPUT_STATE | error | — | 1 | 0 | 0 |
+| FUNGI-LOGIC-013 | DUPLICATE_TRUTH_TABLE_ROW | error | — | 1 | 1 | 0 |
+| FUNGI-LOGIC-014 | INCOMPLETE_TRUTH_TABLE | warning | — | 1 | 1 | 0 |
 
 ## MANIFEST (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-MANIFEST-001 | — | — | — | 0 | 0 | 6 |
-| SPORE-MANIFEST-002 | — | — | — | 0 | 0 | 5 |
-| SPORE-MANIFEST-003 | — | — | — | 0 | 0 | 5 |
-| SPORE-MANIFEST-004 | — | — | — | 0 | 0 | 6 |
-| SPORE-MANIFEST-005 | — | — | — | 0 | 0 | 6 |
+| FUNGI-MANIFEST-001 | — | — | — | 0 | 0 | 6 |
+| FUNGI-MANIFEST-002 | — | — | — | 0 | 0 | 5 |
+| FUNGI-MANIFEST-003 | — | — | — | 0 | 0 | 5 |
+| FUNGI-MANIFEST-004 | — | — | — | 0 | 0 | 6 |
+| FUNGI-MANIFEST-005 | — | — | — | 0 | 0 | 6 |
 
 ## MATCH (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-MATCH-001 | MATCH_NON_EXHAUSTIVE | — | — | 1 | 0 | 18 |
-| SPORE-MATCH-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-MATCH-003 | — | — | — | 0 | 0 | 3 |
-| SPORE-MATCH-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-MATCH-001 | MATCH_NON_EXHAUSTIVE | — | — | 1 | 0 | 18 |
+| FUNGI-MATCH-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-MATCH-003 | — | — | — | 0 | 0 | 3 |
+| FUNGI-MATCH-004 | — | — | — | 0 | 0 | 1 |
 
 ## MEMORY (15)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-MEMORY-001 | USE_AFTER_MOVE | error | packages-galerina/galerina-core-compiler/src/index.ts:1643 | 0 | 3 | 47 |
-| SPORE-MEMORY-002 | BORROW_AFTER_MOVE | error | packages-galerina/galerina-core-compiler/src/index.ts:1651 | 0 | 1 | 4 |
-| SPORE-MEMORY-003 | BORROW_ESCAPES_SCOPE | error | packages-galerina/galerina-core-compiler/src/index.ts:1659 | 0 | 2 | 9 |
-| SPORE-MEMORY-004 | READONLY_MUTATION | error | packages-galerina/galerina-core-compiler/src/index.ts:1667 | 0 | 1 | 3 |
-| SPORE-MEMORY-005 | MUTABLE_ALIAS | error | packages-galerina/galerina-core-compiler/src/index.ts:1675 | 0 | 2 | 8 |
-| SPORE-MEMORY-006 | BOUNDS_VIOLATION | error | packages-galerina/galerina-core-compiler/src/index.ts:1683 | 0 | 2 | 5 |
-| SPORE-MEMORY-007 | UNCHECKED_ACCESS_OUTSIDE_UNSAFE | error | packages-galerina/galerina-core-compiler/src/index.ts:1691 | 0 | 1 | 3 |
-| SPORE-MEMORY-008 | UNSAFE_MEMORY_REQUIRES_FALLBACK | error | packages-galerina/galerina-core-compiler/src/index.ts:1701 | 1 | 11 | 12 |
-| SPORE-MEMORY-SCOPE-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-MEMORY-SCOPE-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-MEMORY-SCOPE-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-MEMORY-SCOPE-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-MEMORY-SCOPE-005 | — | — | — | 0 | 0 | 1 |
-| SPORE-MEMORY-SCOPE-006 | — | — | — | 0 | 0 | 1 |
-| SPORE-MEMORY-SCOPE-007 | — | — | — | 0 | 0 | 1 |
+| FUNGI-MEMORY-001 | USE_AFTER_MOVE | error | packages-galerina/galerina-core-compiler/src/index.ts:1643 | 0 | 3 | 47 |
+| FUNGI-MEMORY-002 | BORROW_AFTER_MOVE | error | packages-galerina/galerina-core-compiler/src/index.ts:1651 | 0 | 1 | 4 |
+| FUNGI-MEMORY-003 | BORROW_ESCAPES_SCOPE | error | packages-galerina/galerina-core-compiler/src/index.ts:1659 | 0 | 2 | 9 |
+| FUNGI-MEMORY-004 | READONLY_MUTATION | error | packages-galerina/galerina-core-compiler/src/index.ts:1667 | 0 | 1 | 3 |
+| FUNGI-MEMORY-005 | MUTABLE_ALIAS | error | packages-galerina/galerina-core-compiler/src/index.ts:1675 | 0 | 2 | 8 |
+| FUNGI-MEMORY-006 | BOUNDS_VIOLATION | error | packages-galerina/galerina-core-compiler/src/index.ts:1683 | 0 | 2 | 5 |
+| FUNGI-MEMORY-007 | UNCHECKED_ACCESS_OUTSIDE_UNSAFE | error | packages-galerina/galerina-core-compiler/src/index.ts:1691 | 0 | 1 | 3 |
+| FUNGI-MEMORY-008 | UNSAFE_MEMORY_REQUIRES_FALLBACK | error | packages-galerina/galerina-core-compiler/src/index.ts:1701 | 1 | 11 | 12 |
+| FUNGI-MEMORY-SCOPE-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-MEMORY-SCOPE-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-MEMORY-SCOPE-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-MEMORY-SCOPE-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-MEMORY-SCOPE-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-MEMORY-SCOPE-006 | — | — | — | 0 | 0 | 1 |
+| FUNGI-MEMORY-SCOPE-007 | — | — | — | 0 | 0 | 1 |
 
 ## META (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-META-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-META-001 | — | — | — | 0 | 0 | 2 |
 
 ## MODULE (10)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-MODULE-001 | — | — | — | 0 | 0 | 7 |
-| SPORE-MODULE-002 | — | — | — | 0 | 0 | 7 |
-| SPORE-MODULE-003 | — | — | — | 0 | 0 | 7 |
-| SPORE-MODULE-004 | — | — | — | 0 | 0 | 6 |
-| SPORE-MODULE-005 | — | — | — | 0 | 0 | 7 |
-| SPORE-MODULE-006 | — | — | — | 0 | 0 | 6 |
-| SPORE-MODULE-007 | — | — | — | 0 | 0 | 4 |
-| SPORE-MODULE-008 | — | — | — | 0 | 0 | 3 |
-| SPORE-MODULE-009 | — | — | — | 0 | 0 | 3 |
-| SPORE-MODULE-010 | — | — | — | 0 | 0 | 3 |
+| FUNGI-MODULE-001 | — | — | — | 0 | 0 | 7 |
+| FUNGI-MODULE-002 | — | — | — | 0 | 0 | 7 |
+| FUNGI-MODULE-003 | — | — | — | 0 | 0 | 7 |
+| FUNGI-MODULE-004 | — | — | — | 0 | 0 | 6 |
+| FUNGI-MODULE-005 | — | — | — | 0 | 0 | 7 |
+| FUNGI-MODULE-006 | — | — | — | 0 | 0 | 6 |
+| FUNGI-MODULE-007 | — | — | — | 0 | 0 | 4 |
+| FUNGI-MODULE-008 | — | — | — | 0 | 0 | 3 |
+| FUNGI-MODULE-009 | — | — | — | 0 | 0 | 3 |
+| FUNGI-MODULE-010 | — | — | — | 0 | 0 | 3 |
 
 ## MONO (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-MONO-001 | EMERGENCY_EXPANDS_CAPABILITY / EMERGENCY_UNKNOWN_ACTION | — | — | 2 | 15 | 20 |
-| SPORE-MONO-002 | UNKNOWN_EMERGENCY_SIGNAL | — | — | 1 | 0 | 3 |
-| SPORE-MONO-003 | — | — | — | 0 | 0 | 4 |
+| FUNGI-MONO-001 | EMERGENCY_EXPANDS_CAPABILITY / EMERGENCY_UNKNOWN_ACTION | — | — | 2 | 15 | 20 |
+| FUNGI-MONO-002 | UNKNOWN_EMERGENCY_SIGNAL | — | — | 1 | 0 | 3 |
+| FUNGI-MONO-003 | — | — | — | 0 | 0 | 4 |
 
 ## MUTATION (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-MUTATION-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-MUTATION-002 | — | — | — | 0 | 0 | 0 |
+| FUNGI-MUTATION-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-MUTATION-002 | — | — | — | 0 | 0 | 0 |
 
 ## NAME (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-NAME-001 | UndeclaredName | error | — | 2 | 27 | 16 |
-| SPORE-NAME-002 | DuplicateName | error | — | 2 | 14 | 11 |
-| SPORE-NAME-003 | CrossModuleShadow | warning | packages-galerina/galerina-core-compiler/src/index.ts:326 | 1 | 11 | 8 |
-| SPORE-NAME-004 | — | — | — | 0 | 0 | 4 |
-| SPORE-NAME-005 | — | — | — | 0 | 0 | 3 |
+| FUNGI-NAME-001 | UndeclaredName | error | — | 2 | 27 | 16 |
+| FUNGI-NAME-002 | DuplicateName | error | — | 2 | 14 | 11 |
+| FUNGI-NAME-003 | CrossModuleShadow | warning | packages-galerina/galerina-core-compiler/src/index.ts:326 | 1 | 11 | 8 |
+| FUNGI-NAME-004 | — | — | — | 0 | 0 | 4 |
+| FUNGI-NAME-005 | — | — | — | 0 | 0 | 3 |
 
 ## NAMING (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-NAMING-001 | AbbreviatedIdentifier | warning | — | 3 | 29 | 0 |
-| SPORE-NAMING-002 | ImplicitReturnType | warning | — | 1 | 5 | 0 |
-| SPORE-NAMING-003 | GenericTypeName | warning | — | 2 | 5 | 0 |
-| SPORE-NAMING-004 | AbbreviatedFlowName | warning | — | 1 | 4 | 0 |
-| SPORE-NAMING-005 | MissingIntentOnPublicFlow | warning | — | 1 | 10 | 0 |
+| FUNGI-NAMING-001 | AbbreviatedIdentifier | warning | — | 3 | 29 | 0 |
+| FUNGI-NAMING-002 | ImplicitReturnType | warning | — | 1 | 5 | 0 |
+| FUNGI-NAMING-003 | GenericTypeName | warning | — | 2 | 5 | 0 |
+| FUNGI-NAMING-004 | AbbreviatedFlowName | warning | — | 1 | 4 | 0 |
+| FUNGI-NAMING-005 | MissingIntentOnPublicFlow | warning | — | 1 | 10 | 0 |
 
 ## NET (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-NET-001 | NetworkDestinationDenied | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:67 | 0 | 8 | 14 |
-| SPORE-NET-002 | PrivateRangeAccess | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:89 | 0 | 3 | 6 |
-| SPORE-NET-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-NET-001 | NetworkDestinationDenied | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:67 | 0 | 8 | 14 |
+| FUNGI-NET-002 | PrivateRangeAccess | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:89 | 0 | 3 | 6 |
+| FUNGI-NET-003 | — | — | — | 0 | 0 | 1 |
 
 ## NETWORK (8)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-NETWORK-001 | — | — | — | 0 | 0 | 12 |
-| SPORE-NETWORK-002 | — | — | — | 0 | 0 | 7 |
-| SPORE-NETWORK-003 | — | — | — | 0 | 0 | 7 |
-| SPORE-NETWORK-004 | — | — | — | 0 | 0 | 5 |
-| SPORE-NETWORK-005 | — | — | — | 0 | 0 | 5 |
-| SPORE-NETWORK-006 | — | — | — | 0 | 0 | 6 |
-| SPORE-NETWORK-007 | — | — | — | 0 | 0 | 7 |
-| SPORE-NETWORK-008 | — | — | — | 0 | 0 | 6 |
+| FUNGI-NETWORK-001 | — | — | — | 0 | 0 | 12 |
+| FUNGI-NETWORK-002 | — | — | — | 0 | 0 | 7 |
+| FUNGI-NETWORK-003 | — | — | — | 0 | 0 | 7 |
+| FUNGI-NETWORK-004 | — | — | — | 0 | 0 | 5 |
+| FUNGI-NETWORK-005 | — | — | — | 0 | 0 | 5 |
+| FUNGI-NETWORK-006 | — | — | — | 0 | 0 | 6 |
+| FUNGI-NETWORK-007 | — | — | — | 0 | 0 | 7 |
+| FUNGI-NETWORK-008 | — | — | — | 0 | 0 | 6 |
 
 ## NO (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-NO-COERCION-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-NO-COERCION-001 | — | — | — | 0 | 0 | 3 |
 
 ## NPU (10)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-NPU-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-NPU-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-NPU-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-NPU-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-NPU-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-NPU-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-NPU-007 | — | — | — | 0 | 0 | 2 |
-| SPORE-NPU-008 | — | — | — | 0 | 0 | 2 |
-| SPORE-NPU-009 | — | — | — | 0 | 0 | 2 |
-| SPORE-NPU-010 | — | — | — | 0 | 0 | 2 |
+| FUNGI-NPU-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-NPU-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-NPU-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-NPU-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-NPU-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-NPU-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-NPU-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-NPU-008 | — | — | — | 0 | 0 | 2 |
+| FUNGI-NPU-009 | — | — | — | 0 | 0 | 2 |
+| FUNGI-NPU-010 | — | — | — | 0 | 0 | 2 |
 
 ## NUMERIC (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-NUMERIC-001 | UnsupportedNumericWidth | error | — | 1 | 25 | 11 |
-| SPORE-NUMERIC-OP-001 | PartialDecimalOperator | — | — | 2 | 8 | 1 |
+| FUNGI-NUMERIC-001 | UnsupportedNumericWidth | error | — | 1 | 25 | 11 |
+| FUNGI-NUMERIC-OP-001 | PartialDecimalOperator | — | — | 2 | 8 | 1 |
 
 ## OBS (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-OBS-001 | OBSERVABILITY_ON_PURE_FLOW | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:520 | 1 | 6 | 7 |
-| SPORE-OBS-002 | OBSERVABILITY_ACCESSES_PRIVACY_SCOPE | — | — | 1 | 0 | 2 |
+| FUNGI-OBS-001 | OBSERVABILITY_ON_PURE_FLOW | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:520 | 1 | 6 | 7 |
+| FUNGI-OBS-002 | OBSERVABILITY_ACCESSES_PRIVACY_SCOPE | — | — | 1 | 0 | 2 |
 
 ## OBSERVE (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-OBSERVE-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-OBSERVE-001 | — | — | — | 0 | 0 | 1 |
 
 ## OMNI (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-OMNI-001 | — | — | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:12 | 1 | 1 | 8 |
-| SPORE-OMNI-002 | — | — | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:15 | 1 | 1 | 3 |
-| SPORE-OMNI-003 | — | — | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:18 | 1 | 1 | 3 |
-| SPORE-OMNI-004 | — | — | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:21 | 1 | 1 | 3 |
-| SPORE-OMNI-005 | — | — | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:24 | 1 | 1 | 5 |
+| FUNGI-OMNI-001 | — | — | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:12 | 1 | 1 | 8 |
+| FUNGI-OMNI-002 | — | — | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:15 | 1 | 1 | 3 |
+| FUNGI-OMNI-003 | — | — | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:18 | 1 | 1 | 3 |
+| FUNGI-OMNI-004 | — | — | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:21 | 1 | 1 | 3 |
+| FUNGI-OMNI-005 | — | — | packages-galerina/galerina-core-logic/src/omni/omni-diagnostics.ts:24 | 1 | 1 | 5 |
 
 ## OWN (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-OWN-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-OWN-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-OWN-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-OWN-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-OWN-005 | — | — | — | 0 | 0 | 1 |
-| SPORE-OWN-006 | — | — | — | 0 | 0 | 1 |
+| FUNGI-OWN-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-OWN-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-OWN-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-OWN-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-OWN-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-OWN-006 | — | — | — | 0 | 0 | 1 |
 
 ## PACKAGE (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PACKAGE-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-PACKAGE-4000 | — | — | — | 0 | 0 | 1 |
+| FUNGI-PACKAGE-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PACKAGE-4000 | — | — | — | 0 | 0 | 1 |
 
 ## PARSE (15)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PARSE-001 | — | — | — | 0 | 13 | 22 |
-| SPORE-PARSE-002 | — | — | — | 0 | 3 | 6 |
-| SPORE-PARSE-003 | — | — | — | 0 | 3 | 3 |
-| SPORE-PARSE-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-PARSE-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-PARSE-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-PARSE-007 | — | — | — | 0 | 0 | 2 |
-| SPORE-PARSE-008 | — | — | — | 0 | 0 | 2 |
-| SPORE-PARSE-009 | — | — | — | 0 | 0 | 2 |
-| SPORE-PARSE-010 | — | — | — | 0 | 0 | 2 |
-| SPORE-PARSE-011 | — | — | — | 0 | 0 | 2 |
-| SPORE-PARSE-012 | — | — | — | 0 | 0 | 2 |
-| SPORE-PARSE-013 | — | — | — | 0 | 0 | 2 |
-| SPORE-PARSE-014 | — | — | — | 0 | 0 | 2 |
-| SPORE-PARSE-DEPTH-001 | — | — | — | 0 | 8 | 3 |
+| FUNGI-PARSE-001 | — | — | — | 0 | 13 | 22 |
+| FUNGI-PARSE-002 | — | — | — | 0 | 3 | 6 |
+| FUNGI-PARSE-003 | — | — | — | 0 | 3 | 3 |
+| FUNGI-PARSE-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PARSE-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PARSE-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PARSE-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PARSE-008 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PARSE-009 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PARSE-010 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PARSE-011 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PARSE-012 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PARSE-013 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PARSE-014 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PARSE-DEPTH-001 | — | — | — | 0 | 8 | 3 |
 
 ## PASSPORT (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PASSPORT-002 | PassportStateSkip | — | — | 1 | 3 | 2 |
+| FUNGI-PASSPORT-002 | PassportStateSkip | — | — | 1 | 3 | 2 |
 
 ## PAYMENTS (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PAYMENTS-1000 | — | — | — | 0 | 0 | 3 |
+| FUNGI-PAYMENTS-1000 | — | — | — | 0 | 0 | 3 |
 
 ## PCI (11)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PCI-000 | — | — | — | 0 | 2 | 0 |
-| SPORE-PCI-001 | — | — | — | 0 | 5 | 4 |
-| SPORE-PCI-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-PCI-003 | — | — | — | 0 | 0 | 0 |
-| SPORE-PCI-004 | — | — | — | 0 | 4 | 0 |
-| SPORE-PCI-005 | — | — | — | 0 | 4 | 0 |
-| SPORE-PCI-006 | — | — | — | 0 | 4 | 0 |
-| SPORE-PCI-007 | — | — | — | 0 | 0 | 0 |
-| SPORE-PCI-008 | — | — | — | 0 | 4 | 0 |
-| SPORE-PCI-009 | — | — | — | 0 | 4 | 0 |
-| SPORE-PCI-010 | — | — | — | 0 | 4 | 0 |
+| FUNGI-PCI-000 | — | — | — | 0 | 2 | 0 |
+| FUNGI-PCI-001 | — | — | — | 0 | 5 | 4 |
+| FUNGI-PCI-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-PCI-003 | — | — | — | 0 | 0 | 0 |
+| FUNGI-PCI-004 | — | — | — | 0 | 4 | 0 |
+| FUNGI-PCI-005 | — | — | — | 0 | 4 | 0 |
+| FUNGI-PCI-006 | — | — | — | 0 | 4 | 0 |
+| FUNGI-PCI-007 | — | — | — | 0 | 0 | 0 |
+| FUNGI-PCI-008 | — | — | — | 0 | 4 | 0 |
+| FUNGI-PCI-009 | — | — | — | 0 | 4 | 0 |
+| FUNGI-PCI-010 | — | — | — | 0 | 4 | 0 |
 
 ## PERM (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PERM-001 | — | — | — | 0 | 0 | 9 |
-| SPORE-PERM-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-PERM-003 | — | — | — | 0 | 0 | 3 |
-| SPORE-PERM-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-PERM-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-PERM-006 | — | — | — | 0 | 0 | 3 |
+| FUNGI-PERM-001 | — | — | — | 0 | 0 | 9 |
+| FUNGI-PERM-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PERM-003 | — | — | — | 0 | 0 | 3 |
+| FUNGI-PERM-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PERM-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PERM-006 | — | — | — | 0 | 0 | 3 |
 
 ## PGO (8)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PGO-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-PGO-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-PGO-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-PGO-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-PGO-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-PGO-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-PGO-007 | — | — | — | 0 | 0 | 2 |
-| SPORE-PGO-008 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PGO-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PGO-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PGO-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PGO-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PGO-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PGO-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PGO-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PGO-008 | — | — | — | 0 | 0 | 2 |
 
 ## PHI (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PHI-001 | — | — | — | 0 | 0 | 4 |
-| SPORE-PHI-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-PHI-001 | — | — | — | 0 | 0 | 4 |
+| FUNGI-PHI-002 | — | — | — | 0 | 0 | 1 |
 
 ## PHOTONIC (10)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PHOTONIC-001 | — | — | — | 0 | 0 | 36 |
-| SPORE-PHOTONIC-002 | — | — | — | 0 | 0 | 7 |
-| SPORE-PHOTONIC-003 | — | — | — | 0 | 0 | 7 |
-| SPORE-PHOTONIC-004 | — | — | — | 0 | 0 | 8 |
-| SPORE-PHOTONIC-005 | — | — | — | 0 | 0 | 6 |
-| SPORE-PHOTONIC-006 | — | — | — | 0 | 0 | 14 |
-| SPORE-PHOTONIC-007 | — | — | — | 0 | 0 | 2 |
-| SPORE-PHOTONIC-008 | — | — | — | 0 | 0 | 2 |
-| SPORE-PHOTONIC-009 | — | — | — | 0 | 0 | 2 |
-| SPORE-PHOTONIC-010 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PHOTONIC-001 | — | — | — | 0 | 0 | 36 |
+| FUNGI-PHOTONIC-002 | — | — | — | 0 | 0 | 7 |
+| FUNGI-PHOTONIC-003 | — | — | — | 0 | 0 | 7 |
+| FUNGI-PHOTONIC-004 | — | — | — | 0 | 0 | 8 |
+| FUNGI-PHOTONIC-005 | — | — | — | 0 | 0 | 6 |
+| FUNGI-PHOTONIC-006 | — | — | — | 0 | 0 | 14 |
+| FUNGI-PHOTONIC-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PHOTONIC-008 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PHOTONIC-009 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PHOTONIC-010 | — | — | — | 0 | 0 | 2 |
 
 ## PII (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PII-001 | — | — | — | 0 | 0 | 6 |
-| SPORE-PII-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-PII-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-PII-001 | — | — | — | 0 | 0 | 6 |
+| FUNGI-PII-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-PII-003 | — | — | — | 0 | 0 | 1 |
 
 ## PIPELINE (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PIPELINE-001 | UNKNOWN_PIPELINE_METHOD | error | packages-galerina/galerina-core-compiler/src/index.ts:1378 | 0 | 0 | 6 |
-| SPORE-PIPELINE-002 | PIPELINE_TYPE_MISMATCH | error | packages-galerina/galerina-core-compiler/src/index.ts:1386 | 0 | 0 | 3 |
-| SPORE-PIPELINE-003 | UNHANDLED_FALLIBLE_PIPELINE | error | packages-galerina/galerina-core-compiler/src/index.ts:1394 | 0 | 0 | 4 |
-| SPORE-PIPELINE-004 | PIPELINE_UNDECLARED_EFFECT | error | packages-galerina/galerina-core-compiler/src/index.ts:1402 | 0 | 0 | 4 |
-| SPORE-PIPELINE-005 | PIPELINE_READONLY_MUTATION | error | packages-galerina/galerina-core-compiler/src/index.ts:1410 | 0 | 0 | 4 |
-| SPORE-PIPELINE-006 | — | — | — | 0 | 0 | 1 |
+| FUNGI-PIPELINE-001 | UNKNOWN_PIPELINE_METHOD | error | packages-galerina/galerina-core-compiler/src/index.ts:1378 | 0 | 0 | 6 |
+| FUNGI-PIPELINE-002 | PIPELINE_TYPE_MISMATCH | error | packages-galerina/galerina-core-compiler/src/index.ts:1386 | 0 | 0 | 3 |
+| FUNGI-PIPELINE-003 | UNHANDLED_FALLIBLE_PIPELINE | error | packages-galerina/galerina-core-compiler/src/index.ts:1394 | 0 | 0 | 4 |
+| FUNGI-PIPELINE-004 | PIPELINE_UNDECLARED_EFFECT | error | packages-galerina/galerina-core-compiler/src/index.ts:1402 | 0 | 0 | 4 |
+| FUNGI-PIPELINE-005 | PIPELINE_READONLY_MUTATION | error | packages-galerina/galerina-core-compiler/src/index.ts:1410 | 0 | 0 | 4 |
+| FUNGI-PIPELINE-006 | — | — | — | 0 | 0 | 1 |
 
 ## PKG (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PKG-001 | CapabilityExpanded | error | packages-galerina/galerina-core-compiler/src/index.ts:375 | 1 | 8 | 16 |
-| SPORE-PKG-002 | UntrustedRegistry | error | packages-galerina/galerina-core-compiler/src/index.ts:385 | 2 | 13 | 6 |
-| SPORE-PKG-003 | MissingHash | warning | packages-galerina/galerina-core-compiler/src/index.ts:395 | 1 | 32 | 5 |
-| SPORE-PKG-004 | InstallScriptDenied | error | packages-galerina/galerina-core-compiler/src/index.ts:405 | 1 | 9 | 6 |
-| SPORE-PKG-005 | MissingSignature | warning | packages-galerina/galerina-core-compiler/src/index.ts:415 | 1 | 17 | 12 |
-| SPORE-PKG-006 | RevokedSigner | error | packages-galerina/galerina-core-compiler/src/index.ts:425 | 1 | 12 | 6 |
+| FUNGI-PKG-001 | CapabilityExpanded | error | packages-galerina/galerina-core-compiler/src/index.ts:375 | 1 | 8 | 16 |
+| FUNGI-PKG-002 | UntrustedRegistry | error | packages-galerina/galerina-core-compiler/src/index.ts:385 | 2 | 13 | 6 |
+| FUNGI-PKG-003 | MissingHash | warning | packages-galerina/galerina-core-compiler/src/index.ts:395 | 1 | 32 | 5 |
+| FUNGI-PKG-004 | InstallScriptDenied | error | packages-galerina/galerina-core-compiler/src/index.ts:405 | 1 | 9 | 6 |
+| FUNGI-PKG-005 | MissingSignature | warning | packages-galerina/galerina-core-compiler/src/index.ts:415 | 1 | 17 | 12 |
+| FUNGI-PKG-006 | RevokedSigner | error | packages-galerina/galerina-core-compiler/src/index.ts:425 | 1 | 12 | 6 |
 
 ## PLAN (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PLAN-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-PLAN-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PLAN-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-PLAN-004 | — | — | — | 0 | 0 | 2 |
 
 ## PLUGIN (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PLUGIN-001 | — | — | — | 0 | 0 | 0 |
+| FUNGI-PLUGIN-001 | — | — | — | 0 | 0 | 0 |
 
 ## POLICY (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-POLICY-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-POLICY-001 | — | — | — | 0 | 0 | 1 |
 
 ## PRIVACY (9)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PRIVACY-00 | — | — | — | 0 | 0 | 1 |
-| SPORE-PRIVACY-001 | — | — | — | 0 | 0 | 10 |
-| SPORE-PRIVACY-002 | EmbeddingCrossesFlowBoundary / EmbeddingEgressDenied | — | — | 3 | 42 | 67 |
-| SPORE-PRIVACY-003 | — | — | — | 0 | 0 | 3 |
-| SPORE-PRIVACY-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-PRIVACY-010 | — | — | — | 0 | 0 | 2 |
-| SPORE-PRIVACY-011 | — | — | — | 0 | 0 | 2 |
-| SPORE-PRIVACY-012 | — | — | — | 0 | 0 | 2 |
-| SPORE-PRIVACY-013 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PRIVACY-00 | — | — | — | 0 | 0 | 1 |
+| FUNGI-PRIVACY-001 | — | — | — | 0 | 0 | 10 |
+| FUNGI-PRIVACY-002 | EmbeddingCrossesFlowBoundary / EmbeddingEgressDenied | — | — | 3 | 42 | 67 |
+| FUNGI-PRIVACY-003 | — | — | — | 0 | 0 | 3 |
+| FUNGI-PRIVACY-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PRIVACY-010 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PRIVACY-011 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PRIVACY-012 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PRIVACY-013 | — | — | — | 0 | 0 | 2 |
 
 ## PROFILE (8)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PROFILE-001 | RecursionInRestrictedProfile | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:36 | 0 | 18 | 10 |
-| SPORE-PROFILE-002 | UnboundedLoopInStrictProfile | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:44 | 0 | 14 | 9 |
-| SPORE-PROFILE-003 | ExceptionControlFlowProhibited | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:52 | 0 | 0 | 5 |
-| SPORE-PROFILE-004 | JitProhibitedInStrictProfile | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:60 | 0 | 0 | 4 |
-| SPORE-PROFILE-005 | DynamicPackageLoadProhibited | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:68 | 0 | 2 | 4 |
-| SPORE-PROFILE-005B | DynamicRegexInStrictProfile | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:76 | 0 | 9 | 2 |
-| SPORE-PROFILE-006 | MissingRuntimeBudget | warning | packages-galerina/galerina-core-compiler/src/profile-checker.ts:85 | 0 | 10 | 7 |
-| SPORE-PROFILE-007 | DynamicRuntimeMutationProhibited | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:93 | 0 | 0 | 4 |
+| FUNGI-PROFILE-001 | RecursionInRestrictedProfile | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:36 | 0 | 18 | 10 |
+| FUNGI-PROFILE-002 | UnboundedLoopInStrictProfile | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:44 | 0 | 14 | 9 |
+| FUNGI-PROFILE-003 | ExceptionControlFlowProhibited | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:52 | 0 | 0 | 5 |
+| FUNGI-PROFILE-004 | JitProhibitedInStrictProfile | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:60 | 0 | 0 | 4 |
+| FUNGI-PROFILE-005 | DynamicPackageLoadProhibited | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:68 | 0 | 2 | 4 |
+| FUNGI-PROFILE-005B | DynamicRegexInStrictProfile | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:76 | 0 | 9 | 2 |
+| FUNGI-PROFILE-006 | MissingRuntimeBudget | warning | packages-galerina/galerina-core-compiler/src/profile-checker.ts:85 | 0 | 10 | 7 |
+| FUNGI-PROFILE-007 | DynamicRuntimeMutationProhibited | error | packages-galerina/galerina-core-compiler/src/profile-checker.ts:93 | 0 | 0 | 4 |
 
 ## PROOF (8)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PROOF-001 | — | — | — | 0 | 0 | 7 |
-| SPORE-PROOF-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-PROOF-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-PROOF-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-PROOF-005 | — | — | — | 0 | 0 | 4 |
-| SPORE-PROOF-CERT-00 | — | — | — | 0 | 0 | 0 |
-| SPORE-PROOF-CERT-001 | — | — | packages-galerina/galerina-core-compiler/src/proof-graph.ts:224 | 0 | 4 | 1 |
-| SPORE-PROOF-CERT-002 | — | — | packages-galerina/galerina-core-compiler/src/proof-graph.ts:226 | 0 | 3 | 1 |
+| FUNGI-PROOF-001 | — | — | — | 0 | 0 | 7 |
+| FUNGI-PROOF-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PROOF-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-PROOF-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-PROOF-005 | — | — | — | 0 | 0 | 4 |
+| FUNGI-PROOF-CERT-00 | — | — | — | 0 | 0 | 0 |
+| FUNGI-PROOF-CERT-001 | — | — | packages-galerina/galerina-core-compiler/src/proof-graph.ts:224 | 0 | 4 | 1 |
+| FUNGI-PROOF-CERT-002 | — | — | packages-galerina/galerina-core-compiler/src/proof-graph.ts:226 | 0 | 3 | 1 |
 
 ## PROTECTED (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PROTECTED-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-PROTECTED-001 | — | — | — | 0 | 0 | 1 |
 
 ## PROV (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-PROV-001 | — | — | — | 0 | 1 | 0 |
+| FUNGI-PROV-001 | — | — | — | 0 | 1 | 0 |
 
 ## QUANT (10)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-QUANT-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-QUANT-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-QUANT-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-QUANT-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-QUANT-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-QUANT-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-QUANT-007 | — | — | — | 0 | 0 | 2 |
-| SPORE-QUANT-008 | — | — | — | 0 | 0 | 2 |
-| SPORE-QUANT-009 | — | — | — | 0 | 0 | 2 |
-| SPORE-QUANT-010 | — | — | — | 0 | 0 | 2 |
+| FUNGI-QUANT-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-QUANT-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-QUANT-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-QUANT-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-QUANT-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-QUANT-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-QUANT-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-QUANT-008 | — | — | — | 0 | 0 | 2 |
+| FUNGI-QUANT-009 | — | — | — | 0 | 0 | 2 |
+| FUNGI-QUANT-010 | — | — | — | 0 | 0 | 2 |
 
 ## QUERY (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-QUERY-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-QUERY-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-QUERY-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-QUERY-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-QUERY-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-QUERY-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-QUERY-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-QUERY-004 | — | — | — | 0 | 0 | 2 |
 
 ## QUORUM (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-QUORUM-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-QUORUM-001 | — | — | — | 0 | 0 | 3 |
 
 ## RAWPTR (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-RAWPTR-001 | RAW_POINTER_OUTSIDE_UNSAFE | error | packages-galerina/galerina-core-compiler/src/index.ts:1364 | 1 | 1 | 13 |
+| FUNGI-RAWPTR-001 | RAW_POINTER_OUTSIDE_UNSAFE | error | packages-galerina/galerina-core-compiler/src/index.ts:1364 | 1 | 1 | 13 |
 
 ## READABLE (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-READABLE-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-READABLE-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-READABLE-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-READABLE-002 | — | — | — | 0 | 0 | 2 |
 
 ## REPL (8)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-REPL-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-REPL-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-REPL-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-REPL-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-REPL-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-REPL-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-REPL-007 | — | — | — | 0 | 0 | 2 |
-| SPORE-REPL-008 | — | — | — | 0 | 0 | 2 |
+| FUNGI-REPL-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-REPL-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-REPL-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-REPL-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-REPL-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-REPL-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-REPL-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-REPL-008 | — | — | — | 0 | 0 | 2 |
 
 ## REPORT (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-REPORT-001 | — | — | — | 0 | 0 | 7 |
-| SPORE-REPORT-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-REPORT-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-REPORT-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-REPORT-005 | — | — | — | 0 | 0 | 4 |
+| FUNGI-REPORT-001 | — | — | — | 0 | 0 | 7 |
+| FUNGI-REPORT-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-REPORT-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-REPORT-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-REPORT-005 | — | — | — | 0 | 0 | 4 |
 
 ## RES (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-RES-001 | RESILIENCE_RETRY_ON_MUTATION | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:512 | 1 | 7 | 12 |
+| FUNGI-RES-001 | RESILIENCE_RETRY_ON_MUTATION | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:512 | 1 | 7 | 12 |
 
 ## RESOURCE (10)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-RESOURCE-001 | — | — | — | 0 | 0 | 13 |
-| SPORE-RESOURCE-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-RESOURCE-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-RESOURCE-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-RESOURCE-005 | — | — | — | 0 | 0 | 1 |
-| SPORE-RESOURCE-006 | — | — | — | 0 | 0 | 6 |
-| SPORE-RESOURCE-007 | — | — | — | 0 | 0 | 2 |
-| SPORE-RESOURCE-008 | — | — | — | 0 | 0 | 2 |
-| SPORE-RESOURCE-009 | — | — | — | 0 | 0 | 2 |
-| SPORE-RESOURCE-010 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RESOURCE-001 | — | — | — | 0 | 0 | 13 |
+| FUNGI-RESOURCE-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RESOURCE-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-RESOURCE-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RESOURCE-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RESOURCE-006 | — | — | — | 0 | 0 | 6 |
+| FUNGI-RESOURCE-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-RESOURCE-008 | — | — | — | 0 | 0 | 2 |
+| FUNGI-RESOURCE-009 | — | — | — | 0 | 0 | 2 |
+| FUNGI-RESOURCE-010 | — | — | — | 0 | 0 | 1 |
 
 ## RETAIN (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-RETAIN-001 | — | — | — | 0 | 3 | 24 |
+| FUNGI-RETAIN-001 | — | — | — | 0 | 3 | 24 |
 
 ## RETENTION (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-RETENTION-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RETENTION-001 | — | — | — | 0 | 0 | 1 |
 
 ## RETRY (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-RETRY-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RETRY-001 | — | — | — | 0 | 0 | 1 |
 
 ## ROUTE (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-ROUTE-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-ROUTE-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-ROUTE-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-ROUTE-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-ROUTE-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-ROUTE-003 | — | — | — | 0 | 0 | 1 |
 
 ## RUNTIME (15)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-RUNTIME-001 | — | — | — | 0 | 0 | 4 |
-| SPORE-RUNTIME-002 | — | — | — | 2 | 3 | 4 |
-| SPORE-RUNTIME-003 | — | — | — | 2 | 5 | 3 |
-| SPORE-RUNTIME-004 | — | — | — | 1 | 2 | 2 |
-| SPORE-RUNTIME-005 | UnauthorizedGovernedValueAccess | error | packages-galerina/galerina-core-compiler/src/interpreter.ts:488 | 1 | 9 | 4 |
-| SPORE-RUNTIME-006 | RateLimitExceeded | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:115 | 3 | 21 | 10 |
-| SPORE-RUNTIME-007 | — | — | — | 1 | 3 | 2 |
-| SPORE-RUNTIME-009 | — | — | — | 0 | 0 | 1 |
-| SPORE-RUNTIME-010 | — | — | — | 0 | 0 | 1 |
-| SPORE-RUNTIME-201 | — | — | — | 0 | 0 | 1 |
-| SPORE-RUNTIME-RESOURCE-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-RUNTIME-RESOURCE-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-RUNTIME-RESOURCE-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-RUNTIME-RESOURCE-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-RUNTIME-RESOURCE-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RUNTIME-001 | — | — | — | 0 | 0 | 4 |
+| FUNGI-RUNTIME-002 | — | — | — | 2 | 3 | 4 |
+| FUNGI-RUNTIME-003 | — | — | — | 2 | 5 | 3 |
+| FUNGI-RUNTIME-004 | — | — | — | 1 | 2 | 2 |
+| FUNGI-RUNTIME-005 | UnauthorizedGovernedValueAccess | error | packages-galerina/galerina-core-compiler/src/interpreter.ts:488 | 1 | 9 | 4 |
+| FUNGI-RUNTIME-006 | RateLimitExceeded | error | packages-galerina/galerina-core-compiler/src/security-policy.ts:115 | 3 | 21 | 10 |
+| FUNGI-RUNTIME-007 | — | — | — | 1 | 3 | 2 |
+| FUNGI-RUNTIME-009 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RUNTIME-010 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RUNTIME-201 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RUNTIME-RESOURCE-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-RUNTIME-RESOURCE-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RUNTIME-RESOURCE-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RUNTIME-RESOURCE-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-RUNTIME-RESOURCE-005 | — | — | — | 0 | 0 | 1 |
 
 ## SAFETY (12)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-SAFETY-001 | TRI_BRANCH_CONDITION | error | packages-galerina/galerina-core-compiler/src/index.ts:1802 | 1 | 2 | 5 |
-| SPORE-SAFETY-002 | UNSAFE_LOGIC_ASSIGNMENT | error | packages-galerina/galerina-core-compiler/src/index.ts:1810 | 1 | 2 | 2 |
-| SPORE-SAFETY-003 | TRI_UNKNOWN_AS_TRUE | error | packages-galerina/galerina-core-compiler/src/index.ts:1818 | 2 | 5 | 4 |
-| SPORE-SAFETY-004 | SECRET_LITERAL | error | packages-galerina/galerina-core-compiler/src/index.ts:1826 | 1 | 5 | 2 |
-| SPORE-SAFETY-005 | UNSAFE_DYNAMIC_CODE | error | packages-galerina/galerina-core-compiler/src/index.ts:1834 | 1 | 2 | 2 |
-| SPORE-SAFETY-006 | TRI_MATCH_NOT_EXHAUSTIVE | error | packages-galerina/galerina-core-compiler/src/index.ts:1842 | 1 | 2 | 3 |
-| SPORE-SAFETY-007 | — | — | — | 0 | 0 | 1 |
-| SPORE-SAFETY-008 | — | — | — | 0 | 0 | 1 |
-| SPORE-SAFETY-AGE-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-SAFETY-AGE-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-SAFETY-AGE-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-SAFETY-AUDIT-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SAFETY-001 | TRI_BRANCH_CONDITION | error | packages-galerina/galerina-core-compiler/src/index.ts:1802 | 1 | 2 | 5 |
+| FUNGI-SAFETY-002 | UNSAFE_LOGIC_ASSIGNMENT | error | packages-galerina/galerina-core-compiler/src/index.ts:1810 | 1 | 2 | 2 |
+| FUNGI-SAFETY-003 | TRI_UNKNOWN_AS_TRUE | error | packages-galerina/galerina-core-compiler/src/index.ts:1818 | 2 | 5 | 4 |
+| FUNGI-SAFETY-004 | SECRET_LITERAL | error | packages-galerina/galerina-core-compiler/src/index.ts:1826 | 1 | 5 | 2 |
+| FUNGI-SAFETY-005 | UNSAFE_DYNAMIC_CODE | error | packages-galerina/galerina-core-compiler/src/index.ts:1834 | 1 | 2 | 2 |
+| FUNGI-SAFETY-006 | TRI_MATCH_NOT_EXHAUSTIVE | error | packages-galerina/galerina-core-compiler/src/index.ts:1842 | 1 | 2 | 3 |
+| FUNGI-SAFETY-007 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SAFETY-008 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SAFETY-AGE-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SAFETY-AGE-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SAFETY-AGE-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SAFETY-AUDIT-001 | — | — | — | 0 | 0 | 1 |
 
 ## SBOM (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-SBOM-001 | — | error | — | 1 | 4 | 3 |
+| FUNGI-SBOM-001 | — | error | — | 1 | 4 | 3 |
 
 ## SEC (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-SEC-014 | — | — | — | 0 | 3 | 11 |
-| SPORE-SEC-020 | RuntimeMutation / RuntimeMutationProhibited | error | packages-galerina/galerina-core-compiler/src/index.ts:1874 | 1 | 39 | 14 |
-| SPORE-SEC-021 | PrototypeMutation / PrototypeMutationProhibited | error | packages-galerina/galerina-core-compiler/src/index.ts:1883 | 1 | 24 | 6 |
-| SPORE-SEC-PATCH-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SEC-014 | — | — | — | 0 | 3 | 11 |
+| FUNGI-SEC-020 | RuntimeMutation / RuntimeMutationProhibited | error | packages-galerina/galerina-core-compiler/src/index.ts:1874 | 1 | 39 | 14 |
+| FUNGI-SEC-021 | PrototypeMutation / PrototypeMutationProhibited | error | packages-galerina/galerina-core-compiler/src/index.ts:1883 | 1 | 24 | 6 |
+| FUNGI-SEC-PATCH-001 | — | — | — | 0 | 0 | 1 |
 
 ## SECRET (8)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-SECRET-001 | SecretValueLogged | — | — | 1 | 45 | 78 |
-| SPORE-SECRET-002 | SecretCrossesFlowBoundary / SecretSentToNetwork / SecretComparisonDenied | — | — | 3 | 74 | 65 |
-| SPORE-SECRET-003 | SecretSerializationDenied | — | — | 1 | 14 | 28 |
-| SPORE-SECRET-004 | SecretDependentBranch | warning | — | 1 | 10 | 6 |
-| SPORE-SECRET-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-SECRET-DISK-00 | — | — | — | 0 | 0 | 2 |
-| SPORE-SECRET-HARDCODED-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-SECRET-HTTP-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SECRET-001 | SecretValueLogged | — | — | 1 | 45 | 78 |
+| FUNGI-SECRET-002 | SecretCrossesFlowBoundary / SecretSentToNetwork / SecretComparisonDenied | — | — | 3 | 74 | 65 |
+| FUNGI-SECRET-003 | SecretSerializationDenied | — | — | 1 | 14 | 28 |
+| FUNGI-SECRET-004 | SecretDependentBranch | warning | — | 1 | 10 | 6 |
+| FUNGI-SECRET-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-SECRET-DISK-00 | — | — | — | 0 | 0 | 2 |
+| FUNGI-SECRET-HARDCODED-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SECRET-HTTP-004 | — | — | — | 0 | 0 | 1 |
 
 ## SECURITY (9)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-SECURITY-001 | — | — | — | 0 | 0 | 11 |
-| SPORE-SECURITY-3000 | — | — | — | 0 | 0 | 1 |
-| SPORE-SECURITY-HSM-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-SECURITY-HSM-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-SECURITY-HSM-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-SECURITY-HSM-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-SECURITY-HSM-005 | — | — | — | 0 | 0 | 1 |
-| SPORE-SECURITY-HSM-006 | — | — | — | 0 | 0 | 1 |
-| SPORE-SECURITY-HSM-007 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SECURITY-001 | — | — | — | 0 | 0 | 11 |
+| FUNGI-SECURITY-3000 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SECURITY-HSM-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SECURITY-HSM-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-SECURITY-HSM-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SECURITY-HSM-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SECURITY-HSM-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SECURITY-HSM-006 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SECURITY-HSM-007 | — | — | — | 0 | 0 | 1 |
 
 ## SOURCE (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-SOURCE-ESCAPE-001 | SourceLevelEvalEscape | error | packages-galerina/galerina-core-compiler/src/index.ts:1784 | 1 | 34 | 9 |
+| FUNGI-SOURCE-ESCAPE-001 | SourceLevelEvalEscape | error | packages-galerina/galerina-core-compiler/src/index.ts:1784 | 1 | 34 | 9 |
 
 ## STATE (6)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-STATE-001 | — | — | — | 0 | 0 | 5 |
-| SPORE-STATE-002 | — | — | — | 0 | 0 | 3 |
-| SPORE-STATE-003 | — | — | — | 0 | 0 | 3 |
-| SPORE-STATE-004 | — | — | — | 0 | 0 | 3 |
-| SPORE-STATE-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-STATE-006 | — | — | — | 0 | 0 | 1 |
+| FUNGI-STATE-001 | — | — | — | 0 | 0 | 5 |
+| FUNGI-STATE-002 | — | — | — | 0 | 0 | 3 |
+| FUNGI-STATE-003 | — | — | — | 0 | 0 | 3 |
+| FUNGI-STATE-004 | — | — | — | 0 | 0 | 3 |
+| FUNGI-STATE-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-STATE-006 | — | — | — | 0 | 0 | 1 |
 
 ## STATIC (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-STATIC-001 | STATIC_NOT_CONSTANT | — | — | 1 | 1 | 5 |
-| SPORE-STATIC-002 | STATIC_REDECLARATION | — | — | 1 | 11 | 4 |
+| FUNGI-STATIC-001 | STATIC_NOT_CONSTANT | — | — | 1 | 1 | 5 |
+| FUNGI-STATIC-002 | STATIC_REDECLARATION | — | — | 1 | 11 | 4 |
 
 ## STDLIB (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-STDLIB-001 | StdlibEffectNotDeclared | error | packages-galerina/galerina-core-compiler/src/index.ts:709 | 1 | 16 | 26 |
-| SPORE-STDLIB-002 | UnknownEffectfulStdlibCall | — | — | 1 | 17 | 5 |
+| FUNGI-STDLIB-001 | StdlibEffectNotDeclared | error | packages-galerina/galerina-core-compiler/src/index.ts:709 | 1 | 16 | 26 |
+| FUNGI-STDLIB-002 | UnknownEffectfulStdlibCall | — | — | 1 | 17 | 5 |
 
 ## STEP (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-STEP-001 | — | — | — | 0 | 0 | 2 |
-| SPORE-STEP-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-STEP-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-STEP-002 | — | — | — | 0 | 0 | 2 |
 
 ## STORAGE (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-STORAGE-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-STORAGE-001 | — | — | — | 0 | 0 | 3 |
 
 ## STRING (4)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-STRING-001 | INVALID_UTF8_DECODE | error | packages-galerina/galerina-core-compiler/src/index.ts:1473 | 0 | 1 | 8 |
-| SPORE-STRING-002 | SECRET_STORED_AS_STRING | error | packages-galerina/galerina-core-compiler/src/index.ts:1481 | 0 | 1 | 2 |
-| SPORE-STRING-003 | IMPLICIT_STRING_BYTE_CONVERSION | error | packages-galerina/galerina-core-compiler/src/index.ts:1489 | 0 | 0 | 3 |
-| SPORE-STRING-004 | AMBIGUOUS_STRING_LENGTH | warning | packages-galerina/galerina-core-compiler/src/index.ts:1497 | 0 | 0 | 2 |
+| FUNGI-STRING-001 | INVALID_UTF8_DECODE | error | packages-galerina/galerina-core-compiler/src/index.ts:1473 | 0 | 1 | 8 |
+| FUNGI-STRING-002 | SECRET_STORED_AS_STRING | error | packages-galerina/galerina-core-compiler/src/index.ts:1481 | 0 | 1 | 2 |
+| FUNGI-STRING-003 | IMPLICIT_STRING_BYTE_CONVERSION | error | packages-galerina/galerina-core-compiler/src/index.ts:1489 | 0 | 0 | 3 |
+| FUNGI-STRING-004 | AMBIGUOUS_STRING_LENGTH | warning | packages-galerina/galerina-core-compiler/src/index.ts:1497 | 0 | 0 | 2 |
 
 ## STYLE (9)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-STYLE-001 | FlowNameCamelCase | warning | packages-galerina/galerina-core-compiler/src/naming-policy-checker.ts:17 | 1 | 35 | 11 |
-| SPORE-STYLE-002 | TypeNamePascalCase | warning | packages-galerina/galerina-core-compiler/src/naming-policy-checker.ts:24 | 1 | 36 | 4 |
-| SPORE-STYLE-003 | — | — | — | 0 | 0 | 3 |
-| SPORE-STYLE-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-STYLE-SEC-001 | SensitiveBindingType | warning | packages-galerina/galerina-core-compiler/src/naming-policy-checker.ts:31 | 1 | 30 | 5 |
-| SPORE-STYLE-SEC-002 | — | — | — | 0 | 0 | 3 |
-| SPORE-STYLE-SEC-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-STYLE-SEC-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-STYLE-SEC-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-STYLE-001 | FlowNameCamelCase | warning | packages-galerina/galerina-core-compiler/src/naming-policy-checker.ts:17 | 1 | 35 | 11 |
+| FUNGI-STYLE-002 | TypeNamePascalCase | warning | packages-galerina/galerina-core-compiler/src/naming-policy-checker.ts:24 | 1 | 36 | 4 |
+| FUNGI-STYLE-003 | — | — | — | 0 | 0 | 3 |
+| FUNGI-STYLE-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-STYLE-SEC-001 | SensitiveBindingType | warning | packages-galerina/galerina-core-compiler/src/naming-policy-checker.ts:31 | 1 | 30 | 5 |
+| FUNGI-STYLE-SEC-002 | — | — | — | 0 | 0 | 3 |
+| FUNGI-STYLE-SEC-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-STYLE-SEC-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-STYLE-SEC-005 | — | — | — | 0 | 0 | 1 |
 
 ## SUBSTRATE (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-SUBSTRATE-001 | CRYPTO_ON_NOISY_LANE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:290 | 1 | 25 | 183 |
-| SPORE-SUBSTRATE-002 | TOLERANCE_UNACHIEVABLE_UNDER_NOISE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:298 | 2 | 32 | 38 |
-| SPORE-SUBSTRATE-003 | REDUNDANCY_INSUFFICIENT | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:306 | 2 | 12 | 22 |
-| SPORE-SUBSTRATE-004 | UNVOTED_ANALOG_INTO_DETERMINISTIC | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:314 | 1 | 11 | 26 |
-| SPORE-SUBSTRATE-005 | REACH_EFFECT_ON_COMPUTE_ONLY_LANE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:325 | 1 | 10 | 5 |
+| FUNGI-SUBSTRATE-001 | CRYPTO_ON_NOISY_LANE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:290 | 1 | 25 | 183 |
+| FUNGI-SUBSTRATE-002 | TOLERANCE_UNACHIEVABLE_UNDER_NOISE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:298 | 2 | 32 | 38 |
+| FUNGI-SUBSTRATE-003 | REDUNDANCY_INSUFFICIENT | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:306 | 2 | 12 | 22 |
+| FUNGI-SUBSTRATE-004 | UNVOTED_ANALOG_INTO_DETERMINISTIC | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:314 | 1 | 11 | 26 |
+| FUNGI-SUBSTRATE-005 | REACH_EFFECT_ON_COMPUTE_ONLY_LANE | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:325 | 1 | 10 | 5 |
 
 ## SUPPLY (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-SUPPLY-001 | — | — | — | 0 | 0 | 9 |
-| SPORE-SUPPLY-002 | — | — | — | 0 | 0 | 4 |
-| SPORE-SUPPLY-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-SUPPLY-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-SUPPLY-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SUPPLY-001 | — | — | — | 0 | 0 | 9 |
+| FUNGI-SUPPLY-002 | — | — | — | 0 | 0 | 4 |
+| FUNGI-SUPPLY-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SUPPLY-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SUPPLY-005 | — | — | — | 0 | 0 | 1 |
 
 ## SYNTAX (14)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-SYNTAX-001 | VAR_NOT_SUPPORTED | error | packages-galerina/galerina-core-compiler/src/index.ts:1217 | 1 | 1 | 11 |
-| SPORE-SYNTAX-002 | CONST_NOT_SUPPORTED | error | packages-galerina/galerina-core-compiler/src/index.ts:1225 | 1 | 1 | 8 |
-| SPORE-SYNTAX-003 | — | — | — | 0 | 4 | 5 |
-| SPORE-SYNTAX-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-SYNTAX-005 | — | — | — | 0 | 3 | 11 |
-| SPORE-SYNTAX-006 | LET_AT_TOP_LEVEL | error | packages-galerina/galerina-core-compiler/src/index.ts:1233 | 0 | 1 | 13 |
-| SPORE-SYNTAX-007 | MUT_AT_TOP_LEVEL | error | packages-galerina/galerina-core-compiler/src/index.ts:1241 | 0 | 1 | 7 |
-| SPORE-SYNTAX-008 | UNSAFE_LET_AT_TOP_LEVEL | error | packages-galerina/galerina-core-compiler/src/index.ts:1249 | 0 | 5 | 7 |
-| SPORE-SYNTAX-009 | EMIT_AT_TOP_LEVEL | error | packages-galerina/galerina-core-compiler/src/index.ts:1257 | 0 | 0 | 9 |
-| SPORE-SYNTAX-010 | — | — | — | 0 | 0 | 20 |
-| SPORE-SYNTAX-LEGACY-001 | LegacyEffectsSyntax | warning | packages-galerina/galerina-core-compiler/src/index.ts:1285 | 0 | 15 | 20 |
-| SPORE-SYNTAX-LEGACY-002 | — | — | — | 0 | 0 | 7 |
-| SPORE-SYNTAX-LEGACY-003 | — | — | — | 0 | 1 | 12 |
-| SPORE-SYNTAX-RLF-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-SYNTAX-001 | VAR_NOT_SUPPORTED | error | packages-galerina/galerina-core-compiler/src/index.ts:1217 | 1 | 1 | 11 |
+| FUNGI-SYNTAX-002 | CONST_NOT_SUPPORTED | error | packages-galerina/galerina-core-compiler/src/index.ts:1225 | 1 | 1 | 8 |
+| FUNGI-SYNTAX-003 | — | — | — | 0 | 4 | 5 |
+| FUNGI-SYNTAX-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-SYNTAX-005 | — | — | — | 0 | 3 | 11 |
+| FUNGI-SYNTAX-006 | LET_AT_TOP_LEVEL | error | packages-galerina/galerina-core-compiler/src/index.ts:1233 | 0 | 1 | 13 |
+| FUNGI-SYNTAX-007 | MUT_AT_TOP_LEVEL | error | packages-galerina/galerina-core-compiler/src/index.ts:1241 | 0 | 1 | 7 |
+| FUNGI-SYNTAX-008 | UNSAFE_LET_AT_TOP_LEVEL | error | packages-galerina/galerina-core-compiler/src/index.ts:1249 | 0 | 5 | 7 |
+| FUNGI-SYNTAX-009 | EMIT_AT_TOP_LEVEL | error | packages-galerina/galerina-core-compiler/src/index.ts:1257 | 0 | 0 | 9 |
+| FUNGI-SYNTAX-010 | — | — | — | 0 | 0 | 20 |
+| FUNGI-SYNTAX-LEGACY-001 | LegacyEffectsSyntax | warning | packages-galerina/galerina-core-compiler/src/index.ts:1285 | 0 | 15 | 20 |
+| FUNGI-SYNTAX-LEGACY-002 | — | — | — | 0 | 0 | 7 |
+| FUNGI-SYNTAX-LEGACY-003 | — | — | — | 0 | 1 | 12 |
+| FUNGI-SYNTAX-RLF-001 | — | — | — | 0 | 0 | 1 |
 
 ## TAINT (7)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TAINT-001 | TaintedValueAtInjectionSink | error | packages-galerina/galerina-core-compiler/src/taint-checker.ts:118 | 0 | 20 | 16 |
-| SPORE-TAINT-002 | UnvalidatedValueAtLogicSink | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:126 | 0 | 0 | 6 |
-| SPORE-TAINT-003 | WrongContextUntaint | error | packages-galerina/galerina-core-compiler/src/taint-checker.ts:134 | 0 | 11 | 5 |
-| SPORE-TAINT-004 | DiscouragedSanitiser | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:142 | 0 | 11 | 3 |
-| SPORE-TAINT-005 | TaintedValueAtHeaderSink | error | packages-galerina/galerina-core-compiler/src/taint-checker.ts:392 | 0 | 1 | 5 |
-| SPORE-TAINT-006 | SsrfPolicyInsufficient | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:401 | 0 | 1 | 3 |
-| SPORE-TAINT-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-TAINT-001 | TaintedValueAtInjectionSink | error | packages-galerina/galerina-core-compiler/src/taint-checker.ts:118 | 0 | 20 | 16 |
+| FUNGI-TAINT-002 | UnvalidatedValueAtLogicSink | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:126 | 0 | 0 | 6 |
+| FUNGI-TAINT-003 | WrongContextUntaint | error | packages-galerina/galerina-core-compiler/src/taint-checker.ts:134 | 0 | 11 | 5 |
+| FUNGI-TAINT-004 | DiscouragedSanitiser | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:142 | 0 | 11 | 3 |
+| FUNGI-TAINT-005 | TaintedValueAtHeaderSink | error | packages-galerina/galerina-core-compiler/src/taint-checker.ts:392 | 0 | 1 | 5 |
+| FUNGI-TAINT-006 | SsrfPolicyInsufficient | warning | packages-galerina/galerina-core-compiler/src/taint-checker.ts:401 | 0 | 1 | 3 |
+| FUNGI-TAINT-007 | — | — | — | 0 | 0 | 2 |
 
 ## TARGET (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TARGET-001 | — | — | — | 0 | 0 | 7 |
-| SPORE-TARGET-101 | — | — | — | 0 | 0 | 1 |
-| SPORE-TARGET-103 | — | — | — | 0 | 0 | 1 |
-| SPORE-TARGET-CAP-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-TARGET-CAP-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-TARGET-001 | — | — | — | 0 | 0 | 7 |
+| FUNGI-TARGET-101 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TARGET-103 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TARGET-CAP-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-TARGET-CAP-002 | — | — | — | 0 | 0 | 2 |
 
 ## TENANT (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TENANT-001 | DANGLING_TENANT_SCOPE_BINDING | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:257 | 1 | 9 | 3 |
-| SPORE-TENANT-002 | UNSCOPED_TENANT_DATA_ACCESS | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:265 | 1 | 20 | 2 |
-| SPORE-TENANT-003 | — | — | — | 0 | 1 | 2 |
+| FUNGI-TENANT-001 | DANGLING_TENANT_SCOPE_BINDING | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:257 | 1 | 9 | 3 |
+| FUNGI-TENANT-002 | UNSCOPED_TENANT_DATA_ACCESS | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:265 | 1 | 20 | 2 |
+| FUNGI-TENANT-003 | — | — | — | 0 | 1 | 2 |
 
 ## TENSOR (10)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TENSOR-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-TENSOR-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-TENSOR-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-TENSOR-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-TENSOR-005 | — | — | — | 0 | 0 | 2 |
-| SPORE-TENSOR-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-TENSOR-007 | — | — | — | 0 | 0 | 2 |
-| SPORE-TENSOR-008 | — | — | — | 0 | 0 | 2 |
-| SPORE-TENSOR-009 | — | — | — | 0 | 0 | 2 |
-| SPORE-TENSOR-010 | — | — | — | 0 | 0 | 2 |
+| FUNGI-TENSOR-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-TENSOR-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-TENSOR-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-TENSOR-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-TENSOR-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-TENSOR-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-TENSOR-007 | — | — | — | 0 | 0 | 2 |
+| FUNGI-TENSOR-008 | — | — | — | 0 | 0 | 2 |
+| FUNGI-TENSOR-009 | — | — | — | 0 | 0 | 2 |
+| FUNGI-TENSOR-010 | — | — | — | 0 | 0 | 2 |
 
 ## TERM (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TERM-001 | TERMINATION_ANNOTATION_MISSING | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:408 | 1 | 11 | 11 |
-| SPORE-TERM-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-TERM-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TERM-001 | TERMINATION_ANNOTATION_MISSING | warning | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:408 | 1 | 11 | 11 |
+| FUNGI-TERM-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TERM-003 | — | — | — | 0 | 0 | 1 |
 
 ## TEST (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TEST-001 | — | — | — | 0 | 2 | 0 |
-| SPORE-TEST-002 | — | — | — | 0 | 2 | 0 |
-| SPORE-TEST-003 | — | — | — | 0 | 1 | 0 |
+| FUNGI-TEST-001 | — | — | — | 0 | 2 | 0 |
+| FUNGI-TEST-002 | — | — | — | 0 | 2 | 0 |
+| FUNGI-TEST-003 | — | — | — | 0 | 1 | 0 |
 
 ## TIER (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TIER-001 | UNDER_DECLARED_FLOW_TIER | — | — | 1 | 26 | 30 |
-| SPORE-TIER-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-TIER-001 | UNDER_DECLARED_FLOW_TIER | — | — | 1 | 26 | 30 |
+| FUNGI-TIER-002 | — | — | — | 0 | 0 | 2 |
 
 ## TIMEOUT (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TIMEOUT-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TIMEOUT-001 | — | — | — | 0 | 0 | 1 |
 
 ## TOLERANCE (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TOLERANCE-MONOTONE-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TOLERANCE-MONOTONE-001 | — | — | — | 0 | 0 | 1 |
 
 ## TRACE (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TRACE-001 | — | — | — | 0 | 0 | 3 |
-| SPORE-TRACE-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-TRACE-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-TRACE-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-TRACE-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TRACE-001 | — | — | — | 0 | 0 | 3 |
+| FUNGI-TRACE-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TRACE-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TRACE-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TRACE-005 | — | — | — | 0 | 0 | 1 |
 
 ## TRAP (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TRAP-001 | TRAP_INVALID_ERROR_CODE | — | — | 1 | 12 | 3 |
-| SPORE-TRAP-002 | TRAP_SYMBOL_UNRESOLVED | — | — | 1 | 1 | 1 |
+| FUNGI-TRAP-001 | TRAP_INVALID_ERROR_CODE | — | — | 1 | 12 | 3 |
+| FUNGI-TRAP-002 | TRAP_SYMBOL_UNRESOLVED | — | — | 1 | 1 | 1 |
 
 ## TRI (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TRI-001 | — | — | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:12 | 1 | 1 | 8 |
-| SPORE-TRI-002 | — | — | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:15 | 1 | 1 | 4 |
-| SPORE-TRI-003 | — | — | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:18 | 1 | 1 | 2 |
-| SPORE-TRI-004 | — | — | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:21 | 1 | 1 | 1 |
-| SPORE-TRI-005 | — | — | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:24 | 1 | 1 | 4 |
+| FUNGI-TRI-001 | — | — | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:12 | 1 | 1 | 8 |
+| FUNGI-TRI-002 | — | — | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:15 | 1 | 1 | 4 |
+| FUNGI-TRI-003 | — | — | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:18 | 1 | 1 | 2 |
+| FUNGI-TRI-004 | — | — | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:21 | 1 | 1 | 1 |
+| FUNGI-TRI-005 | — | — | packages-galerina/galerina-core-logic/src/tri/tri-diagnostics.ts:24 | 1 | 1 | 4 |
 
 ## TYPE (34)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-TYPE-0 | — | — | — | 0 | 1 | 0 |
-| SPORE-TYPE-001 | UnknownType | — | — | 1 | 208 | 33 |
-| SPORE-TYPE-002 | QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol / TypeMismatch | warning/error | packages-galerina/galerina-core-compiler/src/index.ts:272 | 1 | 86 | 20 |
-| SPORE-TYPE-003 | InvalidNominalConversion | error | packages-galerina/galerina-core-compiler/src/index.ts:256 | 1 | 59 | 33 |
-| SPORE-TYPE-004 | InvalidBinaryOperation | — | — | 11 | 129 | 45 |
-| SPORE-TYPE-005 | InvalidCallArgType | — | — | 1 | 23 | 8 |
-| SPORE-TYPE-006 | — | — | — | 0 | 0 | 5 |
-| SPORE-TYPE-007 | InvalidArgumentCount | — | — | 1 | 10 | 3 |
-| SPORE-TYPE-008 | InvalidReturnType / SilentNullDenied | — | — | 2 | 24 | 8 |
-| SPORE-TYPE-009 | InvalidGenericInstantiation | — | — | 1 | 89 | 28 |
-| SPORE-TYPE-010 | UnsatisfiedGenericConstraint / InvalidCollectionElement / InvalidResultType / InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation | error | packages-galerina/galerina-core-compiler/src/index.ts:265 | 0 | 1 | 5 |
-| SPORE-TYPE-011 | InvalidCollectionElement / InvalidResultType / InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch | error | packages-galerina/galerina-core-compiler/src/index.ts:266 | 1 | 54 | 4 |
-| SPORE-TYPE-012 | InvalidResultType / InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch | error/warning | packages-galerina/galerina-core-compiler/src/index.ts:267 | 0 | 0 | 2 |
-| SPORE-TYPE-013 | InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType | error/warning | packages-galerina/galerina-core-compiler/src/index.ts:268 | 0 | 1 | 2 |
-| SPORE-TYPE-014 | MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | error/warning | packages-galerina/galerina-core-compiler/src/index.ts:269 | 1 | 14 | 2 |
-| SPORE-TYPE-015 | GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | error/warning | packages-galerina/galerina-core-compiler/src/index.ts:270 | 0 | 0 | 2 |
-| SPORE-TYPE-016 | TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | error/warning | packages-galerina/galerina-core-compiler/src/index.ts:271 | 1 | 9 | 5 |
-| SPORE-TYPE-017 | QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | warning/error | packages-galerina/galerina-core-compiler/src/index.ts:272 | 1 | 29 | 4 |
-| SPORE-TYPE-018 | InvalidRuntimeTargetType / UnknownSymbol | error | packages-galerina/galerina-core-compiler/src/index.ts:273 | 0 | 9 | 3 |
-| SPORE-TYPE-019 | UnknownSymbol | error | packages-galerina/galerina-core-compiler/src/index.ts:274 | 0 | 4 | 2 |
-| SPORE-TYPE-020 | ShadowedBinding | warning | — | 1 | 15 | 10 |
-| SPORE-TYPE-021 | — | — | — | 0 | 2 | 9 |
-| SPORE-TYPE-022 | UnreachablePattern | — | — | 1 | 6 | 6 |
-| SPORE-TYPE-023 | DeferredTypeCheck / MissingWildcardArm | warning | — | 3 | 24 | 14 |
-| SPORE-TYPE-030 | TensorElementTypeMismatch | error | packages-galerina/galerina-core-compiler/src/index.ts:280 | 1 | 16 | 11 |
-| SPORE-TYPE-031 | TensorDimensionMismatch | error | packages-galerina/galerina-core-compiler/src/index.ts:290 | 0 | 4 | 9 |
-| SPORE-TYPE-032 | — | — | — | 0 | 0 | 1 |
-| SPORE-TYPE-033 | — | — | — | 0 | 0 | 1 |
-| SPORE-TYPE-1000 | — | — | — | 0 | 0 | 1 |
-| SPORE-TYPE-NUMERIC-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-TYPE-NUMERIC-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-TYPE-NUMERIC-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-TYPE-NUMERIC-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-TYPE-NUMERIC-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TYPE-0 | — | — | — | 0 | 1 | 0 |
+| FUNGI-TYPE-001 | UnknownType | — | — | 1 | 208 | 33 |
+| FUNGI-TYPE-002 | QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol / TypeMismatch | warning/error | packages-galerina/galerina-core-compiler/src/index.ts:272 | 1 | 86 | 20 |
+| FUNGI-TYPE-003 | InvalidNominalConversion | error | packages-galerina/galerina-core-compiler/src/index.ts:256 | 1 | 59 | 33 |
+| FUNGI-TYPE-004 | InvalidBinaryOperation | — | — | 11 | 129 | 45 |
+| FUNGI-TYPE-005 | InvalidCallArgType | — | — | 1 | 23 | 8 |
+| FUNGI-TYPE-006 | — | — | — | 0 | 0 | 5 |
+| FUNGI-TYPE-007 | InvalidArgumentCount | — | — | 1 | 10 | 3 |
+| FUNGI-TYPE-008 | InvalidReturnType / SilentNullDenied | — | — | 2 | 24 | 8 |
+| FUNGI-TYPE-009 | InvalidGenericInstantiation | — | — | 1 | 89 | 28 |
+| FUNGI-TYPE-010 | UnsatisfiedGenericConstraint / InvalidCollectionElement / InvalidResultType / InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation | error | packages-galerina/galerina-core-compiler/src/index.ts:265 | 0 | 1 | 5 |
+| FUNGI-TYPE-011 | InvalidCollectionElement / InvalidResultType / InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch | error | packages-galerina/galerina-core-compiler/src/index.ts:266 | 1 | 54 | 4 |
+| FUNGI-TYPE-012 | InvalidResultType / InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch | error/warning | packages-galerina/galerina-core-compiler/src/index.ts:267 | 0 | 0 | 2 |
+| FUNGI-TYPE-013 | InvalidSecretOperation / MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType | error/warning | packages-galerina/galerina-core-compiler/src/index.ts:268 | 0 | 1 | 2 |
+| FUNGI-TYPE-014 | MissingRequiredEffect / GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | error/warning | packages-galerina/galerina-core-compiler/src/index.ts:269 | 1 | 14 | 2 |
+| FUNGI-TYPE-015 | GovernedSinkViolation / TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | error/warning | packages-galerina/galerina-core-compiler/src/index.ts:270 | 0 | 0 | 2 |
+| FUNGI-TYPE-016 | TensorShapeMismatch / QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | error/warning | packages-galerina/galerina-core-compiler/src/index.ts:271 | 1 | 9 | 5 |
+| FUNGI-TYPE-017 | QuantizedPrecisionMismatch / InvalidRuntimeTargetType / UnknownSymbol | warning/error | packages-galerina/galerina-core-compiler/src/index.ts:272 | 1 | 29 | 4 |
+| FUNGI-TYPE-018 | InvalidRuntimeTargetType / UnknownSymbol | error | packages-galerina/galerina-core-compiler/src/index.ts:273 | 0 | 9 | 3 |
+| FUNGI-TYPE-019 | UnknownSymbol | error | packages-galerina/galerina-core-compiler/src/index.ts:274 | 0 | 4 | 2 |
+| FUNGI-TYPE-020 | ShadowedBinding | warning | — | 1 | 15 | 10 |
+| FUNGI-TYPE-021 | — | — | — | 0 | 2 | 9 |
+| FUNGI-TYPE-022 | UnreachablePattern | — | — | 1 | 6 | 6 |
+| FUNGI-TYPE-023 | DeferredTypeCheck / MissingWildcardArm | warning | — | 3 | 24 | 14 |
+| FUNGI-TYPE-030 | TensorElementTypeMismatch | error | packages-galerina/galerina-core-compiler/src/index.ts:280 | 1 | 16 | 11 |
+| FUNGI-TYPE-031 | TensorDimensionMismatch | error | packages-galerina/galerina-core-compiler/src/index.ts:290 | 0 | 4 | 9 |
+| FUNGI-TYPE-032 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TYPE-033 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TYPE-1000 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TYPE-NUMERIC-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TYPE-NUMERIC-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TYPE-NUMERIC-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TYPE-NUMERIC-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-TYPE-NUMERIC-005 | — | — | — | 0 | 0 | 1 |
 
 ## UNIV (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-UNIV-001 | — | — | — | 0 | 0 | 4 |
-| SPORE-UNIV-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-UNIV-001 | — | — | — | 0 | 0 | 4 |
+| FUNGI-UNIV-002 | — | — | — | 0 | 0 | 1 |
 
 ## VAL (12)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-VAL-00 | — | — | — | 0 | 1 | 0 |
-| SPORE-VAL-001 | SafetyCriticalMissingAudit | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:465 | 0 | 36 | 9 |
-| SPORE-VAL-002 | SafetyCriticalMissingDeterminism | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:481 | 0 | 27 | 8 |
-| SPORE-VAL-003 | UnknownValueClassification | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:497 | 0 | 16 | 4 |
-| SPORE-VAL-004 | — | — | — | 0 | 0 | 1 |
-| SPORE-VAL-005 | — | — | — | 0 | 0 | 1 |
-| SPORE-VAL-006 | — | — | — | 0 | 0 | 2 |
-| SPORE-VAL-007 | — | — | — | 0 | 0 | 1 |
-| SPORE-VAL-008 | — | — | — | 0 | 0 | 1 |
-| SPORE-VAL-009 | — | — | — | 0 | 0 | 1 |
-| SPORE-VAL-010 | — | — | — | 0 | 0 | 1 |
-| SPORE-VAL-011 | — | — | — | 0 | 0 | 1 |
+| FUNGI-VAL-00 | — | — | — | 0 | 1 | 0 |
+| FUNGI-VAL-001 | SafetyCriticalMissingAudit | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:465 | 0 | 36 | 9 |
+| FUNGI-VAL-002 | SafetyCriticalMissingDeterminism | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:481 | 0 | 27 | 8 |
+| FUNGI-VAL-003 | UnknownValueClassification | error | packages-galerina/galerina-core-compiler/src/governance-verifier.ts:497 | 0 | 16 | 4 |
+| FUNGI-VAL-004 | — | — | — | 0 | 0 | 1 |
+| FUNGI-VAL-005 | — | — | — | 0 | 0 | 1 |
+| FUNGI-VAL-006 | — | — | — | 0 | 0 | 2 |
+| FUNGI-VAL-007 | — | — | — | 0 | 0 | 1 |
+| FUNGI-VAL-008 | — | — | — | 0 | 0 | 1 |
+| FUNGI-VAL-009 | — | — | — | 0 | 0 | 1 |
+| FUNGI-VAL-010 | — | — | — | 0 | 0 | 1 |
+| FUNGI-VAL-011 | — | — | — | 0 | 0 | 1 |
 
 ## VALIDATE (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-VALIDATE-001 | — | — | — | 0 | 0 | 2 |
+| FUNGI-VALIDATE-001 | — | — | — | 0 | 0 | 2 |
 
 ## VALUE (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-VALUE-STATE-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-VALUE-STATE-001 | — | — | — | 0 | 0 | 1 |
 
 ## VALUESTATE (9)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-VALUESTATE-00 | — | — | — | 0 | 1 | 0 |
-| SPORE-VALUESTATE-001 | UnsafeToSafeTransitionDenied | — | — | 1 | 27 | 21 |
-| SPORE-VALUESTATE-002 | UnsafeConditionalUpgrade | — | — | 2 | 15 | 6 |
-| SPORE-VALUESTATE-003 | UnsafeValueReachedGovernedSink | — | — | 1 | 124 | 46 |
-| SPORE-VALUESTATE-004 | TaintedValuePropagation | error | — | 2 | 20 | 20 |
-| SPORE-VALUESTATE-005 | DERIVED_UNSAFE_VALUE_AT_SINK / DerivedUnsafeValueAtSink | error | packages-galerina/galerina-core-compiler/src/index.ts:239 | 1 | 45 | 23 |
-| SPORE-VALUESTATE-006 | ProtectedBoundaryViolation / ProtectedValueAtAuditLog | error | packages-galerina/galerina-core-compiler/src/index.ts:300 | 2 | 77 | 16 |
-| SPORE-VALUESTATE-007 | RedactedBoundaryViolation | error | packages-galerina/galerina-core-compiler/src/index.ts:308 | 1 | 40 | 3 |
-| SPORE-VALUESTATE-008 | BoundaryInputUnclean | — | — | 1 | 31 | 17 |
+| FUNGI-VALUESTATE-00 | — | — | — | 0 | 1 | 0 |
+| FUNGI-VALUESTATE-001 | UnsafeToSafeTransitionDenied | — | — | 1 | 27 | 21 |
+| FUNGI-VALUESTATE-002 | UnsafeConditionalUpgrade | — | — | 2 | 15 | 6 |
+| FUNGI-VALUESTATE-003 | UnsafeValueReachedGovernedSink | — | — | 1 | 124 | 46 |
+| FUNGI-VALUESTATE-004 | TaintedValuePropagation | error | — | 2 | 20 | 20 |
+| FUNGI-VALUESTATE-005 | DERIVED_UNSAFE_VALUE_AT_SINK / DerivedUnsafeValueAtSink | error | packages-galerina/galerina-core-compiler/src/index.ts:239 | 1 | 45 | 23 |
+| FUNGI-VALUESTATE-006 | ProtectedBoundaryViolation / ProtectedValueAtAuditLog | error | packages-galerina/galerina-core-compiler/src/index.ts:300 | 2 | 77 | 16 |
+| FUNGI-VALUESTATE-007 | RedactedBoundaryViolation | error | packages-galerina/galerina-core-compiler/src/index.ts:308 | 1 | 40 | 3 |
+| FUNGI-VALUESTATE-008 | BoundaryInputUnclean | — | — | 1 | 31 | 17 |
 
 ## VAULT (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-VAULT-001 | — | — | packages-galerina/galerina-core-config/src/index.ts:1314 | 1 | 1 | 9 |
-| SPORE-VAULT-002 | — | — | packages-galerina/galerina-core-config/src/index.ts:1316 | 1 | 1 | 2 |
-| SPORE-VAULT-003 | — | — | packages-galerina/galerina-core-config/src/index.ts:1318 | 1 | 1 | 2 |
-| SPORE-VAULT-004 | — | — | packages-galerina/galerina-core-config/src/index.ts:1320 | 1 | 1 | 1 |
-| SPORE-VAULT-005 | — | — | packages-galerina/galerina-core-config/src/index.ts:1322 | 1 | 1 | 3 |
+| FUNGI-VAULT-001 | — | — | packages-galerina/galerina-core-config/src/index.ts:1314 | 1 | 1 | 9 |
+| FUNGI-VAULT-002 | — | — | packages-galerina/galerina-core-config/src/index.ts:1316 | 1 | 1 | 2 |
+| FUNGI-VAULT-003 | — | — | packages-galerina/galerina-core-config/src/index.ts:1318 | 1 | 1 | 2 |
+| FUNGI-VAULT-004 | — | — | packages-galerina/galerina-core-config/src/index.ts:1320 | 1 | 1 | 1 |
+| FUNGI-VAULT-005 | — | — | packages-galerina/galerina-core-config/src/index.ts:1322 | 1 | 1 | 3 |
 
 ## VERIFY (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-VERIFY-001 | — | — | — | 0 | 0 | 5 |
-| SPORE-VERIFY-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-VERIFY-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-VERIFY-001 | — | — | — | 0 | 0 | 5 |
+| FUNGI-VERIFY-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-VERIFY-005 | — | — | — | 0 | 0 | 2 |
 
 ## VIS (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-VIS-001 | — | — | — | 0 | 0 | 4 |
-| SPORE-VIS-002 | — | — | — | 0 | 0 | 3 |
-| SPORE-VIS-003 | — | — | — | 0 | 0 | 4 |
-| SPORE-VIS-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-VIS-005 | — | — | — | 0 | 0 | 2 |
+| FUNGI-VIS-001 | — | — | — | 0 | 0 | 4 |
+| FUNGI-VIS-002 | — | — | — | 0 | 0 | 3 |
+| FUNGI-VIS-003 | — | — | — | 0 | 0 | 4 |
+| FUNGI-VIS-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-VIS-005 | — | — | — | 0 | 0 | 2 |
 
 ## WASM (5)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-WASM-001 | — | — | — | 0 | 0 | 6 |
-| SPORE-WASM-002 | — | — | — | 0 | 0 | 2 |
-| SPORE-WASM-003 | — | — | — | 0 | 0 | 2 |
-| SPORE-WASM-004 | — | — | — | 0 | 0 | 2 |
-| SPORE-WASM-005 | — | — | — | 0 | 0 | 3 |
+| FUNGI-WASM-001 | — | — | — | 0 | 0 | 6 |
+| FUNGI-WASM-002 | — | — | — | 0 | 0 | 2 |
+| FUNGI-WASM-003 | — | — | — | 0 | 0 | 2 |
+| FUNGI-WASM-004 | — | — | — | 0 | 0 | 2 |
+| FUNGI-WASM-005 | — | — | — | 0 | 0 | 3 |
 
 ## WEB (14)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-WEB-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-003 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-010 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-011 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-020 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-021 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-022 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-030 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-031 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-040 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-041 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-042 | — | — | — | 0 | 0 | 1 |
-| SPORE-WEB-050 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-010 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-011 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-020 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-021 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-022 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-030 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-031 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-040 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-041 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-042 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WEB-050 | — | — | — | 0 | 0 | 1 |
 
 ## WORKFLOW (3)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-WORKFLOW-001 | — | — | — | 0 | 0 | 1 |
-| SPORE-WORKFLOW-002 | — | — | — | 0 | 0 | 1 |
-| SPORE-WORKFLOW-003 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WORKFLOW-001 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WORKFLOW-002 | — | — | — | 0 | 0 | 1 |
+| FUNGI-WORKFLOW-003 | — | — | — | 0 | 0 | 1 |
 
 ## X (2)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-X-001 | Foo | — | scripts/audit-production-blockers.mjs:93 | 0 | 0 | 0 |
-| SPORE-X-002 | — | — | scripts/audit-production-blockers.mjs:94 | 0 | 0 | 0 |
+| FUNGI-X-001 | Foo | — | scripts/audit-production-blockers.mjs:93 | 0 | 0 | 0 |
+| FUNGI-X-002 | — | — | scripts/audit-production-blockers.mjs:94 | 0 | 0 | 0 |
 
 ## Y (1)
 
 | code | name(s) | severity | def | emit | test | doc |
 |---|---|---|---|---|---|---|
-| SPORE-Y-007 | — | — | — | 1 | 0 | 0 |
+| FUNGI-Y-007 | — | — | — | 1 | 0 | 0 |

@@ -62,13 +62,13 @@ galerina rollback          — rollback to previous deployment
 14-pass pipeline. Flags: `--target`, `--json`, `--report`, `--strict`,
 `--profile`, `--out`, `--audit`. Produces `runtime-manifest.json`,
 `compiler-report.json`, `effect-report.json`, `capability-report.json`,
-`audit-report.json`, `build-hash.txt`. Diagnostic codes: `SPORE-BUILD-001`
-through `SPORE-BUILD-005`. Status: partial implementation.
+`audit-report.json`, `build-hash.txt`. Diagnostic codes: `FUNGI-BUILD-001`
+through `FUNGI-BUILD-005`. Status: partial implementation.
 
 `galerina verify` validates compiler and runtime artefact integrity.
 Flags: `--json`, `--strict`, `--manifest`, `--hash`, `--policy`, `--audit`.
 Produces verification status with `manifestHash` and `graphHash`.
-Diagnostic codes: `SPORE-VERIFY-001` through `SPORE-VERIFY-005`.
+Diagnostic codes: `FUNGI-VERIFY-001` through `FUNGI-VERIFY-005`.
 Status: partial — hash checks only.
 
 `galerina deploy` validates the runtime manifest, effects, capabilities, policy,
@@ -77,20 +77,20 @@ success, `2` policy denial, `3` runtime incompatibility, `4` deployment
 validation failure, `5` capability resolution failure, `7` manifest integrity
 failure. Flags: `--dry-run`, `--json`, `--report`, `--audit`, `--strict`,
 `--profile`, `--policy`, `--target`. Produces `deployment-report.json`.
-Diagnostic codes: `SPORE-DEPLOY-001` through `SPORE-DEPLOY-005`.
+Diagnostic codes: `FUNGI-DEPLOY-001` through `FUNGI-DEPLOY-005`.
 
 `galerina explain` explains compiler decisions, runtime authority, effect
 declarations, boundary violations, and why deployment was denied.
 Flags: `--tree` (dependency graph), `--trace` (execution reasoning chain),
 `--effects`, `--capabilities`, `--runtime`, `--policy`, `--audit`, `--json`.
-Diagnostic codes: `SPORE-EXPLAIN-001` through `SPORE-EXPLAIN-004`.
+Diagnostic codes: `FUNGI-EXPLAIN-001` through `FUNGI-EXPLAIN-004`.
 
 `galerina plan` estimates how execution will be coordinated — CPU/GPU suitability,
 memory pressure, parallelism, and fallback options. The planner recommends;
 the runtime decides final execution.
 Flags: `--json`, `--runtime`, `--memory`, `--parallelism`, `--energy`,
 `--target`, `--graph`, `--compatibility`. Produces `compute-plan.json`.
-Diagnostic codes: `SPORE-PLAN-001` through `SPORE-PLAN-004`.
+Diagnostic codes: `FUNGI-PLAN-001` through `FUNGI-PLAN-004`.
 
 Implementation order: Phase 1 build → Phase 2 verify → Phase 3 explain →
 Phase 4 deploy → Phase 5 plan.
@@ -141,7 +141,7 @@ Galerina graph path package:galerina-devtools-project-graph report:project-graph
 
 ## Task Command
 
-`Galerina task` loads safe project automation from `tasks.spore` in the repository root,
+`Galerina task` loads safe project automation from `tasks.fungi` in the repository root,
 or from a file passed with `--file`.
 
 Examples:
@@ -149,7 +149,7 @@ Examples:
 ```text
 Galerina task
 Galerina task buildApi --dry-run
-Galerina task generateReports --file packages-galerina/galerina-core-tasks/examples/tasks.spore --dry-run
+Galerina task generateReports --file packages-galerina/galerina-core-tasks/examples/tasks.fungi --dry-run
 Galerina task buildApi --report-out build/reports/task-report.json
 ```
 
@@ -292,7 +292,7 @@ export function validateEffects(
 //   effectiveEffects = declaredEffects ∪ inferredEffects
 //   check each effect against policy.allowedEffects
 //   check capabilities present for each effect
-//   emit SPORE-EFFECT-001 through SPORE-EFFECT-004 as needed
+//   emit FUNGI-EFFECT-001 through FUNGI-EFFECT-004 as needed
 ```
 
 ### Explain Contracts

@@ -71,7 +71,7 @@ There is no shortcut to "fast Galerina." The cheap win is small; the real wins a
 - **Effort L · risk HIGH** (this runs effectful flows — a wrong lowering is a *governance* bug, the cardinal sin). Exit: governed flows run compiled with byte-identical audit + measurable speedup; audit/test green.
 
 ### Phase 3 — JSON (a concrete, high-value workload)
-- Native governed `json.parse` **effect** routed through `CapabilityHost`, with the parsed tree **taint/seal-tagged** (it's untrusted input — ties to SPORE-PRIVACY-002). String **views** to kill split/slice allocation. **Effort M.**
+- Native governed `json.parse` **effect** routed through `CapabilityHost`, with the parsed tree **taint/seal-tagged** (it's untrusted input — ties to FUNGI-PRIVACY-002). String **views** to kill split/slice allocation. **Effort M.**
 - Hard part: taint/effect propagation on parsed data is governance, not just speed. Exit: JSON workloads use the governed primitive; hand-rolled split is the fallback.
 
 ### Phase 4 — the ceiling: WASM as a *verified runtime tier* (the big one)

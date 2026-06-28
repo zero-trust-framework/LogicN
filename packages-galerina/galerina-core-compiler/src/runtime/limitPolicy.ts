@@ -22,7 +22,7 @@ export type LimitViolation = {
 const DEFAULT_LIMIT_CONFIG: LimitConfig = {};
 
 // The recognized `limits {}` declaration grammar — space-separated phrases. SINGLE SOURCE OF TRUTH: both the
-// parser below AND the SPORE-GOV-019 verifier (via isRecognizedLimitDecl) use these regexes, so they cannot
+// parser below AND the FUNGI-GOV-019 verifier (via isRecognizedLimitDecl) use these regexes, so they cannot
 // drift. (RD-0121 found governance-verifier's snake_case KNOWN_LIMITS_FIELDS allowlist disagreed with this
 // runtime grammar — it false-fired GOV-019 on the idiomatic `max request size N MB` form; CWE-1287.)
 const LIMIT_REQUEST_SIZE_RE = /max\s+request\s+size\s+(\d+(?:\.\d+)?)\s*(bytes?|kb|mb|gb)/;
@@ -33,7 +33,7 @@ const ALL_LIMIT_PATTERNS = [LIMIT_REQUEST_SIZE_RE, LIMIT_BATCH_SIZE_RE, LIMIT_ME
 
 /**
  * True iff a `limits {}` declaration line matches the runtime-recognized grammar (case-insensitive). The
- * SPORE-GOV-019 typo check delegates here so the verifier accepts EXACTLY what the runtime parses — no false
+ * FUNGI-GOV-019 typo check delegates here so the verifier accepts EXACTLY what the runtime parses — no false
  * positives on the idiomatic space-separated form, real typos still flagged.
  */
 export function isRecognizedLimitDecl(decl: string): boolean {

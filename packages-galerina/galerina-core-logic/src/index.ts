@@ -38,7 +38,7 @@ export type LogicDiagnosticSeverity = "info" | "warning" | "error";
  * Additional field: path — dot-path into the validated structure.
  */
 export interface LogicDiagnostic {
-  /** Structured diagnostic code in SPORE-SERIES-NNN format. */
+  /** Structured diagnostic code in FUNGI-SERIES-NNN format. */
   readonly code: string;
   /** Screaming-snake-case name. Example: "DUPLICATE_STATE". */
   readonly name: string;
@@ -172,7 +172,7 @@ export function validateOmniLogicDefinition<N extends number>(
 
   if (definition.kind !== "Omni" || definition.bounded !== true) {
     diagnostics.push({
-      code: "SPORE-LOGIC-006",
+      code: "FUNGI-LOGIC-006",
       name: "OMNI_MUST_BE_BOUNDED",
       severity: "error",
       message: "Omni logic definitions must be explicitly bounded.",
@@ -182,7 +182,7 @@ export function validateOmniLogicDefinition<N extends number>(
 
   if (definition.width > 256) {
     diagnostics.push({
-      code: "SPORE-LOGIC-007",
+      code: "FUNGI-LOGIC-007",
       name: "OMNI_WIDTH_TOO_LARGE",
       severity: "error",
       message: "Omni logic definitions must declare 256 states or fewer.",
@@ -200,7 +200,7 @@ export function validateLogicDefinition<N extends number>(
 
   if (!isSafeGalerinaame(definition.name)) {
     diagnostics.push({
-      code: "SPORE-LOGIC-001",
+      code: "FUNGI-LOGIC-001",
       name: "INVALID_NAME",
       severity: "error",
       message:
@@ -211,7 +211,7 @@ export function validateLogicDefinition<N extends number>(
 
   if (!Number.isSafeInteger(definition.width) || definition.width < 2) {
     diagnostics.push({
-      code: "SPORE-LOGIC-002",
+      code: "FUNGI-LOGIC-002",
       name: "INVALID_WIDTH",
       severity: "error",
       message: "Logic width must be a safe integer greater than or equal to 2.",
@@ -221,7 +221,7 @@ export function validateLogicDefinition<N extends number>(
 
   if (definition.states.length !== definition.width) {
     diagnostics.push({
-      code: "SPORE-LOGIC-003",
+      code: "FUNGI-LOGIC-003",
       name: "STATE_COUNT_MISMATCH",
       severity: "error",
       message: "Logic state count must exactly match the declared width.",
@@ -234,7 +234,7 @@ export function validateLogicDefinition<N extends number>(
   definition.states.forEach((state, index) => {
     if (!isSafeGalerinaame(state)) {
       diagnostics.push({
-        code: "SPORE-LOGIC-004",
+        code: "FUNGI-LOGIC-004",
         name: "INVALID_STATE_NAME",
         severity: "error",
         message:
@@ -245,7 +245,7 @@ export function validateLogicDefinition<N extends number>(
 
     if (seenStates.has(state)) {
       diagnostics.push({
-        code: "SPORE-LOGIC-005",
+        code: "FUNGI-LOGIC-005",
         name: "DUPLICATE_STATE",
         severity: "error",
         message: `Logic state "${state}" is duplicated.`,
@@ -339,7 +339,7 @@ export function validateTruthTable<N extends number>(
 
   if (truthTable.length === 0) {
     diagnostics.push({
-      code: "SPORE-LOGIC-008",
+      code: "FUNGI-LOGIC-008",
       name: "EMPTY_TRUTH_TABLE",
       severity: "warning",
       message: "Truth table has no rows.",
@@ -353,7 +353,7 @@ export function validateTruthTable<N extends number>(
 
   if (expectedInputCount === undefined || expectedInputCount === 0) {
     diagnostics.push({
-      code: "SPORE-LOGIC-009",
+      code: "FUNGI-LOGIC-009",
       name: "EMPTY_TRUTH_TABLE_INPUTS",
       severity: "error",
       message: "Truth table rows must declare at least one input.",
@@ -366,7 +366,7 @@ export function validateTruthTable<N extends number>(
   truthTable.forEach((row, rowIndex) => {
     if (row.inputs.length !== expectedInputCount) {
       diagnostics.push({
-        code: "SPORE-LOGIC-010",
+        code: "FUNGI-LOGIC-010",
         name: "TRUTH_TABLE_ARITY_MISMATCH",
         severity: "error",
         message: "Truth table rows must use a consistent input count.",
@@ -377,7 +377,7 @@ export function validateTruthTable<N extends number>(
     row.inputs.forEach((input, inputIndex) => {
       if (!isValidLogicState(logic, input)) {
         diagnostics.push({
-          code: "SPORE-LOGIC-011",
+          code: "FUNGI-LOGIC-011",
           name: "INVALID_INPUT_STATE",
           severity: "error",
           message: "Truth table input state is outside the declared logic width.",
@@ -388,7 +388,7 @@ export function validateTruthTable<N extends number>(
 
     if (!isValidLogicState(logic, row.output)) {
       diagnostics.push({
-        code: "SPORE-LOGIC-012",
+        code: "FUNGI-LOGIC-012",
         name: "INVALID_OUTPUT_STATE",
         severity: "error",
         message: "Truth table output state is outside the declared logic width.",
@@ -400,7 +400,7 @@ export function validateTruthTable<N extends number>(
 
     if (rowKeys.has(rowKey)) {
       diagnostics.push({
-        code: "SPORE-LOGIC-013",
+        code: "FUNGI-LOGIC-013",
         name: "DUPLICATE_TRUTH_TABLE_ROW",
         severity: "error",
         message: "Truth table contains a duplicate input combination.",
@@ -420,7 +420,7 @@ export function validateTruthTable<N extends number>(
     rowKeys.size < expectedRows
   ) {
     diagnostics.push({
-      code: "SPORE-LOGIC-014",
+      code: "FUNGI-LOGIC-014",
       name: "INCOMPLETE_TRUTH_TABLE",
       severity: "warning",
       message: "Truth table does not cover every input combination.",

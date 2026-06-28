@@ -2,16 +2,16 @@
 
 Galerina, short for **Galerina**, should support fast regex-style processing, but the default design should be **safe pattern matching**, not traditional regex everywhere.
 
-Galerina source files use the `.spore` extension.
+Galerina source files use the `.fungi` extension.
 
 Example files:
 
 ```text
-boot.spore
-main.spore
-patterns.spore
-validators.spore
-log-scanner.spore
+boot.fungi
+main.fungi
+patterns.fungi
+validators.fungi
+log-scanner.fungi
 ```
 
 Detailed syntax examples live in:
@@ -110,7 +110,7 @@ engine-specific recursive patterns
 
 # 3. Pattern Policy
 
-Pattern policy should live in `boot.spore`.
+Pattern policy should live in `boot.fungi`.
 
 ```Galerina
 pattern_policy {
@@ -202,7 +202,7 @@ Unsafe regex used.
 Engine: pcre2_jit
 Reason required.
 Timeout required.
-Source: src/import/postcodes.spore:12
+Source: src/import/postcodes.fungi:12
 ```
 
 ---
@@ -379,7 +379,7 @@ Example:
     "patterns": [
       {
         "name": "postcodePattern",
-        "source": "src/validators/postcode.spore:1",
+        "source": "src/validators/postcode.fungi:1",
         "engine": "safe",
         "compiled": true,
         "cached": true,
@@ -389,7 +389,7 @@ Example:
     "unsafeRegex": [
       {
         "name": "AdvancedPostcodeCheck",
-        "source": "src/import/postcodes.spore:12",
+        "source": "src/import/postcodes.fungi:12",
         "engine": "pcre2_jit",
         "reasonProvided": true,
         "timeout": "10ms",

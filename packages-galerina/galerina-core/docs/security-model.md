@@ -7,7 +7,7 @@ Galerina is a strict, memory-safe, security-first, JSON-native, API-native and a
 Security in Galerina should be part of the language, compiler, runtime, package system, build process and deployment model.
 
 Startup validation is part of that model. A Galerina app should validate
-`boot.spore`, imports, packages, globals, secrets, security policy, routes,
+`boot.fungi`, imports, packages, globals, secrets, security policy, routes,
 webhooks and memory/vector/json policies before `main()` runs. Detailed
 planning lives in `docs/startup-validation.md`.
 
@@ -953,7 +953,7 @@ Bad public response:
 
 ```json
 {
-  "error": "src/payment-service.spore:42 DATABASE_PASSWORD failed"
+  "error": "src/payment-service.fungi:42 DATABASE_PASSWORD failed"
 }
 ```
 

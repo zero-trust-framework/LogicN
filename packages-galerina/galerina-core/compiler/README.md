@@ -4,9 +4,9 @@ This folder contains the first runnable Galerina prototype CLI.
 
 It is not a production compiler. It is a practical v0.1 scaffold that can:
 
-- discover `.spore` source files
-- lex `.spore` source into source-mapped tokens
-- format `.spore` files with stable two-space indentation
+- discover `.fungi` source files
+- lex `.fungi` source into source-mapped tokens
+- format `.fungi` files with stable two-space indentation
 - parse core declarations into AST JSON
 - extract `/// @tag` strict comments into AST, source-map and AI-context reports
 - run prototype smoke tests for parser, formatter and target diagnostics
@@ -38,14 +38,14 @@ npm run schema
 npm run openapi
 npm run build:examples
 npm run verify
-node compiler/galerina.js run examples/hello.spore
-node compiler/galerina.js run examples/hello.spore --generate --out .build-dev-run
-node compiler/galerina.js generate examples --exclude source-map-error.spore --out .build-dev
-node compiler/galerina.js dev examples/hello.spore --out .build-dev
-node compiler/galerina.js dev examples/hello.spore --watch --out .build-dev
+node compiler/galerina.js run examples/hello.fungi
+node compiler/galerina.js run examples/hello.fungi --generate --out .build-dev-run
+node compiler/galerina.js generate examples --exclude source-map-error.fungi --out .build-dev
+node compiler/galerina.js dev examples/hello.fungi --out .build-dev
+node compiler/galerina.js dev examples/hello.fungi --watch --out .build-dev
 node compiler/galerina.js serve examples --dev
 node compiler/galerina.js init my-galerina-app
-node compiler/galerina.js explain examples/source-map-error.spore --for-ai
+node compiler/galerina.js explain examples/source-map-error.fungi --for-ai
 ```
 
 The generated `app.bin` and `app.wasm` files are placeholders. They prove the
@@ -71,7 +71,7 @@ manifest paths using `/` separators. The naming policy is emitted as
 
 Source hashing is recorded in `deterministicInputs` using SHA-256. The build
 manifest includes a combined `sourceHash`, a `sourceHashAlgorithm`, and a
-`sourceFiles` list with one hash per `.spore` source file.
+`sourceFiles` list with one hash per `.fungi` source file.
 
 Dependency hashing is also recorded in `deterministicInputs`. Declared
 `import`/`use` modules are sorted, classified and hashed with SHA-256, then
@@ -113,7 +113,7 @@ node compiler/galerina.js fmt examples --check
 node compiler/galerina.js fmt examples
 ```
 
-The first command reports files that would change. The second rewrites `.spore`
+The first command reports files that would change. The second rewrites `.fungi`
 files using two-space indentation, trimmed trailing whitespace and a single final
 newline.
 
@@ -125,7 +125,7 @@ The prototype test command validates the current examples:
 node compiler/galerina.js test examples
 ```
 
-It checks that `hello.spore` parses as a secure `main` flow, `boot.spore` parses the
+It checks that `hello.fungi` parses as a secure `main` flow, `boot.fungi` parses the
 project entry and targets, valid examples have no error diagnostics, the
 intentional source-map fixture still reports a target compatibility error, and
 the examples are formatter-clean. It also includes in-memory negative checks for
@@ -169,9 +169,9 @@ comments as a design/linting concern rather than a build error.
 The schema generator lives in `compiler/schema-generator.js`.
 
 ```bash
-node compiler/galerina.js schema examples/api-orders.spore
-node compiler/galerina.js schema examples/api-orders.spore --type CreateOrderRequest
-node compiler/galerina.js openapi examples/api-orders.spore
+node compiler/galerina.js schema examples/api-orders.fungi
+node compiler/galerina.js schema examples/api-orders.fungi --type CreateOrderRequest
+node compiler/galerina.js openapi examples/api-orders.fungi
 ```
 
 Builds write `app.schemas.json` and `app.openapi.json`. The JSON Schema output
@@ -212,7 +212,7 @@ docs/ai-summary.md
 docs/docs-manifest.json
 ```
 
-The `boot.spore` `build` block may declare `require_outputs`; when
+The `boot.fungi` `build` block may declare `require_outputs`; when
 `fail_on_missing_output true` is set, the build fails if a required artefact is
 not generated.
 
@@ -236,7 +236,7 @@ Compiled code should always come with generated explanation.
 
 ## Runtime Report
 
-`runtime` blocks in `boot.spore` are extracted into `app.runtime-report.json` and
+`runtime` blocks in `boot.fungi` are extracted into `app.runtime-report.json` and
 `docs/runtime-guide.md`.
 
 The prototype records memory soft/hard limits, ordered pressure actions and
@@ -269,7 +269,7 @@ production HTTP server.
 
 ## Global Report
 
-`globals` blocks in `boot.spore` are extracted into `app.global-report.json` and
+`globals` blocks in `boot.fungi` are extracted into `app.global-report.json` and
 `docs/global-registry-guide.md`.
 
 The prototype records `const`, `config`, `secret` and `state` declarations.

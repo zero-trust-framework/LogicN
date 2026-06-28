@@ -271,13 +271,13 @@ export function checkGuarantee(params: SubstrateParameters, g: SubstrateGuarante
   return { resultId: g.resultId, pBad, epsilonModeled, met, trace, redundancyHelps: pBad < 0.5 };
 }
 
-// ── Diagnostics — SPORE-SUBSTRATE-* (fail-closed) ───────────────────────────────
+// ── Diagnostics — FUNGI-SUBSTRATE-* (fail-closed) ───────────────────────────────
 
 export const SUBSTRATE_DIAGNOSTICS = {
-  CRYPTO_ON_NOISY_LANE: "SPORE-SUBSTRATE-001",
-  TOLERANCE_UNACHIEVABLE_UNDER_NOISE: "SPORE-SUBSTRATE-002",
-  REDUNDANCY_INSUFFICIENT: "SPORE-SUBSTRATE-003",
-  UNVOTED_ANALOG_INTO_DETERMINISTIC: "SPORE-SUBSTRATE-004",
+  CRYPTO_ON_NOISY_LANE: "FUNGI-SUBSTRATE-001",
+  TOLERANCE_UNACHIEVABLE_UNDER_NOISE: "FUNGI-SUBSTRATE-002",
+  REDUNDANCY_INSUFFICIENT: "FUNGI-SUBSTRATE-003",
+  UNVOTED_ANALOG_INTO_DETERMINISTIC: "FUNGI-SUBSTRATE-004",
 } as const;
 
 export interface SubstrateDiagnostic {
@@ -314,7 +314,7 @@ function deny(
 /**
  * Resolve whether a flow's declared substrate guarantee is provable under the model.
  * Fail-closed: any unproved guarantee, crypto-on-noisy, insufficient redundancy, or
- * un-voted-analog-into-deterministic yields DENY + an SPORE-SUBSTRATE-* diagnostic.
+ * un-voted-analog-into-deterministic yields DENY + an FUNGI-SUBSTRATE-* diagnostic.
  * Priority: crypto (001) > unvoted-into-deterministic (004) > redundancy (003) > tolerance (002).
  */
 export function verifyToleranceUnderNoise(

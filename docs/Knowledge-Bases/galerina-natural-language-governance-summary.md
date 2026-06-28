@@ -260,11 +260,11 @@ Subprocesses:             denied
 
 | Code | Meaning |
 |---|---|
-| `SPORE-GOV-SUMMARY-001` | Governance summary emitted |
-| `SPORE-GOV-SUMMARY-002` | Summary contains unknown package authority |
-| `SPORE-GOV-SUMMARY-003` | Summary omitted secret values |
-| `SPORE-GOV-SUMMARY-004` | Summary profile differs from build profile |
-| `SPORE-GOV-SUMMARY-005` | Summary cannot be generated because governance report is incomplete |
+| `FUNGI-GOV-SUMMARY-001` | Governance summary emitted |
+| `FUNGI-GOV-SUMMARY-002` | Summary contains unknown package authority |
+| `FUNGI-GOV-SUMMARY-003` | Summary omitted secret values |
+| `FUNGI-GOV-SUMMARY-004` | Summary profile differs from build profile |
+| `FUNGI-GOV-SUMMARY-005` | Summary cannot be generated because governance report is incomplete |
 
 ---
 

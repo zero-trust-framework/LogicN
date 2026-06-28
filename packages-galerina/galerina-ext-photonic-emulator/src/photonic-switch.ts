@@ -71,14 +71,14 @@ export function selectPhotonicBackend(opts: PhotonicSwitchOptions = {}): Photoni
   // mode is "hardware" or "auto": consider the candidate, fail-closed on every miss.
   if (hw === undefined) {
     return mode === "hardware"
-      ? { backend: emulator, selected: "emulator", reason: "mode=hardware but no hardware backend supplied — fail-closed to emulator", code: "SPORE_PHOTONIC_NO_HARDWARE" }
+      ? { backend: emulator, selected: "emulator", reason: "mode=hardware but no hardware backend supplied — fail-closed to emulator", code: "FUNGI_PHOTONIC_NO_HARDWARE" }
       : { backend: emulator, selected: "emulator", reason: "mode=auto, no hardware backend — emulator" };
   }
   if (hw.nativeAvailable !== true) {
-    return { backend: emulator, selected: "emulator", reason: `hardware backend '${hw.hardwareIdentity}' reports nativeAvailable=${hw.nativeAvailable} — fail-closed to emulator`, code: "SPORE_PHOTONIC_HW_UNAVAILABLE" };
+    return { backend: emulator, selected: "emulator", reason: `hardware backend '${hw.hardwareIdentity}' reports nativeAvailable=${hw.nativeAvailable} — fail-closed to emulator`, code: "FUNGI_PHOTONIC_HW_UNAVAILABLE" };
   }
   if (hw.attested !== true) {
-    return { backend: emulator, selected: "emulator", reason: `hardware backend '${hw.hardwareIdentity}' is UNATTESTED — fail-closed to emulator (never run an unverified PIC)`, code: "SPORE_PHOTONIC_HW_UNATTESTED" };
+    return { backend: emulator, selected: "emulator", reason: `hardware backend '${hw.hardwareIdentity}' is UNATTESTED — fail-closed to emulator (never run an unverified PIC)`, code: "FUNGI_PHOTONIC_HW_UNATTESTED" };
   }
   return { backend: hw, selected: "hardware", reason: `attested hardware backend '${hw.hardwareIdentity}' selected` };
 }

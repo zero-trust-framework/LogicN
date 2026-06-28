@@ -6,7 +6,7 @@ governance semantics, and the acceptance bar so the capability can be wired when
 Source lane: `galerina-quantum-resilience-roadmap.md` §Q1 + `rd-absorbed/rd-qrng-entropy-source-for-hybrid-signing.md`
 (Lane D). The web-cited standards/products grounding is R&D bridge task `0005` (feeds this design; refine on its return).
 
-> **Crypto-on-core (`SPORE-SUBSTRATE-001`):** a QRNG is a **source of randomness, not a cryptographic primitive.**
+> **Crypto-on-core (`FUNGI-SUBSTRATE-001`):** a QRNG is a **source of randomness, not a cryptographic primitive.**
 > It sits **before** the cipher — supplying entropy to the key/nonce schedule — exactly like the OS CSPRNG it
 > augments. It never computes a hash, cipher, or signature. There is **no photonic crypto** here; only photonic *entropy*.
 
@@ -46,15 +46,15 @@ capabilities and the substrate lanes — a three-valued, fail-closed gate:
 | Element | Design |
 |---|---|
 | **Capability** | `entropy.qrng` — present iff a vetted source is configured **and** its current SP 800-90B health state is passing. |
-| **Health → verdict** | a failed RCT/APT health test flips the capability to **unavailable** mid-run; the verdict for any QRNG-requiring policy collapses to **`unknown → deny`** (K3, `SPORE-GOV-3VL-001`). |
+| **Health → verdict** | a failed RCT/APT health test flips the capability to **unavailable** mid-run; the verdict for any QRNG-requiring policy collapses to **`unknown → deny`** (K3, `FUNGI-GOV-3VL-001`). |
 | **No silent downgrade** | a policy that **requires** QRNG entropy **MUST NOT** silently fall back to the OS CSPRNG when QRNG is unavailable — that defeats the assertion. It denies (or, only with explicit policy consent, degrades). Mirrors Lane E §4.2 and Lane B §8.2. |
 | **Default posture** | when **no** policy requires QRNG, the engine uses the OS CSPRNG as today; a configured QRNG is then a transparent quality upgrade (still piped through the DRBG). |
 | **Attestation** | the entropy source's ESV id + health-state summary are bound into the operation's audit/attestation record (the same receipt path the bridge attestation uses), so "this key was QRNG-seeded" is provable, not asserted. |
 
 ### Candidate diagnostics (proposed — not yet enforced)
-- **`SPORE-ENTROPY-001`** — a policy/contract that **requires** `entropy.qrng` but the capability is unavailable (no
+- **`FUNGI-ENTROPY-001`** — a policy/contract that **requires** `entropy.qrng` but the capability is unavailable (no
   vetted source, or a failed health test) → **deny** (fail-closed; audited, never silent).
-- **`SPORE-ENTROPY-002`** — an attempt to consume **raw** entropy-source output as key material (bypassing the
+- **`FUNGI-ENTROPY-002`** — an attempt to consume **raw** entropy-source output as key material (bypassing the
   SP 800-90B health gate / 90A DRBG) → **error** ("never raw bits → key").
 
 ## 4. How it meets the engine
@@ -69,7 +69,7 @@ seam; the governance layer decides **which** source satisfies a given policy.
 1. a **NIST-ESV-validated QRNG** wired behind the capability boundary (today: none in scope);
 2. the **SP 800-90B health → 90A DRBG** pipeline implemented with **fail-closed** behavior on a failed health test;
 3. a **measured RBG2/RBG3 throughput on named hardware** (no synthesized number — crypto-on-core honesty rule);
-4. the `entropy.qrng` capability + `SPORE-ENTROPY-001/002` enforced in the governance verifier.
+4. the `entropy.qrng` capability + `FUNGI-ENTROPY-001/002` enforced in the governance verifier.
 Until 1–3 hold: **define the interface, keep it inert, default to the OS CSPRNG.** No throughput/security number is
 claimed here — absent hardware, that is a **THEORETICAL GAP** (same posture as Lanes B/E).
 

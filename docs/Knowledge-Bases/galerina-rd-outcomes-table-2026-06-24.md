@@ -15,9 +15,9 @@
 | **RD-0113** | Tower-citizen K3 governance, deepened | **Positive** (genuine Kleene K3, 0 errors, 145/145) | **DP** (the combination) + **Paper** (T-MAC = a reduction, not a matmul) | ✅ done |
 | **RD-0114** | .tmf format vs TritMesh DB, compared | **Positive** (both digital + sound; control/data-plane positioning + 2 guardrails) | **No** (positioning) | ✅ done |
 | **RD-0115** | Hybrid photonic/binary placement | **Positive** (shipped switch sound + fail-safe; reuse gap diagnosed, gap is safe) | feeds RD-0117 | ✅ done |
-| **RD-0116** | Holographic "O(1)-read petabyte" storage | **Negative** on the claim (refute-and-park) → spawned a **Positive** net-new finding (`SPORE-RETAIN-001`) | **DP** (the sound-erasure note) | ✅ done |
+| **RD-0116** | Holographic "O(1)-read petabyte" storage | **Negative** on the claim (refute-and-park) → spawned a **Positive** net-new finding (`FUNGI-RETAIN-001`) | **DP** (the sound-erasure note) | ✅ done |
 | **RD-0117** | The join (formalize + wire + measure) | **Positive** (Safe-Floor Theorem proved + shipped as a runtime gate, 15/15) | **Paper** (safe-floor theorem + Amdahl measured-negative) | ✅ done |
-| **RD-0118** | SPORE-RETAIN-001 HW protection directive, hardened | **Positive** (decision core built 12/12; directive design adversarially hardened) | **DP** (the directive) | 🟡 in progress |
+| **RD-0118** | FUNGI-RETAIN-001 HW protection directive, hardened | **Positive** (decision core built 12/12; directive design adversarially hardened) | **DP** (the directive) | 🟡 in progress |
 
 **Could-not-be-done (hardware-gated tails — no CPU-only path; tracked, not failed):** pinning the absolute photonic ns-constants to a real PIC (`RD-0110` action #10, `RD-0117` step 8); the holographic *substrate* itself and the real storage-admission *dispatch* (`RD-0116`, gated #102-106). In every case the *governance/math* half is done on CPU and only the silicon is gated — and the design fails safe to digital, so the gate never blocks correctness.
 
@@ -27,9 +27,9 @@
 |---|---|---|
 | Interpreter sync-fallback hardened (checked algebra) | `152dc0b` | `RD-0112-F1` |
 | Dispatch-completeness lemma (proves the fallback is dead-today, CI gate) | `13276db` | `RD-0112` |
-| CLI redaction fail-closed tripwire (`SPORE-CLI-REDACT-001`) | `fe223fd` | 0094-redact PART-A |
+| CLI redaction fail-closed tripwire (`FUNGI-CLI-REDACT-001`) | `fe223fd` | 0094-redact PART-A |
 | Safe-Floor Theorem proof (imports the real decider, 15/15) | `0c671e6` | `RD-0117-O2` |
-| `SPORE-RETAIN-001` sound-erasure gate (`admitSubstrateWrite`, 12/12) | `746e161` | `RD-0116-O4` / `RD-0118` |
+| `FUNGI-RETAIN-001` sound-erasure gate (`admitSubstrateWrite`, 12/12) | `746e161` | `RD-0116-O4` / `RD-0118` |
 | R&D reference-ID scheme + master index | `f901509` | (process) |
 
 ## Science-paper bottom line

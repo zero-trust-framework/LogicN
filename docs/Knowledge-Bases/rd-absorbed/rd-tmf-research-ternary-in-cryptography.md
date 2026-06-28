@@ -105,7 +105,7 @@ different scheme than the one you picked:
 ## 5. The invariant that ties it together: crypto stays on a deterministic core
 
 Galerina's durable conclusion from this whole thread (`galerina-photonic-tri-substrate-rd-agenda.md`,
-`galerina-substrate-contracts.md`, diagnostic `SPORE-SUBSTRATE-001`):
+`galerina-substrate-contracts.md`, diagnostic `FUNGI-SUBSTRATE-001`):
 
 > **Bulk compute may be photonic/ternary/noisy; integrity must stay on a deterministic core.**
 

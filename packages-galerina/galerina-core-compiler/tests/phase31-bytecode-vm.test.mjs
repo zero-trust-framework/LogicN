@@ -16,7 +16,7 @@ import {
 
 function run(src, flow, args) {
   clearBytecodeCache();
-  const prog = parseProgram(src, "test.spore");
+  const prog = parseProgram(src, "test.fungi");
   return tryRunBytecode(prog.ast, prog.flows, flow, args);
 }
 
@@ -87,7 +87,7 @@ describe("Phase 31: bytecode VM control flow", () => {
 describe("Phase 31: matches tree-walker (cross-check)", () => {
   it("compiled bytecode has expected structure", () => {
     clearBytecodeCache();
-    const prog = parseProgram("pure flow add(a: Int, b: Int) -> Int contract { effects {} } { return a + b }", "test.spore");
+    const prog = parseProgram("pure flow add(a: Int, b: Int) -> Int contract { effects {} } { return a + b }", "test.fungi");
     const bc = compileToBytecode(prog.ast, "add");
     assert.ok(bc !== null, "should compile");
     assert.equal(bc.paramNames.length, 2);

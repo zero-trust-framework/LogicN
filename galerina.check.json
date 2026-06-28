@@ -5,32 +5,32 @@
   "profile": "production",
 
   "rules": {
-    "SPORE-TAINT-001": "error",
-    "SPORE-TAINT-003": "error",
-    "SPORE-TAINT-004": "warning",
-    "SPORE-TAINT-005": "error",
-    "SPORE-TAINT-006": "error",
+    "FUNGI-TAINT-001": "error",
+    "FUNGI-TAINT-003": "error",
+    "FUNGI-TAINT-004": "warning",
+    "FUNGI-TAINT-005": "error",
+    "FUNGI-TAINT-006": "error",
 
-    "SPORE-PROFILE-001": "error",
-    "SPORE-PROFILE-002": "error",
-    "SPORE-PROFILE-005B": "error",
-    "SPORE-PROFILE-006": "warning",
+    "FUNGI-PROFILE-001": "error",
+    "FUNGI-PROFILE-002": "error",
+    "FUNGI-PROFILE-005B": "error",
+    "FUNGI-PROFILE-006": "warning",
 
-    "SPORE-VAL-001": "error",
-    "SPORE-VAL-002": "error",
+    "FUNGI-VAL-001": "error",
+    "FUNGI-VAL-002": "error",
 
-    "SPORE-GOV-002": "error",
-    "SPORE-GOV-009": "error",
+    "FUNGI-GOV-002": "error",
+    "FUNGI-GOV-009": "error",
 
-    "SPORE-SYNTAX-010": "error",
-    "SPORE-SYNTAX-LEGACY-001": "error",
-    "SPORE-SYNTAX-LEGACY-002": "warning",
+    "FUNGI-SYNTAX-010": "error",
+    "FUNGI-SYNTAX-LEGACY-001": "error",
+    "FUNGI-SYNTAX-LEGACY-002": "warning",
 
-    "SPORE-STYLE-001": "off",
+    "FUNGI-STYLE-001": "off",
 
-    "SPORE-SOURCE-ESCAPE-001": "error",
-    "SPORE-SEC-020": "error",
-    "SPORE-SEC-021": "error"
+    "FUNGI-SOURCE-ESCAPE-001": "error",
+    "FUNGI-SEC-020": "error",
+    "FUNGI-SEC-021": "error"
   },
 
   "ignore": [

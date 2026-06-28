@@ -74,7 +74,7 @@ pure flow increment(counter: Int) -> Int {
 }
 ```
 
-`let` and `mut` at the top level emit SPORE-SYNTAX-006 and SPORE-SYNTAX-007.
+`let` and `mut` at the top level emit FUNGI-SYNTAX-006 and FUNGI-SYNTAX-007.
 
 ---
 
@@ -111,7 +111,7 @@ flow process(values: Array<Int>) -> Array<Int> {
 }
 ```
 
-Top-level `fn` emits SPORE-SYNTAX-005.
+Top-level `fn` emits FUNGI-SYNTAX-005.
 
 ---
 
@@ -130,7 +130,7 @@ flow createOrder(...) -> OrderResult {
 }
 ```
 
-Top-level `emit` emits SPORE-SYNTAX-009.
+Top-level `emit` emits FUNGI-SYNTAX-009.
 
 ---
 
@@ -162,6 +162,6 @@ The `service` keyword is reserved for Phase 17.
 ## 10. Diagnostics not yet emitted
 
 These constants are exported but the checks are stubs:
-- `SPORE-TYPE-011` through `SPORE-TYPE-016` — defined, not emitted
-- `SPORE-GOV-005`, `SPORE-GOV-009` — defined, not emitted
-- `SPORE-BUILD-001` — stub, full implementation in Phase 16
+- `FUNGI-TYPE-011` through `FUNGI-TYPE-016` — defined, not emitted
+- `FUNGI-GOV-005`, `FUNGI-GOV-009` — defined, not emitted
+- `FUNGI-BUILD-001` — stub, full implementation in Phase 16

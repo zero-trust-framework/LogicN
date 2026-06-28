@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Fix expected.diagnostics.txt files that have:
 // 1. BOM prefix (U+FEFF)
-// 2. Trailing colon after SPORE code: "SPORE-TYPE-009: ..." → "SPORE-TYPE-009\n..."
+// 2. Trailing colon after FUNGI code: "FUNGI-TYPE-009: ..." → "FUNGI-TYPE-009\n..."
 
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -30,13 +30,13 @@ for (const file of files) {
   // Remove BOM
   let content = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
 
-  // Check if first non-comment line starts with SPORE-XXX-NNN:
+  // Check if first non-comment line starts with FUNGI-XXX-NNN:
   const lines = content.split("\n");
   let changed = raw.charCodeAt(0) === 0xFEFF; // BOM removal already changes it
 
   const fixed_lines = lines.map((line, i) => {
-    // Match SPORE-CODE: description → extract just SPORE-CODE
-    const m = line.match(/^(SPORE-[A-Z]+-\d+):(.*)$/);
+    // Match FUNGI-CODE: description → extract just FUNGI-CODE
+    const m = line.match(/^(FUNGI-[A-Z]+-\d+):(.*)$/);
     if (m) {
       changed = true;
       const code = m[1];

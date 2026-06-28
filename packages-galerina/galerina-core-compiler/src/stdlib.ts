@@ -12,7 +12,7 @@
 //   Decision: docs/Knowledge-Bases/galerina-architecture-layers.md
 // =============================================================================
 
-import { SPORE_NONE, SPORE_VOID, type GalerinaValue } from "./interpreter.js";
+import { FUNGI_NONE, FUNGI_VOID, type GalerinaValue } from "./interpreter.js";
 import { createHash as _nodeCryptoCreateHash, timingSafeEqual as _nodeCryptoTimingSafeEqual } from "node:crypto";
 import { createRequire as _createRequire } from "node:module";
 // SSRF egress protection — the hardened, deny-by-default outbound guard (normalizes numeric-IP /
@@ -215,7 +215,7 @@ function numVal(v: GalerinaValue): number {
  * Float constructor for stdlib minters that can produce a NON-FINITE result — Math.sqrt(-1)→NaN,
  * Math.log(0)→-Inf, Math.pow overflow→+Inf, an empty-list stddev / all-(-Inf) softmax→NaN. A non-finite
  * float must NOT escape as a value: it passes EVERY range guard (every NaN comparison is false) and could be
- * signed into a manifest. Returns a fail-closed trap (NonFiniteFloat / SPORE-FLOAT-NAN-001) that the tree-walker
+ * signed into a manifest. Returns a fail-closed trap (NonFiniteFloat / FUNGI-FLOAT-NAN-001) that the tree-walker
  * propagates exactly like 0.0/0.0. Mirrors interpreter.ts mkFloat. (#55.)
  */
 function floatVal(n: number): GalerinaValue {
@@ -269,20 +269,20 @@ async function optionMethod(
   if (receiver.__tag !== "some" && receiver.__tag !== "none") return undefined;
   switch (method) {
     case "unwrapOr":
-      return receiver.__tag === "some" ? receiver.value : (args[0] ?? SPORE_VOID);
+      return receiver.__tag === "some" ? receiver.value : (args[0] ?? FUNGI_VOID);
     case "isSome":
       return { __tag: "bool", value: receiver.__tag === "some" };
     case "isNone":
       return { __tag: "bool", value: receiver.__tag === "none" };
     case "map":
-      if (receiver.__tag === "none") return SPORE_NONE;
-      return args[0] !== undefined ? mkSome(await ctx.applyFn(args[0], receiver.value)) : SPORE_NONE;
+      if (receiver.__tag === "none") return FUNGI_NONE;
+      return args[0] !== undefined ? mkSome(await ctx.applyFn(args[0], receiver.value)) : FUNGI_NONE;
     case "flatMap":
-      if (receiver.__tag === "none") return SPORE_NONE;
-      return args[0] !== undefined ? await ctx.applyFn(args[0], receiver.value) : SPORE_NONE;
+      if (receiver.__tag === "none") return FUNGI_NONE;
+      return args[0] !== undefined ? await ctx.applyFn(args[0], receiver.value) : FUNGI_NONE;
     case "value":
     case "get":
-      return receiver.__tag === "some" ? receiver.value : SPORE_NONE;
+      return receiver.__tag === "some" ? receiver.value : FUNGI_NONE;
     default:
       return undefined;
   }
@@ -297,7 +297,7 @@ async function resultMethod(
   if (receiver.__tag !== "ok" && receiver.__tag !== "err") return undefined;
   switch (method) {
     case "unwrapOr":
-      return receiver.__tag === "ok" ? receiver.value : (args[0] ?? SPORE_VOID);
+      return receiver.__tag === "ok" ? receiver.value : (args[0] ?? FUNGI_VOID);
     case "isOk":
       return { __tag: "bool", value: receiver.__tag === "ok" };
     case "isErr":
@@ -310,7 +310,7 @@ async function resultMethod(
       return args[0] !== undefined ? { __tag: "err", error: await ctx.applyFn(args[0], receiver.error) } : receiver;
     case "value":
     case "get":
-      return receiver.__tag === "ok" ? mkSome(receiver.value) : SPORE_NONE;
+      return receiver.__tag === "ok" ? mkSome(receiver.value) : FUNGI_NONE;
     default:
       return undefined;
   }
@@ -338,21 +338,21 @@ function stringMethod(receiver: GalerinaValue, method: string, args: readonly Ga
     case "isEmpty":
       return { __tag: "bool", value: s.length === 0 };
     case "startsWith":
-      return { __tag: "bool", value: s.startsWith(strVal(args[0] ?? SPORE_VOID)) };
+      return { __tag: "bool", value: s.startsWith(strVal(args[0] ?? FUNGI_VOID)) };
     case "endsWith":
-      return { __tag: "bool", value: s.endsWith(strVal(args[0] ?? SPORE_VOID)) };
+      return { __tag: "bool", value: s.endsWith(strVal(args[0] ?? FUNGI_VOID)) };
     case "contains":
     case "includes":
-      return { __tag: "bool", value: s.includes(strVal(args[0] ?? SPORE_VOID)) };
+      return { __tag: "bool", value: s.includes(strVal(args[0] ?? FUNGI_VOID)) };
     case "split":
       return {
         __tag: "list",
         items: s.split(strVal(args[0] ?? { __tag: "string", value: "" })).map((p): GalerinaValue => ({ __tag: "string", value: p })),
       };
     case "replace":
-      return { __tag: "string", value: s.replace(strVal(args[0] ?? SPORE_VOID), strVal(args[1] ?? { __tag: "string", value: "" })) };
+      return { __tag: "string", value: s.replace(strVal(args[0] ?? FUNGI_VOID), strVal(args[1] ?? { __tag: "string", value: "" })) };
     case "replaceAll":
-      return { __tag: "string", value: s.replaceAll(strVal(args[0] ?? SPORE_VOID), strVal(args[1] ?? { __tag: "string", value: "" })) };
+      return { __tag: "string", value: s.replaceAll(strVal(args[0] ?? FUNGI_VOID), strVal(args[1] ?? { __tag: "string", value: "" })) };
     case "slice": {
       const start = numVal(args[0] ?? { __tag: "int", value: 0 });
       const end = args[1] !== undefined ? numVal(args[1]) : undefined;
@@ -369,12 +369,12 @@ function stringMethod(receiver: GalerinaValue, method: string, args: readonly Ga
     case "charAt": {
       const idx = numVal(args[0] ?? { __tag: "int", value: 0 });
       const ch = [...s][idx];
-      return ch !== undefined ? mkSome({ __tag: "char", value: ch }) : SPORE_NONE;
+      return ch !== undefined ? mkSome({ __tag: "char", value: ch }) : FUNGI_NONE;
     }
     case "indexOf":
-      return { __tag: "int", value: s.indexOf(strVal(args[0] ?? SPORE_VOID)) };
+      return { __tag: "int", value: s.indexOf(strVal(args[0] ?? FUNGI_VOID)) };
     case "lastIndexOf":
-      return { __tag: "int", value: s.lastIndexOf(strVal(args[0] ?? SPORE_VOID)) };
+      return { __tag: "int", value: s.lastIndexOf(strVal(args[0] ?? FUNGI_VOID)) };
     case "padStart": {
       const len = numVal(args[0] ?? { __tag: "int", value: 0 });
       const pad = args[1]?.__tag === "string" ? args[1].value : " ";
@@ -424,7 +424,7 @@ function stringMethod(receiver: GalerinaValue, method: string, args: readonly Ga
         const match = new RegExp(pattern).exec(s);
         if (!match) return { __tag: "list", items: [] };
         const groups = match.slice(1).map((g): GalerinaValue =>
-          g === undefined ? SPORE_NONE : { __tag: "string", value: g }
+          g === undefined ? FUNGI_NONE : { __tag: "string", value: g }
         );
         return { __tag: "list", items: groups };
       } catch {
@@ -474,15 +474,15 @@ function stringStaticMethod(method: string, args: readonly GalerinaValue[]): Gal
   if (method === "fromChar") {
     const ch = args[0];
     if (ch?.__tag === "char") return { __tag: "string", value: ch.value };
-    return { __tag: "string", value: strVal(ch ?? SPORE_VOID) };
+    return { __tag: "string", value: strVal(ch ?? FUNGI_VOID) };
   }
   if (method === "fromChars") {
-    const chars = asList(args[0] ?? SPORE_VOID);
+    const chars = asList(args[0] ?? FUNGI_VOID);
     const s = chars.map((c) => c.__tag === "char" ? c.value : strVal(c)).join("");
     return { __tag: "string", value: s };
   }
   if (method === "repeat") {
-    const s = strVal(args[0] ?? SPORE_VOID);
+    const s = strVal(args[0] ?? FUNGI_VOID);
     const n = Math.max(0, numVal(args[1] ?? { __tag: "int", value: 0 }));
     return { __tag: "string", value: s.repeat(n) };
   }
@@ -517,17 +517,17 @@ async function listMethod(
     case "isEmpty":
       return { __tag: "bool", value: items.length === 0 };
     case "first":
-      return items.length > 0 ? mkSome(items[0] ?? SPORE_VOID) : SPORE_NONE;
+      return items.length > 0 ? mkSome(items[0] ?? FUNGI_VOID) : FUNGI_NONE;
     case "last":
-      return items.length > 0 ? mkSome(items[items.length - 1] ?? SPORE_VOID) : SPORE_NONE;
+      return items.length > 0 ? mkSome(items[items.length - 1] ?? FUNGI_VOID) : FUNGI_NONE;
     case "get": {
       const idx = numVal(args[0] ?? { __tag: "int", value: -1 });
       const item = items[idx];
-      return item === undefined ? SPORE_NONE : mkSome(item);
+      return item === undefined ? FUNGI_NONE : mkSome(item);
     }
     case "push":
     case "append":
-      return { __tag: "list", items: [...items, args[0] ?? SPORE_VOID] };
+      return { __tag: "list", items: [...items, args[0] ?? FUNGI_VOID] };
     case "filter": {
       const fn = args[0];
       if (fn === undefined) return receiver;
@@ -551,7 +551,7 @@ async function listMethod(
       return { __tag: "list", items: mapped };
     }
     case "reduce": {
-      const init = args[0] ?? SPORE_VOID;
+      const init = args[0] ?? FUNGI_VOID;
       const fn = args[1];
       if (fn === undefined) return init;
       let acc = init;
@@ -571,7 +571,7 @@ async function listMethod(
       return isFloat ? { __tag: "float", value: total } : { __tag: "int", value: total };
     }
     case "contains":
-      return { __tag: "bool", value: items.some((item) => galerinaValuesEqual(item, args[0] ?? SPORE_VOID)) };
+      return { __tag: "bool", value: items.some((item) => galerinaValuesEqual(item, args[0] ?? FUNGI_VOID)) };
     case "reverse":
       return { __tag: "list", items: [...items].reverse() };
     case "slice": {
@@ -583,13 +583,13 @@ async function listMethod(
       return { __tag: "string", value: items.map((i) => strVal(i)).join(strVal(args[0] ?? { __tag: "string", value: "" })) };
     case "find": {
       const fn = args[0];
-      if (fn === undefined) return SPORE_NONE;
+      if (fn === undefined) return FUNGI_NONE;
       for (const item of items) {
         const result = await ctx.applyFn(fn, item);
         if (result.__tag === "runtimeError") return result;   // fail-closed: a predicate that traps aborts find (not a silent None)
         if (result.__tag === "bool" && result.value) return mkSome(item);
       }
-      return SPORE_NONE;
+      return FUNGI_NONE;
     }
     case "any": {
       // existential quantifier: true iff the predicate holds for at least one item. A predicate that traps
@@ -640,7 +640,7 @@ async function listMethod(
     }
 
     case "zip": {
-      const other = asList(args[0] ?? SPORE_VOID);
+      const other = asList(args[0] ?? FUNGI_VOID);
       const len = Math.min(items.length, other.length);
       const zipped = Array.from({ length: len }, (_, i): GalerinaValue => {
         const fields = new Map<string, GalerinaValue>([
@@ -677,12 +677,12 @@ async function listMethod(
     }
 
     case "min": {
-      if (items.length === 0) return SPORE_NONE;
+      if (items.length === 0) return FUNGI_NONE;
       const m = items.reduce((a, b) => numVal(a) < numVal(b) ? a : b);
       return mkSome(m);
     }
     case "max": {
-      if (items.length === 0) return SPORE_NONE;
+      if (items.length === 0) return FUNGI_NONE;
       const m = items.reduce((a, b) => numVal(a) > numVal(b) ? a : b);
       return mkSome(m);
     }
@@ -820,17 +820,17 @@ async function mapMethod(
   const fields = receiver.fields;
   switch (method) {
     case "get": {
-      const key = strVal(args[0] ?? SPORE_VOID);
+      const key = strVal(args[0] ?? FUNGI_VOID);
       const value = fields.get(key);
-      return value === undefined ? SPORE_NONE : mkSome(value);
+      return value === undefined ? FUNGI_NONE : mkSome(value);
     }
     case "set": {
       const updated = new Map(fields);
-      updated.set(strVal(args[0] ?? SPORE_VOID), args[1] ?? SPORE_VOID);
+      updated.set(strVal(args[0] ?? FUNGI_VOID), args[1] ?? FUNGI_VOID);
       return { __tag: "record", fields: updated };
     }
     case "has":
-      return { __tag: "bool", value: fields.has(strVal(args[0] ?? SPORE_VOID)) };
+      return { __tag: "bool", value: fields.has(strVal(args[0] ?? FUNGI_VOID)) };
     case "size":
     case "length":
       return { __tag: "int", value: fields.size };
@@ -843,7 +843,7 @@ async function mapMethod(
     case "delete":
     case "remove": {
       const updated = new Map(fields);
-      updated.delete(strVal(args[0] ?? SPORE_VOID));
+      updated.delete(strVal(args[0] ?? FUNGI_VOID));
       return { __tag: "record", fields: updated };
     }
     case "entries": {
@@ -1019,64 +1019,64 @@ export function moneyBinary(left: GalerinaValue, op: string, right: GalerinaValu
 function numericStatic(receiver: string, method: string, args: readonly GalerinaValue[]): GalerinaValue | undefined {
   switch (`${receiver}.${method}`) {
     case "Int.parse": {
-      const n = parseInt(strVal(args[0] ?? SPORE_VOID), 10);
+      const n = parseInt(strVal(args[0] ?? FUNGI_VOID), 10);
       return Number.isNaN(n) ? err("ParseError: not a valid integer") : ok({ __tag: "int", value: n });
     }
     case "Int.bitAnd": {
       // Bitwise AND for bitmask operations (e.g. V_DPM capability checks).
       // Uses BigInt to avoid sign-extension on bit 31 for 32-bit unsigned masks.
-      const a = BigInt(Math.trunc(numVal(args[0] ?? SPORE_VOID)));
-      const b = BigInt(Math.trunc(numVal(args[1] ?? SPORE_VOID)));
+      const a = BigInt(Math.trunc(numVal(args[0] ?? FUNGI_VOID)));
+      const b = BigInt(Math.trunc(numVal(args[1] ?? FUNGI_VOID)));
       return { __tag: "int", value: Number(a & b) };
     }
     case "Int.bitOr": {
       // Bitwise OR for bitmask operations (e.g. V_DPM quarantine/emergency set).
-      const a = BigInt(Math.trunc(numVal(args[0] ?? SPORE_VOID)));
-      const b = BigInt(Math.trunc(numVal(args[1] ?? SPORE_VOID)));
+      const a = BigInt(Math.trunc(numVal(args[0] ?? FUNGI_VOID)));
+      const b = BigInt(Math.trunc(numVal(args[1] ?? FUNGI_VOID)));
       return { __tag: "int", value: Number(a | b) };
     }
     case "Float.parse": {
-      const n = parseFloat(strVal(args[0] ?? SPORE_VOID));
+      const n = parseFloat(strVal(args[0] ?? FUNGI_VOID));
       return !Number.isFinite(n) ? err("ParseError: not a valid finite float") : ok({ __tag: "float", value: n });
     }
     case "Decimal.parse": {
-      const s = strVal(args[0] ?? SPORE_VOID);
+      const s = strVal(args[0] ?? FUNGI_VOID);
       const n = parseFloat(s);
       return !Number.isFinite(n) ? err("ParseError: not a valid decimal") : ok({ __tag: "decimal", value: s });
     }
     case "Math.abs": {
-      const n = numVal(args[0] ?? SPORE_VOID);
+      const n = numVal(args[0] ?? FUNGI_VOID);
       const v = args[0] ?? { __tag: "int", value: 0 };
       return v.__tag === "float" ? { __tag: "float", value: Math.abs(n) } : { __tag: "int", value: Math.abs(n) };
     }
     case "Math.min": {
-      const a = numVal(args[0] ?? SPORE_VOID);
-      const b = numVal(args[1] ?? SPORE_VOID);
+      const a = numVal(args[0] ?? FUNGI_VOID);
+      const b = numVal(args[1] ?? FUNGI_VOID);
       const isFloat = args[0]?.__tag === "float" || args[1]?.__tag === "float";
       return isFloat ? { __tag: "float", value: Math.min(a, b) } : { __tag: "int", value: Math.min(a, b) };
     }
     case "Math.max": {
-      const a = numVal(args[0] ?? SPORE_VOID);
-      const b = numVal(args[1] ?? SPORE_VOID);
+      const a = numVal(args[0] ?? FUNGI_VOID);
+      const b = numVal(args[1] ?? FUNGI_VOID);
       const isFloat = args[0]?.__tag === "float" || args[1]?.__tag === "float";
       return isFloat ? { __tag: "float", value: Math.max(a, b) } : { __tag: "int", value: Math.max(a, b) };
     }
     case "Math.floor":
-      return { __tag: "int", value: Math.floor(numVal(args[0] ?? SPORE_VOID)) };
+      return { __tag: "int", value: Math.floor(numVal(args[0] ?? FUNGI_VOID)) };
     case "Math.ceil":
-      return { __tag: "int", value: Math.ceil(numVal(args[0] ?? SPORE_VOID)) };
+      return { __tag: "int", value: Math.ceil(numVal(args[0] ?? FUNGI_VOID)) };
     case "Math.round":
-      return { __tag: "int", value: Math.round(numVal(args[0] ?? SPORE_VOID)) };
+      return { __tag: "int", value: Math.round(numVal(args[0] ?? FUNGI_VOID)) };
     case "Math.log":
-      return floatVal(Math.log(numVal(args[0] ?? SPORE_VOID)));  // #55: log(0)→-Inf, log(neg)→NaN ⇒ fail-closed
+      return floatVal(Math.log(numVal(args[0] ?? FUNGI_VOID)));  // #55: log(0)→-Inf, log(neg)→NaN ⇒ fail-closed
     case "Math.log2":
-      return floatVal(Math.log2(numVal(args[0] ?? SPORE_VOID)));
+      return floatVal(Math.log2(numVal(args[0] ?? FUNGI_VOID)));
     case "Math.sin":
-      return { __tag: "float", value: Math.sin(numVal(args[0] ?? SPORE_VOID)) };
+      return { __tag: "float", value: Math.sin(numVal(args[0] ?? FUNGI_VOID)) };
     case "Math.cos":
-      return { __tag: "float", value: Math.cos(numVal(args[0] ?? SPORE_VOID)) };
+      return { __tag: "float", value: Math.cos(numVal(args[0] ?? FUNGI_VOID)) };
     case "Math.tan":
-      return floatVal(Math.tan(numVal(args[0] ?? SPORE_VOID)));  // #55: tan(±Inf)→NaN ⇒ fail-closed
+      return floatVal(Math.tan(numVal(args[0] ?? FUNGI_VOID)));  // #55: tan(±Inf)→NaN ⇒ fail-closed
     case "Math.PI":
       return { __tag: "float", value: Math.PI };
     default:
@@ -1116,7 +1116,7 @@ function sanitizeValue(value: GalerinaValue): GalerinaValue {
 }
 
 function gateFunction(fullName: string, args: readonly GalerinaValue[]): GalerinaValue | undefined {
-  const arg0 = args[0] ?? SPORE_VOID;
+  const arg0 = args[0] ?? FUNGI_VOID;
   if (fullName.startsWith("validate.")) {
     const gateName = fullName.slice("validate.".length);
     const raw = arg0.__tag === "protected" ? arg0.value : arg0;
@@ -1138,7 +1138,7 @@ function gateFunction(fullName: string, args: readonly GalerinaValue[]): Galerin
   }
   if (fullName === "constantTimeEquals") {
     const a = arg0.__tag === "secure" ? arg0.value : strVal(arg0);
-    const bArg = args[1] ?? SPORE_VOID;
+    const bArg = args[1] ?? FUNGI_VOID;
     const b = bArg.__tag === "secure" ? bArg.value : strVal(bArg);
     return { __tag: "bool", value: constantTimeStringEquals(a, b) }; // H7: timing-safe, never ===
   }
@@ -1150,7 +1150,7 @@ export function jsObjectToGalerina(v: unknown): GalerinaValue {
 }
 
 function jsValueToGalerina(v: unknown): GalerinaValue {
-  if (v === null || v === undefined) return SPORE_NONE;
+  if (v === null || v === undefined) return FUNGI_NONE;
   if (typeof v === "string") return { __tag: "string", value: v };
   if (typeof v === "number") return Number.isInteger(v) ? { __tag: "int", value: v } : { __tag: "float", value: v };
   if (typeof v === "boolean") return { __tag: "bool", value: v };
@@ -1203,7 +1203,7 @@ function galerinaToJsValue(v: GalerinaValue): unknown {
 
 function serialization(fullName: string, args: readonly GalerinaValue[]): GalerinaValue | undefined {
   if (fullName === "json.decode" || fullName.startsWith("json.decode<")) {
-    const input = args[0] ?? SPORE_VOID;
+    const input = args[0] ?? FUNGI_VOID;
     let raw: string;
     if (input.__tag === "string") {
       raw = input.value;
@@ -1225,14 +1225,14 @@ function serialization(fullName: string, args: readonly GalerinaValue[]): Galeri
 
   if (fullName === "json.encode") {
     try {
-      return { __tag: "string", value: JSON.stringify(galerinaToJsValue(args[0] ?? SPORE_VOID)) };
+      return { __tag: "string", value: JSON.stringify(galerinaToJsValue(args[0] ?? FUNGI_VOID)) };
     } catch {
       return err("EncodeError: value cannot be serialized");
     }
   }
 
   if (fullName === "toml.decode" || fullName.startsWith("toml.decode<")) {
-    const raw = strVal(args[0] ?? SPORE_VOID);
+    const raw = strVal(args[0] ?? FUNGI_VOID);
     try {
       const fields = new Map<string, GalerinaValue>();
       for (const line of raw.split("\n")) {
@@ -1263,7 +1263,7 @@ function auditAllowlistedEgress(host: string): void {
   _auditedAllowlistEgress.add(host);
   try {
     (process as unknown as { stderr?: { write(s: string): void } }).stderr?.write(
-      `[galerina:egress-audit] SPORE-NET-001 host "${host}" admitted via GALERINA_EGRESS_ALLOWED_HOSTS — ` +
+      `[galerina:egress-audit] FUNGI-NET-001 host "${host}" admitted via GALERINA_EGRESS_ALLOWED_HOSTS — ` +
         `SSRF host-guard + force-HTTPS bypassed for this exact host (operator-trusted allow-list)\n`,
     );
   } catch {
@@ -1277,7 +1277,7 @@ async function networkAsync(fullName: string, args: readonly GalerinaValue[], ct
   const method = fullName.slice("http.".length).toUpperCase();
   if (!["GET", "POST", "PUT", "PATCH", "DELETE"].includes(method)) return undefined;
 
-  const url = strVal(args[0] ?? SPORE_VOID);
+  const url = strVal(args[0] ?? FUNGI_VOID);
   if (!url) return err("NetworkError: empty URL");
 
   // OWASP F2: SSRF — deny-by-default egress guard (@galerina/core-network). guardHop normalizes + denies the
@@ -1318,7 +1318,7 @@ async function networkAsync(fullName: string, args: readonly GalerinaValue[], ct
   };
   const guardHop = async (u: string): Promise<string | null> => {
     const eg = guardOutboundUrl(u, dialPolicy);
-    if (!eg.allowed) return `NetworkError: SSRF — ${eg.reason} (SPORE-NET-001 · ${eg.code})`;
+    if (!eg.allowed) return `NetworkError: SSRF — ${eg.reason} (FUNGI-NET-001 · ${eg.code})`;
     // Audit the production SSRF/force-HTTPS bypass: this exact host was admitted only because the operator
     // allow-listed it (covers redirect hops too — guardHop re-runs on each Location). Normal public hosts
     // (code EGRESS_ALLOWED) are NOT audited; only the explicit bypass leaves a trail.
@@ -1333,10 +1333,10 @@ async function networkAsync(fullName: string, args: readonly GalerinaValue[], ct
         };
         ips = (await dns.lookup(eg.host, { all: true })).map((r) => r.address);
       } catch {
-        return `NetworkError: SSRF — DNS resolution failed for '${eg.host}' (SPORE-NET-001, fail-closed)`;
+        return `NetworkError: SSRF — DNS resolution failed for '${eg.host}' (FUNGI-NET-001, fail-closed)`;
       }
       const rebind = guardResolvedAddresses(eg.host, ips);
-      if (!rebind.allowed) return `NetworkError: SSRF — ${rebind.reason} (SPORE-NET-001 · ${rebind.code})`;
+      if (!rebind.allowed) return `NetworkError: SSRF — ${rebind.reason} (FUNGI-NET-001 · ${rebind.code})`;
     }
     return null;
   };
@@ -1369,7 +1369,7 @@ async function networkAsync(fullName: string, args: readonly GalerinaValue[], ct
         if (!loc) return err(`NetworkError: HTTP ${response.status} redirect with no Location from ${currentUrl}`);
         let nextUrl: string;
         try { nextUrl = new NodeURL(loc, currentUrl).href; } // resolve a relative Location against the current URL
-        catch { return err(`NetworkError: SSRF — invalid redirect target '${loc}' (SPORE-NET-001)`); }
+        catch { return err(`NetworkError: SSRF — invalid redirect target '${loc}' (FUNGI-NET-001)`); }
         const hopErr = await guardHop(nextUrl); // RE-GUARD the redirect destination before following
         if (hopErr !== null) return err(hopErr);
         currentUrl = nextUrl;
@@ -1393,7 +1393,7 @@ async function filesystemAsync(fullName: string, args: readonly GalerinaValue[],
   if (isRead) ctx.recordEffect("filesystem.read");
   if (isWrite) ctx.recordEffect("filesystem.write");
 
-  const path = strVal(args[0] ?? SPORE_VOID);
+  const path = strVal(args[0] ?? FUNGI_VOID);
   if (path === "") return err("FileError: empty path");
 
   // OWASP F3 (fully hardened — OWASP review pass): segment-safe + symlink-safe confinement.
@@ -1446,13 +1446,13 @@ async function filesystemAsync(fullName: string, args: readonly GalerinaValue[],
       return ok({ __tag: "bytes", value: new Uint8Array(buffer) });
     }
     if (fullName === "fs.writeText" || fullName === "File.writeText") {
-      await nodeFs.writeFile(safePath, strVal(args[1] ?? SPORE_VOID), "utf8");
-      return ok(SPORE_VOID);
+      await nodeFs.writeFile(safePath, strVal(args[1] ?? FUNGI_VOID), "utf8");
+      return ok(FUNGI_VOID);
     }
     if (fullName === "fs.writeBytes" || fullName === "File.writeBytes") {
       const bytes = args[1]?.__tag === "bytes" ? args[1].value : new Uint8Array();
       await nodeFs.writeFile(safePath, bytes);
-      return ok(SPORE_VOID);
+      return ok(FUNGI_VOID);
     }
   } catch (error) {
     return err(`FileError: ${error instanceof Error ? error.message : String(error)}`);
@@ -1464,7 +1464,7 @@ function environmentFn(fullName: string, args: readonly GalerinaValue[], ctx: St
   if (!fullName.startsWith("Env.") && !fullName.startsWith("env.")) return undefined;
   ctx.recordEffect("secret.read");
   const env = process?.env ?? {};
-  const key = strVal(args[0] ?? SPORE_VOID);
+  const key = strVal(args[0] ?? FUNGI_VOID);
   if (fullName === "Env.get" || fullName === "env.get") {
     const value = env[key];
     return value !== undefined ? ok({ __tag: "string", value }) : err(`EnvError: '${key}' not set`);
@@ -1474,7 +1474,7 @@ function environmentFn(fullName: string, args: readonly GalerinaValue[], ctx: St
   }
   if (fullName === "env.optional" || fullName === "Env.optional") {
     const value = env[key];
-    return value !== undefined ? mkSome({ __tag: "string", value }) : SPORE_NONE;
+    return value !== undefined ? mkSome({ __tag: "string", value }) : FUNGI_NONE;
   }
   return undefined;
 }
@@ -1484,7 +1484,7 @@ function formatString(args: readonly GalerinaValue[]): GalerinaValue {
   if (template?.__tag !== "string") return { __tag: "string", value: "" };
   let output = template.value;
   for (let i = 1; i < args.length; i += 1) {
-    output = output.replace("{}", safeDisplay(args[i] ?? SPORE_VOID));
+    output = output.replace("{}", safeDisplay(args[i] ?? FUNGI_VOID));
   }
   return { __tag: "string", value: output };
 }
@@ -1511,7 +1511,7 @@ export function galerinaValuesEqual(a: GalerinaValue, b: GalerinaValue): boolean
 // ---------------------------------------------------------------------------
 
 function statisticsModule(method: string, args: readonly GalerinaValue[]): GalerinaValue | undefined {
-  const items = asList(args[0] ?? SPORE_VOID);
+  const items = asList(args[0] ?? FUNGI_VOID);
   if (items.length === 0) {
     if (method === "sum") return { __tag: "int", value: 0 };
     return err(`Statistics.${method}: empty list`);
@@ -1600,7 +1600,7 @@ export async function callStdlib(
     }
 
     // Time.nowMs() — high-resolution wall-clock milliseconds (for benchmarks and timing)
-    // Used by: compute-mix-throughput-benchmark.spore and other timed flows
+    // Used by: compute-mix-throughput-benchmark.fungi and other timed flows
     if (fullName === "Time.nowMs" || fullName === "nowMs") {
       // Use hrtime for high-resolution timing (available in all Node.js environments)
       const [sec, ns] = _proc.hrtime();
@@ -1611,7 +1611,7 @@ export async function callStdlib(
     if (fullName === "Timestamp.now") return makeTimestamp(Date.now());
     if (fullName === "Timestamp.fromMs") return makeTimestamp(numVal(args[0] ?? { __tag: "int", value: 0 }));
     if (fullName === "Timestamp.fromIso") {
-      const s = strVal(args[0] ?? SPORE_VOID);
+      const s = strVal(args[0] ?? FUNGI_VOID);
       const ms = Date.parse(s);
       return isNaN(ms) ? err("ParseError: invalid ISO timestamp") : ok(makeTimestamp(ms));
     }
@@ -1622,7 +1622,7 @@ export async function callStdlib(
 
     // Bytes static constructors
     if (fullName === "Bytes.fromHex") {
-      const hex = strVal(args[0] ?? SPORE_VOID).replace(/\s/g, "");
+      const hex = strVal(args[0] ?? FUNGI_VOID).replace(/\s/g, "");
       const bytes = new Uint8Array(hex.length / 2);
       for (let i = 0; i < bytes.length; i++) {
         bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
@@ -1632,7 +1632,7 @@ export async function callStdlib(
     if (fullName === "Bytes.empty")  return { __tag: "bytes", value: new Uint8Array(0) };
     if (fullName === "Bytes.of")     return { __tag: "bytes", value: new Uint8Array(args.map(numVal)) };
     if (fullName === "Bytes.fromString") {
-      const s = strVal(args[0] ?? SPORE_VOID);
+      const s = strVal(args[0] ?? FUNGI_VOID);
       return { __tag: "bytes", value: new TextEncoder().encode(s) };
     }
 
@@ -1658,7 +1658,7 @@ export async function callStdlib(
     // Map static constructors
     if (fullName === "Map.empty")  return { __tag: "record", fields: new Map() };
     if (fullName === "Map.from" || fullName === "Map.fromList") {
-      const entries = asList(args[0] ?? SPORE_VOID);
+      const entries = asList(args[0] ?? FUNGI_VOID);
       const fields = new Map<string, GalerinaValue>();
       for (const entry of entries) {
         if (entry.__tag === "record") {
@@ -1869,7 +1869,7 @@ function bytesMethod(
       const idx = numVal(args[0] ?? { __tag: "int", value: -1 });
       return idx >= 0 && idx < buf.length
         ? mkSome({ __tag: "byte", value: buf[idx]! })
-        : SPORE_NONE;
+        : FUNGI_NONE;
     }
 
     case "slice": {
@@ -2016,18 +2016,18 @@ async function setMethod(
     case "isEmpty": return { __tag: "bool", value: items.length === 0 };
 
     case "contains": {
-      const target = args[0] ?? SPORE_VOID;
+      const target = args[0] ?? FUNGI_VOID;
       return { __tag: "bool", value: items.some((i) => galerinaValuesEqual(i, target)) };
     }
 
     case "add": {
-      const item = args[0] ?? SPORE_VOID;
+      const item = args[0] ?? FUNGI_VOID;
       if (items.some((i) => galerinaValuesEqual(i, item))) return receiver;
       return makeSet([...items, item]);
     }
 
     case "remove": {
-      const target = args[0] ?? SPORE_VOID;
+      const target = args[0] ?? FUNGI_VOID;
       return makeSet(items.filter((i) => !galerinaValuesEqual(i, target)));
     }
 
@@ -2035,7 +2035,7 @@ async function setMethod(
     case "toArray": return { __tag: "list", items };
 
     case "union": {
-      const other = setItems(args[0] ?? SPORE_VOID);
+      const other = setItems(args[0] ?? FUNGI_VOID);
       const merged = [...items];
       for (const item of other) {
         if (!merged.some((i) => galerinaValuesEqual(i, item))) merged.push(item);
@@ -2044,12 +2044,12 @@ async function setMethod(
     }
 
     case "intersection": {
-      const other = setItems(args[0] ?? SPORE_VOID);
+      const other = setItems(args[0] ?? FUNGI_VOID);
       return makeSet(items.filter((i) => other.some((o) => galerinaValuesEqual(i, o))));
     }
 
     case "difference": {
-      const other = setItems(args[0] ?? SPORE_VOID);
+      const other = setItems(args[0] ?? FUNGI_VOID);
       return makeSet(items.filter((i) => !other.some((o) => galerinaValuesEqual(i, o))));
     }
 
@@ -2122,7 +2122,7 @@ function timestampMethod(
     }
 
     case "subtract": {
-      const other = args[0] ?? SPORE_VOID;
+      const other = args[0] ?? FUNGI_VOID;
       if (isTimestamp(other)) {
         // Timestamp - Timestamp = Duration (ms)
         return { __tag: "int", value: ms - tsMs(other) };
@@ -2131,9 +2131,9 @@ function timestampMethod(
       return makeTimestamp(ms - numVal(other));
     }
 
-    case "before":    return { __tag: "bool", value: ms <  tsMs(args[0] ?? SPORE_VOID) };
-    case "after":     return { __tag: "bool", value: ms >  tsMs(args[0] ?? SPORE_VOID) };
-    case "equals":    return { __tag: "bool", value: ms === tsMs(args[0] ?? SPORE_VOID) };
+    case "before":    return { __tag: "bool", value: ms <  tsMs(args[0] ?? FUNGI_VOID) };
+    case "after":     return { __tag: "bool", value: ms >  tsMs(args[0] ?? FUNGI_VOID) };
+    case "equals":    return { __tag: "bool", value: ms === tsMs(args[0] ?? FUNGI_VOID) };
 
     // Phase 9A-3: Timestamp.format(pattern) — basic pattern formatting
     // Supported tokens: YYYY MM DD HH mm ss (UTC)
@@ -2217,12 +2217,12 @@ function durationMethod(
       return { __tag: "string", value: `${Math.floor(ms / 3600000)}h ${Math.floor((ms % 3600000) / 60000)}m` };
     }
     case "add": {
-      const other = args[0] ?? SPORE_VOID;
+      const other = args[0] ?? FUNGI_VOID;
       const otherMs = isDuration(other) ? durMs(other) : numVal(other);
       return makeDuration(ms + otherMs);
     }
     case "subtract": {
-      const other = args[0] ?? SPORE_VOID;
+      const other = args[0] ?? FUNGI_VOID;
       const otherMs = isDuration(other) ? durMs(other) : numVal(other);
       return makeDuration(ms - otherMs);
     }
@@ -2266,7 +2266,7 @@ async function resultCombinator(method: string, args: readonly GalerinaValue[], 
   switch (method) {
     case "sequence": {
       // Result.sequence(arr: Array<Result<T,E>>) -> Result<Array<T>, E>
-      const arr = asList(args[0] ?? SPORE_VOID);
+      const arr = asList(args[0] ?? FUNGI_VOID);
       const values: GalerinaValue[] = [];
       for (const item of arr) {
         if (item.__tag === "err") return item;  // first error short-circuits
@@ -2276,7 +2276,7 @@ async function resultCombinator(method: string, args: readonly GalerinaValue[], 
       return ok({ __tag: "list", items: values });
     }
     case "fromNullable": {
-      const v = args[0] ?? SPORE_NONE;
+      const v = args[0] ?? FUNGI_NONE;
       const errVal = args[1] ?? { __tag: "string", value: "null value" };
       if (v.__tag === "none" || v.__tag === "void") return { __tag: "err", error: errVal };
       return ok(v);
@@ -2293,25 +2293,25 @@ async function optionCombinator(method: string, args: readonly GalerinaValue[], 
   switch (method) {
     case "sequence": {
       // Option.sequence(arr: Array<Option<T>>) -> Option<Array<T>>
-      const arr = asList(args[0] ?? SPORE_VOID);
+      const arr = asList(args[0] ?? FUNGI_VOID);
       const values: GalerinaValue[] = [];
       for (const item of arr) {
-        if (item.__tag === "none") return SPORE_NONE;
+        if (item.__tag === "none") return FUNGI_NONE;
         if (item.__tag === "some") values.push(item.value);
         else values.push(item);
       }
       return mkSome({ __tag: "list", items: values });
     }
     case "fromNullable": {
-      const v = args[0] ?? SPORE_NONE;
-      if (v.__tag === "none" || v.__tag === "void") return SPORE_NONE;
+      const v = args[0] ?? FUNGI_NONE;
+      if (v.__tag === "none" || v.__tag === "void") return FUNGI_NONE;
       return mkSome(v);
     }
     case "zip": {
       // Option.zip(a, b) -> Option<{first, second}>
-      const a = args[0] ?? SPORE_NONE;
-      const b = args[1] ?? SPORE_NONE;
-      if (a.__tag === "none" || b.__tag === "none") return SPORE_NONE;
+      const a = args[0] ?? FUNGI_NONE;
+      const b = args[1] ?? FUNGI_NONE;
+      if (a.__tag === "none" || b.__tag === "none") return FUNGI_NONE;
       const aVal = a.__tag === "some" ? a.value : a;
       const bVal = b.__tag === "some" ? b.value : b;
       const fields = new Map<string, GalerinaValue>([["first", aVal], ["second", bVal]]);
@@ -2473,7 +2473,7 @@ function tensorModule(method: string, args: readonly GalerinaValue[]): GalerinaV
  * Constant-time string equality via node:crypto `timingSafeEqual` — the SINGLE source of truth
  * for `constantTimeEquals` everywhere (the interpreter + both stdlib dispatch paths). The bare
  * `constantTimeEquals` impls used a short-circuiting `===` (threat-model H7 timing side-channel),
- * which is doubly wrong because SPORE-TYPE-013 actively tells authors to "Use constantTimeEquals()
+ * which is doubly wrong because FUNGI-TYPE-013 actively tells authors to "Use constantTimeEquals()
  * for equality" on secrets — the recommended path MUST actually be constant-time. Both inputs are
  * padded to equal length so the compare time is independent of where they first differ AND of
  * their lengths; a true length difference still yields false, checked AFTER the timing-safe compare
@@ -2496,8 +2496,8 @@ export function constantTimeStringEquals(aStr: string, bStr: string): boolean {
 function cryptoModule(method: string, args: readonly GalerinaValue[]): GalerinaValue | undefined {
   switch (method) {
     case "constantTimeEquals": {
-      const aArg = args[0] ?? SPORE_VOID;
-      const bArg = args[1] ?? SPORE_VOID;
+      const aArg = args[0] ?? FUNGI_VOID;
+      const bArg = args[1] ?? FUNGI_VOID;
       const aStr = aArg.__tag === "secure" ? aArg.value : strVal(aArg);
       const bStr = bArg.__tag === "secure" ? bArg.value : strVal(bArg);
       return { __tag: "bool", value: constantTimeStringEquals(aStr, bStr) };
@@ -2523,8 +2523,8 @@ function bcryptModule(method: string, args: readonly GalerinaValue[]): GalerinaV
   switch (method) {
     case "verify": {
       // verify(plaintext, hash) -> Bool
-      const plainArg = args[0] ?? SPORE_VOID;
-      const hashArg  = args[1] ?? SPORE_VOID;
+      const plainArg = args[0] ?? FUNGI_VOID;
+      const hashArg  = args[1] ?? FUNGI_VOID;
       const plain = plainArg.__tag === "secure" ? plainArg.value : strVal(plainArg);
       const hash  = hashArg.__tag === "secure"  ? hashArg.value  : strVal(hashArg);
       try {
@@ -2536,7 +2536,7 @@ function bcryptModule(method: string, args: readonly GalerinaValue[]): GalerinaV
     }
     case "hash": {
       // hash(plaintext, rounds?) -> String
-      const plainArg = args[0] ?? SPORE_VOID;
+      const plainArg = args[0] ?? FUNGI_VOID;
       const plain = plainArg.__tag === "secure" ? plainArg.value : strVal(plainArg);
       const rounds = args[1]?.__tag === "int" ? Number(args[1].value) : 10;
       try {
@@ -2558,8 +2558,8 @@ async function argon2Module(method: string, args: readonly GalerinaValue[]): Pro
   const a2 = await _argon2Import;
   switch (method) {
     case "verify": {
-      const plainArg = args[0] ?? SPORE_VOID;
-      const hashArg  = args[1] ?? SPORE_VOID;
+      const plainArg = args[0] ?? FUNGI_VOID;
+      const hashArg  = args[1] ?? FUNGI_VOID;
       const plain = plainArg.__tag === "secure" ? plainArg.value : strVal(plainArg);
       const hash  = hashArg.__tag === "secure"  ? hashArg.value  : strVal(hashArg);
       try {
@@ -2569,7 +2569,7 @@ async function argon2Module(method: string, args: readonly GalerinaValue[]): Pro
       }
     }
     case "hash": {
-      const plainArg = args[0] ?? SPORE_VOID;
+      const plainArg = args[0] ?? FUNGI_VOID;
       const plain = plainArg.__tag === "secure" ? plainArg.value : strVal(plainArg);
       try {
         return { __tag: "string", value: await a2.hash(plain, { type: a2.argon2id }) };
@@ -2599,8 +2599,8 @@ async function argon2Module(method: string, args: readonly GalerinaValue[]): Pro
 async function passwordModule(method: string, args: readonly GalerinaValue[]): Promise<GalerinaValue | undefined> {
   switch (method) {
     case "verify": {
-      const plainArg = args[0] ?? SPORE_VOID;
-      const hashArg  = args[1] ?? SPORE_VOID;
+      const plainArg = args[0] ?? FUNGI_VOID;
+      const hashArg  = args[1] ?? FUNGI_VOID;
       const plain = plainArg.__tag === "secure" ? plainArg.value : strVal(plainArg);
       const hash  = hashArg.__tag === "secure"  ? hashArg.value  : strVal(hashArg);
       // Route by hash prefix
@@ -2612,12 +2612,12 @@ async function passwordModule(method: string, args: readonly GalerinaValue[]): P
     }
     case "hash": {
       // Phase 36: default to Argon2id (OWASP preferred)
-      const plainArg = args[0] ?? SPORE_VOID;
+      const plainArg = args[0] ?? FUNGI_VOID;
       return argon2Module("hash", [plainArg]);
     }
     case "needsMigration": {
       // Returns true when the stored hash uses a weaker algorithm (bcrypt) vs current preferred
-      const hashArg = args[0] ?? SPORE_VOID;
+      const hashArg = args[0] ?? FUNGI_VOID;
       const hash = hashArg.__tag === "secure" ? hashArg.value : strVal(hashArg);
       const isBcrypt = hash.startsWith("$2");
       return { __tag: "bool", value: isBcrypt };
@@ -2625,8 +2625,8 @@ async function passwordModule(method: string, args: readonly GalerinaValue[]): P
     case "migrate": {
       // Phase 37: verify with old hash, then re-hash with current preferred if valid.
       // Returns { migrated: Bool, newHash: String }
-      const plainArg = args[0] ?? SPORE_VOID;
-      const oldHashArg = args[1] ?? SPORE_VOID;
+      const plainArg = args[0] ?? FUNGI_VOID;
+      const oldHashArg = args[1] ?? FUNGI_VOID;
       const plain   = plainArg.__tag === "secure" ? plainArg.value : strVal(plainArg);
       const oldHash = oldHashArg.__tag === "secure" ? oldHashArg.value : strVal(oldHashArg);
       // Verify against old hash
@@ -2665,7 +2665,7 @@ async function passwordModule(method: string, args: readonly GalerinaValue[]): P
 function hashModule(method: string, args: readonly GalerinaValue[]): GalerinaValue | undefined {
   switch (method) {
     case "sha256": {
-      const input = args[0] ?? SPORE_VOID;
+      const input = args[0] ?? FUNGI_VOID;
       const data = input.__tag === "bytes"
         ? input.value
         : new TextEncoder().encode(strVal(input));
@@ -2674,7 +2674,7 @@ function hashModule(method: string, args: readonly GalerinaValue[]): GalerinaVal
     }
 
     case "sha512": {
-      const input = args[0] ?? SPORE_VOID;
+      const input = args[0] ?? FUNGI_VOID;
       const data = input.__tag === "bytes"
         ? input.value
         : new TextEncoder().encode(strVal(input));

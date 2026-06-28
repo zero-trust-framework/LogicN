@@ -4,8 +4,8 @@
 
 ```
 Phase 6 baseline:   rules 1-5, gate functions, taint propagation ✅
-Phase 8B:           string taint propagation (SPORE-VALUESTATE-004) ✅
-Phase 11B.1:        two-hop taint (SPORE-VALUESTATE-005) ✅
+Phase 8B:           string taint propagation (FUNGI-VALUESTATE-004) ✅
+Phase 11B.1:        two-hop taint (FUNGI-VALUESTATE-005) ✅
 Phase 11B.2:        user-defined gate prefix matching ✅
 Phase 18C:          ValueStateFlags bitset, structured SINK_REQUIREMENTS ✅
 Phase 19+:          control-flow-aware state tracking
@@ -49,7 +49,7 @@ Accepted ✅
 
 UNSAFE / TAINTED
   ↓ direct to governed sink (no gate)
-SPORE-VALUESTATE-003 / SPORE-VALUESTATE-005 ❌
+FUNGI-VALUESTATE-003 / FUNGI-VALUESTATE-005 ❌
 ```
 
 ## State Bitset (ValueStateFlags)
@@ -118,17 +118,17 @@ Dynamic patterns (`*DB.insert`, `*DB.write`) are validated via regex but should 
 
 | Code | Name | Rule |
 |---|---|---|
-| `SPORE-VALUESTATE-001` | `UnsafeToSafeTransitionDenied` | `safe mut` without recognised gate |
-| `SPORE-VALUESTATE-002` | `UnsafeConditionalUpgrade` | conditional gate (one branch has gate, other doesn't) |
-| `SPORE-VALUESTATE-003` | `UnsafeValueReachedGovernedSink` | unsafe binding at governed sink |
-| `SPORE-VALUESTATE-004` | `TaintedValuePropagation` | taint propagated through expression |
-| `SPORE-VALUESTATE-005` | `DerivedUnsafeValueAtSink` | two-hop taint at sink |
-| `SPORE-VALUESTATE-006` | `ProtectedBoundaryViolation` | protected value at non-protected sink |
-| `SPORE-VALUESTATE-007` | `RedactedBoundaryViolation` | redacted value converted back |
-| `SPORE-SECRET-001` | `SecretValueLogged` | SecureString in log function |
-| `SPORE-SECRET-002` | `SecretComparisonDenied` | SecureString used with `==` |
-| `SPORE-SECRET-003` | `SecretSerializationDenied` | SecureString in serialize/stringify |
-| `SPORE-GATE-001` | `GateAnnotationRequired` | call site missing required gate for @gate flow (Phase 19+) |
+| `FUNGI-VALUESTATE-001` | `UnsafeToSafeTransitionDenied` | `safe mut` without recognised gate |
+| `FUNGI-VALUESTATE-002` | `UnsafeConditionalUpgrade` | conditional gate (one branch has gate, other doesn't) |
+| `FUNGI-VALUESTATE-003` | `UnsafeValueReachedGovernedSink` | unsafe binding at governed sink |
+| `FUNGI-VALUESTATE-004` | `TaintedValuePropagation` | taint propagated through expression |
+| `FUNGI-VALUESTATE-005` | `DerivedUnsafeValueAtSink` | two-hop taint at sink |
+| `FUNGI-VALUESTATE-006` | `ProtectedBoundaryViolation` | protected value at non-protected sink |
+| `FUNGI-VALUESTATE-007` | `RedactedBoundaryViolation` | redacted value converted back |
+| `FUNGI-SECRET-001` | `SecretValueLogged` | SecureString in log function |
+| `FUNGI-SECRET-002` | `SecretComparisonDenied` | SecureString used with `==` |
+| `FUNGI-SECRET-003` | `SecretSerializationDenied` | SecureString in serialize/stringify |
+| `FUNGI-GATE-001` | `GateAnnotationRequired` | call site missing required gate for @gate flow (Phase 19+) |
 
 ## Control-Flow-Aware State (Phase 19+)
 
@@ -204,13 +204,13 @@ State checks happen at compile time. The runtime does NOT need heavy wrapper obj
 |---|---|
 | State machine (unsafe → gate → safe) | ✅ Phase 6 |
 | Gate prefix matching (validate.*, sanitize.*, ...) | ✅ Phase 6 |
-| SPORE-VALUESTATE-001..007 | ✅ Phase 6 / 11B |
-| SPORE-SECRET-001..003 | ✅ Phase 6 |
-| Two-hop taint (SPORE-VALUESTATE-005) | ✅ Phase 11B.1 |
+| FUNGI-VALUESTATE-001..007 | ✅ Phase 6 / 11B |
+| FUNGI-SECRET-001..003 | ✅ Phase 6 |
+| Two-hop taint (FUNGI-VALUESTATE-005) | ✅ Phase 11B.1 |
 | User-defined gate prefix matching | ✅ Phase 11B.2 |
 | ValueStateFlags bitset | ✅ Phase 18C |
 | SINK_REQUIREMENTS structured registry | ✅ Phase 18C |
-| SPORE-GATE-001 constant (reserved) | ✅ Phase 18C |
+| FUNGI-GATE-001 constant (reserved) | ✅ Phase 18C |
 | @gate annotation support | 📋 Phase 19 |
 | Control-flow-aware state tracking | 📋 Phase 19 |
 | Audit proof structured output | 📋 Phase 20 |

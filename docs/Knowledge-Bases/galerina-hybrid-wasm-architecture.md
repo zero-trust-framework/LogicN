@@ -215,7 +215,7 @@ Input/output: DataHandle only — no raw pointers
 No strings, no PII, no protected values
 No filesystem, no network
 Child-process isolation (Phase 27: process, Phase 28: component)
-Signed module (SPORE-PKG-005 equivalent for native)
+Signed module (FUNGI-PKG-005 equivalent for native)
 Audit entry required: records chosen target, buffer sizes (not content)
 Fallback: cpu (always declared)
 ```
@@ -239,7 +239,7 @@ interface galerina-hardware-npu {
 
 **All 8 rules are MANDATORY for native acceleration modules:**
 
-1. **Signed** — native modules must be signed (same as packages: SPORE-PKG-005)
+1. **Signed** — native modules must be signed (same as packages: FUNGI-PKG-005)
 2. **Capability-declared** — must declare: `host.npu.inference`, `host.gpu.compute`, etc.
 3. **No raw protected data** — WASM must never pass raw protected values unless policy allows
 4. **Offset-based memory** — shared memory uses offsets and lengths, not raw pointers in Galerina source
@@ -461,12 +461,12 @@ Host Supervisor
 
 Neither recovers the other directly. The supervisor manages both.
 
-**SPORE-GOV-014 (MissingFallbackTarget):** fallback is required, not optional.
+**FUNGI-GOV-014 (MissingFallbackTarget):** fallback is required, not optional.
 
 ```galerina
 targets {
   prefer [npu, gpu, wasm, cpu]
-  fallback wasm   // required — SPORE-GOV-014 enforces this
+  fallback wasm   // required — FUNGI-GOV-014 enforces this
   deny [remote.execution]
 }
 ```
@@ -476,7 +476,7 @@ targets {
 ## See Also
 
 - `galerina-hybrid-wasm-native-architecture-v1.md` — **Canonical v1.0 document** — the full architecture including Snapdragon/NPU integration strategy
-- `galerina-security-anti-abuse.md` — anti-botnet protections, SPORE-NET-001/002, process.spawn
+- `galerina-security-anti-abuse.md` — anti-botnet protections, FUNGI-NET-001/002, process.spawn
 - `galerina-gir-emitter-architecture.md` — GIR emitter and WASM lowering plan
 - `galerina-runtime-interpreter-roadmap.md` — runtime evolution plan
 - `galerina-explicitness-principles.md` — nothing important hidden

@@ -172,44 +172,44 @@ test("boundary gate: dep already in allowlist passes", () => {
   rmSync(root, { recursive: true, force: true });
 });
 
-// ── Scope coverage: host/ root + .spore source (the example-app blind spot) ──────────────
+// ── Scope coverage: host/ root + .fungi source (the example-app blind spot) ──────────────
 
-test("scans host/ root AND .spore source — not just src/*.ts", () => {
-  // Mirrors the framework example app: governed flows in src/*.spore, TS host in host/.
+test("scans host/ root AND .fungi source — not just src/*.ts", () => {
+  // Mirrors the framework example app: governed flows in src/*.fungi, TS host in host/.
   // Before the fix this scanned to ZERO files (a green border over an unscanned package).
   const root = makeFixture({
-    "src/App.spore": `pure flow main() -> Int\ncontract { intent { "x" } }\n{ return 0 }`,
+    "src/App.fungi": `pure flow main() -> Int\ncontract { intent { "x" } }\n{ return 0 }`,
     "host/server.ts": `import { readFileSync } from "node:fs";\nimport { c } from "./config.js";`,
     "host/config.ts": `export const c = 1;`,
   });
   const graph = buildGraph(scanPackage(root));
   const paths = graph.nodes.slice().sort();
-  assert.deepEqual(paths, ["host/config.ts", "host/server.ts", "src/App.spore"]);
-  assert.equal(graph.stats.fileCount, 3);             // .spore + host/*.ts all counted
+  assert.deepEqual(paths, ["host/config.ts", "host/server.ts", "src/App.fungi"]);
+  assert.equal(graph.stats.fileCount, 3);             // .fungi + host/*.ts all counted
   assert.equal(graph.stats.nodeCoreCount, 1);         // node:fs from host/server.ts
   assert.equal(graph.stats.internalEdgeCount, 1);     // host/server.ts -> host/config.ts
   assert.deepEqual(graph.scannedRoots, ["src", "host"]);
-  assert.ok(graph.scannedExtensions.includes(".spore"));
+  assert.ok(graph.scannedExtensions.includes(".fungi"));
   rmSync(root, { recursive: true, force: true });
 });
 
-test(".spore internal imports resolve as edges; ;;-comments + plugin form handled", () => {
+test(".fungi internal imports resolve as edges; ;;-comments + plugin form handled", () => {
   const root = makeFixture({
-    "src/main.spore":
-      `;; import "./commented-out.spore"   ;; a govComment — must NOT be counted\n` +
-      `import "./util.spore"\n` +
-      `import plugin safe "./plugins/pay.spore" as Pay {\n  contract { intent "pay" }\n}\n` +
+    "src/main.fungi":
+      `;; import "./commented-out.fungi"   ;; a govComment — must NOT be counted\n` +
+      `import "./util.fungi"\n` +
+      `import plugin safe "./plugins/pay.fungi" as Pay {\n  contract { intent "pay" }\n}\n` +
       `pure flow main() -> Int\ncontract { intent { "x" } }\n{ return 0 }`,
-    "src/util.spore": `pure flow u() -> Int\ncontract { intent { "x" } }\n{ return 0 }`,
-    "src/plugins/pay.spore": `pure flow p() -> Int\ncontract { intent { "x" } }\n{ return 0 }`,
+    "src/util.fungi": `pure flow u() -> Int\ncontract { intent { "x" } }\n{ return 0 }`,
+    "src/plugins/pay.fungi": `pure flow p() -> Int\ncontract { intent { "x" } }\n{ return 0 }`,
   });
   const graph = buildGraph(scanPackage(root));
   assert.equal(graph.stats.fileCount, 3);
   assert.equal(graph.stats.externalDepCount, 0);      // all imports are intra-package
-  // main.spore -> util.spore  AND  main.spore -> plugins/pay.spore (the plugin path resolves inside)
+  // main.fungi -> util.fungi  AND  main.fungi -> plugins/pay.fungi (the plugin path resolves inside)
   assert.equal(graph.stats.internalEdgeCount, 2);
   const froms = graph.internalEdges.map((e) => `${e.from}->${e.to}`).sort();
-  assert.deepEqual(froms, ["src/main.spore->src/plugins/pay.spore", "src/main.spore->src/util.spore"]);
+  assert.deepEqual(froms, ["src/main.fungi->src/plugins/pay.fungi", "src/main.fungi->src/util.fungi"]);
   // The ;;-commented import never produced a (dangling) edge.
   assert.ok(!froms.some((f) => f.includes("commented-out")));
   rmSync(root, { recursive: true, force: true });

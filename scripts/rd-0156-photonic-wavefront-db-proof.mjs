@@ -13,7 +13,7 @@
 // Standing Galerina rules enforced here (do NOT assume — CHECK, by running):
 //   * photonic/analog substrate canNOT do bit-exact crypto. Optical masking /
 //     scrambling / obfuscation is NOT encryption and does NOT replace SHA-256 /
-//     AES / ML-DSA. (SPORE-SUBSTRATE-001 candor check, restated as runnable math.)
+//     AES / ML-DSA. (FUNGI-SUBSTRATE-001 candor check, restated as runnable math.)
 //   * "speed-of-light search of a billion records" still has to READ N results to
 //     report them -> O(N), never O(1).
 //
@@ -40,7 +40,7 @@ console.log("\n=== RD-0156 — Photonic Interference Fabric / Holographic Wavefr
 
 // ===========================================================================
 // V1 — NOISE-FLIPS-CRYPTO. The note claims "optical masking" replaces decryption:
-//   right .spore lens -> data comes out clear; wrong lens -> scatters to noise,
+//   right .fungi lens -> data comes out clear; wrong lens -> scatters to noise,
 //   "zero CPU decryption". REFUTE: an analog phase channel carries a continuous
 //   noise term epsilon. To feed bytes to a hash you must QUANTIZE phase -> bits.
 //   Bit-exact crypto demands a zero-error avalanche: perturb the analog phase of
@@ -290,7 +290,7 @@ const EXCLUDED = [
   ["X3", "Slime-mold / Fermat 'least-time' instantaneous routing as an ALGORITHM",
         "Fermat's principle is real OPTICS but is NOT a free combinatorial solver: extracting the chosen path from a physical field is still a read of the field (O of field size). The buildable analogue is matrix-exponentiation M^k for k-hop reachability — exact integer math, already covered by V4's M*q family; benching M^k adds nothing new here. The 'instant pathfinding' overclaim is the same O(1) error refuted in V2."],
   ["X4", "Optical masking as a stand-in for ML-DSA / AES / SHA-256",
-        "REFUTED by V1 (noise destroys bit-exact crypto). This is the SPORE-SUBSTRATE-001 candor check; the established ruling stands. Crypto remains digital (Ed25519/ML-DSA per Galerina key posture)."],
+        "REFUTED by V1 (noise destroys bit-exact crypto). This is the FUNGI-SUBSTRATE-001 candor check; the established ruling stands. Crypto remains digital (Ed25519/ML-DSA per Galerina key posture)."],
 ];
 
 console.log("\n--- EXCLUDED (reasoned, not benched) ---");

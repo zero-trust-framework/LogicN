@@ -31,7 +31,7 @@ let c = neural.matmul(a, b)    // COMPILE ERROR: 128 ≠ 64
 ```
 
 ```text
-SPORE-TENSOR-001: matrix dimensions do not align
+FUNGI-TENSOR-001: matrix dimensions do not align
 
 matmul requires: left [M, K] × right [K, N]
 Found:          left [32, 128] × right [64, 256]
@@ -117,16 +117,16 @@ Galerina Neural IR → backend capability matcher → CoreML / ONNX Runtime / Te
 
 | Code | Meaning |
 |---|---|
-| `SPORE-TENSOR-001` | Matrix dimensions do not align |
-| `SPORE-TENSOR-002` | Incompatible tensor ranks |
-| `SPORE-TENSOR-003` | Dtype mismatch |
-| `SPORE-TENSOR-004` | Layout mismatch |
-| `SPORE-TENSOR-005` | Broadcast rule failed |
-| `SPORE-TENSOR-006` | Dynamic dimension requires runtime guard |
-| `SPORE-TENSOR-007` | Backend does not support operator |
-| `SPORE-TENSOR-008` | Backend does not support dtype/layout combination |
-| `SPORE-TENSOR-009` | Precision policy would be violated |
-| `SPORE-TENSOR-010` | Native neural call lacks shape contract |
+| `FUNGI-TENSOR-001` | Matrix dimensions do not align |
+| `FUNGI-TENSOR-002` | Incompatible tensor ranks |
+| `FUNGI-TENSOR-003` | Dtype mismatch |
+| `FUNGI-TENSOR-004` | Layout mismatch |
+| `FUNGI-TENSOR-005` | Broadcast rule failed |
+| `FUNGI-TENSOR-006` | Dynamic dimension requires runtime guard |
+| `FUNGI-TENSOR-007` | Backend does not support operator |
+| `FUNGI-TENSOR-008` | Backend does not support dtype/layout combination |
+| `FUNGI-TENSOR-009` | Precision policy would be violated |
+| `FUNGI-TENSOR-010` | Native neural call lacks shape contract |
 
 ---
 
@@ -162,7 +162,7 @@ let x2: Tensor<Float32, [batch, hidden]> =
     dequantize(q)
 
 // Invalid — no implicit conversion:
-let x2: Tensor<Float32, [batch, hidden]> = q   // SPORE-QUANT-001
+let x2: Tensor<Float32, [batch, hidden]> = q   // FUNGI-QUANT-001
 ```
 
 ### Quantization Propagation
@@ -220,16 +220,16 @@ precision_policy FraudQuantizedV3 {
 
 | Code | Meaning |
 |---|---|
-| `SPORE-QUANT-001` | Quantized value used where full precision required |
-| `SPORE-QUANT-002` | Full-precision value used where quantized required |
-| `SPORE-QUANT-003` | Incompatible quantization schemes |
-| `SPORE-QUANT-004` | Missing calibration profile |
-| `SPORE-QUANT-005` | Implicit dequantization forbidden |
-| `SPORE-QUANT-006` | Implicit quantization forbidden |
-| `SPORE-QUANT-007` | Backend does not support quantization scheme |
-| `SPORE-QUANT-008` | Accuracy evidence required by policy |
-| `SPORE-QUANT-009` | Quantized accumulation type mismatch |
-| `SPORE-QUANT-010` | Precision downgrade not approved |
+| `FUNGI-QUANT-001` | Quantized value used where full precision required |
+| `FUNGI-QUANT-002` | Full-precision value used where quantized required |
+| `FUNGI-QUANT-003` | Incompatible quantization schemes |
+| `FUNGI-QUANT-004` | Missing calibration profile |
+| `FUNGI-QUANT-005` | Implicit dequantization forbidden |
+| `FUNGI-QUANT-006` | Implicit quantization forbidden |
+| `FUNGI-QUANT-007` | Backend does not support quantization scheme |
+| `FUNGI-QUANT-008` | Accuracy evidence required by policy |
+| `FUNGI-QUANT-009` | Quantized accumulation type mismatch |
+| `FUNGI-QUANT-010` | Precision downgrade not approved |
 
 ---
 
@@ -343,16 +343,16 @@ compute target npu { result = neural.graph FraudModel(input) }
 
 | Code | Meaning |
 |---|---|
-| `SPORE-NPU-001` | NPU target unavailable for deployment platform |
-| `SPORE-NPU-002` | Operator unsupported by selected NPU provider |
-| `SPORE-NPU-003` | Dtype unsupported by selected NPU provider |
-| `SPORE-NPU-004` | Dynamic shape unsupported by selected NPU provider |
-| `SPORE-NPU-005` | Quantization required for NPU target |
-| `SPORE-NPU-006` | Fallback required but not declared |
-| `SPORE-NPU-007` | Selected provider would violate precision policy |
-| `SPORE-NPU-008` | Selected provider cannot satisfy memory budget |
-| `SPORE-NPU-009` | Runtime fallback occurred and was reported |
-| `SPORE-NPU-010` | NPU target requested but neural IR is opaque native call |
+| `FUNGI-NPU-001` | NPU target unavailable for deployment platform |
+| `FUNGI-NPU-002` | Operator unsupported by selected NPU provider |
+| `FUNGI-NPU-003` | Dtype unsupported by selected NPU provider |
+| `FUNGI-NPU-004` | Dynamic shape unsupported by selected NPU provider |
+| `FUNGI-NPU-005` | Quantization required for NPU target |
+| `FUNGI-NPU-006` | Fallback required but not declared |
+| `FUNGI-NPU-007` | Selected provider would violate precision policy |
+| `FUNGI-NPU-008` | Selected provider cannot satisfy memory budget |
+| `FUNGI-NPU-009` | Runtime fallback occurred and was reported |
+| `FUNGI-NPU-010` | NPU target requested but neural IR is opaque native call |
 
 ---
 

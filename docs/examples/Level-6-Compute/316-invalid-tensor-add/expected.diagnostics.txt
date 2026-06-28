@@ -1,1 +1,1 @@
-SPORE-TYPE-004 — Tensor shapes [4, 8] and [8, 4] are not compatible for +. Use matmul() for matrix multiplication.
+FUNGI-TYPE-004 — Tensor shapes [4, 8] and [8, 4] are not compatible for +. Use matmul() for matrix multiplication.

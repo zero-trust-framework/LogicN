@@ -520,11 +520,11 @@ compute auto {
 }
 ```
 
-The target order is defined globally in `boot.spore`.
+The target order is defined globally in `boot.fungi`.
 
 ---
 
-## Example `boot.spore` Compute Policy
+## Example `boot.fungi` Compute Policy
 
 ```Galerina
 compute {
@@ -601,7 +601,7 @@ Before `main()` runs, Galerina should detect available compute targets.
 Startup flow:
 
 ```text
-1. Read boot.spore
+1. Read boot.fungi
 2. Validate compute policy
 3. Detect CPU features
 4. Detect GPU support
@@ -727,7 +727,7 @@ compute target photonic_mzi fallback gpu fallback cpu {
 }
 ```
 
-Instead, `boot.spore` may declare that `photonic_mzi` is allowed when a matching
+Instead, `boot.fungi` may declare that `photonic_mzi` is allowed when a matching
 target plugin or deployment profile exists:
 
 ```Galerina
@@ -1033,7 +1033,7 @@ Galerina should report what target was selected.
 {
   "computeTargetSelection": {
     "flow": "scoreFraud",
-    "source": "src/risk/fraud.spore:8",
+    "source": "src/risk/fraud.fungi:8",
     "computeMode": "auto",
     "operation": "model_predict",
     "selectedTarget": "gpu",
@@ -1237,7 +1237,7 @@ support simple type aliases
 support pure vector flow
 support vectorize rows syntax
 support compute auto
-use global compute target policy from boot.spore
+use global compute target policy from boot.fungi
 generate target report
 ```
 

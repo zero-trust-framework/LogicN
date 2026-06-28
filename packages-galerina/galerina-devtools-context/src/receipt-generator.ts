@@ -393,7 +393,7 @@ function inferGovernanceCodes(
 
   // GOV-010: secure flow without intent
   if ((qualifier === "secure" || qualifier === "guarded") && !contract.intent) {
-    codes.push("SPORE-GOV-010");
+    codes.push("FUNGI-GOV-010");
   }
 
   // Effect-based codes
@@ -553,19 +553,19 @@ function generateFlowReceipt(
 // ---------------------------------------------------------------------------
 
 /**
- * Generate Context Receipts for all flows in a .spore source file.
+ * Generate Context Receipts for all flows in a .fungi source file.
  *
  * Receipts omit the function body, preserving only:
  *   - signature, contract metadata, governance summary, call structure
  *
- * @param source  - Galerina source text (.spore file content)
+ * @param source  - Galerina source text (.fungi file content)
  * @param options - Optional filter / file name override
  */
 export function generateReceipts(
   source: string,
   options: ReceiptOptions = {},
 ): FileContextReceipts {
-  const fileName = options.fileName ?? "source.spore";
+  const fileName = options.fileName ?? "source.fungi";
   const generatedAt = new Date().toISOString();
 
   const parsed: ParseResult = parseProgram(source, fileName);
@@ -587,7 +587,7 @@ export function generateReceipts(
     : 0;
 
   return {
-    schemaVersion: "spore.context-receipt.v1",
+    schemaVersion: "fungi.context-receipt.v1",
     sourceFile: fileName,
     flowCount: receipts.length,
     receipts,

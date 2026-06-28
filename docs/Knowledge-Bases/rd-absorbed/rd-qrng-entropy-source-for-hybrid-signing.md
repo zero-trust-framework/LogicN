@@ -148,7 +148,7 @@ already requires; it does not change the signer.
 
 ### Galerina role
 An **entropy capability behind the governance boundary**: if/when a QRNG is integrated, it is a host-side
-SP 800-90 RBG invoked through the Galerina capability boundary (crypto and entropy cannot live in `.spore` —
+SP 800-90 RBG invoked through the Galerina capability boundary (crypto and entropy cannot live in `.fungi` —
 `galerina check` rejects even bitwise ops, per `signature-custody-v0.md` §7). The governance layer's job is
 the fail-closed posture: a failed SP 800-90B health test → entropy source unavailable → `unknown → deny`,
 identical to how a missing vetted verifier makes the reader reject every signed file. Galerina governs the

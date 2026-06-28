@@ -19,14 +19,14 @@ It may not stop every malicious developer. But it stops:
 
 | Protection | Status | Code |
 |---|---|---|
-| Deny network by default | ✅ | SPORE-EFFECT-001 fires if network.outbound undeclared |
-| No dynamic code execution | ✅ | SPORE-SOURCE-ESCAPE-001 (eval, Function, dynamic import) |
-| No monkey patching | ✅ | SPORE-SEC-020/021 (Runtime.patch, prototype mutation) |
-| Signed packages | ✅ | SPORE-PKG-005, runtime policy: require signature |
+| Deny network by default | ✅ | FUNGI-EFFECT-001 fires if network.outbound undeclared |
+| No dynamic code execution | ✅ | FUNGI-SOURCE-ESCAPE-001 (eval, Function, dynamic import) |
+| No monkey patching | ✅ | FUNGI-SEC-020/021 (Runtime.patch, prototype mutation) |
+| Signed packages | ✅ | FUNGI-PKG-005, runtime policy: require signature |
 | Runtime identity | ✅ | AuditLog.write, contract.context: require actor |
 | Rate limits declared | ✅ | contract.limits { request_time network_requests } parsed |
 | Production deny switch | ✅ | runtime policy: security { default deny } |
-| Stdlib capability enforcement | ✅ | SPORE-STDLIB-001 (File.readText needs filesystem.read) |
+| Stdlib capability enforcement | ✅ | FUNGI-STDLIB-001 (File.readText needs filesystem.read) |
 
 ---
 
@@ -49,7 +49,7 @@ Without this declaration, the compiler blocks any attempt to spawn. This covers:
 - Child process execution
 
 **Status:** ✅ Phase R4 — `process.spawn`, `worker.spawn`, and `event.schedule` added to
-`CANONICAL_EFFECTS` in `effect-checker.ts`. SPORE-EFFECT-001 now fires if any of these
+`CANONICAL_EFFECTS` in `effect-checker.ts`. FUNGI-EFFECT-001 now fires if any of these
 effects are used without declaration.
 
 ### 2. Network destination policy (most important gap)
@@ -73,8 +73,8 @@ Rules:
 - Destination rules apply to **resolved IP address**, not just hostname (DNS rebinding defence)
 
 **New contract sub-block:** `network { allow host deny wildcard deny private_ranges }`
-**New diagnostic:** `SPORE-NET-001` (NetworkDestinationDenied) — called host not in allowlist
-**New diagnostic:** `SPORE-NET-002` (PrivateRangeAccess) — resolved IP is in private range
+**New diagnostic:** `FUNGI-NET-001` (NetworkDestinationDenied) — called host not in allowlist
+**New diagnostic:** `FUNGI-NET-002` (PrivateRangeAccess) — resolved IP is in private range
 
 ### 3. Rate limit enforcement (Phase 11C gap)
 
@@ -93,7 +93,7 @@ contract {
 
 These need wiring into `timeoutPolicy.ts`, `retryPolicy.ts`, `limitPolicy.ts` (Phase 11C skeletons exist).
 
-**Enforcement gap:** `SPORE-RUNTIME-006` (RateLimitExceeded) — for when limits fire at runtime.
+**Enforcement gap:** `FUNGI-RUNTIME-006` (RateLimitExceeded) — for when limits fire at runtime.
 
 ### 4. Memory limits against DoS
 
@@ -156,8 +156,8 @@ contract {
 The compiler can then prove:
 - No outbound network (network_requests 0 + no network.outbound effect)
 - No process spawning (process.spawn not declared)
-- No dynamic code (SPORE-SOURCE-ESCAPE-001)
-- No monkey patching (SPORE-SEC-020/021)
+- No dynamic code (FUNGI-SOURCE-ESCAPE-001)
+- No monkey patching (FUNGI-SEC-020/021)
 - PII redacted before audit
 - Request bounded at 5 seconds and 16MB
 
@@ -191,7 +191,7 @@ let report = getAntiAbuseReport()
 // report.spawnEffects        — list of flows declaring process.spawn / worker.spawn
 // report.networkPolicies     — destination allow/deny rules per flow
 // report.rateLimitGaps       — flows with network.outbound but no limits declared
-// report.undeclaredSpawns    — flows that call spawn without declaring the effect (SPORE-EFFECT-001)
+// report.undeclaredSpawns    — flows that call spawn without declaring the effect (FUNGI-EFFECT-001)
 ```
 
 **Status:** ✅ Phase R4 — `getAntiAbuseReport()` available in `galerina check --devtools` output.
@@ -207,10 +207,10 @@ let report = getAntiAbuseReport()
 | event.schedule as declared effect | ✅ Phase R4 (added to CANONICAL_EFFECTS) |
 | getAntiAbuseReport() devtools function | ✅ Phase R4 |
 | network.contract sub-block (destination policy) | 📋 Phase R4 (in progress) |
-| SPORE-NET-001 (NetworkDestinationDenied) | 📋 Phase R4 (in progress) |
-| SPORE-NET-002 (PrivateRangeAccess / SSRF) | 📋 Phase R4 (in progress) |
+| FUNGI-NET-001 (NetworkDestinationDenied) | 📋 Phase R4 (in progress) |
+| FUNGI-NET-002 (PrivateRangeAccess / SSRF) | 📋 Phase R4 (in progress) |
 | Rate limit enforcement (timeoutPolicy wired) | 📋 Phase 26 (Phase 11C gap) |
-| SPORE-RUNTIME-006 (RateLimitExceeded) | 📋 Phase 26 |
+| FUNGI-RUNTIME-006 (RateLimitExceeded) | 📋 Phase 26 |
 | Memory hard_limit enforcement | 📋 Phase 26 |
 | DNS rebinding defence in capability host | 📋 Phase 26 |
 | Anti-abuse example (processWebhook) | 📋 Phase R4 (in progress) |

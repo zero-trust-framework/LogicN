@@ -51,7 +51,7 @@ const FLOWS = [
     params: ["price: Money"],
     returnType: "Money",
     declaredEffects: [],
-    location: { file: "examples/vat.spore", line: 1, column: 1 },
+    location: { file: "examples/vat.fungi", line: 1, column: 1 },
   },
 ];
 
@@ -61,8 +61,8 @@ const FLOWS = [
 const GENERATED_AT = "2026-06-15T00:00:00.000Z";
 
 // Windows-style path (backslashes) and its expected normalized form.
-const WIN_PATH = "C:\\wwwprojects\\Galerina\\examples\\vat.spore";
-const POSIX_PATH = "C:/wwwprojects/Galerina/examples/vat.spore";
+const WIN_PATH = "C:\\wwwprojects\\Galerina\\examples\\vat.fungi";
+const POSIX_PATH = "C:/wwwprojects/Galerina/examples/vat.fungi";
 
 const PLACEHOLDER_PREFIX = "placeholder:sha256:";
 
@@ -135,7 +135,7 @@ describe("manifest-generator: sourceFile is bound inside the signed body hash", 
     assert.equal(originalHash, embeddedBodyHash(m), "sanity: recomputed == signed");
 
     // Tamper with the path alone — every other field byte-identical.
-    const tampered = { ...body, sourceFile: "C:/attacker/swapped.spore" };
+    const tampered = { ...body, sourceFile: "C:/attacker/swapped.fungi" };
     const tamperedHash = sha256Hex(canonicalJson(tampered));
 
     assert.notEqual(
@@ -147,8 +147,8 @@ describe("manifest-generator: sourceFile is bound inside the signed body hash", 
   });
 
   it("two manifests differing ONLY by sourceFile produce different signatures (anti-swap, end-to-end)", () => {
-    const a = makeManifest("C:/wwwprojects/Galerina/examples/vat.spore");
-    const b = makeManifest("C:/wwwprojects/Galerina/examples/other.spore");
+    const a = makeManifest("C:/wwwprojects/Galerina/examples/vat.fungi");
+    const b = makeManifest("C:/wwwprojects/Galerina/examples/other.fungi");
 
     // Control: identical SOURCE ⇒ identical sourceHash. The ONLY varying input is the path.
     assert.equal(a.sourceHash, b.sourceHash, "control: same source content ⇒ same sourceHash");
@@ -207,7 +207,7 @@ describe("manifest signing input (versioned) + #67 CBOR self-verify", () => {
   // A manifest body whose keys are deliberately OUT of lexicographic order, with nesting + an array,
   // so canonicalization (key-sorting) is observable and the JSON↔CBOR representation differs.
   const BODY = {
-    schemaVersion: "spore.manifest.v2",
+    schemaVersion: "fungi.manifest.v2",
     sourceHash: "sha256:" + "a".repeat(64),
     zeta: "last-alphabetically",
     alpha: 1,

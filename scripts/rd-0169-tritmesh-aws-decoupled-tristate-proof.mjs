@@ -10,7 +10,7 @@
 //   Galerina (compute, decoupled)
 //        ⇄  DB-connection API  (the egress/ingress BORDER)
 //        ⇄  TritMesh DB  (graph engine)
-//        ⇄  .spore storage (S3 / EBS)  +  TritMesh cache (Redis)
+//        ⇄  .fungi storage (S3 / EBS)  +  TritMesh cache (Redis)
 //   driven by a tri_state_vector { storage, cache, node } ∈ {+1, 0, -1}.
 //
 // The note's central claim: map K3 tri-logic (+1 / 0 / -1) onto binary silicon as
@@ -19,14 +19,14 @@
 //
 // WHAT IS SOUND (ADOPT / DESIGN — re-derives shipped work):
 //   * decoupled / headless DB reached via a DB-connection API  -> re-derives RD-0161
-//     (decoupled .spore-stream-back DiD) and RD-0150 (graph-as-data-spine border).
+//     (decoupled .fungi-stream-back DiD) and RD-0150 (graph-as-data-spine border).
 //   * stale-while-revalidate on cache=0  -> collapses a cache stampede.
 //   * lag-tolerant node=0  -> read-only routing of a slightly-behind replica.
 //   * deterministic tri-state routing on binary silicon via a 2-bit/enum encoding.
 //
 // THE LOAD-BEARING ZT CAVEAT (the real R&D point of this note):
 //   The tri_state_vector is an AVAILABILITY / HEALTH signal. It MUST NOT become a
-//   SECURITY / ADMISSION verdict. Authorization stays the SIGNED .spore capability
+//   SECURITY / ADMISSION verdict. Authorization stays the SIGNED .fungi capability
 //   + real crypto (TLS on the border, Ed25519-covered index per RD-0167). This
 //   proof DEMONSTRATES, with node:crypto, that:
 //     - "serve stale on 0" is fine for cache/replica AVAILABILITY, but
@@ -128,7 +128,7 @@ console.log("\nV2  tri-state routing is deterministic on binary silicon (vector 
   const route = (storage, cache, node) => {
     // storage destructive or node dead -> hard fail of the *data path* (not a security
     // verdict; just "this path can't serve"): reroute / abort the data fetch.
-    if (storage === DENY) return "abort:spore-corrupt";
+    if (storage === DENY) return "abort:fungi-corrupt";
     if (node === DENY)    return "reroute:node-dead";
     // node syncing -> may serve reads, must not take writes (see V4).
     // cache decides the read source:
@@ -228,7 +228,7 @@ console.log("\nV4  a lag-0 (catching-up) node accepts READ-ONLY, never WRITE (no
 //   telemetry — becomes a forgeable auth token. We run BOTH designs with node:crypto:
 //     (a) BROKEN: admission keys off the health vector -> an attacker flips it to +1
 //         and is admitted with NO secret  (FAIL-OPEN — re-confirms RD-0162/0164/0165).
-//     (b) SOUND: admission keys off a SIGNED .spore capability (Ed25519); the health
+//     (b) SOUND: admission keys off a SIGNED .fungi capability (Ed25519); the health
 //         vector is advisory only -> flipping it changes routing but NEVER admission.
 console.log("\nV5  DB-connection border: health vector must NOT gate admission; auth stays the SIGNED capability:");
 {
@@ -262,7 +262,7 @@ console.log("\nV5  DB-connection border: health vector must NOT gate admission; 
     return { admitted: authorize(authTrit), routedDegraded: !authorize(effective), reason: "verified capability" };
   };
   {
-    const legitBytes = makeCapabilityBytes("svc-galerina", "spore-9942", "READ");
+    const legitBytes = makeCapabilityBytes("svc-galerina", "fungi-9942", "READ");
     const legitSig = edSign(null, legitBytes, privateKey);
 
     // Legit caller: admitted regardless of health (health only affects ROUTING).
@@ -276,7 +276,7 @@ console.log("\nV5  DB-connection border: health vector must NOT gate admission; 
        "SOUND: forged signature + perfect [+1,+1,+1] health vector -> DENIED (the vector can't buy admission)");
 
     // Tamper the capability bytes (privilege-escalate READ -> WRITE): signature fails.
-    const escalated = makeCapabilityBytes("svc-galerina", "spore-9942", "WRITE");
+    const escalated = makeCapabilityBytes("svc-galerina", "fungi-9942", "WRITE");
     const tamperAdmit = admitSecure(escalated, legitSig, { storage: ALLOW, cache: ALLOW, node: ALLOW });
     ok(tamperAdmit.admitted === false,
        "SOUND: tampering intent READ->WRITE breaks the signature -> denied (capability binds the action, vector is advisory)");
@@ -330,9 +330,9 @@ console.log("\nV6  stale-while-revalidate applies to DATA only; a stale/revoked 
 // EXCLUDED — named, not benched here (kept honest: what we did NOT prove and why).
 // ─────────────────────────────────────────────────────────────────────────────
 const EXCLUDED = [
-  ["X1", "decoupled/headless .spore-stream-back DiD + DB-connection API as net-new",
+  ["X1", "decoupled/headless .fungi-stream-back DiD + DB-connection API as net-new",
         "RE-DERIVE, not new. The decoupled headless DB reached over an API is RD-0161 (zero-copy stream-back DiD) and RD-0150 (graph-as-data-spine border). RD-0169 adds the tri-state ROUTING overlay + the availability/safety separation; the decoupling itself is already adopted."],
-  ["X2", "the in-.spore index / signed capability mechanics",
+  ["X2", "the in-.fungi index / signed capability mechanics",
         "OWNED by RD-0167 (signed primary index, Ed25519-covered, ZT8). RD-0169 only CONSUMES that result (V5/V6 assume the capability is the real auth). The index-poisoning attack+fix is proven in scripts/rd-0166-0167-*-proof.mjs, not re-litigated here."],
   ["X3", "TLS / mTLS / transit-encryption on the DB-connection border",
         "Real crypto, ASSUMED present and NOT replaceable by any tri_state value. The border is an egress/ingress surface -> SSRF + transit-encryption disciplines apply (logicn-session-2026-06-25 SSRF fix; feedback-http-transport K3 cert-gate). A ternary health value CANNOT substitute for TLS — re-confirms the RD-0162/0164/0165 load-bearing refute."],
@@ -340,8 +340,8 @@ const EXCLUDED = [
         "MODEL-STRUCTURAL only. V1 proves a STRUCTURAL count (N misses -> 1 refetch) and V2 proves determinism; neither claims a nanosecond figure. The single refetch still costs Theta(payload). We never assert O(1) or 'zero work' (consistent with the RD-0166/0167 anti-O(1) guard)."],
   ["X5", "gRPC/Protobuf vs REST/JSON payload choice (note's closing question)",
         "TRANSPORT-encoding, owner/infra preference; ZT-neutral. The 2-bit enum (V2) is the semantic content; whether it rides Protobuf or JSON does not change the availability/safety separation. Tracked, not benched."],
-  ["X6", "storage=-1 (corrupt .spore) 'halt all operations instantly' as a SECURITY action",
-        "AVAILABILITY action, not security. A checksum-fail -1 correctly aborts the DATA PATH (V2 route 'abort:spore-corrupt'); it is integrity-availability, not an admission verdict. Integrity-of-the-capability stays the Ed25519 cover (RD-0167), independent of the health trit."],
+  ["X6", "storage=-1 (corrupt .fungi) 'halt all operations instantly' as a SECURITY action",
+        "AVAILABILITY action, not security. A checksum-fail -1 correctly aborts the DATA PATH (V2 route 'abort:fungi-corrupt'); it is integrity-availability, not an admission verdict. Integrity-of-the-capability stays the Ed25519 cover (RD-0167), independent of the health trit."],
 ];
 console.log("\nEXCLUDED (named, not benched here):");
 for (const [id, claim, why] of EXCLUDED) console.log(`  ${id}  ${claim}\n        -> ${why}`);
@@ -353,6 +353,6 @@ const green = fail === 0;
 console.log(green
   ? "RESULT: GREEN — RD-0169: tri-state AVAILABILITY routing is sound (anti-stampede N->1, deterministic, lag-0 read-only).\n" +
     "         LOAD-BEARING: the tri_state_vector is HEALTH telemetry, NOT an auth verdict — authorize(0)=false, vAnd only\n" +
-    "         downgrades, the SIGNED .spore capability + TLS remain the border. Health-as-auth is a runnable FAIL-OPEN.\n"
+    "         downgrades, the SIGNED .fungi capability + TLS remain the border. Health-as-auth is a runnable FAIL-OPEN.\n"
   : "RESULT: RED — a load-bearing V-claim did not hold (see FAIL above)\n");
 process.exitCode = green ? 0 : 1;

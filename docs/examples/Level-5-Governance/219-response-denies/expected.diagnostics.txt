@@ -1,4 +1,4 @@
-SPORE-GOV-003 (PROTECTED_DATA_IN_RESPONSE) — error
+FUNGI-GOV-003 (PROTECTED_DATA_IN_RESPONSE) — error
 
 Flow 'getPatientProfile' returns field 'email' which is denied by contract.response.denies.
 Protected data must not leak through the API surface.

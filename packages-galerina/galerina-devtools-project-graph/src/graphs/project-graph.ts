@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — ProjectGraph
+// fungi-graph — ProjectGraph
 //
 // Workspace knowledge graph: packages, documents, flows, types, effects,
 // policies, and their relationships. Replaces galerina-devtools-project-graph.

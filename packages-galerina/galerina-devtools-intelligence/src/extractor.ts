@@ -150,7 +150,7 @@ function detectSecrets(flowNode: AstNode): boolean {
 function deriveGovernanceCodes(meta: FlowMeta, flowNode: AstNode | undefined): string[] {
   const codes: string[] = [];
 
-  // SPORE-GOV-010: INTENT_MISSING_ON_SECURE_FLOW
+  // FUNGI-GOV-010: INTENT_MISSING_ON_SECURE_FLOW
   if (meta.qualifier === "secure" || meta.qualifier === "guarded") {
     const hasIntent = flowNode !== undefined && (() => {
       const vals: string[] = [];
@@ -167,16 +167,16 @@ function deriveGovernanceCodes(meta: FlowMeta, flowNode: AstNode | undefined): s
     }
 
     if (!intentFound) {
-      codes.push("SPORE-GOV-010");
+      codes.push("FUNGI-GOV-010");
     }
   }
 
-  // SPORE-GOV-002: MISSING_AUDIT_FOR_GOVERNED_SINK (heuristic)
+  // FUNGI-GOV-002: MISSING_AUDIT_FOR_GOVERNED_SINK (heuristic)
   if (meta.declaredEffects.some(e =>
     e.includes("database.write") || e.includes("filesystem.write")
   )) {
     if (!meta.declaredEffects.includes("audit.write")) {
-      codes.push("SPORE-GOV-002");
+      codes.push("FUNGI-GOV-002");
     }
   }
 

@@ -93,7 +93,7 @@ In Galerina terms: the Secure Enclave is the **hardware backing for GovernanceSi
 ```typescript
 // GovernanceSignature backed by Apple Secure Enclave:
 interface SecureEnclaveBackedSignature {
-  readonly algorithm: "spore.gov.sig.v1";
+  readonly algorithm: "fungi.gov.sig.v1";
   readonly signerKeyId: string;
   readonly signature: string;          // signed inside Secure Enclave
   readonly attestation: string;        // hardware attestation from Secure Enclave
@@ -303,4 +303,4 @@ Galerina running on Apple Silicon + Secure Enclave provides:
 - `galerina-hardware-google.md` — Google Axion (also ARM-based, cloud comparison)
 - `galerina-hardware-npu-apu.md` — NPU/APU governance patterns
 - `galerina-governance-signature.md` — GovernanceSignature (Secure Enclave backing)
-- `examples/healthcare/classifyPrivateMedicalNote.spore` — Full example
+- `examples/healthcare/classifyPrivateMedicalNote.fungi` — Full example

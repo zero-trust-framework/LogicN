@@ -10,11 +10,11 @@
 ## Status
 
 ```
-215 .spore examples across 9 levels + proposed readable logic forms
+215 .fungi examples across 9 levels + proposed readable logic forms
 Phase 9 + Phase 10 complete
 All examples use: readonly request: Request (not req)
 All flows with contracts use named result types: -> FlowNameResult
-Diagnostics: SPORE-TYPE-003, SPORE-EVENT-001/002, SPORE-GOV-003/011/012, SPORE-CONTEXT-001, Readable Logic Forms
+Diagnostics: FUNGI-TYPE-003, FUNGI-EVENT-001/002, FUNGI-GOV-003/011/012, FUNGI-CONTEXT-001, Readable Logic Forms
 Signed Attestation (Ed25519), 16-section contract model, naming conventions
 ```
 
@@ -33,7 +33,7 @@ AI learns trust boundaries before types. The corpus is ordered accordingly:
 ```
 Level 1 — Basics        (001–020)   ← flow qualifiers, bindings, fn, match
 Level 4 — Security      (151–175)   ← unsafe→protected→redacted→audit
-Level 3 — Effects       (101–120)   ← pure/guarded/secure, effect rules, SPORE-EFFECT-*
+Level 3 — Effects       (101–120)   ← pure/guarded/secure, effect rules, FUNGI-EFFECT-*
 Level 2 — Types         (051–087)   ← domain types, Money, Tensor, Option, Result
 Level 5 — Governance    (201–213)   ← intent, policy, proof, compute target
 Level 6 — Compute       (301–317)   ← tensor types, compute targets, Money/Decimal
@@ -48,8 +48,8 @@ Every example folder contains:
 
 ```
 NNN-example-name/
-  example.spore              ← Galerina source with /// header
-  expected.diagnostics.txt ← "none" or SPORE-CODE + message (exact implemented codes)
+  example.fungi              ← Galerina source with /// header
+  expected.diagnostics.txt ← "none" or FUNGI-CODE + message (exact implemented codes)
   notes.md                 ← concept + AI rule explanation
 ```
 
@@ -59,7 +59,7 @@ NNN-example-name/
 /// example: NNN-example-name
 /// level: N
 /// concept: description
-/// expected_diagnostics: none | SPORE-TYPE-001 | SPORE-VALUESTATE-003 | ...
+/// expected_diagnostics: none | FUNGI-TYPE-001 | FUNGI-VALUESTATE-003 | ...
 /// ai_rule: One-sentence rule for AI code generators.
 ```
 
@@ -69,71 +69,71 @@ NNN-example-name/
 
 | Code | Meaning | Status |
 |---|---|---|
-| `SPORE-TYPE-001` | Unknown type — not in scope | ✅ Implemented |
-| `SPORE-TYPE-002` | Type mismatch — incompatible assignment | ✅ Implemented |
-| `SPORE-TYPE-003` | Nominal type conversion denied — `unsafe let id: CustomerId = raw` rejected | ✅ Phase 9A-2 |
-| `SPORE-TYPE-004` | Invalid binary operation — wrong operand types or cross-currency Money | ✅ Implemented |
-| `SPORE-TYPE-006` | Wrong argument type for flow call | ✅ Implemented |
-| `SPORE-TYPE-007` | Wrong argument count for flow call | ✅ Implemented |
-| `SPORE-TYPE-008` | Return type mismatch / null-undefined denied | ✅ Implemented |
-| `SPORE-TYPE-009` | Generic arity mismatch (Option expects 1, Result expects 2) | ✅ Implemented |
-| `SPORE-TYPE-020` | Binding shadows outer-scope name (warning) | ✅ Implemented |
-| `SPORE-TYPE-021` | Non-exhaustive match | ✅ Implemented |
-| `SPORE-TYPE-022` | Unreachable pattern (arm after wildcard `_`) | ✅ Implemented |
+| `FUNGI-TYPE-001` | Unknown type — not in scope | ✅ Implemented |
+| `FUNGI-TYPE-002` | Type mismatch — incompatible assignment | ✅ Implemented |
+| `FUNGI-TYPE-003` | Nominal type conversion denied — `unsafe let id: CustomerId = raw` rejected | ✅ Phase 9A-2 |
+| `FUNGI-TYPE-004` | Invalid binary operation — wrong operand types or cross-currency Money | ✅ Implemented |
+| `FUNGI-TYPE-006` | Wrong argument type for flow call | ✅ Implemented |
+| `FUNGI-TYPE-007` | Wrong argument count for flow call | ✅ Implemented |
+| `FUNGI-TYPE-008` | Return type mismatch / null-undefined denied | ✅ Implemented |
+| `FUNGI-TYPE-009` | Generic arity mismatch (Option expects 1, Result expects 2) | ✅ Implemented |
+| `FUNGI-TYPE-020` | Binding shadows outer-scope name (warning) | ✅ Implemented |
+| `FUNGI-TYPE-021` | Non-exhaustive match | ✅ Implemented |
+| `FUNGI-TYPE-022` | Unreachable pattern (arm after wildcard `_`) | ✅ Implemented |
 
 ### Name resolver
 
 | Code | Meaning | Status |
 |---|---|---|
-| `SPORE-NAME-001` | Undeclared name in expression position | ✅ Implemented |
-| `SPORE-NAME-002` | Duplicate name in same scope | ✅ Implemented |
+| `FUNGI-NAME-001` | Undeclared name in expression position | ✅ Implemented |
+| `FUNGI-NAME-002` | Duplicate name in same scope | ✅ Implemented |
 
 ### Value-state checker
 
 | Code | Meaning | Status |
 |---|---|---|
-| `SPORE-VALUESTATE-001` | `safe mut` requires a recognised gate function | ✅ Implemented |
-| `SPORE-VALUESTATE-003` | Unsafe binding at governed sink | ✅ Implemented |
-| `SPORE-VALUESTATE-004` | Tainted value — string concat includes unsafe binding | ✅ Implemented |
+| `FUNGI-VALUESTATE-001` | `safe mut` requires a recognised gate function | ✅ Implemented |
+| `FUNGI-VALUESTATE-003` | Unsafe binding at governed sink | ✅ Implemented |
+| `FUNGI-VALUESTATE-004` | Tainted value — string concat includes unsafe binding | ✅ Implemented |
 
 ### Secret / SecureString
 
 | Code | Meaning | Status |
 |---|---|---|
-| `SPORE-SECRET-001` | SecureString passed to log function | ✅ Implemented |
-| `SPORE-SECRET-002` | SecureString compared with == or != | ✅ Implemented |
-| `SPORE-SECRET-003` | SecureString passed to serialization (json.encode) | ✅ Implemented |
+| `FUNGI-SECRET-001` | SecureString passed to log function | ✅ Implemented |
+| `FUNGI-SECRET-002` | SecureString compared with == or != | ✅ Implemented |
+| `FUNGI-SECRET-003` | SecureString passed to serialization (json.encode) | ✅ Implemented |
 
 ### Effect checker
 
 | Code | Meaning | Status |
 |---|---|---|
-| `SPORE-EFFECT-001` | Effect used but not declared | ✅ Implemented |
-| `SPORE-EFFECT-002` | Transitive effect not declared (callee has effect, caller doesn't) | ✅ Implemented |
-| `SPORE-EFFECT-003` | pure flow cannot call effectful flow / use effectful op | ✅ Implemented |
-| `SPORE-EFFECT-004` | Non-canonical effect name (use `network.outbound` not `network`) | ✅ Implemented |
+| `FUNGI-EFFECT-001` | Effect used but not declared | ✅ Implemented |
+| `FUNGI-EFFECT-002` | Transitive effect not declared (callee has effect, caller doesn't) | ✅ Implemented |
+| `FUNGI-EFFECT-003` | pure flow cannot call effectful flow / use effectful op | ✅ Implemented |
+| `FUNGI-EFFECT-004` | Non-canonical effect name (use `network.outbound` not `network`) | ✅ Implemented |
 
 ### Governance verifier
 
 | Code | Meaning | Status |
 |---|---|---|
-| `SPORE-GOV-001` | Intent/behaviour mismatch (intent says "local", declares network) | ✅ Implemented |
-| `SPORE-GOV-002` | Governed sink without audit evidence | ✅ Implemented |
-| `SPORE-GOV-004` | Denied target selected (deny [remote.execution] + network.outbound) | ✅ Implemented |
-| `SPORE-GOV-010` | secure flow without intent declaration | ✅ Implemented |
-| `SPORE-GOV-011` | `use SetName` in flow contract references an undeclared contract set | ✅ Phase 9B |
-| `SPORE-GOV-012` | Contract set has audit requirements; flow does not declare `audit.write` | ✅ Phase 9B |
-| `SPORE-HINT-COMPUTE-001` | ai.inference without compute target preference (info hint) | ✅ Implemented |
-| `SPORE-GOV-003` | `response.denies` field appears in response body | ✅ Phase 10C |
-| `SPORE-CONTEXT-001` | `context.require X` declared but field never accessed in body (warning) | ✅ Phase 10C |
-| `SPORE-GOV-005` | Policy purpose/behaviour mismatch | Phase 11 |
+| `FUNGI-GOV-001` | Intent/behaviour mismatch (intent says "local", declares network) | ✅ Implemented |
+| `FUNGI-GOV-002` | Governed sink without audit evidence | ✅ Implemented |
+| `FUNGI-GOV-004` | Denied target selected (deny [remote.execution] + network.outbound) | ✅ Implemented |
+| `FUNGI-GOV-010` | secure flow without intent declaration | ✅ Implemented |
+| `FUNGI-GOV-011` | `use SetName` in flow contract references an undeclared contract set | ✅ Phase 9B |
+| `FUNGI-GOV-012` | Contract set has audit requirements; flow does not declare `audit.write` | ✅ Phase 9B |
+| `FUNGI-HINT-COMPUTE-001` | ai.inference without compute target preference (info hint) | ✅ Implemented |
+| `FUNGI-GOV-003` | `response.denies` field appears in response body | ✅ Phase 10C |
+| `FUNGI-CONTEXT-001` | `context.require X` declared but field never accessed in body (warning) | ✅ Phase 10C |
+| `FUNGI-GOV-005` | Policy purpose/behaviour mismatch | Phase 11 |
 
 ### Event checker (Phase 9B)
 
 | Code | Meaning | Status |
 |---|---|---|
-| `SPORE-EVENT-001` | `emit X` in a flow body without a top-level `event X` declaration | ✅ Phase 9B |
-| `SPORE-EVENT-002` | `event X` declared globally but never emitted anywhere (warning) | ✅ Phase 9B |
+| `FUNGI-EVENT-001` | `emit X` in a flow body without a top-level `event X` declaration | ✅ Phase 9B |
+| `FUNGI-EVENT-002` | `event X` declared globally but never emitted anywhere (warning) | ✅ Phase 9B |
 
 ### Readable Logic Forms (Phase 9C)
 
@@ -162,13 +162,13 @@ All forms set `readableForm` on the AST node for IDE/formatter preservation.
 
 | Code | Meaning | Status |
 |---|---|---|
-| `SPORE-SYNTAX-003` | Future-reserved keyword used as identifier | ✅ Implemented |
-| `SPORE-SYNTAX-005` | Top-level `fn` declaration (must be inside flow body) | ✅ Implemented |
-| `SPORE-SYNTAX-006` | Top-level `let` binding (must be inside a flow) | ✅ Implemented |
-| `SPORE-SYNTAX-007` | Top-level `mut` binding (mutable state must be flow-local) | ✅ Implemented |
-| `SPORE-SYNTAX-008` | Top-level `unsafe let` (boundary data must be owned by a secure flow) | ✅ Implemented |
-| `SPORE-SYNTAX-009` | Top-level `emit` (events may only be emitted inside flows) | ✅ Implemented |
-| `SPORE-SEC-014` | fn declares effects or authority (forbidden) | ✅ Implemented |
+| `FUNGI-SYNTAX-003` | Future-reserved keyword used as identifier | ✅ Implemented |
+| `FUNGI-SYNTAX-005` | Top-level `fn` declaration (must be inside flow body) | ✅ Implemented |
+| `FUNGI-SYNTAX-006` | Top-level `let` binding (must be inside a flow) | ✅ Implemented |
+| `FUNGI-SYNTAX-007` | Top-level `mut` binding (mutable state must be flow-local) | ✅ Implemented |
+| `FUNGI-SYNTAX-008` | Top-level `unsafe let` (boundary data must be owned by a secure flow) | ✅ Implemented |
+| `FUNGI-SYNTAX-009` | Top-level `emit` (events may only be emitted inside flows) | ✅ Implemented |
+| `FUNGI-SEC-014` | fn declares effects or authority (forbidden) | ✅ Implemented |
 
 ---
 
@@ -227,7 +227,7 @@ what it accepts.
 
 Negative examples are identified by their name:
 - Names ending in `-invalid`, `-missing`, `-denied`, `-wrong` contain invalid Galerina
-- `expected.diagnostics.txt` contains the exact SPORE-CODE that fires
+- `expected.diagnostics.txt` contains the exact FUNGI-CODE that fires
 
 ---
 

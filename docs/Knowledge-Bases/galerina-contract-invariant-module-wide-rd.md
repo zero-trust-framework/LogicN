@@ -10,11 +10,11 @@
 
 ## Verify-before-build — what already ships
 - **Flow-level `invariant { ensure … }`** (R&D 0040 DbC): parser + governance-verifier (`verifyInvariantBlock`,
-  `tryStaticEval`, `SPORE-INV-001/002/003`) + interpreter + wat-emitter; fail-closed at the single exit, all tiers.
-- **Monotonic emergency `policy{}` overlay** (DRCM Phase 4): `SPORE-MONO-001/003`, `validateTransitionMonotonicity` —
+  `tryStaticEval`, `FUNGI-INV-001/002/003`) + interpreter + wat-emitter; fail-closed at the single exit, all tiers.
+- **Monotonic emergency `policy{}` overlay** (DRCM Phase 4): `FUNGI-MONO-001/003`, `validateTransitionMonotonicity` —
   a runtime overlay may **escalate** capability restriction on a trigger, **never de-escalate**.
 - **`limits{}`** = the committed-arena memory bound (no `memory.grow` → trap). **Taint / info-flow** = the
-  value-state checker + `SPORE-SECRET-*` / `SPORE-PRIVACY-002`. **`liability{}`-on-Auto** (C-003) = deterministic
+  value-state checker + `FUNGI-SECRET-*` / `FUNGI-PRIVACY-002`. **`liability{}`-on-Auto** (C-003) = deterministic
   inference from the breach-risk matrix (NOT a live analog signal). **DWI hard-erase** (I-001/I-003, `step`).
 
 ## Part 1 — ADOPT, but TIER it by provability (Deterministic Foresight)
@@ -26,13 +26,13 @@ clock cycle"). Split them — **prove what you can; trap the rest, never guess**
 
 | Invariant kind | Example (note 45) | Enforcement | Status |
 |---|---|---|---|
-| **Static info-flow / structural** | `Cardholder_Data never_touches PublicTelemetryLog` | **Compile-time PROOF → block the build** (fail-closed) over the module taint graph | already the taint system (`SPORE-SECRET-*`/`PRIVACY-002`); net-new = the *declarative module-wide* form |
+| **Static info-flow / structural** | `Cardholder_Data never_touches PublicTelemetryLog` | **Compile-time PROOF → block the build** (fail-closed) over the module taint graph | already the taint system (`FUNGI-SECRET-*`/`PRIVACY-002`); net-new = the *declarative module-wide* form |
 | **Runtime relational over live state** | `Ledger.totalCredits == totalDebits` | **Injected fail-closed `ensure` pre/post check** (the R&D-0040 DbC mechanism) into every flow's epilogue, trap on violation | net-new = the *module-wide injection* + global-relational invariants |
 | **Resource bound** | `allocatedBuffers <= 50MB` | **alias to `limits{}`** — do not duplicate the arena bound | already ships |
 
 **Net-new to build:** (a) the module-wide *injection* (wrap every flow, not per-flow); (b) global *relational*
 invariants as injected runtime checks; (c) the declarative module-wide *taint-policy* form proven at compile time.
-Diagnostics: `SPORE-INV-MODULE-001..` (or extend `SPORE-INV-*`). **Tiering matters for cost:** the static-proof tier
+Diagnostics: `FUNGI-INV-MODULE-001..` (or extend `FUNGI-INV-*`). **Tiering matters for cost:** the static-proof tier
 has zero runtime cost; only inject a runtime check where you cannot prove it. (The note's "speeds up compilation"
 is true — one global set beats 50 local; the "next clock cycle" is a real *per-boundary runtime* cost the tiering
 minimises.)
@@ -43,7 +43,7 @@ Three specific refutations, each from a standing invariant:
 1. **"Dynamically LOOSEN invariants in low-risk state" → ❌ FAIL-OPEN.** An invariant dropped in "low-risk" mode
    leaves the system least-protected exactly when it is lulled — and an attacker who spoofs the ValueGraph/telemetry
    into "low-risk" *receives the loosened net*. Invariants must be **monotonic: runtime may only TIGHTEN, never
-   loosen** — which is precisely the shipped emergency-overlay rule (`SPORE-MONO-001/003`, escalate-never-de-escalate).
+   loosen** — which is precisely the shipped emergency-overlay rule (`FUNGI-MONO-001/003`, escalate-never-de-escalate).
 2. **"Synthesise the invariant CONDITIONS from live hardware telemetry (HIV voltage/clock variance)" → ❌ guessing +
    analog-as-security-control.** Deciding *whether* a security invariant (e.g. double-entry) is enforced from an
    **analog** signal violates **No-Coercion** (analog may only *degrade a verdict toward DENY*, never *determine* a

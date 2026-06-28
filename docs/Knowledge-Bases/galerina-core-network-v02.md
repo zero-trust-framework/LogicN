@@ -406,14 +406,14 @@ interface NetworkPolicyReport {
 
 | Code           | Meaning                           |
 | -------------- | --------------------------------- |
-| SPORE-NETWORK-001 | SSRF-protected destination denied |
-| SPORE-NETWORK-002 | Sensitive data in AI prompt       |
-| SPORE-NETWORK-003 | Missing capability                |
-| SPORE-NETWORK-004 | TLS required                      |
-| SPORE-NETWORK-005 | Unsupported protocol              |
-| SPORE-NETWORK-006 | Replay attack detected            |
-| SPORE-NETWORK-007 | Invalid webhook signature         |
-| SPORE-NETWORK-008 | Unsafe network boundary           |
+| FUNGI-NETWORK-001 | SSRF-protected destination denied |
+| FUNGI-NETWORK-002 | Sensitive data in AI prompt       |
+| FUNGI-NETWORK-003 | Missing capability                |
+| FUNGI-NETWORK-004 | TLS required                      |
+| FUNGI-NETWORK-005 | Unsupported protocol              |
+| FUNGI-NETWORK-006 | Replay attack detected            |
+| FUNGI-NETWORK-007 | Invalid webhook signature         |
+| FUNGI-NETWORK-008 | Unsafe network boundary           |
 
 ---
 
@@ -439,7 +439,7 @@ galerina-core-network/
 
   diagnostics/
     NetworkDiagnostic.ts
-    codes.ts                (SPORE-NETWORK-001–008)
+    codes.ts                (FUNGI-NETWORK-001–008)
 
   ai/
     validateAiPrompt.ts

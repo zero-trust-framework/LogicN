@@ -1,10 +1,10 @@
 /**
- * P9 #143 — BYTE-PARITY: the self-hosted `lexer.spore` tokenize produces an IDENTICAL
+ * P9 #143 — BYTE-PARITY: the self-hosted `lexer.fungi` tokenize produces an IDENTICAL
  * token stream when run through the Stage-A interpreter AND compiled to real WASM and
  * executed through the #105 admission gate. This is the P9 self-hosting bootstrap gate:
  * the same governed source, two independent backends, byte-for-byte equal output.
  *
- * The WASM path goes .spore → WAT → real-wabt module → Ed25519-attested #105 admission →
+ * The WASM path goes .fungi → WAT → real-wabt module → Ed25519-attested #105 admission →
  * execute → reconstruct tokens from linear memory. The interpreter path runs the same
  * `tokenize` flow directly. Both are normalised to [{kind, value}] and compared.
  */
@@ -17,9 +17,9 @@ import { join, dirname } from "node:path";
 import * as L from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-let SRC = readFileSync(join(__dir, "../src/self-hosted/lexer.spore"), "utf8");
+let SRC = readFileSync(join(__dir, "../src/self-hosted/lexer.fungi"), "utf8");
 if (SRC.charCodeAt(0) === 0xFEFF) SRC = SRC.slice(1);
-const prog = L.parseProgram(SRC, "lexer.spore");
+const prog = L.parseProgram(SRC, "lexer.fungi");
 const fx = L.checkEffects(prog.flows, prog.ast);
 const { gir } = L.emitGIR(prog.ast, prog.flows, fx);
 const WAT = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "lexer", prog.ast, true));

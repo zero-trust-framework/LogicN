@@ -58,7 +58,7 @@ test("galerina keygen --hybrid writes a usable hybrid (PQ) keypair that round-tr
 
     // ── round-trip: the reconstructed key signs + verifies (proves lossless serialization) ──
     const signed = await signProofGraphHybrid(mkPg("ceremony"), kp);
-    assert.equal(signed.governanceSignature?.algorithm, "spore.gov.sig.v2", "produces a v2 hybrid signature");
+    assert.equal(signed.governanceSignature?.algorithm, "fungi.gov.sig.v2", "produces a v2 hybrid signature");
     assert.equal(await verifyGovernanceSignatureHybrid(signed, kp.publicKey, kp.mlDsaPublicKey), true,
       "the reconstructed-from-disk hybrid key verifies its own signature");
 

@@ -246,7 +246,7 @@ pub fn fetch_profile(
 Compiler diagnostic:
 
 ```text
-SPORE-EFFECT-001: undeclared effect
+FUNGI-EFFECT-001: undeclared effect
 function: fetch_profile
 operation: HttpClient.get
 required effect: network
@@ -307,7 +307,7 @@ pub fn get_user_page(
 Diagnostic:
 
 ```text
-SPORE-EFFECT-002: missing propagated effect
+FUNGI-EFFECT-002: missing propagated effect
 function: get_user_page
 called function: find_user
 required effect: storage
@@ -355,7 +355,7 @@ Production policy:
 Deployment diagnostic:
 
 ```text
-SPORE-POLICY-001: effect denied by deployment policy
+FUNGI-POLICY-001: effect denied by deployment policy
 module: app/debug/ping
 function: debug_ping
 effect: network
@@ -427,7 +427,7 @@ check_effects(function):
     missing = observed - declared
 
     if missing is not empty:
-        error(SPORE-EFFECT-001, missing)
+        error(FUNGI-EFFECT-001, missing)
 
     return EffectSummary(declared, observed)
 ```
@@ -524,7 +524,7 @@ import { to_profile } from "app/users/service"
 Diagnostic:
 
 ```text
-SPORE-BOUNDARY-001: cannot import private symbol
+FUNGI-BOUNDARY-001: cannot import private symbol
 symbol: to_profile
 module: app/users/service
 visibility: private
@@ -563,7 +563,7 @@ import type { UserRecord } from "app/users/types"
 Diagnostic:
 
 ```text
-SPORE-BOUNDARY-002: package-visible symbol imported outside owning package
+FUNGI-BOUNDARY-002: package-visible symbol imported outside owning package
 symbol: UserRecord
 owner package: app/users
 current package: app/admin
@@ -586,7 +586,7 @@ pub fn get_api_secret() -> ApiSecret effect secret {
 Diagnostic:
 
 ```text
-SPORE-BOUNDARY-003: public API exposes secret-bearing private type
+FUNGI-BOUNDARY-003: public API exposes secret-bearing private type
 function: get_api_secret
 return type: ApiSecret
 ```
@@ -620,7 +620,7 @@ import { env } from "../../.env"
 Diagnostic:
 
 ```text
-SPORE-BOUNDARY-004: import path escapes package source root
+FUNGI-BOUNDARY-004: import path escapes package source root
 import: ../../.env
 ```
 
@@ -651,7 +651,7 @@ pub fn run() -> ModuleDescriptor {
 Diagnostic:
 
 ```text
-SPORE-BOUNDARY-005: runtime-only symbol used by normal application code
+FUNGI-BOUNDARY-005: runtime-only symbol used by normal application code
 symbol: __runtime_register_module
 ```
 
@@ -670,7 +670,7 @@ pub fn make_database() -> Database {
 Diagnostic:
 
 ```text
-SPORE-BOUNDARY-006: capability object cannot be constructed by normal code
+FUNGI-BOUNDARY-006: capability object cannot be constructed by normal code
 capability: Database
 help: request Database through runtime capability injection
 ```
@@ -715,7 +715,7 @@ pub route GET "/users/{id}" requires [Database] {
 Diagnostic:
 
 ```text
-SPORE-BOUNDARY-007: public route exposes package-internal type
+FUNGI-BOUNDARY-007: public route exposes package-internal type
 route: GET /users/{id}
 type: UserRecord
 field risk: password_hash
@@ -770,26 +770,26 @@ check_boundaries(module):
         target = resolve(import.path)
 
         if target outside allowed package graph:
-            error(SPORE-BOUNDARY-004)
+            error(FUNGI-BOUNDARY-004)
 
         for symbol in import.symbols:
             visibility = resolve_visibility(symbol)
 
             if visibility == private and target.module != module:
-                error(SPORE-BOUNDARY-001)
+                error(FUNGI-BOUNDARY-001)
 
             if visibility == package and target.package != package:
-                error(SPORE-BOUNDARY-002)
+                error(FUNGI-BOUNDARY-002)
 
             if visibility == runtime and not module.is_runtime_authorized:
-                error(SPORE-BOUNDARY-005)
+                error(FUNGI-BOUNDARY-005)
 
     for public_symbol in module.public_symbols:
         if exposes_private_type(public_symbol):
-            error(SPORE-BOUNDARY-003)
+            error(FUNGI-BOUNDARY-003)
 
         if exposes_package_type_outside_package(public_symbol):
-            error(SPORE-BOUNDARY-007)
+            error(FUNGI-BOUNDARY-007)
 ```
 
 ---
@@ -902,12 +902,12 @@ route leaks password_hash
 Diagnostics:
 
 ```text
-SPORE-EFFECT-002: missing propagated effect
+FUNGI-EFFECT-002: missing propagated effect
 route: GET /users/{id}
 handler: handle
 required effect: storage
 
-SPORE-BOUNDARY-007: public route exposes package-internal type
+FUNGI-BOUNDARY-007: public route exposes package-internal type
 route: GET /users/{id}
 type: UserRecord
 ```
@@ -970,20 +970,20 @@ reason: effect denied by runtime policy
 
 | Code | Meaning |
 |---|---|
-| `SPORE-EFFECT-001` | Function performs undeclared effect |
-| `SPORE-EFFECT-002` | Caller missing propagated callee effect |
-| `SPORE-EFFECT-003` | Effect not allowed in current package policy |
-| `SPORE-EFFECT-004` | Runtime intrinsic requires undeclared effect |
-| `SPORE-EFFECT-005` | Effect declared but capability missing |
-| `SPORE-BOUNDARY-001` | Private symbol imported outside module |
-| `SPORE-BOUNDARY-002` | Package symbol imported outside package |
-| `SPORE-BOUNDARY-003` | Public API exposes private or secret-bearing type |
-| `SPORE-BOUNDARY-004` | Import path escapes package source root |
-| `SPORE-BOUNDARY-005` | Runtime-only symbol used by normal code |
-| `SPORE-BOUNDARY-006` | Capability object constructed directly |
-| `SPORE-BOUNDARY-007` | Public route exposes package-internal type |
-| `SPORE-BOUNDARY-008` | Public API exposes denied dependency |
-| `SPORE-BOUNDARY-009` | Module declaration does not match package manifest |
+| `FUNGI-EFFECT-001` | Function performs undeclared effect |
+| `FUNGI-EFFECT-002` | Caller missing propagated callee effect |
+| `FUNGI-EFFECT-003` | Effect not allowed in current package policy |
+| `FUNGI-EFFECT-004` | Runtime intrinsic requires undeclared effect |
+| `FUNGI-EFFECT-005` | Effect declared but capability missing |
+| `FUNGI-BOUNDARY-001` | Private symbol imported outside module |
+| `FUNGI-BOUNDARY-002` | Package symbol imported outside package |
+| `FUNGI-BOUNDARY-003` | Public API exposes private or secret-bearing type |
+| `FUNGI-BOUNDARY-004` | Import path escapes package source root |
+| `FUNGI-BOUNDARY-005` | Runtime-only symbol used by normal code |
+| `FUNGI-BOUNDARY-006` | Capability object constructed directly |
+| `FUNGI-BOUNDARY-007` | Public route exposes package-internal type |
+| `FUNGI-BOUNDARY-008` | Public API exposes denied dependency |
+| `FUNGI-BOUNDARY-009` | Module declaration does not match package manifest |
 
 ---
 

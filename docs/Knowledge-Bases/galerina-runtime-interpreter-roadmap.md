@@ -39,7 +39,7 @@ Lua's VM is one of the fastest scripting VMs ever built.
 - Upvalues map cleanly to Galerina's lexical scope without mutation surprises
 
 **What NOT to borrow:**
-- Lua's metatables (Galerina has no prototype mutation — SPORE-SEC-021)
+- Lua's metatables (Galerina has no prototype mutation — FUNGI-SEC-021)
 - Lua's `rawget/rawset` (bypasses governance)
 
 ---
@@ -134,7 +134,7 @@ GIR.allowedEffects  → WASM import table
 **What to borrow:**
 - Compile-time evaluation for known-pure expressions (Galerina pure flows are comptime-eligible)
 - Explicit allocator patterns → Galerina's arena plan (Phase 23)
-- No hidden control flow → Galerina's no-monkey-patching rule (SPORE-SEC-020/021)
+- No hidden control flow → Galerina's no-monkey-patching rule (FUNGI-SEC-020/021)
 
 ---
 
@@ -193,8 +193,8 @@ Path:            GIR.tensors → WebGPU compute shader / CUDA kernel
 ```
 Requirement:     EffectFree + deterministic + all states handled + TriState
 Galerina proof:    EffectCheckerFlags.EffectFree
-                 Exhaustive match on TriState (SPORE-TYPE-021 checks this)
-                 No hidden mutation (SPORE-SEC-020/021)
+                 Exhaustive match on TriState (FUNGI-TYPE-021 checks this)
+                 No hidden mutation (FUNGI-SEC-020/021)
 Path:            GIR.tensors.photonic_compatible → photonic bridge adapter
                  TriState domain type → balanced ternary encoding at backend
 ```

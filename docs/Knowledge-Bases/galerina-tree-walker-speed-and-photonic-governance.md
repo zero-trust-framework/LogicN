@@ -44,7 +44,7 @@ policy), C-style float NaN-boxing (NaN collision), trace-JIT (determinism risk),
 Galerina has **no user-facing async/await** — `async`/`await`/`yield` are in `V1_FUTURE_RESERVED` (lexer.ts:187-191),
 reserved with no syntax/parser/semantics. Concurrency/effects are modelled by the **governed capability/effect
 system**, not colored functions. The 7.4× tax is the **interpreter implementation** being async-colored
-(every `.spore` program pays it, even a 100%-sync no-effect flow). **Variant G proves the converse:** an
+(every `.fungi` program pays it, even a 100%-sync no-effect flow). **Variant G proves the converse:** an
 interpreter that keeps the async signature (can still `await` at a real effect boundary) but runs a synchronous
 per-node core = **182 ns ≈ sync, 8.5× faster than A** — so the tax is *coloring every node*, not the ability to suspend.
 

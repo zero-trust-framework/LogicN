@@ -245,7 +245,7 @@ Known gaps:
 signature and schema validation (`src/governance-enforcer.ts:30`). It exposes
 `signAudit()`, `markSchemaValidated()`, and `checkTransition()`.
 
-The package comments refer to `governance.spore`, but no package-local manifest or
+The package comments refer to `governance.fungi`, but no package-local manifest or
 parsed `state_transition_policy` is currently used. The policy is a TypeScript
 constant, not governed source. This is already noted in
 `ARCHITECTURE_ISSUES.md`.

@@ -9,22 +9,22 @@ Priority: Very High
 ```
 
 ## TL;DR
-- Branded types must be nominal — `let id: CustomerId = rawString` must emit SPORE-TYPE-003
+- Branded types must be nominal — `let id: CustomerId = rawString` must emit FUNGI-TYPE-003
 - Enum variant type-checking in match must use subject type, not pattern-name inference
 - Money currency tags are phantom types — `Money<GBP>` and `Money<USD>` are distinct compile-time types
 
 ---
 
-## 1. Branded Type Enforcement (SPORE-TYPE-003)
+## 1. Branded Type Enforcement (FUNGI-TYPE-003)
 
 `Brand<String, "CustomerId">` creates a nominal type. Without enforcement, the
 compiler accepts raw strings as trusted domain identifiers — defeating the purpose.
 
-### Invalid (must emit SPORE-TYPE-003)
+### Invalid (must emit FUNGI-TYPE-003)
 
 ```galerina
-let id: CustomerId = rawString    // SPORE-TYPE-003: use validate.customerId()
-let email: Email = someString     // SPORE-TYPE-003: use validate.email()
+let id: CustomerId = rawString    // FUNGI-TYPE-003: use validate.customerId()
+let email: Email = someString     // FUNGI-TYPE-003: use validate.email()
 ```
 
 ### Valid
@@ -38,7 +38,7 @@ let email: protected Email   = validate.email(rawEmail)?
 
 - Track `Brand<T, "Name">` type declarations as nominal
 - In assignment checking: if declared type is branded, reject plain base type
-- Emit SPORE-TYPE-003 with suggestedFix pointing to validate gate
+- Emit FUNGI-TYPE-003 with suggestedFix pointing to validate gate
 
 ---
 
@@ -59,7 +59,7 @@ This is fragile when two enums share variant names.
 
 - Extend `TypeChecker.inferType()` to look up binding types registered in type scope
 - In `checkMatchExhaustiveness()`, use the subject's inferred type to select the enum
-- Emit SPORE-MATCH-003 when a pattern variant doesn't belong to the subject enum
+- Emit FUNGI-MATCH-003 when a pattern variant doesn't belong to the subject enum
 
 ---
 
@@ -72,15 +72,15 @@ This is fragile when two enums share variant names.
 | Expression | Result |
 |---|---|
 | `Money<GBP> + Money<GBP>` | `Money<GBP>` |
-| `Money<GBP> + Money<USD>` | SPORE-TYPE-004 |
+| `Money<GBP> + Money<USD>` | FUNGI-TYPE-004 |
 | `Money<GBP> * Decimal` | `Money<GBP>` |
 | `Money<GBP> / Money<GBP>` | `Decimal` |
-| `Money<GBP> / Money<USD>` | SPORE-TYPE-004 |
+| `Money<GBP> / Money<USD>` | FUNGI-TYPE-004 |
 
 ### Phase 8B implementation
 
 - Extract currency tag from `Money<C>` type annotations
-- In `moneyBinary()`, compare currency tags — emit SPORE-TYPE-004 if they differ
+- In `moneyBinary()`, compare currency tags — emit FUNGI-TYPE-004 if they differ
 - Extend `isAssignmentCompatible()` to compare Money generic arguments
 
 ---

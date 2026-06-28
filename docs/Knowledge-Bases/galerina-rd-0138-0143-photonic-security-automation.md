@@ -22,7 +22,7 @@ Every note decomposes into the same three layers with the same verdict:
 |---|---|---|
 | **Tower-Citizen** (capability charters, AI cage, package isolation, temporal leasing, attestation chains) | issue a restricted Citizen Charter; the compiler/Tower strips tokens the Citizen lacks | ✅ **RE-DERIVES SHIPPED** — domain-guard policies (static manifest clamping), `capability-types` (V_DPM bitmask), `governAiProposal` (No-Coercion: an AI executes iff `min(core, ai)=ALLOW`), package `boundary-policy --check`, `fuse-loader` admission, `lease.ts` (TTL), revocation registry |
 | **Tri-Pipe** ({+1, 0, −1} K3 lanes) | route execution by verdict; **Lane 0 = silently mask/scrub/attenuate and CONTINUE** | ⚠️ **MIXED** — the algebra re-derives `three-valued-governance` (fail-closed `DENY<INDET<ALLOW`); but **"mask-and-continue" is FAIL-OPEN unless a sanctioned declassifier** (proof V2). The sound, shipped form is `partialReturn`/`maskByVerdict` (typed `Masked` sentinel, no value flows) |
-| **Photonic Tri-Logic** (optical FHE, 0-cycle phase gates, PUF signatures, phase-interlocked heartbeats, frequency-hopping) | enforce crypto/capability/audit *in the light*, at 0 CPU cycles | ❌ **REFUTE (standard overclaims)** — crypto-on-photonic violates the crypto-on-core invariant (`SPORE-SUBSTRATE-001`, No-Coercion: proof V1); "0 CPU cycles / speed-of-light = free" is `latency≠work` (proof V3). Govern-don't-absorb: photonic = **degrade-only K3 tamper signal UNDER the digital Ed25519+ML-DSA gate**, never the gate |
+| **Photonic Tri-Logic** (optical FHE, 0-cycle phase gates, PUF signatures, phase-interlocked heartbeats, frequency-hopping) | enforce crypto/capability/audit *in the light*, at 0 CPU cycles | ❌ **REFUTE (standard overclaims)** — crypto-on-photonic violates the crypto-on-core invariant (`FUNGI-SUBSTRATE-001`, No-Coercion: proof V1); "0 CPU cycles / speed-of-light = free" is `latency≠work` (proof V3). Govern-don't-absorb: photonic = **degrade-only K3 tamper signal UNDER the digital Ed25519+ML-DSA gate**, never the gate |
 
 **Net:** ~⅔ re-derives the shipped Tower-Citizen + K3 architecture; the photonic "automate at 0 cost" claims
 refute as the usual overclaims; and the **one genuinely net-new + dangerous idea is "Tri-Pipe Lane 0 =
@@ -33,7 +33,7 @@ ships as `partialReturn`). Each refusal ships paired with a govern-don't-absorb 
 
 ### RD-0138 — Data Privacy · **ZT 5**
 - Tower-Citizen "cage the AI" (strip `pii.read` so a hallucinating agent *physically lacks the vocabulary* to write a breach) → ✅ re-derives `governAiProposal` + domain-guard effect clamping (sound, headline-true).
-- Tri-Pipe "Lane 0 auto-masks PII in transit and the app keeps running" → ⚠️ **fail-open unless a declassifier** (V2). Sound form: `partialReturn` / `SPORE-PRIVACY-002` seal-taint at the sink.
+- Tri-Pipe "Lane 0 auto-masks PII in transit and the app keeps running" → ⚠️ **fail-open unless a declassifier** (V2). Sound form: `partialReturn` / `FUNGI-PRIVACY-002` seal-taint at the sink.
 - "Photonic optical Homomorphic Encryption, 0-latency unbreakable privacy" → ❌ REFUTE (crypto-on-photonic; FHE is digital-RLWE-OK but never line-rate, **TRACK** per [[logicn-fhe-encrypted-similarity-verdict]]).
 
 ### RD-0139 — Supply-Chain · **ZT 6**
@@ -61,9 +61,9 @@ ships as `partialReturn`). Each refusal ships paired with a govern-don't-absorb 
 - **Polymorphic Obfuscation** ("moving-target JIT re-mapping + frequency-hopping every cycle defeats Ghidra/IDA + timing attacks") → ❌ REFUTE — (a) perf-impossible (V3); (b) **security-by-obscurity is a known-weak control = anti-ZT as a primary defence** (X4). Govern-don't-absorb: the sound substitute is **constant-time traversal** (already a keeper) + the **RD-0130 constant-time lint** + capability fencing — defensive anti-side-channel, not obfuscation.
 
 ### RD-0137 — Tarmeties (housekeeping, prior hub assessment) · **ZT 7**
-The owner-floated 2nd product (ungoverned/speed sibling; shared `spore-` packages, both `.spore`, CLI
-`spore foo`). THEORETICAL, post-Galerina-v1. Overall ZT 7; the one fail-open landmine = **governed-artifact-
-run-ungoverned mode confusion** (a `.spore` built under Galerina governance executed by Tarmeties' ungoverned
+The owner-floated 2nd product (ungoverned/speed sibling; shared `fungi-` packages, both `.fungi`, CLI
+`fungi foo`). THEORETICAL, post-Galerina-v1. Overall ZT 7; the one fail-open landmine = **governed-artifact-
+run-ungoverned mode confusion** (a `.fungi` built under Galerina governance executed by Tarmeties' ungoverned
 runtime must be impossible-by-construction, not opt-in). Not yet a buildable spec — recorded for the ledger.
 
 ## Honest residuals + handover
@@ -71,6 +71,6 @@ runtime must be impossible-by-construction, not opt-in). Not yet a buildable spe
   per note** is dispatched to the encryption R&D worker (`_session-bridge/`), e.g. a named-machine photonic
   envelope (X1) and a digital-RLWE FHE feasibility bench (X2).
 - The cross-cutting net-new — **formalize "Tri-Pipe Lane 0" as a typed, audited declassifier rail** (extend
-  `partialReturn` to the runtime data plane with a `SPORE-DECLASSIFY-*` obligation so "mask-and-continue" is
+  `partialReturn` to the runtime data plane with a `FUNGI-DECLASSIFY-*` obligation so "mask-and-continue" is
   only ever reachable through it) — is a candidate build, **owner-gated** (not started).
 - No crypto-on-core was weakened; every photonic claim demoted to degrade-only under the digital gate.

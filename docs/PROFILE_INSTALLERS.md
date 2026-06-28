@@ -311,8 +311,8 @@ Web app projects should scaffold:
 
 ```text
 galerina.project.json
-boot.spore
-main.spore
+boot.fungi
+main.fungi
 api/
 flows/
 domain/
@@ -324,8 +324,8 @@ Agent projects should scaffold:
 
 ```text
 galerina.project.json
-boot.spore
-main.spore
+boot.fungi
+main.fungi
 agents/
 tools/
 workflows/
@@ -337,8 +337,8 @@ Systems service projects should scaffold:
 
 ```text
 galerina.project.json
-boot.spore
-main.spore
+boot.fungi
+main.fungi
 services/
 policies/
 reports/

@@ -17,7 +17,7 @@ The design is built around a strict separation of concerns:
 ```
 EXTERNAL ANCHOR (Guardrail Manifest)           LOCAL DECLARATION (Flow Contract)
 ──────────────────────────────────────────     ───────────────────────────────────────
-governance/policies/invoicing_guard.spore        flows/processInvoice.spore
+governance/policies/invoicing_guard.fungi        flows/processInvoice.fungi
 
 policy InvoicingDomainGuard {                  secure flow processInvoice(...) -> Result<...>
   permitted_effects {                          contract [conforms_to: InvoicingDomainGuard] {
@@ -54,7 +54,7 @@ This also enables the compiler's **Manifest Validation Pass**:
 1. Compiler reads the local `contract` declarations
 2. Compiler loads the referenced external policy (Guardrail Manifest)
 3. Compiler performs the **Differential Proof**: local contract ⊆ policy ceiling?
-4. If any local declaration exceeds the ceiling → hard build fault (SPORE-GOV-004 / SPORE-LIMIT-001)
+4. If any local declaration exceeds the ceiling → hard build fault (FUNGI-GOV-004 / FUNGI-LIMIT-001)
 
 ---
 
@@ -64,7 +64,7 @@ In multi-tenant or AI-assisted environments, local contracts are modified by dev
 
 **Without clamping:** an AI tool writes `effects { filesystem.wipe_all }` in a payment module that should only ever have `effects { gateway.charge }`. The compiler accepts it because the effect is syntactically valid — there's nothing to compare against.
 
-**With domain guard policies:** the Governance Verifier loads `InvoicingDomainGuard`, checks that `filesystem.wipe_all` is not in `permitted_effects`, and rejects the build with `SPORE-GOV-004`.
+**With domain guard policies:** the Governance Verifier loads `InvoicingDomainGuard`, checks that `filesystem.wipe_all` is not in `permitted_effects`, and rejects the build with `FUNGI-GOV-004`.
 
 ---
 
@@ -73,7 +73,7 @@ In multi-tenant or AI-assisted environments, local contracts are modified by dev
 ```
 ┌──────────────────────────────────────────────────────┐
 │ STEP 1: External Guardrail Manifest loaded            │
-│  governance/policies/invoicing_guard.spore              │
+│  governance/policies/invoicing_guard.fungi              │
 │  policy InvoicingDomainGuard {                        │
 │    permitted_effects { gateway.charge, audit.write }  │
 │    enforced_limits   { max_memory_ceiling: 4MB }      │
@@ -93,7 +93,7 @@ In multi-tenant or AI-assisted environments, local contracts are modified by dev
 │ STEP 3: Differential Proof                            │
 │  contract.effects ⊆ policy.permitted_effects?        │
 │  { filesystem.wipe_all } ⊆ { gateway.charge, ... }? │
-│  ❌ NO → SPORE-GOV-004: Policy Violation               │
+│  ❌ NO → FUNGI-GOV-004: Policy Violation               │
 │  'filesystem.wipe_all' forbidden under               │
 │  'InvoicingDomainGuard'                               │
 └──────────────────────────────────────────────────────┘
@@ -105,8 +105,8 @@ In multi-tenant or AI-assisted environments, local contracts are modified by dev
 
 Policy files live in `governance/policies/` and are referenced by name:
 
-```spore
-;; File: governance/policies/invoicing_guard.spore
+```fungi
+;; File: governance/policies/invoicing_guard.fungi
 
 policy InvoicingDomainGuard {
   ;; Maximum allowable effects — anything outside this set is rejected at compile time
@@ -139,8 +139,8 @@ policy InvoicingDomainGuard {
 
 The `[conforms_to: PolicyName]` is a **decorator on the contract block header**, not a sub-block inside it:
 
-```spore
-;; File: flows/processInvoice.spore
+```fungi
+;; File: flows/processInvoice.fungi
 
 secure flow processCorporateInvoicing(merchantId: String, invoiceBatch: List<Invoice>)
   -> Result<Void, Fault>
@@ -165,7 +165,7 @@ contract [conforms_to: InvoicingDomainGuard] {
 
 ### Violation A — Undeclared Effect
 
-```spore
+```fungi
 contract [conforms_to: InvoicingDomainGuard] {
   effects {
     gateway.charge,
@@ -176,13 +176,13 @@ contract [conforms_to: InvoicingDomainGuard] {
 
 **Compiler response:**
 ```
-SPORE-GOV-004: Policy Violation. The effect 'filesystem.delete_logs' is
+FUNGI-GOV-004: Policy Violation. The effect 'filesystem.delete_logs' is
 explicitly forbidden under policy context 'InvoicingDomainGuard'.
 ```
 
 ### Violation B — Exceeding Resource Ceiling
 
-```spore
+```fungi
 contract [conforms_to: InvoicingDomainGuard] {
   limits {
     max_memory: 16MB   ;; 🔴 Ceiling is 4MB
@@ -192,7 +192,7 @@ contract [conforms_to: InvoicingDomainGuard] {
 
 **Compiler response:**
 ```
-SPORE-LIMIT-001: Resource bounds exceeded. Requested max_memory (16MB)
+FUNGI-LIMIT-001: Resource bounds exceeded. Requested max_memory (16MB)
 exceeds the maximum policy constraint (4MB) in 'InvoicingDomainGuard'.
 ```
 
@@ -207,7 +207,7 @@ The values in the local `contract {}` express what the code *intends* to use. Th
 When a bound contract compiles successfully, the validated permissions are embedded in the `.lmanifest`. At runtime, DSS.wasm reads the manifest to configure V_DPM bitmask gates — the policy ceiling is burned into the deployment artifact.
 
 **3. Unlocked Contracts**  
-A contract without `[conforms_to: ...]` is **unlocked** — it falls back to standard Governance Verifier rules (effects deny-by-default, etc.). High-trust modules that declare `effects { filesystem.write }` or similar without a domain guard emit `SPORE-GOV-019: Unbound contract in high-trust module`.
+A contract without `[conforms_to: ...]` is **unlocked** — it falls back to standard Governance Verifier rules (effects deny-by-default, etc.). High-trust modules that declare `effects { filesystem.write }` or similar without a domain guard emit `FUNGI-GOV-019: Unbound contract in high-trust module`.
 
 **4. AI Safety Amplification**  
 Domain guards make the AI authoring safety pipeline structurally stronger. Even if an AI tool proposes a widening (rule C-005: propose → verify → approve), the domain guard ceiling ensures the widening is **compile-time impossible** if it exceeds the ceiling — the proposal fails regardless of the approval state.
@@ -222,9 +222,9 @@ semantics map `permitted_effects` to the K3 calculus:
 
 | Form | K3 | Meaning |
 |---|---|---|
-| **Omitted** (no `permitted_effects` block) | `0` neutral | The policy makes **no claim** on effects — auto-inherit / get-out-of-the-way. A clean **limits-only** guard; no `SPORE-GOV-004` for any declared effect. |
-| **Explicitly empty** `permitted_effects { }` | `−1` hard deny | **Revokes all effects** — every declared effect emits `SPORE-GOV-004`. |
-| **Populated** `permitted_effects { a, b }` | `+1` allow | Allows **only** the listed effects (subject to parent constraints); others emit `SPORE-GOV-004`. |
+| **Omitted** (no `permitted_effects` block) | `0` neutral | The policy makes **no claim** on effects — auto-inherit / get-out-of-the-way. A clean **limits-only** guard; no `FUNGI-GOV-004` for any declared effect. |
+| **Explicitly empty** `permitted_effects { }` | `−1` hard deny | **Revokes all effects** — every declared effect emits `FUNGI-GOV-004`. |
+| **Populated** `permitted_effects { a, b }` | `+1` allow | Allows **only** the listed effects (subject to parent constraints); others emit `FUNGI-GOV-004`. |
 
 **Strict `conforms_to` resolution:** because an omitted block auto-inherits its boundary from the
 named policy, an **unresolvable `[conforms_to: X]`** breaks the inheritance chain — a **FATAL
@@ -240,9 +240,9 @@ in `tests/governance/guard-decl.test.mjs`.
 
 | Code | Description |
 |---|---|
-| `SPORE-GOV-004` | Policy violation — effect/capability not in `permitted_effects`/`permitted_capabilities` |
-| `SPORE-LIMIT-001` | Resource bounds exceeded — `limits {}` value exceeds policy `enforced_limits` ceiling |
-| `SPORE-GOV-019` | Unbound contract in high-trust module (no `[conforms_to: ...]`) |
+| `FUNGI-GOV-004` | Policy violation — effect/capability not in `permitted_effects`/`permitted_capabilities` |
+| `FUNGI-LIMIT-001` | Resource bounds exceeded — `limits {}` value exceeds policy `enforced_limits` ceiling |
+| `FUNGI-GOV-019` | Unbound contract in high-trust module (no `[conforms_to: ...]`) |
 
 ---
 
@@ -253,15 +253,15 @@ in `tests/governance/guard-decl.test.mjs`.
 - Store the bound policy name on the `ContractDecl` AST node
 
 **Phase 2 — Policy definition syntax:**
-- Parse top-level `policy Name { permitted_effects {} permitted_capabilities {} enforced_limits {} }` in `.spore` files
-- Load from `governance/policies/` directory at compile time (or from `galerina.policy.spore` in project root)
+- Parse top-level `policy Name { permitted_effects {} permitted_capabilities {} enforced_limits {} }` in `.fungi` files
+- Load from `governance/policies/` directory at compile time (or from `galerina.policy.fungi` in project root)
 
 **Phase 3 — Governance Verifier — Differential Proof pass:**
 - For each flow with a bound contract, look up the named policy
 - Check: every declared `effects {}` entry ⊆ `permitted_effects`
 - Check: every declared capability ⊆ `permitted_capabilities`
 - Check: every declared `limits {}` value ≤ corresponding `enforced_limits` ceiling
-- Emit `SPORE-GOV-004` / `SPORE-LIMIT-001` on violations
+- Emit `FUNGI-GOV-004` / `FUNGI-LIMIT-001` on violations
 
 **Phase 4 — Manifest integration:**
 - Write the bound policy name and ceiling values into the `.lmanifest`
@@ -275,17 +275,17 @@ in `tests/governance/guard-decl.test.mjs`.
 project/
 ├── governance/
 │   └── policies/
-│       ├── invoicing_guard.spore      ← gateway.charge only, 4MB
-│       ├── auth_guard.spore           ← database.read, secret.read, 32MB
-│       ├── analytics_guard.spore      ← database.read, network.outbound, 128MB
-│       └── admin_guard.spore          ← unrestricted (requires architecture review)
+│       ├── invoicing_guard.fungi      ← gateway.charge only, 4MB
+│       ├── auth_guard.fungi           ← database.read, secret.read, 32MB
+│       ├── analytics_guard.fungi      ← database.read, network.outbound, 128MB
+│       └── admin_guard.fungi          ← unrestricted (requires architecture review)
 ├── flows/
 │   ├── invoicing/
-│   │   └── charge.spore               ← contract [conforms_to: InvoicingDomainGuard] { ... }
+│   │   └── charge.fungi               ← contract [conforms_to: InvoicingDomainGuard] { ... }
 │   ├── auth/
-│   │   └── verify.spore               ← contract [conforms_to: AuthDomainGuard] { ... }
+│   │   └── verify.fungi               ← contract [conforms_to: AuthDomainGuard] { ... }
 │   └── analytics/
-│       └── report.spore               ← contract [conforms_to: AnalyticsDomainGuard] { ... }
+│       └── report.fungi               ← contract [conforms_to: AnalyticsDomainGuard] { ... }
 ```
 
 Each module is statically ceiling-capped at compile time. A dependency injection attack that tricks the invoicing module into calling `database.write` is rejected at the Governance Verifier — not at runtime after damage is done.

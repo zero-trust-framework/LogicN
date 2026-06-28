@@ -10,7 +10,7 @@
 # QRNG Q1 entropy-capability grounding survey
 
 > **Status:** research grounding survey (2026-06-17). **Bridge task:** 0005. **Feeds:** the hub's **Q1 QRNG
-> entropy-capability interface** for Galerina (capability `entropy.qrng`; fail-closed `SPORE-ENTROPY-001/002`).
+> entropy-capability interface** for Galerina (capability `entropy.qrng`; fail-closed `FUNGI-ENTROPY-001/002`).
 > **Extends** (does not repeat) [`photonic-lane-D-qrng.md`](photonic-lane-D-qrng.md) with the implementation-grade
 > SP 800-90A/B/C specifics the governed interface needs.
 > **Posture (binding):** grounded + cited (NIST / ITU-T / FIPS + vendor datasheets only); **no throughput number

@@ -368,18 +368,18 @@ Governance determines execution. Silicon executes.
 
 | Invariant | Code | Status |
 |---|---|---|
-| Effects must be declared | SPORE-EFFECT-001 | Enforced |
-| Stdlib capabilities declared | SPORE-STDLIB-001 | Enforced |
-| Protected values need gates | SPORE-VALUESTATE-006/007 | Enforced |
-| No eval/dynamic code | SPORE-SOURCE-ESCAPE-001 | Enforced |
-| No monkey patching | SPORE-SEC-020/021 | Enforced |
+| Effects must be declared | FUNGI-EFFECT-001 | Enforced |
+| Stdlib capabilities declared | FUNGI-STDLIB-001 | Enforced |
+| Protected values need gates | FUNGI-VALUESTATE-006/007 | Enforced |
+| No eval/dynamic code | FUNGI-SOURCE-ESCAPE-001 | Enforced |
+| No monkey patching | FUNGI-SEC-020/021 | Enforced |
 | Capability checks before calls | capabilityHost.ts | Enforced |
 | Runtime policy is outer envelope | runtime policy config | Enforced |
-| Audit required for governed sinks | SPORE-GOV-002 | Enforced |
-| Package signatures required | SPORE-PKG-005 | Enforced |
-| Network destinations declared | SPORE-NET-001/002 | Enforced |
-| safety_critical requires audit.write | SPORE-VAL-001 | Enforced |
-| safety_critical requires deterministic | SPORE-VAL-002 | Enforced |
+| Audit required for governed sinks | FUNGI-GOV-002 | Enforced |
+| Package signatures required | FUNGI-PKG-005 | Enforced |
+| Network destinations declared | FUNGI-NET-001/002 | Enforced |
+| safety_critical requires audit.write | FUNGI-VAL-001 | Enforced |
+| safety_critical requires deterministic | FUNGI-VAL-002 | Enforced |
 
 ---
 

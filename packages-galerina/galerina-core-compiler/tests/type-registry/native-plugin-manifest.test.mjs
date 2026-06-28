@@ -32,24 +32,24 @@ const examplesDir = join(__dirname, "../../../../examples/ai-inference");
 // ---------------------------------------------------------------------------
 
 describe("Phase 27: classifyMessage parses correctly", () => {
-  it("classifyMessage.spore lexes without errors", () => {
-    const source = readFileSync(join(examplesDir, "classifyMessage.spore"), "utf-8");
+  it("classifyMessage.fungi lexes without errors", () => {
+    const source = readFileSync(join(examplesDir, "classifyMessage.fungi"), "utf-8");
     const result = lex(source);
 
     // The lexer should produce tokens and no error-level diagnostics
     assert.ok(Array.isArray(result.tokens), "lex() must return a tokens array");
-    assert.ok(result.tokens.length > 0, "classifyMessage.spore must produce at least one token");
+    assert.ok(result.tokens.length > 0, "classifyMessage.fungi must produce at least one token");
 
     const errors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       errors.length,
       0,
-      `classifyMessage.spore must lex without errors, got: ${errors.map((e) => e.message).join(", ")}`,
+      `classifyMessage.fungi must lex without errors, got: ${errors.map((e) => e.message).join(", ")}`,
     );
   });
 
-  it("classifyMessage.spore contains guarded flow declaration with ai.inference and audit.write effects", () => {
-    const source = readFileSync(join(examplesDir, "classifyMessage.spore"), "utf-8");
+  it("classifyMessage.fungi contains guarded flow declaration with ai.inference and audit.write effects", () => {
+    const source = readFileSync(join(examplesDir, "classifyMessage.fungi"), "utf-8");
 
     // Verify the source contains the key governance elements as documented
     assert.ok(
@@ -70,7 +70,7 @@ describe("Phase 27: classifyMessage parses correctly", () => {
     );
     assert.ok(
       source.includes("fallback cpu"),
-      "Must declare fallback cpu (SPORE-GOV-014 compliance)",
+      "Must declare fallback cpu (FUNGI-GOV-014 compliance)",
     );
     assert.ok(
       source.includes("protected MessageText"),
@@ -88,7 +88,7 @@ describe("NativePluginManifest: type structure", () => {
     // Construct a manifest that matches the interface shape
     /** @type {import("../../dist/index.js").NativePluginManifest} */
     const manifest = {
-      schemaVersion: "spore.native-plugin.v1",
+      schemaVersion: "fungi.native-plugin.v1",
       name: "galerina-tensor-dot-npu",
       capability: NativeCapabilityId.NpuInference, // "host.npu.inference"
       hash: "sha256:a3b4c5d6e7f801234567890abcdef01234567890abcdef01234567890abcdef01",
@@ -101,7 +101,7 @@ describe("NativePluginManifest: type structure", () => {
     };
 
     // Structural checks — all required fields present and correctly typed
-    assert.equal(manifest.schemaVersion, "spore.native-plugin.v1", "schemaVersion must be literal string");
+    assert.equal(manifest.schemaVersion, "fungi.native-plugin.v1", "schemaVersion must be literal string");
     assert.equal(manifest.capability, "host.npu.inference", "capability must be NativeCapabilityId.NpuInference");
     assert.ok(manifest.hash.startsWith("sha256:"), "hash must start with sha256:");
     assert.ok(manifest.signature.startsWith("ed25519:"), "signature must start with ed25519:");
@@ -117,7 +117,7 @@ describe("NativePluginManifest: type structure", () => {
     // This test proves the runtime value satisfies the compile-time invariant.
     /** @type {import("../../dist/index.js").NativePluginManifest} */
     const tensorDotManifest = {
-      schemaVersion: "spore.native-plugin.v1",
+      schemaVersion: "fungi.native-plugin.v1",
       name: "galerina-tensor-dot-npu",
       capability: "host.npu.inference",
       hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000",
@@ -136,7 +136,7 @@ describe("NativePluginManifest: type structure", () => {
       "Phase 27 native plugins must always use child-process isolation",
     );
 
-    // fallback must be declared (Rule 7 — SPORE-GOV-014)
+    // fallback must be declared (Rule 7 — FUNGI-GOV-014)
     assert.ok(
       tensorDotManifest.fallback.length > 0,
       "fallback must be a non-empty string (Rule 7: fallback declared)",

@@ -2,11 +2,11 @@
  * Faithful Int64 — emitter 2b first milestone: a fused Int64 module VALIDATES under wat2wasm + runs exact.
  *
  * Drives `pure flow f(a: Int64, b: Int64) -> Int64 { return a OP b }` through the REAL WASM tier
- * (.spore → checkEffects → emitGIR → buildWATModuleFromGIR → renderWAT → wabt assemble → #105 admission →
+ * (.fungi → checkEffects → emitGIR → buildWATModuleFromGIR → renderWAT → wabt assemble → #105 admission →
  * instantiate), the same path as the 0014 slice-2 fidelity harness. The DECISIVE assertion is
  * `asm.valid` — wabt actually compiles the i64 module (a green tree-walker would otherwise mask a
  * permanently-declining WASM tier). i64 params/results marshal as JS BigInt. Exactness above 2^53 + the
- * Fork-A overflow traps prove the lowering is faithful, not truncating. This bypasses the SPORE-NUMERIC-001
+ * Fork-A overflow traps prove the lowering is faithful, not truncating. This bypasses the FUNGI-NUMERIC-001
  * gate (the raw WASM-emit path does not run checkValueStates) — the gate stays closed for real `run`/build.
  */
 import { test } from "node:test";
@@ -26,7 +26,7 @@ pure flow mixLit(a: Int64) -> Int64 contract { effects {} } { return a + 5000000
 pure flow addWiden(a: Int, b: Int) -> Int64 contract { effects {} } { let total: Int64 = a + b  return total }`;
 
 test("emitter 2b milestone: a fused Int64 module assembles under wabt + runs exact (i64, not truncated)", async () => {
-  const prog = parseProgram(SRC, "i64-milestone.spore");
+  const prog = parseProgram(SRC, "i64-milestone.fungi");
   const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, `parse error: ${errs.map((d) => d.message).join("; ")}`);
 

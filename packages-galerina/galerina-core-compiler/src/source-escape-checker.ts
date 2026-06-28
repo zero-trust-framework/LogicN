@@ -4,7 +4,7 @@
 // Detects calls to eval-like functions in Galerina source (AST level).
 // These calls bypass governance, capability checks, and audit trails.
 //
-// Fires: SPORE-SOURCE-ESCAPE-001 (SourceLevelEvalEscape)
+// Fires: FUNGI-SOURCE-ESCAPE-001 (SourceLevelEvalEscape)
 //
 // Detected patterns (call name or qualified name):
 //   eval
@@ -88,7 +88,7 @@ function makeEscapeDiagnostic(
   location: SourceLocation | undefined,
 ): EscapeDiagnostic {
   const base = {
-    code: "SPORE-SOURCE-ESCAPE-001",
+    code: "FUNGI-SOURCE-ESCAPE-001",
     name: "SourceLevelEvalEscape",
     severity: "error" as const,
     message: `Galerina source calls eval() or a dynamic code loading function. This bypasses governance, capability checks, and audit trails.`,
@@ -131,7 +131,7 @@ function walkAst(
  * Compiler.eval, Script.run, Function (constructor call pattern).
  *
  * @param ast  The root `program` node from `parseProgram()`.
- * @returns    An EscapeCheckResult containing all SPORE-SOURCE-ESCAPE-001 diagnostics.
+ * @returns    An EscapeCheckResult containing all FUNGI-SOURCE-ESCAPE-001 diagnostics.
  */
 export function checkSourceEscapes(ast: AstNode): EscapeCheckResult {
   const diagnostics: EscapeDiagnostic[] = [];

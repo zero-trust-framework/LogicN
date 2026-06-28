@@ -11,7 +11,7 @@
 //   - CORRECT approach: store an 8-character cleartext prefix token from each
 //     secret with length >= 12 in a write-only lookaside set, then check whether
 //     any registered prefix appears as a SUBSTRING of the output payload. A match
-//     emits SPORE-SECRET-BREACH (trap code 3001).
+//     emits FUNGI-SECRET-BREACH (trap code 3001).
 //
 // Reference: galerina-governance-rules.md K-005
 // =============================================================================
@@ -34,7 +34,7 @@ class SecretSinkMonitor {
   scan(payload: string): { isClean: boolean; trapCode: number } {
     for (const prefix of this.#prefixes) {
       if (payload.includes(prefix)) {
-        return { isClean: false, trapCode: 3001 }; // SPORE-SECRET-BREACH
+        return { isClean: false, trapCode: 3001 }; // FUNGI-SECRET-BREACH
       }
     }
     return { isClean: true, trapCode: 0 };

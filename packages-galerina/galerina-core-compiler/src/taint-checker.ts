@@ -113,33 +113,33 @@ export interface TaintDiagnostic {
   readonly flowName?: string;
 }
 
-/** SPORE-TAINT-001: Raw tainted value reaches an injection sink. */
-export const SPORE_TAINT_001 = {
-  code: "SPORE-TAINT-001",
+/** FUNGI-TAINT-001: Raw tainted value reaches an injection sink. */
+export const FUNGI_TAINT_001 = {
+  code: "FUNGI-TAINT-001",
   name: "TaintedValueAtInjectionSink",
   severity: "error" as const,
   message: "A tainted (untrusted) value reaches an injection sink without passing through an untaint boundary. Apply the appropriate sanitiser/encoder first.",
 } as const;
 
-/** SPORE-TAINT-002: Unvalidated value at a business-logic sink. */
-export const SPORE_TAINT_002 = {
-  code: "SPORE-TAINT-002",
+/** FUNGI-TAINT-002: Unvalidated value at a business-logic sink. */
+export const FUNGI_TAINT_002 = {
+  code: "FUNGI-TAINT-002",
   name: "UnvalidatedValueAtLogicSink",
   severity: "warning" as const,
   message: "An unvalidated value reaches a business-logic sink. Validate it first (Validated<T>).",
 } as const;
 
-/** SPORE-TAINT-003: Value cleaned for context A used in a sink expecting context B. */
-export const SPORE_TAINT_003 = {
-  code: "SPORE-TAINT-003",
+/** FUNGI-TAINT-003: Value cleaned for context A used in a sink expecting context B. */
+export const FUNGI_TAINT_003 = {
+  code: "FUNGI-TAINT-003",
   name: "WrongContextUntaint",
   severity: "error" as const,
   message: "A value cleaned for one sink context is used in a sink expecting a different context. A value is only clean for the sink it was cleaned for.",
 } as const;
 
-/** SPORE-TAINT-004: Discouraged sanitiser used where a preferred boundary exists. */
-export const SPORE_TAINT_004 = {
-  code: "SPORE-TAINT-004",
+/** FUNGI-TAINT-004: Discouraged sanitiser used where a preferred boundary exists. */
+export const FUNGI_TAINT_004 = {
+  code: "FUNGI-TAINT-004",
   name: "DiscouragedSanitiser",
   severity: "warning" as const,
   message: "Discouraged sanitiser used. OWASP prefers parameterized APIs (Sql.parameterize) and no-shell spawning (Process.spawn) over escaping/quoting.",
@@ -354,17 +354,17 @@ function checkSinkCalls(
         if (arg.kind === "identifier" && bindings.has(arg.value ?? "")) {
           const state = bindings.get(arg.value ?? "")!;
           if (state.kind === "tainted") {
-            diagnostics.push({ ...SPORE_TAINT_001, flowName,
-              message: `Flow '${flowName}': tainted value '${arg.value}' reaches sink '${callee}' (needs SafeFor<${requiredContext}>). ${SPORE_TAINT_001.message}` });
+            diagnostics.push({ ...FUNGI_TAINT_001, flowName,
+              message: `Flow '${flowName}': tainted value '${arg.value}' reaches sink '${callee}' (needs SafeFor<${requiredContext}>). ${FUNGI_TAINT_001.message}` });
           } else if (state.kind === "safeFor" && state.context !== requiredContext) {
-            diagnostics.push({ ...SPORE_TAINT_003, flowName,
-              message: `Flow '${flowName}': value '${arg.value}' is SafeFor<${state.context}> but sink '${callee}' needs SafeFor<${requiredContext}>. ${SPORE_TAINT_003.message}` });
+            diagnostics.push({ ...FUNGI_TAINT_003, flowName,
+              message: `Flow '${flowName}': value '${arg.value}' is SafeFor<${state.context}> but sink '${callee}' needs SafeFor<${requiredContext}>. ${FUNGI_TAINT_003.message}` });
           }
         } else {
           const t = taintOf(arg, bindings);
           if (t.kind === "tainted") {
-            diagnostics.push({ ...SPORE_TAINT_001, flowName,
-              message: `Flow '${flowName}': tainted expression reaches sink '${callee}'. ${SPORE_TAINT_001.message}` });
+            diagnostics.push({ ...FUNGI_TAINT_001, flowName,
+              message: `Flow '${flowName}': tainted expression reaches sink '${callee}'. ${FUNGI_TAINT_001.message}` });
           }
         }
       }
@@ -374,31 +374,31 @@ function checkSinkCalls(
   for (const child of node.children ?? []) checkSinkCalls(child, bindings, flowName, diagnostics);
 }
 
-/** Emit SPORE-TAINT-004 when a discouraged sanitiser is used. */
+/** Emit FUNGI-TAINT-004 when a discouraged sanitiser is used. */
 function checkDiscouraged(node: AstNode, flowName: string, diagnostics: TaintDiagnostic[]): void {
   const callee = calleeNameOf(node);
   if (callee !== null) {
     const b = BOUNDARY_BY_FN.get(callee);
     if (b !== undefined && !b.preferred) {
-      diagnostics.push({ ...SPORE_TAINT_004, flowName,
-        message: `Flow '${flowName}': '${callee}' is discouraged. ${SPORE_TAINT_004.message}` });
+      diagnostics.push({ ...FUNGI_TAINT_004, flowName,
+        message: `Flow '${flowName}': '${callee}' is discouraged. ${FUNGI_TAINT_004.message}` });
     }
   }
   for (const child of node.children ?? []) checkDiscouraged(child, flowName, diagnostics);
 }
 
-/** SPORE-TAINT-005: Raw tainted value reaches an HTTP header sink (header injection risk). */
-export const SPORE_TAINT_005 = {
-  code: "SPORE-TAINT-005",
+/** FUNGI-TAINT-005: Raw tainted value reaches an HTTP header sink (header injection risk). */
+export const FUNGI_TAINT_005 = {
+  code: "FUNGI-TAINT-005",
   name: "TaintedValueAtHeaderSink",
   severity: "error" as const,
   message: "A tainted value reaches an HTTP header sink. HTTP header injection allows CRLF splitting and policy bypass. Use Http.encodeHeaderValue() to produce SafeFor<HttpHeaderValue>.",
   suggestedFix: "Wrap the value: Http.encodeHeaderValue(taintedValue)",
 } as const;
 
-/** SPORE-TAINT-006: SSRF policy is insufficient (empty or missing blockPrivateIp). */
-export const SPORE_TAINT_006 = {
-  code: "SPORE-TAINT-006",
+/** FUNGI-TAINT-006: SSRF policy is insufficient (empty or missing blockPrivateIp). */
+export const FUNGI_TAINT_006 = {
+  code: "FUNGI-TAINT-006",
   name: "SsrfPolicyInsufficient",
   severity: "warning" as const,
   message: "Url.parseAndAllowlist() called without blockPrivateIp: true. An empty or incomplete policy allows SSRF to private IP ranges (RFC 1918, APIPA, loopback). Add blockPrivateIp: true to the policy.",
@@ -407,6 +407,6 @@ export const SPORE_TAINT_006 = {
 
 /** Taint diagnostic constants for external reference. */
 export const TAINT_DIAGNOSTICS = [
-  SPORE_TAINT_001, SPORE_TAINT_002, SPORE_TAINT_003, SPORE_TAINT_004,
-  SPORE_TAINT_005, SPORE_TAINT_006,
+  FUNGI_TAINT_001, FUNGI_TAINT_002, FUNGI_TAINT_003, FUNGI_TAINT_004,
+  FUNGI_TAINT_005, FUNGI_TAINT_006,
 ] as const;

@@ -4,7 +4,7 @@
 
 ```
 Phase 17A baseline: loadPackageManifest(), resolvePackageTypes(), name/version/exports/effects/capabilities ✅
-Phase 18B: hash, signature, targets, compute, installScript, SPORE-PKG-* diagnostics, resolver reports
+Phase 18B: hash, signature, targets, compute, installScript, FUNGI-PKG-* diagnostics, resolver reports
 Phase 19+: full lockfile, content-addressable cache, signed registry, capability expansion CI check
 ```
 
@@ -115,15 +115,15 @@ compute:
 
 ---
 
-## Diagnostic Codes — SPORE-PKG-*
+## Diagnostic Codes — FUNGI-PKG-*
 
 | Code | Name | Severity | Trigger |
 |---|---|---|---|
-| `SPORE-PKG-001` | `CapabilityExpanded` | error | Package declares more capabilities than the lockfile snapshot |
-| `SPORE-PKG-002` | `UntrustedRegistry` | error | Package comes from an unregistered or unverified registry |
-| `SPORE-PKG-003` | `MissingHash` | warning | Package manifest has no content-addressable hash |
-| `SPORE-PKG-004` | `InstallScriptDenied` | error | Package declares or attempts an install script; default policy denies |
-| `SPORE-PKG-005` | `MissingSignature` | warning | Package has no signature; origin cannot be verified |
+| `FUNGI-PKG-001` | `CapabilityExpanded` | error | Package declares more capabilities than the lockfile snapshot |
+| `FUNGI-PKG-002` | `UntrustedRegistry` | error | Package comes from an unregistered or unverified registry |
+| `FUNGI-PKG-003` | `MissingHash` | warning | Package manifest has no content-addressable hash |
+| `FUNGI-PKG-004` | `InstallScriptDenied` | error | Package declares or attempts an install script; default policy denies |
+| `FUNGI-PKG-005` | `MissingSignature` | warning | Package has no signature; origin cannot be verified |
 
 ---
 
@@ -149,7 +149,7 @@ Packages are read-only after resolution. No package may:
 
 - Mutate another package's exports
 - Rewrite imports at runtime
-- Monkey-patch runtime objects (SPORE-SEC-020/021)
+- Monkey-patch runtime objects (FUNGI-SEC-020/021)
 
 ### Rule 3 — No dynamic package loading
 
@@ -180,7 +180,7 @@ capabilities:
   - network.outbound
 ```
 
-That is a `SPORE-PKG-001` (CapabilityExpanded) — a breaking security change that must be explicitly reviewed and re-approved.
+That is a `FUNGI-PKG-001` (CapabilityExpanded) — a breaking security change that must be explicitly reviewed and re-approved.
 
 ### Rule 5 — Lockfile determinism
 
@@ -294,10 +294,10 @@ sha256(source_hash + package_graph_hash + capability_graph_hash + target_hash + 
 PHP-style autoloading               — implicit trust
 node_modules filesystem guessing    — nondeterministic
 postinstall scripts                 — code execution during install
-runtime package mutation            — SPORE-SEC-020/021
+runtime package mutation            — FUNGI-SEC-020/021
 dynamic dependency loading          — ungoverned
 unverified registries               — supply chain risk
-hidden transitive capabilities      — SPORE-PKG-001
+hidden transitive capabilities      — FUNGI-PKG-001
 implicit imports                    — no governance trail
 ```
 
@@ -313,7 +313,7 @@ implicit imports                    — no governance trail
 | `hash`, `signature`, `registry`, `installScript` | ✅ Phase 18B |
 | `targets` (cpu, wasm, npu, gpu, apu) | ✅ Phase 18B |
 | `compute` (tensor_shapes, supports, photonic_compatible) | ✅ Phase 18B |
-| `SPORE-PKG-001..005` diagnostic constants | ✅ Phase 18B |
+| `FUNGI-PKG-001..005` diagnostic constants | ✅ Phase 18B |
 | `checkPackageCapabilityExpansion()` | ✅ Phase 18B |
 | `getResolverReport()` | ✅ Phase 18B |
 | Full lockfile (`package.galerina.lock`) | 📋 Phase 19 |

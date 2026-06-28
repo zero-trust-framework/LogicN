@@ -163,7 +163,7 @@ process.spawn("bash")
 ```
 
 ```text
-SPORE-RUNTIME-001: Execution violates governed execution plan.
+FUNGI-RUNTIME-001: Execution violates governed execution plan.
   denied: process.spawn
 ```
 
@@ -285,7 +285,7 @@ The runtime consumes the governed execution plan to:
 
 Intent declares *what the system is for* — the semantic purpose. The governed execution plan translates that into *operational permission* — what the runtime is allowed to do on the system's behalf.
 
-A mismatch between the two is caught at compile time (`SPORE-INTENT-001`).
+A mismatch between the two is caught at compile time (`FUNGI-INTENT-001`).
 
 ---
 
@@ -338,4 +338,4 @@ The governed execution plan is the *operational constitution* of the application
 | [Intent](galerina-concept-intent.md) | First pipeline stage — semantic purpose declaration |
 | [Coordinated Compute](galerina-concept-coordinated-compute.md) | Third stage — runtime execution against the plan |
 | [Audit Proof](galerina-concept-audit-proof.md) | Fourth stage — verifiable execution evidence |
-| [compiler-diagnostics.md](compiler-diagnostics.md) | Full `SPORE-*` diagnostic code table |
+| [compiler-diagnostics.md](compiler-diagnostics.md) | Full `FUNGI-*` diagnostic code table |

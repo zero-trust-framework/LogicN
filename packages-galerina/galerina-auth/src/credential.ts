@@ -15,7 +15,7 @@
  *     authentication. The factor is ALWAYS `0` (INDETERMINATE): it carries no
  *     positive proof and can never authorize on its own. Folded into a composed
  *     auth verdict it pulls the result to non-ALLOW, and the kernel collapses that
- *     to deny (audited SPORE-GOV-3VL-001). This factor exists to make the posture
+ *     to deny (audited FUNGI-GOV-3VL-001). This factor exists to make the posture
  *     explicit and to refuse presence-as-proof structurally, not by a flag check.
  *
  *   - LEGACY OPT-IN (allowHeaderPresenceFallback === true) — mirrors the kernel's

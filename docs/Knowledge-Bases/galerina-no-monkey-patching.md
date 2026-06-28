@@ -5,7 +5,7 @@
 ```
 Core Architecture Rule — applies to all phases
 No runtime behaviour modification is permitted in Galerina source, runtime, stdlib, packages, or capabilities.
-Compiler diagnostics: SPORE-SEC-020 (future), SPORE-SEC-021 (future)
+Compiler diagnostics: FUNGI-SEC-020 (future), FUNGI-SEC-021 (future)
 Alternative patterns: adapters, interfaces, capabilities, mocks, context
 ```
 
@@ -48,8 +48,8 @@ If monkey patching existed:
 ## Future Diagnostics
 
 ```
-SPORE-SEC-020  RuntimeMutation — runtime modification is prohibited. Use adapters or mocks instead.
-SPORE-SEC-021  PrototypeMutation — prototype modification is prohibited.
+FUNGI-SEC-020  RuntimeMutation — runtime modification is prohibited. Use adapters or mocks instead.
+FUNGI-SEC-021  PrototypeMutation — prototype modification is prohibited.
 ```
 
 ## See Also

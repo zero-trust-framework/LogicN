@@ -27,13 +27,13 @@ refuse-to-boot, `governance-verifier.ts` capability intersection, the exhaustive
 **Bind a signed `TestWitness` receipt into the existing tower-citizen attestation / fuse-loader envelope** —
 the Claim 3 + Claim 4 net-new intersection. Reuses 100% shipped crypto (hybrid Ed25519 + ML-DSA-65
 `signManifest`/`verifyAttestation`/`attestationHash`) and shipped determinism (`canonicalLeakProof`,
-`spore.leakproof.v1`). Extends fail-closed refuse-to-boot from *"bytecode is signed"* → *"bytecode is signed AND
+`fungi.leakproof.v1`). Extends fail-closed refuse-to-boot from *"bytecode is signed"* → *"bytecode is signed AND
 its governance-test/leak receipt verifies over the same `wasmSha256`."* No new crypto, analysis, or coverage
 claim invented — it banks the already-proven No-Coercion property into a non-repudiable, attestable artifact and
 promotes the comment-only `TestWitness` aspiration (leak-proof.ts:12,145) into a real signed type.
 
 **First increment (type + signing only; defer CLI/fuse/TAP-fill):**
-1. `leak-proof.ts`: `interface TestWitness { schema: 'spore.testwitness.v1'; wasmSha256; leakProof: CapabilityLeakProof; suiteDigest }` + `buildTestWitness(wasmSha256, leak, suite)` where `suiteDigest` = sha256 over a stable-key-order serialization of `generateContractTestSuite` output (reuse the canonical serializer pattern; invent no new one).
+1. `leak-proof.ts`: `interface TestWitness { schema: 'fungi.testwitness.v1'; wasmSha256; leakProof: CapabilityLeakProof; suiteDigest }` + `buildTestWitness(wasmSha256, leak, suite)` where `suiteDigest` = sha256 over a stable-key-order serialization of `generateContractTestSuite` output (reuse the canonical serializer pattern; invent no new one).
 2. `canonicalTestWitness(w)` (same stable-order discipline as `canonicalLeakProof`) as the signing pre-image.
 3. Sign through the EXISTING envelope only — feed `canonicalTestWitness(w)` to `attestationHash`/`signManifest`; add NO new keys/crypto.
 4. Tests: a tampered `suiteDigest`/`wasmSha256` MUST fail verification (deny-by-default); a malformed/empty `leakProof` MUST NOT silently verify as clean; sign→verify round-trip passes.

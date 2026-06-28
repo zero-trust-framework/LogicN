@@ -44,7 +44,7 @@ export function buildKBGraph(scanResult: ScanResult): KBGraph {
     .filter(d => !hasInbound.has(d.id))
     .map(d => d.id);
 
-  // Unique SPORE codes across all docs
+  // Unique FUNGI codes across all docs
   const allSporeCodes = new Set<string>();
   for (const doc of docs) {
     for (const code of doc.lnlCodes) {

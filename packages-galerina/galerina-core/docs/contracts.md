@@ -5,12 +5,12 @@ Galerina contracts describe externally visible behaviour that the compiler can v
 The focused source example is:
 
 ```text
-../examples/contracts.spore
+../examples/contracts.fungi
 ```
 
 It shows typed request/response records, a secure flow signature, explicit
 `Result<T, E>` errors, declared effects and strict comments that can be extracted
-into reports. Route-level API contracts are shown in `../examples/api-orders.spore`.
+into reports. Route-level API contracts are shown in `../examples/api-orders.fungi`.
 
 ## Contract Types
 

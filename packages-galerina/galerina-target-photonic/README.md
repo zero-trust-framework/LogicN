@@ -61,7 +61,7 @@ What fallback path is available if optical I/O is not present?
 `galerina-target-photonic` sits after language checking and compute planning.
 
 ```text
-.spore source
+.fungi source
   ->
 galerina-core / galerina-core-compiler
   ->

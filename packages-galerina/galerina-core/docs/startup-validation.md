@@ -31,7 +31,7 @@ unsafe routes, wrong ports, broken package permissions or invalid config.
 Recommended startup order:
 
 ```text
-1. Read boot.spore
+1. Read boot.fungi
 2. Validate project config
 3. Validate imports and packages
 4. Validate globals, env vars and secrets
@@ -46,12 +46,12 @@ Recommended startup order:
 
 ---
 
-## Example boot.spore
+## Example boot.fungi
 
 ```Galerina
 project "VatApi"
 
-entry "./src/main.spore"
+entry "./src/main.fungi"
 
 startup {
   validate true
@@ -91,7 +91,7 @@ security {
 Startup validation should check:
 
 ```text
-boot.spore is valid
+boot.fungi is valid
 entry file exists
 main() exists
 required env variables exist
@@ -113,7 +113,7 @@ production-disabled packages are absent or explicitly overridden
 
 ## Missing Secret Failure
 
-If `boot.spore` says:
+If `boot.fungi` says:
 
 ```Galerina
 secret API_KEY: SecureString = env.secret("API_KEY")
@@ -127,7 +127,7 @@ Startup validation error:
 Missing required secret API_KEY.
 
 Declared:
-  boot.spore:12
+  boot.fungi:12
 
 Suggestion:
   Add API_KEY to the runtime environment or .env file.
@@ -145,7 +145,7 @@ DELETE "/orders/{id}" {
 }
 ```
 
-but `boot.spore` only aLOws:
+but `boot.fungi` only aLOws:
 
 ```Galerina
 allow [GET, POST]
@@ -161,7 +161,7 @@ ALOwed:
   GET, POST
 
 Source:
-  src/routes/orders.spore:8
+  src/routes/orders.fungi:8
 ```
 
 ---

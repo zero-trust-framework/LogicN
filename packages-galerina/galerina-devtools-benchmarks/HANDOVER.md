@@ -21,10 +21,10 @@ When the owner asks for benchmarks: run the **FULL** suite (no `--quick`), table
 
 ## ⚠️ Galerina is NOT YET able to express standard cross-language benchmarks
 Confirmed three language gaps (full detail + suggested R&D job in roadmap §8):
-- **B1 — recursive `record` types have no leaf terminator** (no null / `Option<Record>` lowering / payload-enum). binary-trees couldn't allocate a real tree; its `.spore` is a count-only fused recursion. Blocks any tree/linked structure + honest allocation benchmarks.
+- **B1 — recursive `record` types have no leaf terminator** (no null / `Option<Record>` lowering / payload-enum). binary-trees couldn't allocate a real tree; its `.fungi` is a count-only fused recursion. Blocks any tree/linked structure + honest allocation benchmarks.
 - **B2 — no mutable indexed arrays** (lists immutable, tree-walker-only). Excluded spectral-norm; defers fannkuch, sort, sieve, k-nucleotide.
 - **B3 — no native floats on the fast path** (bytecode VM rejects floats → all numeric benchmarks use scaled-int ×1000).
-- (Bitwise ops are engine-side **by design** — constraint, not a gap; blocks base64/hashing in `.spore`.)
+- (Bitwise ops are engine-side **by design** — constraint, not a gap; blocks base64/hashing in `.fungi`.)
 → Prioritise B1 then B2. B3 is low priority (scaled-int works; the real answer is route-to-WASM).
 
 ## Verify

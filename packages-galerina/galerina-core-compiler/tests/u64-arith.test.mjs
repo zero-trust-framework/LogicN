@@ -1,7 +1,7 @@
 // u64-arith — strict-trapping UNSIGNED 64-bit arithmetic (the UInt64 unlock foundation).
 // Mirrors i64-arith's Fork-A trap model but in [0, 2^64-1]: overflow/underflow/divzero TRAP (no silent
 // wraparound), and div/rem are UNSIGNED. The layer is the proven foundation; interpreter wiring + the
-// SPORE-NUMERIC-001 gate-lift land next (prove the math, then admit the type).
+// FUNGI-NUMERIC-001 gate-lift land next (prove the math, then admit the type).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {

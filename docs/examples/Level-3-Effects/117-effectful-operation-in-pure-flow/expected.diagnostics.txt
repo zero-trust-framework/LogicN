@@ -1,4 +1,4 @@
-SPORE-EFFECT-003
+FUNGI-EFFECT-003
 
 pure flow cannot perform filesystem.read.
 Change qualifier to guarded and declare the effect:

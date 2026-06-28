@@ -5,7 +5,7 @@ import { runCli } from "./cli.js";
 export { runCli } from "./cli.js";
 export { commands, findCommand } from "./commands.js";
 export { formatCliResult } from "./output.js";
-export { redactCliOutput, redactCliOutputChecked, SPORE_CLI_REDACT_001 } from "./security.js";
+export { redactCliOutput, redactCliOutputChecked, FUNGI_CLI_REDACT_001 } from "./security.js";
 export type { RedactionResult } from "./security.js";
 export type { CliCommand, CliContext, CliEnvironment, CliResult } from "./types.js";
 

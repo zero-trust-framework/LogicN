@@ -67,7 +67,7 @@ Practical rule:
 Source compatibility answers the question:
 
 ```text
-Will an older `.spore` project still parse and mean the same thing?
+Will an older `.fungi` project still parse and mean the same thing?
 ```
 
 Policy:
@@ -127,7 +127,7 @@ Compatible examples:
 
 ```text
 compiler/galerina.js
-examples/hello.spore
+examples/hello.fungi
 schemas/ai-context.schema.json
 docs/type-system.md
 ```
@@ -136,7 +136,7 @@ Incompatible inside this repository:
 
 ```text
 packages-galerina/galerina-core/compiler/galerina.js
-packages-galerina/galerina-core/examples/hello.spore
+packages-galerina/galerina-core/examples/hello.fungi
 packages-galerina/galerina-core/schemas/ai-context.schema.json
 packages-galerina/galerina-core/docs/type-system.md
 ```
@@ -150,7 +150,7 @@ SPEC.md
 COMPATIBILITY.md
 AI-INSTRUCTIONS.md
 TODO.md
-boot.spore
+boot.fungi
 build/
 docs/
 schemas/
@@ -233,7 +233,7 @@ redaction-to-plain-text change = breaking and usually disallowed
 ## Source Map Compatibility
 
 Source maps are a compatibility promise between generated outputs and original
-`.spore` code.
+`.fungi` code.
 
 At minimum, source-map compatibility should preserve:
 

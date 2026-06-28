@@ -19,15 +19,15 @@ import {
   checkEffects,
   verifyGovernance,
   GovernanceFlags,
-  SPORE_GOV_013,
-  SPORE_GOV_014,
+  FUNGI_GOV_013,
+  FUNGI_GOV_014,
   executeFlow,
   extractRequestTimeMs,
-  SPORE_RUNTIME_005,
-  SPORE_RUNTIME_006,
-  SPORE_NET_001,
-  SPORE_NET_002,
-  SPORE_ANTI_ABUSE_001,
+  FUNGI_RUNTIME_005,
+  FUNGI_RUNTIME_006,
+  FUNGI_NET_001,
+  FUNGI_NET_002,
+  FUNGI_ANTI_ABUSE_001,
   createCapabilityHost,
   createContractEnforcer,
   getCachedPureFlow,
@@ -73,7 +73,7 @@ describe("GovernanceFlags: constant shape", () => {
 // ---------------------------------------------------------------------------
 
 function verifySource(source, profile = "dev") {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effectResults = checkEffects(parsed.flows, parsed.ast);
   return verifyGovernance(parsed.ast, parsed.flows, effectResults, profile);
 }
@@ -205,7 +205,7 @@ contract {
 `, "production");
     const manifest = result.runtimeManifests[0];
     assert.ok(manifest !== undefined, "Manifest must exist");
-    assert.equal(manifest.schemaVersion, "spore.runtime.manifest.v1");
+    assert.equal(manifest.schemaVersion, "fungi.runtime.manifest.v1");
   });
 
   it("RuntimeManifest requiresAudit is true for database.write flows", () => {
@@ -306,36 +306,36 @@ contract {
 });
 
 // ---------------------------------------------------------------------------
-// SPORE_GOV_014 constant shape
+// FUNGI_GOV_014 constant shape
 // ---------------------------------------------------------------------------
 
-describe("SPORE_GOV_014: MissingFallbackTarget shape", () => {
-  it("SPORE_GOV_014.code === 'SPORE-GOV-014'", () => {
-    assert.equal(SPORE_GOV_014.code, "SPORE-GOV-014");
+describe("FUNGI_GOV_014: MissingFallbackTarget shape", () => {
+  it("FUNGI_GOV_014.code === 'FUNGI-GOV-014'", () => {
+    assert.equal(FUNGI_GOV_014.code, "FUNGI-GOV-014");
   });
 
-  it("SPORE_GOV_014.severity === 'warning'", () => {
-    assert.equal(SPORE_GOV_014.severity, "warning");
+  it("FUNGI_GOV_014.severity === 'warning'", () => {
+    assert.equal(FUNGI_GOV_014.severity, "warning");
   });
 });
 
 // ---------------------------------------------------------------------------
-// SPORE_GOV_013 constant shape
+// FUNGI_GOV_013 constant shape
 // ---------------------------------------------------------------------------
 
-describe("SPORE_GOV_013 constant shape", () => {
+describe("FUNGI_GOV_013 constant shape", () => {
   it("has correct code and name", () => {
-    assert.equal(SPORE_GOV_013.code, "SPORE-GOV-013");
-    assert.equal(SPORE_GOV_013.name, "BoundaryViolation");
+    assert.equal(FUNGI_GOV_013.code, "FUNGI-GOV-013");
+    assert.equal(FUNGI_GOV_013.name, "BoundaryViolation");
   });
 
   it("has severity error and non-empty message, why, and suggestedFix", () => {
-    assert.equal(SPORE_GOV_013.severity, "error");
-    assert.ok(typeof SPORE_GOV_013.message === "string" && SPORE_GOV_013.message.length > 0,
+    assert.equal(FUNGI_GOV_013.severity, "error");
+    assert.ok(typeof FUNGI_GOV_013.message === "string" && FUNGI_GOV_013.message.length > 0,
       "message must be a non-empty string");
-    assert.ok(typeof SPORE_GOV_013.why === "string" && SPORE_GOV_013.why.length > 0,
+    assert.ok(typeof FUNGI_GOV_013.why === "string" && FUNGI_GOV_013.why.length > 0,
       "why must be a non-empty string");
-    assert.ok(typeof SPORE_GOV_013.suggestedFix === "string" && SPORE_GOV_013.suggestedFix.length > 0,
+    assert.ok(typeof FUNGI_GOV_013.suggestedFix === "string" && FUNGI_GOV_013.suggestedFix.length > 0,
       "suggestedFix must be a non-empty string");
   });
 });
@@ -353,7 +353,7 @@ secure flow handleEmail(rawInput: String) -> String
   return "ok"
 }
 `;
-    const parsed = parseProgram(source, "test-11d.spore");
+    const parsed = parseProgram(source, "test-11d.fungi");
     const args = new Map([["rawInput", { __tag: "string", value: "user@example.com" }]]);
     const result = await executeFlow("handleEmail", args, parsed.ast, parsed.flows);
     // No runtime error — the flow completes successfully
@@ -371,7 +371,7 @@ secure flow tagEmail(rawInput: String) -> String
   return "tagged"
 }
 `;
-    const parsed = parseProgram(source, "test-11d-tag.spore");
+    const parsed = parseProgram(source, "test-11d-tag.fungi");
     const args = new Map([["rawInput", { __tag: "string", value: "test@example.com" }]]);
     const result = await executeFlow("tagEmail", args, parsed.ast, parsed.flows);
     // Flow must complete without error
@@ -381,10 +381,10 @@ secure flow tagEmail(rawInput: String) -> String
     );
     // No diagnostics about governed access yet (Phase 11D is tagging-only)
     const governedErrors = result.diagnostics.filter(
-      (d) => d.code === SPORE_RUNTIME_005.code,
+      (d) => d.code === FUNGI_RUNTIME_005.code,
     );
     assert.equal(governedErrors.length, 0,
-      "Phase 11D does not yet emit SPORE-RUNTIME-005 — tagging only, no enforcement");
+      "Phase 11D does not yet emit FUNGI-RUNTIME-005 — tagging only, no enforcement");
   });
 });
 
@@ -397,7 +397,7 @@ describe("R1: Runtime enforcement infrastructure", () => {
     const source = `
 pure flow add(a: Int, b: Int) -> Int { return a }
 `;
-    const parsed = parseProgram(source, "test-r1a.spore");
+    const parsed = parseProgram(source, "test-r1a.fungi");
     const flowNode = parsed.ast.children?.find((c) => c.value === "add");
     assert.ok(flowNode !== undefined, "Flow node must exist");
     const limitMs = extractRequestTimeMs(flowNode);
@@ -418,7 +418,7 @@ contract {
   return x
 }
 `;
-    const parsed = parseProgram(source, "test-r1a-limit.spore");
+    const parsed = parseProgram(source, "test-r1a-limit.fungi");
     const flowNode = parsed.ast.children?.find((c) => c.value === "slow");
     assert.ok(flowNode !== undefined, "Flow node must exist");
     const limitMs = extractRequestTimeMs(flowNode);
@@ -426,7 +426,7 @@ contract {
       "extractRequestTimeMs must parse '5s' as 5000ms");
   });
 
-  it("R1B/R1C: flow with protected binding completes without SPORE-RUNTIME-006 when well within limits", async () => {
+  it("R1B/R1C: flow with protected binding completes without FUNGI-RUNTIME-006 when well within limits", async () => {
     const source = `
 secure flow protect(rawInput: String) -> String
 contract {
@@ -440,7 +440,7 @@ contract {
   return "ok"
 }
 `;
-    const parsed = parseProgram(source, "test-r1bc.spore");
+    const parsed = parseProgram(source, "test-r1bc.fungi");
     const args = new Map([["rawInput", { __tag: "string", value: "user@example.com" }]]);
     const result = await executeFlow("protect", args, parsed.ast, parsed.flows);
     assert.ok(
@@ -448,10 +448,10 @@ contract {
       `Flow must not produce a runtime error, got: ${result.value.__tag}`,
     );
     const deadlineErrors = result.diagnostics.filter(
-      (d) => d.code === SPORE_RUNTIME_006.code,
+      (d) => d.code === FUNGI_RUNTIME_006.code,
     );
     assert.equal(deadlineErrors.length, 0,
-      "No SPORE-RUNTIME-006 should be emitted for a flow that completes well within its 30s limit");
+      "No FUNGI-RUNTIME-006 should be emitted for a flow that completes well within its 30s limit");
   });
 });
 
@@ -460,17 +460,17 @@ contract {
 // ---------------------------------------------------------------------------
 
 describe("R4: Security enforcement", () => {
-  it("R4A: SPORE-NET-001 constant has correct code and severity", () => {
-    assert.equal(SPORE_NET_001.code, "SPORE-NET-001");
-    assert.equal(SPORE_NET_001.name, "NetworkDestinationDenied");
-    assert.equal(SPORE_NET_001.severity, "error");
-    assert.ok(typeof SPORE_NET_001.message === "string" && SPORE_NET_001.message.length > 0,
-      "SPORE_NET_001.message must be non-empty");
-    assert.ok(typeof SPORE_NET_001.suggestedFix === "string" && SPORE_NET_001.suggestedFix.length > 0,
-      "SPORE_NET_001.suggestedFix must be non-empty");
+  it("R4A: FUNGI-NET-001 constant has correct code and severity", () => {
+    assert.equal(FUNGI_NET_001.code, "FUNGI-NET-001");
+    assert.equal(FUNGI_NET_001.name, "NetworkDestinationDenied");
+    assert.equal(FUNGI_NET_001.severity, "error");
+    assert.ok(typeof FUNGI_NET_001.message === "string" && FUNGI_NET_001.message.length > 0,
+      "FUNGI_NET_001.message must be non-empty");
+    assert.ok(typeof FUNGI_NET_001.suggestedFix === "string" && FUNGI_NET_001.suggestedFix.length > 0,
+      "FUNGI_NET_001.suggestedFix must be non-empty");
   });
 
-  it("R4A: capabilityHost denies network.outbound to a private IP (SPORE-NET-002 path)", () => {
+  it("R4A: capabilityHost denies network.outbound to a private IP (FUNGI-NET-002 path)", () => {
     const enforcer = createContractEnforcer(undefined, "testFlow");
     const host = createCapabilityHost({
       declaredEffects: new Set(["network.outbound"]),
@@ -489,13 +489,13 @@ describe("R4: Security enforcement", () => {
     assert.equal(result.allowed, false,
       "network.outbound to a private IP must be denied");
     assert.ok(
-      result.reason !== undefined && result.reason.includes("SPORE-NET-002"),
-      `Denial reason must reference SPORE-NET-002, got: ${result.reason}`,
+      result.reason !== undefined && result.reason.includes("FUNGI-NET-002"),
+      `Denial reason must reference FUNGI-NET-002, got: ${result.reason}`,
     );
   });
 
   it("R4B/R4C: process.spawn is a canonical effect and forbidden in pure flows", () => {
-    // process.spawn must now be recognised as a canonical effect name (no SPORE-EFFECT-004)
+    // process.spawn must now be recognised as a canonical effect name (no FUNGI-EFFECT-004)
     const source = `
 guarded flow spawnWorker(cmd: String) -> Void
 contract { effects { process.spawn } }
@@ -503,23 +503,23 @@ contract { effects { process.spawn } }
   return
 }
 `;
-    const parsed = parseProgram(source, "test-r4b.spore");
+    const parsed = parseProgram(source, "test-r4b.fungi");
     const effectResults = checkEffects(parsed.flows, parsed.ast);
     const spawnFlow = effectResults.find((r) => r.flowName === "spawnWorker");
     assert.ok(spawnFlow !== undefined, "spawnWorker flow must exist in effect results");
 
-    // No SPORE-EFFECT-004 (unknown effect) should be emitted for process.spawn
+    // No FUNGI-EFFECT-004 (unknown effect) should be emitted for process.spawn
     const unknownEffectDiags = spawnFlow.diagnostics.filter(
-      (d) => d.code === "SPORE-EFFECT-004" && d.message.includes("process.spawn"),
+      (d) => d.code === "FUNGI-EFFECT-004" && d.message.includes("process.spawn"),
     );
     assert.equal(unknownEffectDiags.length, 0,
-      "process.spawn must be a recognised canonical effect — no SPORE-EFFECT-004 expected");
+      "process.spawn must be a recognised canonical effect — no FUNGI-EFFECT-004 expected");
 
-    // SPORE_ANTI_ABUSE_001 constant must be properly shaped
-    assert.equal(SPORE_ANTI_ABUSE_001.code, "SPORE-ANTI-ABUSE-001");
-    assert.equal(SPORE_ANTI_ABUSE_001.severity, "error");
-    assert.ok(typeof SPORE_ANTI_ABUSE_001.message === "string" && SPORE_ANTI_ABUSE_001.message.length > 0,
-      "SPORE_ANTI_ABUSE_001.message must be non-empty");
+    // FUNGI_ANTI_ABUSE_001 constant must be properly shaped
+    assert.equal(FUNGI_ANTI_ABUSE_001.code, "FUNGI-ANTI-ABUSE-001");
+    assert.equal(FUNGI_ANTI_ABUSE_001.severity, "error");
+    assert.ok(typeof FUNGI_ANTI_ABUSE_001.message === "string" && FUNGI_ANTI_ABUSE_001.message.length > 0,
+      "FUNGI_ANTI_ABUSE_001.message must be non-empty");
   });
 });
 
@@ -534,7 +534,7 @@ pure flow double(x: Int) -> Int {
   return x
 }
 `;
-    const parsed = parseProgram(source, "test-memo-1.spore");
+    const parsed = parseProgram(source, "test-memo-1.fungi");
     const args = new Map([["x", { __tag: "int", value: 42 }]]);
 
     // Clear cache to ensure a clean state
@@ -606,8 +606,8 @@ contract {
 `);
     const pg = result.proofGraphs.get("createUser");
     assert.ok(pg !== undefined, "ProofGraph must exist for createUser");
-    assert.equal(pg.schemaVersion, "spore.proof.v1",
-      "ProofGraph schemaVersion must be spore.proof.v1");
+    assert.equal(pg.schemaVersion, "fungi.proof.v1",
+      "ProofGraph schemaVersion must be fungi.proof.v1");
     assert.ok(pg.verified === true,
       "ProofGraph must be verified: true for a secure flow with effects and contract");
   });
@@ -621,8 +621,8 @@ contract { effects { database.write audit.write } }
 }
 `);
     const report = generateROIReport(result.proofGraphs);
-    assert.equal(report.schemaVersion, "spore.roi.v1",
-      "GovernanceROIReport schemaVersion must be spore.roi.v1");
+    assert.equal(report.schemaVersion, "fungi.roi.v1",
+      "GovernanceROIReport schemaVersion must be fungi.roi.v1");
     assert.ok(typeof report.flowCount === "number",
       "report.flowCount must be a number");
     assert.ok(report.notes.length > 0,

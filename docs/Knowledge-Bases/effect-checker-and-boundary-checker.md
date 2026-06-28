@@ -7,7 +7,7 @@ Package: galerina-core-compiler
 Area: effect checker and boundary checker
 Version target: v0.2
 Implementation status: fully specified, implementation pending
-Canonical diagnostic ranges: SPORE-EFFECT-001 through SPORE-EFFECT-004, SPORE-BOUNDARY-001 through SPORE-BOUNDARY-004
+Canonical diagnostic ranges: FUNGI-EFFECT-001 through FUNGI-EFFECT-004, FUNGI-BOUNDARY-001 through FUNGI-BOUNDARY-004
 Primary compiler outputs: effect graph, boundary graph, runtime manifest input metadata
 ```
 
@@ -360,7 +360,7 @@ export function validateFunctionEffects(
   for (const effect of fn.effectiveEffects) {
     if (!registry.has(effect.name)) {
       diagnostics.push({
-        code: "SPORE-EFFECT-001",
+        code: "FUNGI-EFFECT-001",
         severity: "error",
         message: `Unknown or undeclared effect ${effect.name}.`,
         sourceLocation: effect.sourceLocation
@@ -369,7 +369,7 @@ export function validateFunctionEffects(
 
     if (!isEffectAllowedOnTarget(effect.name, target)) {
       diagnostics.push({
-        code: "SPORE-EFFECT-002",
+        code: "FUNGI-EFFECT-002",
         severity: "error",
         message: `Effect ${effect.name} is forbidden for target ${target}.`,
         sourceLocation: effect.sourceLocation
@@ -380,7 +380,7 @@ export function validateFunctionEffects(
   for (const transitive of fn.transitiveEffects) {
     if (!containsEffect(fn.declaredEffects, transitive.name)) {
       diagnostics.push({
-        code: "SPORE-EFFECT-004",
+        code: "FUNGI-EFFECT-004",
         severity: "error",
         message: `Function ${fn.name} inherits ${transitive.name} but does not declare it.`,
         sourceLocation: transitive.sourceLocation
@@ -394,16 +394,16 @@ export function validateFunctionEffects(
 
 ---
 
-## Canonical SPORE-EFFECT Codes
+## Canonical FUNGI-EFFECT Codes
 
 | Code | Meaning | Severity | Typical fix |
 | --- | --- | --- | --- |
-| `SPORE-EFFECT-001` | Unknown or undeclared effect | error | Declare the effect or add it to the registry |
-| `SPORE-EFFECT-002` | Effect forbidden for selected target | error | Change target or remove the effect |
-| `SPORE-EFFECT-003` | Effect escalation detected | error | Narrow callee authority or update capability policy |
-| `SPORE-EFFECT-004` | Transitive effect mismatch | error/warning | Declare inherited effect or remove effectful call |
+| `FUNGI-EFFECT-001` | Unknown or undeclared effect | error | Declare the effect or add it to the registry |
+| `FUNGI-EFFECT-002` | Effect forbidden for selected target | error | Change target or remove the effect |
+| `FUNGI-EFFECT-003` | Effect escalation detected | error | Narrow callee authority or update capability policy |
+| `FUNGI-EFFECT-004` | Transitive effect mismatch | error/warning | Declare inherited effect or remove effectful call |
 
-`SPORE-EFFECT-001` through `SPORE-EFFECT-004` are the canonical v0.2 compiler codes for this checker. Older `SPORE-E4*` codes may remain as compatibility aliases in CLI output, but new reports should use the `SPORE-EFFECT-*` range.
+`FUNGI-EFFECT-001` through `FUNGI-EFFECT-004` are the canonical v0.2 compiler codes for this checker. Older `FUNGI-E4*` codes may remain as compatibility aliases in CLI output, but new reports should use the `FUNGI-EFFECT-*` range.
 
 ---
 
@@ -520,7 +520,7 @@ export function validateBoundaryEdge(
   for (const effect of edge.transferredEffects) {
     if (boundary.deniedEffects.includes(effect)) {
       diagnostics.push({
-        code: "SPORE-BOUNDARY-001",
+        code: "FUNGI-BOUNDARY-001",
         severity: "error",
         message: `Effect ${effect} is denied at boundary ${boundary.id}.`
       })
@@ -531,7 +531,7 @@ export function validateBoundaryEdge(
       !boundary.allowedEffects.includes(effect)
     ) {
       diagnostics.push({
-        code: "SPORE-BOUNDARY-002",
+        code: "FUNGI-BOUNDARY-002",
         severity: "error",
         message: `Effect ${effect} is not allowed at boundary ${boundary.id}.`
       })
@@ -540,7 +540,7 @@ export function validateBoundaryEdge(
 
   if (edge.transferredSecrets.length > 0 && boundary.type !== "secret") {
     diagnostics.push({
-      code: "SPORE-BOUNDARY-003",
+      code: "FUNGI-BOUNDARY-003",
       severity: "error",
       message: `Secret values cannot cross ${boundary.type} boundary ${boundary.id}.`
     })
@@ -548,7 +548,7 @@ export function validateBoundaryEdge(
 
   if (edge.requiresValidation && !hasValidationPolicy(boundary)) {
     diagnostics.push({
-      code: "SPORE-BOUNDARY-004",
+      code: "FUNGI-BOUNDARY-004",
       severity: "error",
       message: `Boundary ${boundary.id} requires validation policy before execution.`
     })
@@ -560,16 +560,16 @@ export function validateBoundaryEdge(
 
 ---
 
-## Canonical SPORE-BOUNDARY Codes
+## Canonical FUNGI-BOUNDARY Codes
 
 | Code | Meaning | Severity | Typical fix |
 | --- | --- | --- | --- |
-| `SPORE-BOUNDARY-001` | Denied effect crosses boundary | error | Remove effect or change boundary policy |
-| `SPORE-BOUNDARY-002` | Effect not present in boundary allowlist | error | Add explicit allow policy or move code behind safer boundary |
-| `SPORE-BOUNDARY-003` | Secret or protected value crosses unsafe boundary | error | Use SecretReference/redaction or keep secret inside secret boundary |
-| `SPORE-BOUNDARY-004` | Required boundary policy missing | error | Add validation/auth/rate-limit/replay/secret policy |
+| `FUNGI-BOUNDARY-001` | Denied effect crosses boundary | error | Remove effect or change boundary policy |
+| `FUNGI-BOUNDARY-002` | Effect not present in boundary allowlist | error | Add explicit allow policy or move code behind safer boundary |
+| `FUNGI-BOUNDARY-003` | Secret or protected value crosses unsafe boundary | error | Use SecretReference/redaction or keep secret inside secret boundary |
+| `FUNGI-BOUNDARY-004` | Required boundary policy missing | error | Add validation/auth/rate-limit/replay/secret policy |
 
-`SPORE-BOUNDARY-001` through `SPORE-BOUNDARY-004` are the canonical v0.2 compiler codes for this checker. Older expanded boundary codes may be retained in historical reports, but new compiler reports should use the four-code canonical range above.
+`FUNGI-BOUNDARY-001` through `FUNGI-BOUNDARY-004` are the canonical v0.2 compiler codes for this checker. Older expanded boundary codes may be retained in historical reports, but new compiler reports should use the four-code canonical range above.
 
 ---
 
@@ -642,7 +642,7 @@ pub fn render_profile_page(http: HttpClient, id: UserId) -> Html {
 `render_profile_page` inherits `network` from `load_profile`. If it does not declare that effect, the checker emits:
 
 ```text
-SPORE-EFFECT-004: Function render_profile_page inherits network but does not declare it.
+FUNGI-EFFECT-004: Function render_profile_page inherits network but does not declare it.
 ```
 
 Corrected:
@@ -670,7 +670,7 @@ pub fn debug_secret(secret: SecretString) {
 The boundary checker must reject this because a protected secret crosses a runtime/logging boundary.
 
 ```text
-SPORE-BOUNDARY-003: Secret values cannot cross runtime boundary runtime.print.
+FUNGI-BOUNDARY-003: Secret values cannot cross runtime boundary runtime.print.
 ```
 
 Corrected:
@@ -694,7 +694,7 @@ route POST "/admin/restart" {
 A public API route cannot directly cross into process execution unless an explicit privileged policy exists.
 
 ```text
-SPORE-BOUNDARY-001: Effect process.spawn is denied at boundary api.public.
+FUNGI-BOUNDARY-001: Effect process.spawn is denied at boundary api.public.
 ```
 
 Corrected design:
@@ -727,7 +727,7 @@ pub fn read_local_file(path: Text) -> Text
 The target policy rejects this because direct filesystem access is not allowed for the selected WASM target.
 
 ```text
-SPORE-EFFECT-002: Effect filesystem.read is forbidden for target wasm.
+FUNGI-EFFECT-002: Effect filesystem.read is forbidden for target wasm.
 ```
 
 ---
@@ -843,11 +843,11 @@ packages-galerina/galerina-core-compiler/src/
  6. Build EffectGraph from checked functions and call edges
  7. Propagate effects using iterative fixpoint
  8. Validate undeclared, forbidden, escalated, and transitive effects
- 9. Emit SPORE-EFFECT-001 through SPORE-EFFECT-004 diagnostics
+ 9. Emit FUNGI-EFFECT-001 through FUNGI-EFFECT-004 diagnostics
 10. Define Boundary, BoundaryRequirement, BoundaryEdge, and BoundaryGraph
 11. Build boundary graph from routes, packages, jobs, workers, calls, and interop
 12. Validate denied effects, allowlists, secret movement, and required policies
-13. Emit SPORE-BOUNDARY-001 through SPORE-BOUNDARY-004 diagnostics
+13. Emit FUNGI-BOUNDARY-001 through FUNGI-BOUNDARY-004 diagnostics
 14. Generate effect-report.json and boundary-report.json
 15. Feed FunctionManifest, EffectManifest, and BoundaryManifest data into pass 14
 16. Add tests for propagation, recursive calls, secret leakage, target denial, and API boundary denial
@@ -901,7 +901,7 @@ describe("boundary checker", () => {
       }
     )
 
-    expect(diagnostics.some(d => d.code === "SPORE-BOUNDARY-003")).toBe(true)
+    expect(diagnostics.some(d => d.code === "FUNGI-BOUNDARY-003")).toBe(true)
   })
 })
 ```
@@ -960,8 +960,8 @@ CheckedCallExpression
 The canonical diagnostic ranges are:
 
 ```text
-SPORE-EFFECT-001 through SPORE-EFFECT-004
-SPORE-BOUNDARY-001 through SPORE-BOUNDARY-004
+FUNGI-EFFECT-001 through FUNGI-EFFECT-004
+FUNGI-BOUNDARY-001 through FUNGI-BOUNDARY-004
 ```
 
 These systems are required before Galerina can truthfully claim governed execution, runtime authority control, deployment-safe manifests, or audit-grade execution proof.

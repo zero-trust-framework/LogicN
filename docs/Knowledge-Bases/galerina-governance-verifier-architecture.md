@@ -3,7 +3,7 @@
 ## Status
 
 ```
-Stage A baseline:   SPORE-GOV-002..012, SPORE-CONTEXT-001, profiles (dev/production/deterministic) ✅
+Stage A baseline:   FUNGI-GOV-002..012, FUNGI-CONTEXT-001, profiles (dev/production/deterministic) ✅
 Phase 18F:          GovernanceFlags bitset, RuntimeManifest, buildRuntimeManifest() ✅
 Phase 19+:          GovernanceGraph, authority graph precomputation
 Phase 20+:          Full runtime manifest with audit chain, package boundary checks
@@ -148,24 +148,24 @@ Future: profile-aware RuntimeManifest generation (production manifests omit dev-
 
 | Code | Name | Rule |
 |---|---|---|
-| `SPORE-GOV-002` | `MISSING_AUDIT_FOR_GOVERNED_SINK` | database.write/payment.charge without audit.write |
-| `SPORE-GOV-003` | `PROTECTED_DATA_IN_RESPONSE` | denied field in response |
-| `SPORE-GOV-004` | `DENIED_TARGET_SELECTED` | compute.deny conflicts with network.outbound |
-| `SPORE-GOV-005` | `POLICY_PURPOSE_MISMATCH` | purpose "read-only" + database.write |
-| `SPORE-GOV-007` | `AUTHORITY_BLOCK_MISSING_REASON` | authority block has no reason |
-| `SPORE-GOV-008` | `EXPERIMENTAL_CODE_IN_PRODUCTION_PROFILE` | experimental in production |
-| `SPORE-GOV-009` | `PRIVILEGED_FLOW_MISSING_CAPABILITY` | privileged flow with no declared capability |
-| `SPORE-GOV-010` | `INTENT_MISSING_ON_SECURE_FLOW` | secure flow without intent |
-| `SPORE-GOV-011` | `UnknownContractSet` | use SetName references undeclared contract set |
-| `SPORE-GOV-012` | `ContractSetRequirementNotMet` | contract set audit requirement not met |
-| `SPORE-CONTEXT-001` | `REQUIRED_CONTEXT_NOT_ACCESSED` | required context field never accessed |
+| `FUNGI-GOV-002` | `MISSING_AUDIT_FOR_GOVERNED_SINK` | database.write/payment.charge without audit.write |
+| `FUNGI-GOV-003` | `PROTECTED_DATA_IN_RESPONSE` | denied field in response |
+| `FUNGI-GOV-004` | `DENIED_TARGET_SELECTED` | compute.deny conflicts with network.outbound |
+| `FUNGI-GOV-005` | `POLICY_PURPOSE_MISMATCH` | purpose "read-only" + database.write |
+| `FUNGI-GOV-007` | `AUTHORITY_BLOCK_MISSING_REASON` | authority block has no reason |
+| `FUNGI-GOV-008` | `EXPERIMENTAL_CODE_IN_PRODUCTION_PROFILE` | experimental in production |
+| `FUNGI-GOV-009` | `PRIVILEGED_FLOW_MISSING_CAPABILITY` | privileged flow with no declared capability |
+| `FUNGI-GOV-010` | `INTENT_MISSING_ON_SECURE_FLOW` | secure flow without intent |
+| `FUNGI-GOV-011` | `UnknownContractSet` | use SetName references undeclared contract set |
+| `FUNGI-GOV-012` | `ContractSetRequirementNotMet` | contract set audit requirement not met |
+| `FUNGI-CONTEXT-001` | `REQUIRED_CONTEXT_NOT_ACCESSED` | required context field never accessed |
 
 ---
 
 ## Response / Privacy Governance
 
 Current:
-- `contract.response.denies email` vs returned fields → SPORE-GOV-003
+- `contract.response.denies email` vs returned fields → FUNGI-GOV-003
 
 Future (Phase 19+):
 - `protected PII cannot leave response unless response.exposes allows it`
@@ -178,7 +178,7 @@ Future (Phase 19+):
 Governance does NOT schedule hardware. It proves what is allowed:
 
 ```
-deny remote.execution → enforced by SPORE-GOV-004
+deny remote.execution → enforced by FUNGI-GOV-004
 readonly data → proven by value-state checker (ReadOnly flag)
 fixed privacy policy → proven by contract.privacy
 ```
@@ -208,7 +208,7 @@ Phase 19: migrate remaining string-parsing patterns in governance-verifier.ts to
 
 | Feature | Status |
 |---|---|
-| SPORE-GOV-002..012, SPORE-CONTEXT-001 | ✅ Stage A |
+| FUNGI-GOV-002..012, FUNGI-CONTEXT-001 | ✅ Stage A |
 | Profiles (dev/production/deterministic/check-only) | ✅ Stage A |
 | PURPOSE_DENIED_EFFECTS map | ✅ Stage A |
 | Intent required for secure flows | ✅ Stage A |

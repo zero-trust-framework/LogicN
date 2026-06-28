@@ -6,7 +6,7 @@ implemented. Taint monotonicity extends the existing `checkValueStates` checker 
 implemented). This document records the intended design so all three guards can be built
 incrementally. No source code is modified by this document.
 
-**Auto-by-default:** The `strict` security profile (SPORE-PROFILE-002/003) already bans unbounded
+**Auto-by-default:** The `strict` security profile (FUNGI-PROFILE-002/003) already bans unbounded
 recursion. The termination proof system described here would formalize "banned" into "proven safe"
 — the protection is present either way. `Universe<N>` stratification is enforced by the compiler
 with no annotation required for the common case; annotations are only needed at the boundary of
@@ -47,7 +47,7 @@ A flow that recurses without a decreasing bound can:
 - Construct an infinite proof search that hangs the ProofGraph verification pass, effectively
   defeating governance by making the verifier wait forever.
 
-The `strict` security profile bans unbounded recursion (SPORE-PROFILE-002) but does so by
+The `strict` security profile bans unbounded recursion (FUNGI-PROFILE-002) but does so by
 prohibition rather than by proof: the compiler rejects it because it cannot prove termination,
 not because it has proven termination. This is conservative and correct, but it rules out valid
 recursive algorithms that are genuinely terminating.
@@ -87,7 +87,7 @@ A self-containing type declaration is a **compile-time error**:
 // ERROR: Universe<1> type may not reference itself
 type Tree = { value: Int, children: Array<Tree> }
 //                                         ^^^^
-// SPORE-UNIV-001: Self-referential type at Universe<1> — use an opaque handle or
+// FUNGI-UNIV-001: Self-referential type at Universe<1> — use an opaque handle or
 //               a Universe<1> tree parameterized over a Universe<0> node type.
 ```
 
@@ -154,7 +154,7 @@ The compiler verifies:
 3. The `contract.invariant { ensure ... }` establishes the lower bound.
 
 If any of these three conditions cannot be verified statically, the compiler emits
-`SPORE-TERM-001` (unproven termination) and the flow is rejected under the `strict` profile.
+`FUNGI-TERM-001` (unproven termination) and the flow is rejected under the `strict` profile.
 
 ### 3.2 Mutual Recursion
 
@@ -187,8 +187,8 @@ ProofGraph, are auditable, and can be referenced by `epilogue {}` proof receipts
 
 ### 3.4 Relationship to `strict` Profile
 
-The `strict` security profile currently bans unbounded recursion via SPORE-PROFILE-002 and
-SPORE-PROFILE-003. With the termination engine:
+The `strict` security profile currently bans unbounded recursion via FUNGI-PROFILE-002 and
+FUNGI-PROFILE-003. With the termination engine:
 
 - A recursive flow annotated with a valid `decreases` metric is **permitted under `strict`**.
 - A recursive flow with no `decreases` annotation remains **banned under `strict`** (same as
@@ -209,7 +209,7 @@ The formal rule:
 
 > Once a value carries `TaintType.Unverified_Raw`, that taint cannot be removed by any
 > type-level operation. It can only be **consumed** by a Linear Gateway Transformation
-> (an SPORE-GATE-* flow), which takes the tainted value as input and produces a new,
+> (an FUNGI-GATE-* flow), which takes the tainted value as input and produces a new,
 > verified value as output. The original tainted value is consumed (cannot be used again).
 
 This is the taint monotonicity principle: taint can only increase or be linearly consumed —
@@ -217,7 +217,7 @@ it cannot decrease or be silently dropped.
 
 ### 4.2 Current Implementation State
 
-The `checkValueStates` function (Stage-A compiler) and the `SPORE-GATE-*` error codes implement
+The `checkValueStates` function (Stage-A compiler) and the `FUNGI-GATE-*` error codes implement
 taint checking partially: flows that attempt to pass a `TaintType.Unverified_Raw` value to a
 parameter that does not accept tainted input are flagged. See `trust-conversion-model.md` and
 `trust-conversion-and-data-safety.md` for the existing model.
@@ -249,7 +249,7 @@ formal extension of those existing patterns into the type system.
 
 ### 4.4 Relationship to ProofGraph
 
-Taint consumption events (a `once Unverified_Raw` value passing through an SPORE-GATE-* flow)
+Taint consumption events (a `once Unverified_Raw` value passing through an FUNGI-GATE-* flow)
 are recorded in the ProofGraph as first-class provenance events. The audit trail can reconstruct
 the exact chain of transformations from raw input to verified output, making taint linearity
 auditable in the same way that contract execution is auditable.
@@ -279,13 +279,13 @@ type-checker is stable enough to express the stratification rules in Galerina it
 
 | Code | Meaning |
 |------|---------|
-| `SPORE-UNIV-001` | Self-referential type declaration — Universe stratification violation |
-| `SPORE-UNIV-002` | Type at level N references type at level > N-1 |
-| `SPORE-TERM-001` | Recursive flow with no `decreases` annotation (under `strict` profile) |
-| `SPORE-TERM-002` | `decreases` metric not strictly decreasing at a call site |
-| `SPORE-TERM-003` | `decreases` metric lower bound not established by `contract.invariant` |
-| `SPORE-TAINT-001` | Taint stripped implicitly through generic instantiation |
-| `SPORE-TAINT-002` | `once` value used more than once (linearity violation) |
+| `FUNGI-UNIV-001` | Self-referential type declaration — Universe stratification violation |
+| `FUNGI-UNIV-002` | Type at level N references type at level > N-1 |
+| `FUNGI-TERM-001` | Recursive flow with no `decreases` annotation (under `strict` profile) |
+| `FUNGI-TERM-002` | `decreases` metric not strictly decreasing at a call site |
+| `FUNGI-TERM-003` | `decreases` metric lower bound not established by `contract.invariant` |
+| `FUNGI-TAINT-001` | Taint stripped implicitly through generic instantiation |
+| `FUNGI-TAINT-002` | `once` value used more than once (linearity violation) |
 
 ---
 
@@ -298,8 +298,8 @@ type-checker is stable enough to express the stratification rules in Galerina it
 - `galerina-zk-proof-plan.md` — termination proofs as first-class ProofGraph nodes, auditable
   via `epilogue { generate_proof zk_snark_receipt }`
 - `trust-conversion-model.md` — existing taint model that taint monotonicity extends
-- `trust-conversion-and-data-safety.md` — SPORE-GATE-* gateway transformation patterns
-- `runtime-profiles.md` — `strict` profile (SPORE-PROFILE-002/003) that termination proofs
+- `trust-conversion-and-data-safety.md` — FUNGI-GATE-* gateway transformation patterns
+- `runtime-profiles.md` — `strict` profile (FUNGI-PROFILE-002/003) that termination proofs
   formalize from "banned" to "proven safe"
 - `security-invariants-and-policy-proof.md` — existing invariant model this integrates with
 - `galerina-cross-layer-resilience.md` — Universe stratification contributes to the mathematical

@@ -2,7 +2,7 @@
 // audit-web-stub-guard.mjs — RD-0100 web-* fail-closed contract enforcer tests.
 //
 // Locks the deny-by-default galerina-web-* posture BEFORE code exists: a stub is inert (passes),
-// but an implemented web-* package must ship its SPORE-WEB-* fail-closed acceptance tests in the
+// but an implemented web-* package must ship its FUNGI-WEB-* fail-closed acceptance tests in the
 // same change (else the prose "deny-by-default" fails OPEN the moment impl lands).
 // =============================================================================
 

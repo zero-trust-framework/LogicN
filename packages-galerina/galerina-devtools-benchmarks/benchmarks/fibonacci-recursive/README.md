@@ -23,6 +23,6 @@ Galerina: fib(20) to keep wall time reasonable; runner normalises throughput.
 |------|---------|
 | `node.mjs` | Node.js |
 | `python.py` | Python 3 |
-| `benchmark.spore` | Galerina governed/manifest |
+| `benchmark.fungi` | Galerina governed/manifest |
 | `bench.rs` | Rust (compile with `rustc -O`) |
 | `bench.cpp` | C++ (compile with `g++ -O2`) |

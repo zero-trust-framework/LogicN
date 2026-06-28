@@ -1,13 +1,13 @@
 /**
- * Self-hosted effect checker (effect-checker.spore) — execution tests.
+ * Self-hosted effect checker (effect-checker.fungi) — execution tests.
  *
  * Exercises the Stage B declared-vs-used effect reconciliation by executing
- * the .spore flows through the production interpreter and asserting their
+ * the .fungi flows through the production interpreter and asserting their
  * diagnostics. Codes match the Stage A compiler's canonical meanings:
- *   - SPORE-EFFECT-001 (UNDECLARED_EFFECT)          — used effect not declared
- *   - SPORE-EFFECT-003 (EFFECT_BOUNDARY_VIOLATION)  — pure flow declares/uses effects
- *   - SPORE-EFFECT-004 (UNKNOWN_EFFECT)             — effect not in known registry
- *   - SPORE-EFFECT-005 (advisory, carried from stub) — secure/guarded declares none
+ *   - FUNGI-EFFECT-001 (UNDECLARED_EFFECT)          — used effect not declared
+ *   - FUNGI-EFFECT-003 (EFFECT_BOUNDARY_VIOLATION)  — pure flow declares/uses effects
+ *   - FUNGI-EFFECT-004 (UNKNOWN_EFFECT)             — effect not in known registry
+ *   - FUNGI-EFFECT-005 (advisory, carried from stub) — secure/guarded declares none
  *
  * Each flow record passed in carries:
  *   name: String, kind: String, effects: Array<String> (declared),
@@ -22,9 +22,9 @@ import { dirname, join } from "node:path";
 import { parseProgram, executeFlow } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const EC_SPORE = join(__dir, "..", "src", "self-hosted", "effect-checker.spore");
+const EC_FUNGI = join(__dir, "..", "src", "self-hosted", "effect-checker.fungi");
 
-const program = parseProgram(readFileSync(EC_SPORE, "utf8"), "effect-checker.spore");
+const program = parseProgram(readFileSync(EC_FUNGI, "utf8"), "effect-checker.fungi");
 
 // ── value-model builders (interpreter takes tagged values / Maps) ──
 const vStr = (s) => ({ __tag: "string", value: String(s) });
@@ -122,14 +122,14 @@ async function checkBody(flows) {
   };
 }
 
-describe("effect-checker.spore — parses clean", () => {
+describe("effect-checker.fungi — parses clean", () => {
   it("has zero parse errors", () => {
     const errors = program.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, errors.map((e) => e.message).join(", "));
   });
 });
 
-describe("effect-checker.spore — clean reconciliation (used ⊆ declared)", () => {
+describe("effect-checker.fungi — clean reconciliation (used ⊆ declared)", () => {
   it("guarded flow using exactly its declared effects → no diagnostics", async () => {
     const { diags, cleanFlows } = await check([
       flow({ name: "a", kind: "guarded", effects: ["database.read"], usedEffects: ["database.read"] }),
@@ -146,44 +146,44 @@ describe("effect-checker.spore — clean reconciliation (used ⊆ declared)", ()
   });
 });
 
-describe("effect-checker.spore — SPORE-EFFECT-001 UndeclaredEffect", () => {
-  it("uses an effect it did not declare → SPORE-EFFECT-001", async () => {
+describe("effect-checker.fungi — FUNGI-EFFECT-001 UndeclaredEffect", () => {
+  it("uses an effect it did not declare → FUNGI-EFFECT-001", async () => {
     const { diags } = await check([
       flow({ name: "b", kind: "guarded", effects: ["database.read"], usedEffects: ["database.read", "network.outbound"] }),
     ]);
-    assert.deepEqual(codesFor(diags, "b"), ["SPORE-EFFECT-001"]);
+    assert.deepEqual(codesFor(diags, "b"), ["FUNGI-EFFECT-001"]);
   });
 });
 
-describe("effect-checker.spore — SPORE-EFFECT-004 UnknownEffect", () => {
-  it("declares an effect not in the registry → SPORE-EFFECT-004", async () => {
+describe("effect-checker.fungi — FUNGI-EFFECT-004 UnknownEffect", () => {
+  it("declares an effect not in the registry → FUNGI-EFFECT-004", async () => {
     const { diags } = await check([
       flow({ name: "d", kind: "guarded", effects: ["bogus.declared"], usedEffects: [] }),
     ]);
-    assert.deepEqual(codesFor(diags, "d"), ["SPORE-EFFECT-004"]);
+    assert.deepEqual(codesFor(diags, "d"), ["FUNGI-EFFECT-004"]);
   });
 
   it("uses an unknown effect → both undeclared (001) and unknown (004)", async () => {
     const { diags } = await check([
       flow({ name: "c", kind: "guarded", effects: ["database.read"], usedEffects: ["bogus.effect"] }),
     ]);
-    assert.deepEqual(codesFor(diags, "c"), ["SPORE-EFFECT-001", "SPORE-EFFECT-004"]);
+    assert.deepEqual(codesFor(diags, "c"), ["FUNGI-EFFECT-001", "FUNGI-EFFECT-004"]);
   });
 });
 
-describe("effect-checker.spore — SPORE-EFFECT-003 PureViolation", () => {
-  it("pure flow that USES an effect → SPORE-EFFECT-003 (plus 001, nothing declared)", async () => {
+describe("effect-checker.fungi — FUNGI-EFFECT-003 PureViolation", () => {
+  it("pure flow that USES an effect → FUNGI-EFFECT-003 (plus 001, nothing declared)", async () => {
     const { diags } = await check([
       flow({ name: "e", kind: "pure", effects: [], usedEffects: ["database.read"] }),
     ]);
-    assert.deepEqual(codesFor(diags, "e"), ["SPORE-EFFECT-001", "SPORE-EFFECT-003"]);
+    assert.deepEqual(codesFor(diags, "e"), ["FUNGI-EFFECT-001", "FUNGI-EFFECT-003"]);
   });
 
-  it("pure flow that DECLARES an effect → SPORE-EFFECT-003 (count check kept)", async () => {
+  it("pure flow that DECLARES an effect → FUNGI-EFFECT-003 (count check kept)", async () => {
     const { diags } = await check([
       flow({ name: "f", kind: "pure", effects: ["database.read"], usedEffects: [] }),
     ]);
-    assert.deepEqual(codesFor(diags, "f"), ["SPORE-EFFECT-003"]);
+    assert.deepEqual(codesFor(diags, "f"), ["FUNGI-EFFECT-003"]);
   });
 
   it("pure flow with no effects declared or used → clean", async () => {
@@ -194,18 +194,18 @@ describe("effect-checker.spore — SPORE-EFFECT-003 PureViolation", () => {
   });
 });
 
-describe("effect-checker.spore — SPORE-EFFECT-005 secure advisory", () => {
-  it("secure flow declaring no effects → SPORE-EFFECT-005 warning", async () => {
+describe("effect-checker.fungi — FUNGI-EFFECT-005 secure advisory", () => {
+  it("secure flow declaring no effects → FUNGI-EFFECT-005 warning", async () => {
     const { diags } = await check([
       flow({ name: "g", kind: "secure", effects: [], usedEffects: [] }),
     ]);
     const g = diags.filter((d) => d.flowName === "g");
-    assert.deepEqual(g.map((d) => d.code), ["SPORE-EFFECT-005"]);
+    assert.deepEqual(g.map((d) => d.code), ["FUNGI-EFFECT-005"]);
     assert.equal(g[0].severity, "warning");
   });
 });
 
-describe("effect-checker.spore — aggregate & edge cases", () => {
+describe("effect-checker.fungi — aggregate & edge cases", () => {
   it("empty flow list → no diagnostics, flowCount 0", async () => {
     const { flowCount, cleanFlows, diags } = await check([]);
     assert.equal(flowCount, 0);
@@ -222,19 +222,19 @@ describe("effect-checker.spore — aggregate & edge cases", () => {
     assert.equal(flowCount, 3);
     assert.equal(cleanFlows, 1);
     assert.deepEqual(codesFor(diags, "ok"), []);
-    assert.deepEqual(codesFor(diags, "bad"), ["SPORE-EFFECT-001"]);
-    assert.deepEqual(codesFor(diags, "purebad"), ["SPORE-EFFECT-001", "SPORE-EFFECT-003"]);
+    assert.deepEqual(codesFor(diags, "bad"), ["FUNGI-EFFECT-001"]);
+    assert.deepEqual(codesFor(diags, "purebad"), ["FUNGI-EFFECT-001", "FUNGI-EFFECT-003"]);
   });
 });
 
-describe("effect-checker.spore — checkBodyEffects (body-derived effects)", () => {
-  it("body calls dbRead but declares no effects → SPORE-EFFECT-001", async () => {
+describe("effect-checker.fungi — checkBodyEffects (body-derived effects)", () => {
+  it("body calls dbRead but declares no effects → FUNGI-EFFECT-001", async () => {
     const { diags, cleanFlows } = await checkBody([
       bodyFlow({ name: "f1", kind: "guarded", effects: [], body: [
         stmt({ kind: "exprStmt", expr: [eCall("dbRead")] }),
       ]}),
     ]);
-    assert.deepEqual(codesFor(diags, "f1"), ["SPORE-EFFECT-001"]);
+    assert.deepEqual(codesFor(diags, "f1"), ["FUNGI-EFFECT-001"]);
     assert.equal(cleanFlows, 0);
   });
 
@@ -248,13 +248,13 @@ describe("effect-checker.spore — checkBodyEffects (body-derived effects)", () 
     assert.equal(cleanFlows, 1);
   });
 
-  it("pure flow that calls dbWrite → SPORE-EFFECT-003 (plus 001, nothing declared)", async () => {
+  it("pure flow that calls dbWrite → FUNGI-EFFECT-003 (plus 001, nothing declared)", async () => {
     const { diags } = await checkBody([
       bodyFlow({ name: "f3", kind: "pure", effects: [], body: [
         stmt({ kind: "exprStmt", expr: [eCall("dbWrite")] }),
       ]}),
     ]);
-    assert.deepEqual(codesFor(diags, "f3"), ["SPORE-EFFECT-001", "SPORE-EFFECT-003"]);
+    assert.deepEqual(codesFor(diags, "f3"), ["FUNGI-EFFECT-001", "FUNGI-EFFECT-003"]);
   });
 
   it("effectful call nested inside an if body → still detected (recursion)", async () => {
@@ -265,7 +265,7 @@ describe("effect-checker.spore — checkBodyEffects (body-derived effects)", () 
         ]}),
       ]}),
     ]);
-    assert.deepEqual(codesFor(diags, "f4"), ["SPORE-EFFECT-001"]);
+    assert.deepEqual(codesFor(diags, "f4"), ["FUNGI-EFFECT-001"]);
   });
 
   it("effectful call nested inside an if ELSE body → still detected (else recursion)", async () => {
@@ -276,7 +276,7 @@ describe("effect-checker.spore — checkBodyEffects (body-derived effects)", () 
           elseBody: [stmt({ kind: "exprStmt", expr: [eCall("dbWrite")] })] }),
       ]}),
     ]);
-    assert.deepEqual(codesFor(diags, "f4e"), ["SPORE-EFFECT-001"]);
+    assert.deepEqual(codesFor(diags, "f4e"), ["FUNGI-EFFECT-001"]);
   });
 
   it("effectful call nested inside a while body → still detected (recursion)", async () => {
@@ -287,7 +287,7 @@ describe("effect-checker.spore — checkBodyEffects (body-derived effects)", () 
         ]}),
       ]}),
     ]);
-    assert.deepEqual(codesFor(diags, "f4b"), ["SPORE-EFFECT-001"]);
+    assert.deepEqual(codesFor(diags, "f4b"), ["FUNGI-EFFECT-001"]);
   });
 
   it("call buried in a binary argument (x + auditWrite()) → detected", async () => {
@@ -296,7 +296,7 @@ describe("effect-checker.spore — checkBodyEffects (body-derived effects)", () 
         stmt({ kind: "return", expr: [eBinary("+", eName("x"), eCall("auditWrite"))] }),
       ]}),
     ]);
-    assert.deepEqual(codesFor(diags, "f5"), ["SPORE-EFFECT-001"]);
+    assert.deepEqual(codesFor(diags, "f5"), ["FUNGI-EFFECT-001"]);
   });
 
   it("call passed as a call argument (dbWrite(netGet())) → both effects detected", async () => {
@@ -306,7 +306,7 @@ describe("effect-checker.spore — checkBodyEffects (body-derived effects)", () 
       ]}),
     ]);
     // dbWrite is declared; netGet (network.inbound) is not → one 001.
-    assert.deepEqual(codesFor(diags, "f5b"), ["SPORE-EFFECT-001"]);
+    assert.deepEqual(codesFor(diags, "f5b"), ["FUNGI-EFFECT-001"]);
   });
 
   it("only non-effectful calls / pure arithmetic → clean", async () => {
@@ -334,23 +334,23 @@ describe("effect-checker.spore — checkBodyEffects (body-derived effects)", () 
     assert.equal(flowCount, 3);
     assert.equal(cleanFlows, 1);
     assert.deepEqual(codesFor(diags, "ok"), []);
-    assert.deepEqual(codesFor(diags, "bad"), ["SPORE-EFFECT-001"]);
-    assert.deepEqual(codesFor(diags, "purebad"), ["SPORE-EFFECT-001", "SPORE-EFFECT-003"]);
+    assert.deepEqual(codesFor(diags, "bad"), ["FUNGI-EFFECT-001"]);
+    assert.deepEqual(codesFor(diags, "purebad"), ["FUNGI-EFFECT-001", "FUNGI-EFFECT-003"]);
   });
 });
 
-describe("effect-checker.spore — no duplicate diagnostics", () => {
-  it("a used + declared unknown effect emits exactly ONE SPORE-EFFECT-004", async () => {
+describe("effect-checker.fungi — no duplicate diagnostics", () => {
+  it("a used + declared unknown effect emits exactly ONE FUNGI-EFFECT-004", async () => {
     const { diags } = await check([
       flow({ name: "x", kind: "guarded", effects: ["bogus.x"], usedEffects: ["bogus.x"] }),
     ]);
-    assert.deepEqual(codesFor(diags, "x"), ["SPORE-EFFECT-004"]);
+    assert.deepEqual(codesFor(diags, "x"), ["FUNGI-EFFECT-004"]);
   });
 
-  it("a repeated used effect emits SPORE-EFFECT-001 only once", async () => {
+  it("a repeated used effect emits FUNGI-EFFECT-001 only once", async () => {
     const { diags } = await check([
       flow({ name: "y", kind: "guarded", effects: ["database.read"], usedEffects: ["network.outbound", "network.outbound"] }),
     ]);
-    assert.deepEqual(codesFor(diags, "y"), ["SPORE-EFFECT-001"]);
+    assert.deepEqual(codesFor(diags, "y"), ["FUNGI-EFFECT-001"]);
   });
 });

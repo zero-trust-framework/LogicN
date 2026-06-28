@@ -159,13 +159,13 @@ function triAnd(
 
 ---
 
-### SPORE-TRI Diagnostics
+### FUNGI-TRI Diagnostics
 
 | Code       | Meaning                       |
 | ---------- | ----------------------------- |
-| SPORE-TRI-001 | Invalid TriState              |
-| SPORE-TRI-002 | Missing unknown reasons       |
-| SPORE-TRI-003 | Invalid tri-state combination |
+| FUNGI-TRI-001 | Invalid TriState              |
+| FUNGI-TRI-002 | Missing unknown reasons       |
+| FUNGI-TRI-003 | Invalid tri-state combination |
 
 ---
 
@@ -363,13 +363,13 @@ function evaluateCapability(
 
 ---
 
-### SPORE-DECISION Diagnostics
+### FUNGI-DECISION Diagnostics
 
 | Code            | Meaning                    |
 | --------------- | -------------------------- |
-| SPORE-DECISION-001 | Invalid decision           |
-| SPORE-DECISION-002 | Unsafe decision conversion |
-| SPORE-DECISION-003 | Missing deny reason        |
+| FUNGI-DECISION-001 | Invalid decision           |
+| FUNGI-DECISION-002 | Unsafe decision conversion |
+| FUNGI-DECISION-003 | Missing deny reason        |
 
 ---
 
@@ -424,13 +424,13 @@ function validateBoolBoundary(
 
 ---
 
-### SPORE-BOOL-BOUNDARY Diagnostics
+### FUNGI-BOOL-BOUNDARY Diagnostics
 
 | Code                 | Meaning                   |
 | -------------------- | ------------------------- |
-| SPORE-BOOL-BOUNDARY-001 | Unsafe unknown conversion |
-| SPORE-BOOL-BOUNDARY-002 | Invalid bool boundary     |
-| SPORE-BOOL-BOUNDARY-003 | Implicit logical collapse |
+| FUNGI-BOOL-BOUNDARY-001 | Unsafe unknown conversion |
+| FUNGI-BOOL-BOUNDARY-002 | Invalid bool boundary     |
+| FUNGI-BOOL-BOUNDARY-003 | Implicit logical collapse |
 
 ---
 
@@ -516,14 +516,14 @@ function evaluateOmni(
 
 ---
 
-### SPORE-OMNI Diagnostics
+### FUNGI-OMNI Diagnostics
 
 | Code        | Meaning                    |
 | ----------- | -------------------------- |
-| SPORE-OMNI-001 | Invalid omni state         |
-| SPORE-OMNI-002 | Impossible state detected  |
-| SPORE-OMNI-003 | Unsafe omni collapse       |
-| SPORE-OMNI-004 | Conflicting runtime states |
+| FUNGI-OMNI-001 | Invalid omni state         |
+| FUNGI-OMNI-002 | Impossible state detected  |
+| FUNGI-OMNI-003 | Unsafe omni collapse       |
+| FUNGI-OMNI-004 | Conflicting runtime states |
 
 ---
 
@@ -536,7 +536,7 @@ galerina-core-logic/src/
     TriState.ts           (discriminated union — type field)
     constants.ts          (TRI_TRUE, TRI_FALSE, triUnknown)
     operators.ts          (triAnd, combineUnknownReasons)
-    diagnostics.ts        (SPORE-TRI-001–003)
+    diagnostics.ts        (FUNGI-TRI-001–003)
 
   decision/
     Decision.ts           (discriminated union — type field)
@@ -544,15 +544,15 @@ galerina-core-logic/src/
     combineDecisions.ts   (priority: DENY > UNKNOWN > ALLOW)
     evaluateCapability.ts (deny-first)
     decisionToRuntimeBool.ts
-    diagnostics.ts        (SPORE-DECISION-001–003)
+    diagnostics.ts        (FUNGI-DECISION-001–003)
 
   bool-boundary/
     BoolBoundaryResult.ts
     validateBoolBoundary.ts
-    diagnostics.ts        (SPORE-BOOL-BOUNDARY-001–003)
+    diagnostics.ts        (FUNGI-BOOL-BOUNDARY-001–003)
 
   omni/
     OmniState.ts          (enum — 8 values)
     evaluateOmni.ts
-    diagnostics.ts        (SPORE-OMNI-001–004)
+    diagnostics.ts        (FUNGI-OMNI-001–004)
 ```

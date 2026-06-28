@@ -354,4 +354,4 @@ ARM acceleration may never:
 - `galerina-execution-graph-kernel-architecture.md` — Intel mapping (comparison)
 - `galerina-hardware-google.md` — Google Axion (also ARM-based)
 - `galerina-governance-scope.md` — High-consequence system governance
-- `examples/aerospace/processFlightTelemetry.spore` — Full aerospace ARM example
+- `examples/aerospace/processFlightTelemetry.fungi` — Full aerospace ARM example

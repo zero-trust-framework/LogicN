@@ -3,17 +3,17 @@
 ## Status
 
 ```
-Phase 19A — SPORE-STDLIB-001 enforcement complete
+Phase 19A — FUNGI-STDLIB-001 enforcement complete
 Phase 18D  — EffectFlags bitset, effectsToFlags(), effectsSubset() implemented
 Phase 18H  — STDLIB_CAPABILITY_MAP wired (35+ stdlib functions → required effects → WASM imports)
-Phase 19A  — SPORE-STDLIB-001: File.readText without filesystem.read → compile error
+Phase 19A  — FUNGI-STDLIB-001: File.readText without filesystem.read → compile error
 Phase 20A  — RuntimeManifest.requiredContext populated from contract.context
 ```
 
 **Key files:**
 - `src/stdlib-registry.ts` — STDLIB_CAPABILITY_MAP, getStdlibRequiredEffects(), getStdlibWasmImport()
 - `src/type-registry.ts` — EffectFlags (14-bit bitset), effectsToFlags(), effectsSubset()
-- `src/effect-checker.ts` — SPORE-STDLIB-001 enforcement, SPORE-EFFECT-001..005
+- `src/effect-checker.ts` — FUNGI-STDLIB-001 enforcement, FUNGI-EFFECT-001..005
 - `src/gir-emitter.ts` — GIRFlow.allowedEffectsMask populated from declared effects
 
 ## TL;DR
@@ -97,7 +97,7 @@ contract {
 The effect checker sees `AuditLog.write` requires `audit.write`. The contract does not declare it.
 
 ```text
-SPORE-EFFECT-001: Flow getPatient calls AuditLog.write which requires effect audit.write,
+FUNGI-EFFECT-001: Flow getPatient calls AuditLog.write which requires effect audit.write,
 but audit.write is not declared in the contract effects block.
 
 Suggested fix:
@@ -146,12 +146,12 @@ Static proofs do not replace runtime enforcement. They reduce redundant runtime 
 
 ---
 
-## SPORE-STDLIB-001: Stdlib Capability Enforcement (Phase 19A)
+## FUNGI-STDLIB-001: Stdlib Capability Enforcement (Phase 19A)
 
 The compiler now checks that every effectful stdlib function call has its required effect declared.
 
 ```galerina
-// ❌ SPORE-STDLIB-001: File.readText requires filesystem.read — not declared
+// ❌ FUNGI-STDLIB-001: File.readText requires filesystem.read — not declared
 guarded flow loadConfig() -> String
 contract { effects { database.read } }
 {
@@ -255,7 +255,7 @@ Each host operation maps to one or more required effects via the capability regi
 
 **Step 3 — Validate against declared contract.**
 
-The effect checker compares required effects against the contract's `effects` block. Any required effect not declared produces `SPORE-EFFECT-001`. Any transitive effect not declared (inherited from a callee) produces `SPORE-EFFECT-002`.
+The effect checker compares required effects against the contract's `effects` block. Any required effect not declared produces `FUNGI-EFFECT-001`. Any transitive effect not declared (inherited from a callee) produces `FUNGI-EFFECT-002`.
 
 ```text
 flow body scan
@@ -263,7 +263,7 @@ flow body scan
   → required effects resolved via capability-registry.yaml
   → required effects compared to contract effects block
   → all present: proof passes
-  → any missing: SPORE-EFFECT-001 / SPORE-EFFECT-002 emitted
+  → any missing: FUNGI-EFFECT-001 / FUNGI-EFFECT-002 emitted
 ```
 
 ---
@@ -337,7 +337,7 @@ contract {
 The effect checker propagates `network.outbound` from `fetchRate` to `processOrder`. Since `processOrder` does not declare `network.outbound`, it emits:
 
 ```text
-SPORE-EFFECT-002: Flow processOrder inherits effect network.outbound from fetchRate
+FUNGI-EFFECT-002: Flow processOrder inherits effect network.outbound from fetchRate
 but does not declare it.
 
 Suggested fix:
@@ -488,11 +488,11 @@ Generated JS must not access `globalThis`, `process.env`, `require`, raw databas
 
 ## One-Click Governance Fixes
 
-When `SPORE-EFFECT-001` or `SPORE-EFFECT-002` fires, the compiler produces a machine-readable fix suggestion:
+When `FUNGI-EFFECT-001` or `FUNGI-EFFECT-002` fires, the compiler produces a machine-readable fix suggestion:
 
 ```json
 {
-  "code": "SPORE-EFFECT-001",
+  "code": "FUNGI-EFFECT-001",
   "severity": "warning",
   "message": "Flow getPatient uses audit.write but does not declare it.",
   "suggestedCode": "contract {\n  effects {\n    database.read\n    audit.write\n  }\n}"
@@ -516,7 +516,7 @@ The static capability proof tells the runtime what authority the flow was grante
 ```text
 RULE 1   Every host operation requires an effect declared in the contract.
 RULE 2   Transitive effects (from callees) must be declared by the calling flow.
-RULE 3   Missing effects emit SPORE-EFFECT-001 (direct) or SPORE-EFFECT-002 (transitive).
+RULE 3   Missing effects emit FUNGI-EFFECT-001 (direct) or FUNGI-EFFECT-002 (transitive).
 RULE 4   Runtime uses capabilityHost, never raw globals, drivers, or require().
 RULE 5   Approved capabilities are pre-computed in the Passive Execution Plan.
 RULE 6   Dynamic capability names are forbidden.
@@ -537,4 +537,4 @@ RULE 10  Compiler proves permission. Runtime enforces reality.
 - `galerina-phase-13-decisions.md` — Decision 2 (warn vs error modes), Decision 5 (canonical hashing)
 - `galerina-gradual-capability-inference.md` — inference modes for developer workflow
 - `galerina-stage-b-root-capability-provider.md` — how capabilityHost is bootstrapped
-- `compiler-diagnostics.md` — full SPORE-EFFECT-* and SPORE-BOUNDARY-* code table
+- `compiler-diagnostics.md` — full FUNGI-EFFECT-* and FUNGI-BOUNDARY-* code table

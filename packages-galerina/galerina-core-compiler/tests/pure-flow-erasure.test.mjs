@@ -29,7 +29,7 @@ pure flow add(a: Int, b: Int) -> Int {
   return a + b
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
 
     // Verify the flow is detected as pure + effect-free
     assert.equal(
@@ -101,7 +101,7 @@ pure flow multiply(x: Int, y: Int) -> Int {
   return x * y
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const args = new Map([
       ["x", { __tag: "int", value: 6 }],
       ["y", { __tag: "int", value: 7 }],
@@ -151,7 +151,7 @@ pure flow square(n: Int) -> Int {
   return n * n
 }
 `;
-    const parsed = parseProgram(source, "test.spore");
+    const parsed = parseProgram(source, "test.fungi");
     const args = new Map([["n", { __tag: "int", value: 9 }]]);
     const ITERATIONS = 1000;
 

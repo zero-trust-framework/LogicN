@@ -38,7 +38,7 @@ Running `galerina docker init` in a Galerina project generates the following fil
 | File | Purpose |
 |---|---|
 | `Dockerfile` | Minimal Alpine image, production-only dependencies, non-root user |
-| `.dockerignore` | Excludes `node_modules`, `.env`, `*.spore` source files, and `tests/` |
+| `.dockerignore` | Excludes `node_modules`, `.env`, `*.fungi` source files, and `tests/` |
 | `galerina.container.json` | Capability-to-container mapping derived from the service manifest |
 | `compose.yaml` | Service definition with network isolation and secure defaults |
 
@@ -142,7 +142,7 @@ This means containers stop cleanly, restart without state corruption, and start 
 
 Phase 17 introduces a `container {}` block to the Galerina service definition syntax. This block declares container-level constraints that are enforced at both build time and runtime:
 
-```spore
+```fungi
 service UserService {
 
   container {

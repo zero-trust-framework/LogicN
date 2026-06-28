@@ -3833,7 +3833,7 @@
         "notes": [
           "Records: 500 key:value records of 5 fields each",
           "checksum = N × (5 fields + 20 value-chars) via split/length — matches Galerina and Python",
-          "splitScan mirrors the .spore kernel; jsonParse is the native JSON.parse path for reference"
+          "splitScan mirrors the .fungi kernel; jsonParse is the native JSON.parse path for reference"
         ],
         "normThroughput": 3336500,
         "throughputUnit": "records/s"
@@ -4543,7 +4543,7 @@
       "nodejs": {
         "benchmark": "naming-check",
         "runtime": "node",
-        "description": "SPORE-NAMING checker over auth-service corpus (27 files)",
+        "description": "FUNGI-NAMING checker over auth-service corpus (27 files)",
         "iterations": 100,
         "filesPerIteration": 31,
         "elapsedMs": 274,

@@ -22,7 +22,7 @@ from the digital AEAD/KDF keystream** the channel already produces — so it int
 seed is Binary key-derived material from `kemdem.ts`, never analog). It is adopted (`0065` §2-S5; hub decision
 **D9**; `WILL USE` row **S5**) because it reuses two shipped rails verbatim — the **deny-by-default capability
 gate** (`buildCapabilityImports`, `fuse-loader.ts:435-455` in `galerina-framework-app-kernel`, diagnostic
-`SPORE-FUSE-UNKNOWN-CAP`) and the **AEAD keystream** (`galerina-ext-tmf/src/kemdem.ts`) — and adds only a length
+`FUNGI-FUSE-UNKNOWN-CAP`) and the **AEAD keystream** (`galerina-ext-tmf/src/kemdem.ts`) — and adds only a length
 sampler plus one **hard composition rule**: a morphed frame **REPLACES** any cleartext routing tag, it never
 accompanies one. It is classified as **metadata-confidentiality / availability**, NOT payload confidentiality
 (the payload was already AEAD-confidential), and it carries an **honestly stated limit**: it defeats size/boundary
@@ -57,7 +57,7 @@ analysis but **not** timing/volume analysis (§2.6).
 
 Morphing only ever runs if the package was admitted with the `transport.obfuscate` capability. This is the shipped
 deny-by-default fold (`buildCapabilityImports`, `fuse-loader.ts:435-455`): an undeclared capability has no factory
-and returns `fuseError("SPORE-FUSE-UNKNOWN-CAP", …)`. As a verdict:
+and returns `fuseError("FUNGI-FUSE-UNKNOWN-CAP", …)`. As a verdict:
 
 ```
 cap_verdict = (transport.obfuscate ∈ declared_capabilities) ? ALLOW(+1) : INDETERMINATE(0)
@@ -142,7 +142,7 @@ I( L⃗ ; O )  ≤  Σᵢ [ H(Lᵢ) − H(Lᵢ | ℓᵢ) ]   and   H(Lᵢ | ℓ�
 i.e. each frame's size leaks **at most** `H(Lᵢ) − log₂(B)`-style residual, and against a true PRF the recoverable
 block index is masked by the uniform `extra` term ⇒ `I(L⃗;O) → 0` for the *boundary/segmentation* component.
 
-### 2.4 The morph-replaces-tag rule (the SPORE-PRIVACY-002 safety invariant)
+### 2.4 The morph-replaces-tag rule (the FUNGI-PRIVACY-002 safety invariant)
 
 The single security-critical algebraic constraint. Let `frame = (header, c)` where `header` may or may not contain
 a **cleartext routing tag** `rt`. Define:
@@ -158,7 +158,7 @@ S5 is sound **iff** for every emitted frame:
 emit_morphed(frame) = 1   ⇒   leak(frame) = 0          // morphing REPLACES the tag, never accompanies it
 ```
 
-Contrapositive (the violation to forbid): `leak(frame) = 1  ∧  emit_morphed = 1` re-opens `SPORE-PRIVACY-002` — the
+Contrapositive (the violation to forbid): `leak(frame) = 1  ∧  emit_morphed = 1` re-opens `FUNGI-PRIVACY-002` — the
 killed cleartext-semantic-routing leak (vec2text ~92% reconstruction). A morphed frame that *also* carries a
 cleartext tag has spent bandwidth hiding the size while broadcasting the routing class in the clear: net leakage is
 **unchanged or worse**. The routing info must move INSIDE the AEAD `c` (covered by both confidentiality and
@@ -254,9 +254,9 @@ frame that still carries a cleartext routing tag.
 ```
 transport.obfuscate ∉ declared_capabilities
 cap_verdict        = INDETERMINATE(0)            // unknown capability → INDETERMINATE
-decideAtBoundary(0).authorized = false           // collapse: 0 denies (SPORE-GOV-3VL-001)
+decideAtBoundary(0).authorized = false           // collapse: 0 denies (FUNGI-GOV-3VL-001)
 emit_morphed       = false                        // no morphing; if the host-import was requested:
-                   → fuseError("SPORE-FUSE-UNKNOWN-CAP", …)   // fuse-loader.ts:443-447
+                   → fuseError("FUNGI-FUSE-UNKNOWN-CAP", …)   // fuse-loader.ts:443-447
 ```
 Result: **DENY** — the stream ships unmorphed (the size leak of Example A is *present*, but no invariant is
 violated, and the developer is told to declare the capability). Fail-closed: the feature is OFF unless explicitly
@@ -266,7 +266,7 @@ granted.
 ```
 emit_morphed = 1   AND   leak(frame) = 1     // morphed frame ALSO carries cleartext routing tag `rt`
 ⇒ violates §2.4 invariant  ( emit_morphed ⇒ leak == 0 )
-⇒ re-opens SPORE-PRIVACY-002 (cleartext-semantic-routing leak, vec2text ~92%)
+⇒ re-opens FUNGI-PRIVACY-002 (cleartext-semantic-routing leak, vec2text ~92%)
 ```
 Result: **build/lint must REJECT** this configuration (DENY). The size is hidden but the routing class is broadcast
 in the clear — net leakage unchanged or worse. The fix is to move `rt` inside the AEAD and **delete** the cleartext
@@ -291,14 +291,14 @@ crypto and no new verdict type.
 
 1. **Register the capability (deny-by-default).** Add `transport.obfuscate` to the capability registry consumed by
    `buildCapabilityImports` (`fuse-loader.ts:435-455`, `galerina-framework-app-kernel`). Inputs: the package's
-   declared capability list. Output: either a granted obfuscation namespace or `SPORE-FUSE-UNKNOWN-CAP`. **Reuse**
+   declared capability list. Output: either a granted obfuscation namespace or `FUNGI-FUSE-UNKNOWN-CAP`. **Reuse**
    `buildCapabilityImports` verbatim — do not write a parallel gate. Add a `capability-types.ts` bit position and
    confirm it is NOT a banned wildcard root.
 
 2. **Wire the capability verdict to the feature switch.** `cap_verdict = ALLOW(+1)` iff granted, else
    `INDETERMINATE(0)`. Resolve through `decideAtBoundary` (`three-valued-governance.ts:141`) — reuse, do not
    re-implement the collapse. `emit_morphed = decideAtBoundary(cap_verdict).authorized`. Inputs: declared caps.
-   Output: a boolean switch + an `SPORE-GOV-3VL-001` diagnostic on collapse.
+   Output: a boolean switch + an `FUNGI-GOV-3VL-001` diagnostic on collapse.
 
 3. **Derive the obfuscation seed (digital, domain-separated).** Take a dedicated sub-stream slice off the AEAD/KDF
    keystream from `kemdem.ts` (`galerina-ext-tmf`) via `HKDF-Expand(KS, "tlstp/obfuscate/v0", n)`. Inputs: the live
@@ -311,7 +311,7 @@ crypto and no new verdict type.
 
 5. **Enforce the morph-replaces-tag rule (§2.4) as a lint/build check, not a runtime hope.** A static rule that
    rejects any transport config where a morphed frame path also emits a cleartext routing tag. Output: a DENY
-   diagnostic referencing `SPORE-PRIVACY-002`. This is the SealTaint-adjacent guarantee — treat it as a hard gate.
+   diagnostic referencing `FUNGI-PRIVACY-002`. This is the SealTaint-adjacent guarantee — treat it as a hard gate.
 
 6. **SNI sibling:** do NOT build a bespoke SNI hider. Document that endpoint/handshake-metadata confidentiality uses
    **ECH + Oblivious HTTP (RFC 9458)** as the decided pattern. S5 stays scoped to established-channel frame sizes.
@@ -326,9 +326,9 @@ crypto and no new verdict type.
 - **Padding-only:** property test `∀ L: ℓ ≥ L+τ ∧ pad ≥ 0 ∧ ℓ ≤ B_max`.
 - **Indistinguishability:** two equal-`L` messages at different stream positions produce different `ℓ` (Example B,
   frames 1 vs 3) with overwhelming probability.
-- **Deny-by-default:** capability absent ⇒ no morphing + `SPORE-FUSE-UNKNOWN-CAP` (Example C1).
+- **Deny-by-default:** capability absent ⇒ no morphing + `FUNGI-FUSE-UNKNOWN-CAP` (Example C1).
 - **Invariant guard (the load-bearing test):** morphed-frame + cleartext-routing-tag config ⇒ build REJECT with an
-  `SPORE-PRIVACY-002` reference (Example C2).
+  `FUNGI-PRIVACY-002` reference (Example C2).
 - **Threat-model honesty test:** assert that total volume `Σℓ` still tracks `ΣL` (within the ceiling) — encodes,
   in a test, that S5 does NOT hide volume/timing.
 
@@ -338,7 +338,7 @@ crypto and no new verdict type.
   ciphertext, the padding is unauthenticated and an attacker can strip it to recover `ℓ`-vs-`L` (re-opening the
   leak) or use it as a malleability oracle. Order is **plaintext + pad → AEAD**. Easy to get backwards.
 - **HARD #2 (most dangerous) — The morph-replaces-tag rule (§2.4).** The intuitive, wrong implementation keeps the
-  existing cleartext routing header "for routing" and just pads the body. That re-opens `SPORE-PRIVACY-002` and makes
+  existing cleartext routing header "for routing" and just pads the body. That re-opens `FUNGI-PRIVACY-002` and makes
   the whole feature counterproductive. The morphed frame MUST carry routing INSIDE the seal and the cleartext tag
   MUST be deleted. This is the single easiest mistake and must be a hard build-time DENY, not a code-review note.
 - **HARD #3 — Seed domain separation.** Seeding the obfuscation CSPRNG off the *same* keystream slice the cipher

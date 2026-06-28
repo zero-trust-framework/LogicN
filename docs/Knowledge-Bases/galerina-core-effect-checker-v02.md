@@ -2,7 +2,7 @@
 >
 > ⚠️ **CANONICAL RULE (applies even to historical reading):** In the current Galerina model, only
 > `flow` variants may declare effects. `fn` cannot declare `effects [...]` or `with effects [...]`
-> — this emits `SPORE-SEC-014`. The `CheckedFunction` class below reflects v0.2 compiler internals
+> — this emits `FUNGI-SEC-014`. The `CheckedFunction` class below reflects v0.2 compiler internals
 > that predate this rule. See `flow-vs-fn-security-model.md` for the canonical `fn` contract.
 
 # Galerina Core Compiler: Effect Checker and Boundary Checker v0.2
@@ -177,14 +177,14 @@ function analyzeFunction(
 
 ---
 
-### SPORE-EFFECT Diagnostic Codes (v0.2)
+### FUNGI-EFFECT Diagnostic Codes (v0.2)
 
 | Code          | Meaning                               |
 | ------------- | ------------------------------------- |
-| SPORE-EFFECT-001 | Missing IO effect declaration         |
-| SPORE-EFFECT-002 | Effect propagation violation          |
-| SPORE-EFFECT-003 | Missing Async effect declaration      |
-| SPORE-EFFECT-004 | Unsafe operation without Unsafe effect |
+| FUNGI-EFFECT-001 | Missing IO effect declaration         |
+| FUNGI-EFFECT-002 | Effect propagation violation          |
+| FUNGI-EFFECT-003 | Missing Async effect declaration      |
+| FUNGI-EFFECT-004 | Unsafe operation without Unsafe effect |
 
 Note: These meanings differ from the prior KB codes. v0.2 codes are
 specific to effect category failures rather than generic "undeclared effect".
@@ -259,7 +259,7 @@ function validateBoundary(
          fn.declaredEffects.has(Effect.External))
     ) {
         diagnostics.push({
-            code: "SPORE-BOUNDARY-002",
+            code: "FUNGI-BOUNDARY-002",
             message: "Sandbox boundary violation: prohibited effect detected."
         });
     }
@@ -270,14 +270,14 @@ function validateBoundary(
 
 ---
 
-### SPORE-BOUNDARY Diagnostic Codes (v0.2)
+### FUNGI-BOUNDARY Diagnostic Codes (v0.2)
 
 | Code             | Meaning                              |
 | ---------------- | ------------------------------------ |
-| SPORE-BOUNDARY-001  | Invalid external boundary crossing   |
-| SPORE-BOUNDARY-002  | Sandbox boundary violation           |
-| SPORE-BOUNDARY-003  | Runtime boundary violation           |
-| SPORE-BOUNDARY-004  | Unsafe boundary access               |
+| FUNGI-BOUNDARY-001  | Invalid external boundary crossing   |
+| FUNGI-BOUNDARY-002  | Sandbox boundary violation           |
+| FUNGI-BOUNDARY-003  | Runtime boundary violation           |
+| FUNGI-BOUNDARY-004  | Unsafe boundary access               |
 
 ---
 
@@ -292,7 +292,7 @@ function validateBoundary(
  4. Implement EffectGraph with nodes Map
  5. Implement propagateEffects() with visited-node cycle detection
  6. Implement analyzeFunction() comparing declared vs inferred
- 7. Emit SPORE-EFFECT-001–004 diagnostics per missing effect
+ 7. Emit FUNGI-EFFECT-001–004 diagnostics per missing effect
  8. Integrate effect graph with compiler pass 13
 ```
 
@@ -305,7 +305,7 @@ function validateBoundary(
 12. Implement Internal→External Network/External effect requirement
 13. Implement Sandbox prohibition for IO/Network/Unsafe/External
 14. Implement Runtime boundary requirement
-15. Emit SPORE-BOUNDARY-001–004 diagnostics for violations
+15. Emit FUNGI-BOUNDARY-001–004 diagnostics for violations
 16. Feed validated boundary graph into manifest generation (pass 14)
 ```
 
@@ -323,13 +323,13 @@ galerina-core-compiler/src/
     EffectGraph.ts
     propagateEffects.ts     (recursive + visited tracking)
     analyzeFunction.ts
-    effect-diagnostics.ts   (SPORE-EFFECT-001–004)
+    effect-diagnostics.ts   (FUNGI-EFFECT-001–004)
 
   boundaries/
     BoundaryType.ts         (enum — 5 values)
     BoundaryNode.ts
     validateBoundary.ts
-    boundary-diagnostics.ts (SPORE-BOUNDARY-001–004)
+    boundary-diagnostics.ts (FUNGI-BOUNDARY-001–004)
 ```
 
 ---

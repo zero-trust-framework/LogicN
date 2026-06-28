@@ -2,8 +2,8 @@
 // CLI integration tests — basic sanity checks
 //
 // Verifies:
-//   1. SPORE_SOURCE_ESCAPE_001 is exported from dist/index.js
-//   2. SPORE_BACKEND_001 is exported from dist/index.js
+//   1. FUNGI_SOURCE_ESCAPE_001 is exported from dist/index.js
+//   2. FUNGI_BACKEND_001 is exported from dist/index.js
 //   3. The CLI module (dist/cli.js) can be loaded without throwing
 // =============================================================================
 
@@ -14,30 +14,30 @@ import { fileURLToPath } from "node:url";
 import * as path from "node:path";
 
 // ---------------------------------------------------------------------------
-// Test 1: SPORE_SOURCE_ESCAPE_001 is exported
+// Test 1: FUNGI_SOURCE_ESCAPE_001 is exported
 // ---------------------------------------------------------------------------
 
-describe("SPORE_SOURCE_ESCAPE_001 export", () => {
+describe("FUNGI_SOURCE_ESCAPE_001 export", () => {
   it("is exported from dist/index.js with correct code", async () => {
-    const { SPORE_SOURCE_ESCAPE_001 } = await import("../dist/index.js");
-    assert.ok(SPORE_SOURCE_ESCAPE_001 !== undefined, "SPORE_SOURCE_ESCAPE_001 must be exported");
-    assert.equal(SPORE_SOURCE_ESCAPE_001.code, "SPORE-SOURCE-ESCAPE-001");
-    assert.equal(SPORE_SOURCE_ESCAPE_001.severity, "error");
-    assert.equal(SPORE_SOURCE_ESCAPE_001.name, "SourceLevelEvalEscape");
+    const { FUNGI_SOURCE_ESCAPE_001 } = await import("../dist/index.js");
+    assert.ok(FUNGI_SOURCE_ESCAPE_001 !== undefined, "FUNGI_SOURCE_ESCAPE_001 must be exported");
+    assert.equal(FUNGI_SOURCE_ESCAPE_001.code, "FUNGI-SOURCE-ESCAPE-001");
+    assert.equal(FUNGI_SOURCE_ESCAPE_001.severity, "error");
+    assert.equal(FUNGI_SOURCE_ESCAPE_001.name, "SourceLevelEvalEscape");
   });
 });
 
 // ---------------------------------------------------------------------------
-// Test 2: SPORE_BACKEND_001 is exported
+// Test 2: FUNGI_BACKEND_001 is exported
 // ---------------------------------------------------------------------------
 
-describe("SPORE_BACKEND_001 export", () => {
+describe("FUNGI_BACKEND_001 export", () => {
   it("is exported from dist/index.js with correct code", async () => {
-    const { SPORE_BACKEND_001 } = await import("../dist/index.js");
-    assert.ok(SPORE_BACKEND_001 !== undefined, "SPORE_BACKEND_001 must be exported");
-    assert.equal(SPORE_BACKEND_001.code, "SPORE-BACKEND-001");
-    assert.equal(SPORE_BACKEND_001.severity, "error");
-    assert.equal(SPORE_BACKEND_001.name, "BackendError");
+    const { FUNGI_BACKEND_001 } = await import("../dist/index.js");
+    assert.ok(FUNGI_BACKEND_001 !== undefined, "FUNGI_BACKEND_001 must be exported");
+    assert.equal(FUNGI_BACKEND_001.code, "FUNGI-BACKEND-001");
+    assert.equal(FUNGI_BACKEND_001.severity, "error");
+    assert.equal(FUNGI_BACKEND_001.name, "BackendError");
   });
 });
 

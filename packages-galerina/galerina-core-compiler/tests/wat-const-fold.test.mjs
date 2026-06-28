@@ -11,7 +11,7 @@ import assert from "node:assert/strict";
 import * as L from "../dist/index.js";
 
 function compileWAT(src) {
-  const p = L.parseProgram(src, "cf.spore");
+  const p = L.parseProgram(src, "cf.fungi");
   const errs = p.diagnostics.filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "parse: " + errs.map((e) => e.message).join("; "));
   const fx = L.checkEffects(p.flows, p.ast);
@@ -34,7 +34,7 @@ describe("AOT #1: const-expression folding (WAT emitter)", () => {
   it("folds `60 * 24` to (i32.const 1440) — no runtime mul emitted", () => {
     const { wat } = compileWAT(`pure flow scale() -> Int\ncontract { effects {} }\n{ let s: Int = 60 * 24  return s }`);
     assert.ok(wat.includes("(i32.const 1440)"), `expected folded constant 1440:\n${wat}`);
-    assert.ok(!wat.includes("$spore_checked_mul_i32"), `the constant mul must be folded away, not emitted:\n${wat}`);
+    assert.ok(!wat.includes("$fungi_checked_mul_i32"), `the constant mul must be folded away, not emitted:\n${wat}`);
   });
 
   it("folds a nested const chain `2 * 3 + 4` to (i32.const 10)", () => {
@@ -51,7 +51,7 @@ describe("AOT #1: const-expression folding (WAT emitter)", () => {
   it("does NOT fold a TRAPPING constant (overflow) — emits the runtime checked-mul, stays fail-closed", async () => {
     const { wat, trapped } = await run(`pure flow ovf() -> Int\ncontract { effects {} }\n{ return 2000000000 * 2000000000 }`, "ovf");
     // the PRODUCT must not be folded — the runtime checked op must be present (operands stay i32.const literals)
-    assert.ok(wat.includes("$spore_checked_mul_i32"), `an overflowing const must keep the runtime checked mul (not fold to a literal):\n${wat}`.slice(0, 400));
+    assert.ok(wat.includes("$fungi_checked_mul_i32"), `an overflowing const must keep the runtime checked mul (not fold to a literal):\n${wat}`.slice(0, 400));
     assert.equal(trapped, true, "the overflowing constant must trap at runtime (Fork-A=TRAP), not fold to a wrong value");
   });
 
@@ -59,7 +59,7 @@ describe("AOT #1: const-expression folding (WAT emitter)", () => {
     const src = `pure flow h(n: Int) -> Int\ncontract { effects {} }\n{ let scale: Int = 60 * 24  return n * scale }`;
     for (const n of [0, 1, 7, 100]) {
       const { val } = await run(src, "h", [n]);
-      const p = L.parseProgram(src, "h.spore");
+      const p = L.parseProgram(src, "h.fungi");
       const ref = (await L.executeFlow("h", new Map([["n", { __tag: "int", value: n }]]), p.ast, p.flows)).value;
       assert.equal(ref.__tag, "int");
       assert.ok(Object.is(val, ref.value), `n=${n}: WASM ${val} must equal interp ${ref.value}`);

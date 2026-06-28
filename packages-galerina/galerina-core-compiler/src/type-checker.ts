@@ -6,37 +6,37 @@
 // Spec: docs/Knowledge-Bases/formal-type-system-spec.md
 //
 // Implemented diagnostics:
-//   SPORE-TYPE-001  UnknownType                — type name not in scope
-//   SPORE-TYPE-008  SilentNullDenied           — null / undefined used as value
-//   SPORE-TYPE-009  InvalidGenericInstantiation — wrong generic arity
-//   SPORE-TYPE-011  InvalidCollectionElement   — Array<T> element type mismatch
-//   SPORE-TYPE-017  QuantizedPrecisionMismatch — stub; fires when quantized/float tensors
+//   FUNGI-TYPE-001  UnknownType                — type name not in scope
+//   FUNGI-TYPE-008  SilentNullDenied           — null / undefined used as value
+//   FUNGI-TYPE-009  InvalidGenericInstantiation — wrong generic arity
+//   FUNGI-TYPE-011  InvalidCollectionElement   — Array<T> element type mismatch
+//   FUNGI-TYPE-017  QuantizedPrecisionMismatch — stub; fires when quantized/float tensors
 //                                              mix without dequantize() (Phase 13, tensor scope)
-//   SPORE-TYPE-020  ShadowedBinding            — binding shadows outer-scope name (warning)
-//   SPORE-TYPE-021  NonExhaustiveMatch         — match missing arm(s)
-//   SPORE-TYPE-022  UnreachablePattern         — arm after wildcard or exhausted set
-//   SPORE-NAME-002  DuplicateName              — same name declared twice in same scope
+//   FUNGI-TYPE-020  ShadowedBinding            — binding shadows outer-scope name (warning)
+//   FUNGI-TYPE-021  NonExhaustiveMatch         — match missing arm(s)
+//   FUNGI-TYPE-022  UnreachablePattern         — arm after wildcard or exhausted set
+//   FUNGI-NAME-002  DuplicateName              — same name declared twice in same scope
 //
 // Implemented (continued):
-//   SPORE-TYPE-003  InvalidNominalConversion   — String → BrandedType requires gate (Phase 9A-2)
-//   SPORE-TYPE-004  InvalidBinaryOperation     — extended with String+non-String, Bool arithmetic,
+//   FUNGI-TYPE-003  InvalidNominalConversion   — String → BrandedType requires gate (Phase 9A-2)
+//   FUNGI-TYPE-004  InvalidBinaryOperation     — extended with String+non-String, Bool arithmetic,
 //                                              String ordering comparisons
-//   SPORE-BINDING-005  ImmutableBindingReassigned — let/param reassignment rejected (Phase 11A.2)
+//   FUNGI-BINDING-005  ImmutableBindingReassigned — let/param reassignment rejected (Phase 11A.2)
 //
 // Deferred (require full expression type inference or call graph):
-//   SPORE-TYPE-002  TypeMismatch               — assignment compatibility (partial Phase 8A)
-//   SPORE-TYPE-005..007  Operator / call / return type checking
-//   SPORE-TYPE-010  UnsatisfiedGenericConstraint — generic constraint checks
-//   SPORE-TYPE-012..016  ResultType, SecretOp, MissingEffect, GovernedSink, TensorShape
-//   SPORE-TYPE-018  InvalidRuntimeTargetType
-//   SPORE-TYPE-019  UnknownSymbol
+//   FUNGI-TYPE-002  TypeMismatch               — assignment compatibility (partial Phase 8A)
+//   FUNGI-TYPE-005..007  Operator / call / return type checking
+//   FUNGI-TYPE-010  UnsatisfiedGenericConstraint — generic constraint checks
+//   FUNGI-TYPE-012..016  ResultType, SecretOp, MissingEffect, GovernedSink, TensorShape
+//   FUNGI-TYPE-018  InvalidRuntimeTargetType
+//   FUNGI-TYPE-019  UnknownSymbol
 //   Module-level import resolution
 //
 // Protected/redacted boundary violations now live in value-state-checker.ts:
-//   SPORE-VALUESTATE-006  ProtectedBoundaryViolation
-//   SPORE-VALUESTATE-007  RedactedBoundaryViolation
+//   FUNGI-VALUESTATE-006  ProtectedBoundaryViolation
+//   FUNGI-VALUESTATE-007  RedactedBoundaryViolation
 //
-// Symbol resolver (SPORE-NAME-001, SPORE-NAME-003) lives in symbol-resolver.ts
+// Symbol resolver (FUNGI-NAME-001, FUNGI-NAME-003) lives in symbol-resolver.ts
 // =============================================================================
 
 import { type AstNode, type SourceLocation } from "./parser.js";
@@ -133,7 +133,7 @@ function makeTCDiag(
 //
 // These are NOT types — they are compile-time keywords that tell the type
 // checker to defer resolution to the inference pass.
-// Do NOT emit SPORE-TYPE-001 for these names.
+// Do NOT emit FUNGI-TYPE-001 for these names.
 // Canonical source: docs/Knowledge-Bases/formal-type-system-spec.md §Auto
 // ---------------------------------------------------------------------------
 
@@ -393,13 +393,13 @@ function isAssignmentCompatible(declared: string, inferred: string): boolean {
       (inferred === "Decimal") ||
       (inferred === "Byte");
     if (!isWideningSource) {
-      return false; // Known type mismatch — emit SPORE-TYPE-002 with high confidence
+      return false; // Known type mismatch — emit FUNGI-TYPE-002 with high confidence
     }
   }
 
   // Strip governance qualifiers (protected/redacted) from inferred before comparing.
   // "protected Email" is assignment-compatible with "Email" because the qualifier
-  // is additive. SPORE-VALUESTATE-006/007 handle the reverse case (plain X ← protected X).
+  // is additive. FUNGI-VALUESTATE-006/007 handle the reverse case (plain X ← protected X).
   let nInferred = inferred;
   if (nInferred.startsWith("protected ")) nInferred = nInferred.slice(10).trim();
   else if (nInferred.startsWith("redacted ")) nInferred = nInferred.slice(9).trim();
@@ -443,7 +443,7 @@ class TypeChecker {
   /**
    * Phase 9A-2: user-defined types declared as `type X = Brand<T, "Name">`.
    * Bindings with these declared types require a validation gate — direct
-   * String assignment (or unsafe let) is rejected with SPORE-TYPE-003.
+   * String assignment (or unsafe let) is rejected with FUNGI-TYPE-003.
    */
   private readonly brandedTypes = new Set<string>();
 
@@ -490,7 +490,7 @@ class TypeChecker {
     }
 
     // Phase 9A-2: detect Brand<T, "Name"> aliases → register as branded type
-    // These types require a validation gate before assignment (SPORE-TYPE-003).
+    // These types require a validation gate before assignment (FUNGI-TYPE-003).
     if (node.kind === "typeDecl" && node.value) {
       const aliasChild = node.children?.[0];
       if (aliasChild?.kind === "typeRef") {
@@ -532,7 +532,7 @@ class TypeChecker {
         });
       this.flowParamTypes.set(node.value, paramTypes);
 
-      // Extract declared effects for SPORE-TYPE-014.
+      // Extract declared effects for FUNGI-TYPE-014.
       // Effects appear in two possible AST shapes:
       //
       //   1. Direct effectsDecl child (legacy `with effects [...]`, now removed):
@@ -544,7 +544,7 @@ class TypeChecker {
       //            children: [{ kind: "identifier", value: "effect:database.write" }] }
       //      ]}
       //
-      // The type-checker must handle both to support SPORE-TYPE-014 with canonical syntax.
+      // The type-checker must handle both to support FUNGI-TYPE-014 with canonical syntax.
 
       // Path 1: direct effectsDecl (legacy)
       let effectNames: string[] = [];
@@ -886,7 +886,7 @@ class TypeChecker {
           // i64 Step 2a: Int64 is contagious — a mixed Int+Int64 expression is Int64, matching the
           // interpreter's int64-dispatch promotion (BigInt(int)) and the emitter's i64 routing (which
           // sign-extends the i32 operand). Behaviour-neutral for non-Int64 programs (needs an Int64 operand,
-          // which SPORE-NUMERIC-001 still gates). Keeps all three tiers agreeing on a mixed expression's type.
+          // which FUNGI-NUMERIC-001 still gates). Keeps all three tiers agreeing on a mixed expression's type.
           if (leftType === "Int64" || rightType === "Int64") return "Int64";
           return leftType;
         }
@@ -1037,7 +1037,7 @@ class TypeChecker {
             const declaredBase = this.currentReturnType.split("<")[0]?.trim() ?? this.currentReturnType;
             if (!isOkErrReturn && !isAssignmentCompatible(declaredBase, inferredType)) {
               this.diagnostics.push(makeTCDiag(
-                "SPORE-TYPE-008",
+                "FUNGI-TYPE-008",
                 "InvalidReturnType",
                 `Flow declares return type '${this.currentReturnType}' but this return expression has type '${inferredType}'.`,
                 node.location,
@@ -1049,7 +1049,7 @@ class TypeChecker {
               // check. Emit a visible advisory instead of nothing. Once an inference pass
               // resolves `Auto` to a concrete type, this site must re-check normally.
               this.diagnostics.push({
-                code: "SPORE-TYPE-023",
+                code: "FUNGI-TYPE-023",
                 name: "DeferredTypeCheck",
                 severity: "warning",
                 message: `Return type declared 'Auto'; the type check against this return expression ('${inferredType}') is deferred pending inference.`,
@@ -1063,14 +1063,14 @@ class TypeChecker {
         return;
       }
 
-      // ── Phase 11A.2: assignment to existing binding (SPORE-BINDING-005) ───────
+      // ── Phase 11A.2: assignment to existing binding (FUNGI-BINDING-005) ───────
       case "assignStmt": {
         const targetName = node.value ?? "";
         if (targetName !== "") {
           const kind = this.lookupBindingKind(targetName);
           if (kind === "let" || kind === "readonly") {
             this.diagnostics.push(makeTCDiag(
-              "SPORE-BINDING-005",
+              "FUNGI-BINDING-005",
               "IMMUTABLE_BINDING_REASSIGNED",
               `Cannot reassign immutable binding '${targetName}'. Use 'mut' if reassignment is intended.`,
               node.location,
@@ -1112,17 +1112,17 @@ class TypeChecker {
           // Plain call: all children are arguments.
           const argNodes = node.children ?? [];
 
-          // SPORE-TYPE-007: wrong argument count
+          // FUNGI-TYPE-007: wrong argument count
           if (argNodes.length !== paramTypes.length) {
             this.diagnostics.push(makeTCDiag(
-              "SPORE-TYPE-007",
+              "FUNGI-TYPE-007",
               "InvalidArgumentCount",
               `Flow '${flowName}' expects ${paramTypes.length} argument${paramTypes.length === 1 ? "" : "s"} but received ${argNodes.length}.`,
               node.location,
               `Provide exactly ${paramTypes.length} argument${paramTypes.length === 1 ? "" : "s"} to '${flowName}'.`,
             ));
           } else {
-            // SPORE-TYPE-005: argument type mismatch (for inferrable types only)
+            // FUNGI-TYPE-005: argument type mismatch (for inferrable types only)
             for (let i = 0; i < argNodes.length; i++) {
               const argNode = argNodes[i];
               const expectedType = paramTypes[i];
@@ -1130,17 +1130,17 @@ class TypeChecker {
               const inferredArgType = this.inferType(argNode);
               if (inferredArgType !== undefined && !isAssignmentCompatible(expectedType, inferredArgType)) {
                 this.diagnostics.push(makeTCDiag(
-                  "SPORE-TYPE-005",
+                  "FUNGI-TYPE-005",
                   "InvalidCallArgType",
                   `Argument ${i + 1} to '${flowName}' expects '${expectedType}' but received '${inferredArgType}'.`,
                   argNode.location,
                   `Pass a value of type '${expectedType}' as argument ${i + 1}.`,
                 ));
               } else if (inferredArgType !== undefined && expectedType === "Auto") {
-                // Surface the deferral (see SPORE-TYPE-023 on returnStmt): an `Auto`-declared
+                // Surface the deferral (see FUNGI-TYPE-023 on returnStmt): an `Auto`-declared
                 // parameter silently mutes the argument-type check via isAssignmentCompatible.
                 this.diagnostics.push({
-                  code: "SPORE-TYPE-023",
+                  code: "FUNGI-TYPE-023",
                   name: "DeferredTypeCheck",
                   severity: "warning",
                   message: `Parameter ${i + 1} of '${flowName}' is declared 'Auto'; the type check against this argument ('${inferredArgType}') is deferred pending inference.`,
@@ -1151,7 +1151,7 @@ class TypeChecker {
             }
           }
 
-          // SPORE-TYPE-014: MissingRequiredEffect
+          // FUNGI-TYPE-014: MissingRequiredEffect
           // When the called flow declares effects that the current flow doesn't declare,
           // emit an error for each missing effect.
           const calledEffects = this.flowDeclaredEffects.get(flowName);
@@ -1160,7 +1160,7 @@ class TypeChecker {
             for (const requiredEffect of calledEffects) {
               if (!currentEffectSet.has(requiredEffect)) {
                 this.diagnostics.push(makeTCDiag(
-                  "SPORE-TYPE-014",
+                  "FUNGI-TYPE-014",
                   "MissingRequiredEffect",
                   `Calling '${flowName}' requires effect '${requiredEffect}' but current flow '${this.currentFlowName}' does not declare it.`,
                   node.location,
@@ -1179,7 +1179,7 @@ class TypeChecker {
         const val = node.value ?? "";
         if (val === "null" || val === "undefined") {
           this.diagnostics.push(makeTCDiag(
-            "SPORE-TYPE-008",
+            "FUNGI-TYPE-008",
             "SilentNullDenied",
             `'${val}' is not a valid Galerina value. Use Option<T> to represent absence.`,
             node.location,
@@ -1234,9 +1234,9 @@ class TypeChecker {
     if (bindingName === "") return;
 
     if (this.lookupBindingInCurrentScope(bindingName)) {
-      // ── SPORE-NAME-002: Duplicate name in the SAME scope ─────────────────────
+      // ── FUNGI-NAME-002: Duplicate name in the SAME scope ─────────────────────
       this.diagnostics.push({
-        code: "SPORE-NAME-002",
+        code: "FUNGI-NAME-002",
         name: "DuplicateName",
         severity: "error",
         message: `'${bindingName}' is already declared in this scope.`,
@@ -1244,9 +1244,9 @@ class TypeChecker {
         suggestedFix: `Rename this binding — '${bindingName}' was already declared earlier in the same block.`,
       });
     } else if (this.lookupBinding(bindingName)) {
-      // ── SPORE-TYPE-020: Shadowing an OUTER scope binding ─────────────────────
+      // ── FUNGI-TYPE-020: Shadowing an OUTER scope binding ─────────────────────
       this.diagnostics.push({
-        code: "SPORE-TYPE-020",
+        code: "FUNGI-TYPE-020",
         name: "ShadowedBinding",
         severity: "warning",
         message: `Binding '${bindingName}' shadows an outer-scope binding with the same name.`,
@@ -1290,9 +1290,9 @@ class TypeChecker {
         this.registerBindingType(bindingName, registeredType !== "" ? registeredType : declaredBase);
 
         // Phase 8A: check assignment compatibility with init expression
-        // Skip SPORE-TYPE-002 when the declared type has a governance qualifier (protected/redacted)
+        // Skip FUNGI-TYPE-002 when the declared type has a governance qualifier (protected/redacted)
         // — those bindings accept inferred protected/redacted types and the boundary checks
-        // (SPORE-VALUESTATE-006/007 in value-state-checker.ts) cover the reverse direction.
+        // (FUNGI-VALUESTATE-006/007 in value-state-checker.ts) cover the reverse direction.
         // Also skip for view() MMCP types (view:cap1|cap2) — the governance verifier
         // validates capability-pointer access; type assignment is always the underlying type.
         const hasGovernanceQualifier = typeSection.startsWith("protected ") || typeSection.startsWith("redacted ");
@@ -1302,7 +1302,7 @@ class TypeChecker {
           const inferredType = this.inferType(initNode);
           if (inferredType !== undefined && !isAssignmentCompatible(declaredBase, inferredType)) {
             this.diagnostics.push(makeTCDiag(
-              "SPORE-TYPE-002",
+              "FUNGI-TYPE-002",
               "TypeMismatch",
               `Cannot assign '${inferredType}' to '${declaredBase}'. The declared type and the value type are incompatible.`,
               node.location,
@@ -1314,7 +1314,7 @@ class TypeChecker {
           }
         }
 
-        // Phase 9A-2: SPORE-TYPE-003 — branded type enforcement
+        // Phase 9A-2: FUNGI-TYPE-003 — branded type enforcement
         // A branded type (e.g. CustomerId = Brand<String, "CustomerId">) cannot be
         // assigned a raw String. The value must pass through a validation gate first.
         if (this.brandedTypes.has(declaredBase)) {
@@ -1332,7 +1332,7 @@ class TypeChecker {
           if (emitBrandedError) {
             const gateName = `validate.${declaredBase.charAt(0).toLowerCase()}${declaredBase.slice(1)}`;
             this.diagnostics.push(makeTCDiag(
-              "SPORE-TYPE-003",
+              "FUNGI-TYPE-003",
               "InvalidNominalConversion",
               `Cannot assign a raw String to branded type '${declaredBase}'. `
                 + `Branded types require a validation gate (e.g. ${gateName}(raw)?).`,
@@ -1344,10 +1344,10 @@ class TypeChecker {
         }
 
         // Note: protected/redacted boundary violations are enforced in value-state-checker.ts
-        // as SPORE-VALUESTATE-006 (ProtectedBoundaryViolation) and
-        // SPORE-VALUESTATE-007 (RedactedBoundaryViolation).
+        // as FUNGI-VALUESTATE-006 (ProtectedBoundaryViolation) and
+        // FUNGI-VALUESTATE-007 (RedactedBoundaryViolation).
 
-        // SPORE-TYPE-011: Array<T> element type mismatch
+        // FUNGI-TYPE-011: Array<T> element type mismatch
         if (declaredBase === "Array") {
           const parsed = parseTypeString(typeSection);
           const elementType = parsed.args[0];
@@ -1358,7 +1358,7 @@ class TypeChecker {
                 if (elemInferred !== undefined && elemInferred !== elementType &&
                     !isAssignmentCompatible(elementType, elemInferred)) {
                   this.diagnostics.push(makeTCDiag(
-                    "SPORE-TYPE-011",
+                    "FUNGI-TYPE-011",
                     "InvalidCollectionElement",
                     `Array<${elementType}> contains a '${elemInferred}' element. All elements must be '${elementType}'.`,
                     element.location,
@@ -1370,7 +1370,7 @@ class TypeChecker {
           }
         }
 
-        // SPORE-TYPE-016 / SPORE-TYPE-030 / SPORE-TYPE-017: Tensor type checking
+        // FUNGI-TYPE-016 / FUNGI-TYPE-030 / FUNGI-TYPE-017: Tensor type checking
         // When both declared and inferred types are Tensor<>, compare element types and
         // dimension counts using the tensor helpers from type-registry.
         if (declaredBase === "Tensor" && initNode !== undefined) {
@@ -1382,24 +1382,24 @@ class TypeChecker {
             const declaredTensor = parseTensorType(typeSection);
             const inferredTensor = parseTensorType(inferredFull);
             if (declaredTensor.valid && inferredTensor.valid) {
-              // SPORE-TYPE-030: element type mismatch
+              // FUNGI-TYPE-030: element type mismatch
               if (!tensorElementTypesCompatible(declaredTensor.elementType, inferredTensor.elementType)) {
                 this.diagnostics.push(makeTCDiag(
-                  "SPORE-TYPE-030",
+                  "FUNGI-TYPE-030",
                   "TensorElementTypeMismatch",
                   `Tensor element type mismatch: expected '${declaredTensor.elementType}' but got '${inferredTensor.elementType}'. Cannot assign Tensor<${inferredTensor.elementType}> to Tensor<${declaredTensor.elementType}>.`,
                   node.location,
                   `Use dequantize() to convert Int8 to Float32 before assignment, or quantize() for the reverse.`,
                 ));
 
-                // SPORE-TYPE-017: QuantizedPrecisionMismatch — fires when mixing
+                // FUNGI-TYPE-017: QuantizedPrecisionMismatch — fires when mixing
                 // quantized (Int8) and floating-point (Float32) tensors without dequantize().
                 const isQuantizedMix =
                   (declaredTensor.elementType === "Float32" && inferredTensor.elementType === "Int8") ||
                   (declaredTensor.elementType === "Int8" && inferredTensor.elementType === "Float32");
                 if (isQuantizedMix) {
                   this.diagnostics.push({
-                    code: "SPORE-TYPE-017",
+                    code: "FUNGI-TYPE-017",
                     name: "QuantizedPrecisionMismatch",
                     severity: "warning",
                     message: `Cannot mix quantized (Int8) and floating-point (Float32) tensors without explicit dequantize(). Declare the binding as Tensor<${inferredTensor.elementType}, [...]> or call dequantize() first.`,
@@ -1409,7 +1409,7 @@ class TypeChecker {
                 }
               }
 
-              // SPORE-TYPE-016: shape mismatch — rank differs, or fixed dimension values differ.
+              // FUNGI-TYPE-016: shape mismatch — rank differs, or fixed dimension values differ.
               // tensorDimensionCountsCompatible checks rank (number of dims).
               // Additionally, if rank matches, check fixed dimension values pairwise.
               const rankMismatch = !tensorDimensionCountsCompatible(declaredTensor.dimensions, inferredTensor.dimensions);
@@ -1426,7 +1426,7 @@ class TypeChecker {
               }
               if (rankMismatch || dimValueMismatch) {
                 this.diagnostics.push(makeTCDiag(
-                  "SPORE-TYPE-016",
+                  "FUNGI-TYPE-016",
                   "TensorShapeMismatch",
                   `Tensor shape mismatch: expected [${declaredTensor.dimensions.join(", ")}] but got [${inferredTensor.dimensions.join(", ")}].`,
                   node.location,
@@ -1461,7 +1461,7 @@ class TypeChecker {
 
   /**
    * Phase 8A: check binary operator type compatibility.
-   * Emits SPORE-TYPE-004 for incompatible operand types.
+   * Emits FUNGI-TYPE-004 for incompatible operand types.
    */
   private checkBinaryOperatorTypes(
     op: string,
@@ -1477,9 +1477,9 @@ class TypeChecker {
     if (leftBase === "Money" && rightBase === "Money") {
       if (op === "+" || op === "-") {
         if (leftType !== rightType) {
-          // Cross-currency addition/subtraction: Money<GBP> + Money<USD> → SPORE-TYPE-004
+          // Cross-currency addition/subtraction: Money<GBP> + Money<USD> → FUNGI-TYPE-004
           this.diagnostics.push(makeTCDiag(
-            "SPORE-TYPE-004",
+            "FUNGI-TYPE-004",
             "InvalidBinaryOperation",
             `Cannot ${op === "+" ? "add" : "subtract"} '${leftType}' and '${rightType}'. Money arithmetic requires the same currency.`,
             location,
@@ -1492,7 +1492,7 @@ class TypeChecker {
       if (op === "*") {
         // Money<C> * Money<C> is dimensionally invalid (produces Money²)
         this.diagnostics.push(makeTCDiag(
-          "SPORE-TYPE-004",
+          "FUNGI-TYPE-004",
           "InvalidBinaryOperation",
           `Operator '*' cannot be applied to two Money values. Use 'Money<C> * Decimal' for scaling.`,
           location,
@@ -1503,7 +1503,7 @@ class TypeChecker {
       if (op === "/" && leftType !== rightType) {
         // Money<GBP> / Money<USD> is invalid (ratio requires same currency)
         this.diagnostics.push(makeTCDiag(
-          "SPORE-TYPE-004",
+          "FUNGI-TYPE-004",
           "InvalidBinaryOperation",
           `Cannot divide '${leftType}' by '${rightType}'. Currency ratio requires same currency.`,
           location,
@@ -1525,7 +1525,7 @@ class TypeChecker {
         (op === "/" || op === "%")) {
       if (op === "/") {
         this.diagnostics.push(makeTCDiag(
-          "SPORE-NUMERIC-OP-001",
+          "FUNGI-NUMERIC-OP-001",
           "PartialDecimalOperator",
           "Operator '/' is not available for Decimal — exact decimal division is non-terminating (1/3 = 0.333…) and needs an explicit rounding policy + scale (a silent default rounding on money is a fail-open).",
           location,
@@ -1534,7 +1534,7 @@ class TypeChecker {
         ));
       } else {
         this.diagnostics.push(makeTCDiag(
-          "SPORE-NUMERIC-OP-001",
+          "FUNGI-NUMERIC-OP-001",
           "PartialDecimalOperator",
           "Operator '%' is not available for Decimal — use the exact method form (modulo on a value that supports a rounding policy must be explicit).",
           location,
@@ -1556,7 +1556,7 @@ class TypeChecker {
         // R5A: isBuiltInType — unified check (TypeId registry + BUILT_IN_TYPES + KNOWN_DOMAIN_TYPES)
         if (isBuiltInType(rightBase) && !STRING_BASED_TYPES.has(rightBase)) {
           this.diagnostics.push(makeTCDiag(
-            "SPORE-TYPE-004",
+            "FUNGI-TYPE-004",
             "InvalidBinaryOperation",
             `Cannot use '+' between 'String' and '${rightBase}'. String concatenation requires both operands to be String.`,
             location,
@@ -1569,7 +1569,7 @@ class TypeChecker {
         // R5A: isBuiltInType — unified check (TypeId registry + BUILT_IN_TYPES + KNOWN_DOMAIN_TYPES)
         if (isBuiltInType(leftBase) && !STRING_BASED_TYPES.has(leftBase)) {
           this.diagnostics.push(makeTCDiag(
-            "SPORE-TYPE-004",
+            "FUNGI-TYPE-004",
             "InvalidBinaryOperation",
             `Cannot use '+' between '${leftBase}' and 'String'. String concatenation requires both operands to be String.`,
             location,
@@ -1584,7 +1584,7 @@ class TypeChecker {
     if (["+", "-", "*", "/", "%"].includes(op)) {
       if (leftBase === "Bool" || rightBase === "Bool") {
         this.diagnostics.push(makeTCDiag(
-          "SPORE-TYPE-004",
+          "FUNGI-TYPE-004",
           "InvalidBinaryOperation",
           `Arithmetic operator '${op}' cannot be applied to Bool. Bool supports only '&&', '||', and '!'.`,
           location,
@@ -1608,7 +1608,7 @@ class TypeChecker {
         if (leftBase === "Money" && NUMERIC_TYPES.has(rightType)) return;  // Money * Decimal: valid
         if (rightBase === "Money" && NUMERIC_TYPES.has(leftType)) return;  // Decimal * Money: valid
         this.diagnostics.push(makeTCDiag(
-          "SPORE-TYPE-004",
+          "FUNGI-TYPE-004",
           "InvalidBinaryOperation",
           `Operator '${op}' cannot be applied to '${leftType}' and '${rightType}'. Both operands must be numeric, or both String for '+'.`,
           location,
@@ -1620,11 +1620,11 @@ class TypeChecker {
 
     // Equality operators
     if (op === "==" || op === "!=") {
-      // SecureString equality is caught by value-state checker (SPORE-SECRET-002)
+      // SecureString equality is caught by value-state checker (FUNGI-SECRET-002)
       // Cross-type equality: warn but allow for now (Phase 8B will tighten)
       if (leftType !== rightType && !NUMERIC_TYPES.has(leftType) && !NUMERIC_TYPES.has(rightType)) {
         this.diagnostics.push(makeTCDiag(
-          "SPORE-TYPE-004",
+          "FUNGI-TYPE-004",
           "InvalidBinaryOperation",
           `Equality operator '${op}' used on different types: '${leftType}' and '${rightType}'.`,
           location,
@@ -1640,7 +1640,7 @@ class TypeChecker {
       if ((leftBase === "String" && rightBase !== "String" && rightBase !== "") ||
           (rightBase === "String" && leftBase !== "String" && leftBase !== "")) {
         this.diagnostics.push(makeTCDiag(
-          "SPORE-TYPE-004",
+          "FUNGI-TYPE-004",
           "InvalidBinaryOperation",
           `Operator '${op}' cannot compare 'String' with '${leftBase === "String" ? rightBase : leftBase}'. Only same-type comparison is allowed.`,
           location,
@@ -1650,7 +1650,7 @@ class TypeChecker {
       }
       if (!ORDERABLE_TYPES.has(leftType) || !ORDERABLE_TYPES.has(rightType)) {
         this.diagnostics.push(makeTCDiag(
-          "SPORE-TYPE-004",
+          "FUNGI-TYPE-004",
           "InvalidBinaryOperation",
           `Comparison operator '${op}' requires comparable types, got '${leftType}' and '${rightType}'.`,
           location,
@@ -1664,7 +1664,7 @@ class TypeChecker {
     if (op === "&&" || op === "||") {
       if (leftType !== "Bool") {
         this.diagnostics.push(makeTCDiag(
-          "SPORE-TYPE-004",
+          "FUNGI-TYPE-004",
           "InvalidBinaryOperation",
           `Logical operator '${op}' requires Bool operands, but left operand is '${leftType}'.`,
           location,
@@ -1704,7 +1704,7 @@ class TypeChecker {
     // ── MMCP view() type: view:cap1|cap2 — capability-masked pointer (task #78) ──
     // These are first-class type annotations emitted by the parser as "view:<capMask>".
     // The governance verifier validates capability bits; the type checker only verifies
-    // that the syntax is structurally well-formed. No SPORE-TYPE-001 for view: types.
+    // that the syntax is structurally well-formed. No FUNGI-TYPE-001 for view: types.
     if (rawValue.startsWith("view:")) return;
 
     const { base, args } = parseTypeString(rawValue);
@@ -1714,17 +1714,17 @@ class TypeChecker {
     // Skip numeric literals used as dimension args (Matrix<Float32, 4, 4>)
     if (/^\d/.test(base)) return;
 
-    // Skip inference markers — Auto defers to the inference pass, never SPORE-TYPE-001
+    // Skip inference markers — Auto defers to the inference pass, never FUNGI-TYPE-001
     if (INFERENCE_MARKERS.has(base)) return;
 
-    // ── SPORE-TYPE-001: Unknown type ──────────────────────────────────────────
+    // ── FUNGI-TYPE-001: Unknown type ──────────────────────────────────────────
     // R5A: isBuiltInType is the unified gate — covers TypeId registry, BUILT_IN_TYPES,
     // and KNOWN_DOMAIN_TYPES. userDefinedTypes covers locally declared types.
     if (!isBuiltInType(base) && !this.userDefinedTypes.has(base)) {
       const suggestion = this.fuzzyTypeSuggestion(base);
       const singleCandidate = this.fuzzySingleCandidate(base);
       this.diagnostics.push(makeTCDiag(
-        "SPORE-TYPE-001",
+        "FUNGI-TYPE-001",
         "UnknownType",
         `Type '${base}' is not defined. It is not a built-in type and no 'type ${base}' or 'enum ${base}' declaration was found in scope.`,
         location,
@@ -1735,14 +1735,14 @@ class TypeChecker {
       return;
     }
 
-    // ── SPORE-TYPE-009: Generic arity mismatch ─────────────────────────────────
+    // ── FUNGI-TYPE-009: Generic arity mismatch ─────────────────────────────────
     const expectedArity = GENERIC_ARITY.get(base);
     if (expectedArity !== undefined) {
       const argCount = args.filter((a) => a.trim() !== "").length;
       if (argCount !== expectedArity) {
         const example = GENERIC_EXAMPLES.get(base) ?? `${base}<T>`;
         this.diagnostics.push(makeTCDiag(
-          "SPORE-TYPE-009",
+          "FUNGI-TYPE-009",
           "InvalidGenericInstantiation",
           `Generic type '${base}' expects ${expectedArity} type argument${expectedArity === 1 ? "" : "s"} but received ${argCount}.`,
           location,
@@ -1773,7 +1773,7 @@ class TypeChecker {
     const isWildcardPat = (v: string | undefined): boolean => v === "_" || v === "else";
     const hasWildcard = armPatterns.has("_") || armPatterns.has("else");
 
-    // ── SPORE-TYPE-022: Unreachable pattern ──────────────────────────────────
+    // ── FUNGI-TYPE-022: Unreachable pattern ──────────────────────────────────
     // Any arm that follows a wildcard (`_` or `else`) is unreachable.
     for (let i = 0; i < arms.length; i++) {
       const arm = arms[i]!;
@@ -1782,7 +1782,7 @@ class TypeChecker {
         for (let j = i + 1; j < arms.length; j++) {
           const unreachable = arms[j]!;
           this.diagnostics.push(makeTCDiag(
-            "SPORE-TYPE-022",
+            "FUNGI-TYPE-022",
             "UnreachablePattern",
             `Pattern '${unreachable.value ?? "?"}' is unreachable — the wildcard arm already covers all remaining cases.`,
             unreachable.location,
@@ -1793,7 +1793,7 @@ class TypeChecker {
       }
     }
 
-    // ── SPORE-TYPE-023: Mandatory wildcard arm (task #174) ───────────────────
+    // ── FUNGI-TYPE-023: Mandatory wildcard arm (task #174) ───────────────────
     // Every match MUST end with a `_ =>` (or `else =>`) catch-all. This is a
     // fail-closed, deny-by-default rule (Zero Trust Framework): an unhandled
     // or future case routes to the explicit wildcard rather than silently
@@ -1801,7 +1801,7 @@ class TypeChecker {
     // missing variant is now caught by the mandatory wildcard.
     if (!hasWildcard) {
       this.diagnostics.push(makeTCDiag(
-        "SPORE-TYPE-023",
+        "FUNGI-TYPE-023",
         "MissingWildcardArm",
         `match must end with a wildcard '_ =>' (or 'else =>') catch-all arm.`,
         node.location,
@@ -1913,7 +1913,7 @@ function levenshtein(a: string, b: string): number {
  * @param ast            The root `program` node from `parseProgram()`.
  * @param importedTypes  Optional list of type names resolved from import declarations
  *                       (Phase 11E). These are added to the user-defined type set so
- *                       SPORE-TYPE-001 is not emitted for them.
+ *                       FUNGI-TYPE-001 is not emitted for them.
  * @returns    A result object containing all type diagnostics.
  */
 export function checkTypes(ast: AstNode, importedTypes?: readonly string[]): TypeCheckResult {

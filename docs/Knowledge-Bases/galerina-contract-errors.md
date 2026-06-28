@@ -5,7 +5,7 @@
 ```
 Phase 10B — Specification
 Parser: Phase 10B
-Enforcement: SPORE-GOV-ERROR-001..005 (Phase 10B+)
+Enforcement: FUNGI-GOV-ERROR-001..005 (Phase 10B+)
 ```
 
 ## TL;DR
@@ -213,7 +213,7 @@ contract {
 | Internal hostname leak | `redact { ApiError.Internal }` |
 | Auth reason exposure | `redact { ApiError.Unauthorised }` if sensitive |
 | Unaudited security event | `audit { ApiError.Unauthorised }` |
-| Undeclared error type returned | `SPORE-GOV-ERROR-001` (Phase 10B+) |
+| Undeclared error type returned | `FUNGI-GOV-ERROR-001` (Phase 10B+) |
 | Domain error escaping boundary | `map DomainError to ApiError.X` |
 
 ---

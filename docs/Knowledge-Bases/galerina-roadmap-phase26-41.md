@@ -51,15 +51,15 @@ Expected speedup: 10-100× on pure numeric flows
 Add `"strict"` and `"high_integrity"` to `DeploymentProfile` type.
 
 Compiler checks for `profile strict`:
-- `SPORE-PROFILE-001`: `try`/`catch` used in strict profile (error)
-- `SPORE-PROFILE-002`: unbounded loop in strict profile (error)
-- `SPORE-PROFILE-003`: recursion used in strict profile (error)
-- `SPORE-PROFILE-004`: JIT target in strict profile (error)
-- `SPORE-PROFILE-005`: LRU cache enabled in strict profile (error)
+- `FUNGI-PROFILE-001`: `try`/`catch` used in strict profile (error)
+- `FUNGI-PROFILE-002`: unbounded loop in strict profile (error)
+- `FUNGI-PROFILE-003`: recursion used in strict profile (error)
+- `FUNGI-PROFILE-004`: JIT target in strict profile (error)
+- `FUNGI-PROFILE-005`: LRU cache enabled in strict profile (error)
 
 Compiler checks for `profile high_integrity`:
-- `SPORE-PROFILE-006`: no `runtime_budget` declared (warning)
-- `SPORE-PROFILE-007`: dynamic mutation in high_integrity (error)
+- `FUNGI-PROFILE-006`: no `runtime_budget` declared (warning)
+- `FUNGI-PROFILE-007`: dynamic mutation in high_integrity (error)
 
 Boot/main syntax:
 ```galerina
@@ -68,7 +68,7 @@ boot main {
 }
 ```
 
-This makes the aerospace examples (`updateFlightPath.spore`) fully compilable
+This makes the aerospace examples (`updateFlightPath.fungi`) fully compilable
 under strict profile — not just classified safety_critical but actually
 running under the restricted language subset.
 
@@ -270,7 +270,7 @@ Milestone check: `node bootstrap-verify.mjs` passes with matching checksums.
 Add a benchmark dedicated to profiled execution:
 - Run the same arithmetic flow in: normal / strict / high_integrity / both
 - Measure: compile-time overhead (extra checks), runtime overhead (no cache in strict)
-- Verify: SPORE-PROFILE-* diagnostics fire correctly for prohibited constructs
+- Verify: FUNGI-PROFILE-* diagnostics fire correctly for prohibited constructs
 - Baseline: `governance-cost` benchmark under strict profile vs normal profile
 
 ```bash
@@ -309,7 +309,7 @@ Expected: strict profile adds ~15-30% compile time (extra checks), ~0% runtime o
 **Dependencies: Phase 29 (economics), Phase 28 (profiles)**
 
 - `ai.generate` effect: LLM generates flow body, governance verifier checks it
-- Generated flows must pass all SPORE-* checks before execution
+- Generated flows must pass all FUNGI-* checks before execution
 - `contract.ai { model "gpt-4" max_tokens 500 deny eval }` 
 - AI-generated code cannot bypass governance — it is verified the same as human code
 - Benchmark: AI-generated vs human-written flow, governance overhead comparison

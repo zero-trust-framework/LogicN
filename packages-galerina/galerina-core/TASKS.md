@@ -25,8 +25,8 @@ Example:
 ```text
 [ ] Write grammar draft
 [/] Draft README
-[x] Choose .spore extension
-[?] Decide boot.spore vs main.spore
+[x] Choose .fungi extension
+[?] Decide boot.fungi vs main.fungi
 [!] Real photonic backend blocked by hardware access
 ```
 
@@ -67,7 +67,7 @@ package boundaries
 
 ```text
 [x] Project name: Galerina / Galerina
-[x] Source file extension: .spore
+[x] Source file extension: .fungi
 [x] Language should be strict typed
 [x] Language should be memory safe
 [x] Language should be security-first
@@ -100,8 +100,8 @@ package boundaries
 ## Open Decisions
 
 ```text
-[?] Should the main entry file be boot.spore or main.spore?
-[?] Should boot.spore contain both project config and executable logic?
+[?] Should the main entry file be boot.fungi or main.fungi?
+[?] Should boot.fungi contain both project config and executable logic?
 [?] Should Galerina.config be required or optional?
 [?] Should Galerina use braces only, indentation only, or braces with optional formatting?
 [?] Should functions be called flow, fn, function, or task?
@@ -697,7 +697,7 @@ Tasks:
 
 ```text
 [ ] Define source-map JSON schema
-[ ] Map generated output to original .spore files
+[ ] Map generated output to original .fungi files
 [ ] Track original line numbers
 [ ] Track original columns
 [ ] Track flow/function names
@@ -796,7 +796,7 @@ Version 0.1 should prove the concept, not build the full language.
 [x] Define parser prototype scope
 [x] Define interpreter prototype scope
 [x] Define report schemas
-[x] Create example .spore files
+[x] Create example .fungi files
 ```
 
 ---
@@ -900,10 +900,10 @@ Recommended next work:
 
 ```text
 [ ] Finish documentation bundle
-[ ] Decide boot.spore vs main.spore default
+[ ] Decide boot.fungi vs main.fungi default
 [ ] Draft grammar outline
-[ ] Draft example boot.spore
-[ ] Draft example hello.spore
+[ ] Draft example boot.fungi
+[ ] Draft example hello.fungi
 [ ] Draft parser architecture
 [ ] Draft source-map schema
 [x] Draft AI context schema

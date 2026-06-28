@@ -7,7 +7,7 @@
 //   - TENSOR_STDLIB_OPS (compute target compatibility flags)
 //   - TRI_STDLIB_OPS (TriState operations, photonic compatible)
 //   - getStdlibRequiredEffects, getStdlibModuleKind, getStdlibWasmImport
-//   - SPORE_STDLIB_001 constant shape
+//   - FUNGI_STDLIB_001 constant shape
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -24,7 +24,7 @@ import {
   getStdlibRequiredEffects,
   getStdlibModuleKind,
   getStdlibWasmImport,
-  SPORE_STDLIB_001,
+  FUNGI_STDLIB_001,
   renderWAT,
   buildWATModule,
   emitWATBody,
@@ -33,7 +33,7 @@ import {
   DEFAULT_WASM_SIMD,
   parseProgram,
   callStdlib,
-  SPORE_VOID,
+  FUNGI_VOID,
   toFlatTokenStream,
   tokenStreamKind,
   tokenStreamStart,
@@ -273,20 +273,20 @@ describe("TRI_STDLIB_OPS: TriState operations", () => {
 });
 
 // ---------------------------------------------------------------------------
-// SPORE_STDLIB_001
+// FUNGI_STDLIB_001
 // ---------------------------------------------------------------------------
 
-describe("SPORE_STDLIB_001: constant shape", () => {
+describe("FUNGI_STDLIB_001: constant shape", () => {
   it("has correct code and name", () => {
-    assert.equal(SPORE_STDLIB_001.code, "SPORE-STDLIB-001");
-    assert.equal(SPORE_STDLIB_001.name, "StdlibEffectNotDeclared");
-    assert.equal(SPORE_STDLIB_001.severity, "error");
+    assert.equal(FUNGI_STDLIB_001.code, "FUNGI-STDLIB-001");
+    assert.equal(FUNGI_STDLIB_001.name, "StdlibEffectNotDeclared");
+    assert.equal(FUNGI_STDLIB_001.severity, "error");
   });
 
   it("has why and suggestedFix", () => {
-    assert.ok(typeof SPORE_STDLIB_001.why === "string");
-    assert.ok(SPORE_STDLIB_001.suggestedFix.includes("contract"), "suggestedFix must mention contract");
-    assert.ok(SPORE_STDLIB_001.suggestedFix.includes("effects"), "suggestedFix must mention effects");
+    assert.ok(typeof FUNGI_STDLIB_001.why === "string");
+    assert.ok(FUNGI_STDLIB_001.suggestedFix.includes("contract"), "suggestedFix must mention contract");
+    assert.ok(FUNGI_STDLIB_001.suggestedFix.includes("effects"), "suggestedFix must mention effects");
   });
 });
 
@@ -485,14 +485,14 @@ describe("WAT imports from effect declarations", () => {
 // ---------------------------------------------------------------------------
 
 describe("Phase 25A: verifyPassword example parses without errors", () => {
-  it("reads and parses examples/auth-service/verifyPassword.spore with 0 errors, qualifier secure, and required effects", () => {
+  it("reads and parses examples/auth-service/verifyPassword.fungi with 0 errors, qualifier secure, and required effects", () => {
     // Resolve path from repo root: tests/stdlib/ -> ../../../.. -> repo root -> examples/
     // tests/stdlib -> tests -> galerina-core-compiler -> packages-galerina -> LO (repo root)
-    const examplePath = join(__dirname, "..", "..", "..", "..", "examples", "auth-service", "verifyPassword.spore");
+    const examplePath = join(__dirname, "..", "..", "..", "..", "examples", "auth-service", "verifyPassword.fungi");
     const source = readFileSync(examplePath, "utf8");
 
     // Parse (parseProgram takes the raw source string and an optional filename)
-    const parseResult = parseProgram(source, "verifyPassword.spore");
+    const parseResult = parseProgram(source, "verifyPassword.fungi");
 
     // 0 parse errors
     assert.equal(
@@ -529,11 +529,11 @@ describe("Phase 25A: verifyPassword example parses without errors", () => {
 // ---------------------------------------------------------------------------
 
 describe("Phase 25B-C: createSession + verifyToken parse correctly", () => {
-  it("reads and parses examples/auth-service/createSession.spore with 0 errors, qualifier secure, and effects database.write + audit.write", () => {
-    const examplePath = join(__dirname, "..", "..", "..", "..", "examples", "auth-service", "createSession.spore");
+  it("reads and parses examples/auth-service/createSession.fungi with 0 errors, qualifier secure, and effects database.write + audit.write", () => {
+    const examplePath = join(__dirname, "..", "..", "..", "..", "examples", "auth-service", "createSession.fungi");
     const source = readFileSync(examplePath, "utf8");
 
-    const parseResult = parseProgram(source, "createSession.spore");
+    const parseResult = parseProgram(source, "createSession.fungi");
 
     assert.equal(
       parseResult.diagnostics.length,
@@ -561,11 +561,11 @@ describe("Phase 25B-C: createSession + verifyToken parse correctly", () => {
     }
   });
 
-  it("reads and parses examples/auth-service/verifyToken.spore with 0 errors, qualifier pure, and no effects", () => {
-    const examplePath = join(__dirname, "..", "..", "..", "..", "examples", "auth-service", "verifyToken.spore");
+  it("reads and parses examples/auth-service/verifyToken.fungi with 0 errors, qualifier pure, and no effects", () => {
+    const examplePath = join(__dirname, "..", "..", "..", "..", "examples", "auth-service", "verifyToken.fungi");
     const source = readFileSync(examplePath, "utf8");
 
-    const parseResult = parseProgram(source, "verifyToken.spore");
+    const parseResult = parseProgram(source, "verifyToken.fungi");
 
     assert.equal(
       parseResult.diagnostics.length,
@@ -600,7 +600,7 @@ function stdlibCtx() {
   return {
     recordEffect: () => {},
     resolveIdentifier: () => undefined,
-    callFlow: async () => SPORE_VOID,
+    callFlow: async () => FUNGI_VOID,
     applyFn: async (_fn, arg) => arg,
   };
 }
@@ -826,7 +826,7 @@ describe("Flat token stream: Int32Array layout", () => {
   // Test 1: toFlatTokenStream produces correct stride-4 layout
   it("toFlatTokenStream produces correct stride-4 layout", () => {
     const source = "flow hello() {}";
-    const { tokens } = lex(source, "test.spore");
+    const { tokens } = lex(source, "test.fungi");
     const ts = toFlatTokenStream(tokens, source);
     assert.equal(ts.count, tokens.length, "count must match token array length");
     assert.equal(ts.data.length, tokens.length * TOKEN_STRIDE, "data length must be count * stride");
@@ -841,7 +841,7 @@ describe("Flat token stream: Int32Array layout", () => {
   // Test 2: tokenStreamValue correctly slices source
   it("tokenStreamValue correctly slices source", () => {
     const source = "flow hello() {}";
-    const { tokens } = lex(source, "test.spore");
+    const { tokens } = lex(source, "test.fungi");
     const ts = toFlatTokenStream(tokens, source);
     // Find the token with value "flow"
     let foundFlow = false;
@@ -855,7 +855,7 @@ describe("Flat token stream: Int32Array layout", () => {
   // Test 3: tokenStreamKind matches original kindId
   it("tokenStreamKind matches original kindId", () => {
     const source = "flow hello() {}";
-    const { tokens } = lex(source, "test.spore");
+    const { tokens } = lex(source, "test.fungi");
     const ts = toFlatTokenStream(tokens, source);
     for (let i = 0; i < ts.count; i++) {
       assert.equal(

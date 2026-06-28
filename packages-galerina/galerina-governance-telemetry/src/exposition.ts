@@ -12,7 +12,7 @@
 //     `network.outbound('https://customer-x/…')` becomes just `network`);
 //   • unknown flag/status/tier label values (outside the closed vocab) are dropped.
 // The number of dropped series is itself exported (galerina_telemetry_dropped_series_total) so the
-// fence is observable. This is SPORE-SUBSTRATE-001 (crypto-on-core / no-cleartext-egress) projected
+// fence is observable. This is FUNGI-SUBSTRATE-001 (crypto-on-core / no-cleartext-egress) projected
 // onto the metrics wire.
 // =============================================================================
 

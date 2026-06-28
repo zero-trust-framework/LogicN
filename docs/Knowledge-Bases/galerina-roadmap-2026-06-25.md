@@ -4,20 +4,20 @@
 > - **#149** — Hardened Border wired ENFORCING in CI (`scripts/audit-package-border.mjs` + `hardened-border`
 >   job): zero-trust, re-scans every package FROM SOURCE, self-tested, fail-closed. Workspace 93/0. (`24322f0`,
 >   drift `fe25a4c`.)
-> - **#38** — pre-governance import-path traversal (`SPORE-IMPORT-005`, two-layer containment) + uniform
->   read-size guard (`SPORE-IMPORT-006` + manifest cap), fail-closed. (`170eb8a`, `ab99b46`.)
-> - **Compute-only fence** — `SPORE-SUBSTRATE-005`: a noisy/photonic lane is deny-by-default compute-only (no
+> - **#38** — pre-governance import-path traversal (`FUNGI-IMPORT-005`, two-layer containment) + uniform
+>   read-size guard (`FUNGI-IMPORT-006` + manifest cap), fail-closed. (`170eb8a`, `ab99b46`.)
+> - **Compute-only fence** — `FUNGI-SUBSTRATE-005`: a noisy/photonic lane is deny-by-default compute-only (no
 >   network/persistence/secret/process reach); allowlist = compute.*/ai.inference/random/clock/audit. (`346f8ee`.)
 > - **Owner-gated builds landed:** `vAndTensor`, `consensusTritN` + `ConfidenceVerdict`, dead-zone dispatcher,
 >   calibration-attestation core (signed `SubstrateModelSnapshot` follow-up #50, Ed25519).
 > - **Owner decisions 2026-06-26:** focus = owner-gated roadmap; #34 Ed25519-only for now (keep
->   `SPORE-CRYPTO-PQ-001` enforced); UInt64 unlock (u64-arith) AUTHORIZED; build supply-chain attestation core.
-> - **Remaining owner-gated queue:** prevention-rules (incl. `SPORE-NO-COERCION-001`, `SPORE-QUORUM-001`),
+>   `FUNGI-CRYPTO-PQ-001` enforced); UInt64 unlock (u64-arith) AUTHORIZED; build supply-chain attestation core.
+> - **Remaining owner-gated queue:** prevention-rules (incl. `FUNGI-NO-COERCION-001`, `FUNGI-QUORUM-001`),
 >   digital-ECC, `@galerina/ext-attestation` core, u64-arith. Shamir SSS stays blocked (ML-DSA deferred).
 
 **Status:** v1.0.0-beta.2 · **~88% shippable / ~63% full-vision** · 60 packages · compiler suite 3,916/0.
 This session closed the threat-model's two criticals + most highs (C1, C2, H1, H2, H7, H8) plus several
-fresh fail-opens (substrate-lane ×2, `constantTimeEquals`, init-env scan-evasion, false-✅ on empty `.spore`).
+fresh fail-opens (substrate-lane ×2, `constantTimeEquals`, init-env scan-evasion, false-✅ on empty `.fungi`).
 Supersedes the count claims in older roadmap docs.
 
 ## 🔒 NOW — security hardening (most-secure-first, #36)
@@ -49,7 +49,7 @@ build each against the live path:
 
 ## 🚀 NEXT — infrastructure
 - **#149** — wire `graph --check` **fail-closed in CI** (the last governance gate still manually enforced;
-  now unblocked, border 93/0). Pairs with the new **`SPORE-GRAPH-BORDER-001`** rule (scanner fails closed on
+  now unblocked, border 93/0). Pairs with the new **`FUNGI-GRAPH-BORDER-001`** rule (scanner fails closed on
   any unresolvable import). Sequencing: repair the committed-FAIL baselines + the example-app blind-scanner
   first (scanner-worker lane), then gate CI.
 - **#35** — photonic-vs-standard A/B benchmark mode (per benchmark).
@@ -62,8 +62,8 @@ build each against the live path:
   after-ADC.
 - **`consensusTritN` / `ConfidenceVerdict`** — abstain-aware quorum + probability-vector verdict (notes/62).
 - **GF(2⁸) Shamir SSS ext custody module** — blocked on `.tmf` slice-4 ML-DSA signing.
-- **The 13 prevention/graph rules** (error→tooling) — `SPORE-NO-COERCION-001`, `SPORE-VERIFY-PATH-PURITY`,
-  `SPORE-QUORUM-001`, `SPORE-DERIVED-PROJECTION`, `SPORE-GOV-3VL-002`, etc.
+- **The 13 prevention/graph rules** (error→tooling) — `FUNGI-NO-COERCION-001`, `FUNGI-VERIFY-PATH-PURITY`,
+  `FUNGI-QUORUM-001`, `FUNGI-DERIVED-PROJECTION`, `FUNGI-GOV-3VL-002`, etc.
 
 ## 🌅 LATER — HW / research / #34 gated
 - **UInt64 lift** — needs `u64-arith` (Int64 already lifted this cycle). Stays gated.

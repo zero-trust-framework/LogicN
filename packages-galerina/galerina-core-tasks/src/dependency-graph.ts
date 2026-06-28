@@ -1,11 +1,11 @@
 // =============================================================================
 // galerina-core-tasks — dependency resolution
 //
-// Backed by spore-graph's GraphBuilder + resolveDependencies (Kahn's topoSort).
+// Backed by fungi-graph's GraphBuilder + resolveDependencies (Kahn's topoSort).
 // Public interface is unchanged from the original hand-written DFS version.
 // =============================================================================
 
-import { GraphBuilder, resolveDependencies as sporeResolveDependencies } from "@galerina/devtools-project-graph";
+import { GraphBuilder, resolveDependencies as fungiResolveDependencies } from "@galerina/devtools-project-graph";
 import type { LoadedTasks } from "./load-tasks.js";
 import type { TaskDefinition, TaskError } from "./types.js";
 
@@ -50,7 +50,7 @@ export function resolveTaskDependencies(
     for (const dep of task.depends ?? []) queue.push(dep);
   }
 
-  // Build a spore-graph graph from the collected tasks.
+  // Build a fungi-graph graph from the collected tasks.
   // Edge direction: caller → dependency (same as buildDependencyGraph convention).
   const builder = new GraphBuilder<{ taskName: string }, { required: boolean }>();
   for (const [name] of relevant) {
@@ -65,7 +65,7 @@ export function resolveTaskDependencies(
     }
   }
 
-  const result = sporeResolveDependencies(builder.build());
+  const result = fungiResolveDependencies(builder.build());
 
   if (!result.ok) {
     return {

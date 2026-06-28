@@ -48,7 +48,7 @@ test("example (a): valid pinned chain + fresh OCSP → +1 → ALLOW", () => {
   assert.equal(decision.diagnostic, null);
 });
 
-test("example (b): revocation responder unreachable → 0 → DENY + SPORE-GOV-3VL-001 (the soft-fail hole, closed)", () => {
+test("example (b): revocation responder unreachable → 0 → DENY + FUNGI-GOV-3VL-001 (the soft-fail hole, closed)", () => {
   const input = { ...HEALTHY, revocation: "unknown" };
   const subs = toSubVerdicts(input);
   // Three "good" factors cannot rescue the one unknown.
@@ -63,9 +63,9 @@ test("example (b): revocation responder unreachable → 0 → DENY + SPORE-GOV-3
   assert.equal(decision.verdict, INDETERMINATE);
   assert.equal(decision.decision, "deny");
   assert.equal(decision.authorized, false);
-  assert.equal(decision.diagnostic?.code, "SPORE-GOV-3VL-001");
+  assert.equal(decision.diagnostic?.code, "FUNGI-GOV-3VL-001");
   assert.equal(diags.length, 1);
-  assert.equal(diags[0].code, "SPORE-GOV-3VL-001");
+  assert.equal(diags[0].code, "FUNGI-GOV-3VL-001");
 });
 
 test("example (c): hash-pin mismatch → −1 → DENY, no diagnostic (library-valid cert is not enough)", () => {
@@ -148,14 +148,14 @@ test("truth table end-to-end: certGate(subsToInput(subs)) authorizes ⟺ all fou
 
 // ── Single-factor-unknown sweep ───────────────────────────────────────────────
 
-test("single-factor-unknown: each factor = 0 (others +1) → deny + SPORE-GOV-3VL-001", () => {
+test("single-factor-unknown: each factor = 0 (others +1) → deny + FUNGI-GOV-3VL-001", () => {
   const factors = ["pinMatch", "chainValid", "notExpired", "revocationFresh"];
   for (const zeroed of factors) {
     const subs = { pinMatch: ALLOW, chainValid: ALLOW, notExpired: ALLOW, revocationFresh: ALLOW };
     subs[zeroed] = INDETERMINATE;
     const decision = certGate(subsToInput(subs));
     assert.equal(decision.authorized, false, `${zeroed}=0 must deny`);
-    assert.equal(decision.diagnostic?.code, "SPORE-GOV-3VL-001", `${zeroed}=0 must audit the collapse`);
+    assert.equal(decision.diagnostic?.code, "FUNGI-GOV-3VL-001", `${zeroed}=0 must audit the collapse`);
   }
 });
 
@@ -171,7 +171,7 @@ test("empty input: all factors default to INDETERMINATE → deny (nothing defaul
   });
   const decision = certGate({});
   assert.equal(decision.authorized, false);
-  assert.equal(decision.diagnostic?.code, "SPORE-GOV-3VL-001");
+  assert.equal(decision.diagnostic?.code, "FUNGI-GOV-3VL-001");
 });
 
 // ── Revocation: throws / stale / future-dated / revoked ───────────────────────
@@ -319,7 +319,7 @@ test("side-signals fold into certGate: a DENY side-signal sinks an otherwise-ALL
   // An INDETERMINATE side-signal degrades +1 → 0 → deny (audited).
   const degraded = certGate({ ...HEALTHY, sideSignals: [INDETERMINATE] });
   assert.equal(degraded.authorized, false);
-  assert.equal(degraded.diagnostic?.code, "SPORE-GOV-3VL-001");
+  assert.equal(degraded.diagnostic?.code, "FUNGI-GOV-3VL-001");
 
   // An ALLOW side-signal cannot lift anything but must not break a healthy channel.
   const intact = certGate({ ...HEALTHY, sideSignals: [ALLOW, ALLOW] });

@@ -18,7 +18,7 @@
 <text x="40" y="124" font-size="11" fill="#5a6470">② app layout (my-orders-app/)</text>
 <rect x="40" y="130" width="640" height="62" rx="8" fill="#eef3fc" stroke="#5b85dd" stroke-width="1.5"/>
 <rect x="52" y="144" width="118" height="36" rx="6" fill="#e8effb" stroke="#5b85dd" stroke-width="1"/>
-<text x="111" y="160" text-anchor="middle" font-size="11" font-weight="600" fill="#1f3a6b">App.spore</text>
+<text x="111" y="160" text-anchor="middle" font-size="11" font-weight="600" fill="#1f3a6b">App.fungi</text>
 <text x="111" y="174" text-anchor="middle" font-size="9.5" fill="#3a5285">composition root</text>
 <rect x="178" y="144" width="118" height="36" rx="6" fill="#e8effb" stroke="#5b85dd" stroke-width="1"/>
 <text x="237" y="160" text-anchor="middle" font-size="11" font-weight="600" fill="#1f3a6b">App.manifest</text>
@@ -39,7 +39,7 @@
 
 <!-- 3. Build -->
 <rect x="120" y="212" width="480" height="48" rx="8" fill="#e8effb" stroke="#3b6fd4" stroke-width="1.5"/>
-<text x="360" y="233" text-anchor="middle" font-size="13" font-weight="600" fill="#1f3a6b">③ galerina build App.spore  →  one signed artifact pair (Ed25519)</text>
+<text x="360" y="233" text-anchor="middle" font-size="13" font-weight="600" fill="#1f3a6b">③ galerina build App.fungi  →  one signed artifact pair (Ed25519)</text>
 <text x="360" y="250" text-anchor="middle" font-size="11" fill="#3a5285">intra-app flows fuse to one wasm · signed .lmanifest (CBOR)</text>
 
 <!-- Two signed artifacts -->

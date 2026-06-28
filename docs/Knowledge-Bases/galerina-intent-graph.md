@@ -98,7 +98,7 @@ Machine-readable JSON:
       "id": "flow:createOrder",
       "kind": "flow",
       "name": "createOrder",
-      "source": { "file": "api-orders.spore", "line": 12 }
+      "source": { "file": "api-orders.fungi", "line": 12 }
     },
     {
       "id": "capability:payment.charge",
@@ -116,7 +116,7 @@ Machine-readable JSON:
       "from": "flow:createOrder",
       "to": "effect:database.write",
       "kind": "produces_effect",
-      "span": { "file": "api-orders.spore", "start": { "line": 24, "column": 1 }, "end": { "line": 24, "column": 25 } }
+      "span": { "file": "api-orders.fungi", "start": { "line": 24, "column": 1 }, "end": { "line": 24, "column": 25 } }
     }
   ],
   "indexes": {}
@@ -221,7 +221,7 @@ Every graph fact is source-mapped where possible:
   "to": "effect:database.write",
   "kind": "produces_effect",
   "span": {
-    "file": "api-orders.spore",
+    "file": "api-orders.fungi",
     "start": { "line": 24, "column": 1 },
     "end": { "line": 24, "column": 25 }
   }
@@ -336,12 +336,12 @@ Output formats: JSON (primary), JSONL, GraphML, DOT, vector-index chunks.
 
 | Code | Meaning |
 |---|---|
-| `SPORE-INTENT-GRAPH-001` | Intent graph emitted |
-| `SPORE-INTENT-GRAPH-002` | Unresolved edge omitted due to type errors |
-| `SPORE-INTENT-GRAPH-003` | Secret value redacted |
-| `SPORE-INTENT-GRAPH-004` | Schema validation failed |
-| `SPORE-INTENT-GRAPH-005` | Graph contains experimental node kind |
-| `SPORE-INTENT-GRAPH-006` | Transitive summary omitted due to cycle |
+| `FUNGI-INTENT-GRAPH-001` | Intent graph emitted |
+| `FUNGI-INTENT-GRAPH-002` | Unresolved edge omitted due to type errors |
+| `FUNGI-INTENT-GRAPH-003` | Secret value redacted |
+| `FUNGI-INTENT-GRAPH-004` | Schema validation failed |
+| `FUNGI-INTENT-GRAPH-005` | Graph contains experimental node kind |
+| `FUNGI-INTENT-GRAPH-006` | Transitive summary omitted due to cycle |
 
 ---
 

@@ -45,7 +45,7 @@ graph TD
 
     subgraph DEVTOOLS["DevTools"]
         DS["galerina-devtools-security\nrunSecurityAudit · PCI DSS 4.0.1"]
-        DN["galerina-devtools-naming\nSPORE-NAMING-001..005"]
+        DN["galerina-devtools-naming\nFUNGI-NAMING-001..005"]
         DC["galerina-devtools-context\ncontext receipts · --summary"]
         DI["galerina-devtools-intelligence\nBM25 hybrid search"]
         DP["galerina-devtools-provenance\ndata lineage · W3C PROV-JSON"]
@@ -81,16 +81,16 @@ graph TD
 
 ```mermaid
 flowchart LR
-    SRC([".spore source"]) --> LEX
+    SRC([".fungi source"]) --> LEX
 
     subgraph STATIC["Static Analysis Pipeline"]
-        LEX["Lexer\nSPORE-LEX-001..006\nTokenStream"]
+        LEX["Lexer\nFUNGI-LEX-001..006\nTokenStream"]
         PAR["Parser\nAST · FlowDecl\ncontract blocks\nfor/match/record"]
-        SYM["Symbol Resolver\nSPORE-NAME-001..003"]
-        TYP["Type Checker\nSPORE-TYPE-001..023\nAuto deferral"]
-        VSC["Value-State Checker\nSPORE-VALUESTATE/TAINT\nSPORE-SECRET-001..003\nsource_from · list/record taint"]
-        EFF["Effect Checker\nSPORE-EFFECT-001..005\ndeny-by-default"]
-        GOV["Governance Verifier\nSPORE-GOV-001..020\nSPORE-TERM-001\nProofGraph\nEpilogueReceipt\nLiabilityProfile"]
+        SYM["Symbol Resolver\nFUNGI-NAME-001..003"]
+        TYP["Type Checker\nFUNGI-TYPE-001..023\nAuto deferral"]
+        VSC["Value-State Checker\nFUNGI-VALUESTATE/TAINT\nFUNGI-SECRET-001..003\nsource_from · list/record taint"]
+        EFF["Effect Checker\nFUNGI-EFFECT-001..005\ndeny-by-default"]
+        GOV["Governance Verifier\nFUNGI-GOV-001..020\nFUNGI-TERM-001\nProofGraph\nEpilogueReceipt\nLiabilityProfile"]
     end
 
     subgraph EMIT["Code Generation"]
@@ -122,19 +122,19 @@ flowchart LR
 
 ```mermaid
 graph TD
-    subgraph SELFHOSTED["Stage B — 8 self-hosted .spore modules"]
-        L["lexer.spore\nTokenises .spore source\nAll keywords + literals"]
-        P["parser.spore\nparseFlows · parseMatchArms\nparseForLoop · parseRecordLiteral\ncross-module import skip"]
-        TC2["type-checker.spore\nFlow body type checking\nSPORE-TYPE subset"]
-        EC["effect-checker.spore\nEffect validation\ndeny-by-default enforcement"]
-        GV["governance-verifier.spore\ncontract block validation\nProofGraph per flow"]
-        GE["gir-emitter.spore\nAST → GIR ops\nfield·arrlit·reclit·matche·arm\nname2 binding for destructure"]
-        RT["runtime.spore\nexecGIRBody · evalGIRExpr\nRtValue{Int·Bool·String·tag·record·list}\nRunResult{retVal·auditLog}\nAppend · count · get · length\ncontains · toStr · unwrapOr\nmatch Some(x) destructuring\nfor range + iterator loops\nobservable effects (AuditLog.write)"]
-        CAP["compiler.capabilities.spore\nCapability declarations\ncompiler + user-runtime domains"]
+    subgraph SELFHOSTED["Stage B — 8 self-hosted .fungi modules"]
+        L["lexer.fungi\nTokenises .fungi source\nAll keywords + literals"]
+        P["parser.fungi\nparseFlows · parseMatchArms\nparseForLoop · parseRecordLiteral\ncross-module import skip"]
+        TC2["type-checker.fungi\nFlow body type checking\nFUNGI-TYPE subset"]
+        EC["effect-checker.fungi\nEffect validation\ndeny-by-default enforcement"]
+        GV["governance-verifier.fungi\ncontract block validation\nProofGraph per flow"]
+        GE["gir-emitter.fungi\nAST → GIR ops\nfield·arrlit·reclit·matche·arm\nname2 binding for destructure"]
+        RT["runtime.fungi\nexecGIRBody · evalGIRExpr\nRtValue{Int·Bool·String·tag·record·list}\nRunResult{retVal·auditLog}\nAppend · count · get · length\ncontains · toStr · unwrapOr\nmatch Some(x) destructuring\nfor range + iterator loops\nobservable effects (AuditLog.write)"]
+        CAP["compiler.capabilities.fungi\nCapability declarations\ncompiler + user-runtime domains"]
     end
 
     subgraph FLOW["Self-hosted execution flow"]
-        IN[".spore source string"] --> L
+        IN[".fungi source string"] --> L
         L -->|"token stream"| P
         P -->|"ParseResult{flows, imports}"| TC2
         TC2 --> EC --> GV
@@ -217,11 +217,11 @@ graph LR
     end
 
     subgraph ENFORCED["Compiler-enforced at build time"]
-        E1["effects → SPORE-EFFECT-001..005\ndeny-by-default: omit = pure"]
-        E2["intent → SPORE-GOV-010\nrequired for secure flows"]
-        E3["secrets → SPORE-SECRET-001/002/003\nsink guards: log/serialize/network"]
-        E4["invariant → SPORE-TERM-001\ndecreases annotation"]
-        E5["cyber_physical_hardening → SPORE-GOV-017\nvalidates values + warns if low-risk"]
+        E1["effects → FUNGI-EFFECT-001..005\ndeny-by-default: omit = pure"]
+        E2["intent → FUNGI-GOV-010\nrequired for secure flows"]
+        E3["secrets → FUNGI-SECRET-001/002/003\nsink guards: log/serialize/network"]
+        E4["invariant → FUNGI-TERM-001\ndecreases annotation"]
+        E5["cyber_physical_hardening → FUNGI-GOV-017\nvalidates values + warns if low-risk"]
     end
 
     SIG --> CB --> BODY
@@ -245,7 +245,7 @@ sequenceDiagram
     participant RT as Runtime
     participant AL as AuditLog
 
-    DEV->>CC: galerina build program.spore
+    DEV->>CC: galerina build program.fungi
     CC->>CC: lex → parse → typecheck
     CC->>CC: value-state: taint + secret sink guards
     CC->>CC: effect check: deny-by-default
@@ -256,7 +256,7 @@ sequenceDiagram
     CC->>CC: emitGIR → WAT → wabt → .wasm
     CC-->>DEV: build/program.wasm (+ .lmanifest planned)
 
-    DEV->>RT: galerina run program.spore --invoke main
+    DEV->>RT: galerina run program.fungi --invoke main
     RT->>RT: compile to WASM (same pipeline)
     RT->>RT: WebAssembly.instantiate
     RT->>RT: ① pre-invariant check (if declared)
@@ -272,17 +272,17 @@ sequenceDiagram
 
 ```mermaid
 graph TD
-    subgraph INPUT["Input: auth-service corpus (31 .spore files)"]
-        F["examples/auth-service/*.spore"]
+    subgraph INPUT["Input: auth-service corpus (31 .fungi files)"]
+        F["examples/auth-service/*.fungi"]
     end
 
     subgraph TOOLS["DevTools packages"]
-        SEC["galerina-devtools-security\nrunSecurityAudit\nSPORE-TAINT/GATE/SECRET/GOV/PCI\n34 tests"]
-        NAM["galerina-devtools-naming\nSPORE-NAMING-001..005\nabbreviation detection\n15 tests"]
+        SEC["galerina-devtools-security\nrunSecurityAudit\nFUNGI-TAINT/GATE/SECRET/GOV/PCI\n34 tests"]
+        NAM["galerina-devtools-naming\nFUNGI-NAMING-001..005\nabbreviation detection\n15 tests"]
         CTX["galerina-devtools-context\nContext receipts\n51-97% token reduction\n35 tests"]
         INT["galerina-devtools-intelligence\nBM25 hybrid search\n81 flows indexed\n16 tests"]
         PRV["galerina-devtools-provenance\ndata lineage graph\nW3C PROV-JSON output\n20 tests"]
-        PCI["galerina-devtools-pci\nPCI DSS 4.0.1\nSPORE-PCI-001..010\n12 tests"]
+        PCI["galerina-devtools-pci\nPCI DSS 4.0.1\nFUNGI-PCI-001..010\n12 tests"]
         BEN["galerina-devtools-benchmarks\n23 benchmarks\ngoverned vs Rust/WASM/Node/Python"]
     end
 

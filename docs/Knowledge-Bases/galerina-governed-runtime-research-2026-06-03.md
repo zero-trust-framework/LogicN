@@ -16,7 +16,7 @@ Before the enhancement list, a record of what no comparable open-source system c
   in a single governance model. Cedar, OPA, Koka, in-toto — none do this.
 - **Post-quantum governance signatures in the language runtime** — ML-DSA-65 (NIST FIPS 204)
   as a first-class runtime signing primitive is unique in the language/runtime space.
-- **Taint + sink guards + secret-sink trilogy** (SPORE-SECRET-001/002/003) baked into the
+- **Taint + sink guards + secret-sink trilogy** (FUNGI-SECRET-001/002/003) baked into the
   compiler as diagnostic codes — Koka/Pony/Austral don't operationalize information-flow
   to HTTP/log/serialize sinks with structured codes.
 
@@ -72,7 +72,7 @@ independently authored, updated, analysed, and audited without recompiling the a
 Currently Galerina `contract {}` blocks are compiled into the module they govern, coupling
 compliance lifecycle to development lifecycle.
 
-**Mapping to Galerina:** introduce versioned governance bundle files (`*.sporepolicy`) that
+**Mapping to Galerina:** introduce versioned governance bundle files (`*.fungipolicy`) that
 the runtime can load separately from the compiled module. The governance verifier binds
 the module's governance signature to the loaded bundle's hash. Compliance teams can
 update `authority {}` / `effects {}` / `privacy {}` clauses without touching application
@@ -96,7 +96,7 @@ internal state — maps naturally onto Galerina's authority-token model.
 **Mapping to Galerina:** reframe `contract.authority {}` and `contract.effects {}` to
 include deny semantics: "this module may not read secret bindings directly; it may only
 call them through their declared accessor interface." The taint checker's sink guards are
-already expressed in deny terms (SPORE-SECRET-001: must not log); extending this to the
+already expressed in deny terms (FUNGI-SECRET-001: must not log); extending this to the
 full capability model would give stronger static isolation guarantees.
 
 **Action:** add `deny:` qualifiers to `contract.authority {}` blocks; extend the
@@ -114,7 +114,7 @@ error), use-after-revocation (consuming a value twice = rejected), and double-cl
 **Mapping to Galerina:** `contract.secrets {}` values and cryptographic key objects are
 natural candidates for a **restricted linear fragment** — they can only be used exactly
 once, must be explicitly consumed (redacted, encrypted, or passed to a declared sink), and
-cannot be silently discarded. This elevates SPORE-SECRET-001/002/003 from "detected at the
+cannot be silently discarded. This elevates FUNGI-SECRET-001/002/003 from "detected at the
 check pass" to "impossible by construction in the type system."
 
 **Incremental path:** introduce a `once` type qualifier (not a full linear type system).

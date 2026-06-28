@@ -17,7 +17,7 @@
  * The shaderSource is a WGSL stub in Phase 22B; full WGSL emission in Phase 23.
  */
 export interface WebGPUComputePlan {
-  readonly schemaVersion: "spore.gpu.v1";
+  readonly schemaVersion: "fungi.gpu.v1";
   readonly flowName: string;
   readonly shaderSource: string;     // WGSL stub
   readonly bindGroups: readonly { binding: number; name: string; type: "storage" | "uniform" }[];
@@ -53,7 +53,7 @@ export function buildWebGPUPlan(
   }));
 
   return {
-    schemaVersion: "spore.gpu.v1",
+    schemaVersion: "fungi.gpu.v1",
     flowName,
     shaderSource: WGSL_SKELETON_TEMPLATE,
     bindGroups,
@@ -70,7 +70,7 @@ export function buildWebGPUPlan(
  * Targets neural processing units via ONNX model export.
  */
 export interface NPUKernelPlan {
-  readonly schemaVersion: "spore.npu.v1";
+  readonly schemaVersion: "fungi.npu.v1";
   readonly flowName: string;
   readonly inputShapes: readonly string[];
   readonly outputShapes: readonly string[];
@@ -100,7 +100,7 @@ export function buildNPUPlan(
   const quantized = compatible.some((t) => t.elementType === "Int8");
 
   return {
-    schemaVersion: "spore.npu.v1",
+    schemaVersion: "fungi.npu.v1",
     flowName,
     inputShapes,
     outputShapes,
@@ -130,7 +130,7 @@ export interface APUSharedBuffer {
  * Maps tensor bindings to APU shared memory buffers for zero-copy execution.
  */
 export interface APUSharedMemoryPlan {
-  readonly schemaVersion: "spore.apu.v1";
+  readonly schemaVersion: "fungi.apu.v1";
   readonly flowName: string;
   readonly sharedBuffers: readonly APUSharedBuffer[];
 }
@@ -183,7 +183,7 @@ export function buildAPUSharedMemoryPlan(
   }
 
   return {
-    schemaVersion: "spore.apu.v1",
+    schemaVersion: "fungi.apu.v1",
     flowName,
     sharedBuffers,
   };

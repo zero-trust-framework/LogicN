@@ -25,7 +25,7 @@
 | Track | Folder | Emphasis | State |
 |---|---|---|---|
 | **`.tmf` spec track** | `C:\wwwprojects\Galerina-R-AND-D\tmf\` | Byte-precise **format** + **integrity/authenticity** + reference vectors | spec-complete (signing Blocked on a vetted lib) |
-| **tri-encryption track** | `C:\wwwprojects\Galerina-R-AND-D\tri-encription\` | **Confidentiality** design + **measured benchmark** + **runnable `.spore`** governance + threat literature | done; verified 10/10 + `galerina check` clean |
+| **tri-encryption track** | `C:\wwwprojects\Galerina-R-AND-D\tri-encription\` | **Confidentiality** design + **measured benchmark** + **runnable `.fungi`** governance + threat literature | done; verified 10/10 + `galerina check` clean |
 
 **Same root, complementary growth.** `notes/1.md · 2.md · 3.md` are **byte-identical** across both
 folders (md5 match) — both tracks started from the same aspirational source material and corrected it the
@@ -36,7 +36,7 @@ plus a measured benchmark and a runnable governance clone the spec track only sp
 
 **Adjacent R&D at the parent** (`C:\wwwprojects\Galerina-R-AND-D\`), referenced but not merged here:
 `FFSM\` (governed `ffsim` quantum-sim bridge, task #199 — same attestation idiom), and
-`photonic-tri-governance\` (the three-valued K3 / Direction-A governance the tri-encryption `.spore` clone
+`photonic-tri-governance\` (the three-valued K3 / Direction-A governance the tri-encryption `.fungi` clone
 exercises).
 
 ---
@@ -48,7 +48,7 @@ Both tracks' artifacts were re-run, not trusted:
   `43386e64…685212` equals the TMX root by construction.
 - **tri-encryption bench**: `node --test` → **10/10 pass**, real `@noble` primitives (not stubs), byte
   constants match (ct=1088, hybrid=1120, ML-DSA-65 sig=3309, shared=32), perf honestly labelled pure-JS.
-- **tri-encryption `.spore`**: `galerina check k3-gate.spore` → **0 errors / 0 warnings**; K3 + verify-before-decrypt
+- **tri-encryption `.fungi`**: `galerina check k3-gate.fungi` → **0 errors / 0 warnings**; K3 + verify-before-decrypt
   semantics reproduce on the WASM path.
 - **External claims**: vec2text ~92% (Morris et al.), NIST **SP 800-227** (KEMs), **RFC 9180** (HPKE) — all confirmed.
 - **One claim corrected by primary-source check:** the tri-encryption doc's "KB contradiction at
@@ -68,15 +68,15 @@ derivations of the same security core is the strongest validation available here
 |---|---|---|---|
 | F1 | **Integrity** = TMX-256, a 3-ary SHAKE256 tree XOF over coordinate-bound leaves; root binds the header, never itself | ✅ verified vectors | tmf `spec/tmx-256-construction-v0.md` |
 | F2 | **Authenticity** = ML-DSA-65 (FIPS 204) **over the root**; hybrid Ed25519+ML-DSA-65, AND verification | ✅ both, aligned | tmf `spec/signature-custody-v0.md` · tri `quantum-resilient-tri-encryption.md` |
-| F3 | **Confidentiality** is genuinely missing in Galerina/`.tmf` → **add KEM-DEM/HPKE**: hybrid X25519+ML-KEM-768 → KDF → AEAD, **under** the TMX+ML-DSA gate, verify-before-decrypt, fail-closed | ✅ designed + benched | tri `SPORE-AMD-024-tmf-confidentiality.md`, `bench/` |
-| F4 | **Crypto-on-core** (`SPORE-SUBSTRATE-001`): hashing/keying/signing stay **bit-exact on a deterministic digital core**; photonics confined to QRNG / optical-PUF / optical-LSH, outside the gate, re-verified | ✅ re-derived twice | both tracks; KB `galerina-hardware-future-substrates.md` |
+| F3 | **Confidentiality** is genuinely missing in Galerina/`.tmf` → **add KEM-DEM/HPKE**: hybrid X25519+ML-KEM-768 → KDF → AEAD, **under** the TMX+ML-DSA gate, verify-before-decrypt, fail-closed | ✅ designed + benched | tri `FUNGI-AMD-024-tmf-confidentiality.md`, `bench/` |
+| F4 | **Crypto-on-core** (`FUNGI-SUBSTRATE-001`): hashing/keying/signing stay **bit-exact on a deterministic digital core**; photonics confined to QRNG / optical-PUF / optical-LSH, outside the gate, re-verified | ✅ re-derived twice | both tracks; KB `galerina-hardware-future-substrates.md` |
 | F5 | **No photonic SHA-256** — analog optics ≤~10 bits, breaks the avalanche; SHA-256 is already Grover-acceptable | ✅ | tri `photonic-sha256-integrity.md` |
-| F6 | **Tri-logic belongs in the key-release *gate*** (proven fail-closed, `collapse(0)=deny`), **not the cipher**; the only honest "trit in the crypto" is NTRU/ML-KEM's exact **digital** ternary/small-signed polynomials | ✅ proven runnable | tri `spore/k3-gate.spore` · tmf `research/ternary-in-cryptography.md` |
-| F7 | **No in-gate self-heal** — reconstruction inside the trust gate is forbidden; use **Reed-Solomon erasure on ciphertext, outside the gate**, re-verify vs. the signed root, fail-closed | ✅ both, aligned | tri `SPORE-AMD-024…` · tmf `encryption-architecture.md` §5 |
+| F6 | **Tri-logic belongs in the key-release *gate*** (proven fail-closed, `collapse(0)=deny`), **not the cipher**; the only honest "trit in the crypto" is NTRU/ML-KEM's exact **digital** ternary/small-signed polynomials | ✅ proven runnable | tri `fungi/k3-gate.fungi` · tmf `research/ternary-in-cryptography.md` |
+| F7 | **No in-gate self-heal** — reconstruction inside the trust gate is forbidden; use **Reed-Solomon erasure on ciphertext, outside the gate**, re-verify vs. the signed root, fail-closed | ✅ both, aligned | tri `FUNGI-AMD-024…` · tmf `encryption-architecture.md` §5 |
 | F8 | **NVFP4 `Vector` codec is real** (9-byte block = 16×E2M1 + 1-byte E4M3), opt-in, **lossy → never integrity bytes**, opaque to TMX | ✅ verified vs NVIDIA source | tmf `spec/nvfp4-codec-v0.md`, `research/external-repos-analysis.md` |
 | F9 | **Cleartext semantic attribute layer cannot survive zero-trust** — embeddings invert to ~plaintext (vec2text ~92%). **Encrypt the attribute vector; filter at trusted endpoints.** Kills the notes' "firewalls filter on meaning" feature | ✅ literature confirmed | tri `metadata-confidentiality.md` |
 | F10 | **No fictional perf / hardware** — "12.5M RPS / sub-0.01 ms / single clock cycle", in-cache self-heal, "store a 0 in 0 bits", "photonic SHA-256", `galerina-substrate-mytri` — all rejected | ✅ both ledgers | tmf `real-vs-aspirational-ledger.md` · tri §6 |
-| F11 | **Galerina dogfooding gaps** (from the `.spore` clone): `governance` reserved word (no hint) **✅ FIXED**; `secure flow main` absent from `--invoke` **⏳ OPEN**; CLI Bool args silently mis-marshal **✅ FIXED** | ✅ reproduced; 2/3 fixed (re-verified 2026-06-16) | tri `spore/galerina-gaps-candidate-issues.md` |
+| F11 | **Galerina dogfooding gaps** (from the `.fungi` clone): `governance` reserved word (no hint) **✅ FIXED**; `secure flow main` absent from `--invoke` **⏳ OPEN**; CLI Bool args silently mis-marshal **✅ FIXED** | ✅ reproduced; 2/3 fixed (re-verified 2026-06-16) | tri `fungi/galerina-gaps-candidate-issues.md` |
 
 ---
 
@@ -101,7 +101,7 @@ derivations of the same security core is the strongest validation available here
 - `C:\wwwprojects\Galerina-R-AND-D\tmf\spec\nvfp4-codec-v0.md` — opt-in `Vector`-modality NVFP4 codec.
 - `C:\wwwprojects\Galerina-R-AND-D\tmf\spec\signature-custody-v0.md` — hybrid sig block + key custody (impl Blocked); **TASK 2, #34-ready.**
 - `C:\wwwprojects\Galerina-R-AND-D\tmf\spec\inclusion-proof-v0.md` — TMX-256 Merkle-path proof (selective disclosure; Phase 1c).
-- `C:\wwwprojects\Galerina-R-AND-D\tmf\spec\tmf-encryption-v0.md` — **the v1 confidentiality layer** (promoted from `SPORE-AMD-024`): 3 orthogonal selectors (`kem_profile`/`aead_suite`/`dem_mode`), SHAKE256 DEM KDF, AAD-committing AEAD, STREAM nonce, fail-closed verify-before-decrypt; resolves the AAD-binding question (Q5).
+- `C:\wwwprojects\Galerina-R-AND-D\tmf\spec\tmf-encryption-v0.md` — **the v1 confidentiality layer** (promoted from `FUNGI-AMD-024`): 3 orthogonal selectors (`kem_profile`/`aead_suite`/`dem_mode`), SHAKE256 DEM KDF, AAD-committing AEAD, STREAM nonce, fail-closed verify-before-decrypt; resolves the AAD-binding question (Q5).
 - `C:\wwwprojects\Galerina-R-AND-D\tmf\spec\_vectors\gen_tmx_vectors.py` · `gen_tmf_container.py` · `gen_nvfp4_block.py` · `gen_sig_block.py` · `gen_inclusion_proof.py` · `gen_tmf_encryption.py` (+ `*.txt` outputs) — **5+ stdlib reference generators** + golden vectors (the cross-language conformance oracle).
 
 **Source**
@@ -115,11 +115,11 @@ derivations of the same security core is the strongest validation available here
 - `C:\wwwprojects\Galerina-R-AND-D\tri-encription\research\quantum-resilient-tri-encryption.md` — confidentiality design + KEM-DEM + tri-logic in both layers.
 - `C:\wwwprojects\Galerina-R-AND-D\tri-encription\research\photonic-sha256-integrity.md` — "photonic SHA-256?" verdict (no) + honest photonic integrity architecture.
 - `C:\wwwprojects\Galerina-R-AND-D\tri-encription\research\metadata-confidentiality.md` — attribute-layer leakage + metadata-minimization.
-- `C:\wwwprojects\Galerina-R-AND-D\tri-encription\research\SPORE-AMD-024-tmf-confidentiality.md` — the `.tmf` confidentiality blueprint (container, STREAM, RS self-heal).
+- `C:\wwwprojects\Galerina-R-AND-D\tri-encription\research\FUNGI-AMD-024-tmf-confidentiality.md` — the `.tmf` confidentiality blueprint (container, STREAM, RS self-heal).
 
 **Engineering (runnable, verified)**
 - `C:\wwwprojects\Galerina-R-AND-D\tri-encription\bench\` — `bench.mjs`, `tmf-crypto.test.mjs`, `lib\{k3,kemdem,rs,stream,tmx}.mjs`, `README.md` (`npm test` → 10/10; `npm run bench`).
-- `C:\wwwprojects\Galerina-R-AND-D\tri-encription\spore\k3-gate.spore` + `spore\README.md` — K3 governance + verify-before-decrypt, `galerina check` clean, runs on WASM.
+- `C:\wwwprojects\Galerina-R-AND-D\tri-encription\fungi\k3-gate.fungi` + `fungi\README.md` — K3 governance + verify-before-decrypt, `galerina check` clean, runs on WASM.
 
 **Source**
 - `C:\wwwprojects\Galerina-R-AND-D\tri-encription\notes\1.md · 2.md · 3.md` — ≡ the `.tmf` notes (identical).
@@ -142,7 +142,7 @@ invented ternary cipher**. No contradictions found between the tracks.
 - **D-A. AEAD cipher (the one real divergence): AES-256-GCM vs Ascon-AEAD128.** *(Corrected 2026-06-16 on
   takeover — primary-source check.)* This is a genuine **cross-track** divergence, **not** an internal
   inconsistency: the tri-encryption track is **AES-256-GCM throughout** (incl. `quantum-resilient-tri-encryption.md`
-  §4 and `SPORE-AMD-024`); the `.tmf` spec track is **Ascon-AEAD128** (`encryption-architecture.md`). Both are
+  §4 and `FUNGI-AMD-024`); the `.tmf` spec track is **Ascon-AEAD128** (`encryption-architecture.md`). Both are
   FIPS-standardised and defensible — Ascon (SP 800-232): lightweight, side-channel-friendly, 128-bit, ideal
   for constrained/embedded; AES-256-GCM: 256-bit Grover headroom, AES-NI-ubiquitous (multi-GB/s on the
   deterministic core), suite-consistent with the level-3 ML-KEM-768/ML-DSA-65. **→ Resolve to a crypto-profile
@@ -171,7 +171,7 @@ Status: ✅ done/verified · 🔜 next (R&D folder) · 🚦 gated on owner go ·
 
 ### Phase 0 — Foundations  ✅ DONE & VERIFIED
 - `.tmf` trust-layer spec (TMX-256, container, NVFP4 codec, sig+custody) — byte-precise, verified vectors, cross-consistent.
-- Confidentiality design + validation — KEM-DEM, bench 10/10, runnable K3 `.spore`.
+- Confidentiality design + validation — KEM-DEM, bench 10/10, runnable K3 `.fungi`.
 
 ### Phase 1 — Reconcile & complete the spec  🔜 (R&D folder)
 - **Adopt the crypto-profile registry** (D-A): Ascon default + AES-256 archival; fix the tri-encryption summary.
@@ -181,7 +181,7 @@ Status: ✅ done/verified · 🔜 next (R&D folder) · 🚦 gated on owner go ·
   published root `43386e64…`; tamper / wrong-leaf fail closed. Selective disclosure / streaming verification.
 - ✅ **1d DONE** — **Confidentiality layer promoted to a byte-precise, oracle-backed spec**
   (`tmf/spec/tmf-encryption-v0.md` + `_vectors/gen_tmf_encryption.py`), the v1 layer the container deferred.
-  Disentangles the `SPORE-AMD-024` `0x01/0x02` overload into 3 orthogonal selector bytes; pins the SHAKE256 DEM
+  Disentangles the `FUNGI-AMD-024` `0x01/0x02` overload into 3 orthogonal selector bytes; pins the SHAKE256 DEM
   KDF, AAD-committing AEAD, 36-B AAD context (**resolves Q5**), KEM block layout (1088/1120, X-Wing order),
   and STREAM nonce — all matched to the verified `@noble` bench. Deterministic bytes reproduce in stdlib;
   KEM/AEAD bytes are labelled placeholders. Adversarially verified (4 findings, 3 fixed, 1 dismissed).
@@ -193,13 +193,13 @@ Status: ✅ done/verified · 🔜 next (R&D folder) · 🚦 gated on owner go ·
   cleartext-attribute filtering; endpoint-side only.
 - **Native-WebCrypto AES comparison in `bench/`** — show the AEAD *ceiling* (AES-NI ~GB/s) vs pure-JS floor.
 - **Cleanup:** mark the KB `:63` item **resolved** in the tri-encryption docs; flag the AES/Ascon divergence
-  in `FINDINGS-AND-ROADMAP.md`; close the "crypto Blocked in `.spore`" claim with a probe `.spore`.
+  in `FINDINGS-AND-ROADMAP.md`; close the "crypto Blocked in `.fungi`" claim with a probe `.fungi`.
 - Confirm the open micro-decisions (§7).
 
 ### Phase 2 — Engine build: Rust `libtmf_core`  🚦 (production repo; gated on D3)
 Scaffold `libtmf_core` (packed-trit, SHAKE256 via `sha3`, TMX tree, `.tmf` reader/writer) as a
 capability-bounded wrapped backend, `lane: digital`; wire **vetted FIPS-204 + Ed25519** (removes the only
-Blocked piece — real signing); KEM-DEM confidentiality + RS erasure outside the gate; `.spore` governance
+Blocked piece — real signing); KEM-DEM confidentiality + RS erasure outside the gate; `.fungi` governance
 contract in `packages-galerina`. **The Python + `@noble` vectors become the cross-language conformance oracle.**
 
 ### Phase 3 — Assurance & profiles  ✅ DONE (2026-06-16)
@@ -209,7 +209,7 @@ contract in `packages-galerina`. **The Python + `@noble` vectors become the cros
   golden vectors updated.
 - ✅ **End-to-end section round-trip measurement** (`bench/section-roundtrip.mjs`, composition not RPS, i9-9900K):
   L3 ~27 ms, L5+ML-DSA-87 ~43 ms, L5+SLH-DSA-256s ~5.3 s (SLH-DSA *sign* is the cold-path cost; verify ~13 ms).
-- ✅ **Expanded the `.spore` governance clone** (`spore/k3-policy.spore`: `allOf`/`anyOf` + `authorizeRead`/`egressRedact`
+- ✅ **Expanded the `.fungi` governance clone** (`fungi/k3-policy.fungi`: `allOf`/`anyOf` + `authorizeRead`/`egressRedact`
   egress seam, `galerina check` clean, `--invoke`-verified; surfaced GAP-4).
 
 ### Phase 4 — Storage & query (the DB half)  ✅ DESIGN DONE (2026-06-16)
@@ -299,19 +299,19 @@ Full triage: `tmf\research\real-vs-aspirational-ledger.md` and `tri-encription\F
 2. Update `tmf\research\encryption-architecture.md` for the **metadata-routing kill** + the DEM registry.
 3. In the tri-encryption docs: mark the **KB `:63` item resolved**, **flag the AES/Ascon divergence**, tighten
    the "92%/32-token" shorthand, and add the **committing-AEAD** task to Next.
-4. Add a one-line probe `.spore` to **prove "crypto is Blocked in `.spore`"** (close the unverified claim).
+4. Add a one-line probe `.fungi` to **prove "crypto is Blocked in `.fungi`"** (close the unverified claim).
 5. Decide folder consolidation (Q9) — I can keep both folders + this index, or consolidate on your word.
 
 *Status 2026-06-16 (on takeover): actions 1–4 **executed** — AEAD registry (AES-256-GCM default) + committing
 AEAD + metadata-routing kill propagated into `tmf\research\encryption-architecture.md` §0,
-`tri-encription\research\SPORE-AMD-024…` §2.3/§4, and the `tmf\spec\tmf-container-v0.md` §10 v1 note; the
-"crypto-Blocked-in-.spore" claim closed with `tri-encription\spore\probe-no-bitwise.spore` (SPORE-PARSE-001 on `^`).
+`tri-encription\research\FUNGI-AMD-024…` §2.3/§4, and the `tmf\spec\tmf-container-v0.md` §10 v1 note; the
+"crypto-Blocked-in-.fungi" claim closed with `tri-encription\fungi\probe-no-bitwise.fungi` (FUNGI-PARSE-001 on `^`).
 Action 5 (folder consolidation): kept both folders, this doc canonical; physical merge deferred. The 3 Galerina
-dogfooding gaps are staged as filing-ready issues in `tri-encription\spore\galerina-gaps-candidate-issues.md`
+dogfooding gaps are staged as filing-ready issues in `tri-encription\fungi\galerina-gaps-candidate-issues.md`
 (owner moves them to the real issues repo; TritMesh off-limits).*
 
 *Status 2026-06-16 (cont.): with TASK 2 frozen and the oracle airtight, the **v1 confidentiality layer was
-promoted from the `SPORE-AMD-024` sketch into the byte-precise, oracle-backed spec track** —
+promoted from the `FUNGI-AMD-024` sketch into the byte-precise, oracle-backed spec track** —
 `tmf\spec\tmf-encryption-v0.md` + `_vectors\gen_tmf_encryption.py` (the 5th generator). It disentangles the
 sketch's `0x01/0x02` axis-overload into 3 orthogonal selectors, pins the SHAKE256 DEM KDF + AAD-committing
 AEAD + 36-B AAD context (**resolves Q5**) + STREAM nonce against the verified bench, and was adversarially

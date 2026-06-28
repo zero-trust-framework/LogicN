@@ -173,12 +173,12 @@ Traditional and readable operators may be mixed in the same expression.
 Because readable forms are aliases, they need their own diagnostic family for
 unknown or ambiguous readable expressions.
 
-Suggested prefix: `SPORE-READABLE-*`
+Suggested prefix: `FUNGI-READABLE-*`
 
-### SPORE-READABLE-001 — Unknown readable operator
+### FUNGI-READABLE-001 — Unknown readable operator
 
 ```galerina
-if amount is massively greater than limit   // SPORE-READABLE-001
+if amount is massively greater than limit   // FUNGI-READABLE-001
 ```
 
 ```text
@@ -186,10 +186,10 @@ Unknown readable comparison.
 Try: amount is greater than limit
 ```
 
-### SPORE-READABLE-002 — Ambiguous readable expression
+### FUNGI-READABLE-002 — Ambiguous readable expression
 
 ```galerina
-if amount is not greater than less than limit   // SPORE-READABLE-002
+if amount is not greater than less than limit   // FUNGI-READABLE-002
 ```
 
 ```text

@@ -1,7 +1,7 @@
 /**
- * Self-hosted GIR emitter (gir-emitter.spore) — execution tests.
+ * Self-hosted GIR emitter (gir-emitter.fungi) — execution tests.
  *
- * Exercises the Stage B GIR emitter by executing the .spore flows through the
+ * Exercises the Stage B GIR emitter by executing the .fungi flows through the
  * production interpreter. GIR = Governed Intermediate Representation, the form
  * between AST and backend lowering. Each flow contributes TWO GIR nodes:
  *   - a "flowDecl" metadata node (qualifier/returnType/effect/param counts)
@@ -21,9 +21,9 @@ import { dirname, join } from "node:path";
 import { parseProgram, executeFlow } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const GIR_SPORE = join(__dir, "..", "src", "self-hosted", "gir-emitter.spore");
+const GIR_FUNGI = join(__dir, "..", "src", "self-hosted", "gir-emitter.fungi");
 
-const program = parseProgram(readFileSync(GIR_SPORE, "utf8"), "gir-emitter.spore");
+const program = parseProgram(readFileSync(GIR_FUNGI, "utf8"), "gir-emitter.fungi");
 
 // ── value-model builders (interpreter takes tagged values / Maps) ──
 const vStr = (s) => ({ __tag: "string", value: String(s) });
@@ -97,14 +97,14 @@ async function emit(flows) {
 const exprFor = (exprNodes, flowName) => exprNodes.find((e) => e.flowName === flowName);
 const nodeFor = (nodes, flowName) => nodes.find((n) => n.flowName === flowName);
 
-describe("gir-emitter.spore — parses clean", () => {
+describe("gir-emitter.fungi — parses clean", () => {
   it("has zero parse errors", () => {
     const errors = program.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, errors.map((e) => e.message).join(", "));
   });
 });
 
-describe("gir-emitter.spore — expression GIR ops", () => {
+describe("gir-emitter.fungi — expression GIR ops", () => {
   it("literal → op 'const', resultType carries litType", async () => {
     const { exprNodes } = await emit([
       flow({ name: "f", returnType: "Int", returnExpr: retExpr("literal", "Int") }),
@@ -163,7 +163,7 @@ describe("gir-emitter.spore — expression GIR ops", () => {
   });
 });
 
-describe("gir-emitter.spore — flow-decl GIR node", () => {
+describe("gir-emitter.fungi — flow-decl GIR node", () => {
   it("pure effect-free flow → flowDecl node with isPure/isEffectFree true", async () => {
     const { nodes } = await emit([
       flow({ name: "f", returnType: "Int", returnExpr: retExpr("literal", "Int") }),
@@ -196,7 +196,7 @@ describe("gir-emitter.spore — flow-decl GIR node", () => {
   });
 });
 
-describe("gir-emitter.spore — module emission", () => {
+describe("gir-emitter.fungi — module emission", () => {
   it("each flow contributes BOTH a flowDecl node and an expr node", async () => {
     const { nodes, exprNodes, flowCount } = await emit([
       flow({ name: "a", returnType: "Int", returnExpr: retExpr("literal", "Int") }),

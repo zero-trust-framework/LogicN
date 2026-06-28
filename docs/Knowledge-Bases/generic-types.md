@@ -166,9 +166,9 @@ let erased:     AnyTensor                   = dynamicLoad()
 
 | Valid | Invalid | Error |
 |---|---|---|
-| `Tensor<Float32, [1, 128]>` | `Tensor` | `SPORE-TYPE-009` — expected 2 type arguments |
-| `Tensor<Float16, DynamicShape>` | `Tensor<Float32>` | `SPORE-TYPE-009` — expected 2 type arguments |
-| `AnyTensor` | `Tensor<Float32, [1, 128], Gpu>` | `SPORE-TYPE-009` — expected 2 type arguments |
+| `Tensor<Float32, [1, 128]>` | `Tensor` | `FUNGI-TYPE-009` — expected 2 type arguments |
+| `Tensor<Float16, DynamicShape>` | `Tensor<Float32>` | `FUNGI-TYPE-009` — expected 2 type arguments |
+| `AnyTensor` | `Tensor<Float32, [1, 128], Gpu>` | `FUNGI-TYPE-009` — expected 2 type arguments |
 
 Use `AnyTensor` when both element type and shape are unknown at compile time.
 Use `Tensor<T, DynamicShape>` when the element type is known but shape is dynamic.

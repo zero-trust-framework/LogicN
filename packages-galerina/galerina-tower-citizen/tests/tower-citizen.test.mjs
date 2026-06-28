@@ -137,7 +137,7 @@ describe("TowerRuntime: Load→Execute→Erase lifecycle", () => {
     const tower = new TowerRuntime({ assimilationMemoryBudgetMB: 32 });
     await assert.rejects(
       () => tower.load(TEST_METADATA),
-      /SPORE-ASSIMILATE-002/
+      /FUNGI-ASSIMILATE-002/
     );
   });
 

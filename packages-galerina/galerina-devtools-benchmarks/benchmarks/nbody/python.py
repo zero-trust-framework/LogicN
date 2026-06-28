@@ -5,7 +5,7 @@ import gc
 import tracemalloc
 
 # N-body pairwise gravitational force — scaled-integer kernel.
-# Mirrors benchmark.spore and node.mjs exactly. `//` (floor) == trunc here because
+# Mirrors benchmark.fungi and node.mjs exactly. `//` (floor) == trunc here because
 # every numerator (G * adx) is non-negative and every denominator (d2) is positive,
 # so the checksum is identical across Python, Node and the Galerina integer path.
 G = 100000   # scaled gravitational constant

@@ -137,8 +137,8 @@ docs/
 ```text
 define the language purpose
 define the file structure
-define .spore source files
-define boot.spore
+define .fungi source files
+define boot.fungi
 define strict type rules
 define memory safety goals
 define security-first defaults
@@ -159,7 +159,7 @@ define deployment principles
 ```text
 all main documentation files drafted
 Apache-2.0 licence included
-example .spore files drafted
+example .fungi files drafted
 roadmap agreed
 core terminology consistent
 ```
@@ -170,7 +170,7 @@ core terminology consistent
 
 ### Goal
 
-Build the first parser prototype for `.spore` files.
+Build the first parser prototype for `.fungi` files.
 
 ### Planned Features
 
@@ -186,7 +186,7 @@ basic source-map structure
 ### Syntax to Parse
 
 ```text
-boot.spore
+boot.fungi
 project block
 language block
 entry declaration
@@ -224,8 +224,8 @@ basic failure report
 ### Completion Criteria
 
 ```text
-hello.spore parses successfully
-boot.spore parses successfully
+hello.fungi parses successfully
+boot.fungi parses successfully
 parser reports line/column errors
 AST contains source positions
 ```
@@ -481,7 +481,7 @@ overly broad permissions
 ```text
 formatter works on example files
 linter reports common issues
-VS Code highlights .spore files
+VS Code highlights .fungi files
 CLI help is available
 ```
 
@@ -510,7 +510,7 @@ source-map lookup
 ### Completion Criteria
 
 ```text
-hello.spore can run
+hello.fungi can run
 simple JSON decode example can run
 simple API route example can run
 simple webhook example can be validated
@@ -546,7 +546,7 @@ test structure
 
 ```text
 my-galerina-api-app/
-├── boot.spore
+├── boot.fungi
 ├── src/
 ├── app/
 │   ├── controllers/
@@ -581,8 +581,8 @@ review before any stable release.
 ### Required for 1.0.0-beta.x
 
 ```text
-beta .spore syntax
-beta boot.spore structure
+beta .fungi syntax
+beta boot.fungi structure
 beta strict type rules
 beta Option and Result model
 beta Decision model
@@ -752,23 +752,23 @@ docs/glossary.md
 Examples should be added in this order:
 
 ```text
-hello.spore
-strict-types.spore
-option.spore
-result.spore
-decision.spore
-json-decode.spore
-api-orders.spore
-payment-webhook.spore
-parallel-api-calls.spore
-workers.spore
-rollback.spore
-compute-block.spore
-gpu-plan.spore
-photonic-plan.spore
-ternary-sim.spore
-source-map-error.spore
-ai-context.spore
+hello.fungi
+strict-types.fungi
+option.fungi
+result.fungi
+decision.fungi
+json-decode.fungi
+api-orders.fungi
+payment-webhook.fungi
+parallel-api-calls.fungi
+workers.fungi
+rollback.fungi
+compute-block.fungi
+gpu-plan.fungi
+photonic-plan.fungi
+ternary-sim.fungi
+source-map-error.fungi
+ai-context.fungi
 ```
 
 ---

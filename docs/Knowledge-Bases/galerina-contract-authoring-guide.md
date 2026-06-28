@@ -42,7 +42,7 @@ policy { ... }                                    ← runtime monotonic overlay 
 
 The `policy {}` block is **optional** and **separate from `contract {}`**. It is NOT a sub-block inside `contract {}`. It sits between the contract declaration and the body, and contains runtime monotonic overlay rules (`emergency { on anomaly { deny ... } }`). Most flows will never declare a `policy {}` block — the runtime uses defaults. Only flows that need explicit emergency posture management (financial services, critical infrastructure) declare it explicitly.
 
-```spore
+```fungi
 // ✅ CORRECT — policy {} as its own separate block, between contract and body
 secure flow assessRisk(input: RiskRequest) -> Result<RiskResult, Fault>
 contract {
@@ -111,9 +111,9 @@ Nothing here is *globally* mandatory. Requirement depends on the **flow kind** a
 | `economics` | **Optional, auto-by-default** | cost/resource budget | auto-inferred from CostGraph/ValueGraph when omitted |
 | `epilogue` | **Optional, auto-by-default** | post-exec proof strategy | auto-tier from value when omitted; declare to pin a strategy |
 | `targets` | Optional | execution preference/fallback | hardware/TEE/WASM isolation hints; never grants authority |
-| `invariant` | **Optional / required for high-trust mutation flows** | pre/post condition assertions | evaluated before AND after the body; violations raise SPORE-INV-001 (pre) / SPORE-INV-002 (post); uses `ensure` keyword |
-| `cyber_physical_hardening` | **Strongly discouraged unless Tier 1 ASIC** | physical shielding directives | auto-selected by runtime from ValueGraph. Only declare with high `economics.max_risk_liability` AND physical ASIC hardware. SPORE-GOV-017 warns if declared without need. |
-| `liability` | **NEVER write manually** | max legal/financial exposure | auto-calculated by governance verifier from breach-risk matrix → stored in ProofGraph. SPORE-GOV-018 warns if declared in source. |
+| `invariant` | **Optional / required for high-trust mutation flows** | pre/post condition assertions | evaluated before AND after the body; violations raise FUNGI-INV-001 (pre) / FUNGI-INV-002 (post); uses `ensure` keyword |
+| `cyber_physical_hardening` | **Strongly discouraged unless Tier 1 ASIC** | physical shielding directives | auto-selected by runtime from ValueGraph. Only declare with high `economics.max_risk_liability` AND physical ASIC hardware. FUNGI-GOV-017 warns if declared without need. |
+| `liability` | **NEVER write manually** | max legal/financial exposure | auto-calculated by governance verifier from breach-risk matrix → stored in ProofGraph. FUNGI-GOV-018 warns if declared in source. |
 
 ## Decision guide by flow kind
 
@@ -159,7 +159,7 @@ contract {
   return Ok(amount)
 }
 ```
-(More verified flows: `tests/r6-corpus/r6-00N-*.spore`.)
+(More verified flows: `tests/r6-corpus/r6-00N-*.fungi`.)
 
 ## Reference blueprints (authoritative STRUCTURE; some syntax illustrative/forward)
 
@@ -228,8 +228,8 @@ contract {
 
 A **Domain Guard Policy** is defined in an **external file** (`governance/policies/`), not in the flow. It sets an immutable ceiling on what any flow's contract is allowed to declare. The contract binds to it via `[conforms_to: PolicyName]` — a decorator on the `contract` block header.
 
-```spore
-;; External file: governance/policies/invoicing_guard.spore
+```fungi
+;; External file: governance/policies/invoicing_guard.fungi
 policy InvoicingDomainGuard {
   permitted_effects { gateway.charge, audit.write }
   enforced_limits   { max_memory_ceiling: 4MB }
@@ -257,7 +257,7 @@ The `[conforms_to: X]` is a decorator on the contract block header — NOT a sub
 
 An **Emergency Policy Overlay** is a per-flow, inline block that sits between `contract {}` and `{ body }`. It declares runtime monotonic security responses to anomalies. Most flows never use this.
 
-```spore
+```fungi
 secure flow assessRisk(input: RiskRequest) -> RiskResult
 contract {
   intent  { "Assess risk with emergency posture management." }
@@ -282,7 +282,7 @@ This `policy {}` is NOT a contract sub-block. It is NOT a domain guard. It is NO
 
 ## `invariant {}` — pre/post condition assertions (DRCM Module 2)
 
-`invariant {}` is an **optional sub-block inside `contract {}`** — it sits alongside `intent` and `effects`. It contains one or more `ensure` expressions that are checked **before the body executes** (pre-condition → `SPORE-INV-001`) and **after the body returns** (post-condition → `SPORE-INV-002`).
+`invariant {}` is an **optional sub-block inside `contract {}`** — it sits alongside `intent` and `effects`. It contains one or more `ensure` expressions that are checked **before the body executes** (pre-condition → `FUNGI-INV-001`) and **after the body returns** (post-condition → `FUNGI-INV-002`).
 
 ```galerina
 // ✅ CORRECT — invariant inside contract block
@@ -303,8 +303,8 @@ contract {
 **Rules:**
 - `ensure` expressions must be **simple, evaluable expressions** — not theorem prover calls. The runtime evaluates them directly.
 - Complex arithmetic invariants (`ensure ledger.credits == ledger.debits`) will be static (Phase 4 SMT solver). For now, use runtime-evaluable guards.
-- `SPORE-INV-001` fires when a pre-condition fails; execution aborts before the body runs.
-- `SPORE-INV-002` fires when a post-condition fails; execution aborts before the result is returned.
+- `FUNGI-INV-001` fires when a pre-condition fails; execution aborts before the body runs.
+- `FUNGI-INV-002` fires when a post-condition fails; execution aborts before the result is returned.
 - For AI generation: add `invariant {}` to any high-trust mutation flow (payments, medical, government records). Plain internal/pure flows do not need it.
 
 > **Note:** `invariant {}` is a DRCM Phase 2 feature — the parser, governance verifier, and WAT gate injection are scheduled for 2026-07. The clause is documented here now so AI tools and developers write it correctly when the compiler supports it.
@@ -360,7 +360,7 @@ contract {
 - [ ] Leave `economics`/`secrets`/`epilogue` out unless overriding the auto behavior.
 - [ ] `cyber_physical_hardening {}` — **do NOT write** unless on Tier 1 ASIC hardware with
   a regulatory mandate requiring attestation proof. Runtime auto-selects the tier from
-  the ValueGraph. Writing this on a low-risk flow triggers **SPORE-GOV-017**.
+  the ValueGraph. Writing this on a low-risk flow triggers **FUNGI-GOV-017**.
 - [ ] `liability {}` — **never write in source**. Auto-calculated by the governance verifier
   from the ValueGraph breach-risk matrix and stored in the ProofGraph. Writing it manually
-  triggers **SPORE-GOV-018**.
+  triggers **FUNGI-GOV-018**.

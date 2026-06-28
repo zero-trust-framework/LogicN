@@ -175,7 +175,7 @@ describe("galerina-core-reports contracts", () => {
           effects: ["network.outbound", "await"],
           timeoutMs: 2000,
           source: {
-            path: "orders.spore",
+            path: "orders.fungi",
             line: 12,
           },
         },
@@ -188,7 +188,7 @@ describe("galerina-core-reports contracts", () => {
           timeoutMs: 2500,
           cancellationPolicy: "cancelOnError",
           source: {
-            path: "dashboard.spore",
+            path: "dashboard.fungi",
             line: 20,
           },
         },

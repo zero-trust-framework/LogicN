@@ -5,7 +5,7 @@
 //
 // SOURCE NOTE: notes/76-mesh-r-d-06.md (owner-pasted AI dialogue). The note
 // proposes replacing SSL/TLS + X.509 + Certificate Authorities with a public
-// ".spore" ternary geometric vector, where authentication is a single SIMD
+// ".fungi" ternary geometric vector, where authentication is a single SIMD
 // dot product  I = S . C  on hardware (silicon AVX-512 or a photonic
 // Mach-Zehnder interferometer), claiming "death of X.509", "death of the
 // handshake (0-RTT in one clock cycle)", and "death of CAs".
@@ -34,7 +34,7 @@
 //       Security rests on Module-LWE / Module-SIS, NOT on "guessing a short
 //       vector path" by inspection. A scalar dot product is NOT a lattice
 //       signature and carries NO identity binding. (Demo 4 contrasts them.)
-//     * Treat the .spore as an ADDITIONAL app-level PQ CAPABILITY TOKEN that
+//     * Treat the .fungi as an ADDITIONAL app-level PQ CAPABILITY TOKEN that
 //       is signed (ML-DSA) and LAYERED ON real TLS 1.3 — never a replacement
 //       for the CA-anchored certificate chain or the AEAD record layer.
 //       (Demo 5 builds the layered model and shows it rejects the forgery.)
@@ -67,7 +67,7 @@ function randTernary(dim, rng = Math.random) {
 // =============================================================================
 // DEMO 1 — IDENTITY-BINDING REFUTE: forge the vector-gate with NO secret.
 // =============================================================================
-// The note (sec. 1 & 3) says the certificate IS the public .spore = the
+// The note (sec. 1 & 3) says the certificate IS the public .fungi = the
 // capability lock vector C, and a client is authenticated iff its signature
 // vector S satisfies  I = S . C >= tau.  But C is PUBLIC (it is literally the
 // published certificate). Authentication that depends only on a value the
@@ -80,7 +80,7 @@ section('DEMO 1 — public dot-product gate has NO identity binding (forgery)');
 {
   const tau = 64; // the note's geometric threshold (any positive tau; scaled to DIM)
 
-  // The honest server publishes its public lock C (this IS the .spore cert).
+  // The honest server publishes its public lock C (this IS the .fungi cert).
   const C = randTernary(DIM);
 
   // --- Attacker forgery #1: copy the lock. S = C maximizes the dot product. ---
@@ -193,8 +193,8 @@ section('DEMO 2 — replay & no-key-exchange: cheap check != authenticated KE');
 // DEMO 3 — Mach-Zehnder: correct PHYSICS, but ANALOG => not bit-exact crypto.
 // =============================================================================
 // Reproduce the note's equation (sec. Photonic):
-//     E_spore = E0 * e^{ i(wt + phiS) },  E_lock = E0 * e^{ i(wt + phiC) }
-//     I_out = |E_spore + E_lock|^2 = 2*E0^2*[1 + cos(phiS - phiC)]
+//     E_fungi = E0 * e^{ i(wt + phiS) },  E_lock = E0 * e^{ i(wt + phiC) }
+//     I_out = |E_fungi + E_lock|^2 = 2*E0^2*[1 + cos(phiS - phiC)]
 // Verify Δφ=0 -> 4 E0^2 (constructive) and Δφ=π -> 0 (destructive), exactly as
 // the note states. THEN show that real detectors have shot/thermal noise and
 // real modulators have phase jitter, so the measured intensity is a random
@@ -337,7 +337,7 @@ section('DEMO 4 — lattice/ML-DSA is the sound retained part (NOT a dot product
   function trySign(alg, genOpts) {
     try {
       const { publicKey, privateKey } = crypto.generateKeyPairSync(alg, genOpts || {});
-      const msg = Buffer.from('spore-capability:bank.example:exp=2026-12-31');
+      const msg = Buffer.from('fungi-capability:bank.example:exp=2026-12-31');
       const sig = crypto.sign(null, msg, privateKey);
       const ok = crypto.verify(null, msg, publicKey, sig);
       // Forgery attempt: flip one signature byte -> must fail to verify.
@@ -369,10 +369,10 @@ section('DEMO 4 — lattice/ML-DSA is the sound retained part (NOT a dot product
 }
 
 // =============================================================================
-// DEMO 5 — WORK-WITH-IT: .spore as a SIGNED app-level PQ capability token,
+// DEMO 5 — WORK-WITH-IT: .fungi as a SIGNED app-level PQ capability token,
 //          LAYERED ON real TLS 1.3 (never a replacement).
 // =============================================================================
-// The constructive design: the .spore carries capability claims (subject,
+// The constructive design: the .fungi carries capability claims (subject,
 // expiry, scope). It is SIGNED with a PQ signature (Demo 4). It is presented
 // INSIDE an already-authenticated, already-encrypted TLS 1.3 channel whose
 // server identity is bound by the CA-anchored X.509 chain. The dot-product /
@@ -441,7 +441,7 @@ section('DEMO 5 — sound layered model: signed PQ capability token over TLS 1.3
 
   // Explicitly assert the architectural rule.
   const rule =
-    '.spore = app-level PQ capability token, signed (ML-DSA), presented inside ' +
+    '.fungi = app-level PQ capability token, signed (ML-DSA), presented inside ' +
     'TLS 1.3 (CA-anchored X.509 server identity + AEAD record layer). ' +
     'It LAYERS ON TLS; it does NOT replace X.509/CA/handshake.';
   check('architectural rule recorded: LAYER-ON, never REPLACE',
@@ -457,7 +457,7 @@ const TOTAL = PASS + FAIL;
 console.log('\n--------------------------------------------------------------------------');
 console.log(`RESULT: ${PASS}/${TOTAL} passed` + (FAIL ? `  (${FAIL} FAILED)` : ''));
 console.log('VERDICT: REFUTE security core (no identity binding; replay; analog!=bit-exact)');
-console.log('         ADOPT  ML-DSA/lattice PQ; .spore = signed PQ capability token over TLS 1.3');
+console.log('         ADOPT  ML-DSA/lattice PQ; .fungi = signed PQ capability token over TLS 1.3');
 console.log('==========================================================================\n');
 
 process.exitCode = FAIL ? 1 : 0;

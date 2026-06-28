@@ -1,13 +1,13 @@
 // =============================================================================
 // Self-Hosted Parser — End-to-End Execution Test
 //
-// Verifies that src/self-hosted/parser.spore parses and executes correctly,
-// producing valid FlowDecl records from a token stream produced by lexer.spore.
+// Verifies that src/self-hosted/parser.fungi parses and executes correctly,
+// producing valid FlowDecl records from a token stream produced by lexer.fungi.
 //
 // Pipeline under test:
 //   Galerina source text
-//     → tokenize() from lexer.spore  → Array<Token>
-//     → parseFlows() from parser.spore → ParseResult { flows, errors }
+//     → tokenize() from lexer.fungi  → Array<Token>
+//     → parseFlows() from parser.fungi → ParseResult { flows, errors }
 //
 // Milestones exercised:
 //   - Stage B: self-hosted parser Milestone 1 (flow headers only)
@@ -21,7 +21,7 @@
 //   - Constructs parsed: return type annotation (split "-" ">" tokens)
 //   - Constructs parsed: with effects [...] clause (dotted names)
 //   - Constructs parsed: full structured body AST (Milestone M-A — the former
-//     body-parser.spore folded in: parseFlows yields FlowDecl.body as nested
+//     body-parser.fungi folded in: parseFlows yields FlowDecl.body as nested
 //     Stmt/Expr nodes via parseBlock, alongside the back-compat returnExpr)
 // =============================================================================
 
@@ -38,8 +38,8 @@ import { parseProgram, resolveSymbols, checkTypes, executeFlow } from "../dist/i
 // ---------------------------------------------------------------------------
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const LEXER_PATH  = join(__dir, "../src/self-hosted/lexer.spore");
-const PARSER_PATH = join(__dir, "../src/self-hosted/parser.spore");
+const LEXER_PATH  = join(__dir, "../src/self-hosted/lexer.fungi");
+const PARSER_PATH = join(__dir, "../src/self-hosted/parser.fungi");
 
 // ---------------------------------------------------------------------------
 // Setup: load and compile the combined lexer + parser into a single AST
@@ -56,7 +56,7 @@ before(() => {
 
   // Combine into one compilation unit so lexer types are visible to the parser
   const combined = lexerSrc + "\n" + parserSrc;
-  const parsed = parseProgram(combined, "lexer+parser.spore");
+  const parsed = parseProgram(combined, "lexer+parser.fungi");
   resolveSymbols(parsed.ast);
   checkTypes(parsed.ast);
   combinedAst = parsed.ast;
@@ -124,7 +124,7 @@ function paramsList(flowDecl) {
 
 /**
  * Extract the decomposed returnExpr record from a FlowDecl.
- * Shape (Phase S6, matching type-checker.spore + gir-emitter.spore):
+ * Shape (Phase S6, matching type-checker.fungi + gir-emitter.fungi):
  *   { kind, litType, leftType, rightType } — all strings.
  */
 function returnExpr(flowDecl) {
@@ -139,8 +139,8 @@ function returnExpr(flowDecl) {
 }
 
 // --- Full body AST readers (Milestone M-A: parseFlows now returns FlowDecl.body
-// as a nested Stmt/Expr AST, folded from the former body-parser.spore). These
-// mirror the .spore record shapes (Stmt { kind, name, typeName, expr, body },
+// as a nested Stmt/Expr AST, folded from the former body-parser.fungi). These
+// mirror the .fungi record shapes (Stmt { kind, name, typeName, expr, body },
 // Expr { kind, value, litType, children }). ---
 function readExpr(node) {
   const x = node.value ?? node;
@@ -174,12 +174,12 @@ function bodyList(flowDecl) {
 // Section 1: Parse-time sanity
 // ---------------------------------------------------------------------------
 
-describe("Self-Hosted Parser (parser.spore) — parse-time sanity", () => {
+describe("Self-Hosted Parser (parser.fungi) — parse-time sanity", () => {
 
-  it("parser.spore alone parses with zero errors", () => {
+  it("parser.fungi alone parses with zero errors", () => {
     let src = readFileSync(PARSER_PATH, "utf8");
     if (src.charCodeAt(0) === 0xFEFF) src = src.slice(1);
-    const parsed = parseProgram(src, "parser.spore");
+    const parsed = parseProgram(src, "parser.fungi");
     const errors = parsed.diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       errors.length,
@@ -188,10 +188,10 @@ describe("Self-Hosted Parser (parser.spore) — parse-time sanity", () => {
     );
   });
 
-  it("parser.spore exports the three expected flows", () => {
+  it("parser.fungi exports the three expected flows", () => {
     let src = readFileSync(PARSER_PATH, "utf8");
     if (src.charCodeAt(0) === 0xFEFF) src = src.slice(1);
-    const parsed = parseProgram(src, "parser.spore");
+    const parsed = parseProgram(src, "parser.fungi");
     const names = parsed.flows?.map((f) => f.name) ?? [];
     assert.ok(names.includes("parseFlows"), "parseFlows should be present");
     assert.ok(names.includes("tokVal"),     "tokVal helper should be present");
@@ -203,7 +203,7 @@ describe("Self-Hosted Parser (parser.spore) — parse-time sanity", () => {
     if (lexerSrc.charCodeAt(0) === 0xFEFF) lexerSrc = lexerSrc.slice(1);
     let parserSrc = readFileSync(PARSER_PATH, "utf8");
     if (parserSrc.charCodeAt(0) === 0xFEFF) parserSrc = parserSrc.slice(1);
-    const parsed = parseProgram(lexerSrc + "\n" + parserSrc, "combined.spore");
+    const parsed = parseProgram(lexerSrc + "\n" + parserSrc, "combined.fungi");
     const errors = parsed.diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       errors.length,
@@ -325,17 +325,17 @@ describe("Self-Hosted Parser — secure flow with readonly parameter", () => {
 // Section 5: with effects clause
 // ---------------------------------------------------------------------------
 
-// Stage B parser.spore — effects extraction milestone.
+// Stage B parser.fungi — effects extraction milestone.
 // 'with effects [...]' was removed in v1-current; canonical form is 'contract { effects {} }'.
-// The Stage B parser (parser.spore) reads contract.effects blocks.
+// The Stage B parser (parser.fungi) reads contract.effects blocks.
 // This describe block tests what the Stage B parser does today:
 // - returnType parsing is correct (not contaminated by effects clause)
-// - effects extraction from contract block is a Stage B v1 target (parser.spore needs update)
+// - effects extraction from contract block is a Stage B v1 target (parser.fungi needs update)
 describe("Self-Hosted Parser — contract effects clause", () => {
 
-  it("effects list is empty when Stage B parser.spore does not yet parse contract.effects (milestone)", async () => {
-    // Stage B parser.spore does not yet extract effects from contract { effects {} } blocks.
-    // This test confirms current behavior (empty). Advance this test when parser.spore gains
+  it("effects list is empty when Stage B parser.fungi does not yet parse contract.effects (milestone)", async () => {
+    // Stage B parser.fungi does not yet extract effects from contract { effects {} } blocks.
+    // This test confirms current behavior (empty). Advance this test when parser.fungi gains
     // contract.effects parsing (Stage B milestone).
     const result = await pipeline(`pure flow fetch() -> String contract { effects { io.read } }\n{ return x }`);
     const [flow] = flowsList(result);
@@ -463,7 +463,7 @@ describe("Self-Hosted Parser — body brace skipping", () => {
 //
 // The parser decomposes each flow's first top-level return into a
 // returnExpr record { kind, litType, leftType, rightType } that exactly
-// matches what self-hosted type-checker.spore and gir-emitter.spore consume.
+// matches what self-hosted type-checker.fungi and gir-emitter.fungi consume.
 //   kind ∈ "literal" | "param" | "arith" | "compare"
 // ---------------------------------------------------------------------------
 
@@ -603,7 +603,7 @@ describe("Self-Hosted Parser — decomposed returnExpr (Phase S6)", () => {
 // ---------------------------------------------------------------------------
 // Section 8c: full structured body AST (Milestone M-A)
 //
-// parseFlows now folds in the former body-parser.spore: each FlowDecl carries a
+// parseFlows now folds in the former body-parser.fungi: each FlowDecl carries a
 // `body` field that is the full nested Stmt/Expr AST (produced by parseBlock),
 // in ADDITION to the flat back-compat `returnExpr`. These assertions port the
 // strongest coverage from the deleted self-hosted-body-parser.test.mjs, proving
@@ -672,7 +672,7 @@ describe("Self-Hosted Parser — full body AST (Milestone M-A)", () => {
     assert.deepEqual(ret.expr[0].children.map((c) => c.kind), ["call", "call"]);
     assert.deepEqual(ret.expr[0].children.map((c) => c.value), ["fib", "fib"]);
 
-    // Header fields (consumed by type-checker.spore + gir-emitter.spore) intact.
+    // Header fields (consumed by type-checker.fungi + gir-emitter.fungi) intact.
     assert.equal(strField(flow, "name"), "fib");
     assert.equal(strField(flow, "kind"), "pure");
     assert.equal(strField(flow, "returnType"), "Int");
@@ -715,7 +715,7 @@ describe("Self-Hosted Parser — error resilience", () => {
       new Map([["tokens", tokens]]),
       combinedAst,
     );
-    const runtimeErrors = parseResult.diagnostics.filter((d) => d.code === "SPORE-RUNTIME-002");
+    const runtimeErrors = parseResult.diagnostics.filter((d) => d.code === "FUNGI-RUNTIME-002");
     assert.equal(runtimeErrors.length, 0, "Should produce no unresolved-call runtime errors");
   });
 

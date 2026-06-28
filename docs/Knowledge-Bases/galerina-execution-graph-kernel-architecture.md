@@ -64,7 +64,7 @@ A first-class stage between PassiveExecutionPlan and ExecutionGraph.
 
 ```typescript
 interface ProofGraph {
-  readonly schemaVersion: "spore.proof.v1";
+  readonly schemaVersion: "fungi.proof.v1";
   readonly obligations: readonly ProofObligation[];
   readonly evidence: readonly ProofEvidence[];
   readonly signature: string;   // cryptographic proof the obligations were satisfied
@@ -235,7 +235,7 @@ function diffFingerprints(a: GraphFingerprint, b: GraphFingerprint): readonly st
 **Developer experience:** Given a flow denied on WASM standalone, the fingerprint diff explains exactly why — without diffing source code.
 
 **Connection to existing code:**
-- `SPORE-EFFECT-005` (BroadAliasUsed) suggestedFix is a primitive version of this
+- `FUNGI-EFFECT-005` (BroadAliasUsed) suggestedFix is a primitive version of this
 - `getGraphFlagSummary()` in devtools-graph provides the raw data
 
 **Implementation phase:** Phase 32 (developer tooling — galerina explain)

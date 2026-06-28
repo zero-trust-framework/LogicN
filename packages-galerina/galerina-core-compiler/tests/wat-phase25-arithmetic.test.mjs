@@ -40,7 +40,7 @@ describe("emitBlockLastExpr: fail-closed on an unlowerable block tail (#128-sibl
 // ---------------------------------------------------------------------------
 
 function compileToWAT(src) {
-  const prog = parseProgram(src, "test.spore");
+  const prog = parseProgram(src, "test.fungi");
   const errs = (prog.diagnostics ?? []).filter(d => d.severity === "error");
   if (errs.length > 0) throw new Error("Parse error: " + errs.map(d => d.message).join("; "));
   const fx = checkEffects(prog.flows, prog.ast);
@@ -95,7 +95,7 @@ describe("emitWATExpr: binary operations", () => {
       kind: "binaryExpr", value: "+",
       children: [{ kind: "identifier", value: "a" }, { kind: "identifier", value: "b" }],
     };
-    assert.equal(emitWATExpr(node, vars), "(call $spore_checked_add_i32 (local.get $p0) (local.get $p1))");
+    assert.equal(emitWATExpr(node, vars), "(call $fungi_checked_add_i32 (local.get $p0) (local.get $p1))");
   });
 
   it("- → checked sub", () => {
@@ -105,7 +105,7 @@ describe("emitWATExpr: binary operations", () => {
       kind: "binaryExpr", value: "-",
       children: [{ kind: "identifier", value: "a" }, { kind: "identifier", value: "b" }],
     };
-    assert.equal(emitWATExpr(node, vars), "(call $spore_checked_sub_i32 (local.get $p0) (local.get $p1))");
+    assert.equal(emitWATExpr(node, vars), "(call $fungi_checked_sub_i32 (local.get $p0) (local.get $p1))");
   });
 
   it("* → checked mul", () => {
@@ -115,7 +115,7 @@ describe("emitWATExpr: binary operations", () => {
       kind: "binaryExpr", value: "*",
       children: [{ kind: "identifier", value: "a" }, { kind: "identifier", value: "b" }],
     };
-    assert.equal(emitWATExpr(node, vars), "(call $spore_checked_mul_i32 (local.get $p0) (local.get $p1))");
+    assert.equal(emitWATExpr(node, vars), "(call $fungi_checked_mul_i32 (local.get $p0) (local.get $p1))");
   });
 
   it("< → i32.lt_s", () => {
@@ -151,7 +151,7 @@ describe("emitWATExpr: binary operations", () => {
     // owner Fork A=TRAP: nested arithmetic composes the checked-op calls
     assert.equal(
       emitWATExpr(node, vars),
-      "(call $spore_checked_mul_i32 (call $spore_checked_add_i32 (local.get $p0) (local.get $p1)) (local.get $p2))"
+      "(call $fungi_checked_mul_i32 (call $fungi_checked_add_i32 (local.get $p0) (local.get $p1)) (local.get $p2))"
     );
   });
 });
@@ -164,7 +164,7 @@ describe("emitWATExpr: unary operations", () => {
       kind: "unaryExpr", value: "-",
       children: [{ kind: "identifier", value: "x" }],
     };
-    assert.equal(emitWATExpr(node, vars), "(call $spore_checked_sub_i32 (i32.const 0) (local.get $p0))");
+    assert.equal(emitWATExpr(node, vars), "(call $fungi_checked_sub_i32 (i32.const 0) (local.get $p0))");
   });
 
   it("unary ! → i32.eqz", () => {
@@ -185,7 +185,7 @@ describe("extractFlowParamNames", () => {
   it("extracts names from paramDecl nodes", () => {
     const prog = parseProgram(
       "pure flow add(a: Int, b: Int) -> Int contract { effects {} } { return a + b }",
-      "test.spore"
+      "test.fungi"
     );
     const flowNode = prog.ast.children?.find(c => c.kind === "pureFlowDecl");
     assert.deepEqual(extractFlowParamNames(flowNode), ["a", "b"]);
@@ -194,7 +194,7 @@ describe("extractFlowParamNames", () => {
   it("returns empty array for no-param flow", () => {
     const prog = parseProgram(
       "pure flow zero() -> Int contract { effects {} } { return 0 }",
-      "test.spore"
+      "test.fungi"
     );
     const flowNode = prog.ast.children?.find(c => c.kind === "pureFlowDecl");
     assert.deepEqual(extractFlowParamNames(flowNode), []);
@@ -209,7 +209,7 @@ describe("findFlowNodeInAST", () => {
   it("finds a named pure flow", () => {
     const prog = parseProgram(
       "pure flow add(a: Int, b: Int) -> Int contract { effects {} } { return a + b }",
-      "test.spore"
+      "test.fungi"
     );
     const node = findFlowNodeInAST(prog.ast, "add");
     assert.ok(node !== undefined, "must find the add flow");
@@ -220,7 +220,7 @@ describe("findFlowNodeInAST", () => {
   it("returns undefined for unknown flow name", () => {
     const prog = parseProgram(
       "pure flow add(a: Int, b: Int) -> Int contract { effects {} } { return a + b }",
-      "test.spore"
+      "test.fungi"
     );
     assert.equal(findFlowNodeInAST(prog.ast, "notHere"), undefined);
   });
@@ -236,7 +236,7 @@ describe("Phase 25 integration: real WAT arithmetic", () => {
     const wat = compileToWAT(
       "pure flow add(a: Int, b: Int) -> Int contract { effects {} } { return a + b }"
     );
-    assert.ok(wat.includes("call $spore_checked_add_i32"), `expected checked add in:\n${wat}`);
+    assert.ok(wat.includes("call $fungi_checked_add_i32"), `expected checked add in:\n${wat}`);
     assert.ok(wat.includes("local.get $p0"));
     assert.ok(wat.includes("local.get $p1"));
     // checked helper legitimately contains its own overflow-trap `unreachable`,
@@ -249,7 +249,7 @@ describe("Phase 25 integration: real WAT arithmetic", () => {
     const wat = compileToWAT(
       "pure flow sub(a: Int, b: Int) -> Int contract { effects {} } { return a - b }"
     );
-    assert.ok(wat.includes("call $spore_checked_sub_i32"));
+    assert.ok(wat.includes("call $fungi_checked_sub_i32"));
     assert.ok(!wat.includes(";; unsupported-in-WASM"));
   });
 
@@ -258,7 +258,7 @@ describe("Phase 25 integration: real WAT arithmetic", () => {
     const wat = compileToWAT(
       "pure flow mul(a: Int, b: Int) -> Int contract { effects {} } { return a * b }"
     );
-    assert.ok(wat.includes("call $spore_checked_mul_i32"));
+    assert.ok(wat.includes("call $fungi_checked_mul_i32"));
     assert.ok(!wat.includes(";; unsupported-in-WASM"));
   });
 
@@ -287,7 +287,7 @@ describe("Phase 25 integration: real WAT arithmetic", () => {
     ].join("\n"));
     assert.ok(wat.includes("(local $result i32)"), `expected local decl:\n${wat}`);
     assert.ok(wat.includes("local.set $result"));
-    assert.ok(wat.includes("call $spore_checked_mul_i32")); // owner Fork A=TRAP
+    assert.ok(wat.includes("call $fungi_checked_mul_i32")); // owner Fork A=TRAP
     assert.ok(!wat.includes(";; unsupported-in-WASM"));
   });
 
@@ -304,14 +304,14 @@ describe("Phase 25 integration: real WAT arithmetic", () => {
     assert.ok(sumPos !== -1  && dblPos !== -1);
     assert.ok(sumPos < dblPos, "sumVal declaration must precede doubled");
     // owner Fork A=TRAP: both ops lower to checked-op calls
-    assert.ok(wat.includes("call $spore_checked_add_i32") && wat.includes("call $spore_checked_mul_i32"));
+    assert.ok(wat.includes("call $fungi_checked_add_i32") && wat.includes("call $fungi_checked_mul_i32"));
     assert.ok(!wat.includes(";; unsupported-in-WASM"));
   });
 
   it("Phase 24A fallback (no ast) still avoids unreachable", () => {
     const prog = parseProgram(
       "pure flow add(a: Int, b: Int) -> Int contract { effects {} } { return a + b }",
-      "test.spore"
+      "test.fungi"
     );
     const fx = checkEffects(prog.flows, prog.ast);
     const { gir } = emitGIR(prog.ast, prog.flows, fx);
@@ -328,7 +328,7 @@ describe("Phase 25 integration: real WAT arithmetic", () => {
     assert.ok(wat.startsWith("(module"), "must start with (module");
     assert.ok(wat.includes("(memory"), "must declare memory");
     assert.ok(wat.includes("(func $inc"), "must have func $inc");
-    assert.ok(wat.includes("call $spore_checked_add_i32"), "must have real arithmetic"); // owner Fork A=TRAP
+    assert.ok(wat.includes("call $fungi_checked_add_i32"), "must have real arithmetic"); // owner Fork A=TRAP
     assert.ok(wat.includes("i32.const 1"), "must have constant 1");
   });
 });

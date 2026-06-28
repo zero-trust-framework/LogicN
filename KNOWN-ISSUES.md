@@ -34,12 +34,12 @@ disclosed below. Read this before relying on any guarantee. Last reconciled: 202
   to **Deny**), and **no in-tree artifact is signed by it**. A history rewrite was deliberately
   avoided because it would rebase every commit SHA and break the verifiable trust chain. Treat any
   signature from `8eecf4187ebc9341` as permanently distrusted.
-- **`SPORE-VALUESTATE-008` is production-gated.** The boundary-input cleanliness floor (an unmarked bare
+- **`FUNGI-VALUESTATE-008` is production-gated.** The boundary-input cleanliness floor (an unmarked bare
   parameter reaching a governed sink) escalates to an *error* only in production builds, and is now
   enforced on the user-facing `galerina build` path under `GALERINA_PROFILE=production` (commit `8d840ca`);
   dev/check remains permissive (warning, a planned follow-up). This is intentional for beta but means
   dev builds do not surface it.
-- **`SPORE-TIER-001` tier floor is production-gated.** The flow-kind tier floor (an under-declared
+- **`FUNGI-TIER-001` tier floor is production-gated.** The flow-kind tier floor (an under-declared
   secure-tier flow) is enforced only in production builds, and is now enforced on the user-facing
   `galerina build` path under `GALERINA_PROFILE=production` (commit `8d840ca`); dev/check remains permissive
   and does not yet surface it (the dev-mode warning is a planned follow-up).

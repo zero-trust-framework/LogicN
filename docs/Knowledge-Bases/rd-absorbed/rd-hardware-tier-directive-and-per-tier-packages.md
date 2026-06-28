@@ -24,7 +24,7 @@ re-architecture:
 
 ## Resolution order (§1.2) + fail-closed
 
-`!attested ⇒ binary` · `profiles.get(target)=undefined ⇒ binary` (K3 DENY, SPORE-HW-004) ·
+`!attested ⇒ binary` · `profiles.get(target)=undefined ⇒ binary` (K3 DENY, FUNGI-HW-004) ·
 `requiresAttestation && !verified ⇒ binary` · `AcceleratorPlane && fully-eligible ⇒ photonic` ·
 `AcceleratorPlane(whole)/ExecutionPlane ⇒ hybrid` · else `⇒ binary`. The tier MAP mirrors
 `HARDWARE_TRUST_PROFILES` (`type-registry.ts:455-505`): cpu/wasm=GovernancePlane(binary);

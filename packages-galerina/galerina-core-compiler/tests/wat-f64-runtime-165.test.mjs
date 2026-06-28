@@ -13,7 +13,7 @@ import { describe, it } from "node:test";
 import { parseProgram, checkEffects, emitGIR, renderWAT, buildWATModuleFromGIR, assembleWAT } from "../dist/index.js";
 
 async function run(src) {
-  const p = parseProgram(src, "t.spore");
+  const p = parseProgram(src, "t.fungi");
   const errs = (p.diagnostics ?? []).filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "parse: " + errs.map((d) => d.message).join("; "));
   const fx = checkEffects(p.flows, p.ast);

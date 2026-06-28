@@ -4,7 +4,7 @@ import { describe, it } from "node:test";
 import { buildRouteRegistry, parseProgram } from "../dist/index.js";
 
 function buildRegistry(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   return buildRouteRegistry(parsed.ast);
 }
 

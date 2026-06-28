@@ -26,7 +26,7 @@
 [ ]   - implement BuildResult: success, artefacts[], diagnostics[], manifestPath, duration
 [ ]   - implement BuildWorkspaceInput: workspace, target, strict, profile?, outDir
 [ ]   - implement buildWorkspace(input: BuildWorkspaceInput): Promise<BuildResult>
-[ ]   - diagnostic codes SPORE-BUILD-001 through SPORE-BUILD-005
+[ ]   - diagnostic codes FUNGI-BUILD-001 through FUNGI-BUILD-005
 [ ]   - create build/ dir: build-command.ts, build-pipeline.ts, build-reporter.ts, build-artifacts.ts, build-integrity.ts
 [ ] Complete Galerina verify command — full governance verification
 [ ]   - validate manifest integrity (beyond hash-only)
@@ -36,7 +36,7 @@
 [ ]   - implement VerificationResult: success, artefacts[], diagnostics[]
 [ ]   - implement verifyHash(artefact, expected): Promise<VerifiedArtefact>
 [ ]   - emit verification-report.json
-[ ]   - diagnostic codes SPORE-VERIFY-001 through SPORE-VERIFY-005
+[ ]   - diagnostic codes FUNGI-VERIFY-001 through FUNGI-VERIFY-005
 [ ]   - create verify/ dir: verify-command.ts, verify-manifest.ts, verify-integrity.ts, verify-runtime.ts, verify-reporter.ts
 [ ] Add Galerina deploy command integration
 [ ]   - load workspace manifest, runtime profile, deployment policy
@@ -48,7 +48,7 @@
 [ ]   - implement ValidateEffectsInput: manifest, policy, target
 [ ]   - implement validateEffects(input): CompilerDiagnostic[]
 [ ]   - return exit codes 0–7 (0 success, 2 policy denial, 3 runtime incompatibility, 4 validation failure, 5 capability failure, 6 verify failure, 7 manifest integrity)
-[ ]   - diagnostic codes SPORE-DEPLOY-001 through SPORE-DEPLOY-005
+[ ]   - diagnostic codes FUNGI-DEPLOY-001 through FUNGI-DEPLOY-005
 [ ]   - create deploy/ dir: deploy-command.ts, deploy-policy.ts, deploy-validator.ts, deploy-report.ts, deploy-runtime.ts
 [ ] Add Galerina explain command integration
 [ ]   - explain imports, effects, capabilities, dependency tree
@@ -58,7 +58,7 @@
 [ ]   - implement ExplainResult: traces[], effects[], capabilities[], boundaries[], diagnostics[]
 [ ]   - implement buildTrace(manifest, options): ExplainTrace[]
 [ ]   - emit explain-report.json
-[ ]   - diagnostic codes SPORE-EXPLAIN-001 through SPORE-EXPLAIN-004
+[ ]   - diagnostic codes FUNGI-EXPLAIN-001 through FUNGI-EXPLAIN-004
 [ ]   - create explain/ dir: explain-command.ts, explain-trace.ts, explain-tree.ts, explain-runtime.ts, explain-reporter.ts
 [ ] Add Galerina plan command integration
 [ ]   - estimate CPU/GPU/accelerator suitability and memory pressure
@@ -66,7 +66,7 @@
 [ ]   - support --json, --runtime, --memory, --parallelism, --energy, --target, --graph, --compatibility flags
 [ ]   - implement ComputePlan: target, gpu (GpuPlan), optical (OpticalPlan), wasm, compatibility, estimatedMemoryMb, parallelism, diagnostics[]
 [ ]   - implement estimateTarget(workspace, options): ComputePlan
-[ ]   - diagnostic codes SPORE-PLAN-001 through SPORE-PLAN-004
+[ ]   - diagnostic codes FUNGI-PLAN-001 through FUNGI-PLAN-004
 [ ]   - create plan/ dir: plan-command.ts, plan-graph.ts, plan-runtime.ts, plan-memory.ts, plan-reporter.ts
 [ ] Add Galerina verify deploy command integration (verify running version against build manifest)
 [ ] Add Galerina promote command integration (promote artifact across environments)

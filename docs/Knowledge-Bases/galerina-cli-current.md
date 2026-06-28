@@ -14,7 +14,7 @@ All CLI output decisions consider WASM compatibility first. Build targets, diagn
 
 ### `galerina check [path]`
 
-Check `.spore` files in development mode. Diagnostics are emitted as warnings; nothing blocks the process.
+Check `.fungi` files in development mode. Diagnostics are emitted as warnings; nothing blocks the process.
 
 **Flags**
 
@@ -28,14 +28,14 @@ Typical use: editor integration, pre-commit hooks, CI smoke pass.
 
 ### `galerina build [path]`
 
-Compile `.spore` files to JavaScript bootstrap output (default target).
+Compile `.fungi` files to JavaScript bootstrap output (default target).
 
 **Flags**
 
 | Flag | Effect |
 |---|---|
 | `--production` | Full governance enforcement; all diagnostics at error severity cause exit 1 |
-| `--deterministic` | Implies `--production`; additionally requires bit-for-bit reproducible output. Emits `SPORE-BUILD-001` and exits 1 on any hash mismatch between two internal compilation passes |
+| `--deterministic` | Implies `--production`; additionally requires bit-for-bit reproducible output. Emits `FUNGI-BUILD-001` and exits 1 on any hash mismatch between two internal compilation passes |
 | `--target=wasm-standalone` | Emit a WASM/WASI module. Pure flows compile to WASM functions with zero imports. Effectful stdlib calls (e.g. `File.readText`) become typed imports from the `host:*` namespace, sourced from `STDLIB_CAPABILITY_MAP.wasmImport`. Runtime policy limits are expressed as WASM memory limits |
 | `--target=wasm-hybrid` | Emit a JS capability shell wrapping a WASM pure-flow core. The JS shell manages capabilities, audit trails, and governance enforcement; the WASM core handles pure computation (tensors, math, validation gates) |
 
@@ -43,7 +43,7 @@ Compile `.spore` files to JavaScript bootstrap output (default target).
 
 ### `galerina fix [path]`
 
-Analyse `.spore` files and emit suggested corrections.
+Analyse `.fungi` files and emit suggested corrections.
 
 **Flags**
 
@@ -55,7 +55,7 @@ Analyse `.spore` files and emit suggested corrections.
 
 ### `galerina emit [path]`
 
-Emit supplementary artefacts from a compiled `.spore` program.
+Emit supplementary artefacts from a compiled `.fungi` program.
 
 **Flags**
 
@@ -67,7 +67,7 @@ Emit supplementary artefacts from a compiled `.spore` program.
 
 ### `galerina verify-selfhost [path]`
 
-Verify deterministic build integrity. Compiles the same source twice in sequence and compares output hashes. Emits `SPORE-BUILD-001` and exits 1 if hashes differ.
+Verify deterministic build integrity. Compiles the same source twice in sequence and compares output hashes. Emits `FUNGI-BUILD-001` and exits 1 if hashes differ.
 
 **Hash function:** `canonicalHash()` — strips all timestamps, sorts object keys alphabetically, then applies SHA-256 over the canonical JSON representation.
 
@@ -89,13 +89,13 @@ Typical use: release pipelines, reproducible-build attestation, bootstrap trust 
 
 | Code | `check` | `check --strict` | `build` | `build --production` | `build --deterministic` |
 |---|---|---|---|---|---|
-| `SPORE-EFFECT-001` — missing effect declaration | warning | error | warning | error | error |
-| `SPORE-STDLIB-001` — stdlib call missing effect annotation | warning | error | warning | error | error |
-| `SPORE-GOV-010` — flow has no intent declaration | info | warning | info | error | error |
-| `SPORE-BUILD-001` — non-deterministic output detected | — | — | — | — | error |
-| `SPORE-SYNTAX-LEGACY-001` — removed `with effects` syntax (hard error) | error | error | error | error | error |
-| `SPORE-SYNTAX-LEGACY-002` — legacy flow qualifier (`safe/guard/unsafe flow`) | warning | error | warning | error | error |
-| `SPORE-STYLE-001` — `else if` advisory (use `match` for multi-branch) | info | warning | info | info | info |
+| `FUNGI-EFFECT-001` — missing effect declaration | warning | error | warning | error | error |
+| `FUNGI-STDLIB-001` — stdlib call missing effect annotation | warning | error | warning | error | error |
+| `FUNGI-GOV-010` — flow has no intent declaration | info | warning | info | error | error |
+| `FUNGI-BUILD-001` — non-deterministic output detected | — | — | — | — | error |
+| `FUNGI-SYNTAX-LEGACY-001` — removed `with effects` syntax (hard error) | error | error | error | error | error |
+| `FUNGI-SYNTAX-LEGACY-002` — legacy flow qualifier (`safe/guard/unsafe flow`) | warning | error | warning | error | error |
+| `FUNGI-STYLE-001` — `else if` advisory (use `match` for multi-branch) | info | warning | info | info | info |
 
 Notes:
 - `—` means the diagnostic is not evaluated in that mode.
@@ -107,7 +107,7 @@ Notes:
 
 ## Syntax Notes
 
-### `with effects [...]` — Removed (SPORE-SYNTAX-LEGACY-001)
+### `with effects [...]` — Removed (FUNGI-SYNTAX-LEGACY-001)
 
 `with effects [...]` at the flow signature is a **hard error** in all modes.
 The parser rejects it immediately. The canonical form is:

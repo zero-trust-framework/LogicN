@@ -316,7 +316,7 @@ function validateAuditSafety(
             !event.proof
         ) {
             diagnostics.push({
-                code: "SPORE-AUDIT-001",
+                code: "FUNGI-AUDIT-001",
                 message:
                     "Unsafe event missing execution proof."
             });
@@ -331,45 +331,45 @@ function validateAuditSafety(
 
 ## Diagnostic Codes (v0.2)
 
-### SPORE-AUDIT
+### FUNGI-AUDIT
 
 | Code         | Meaning                    |
 | ------------ | -------------------------- |
-| SPORE-AUDIT-001 | Unsafe event missing proof |
-| SPORE-AUDIT-002 | Invalid audit event        |
-| SPORE-AUDIT-003 | Audit hash mismatch        |
+| FUNGI-AUDIT-001 | Unsafe event missing proof |
+| FUNGI-AUDIT-002 | Invalid audit event        |
+| FUNGI-AUDIT-003 | Audit hash mismatch        |
 
-### SPORE-REPORT
+### FUNGI-REPORT
 
 | Code          | Meaning                     |
 | ------------- | --------------------------- |
-| SPORE-REPORT-001 | Invalid report structure    |
-| SPORE-REPORT-002 | JSONL serialization failure |
-| SPORE-REPORT-003 | Missing runtime metadata    |
+| FUNGI-REPORT-001 | Invalid report structure    |
+| FUNGI-REPORT-002 | JSONL serialization failure |
+| FUNGI-REPORT-003 | Missing runtime metadata    |
 
-### SPORE-PROOF
+### FUNGI-PROOF
 
 | Code         | Meaning                 |
 | ------------ | ----------------------- |
-| SPORE-PROOF-001 | Invalid execution proof |
-| SPORE-PROOF-002 | Proof hash mismatch     |
-| SPORE-PROOF-003 | Missing execution hash  |
+| FUNGI-PROOF-001 | Invalid execution proof |
+| FUNGI-PROOF-002 | Proof hash mismatch     |
+| FUNGI-PROOF-003 | Missing execution hash  |
 
-### SPORE-DENIAL
+### FUNGI-DENIAL
 
 | Code          | Meaning                 |
 | ------------- | ----------------------- |
-| SPORE-DENIAL-001 | Invalid denial report   |
-| SPORE-DENIAL-002 | Missing denial evidence |
-| SPORE-DENIAL-003 | Invalid denial boundary |
+| FUNGI-DENIAL-001 | Invalid denial report   |
+| FUNGI-DENIAL-002 | Missing denial evidence |
+| FUNGI-DENIAL-003 | Invalid denial boundary |
 
-### SPORE-EVIDENCE
+### FUNGI-EVIDENCE
 
 | Code            | Meaning                    |
 | --------------- | -------------------------- |
-| SPORE-EVIDENCE-001 | Invalid evidence payload   |
-| SPORE-EVIDENCE-002 | Unsupported evidence type  |
-| SPORE-EVIDENCE-003 | Evidence integrity failure |
+| FUNGI-EVIDENCE-001 | Invalid evidence payload   |
+| FUNGI-EVIDENCE-002 | Unsupported evidence type  |
+| FUNGI-EVIDENCE-003 | Evidence integrity failure |
 
 ---
 

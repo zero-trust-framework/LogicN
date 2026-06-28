@@ -10,7 +10,7 @@ implementation proceeding. Math-home decision resolved to the copy + golden-orac
 `galerina-substrate-failure-model.md` §8.
 **Provenance.** Direction A made the governance verdict three-valued and proved it cannot fail open
 (`galerina-three-valued-governance.md`). Direction C shipped the *noise math* and the
-`SPORE-SUBSTRATE-001..004` diagnostic family in `galerina-tower-citizen/src/substrate-model.ts` — a
+`FUNGI-SUBSTRATE-001..004` diagnostic family in `galerina-tower-citizen/src/substrate-model.ts` — a
 self-contained library, **no contract grammar, no compiler pass**. Direction B is the missing surface:
 a `substrate {}` **contract block** an author writes, and a **compiler verifier pass** that holds the
 flow to the Direction-C model *before any silicon exists*.
@@ -30,7 +30,7 @@ the entire dependency design is restated as a constraint, not an assumption, in 
 ## 1. The problem
 
 Direction C can answer *"given this noise and this redundancy, is the declared tolerance provable?"* —
-but only if someone hands it parameters. Today nothing does: a `.spore` author has **no way to declare**
+but only if someone hands it parameters. Today nothing does: a `.fungi` author has **no way to declare**
 that a flow runs on a photonic/noisy lane, what error rate it tolerates, or how many redundant lanes it
 votes across. Direction B closes the loop:
 
@@ -71,7 +71,7 @@ sign-off is void.
 `substrate {}` is an **optional** sub-block of `contract {}`, peer to `resilience {}` /
 `observability {}` / `privacy {}` / `invariant {}`. Concrete surface:
 
-```spore
+```fungi
 secure flow settleBatch(req: BatchRequest) -> Result<Receipt, ApiError>
 contract {
   intent { settle a batch on an emerging photonic accelerator }
@@ -111,7 +111,7 @@ generic fallback (`parser.ts:4510–4568`). The only change is **one dispatch ar
 // parser.ts, parseContractDecl() while loop, after the invariant arm (3975)
 if ((tok.kind === "keyword" || tok.kind === "identifier") && tok.value === "substrate") {
   if (seenBlocks.has("substrate")) {
-    this.emit("SPORE-SYNTAX-009", "DUPLICATE_CONTRACT_SECTION",
+    this.emit("FUNGI-SYNTAX-009", "DUPLICATE_CONTRACT_SECTION",
       "Duplicate 'substrate' block in contract.", this.loc());
   } else {
     seenBlocks.add("substrate");
@@ -134,11 +134,11 @@ if ((tok.kind === "keyword" || tok.kind === "identifier") && tok.value === "subs
 
 This matches the `"resilience:block"` / `"observability:block"` prefix pattern that
 `hasExplicitResilience()` keys off (`resilience-inference.ts:73–78`). **Duplicate-block detection**
-(`SPORE-SYNTAX-009`, defined in `compiler-diagnostics.md:369`, currently un-enforced) is opportunistically
+(`FUNGI-SYNTAX-009`, defined in `compiler-diagnostics.md:369`, currently un-enforced) is opportunistically
 turned on for `substrate` via a `const seenBlocks = new Set<string>()` declared once before the
 `3833` while loop — `substrate` is **not** in the repeatable-block exception list (`intent`, `assuming`,
-`access`, `@`-attributes). Reference emit/continue templates: `SPORE-SYNTAX-LEGACY-001` (`parser.ts:646–654`),
-`SPORE-SYNTAX-LEGACY-002` (`parser.ts:441–476`).
+`access`, `@`-attributes). Reference emit/continue templates: `FUNGI-SYNTAX-LEGACY-001` (`parser.ts:646–654`),
+`FUNGI-SYNTAX-LEGACY-002` (`parser.ts:441–476`).
 
 ### 3.2 FlowMeta extension
 
@@ -160,17 +160,17 @@ equally correct.
 ## 4. The three invariants (B1 / B2 / B3)
 
 All three reuse the codes Direction C **already registered** in
-`substrate-model.ts:273–278` (`SUBSTRATE_DIAGNOSTICS`) and `compiler-diagnostics.md` §`SPORE-SUBSTRATE-*`.
+`substrate-model.ts:273–278` (`SUBSTRATE_DIAGNOSTICS`) and `compiler-diagnostics.md` §`FUNGI-SUBSTRATE-*`.
 No new codes are minted. Priority order when several fire is fixed by Direction C's
 `verifyToleranceUnderNoise` (`substrate-model.ts:315–352`): **001 > 004 > 003 > 002**.
 
 | # | Invariant | Trigger | Code · name | Severity |
 |---|---|---|---|---|
-| **B1** | **crypto-on-core.** Integrity is never tolerance-bounded. | flow has a Hash/Sign/crypto effect **and** `lane` is `photonic`/`noisy` | `SPORE-SUBSTRATE-001` · `CRYPTO_ON_NOISY_LANE` | **error** (always, every profile) |
-| **B2** | **redundancy sufficiency.** Declared tolerance must be provable at the declared `N`. | `epsilonModeled > tolerance` at the declared `redundancy` | `SPORE-SUBSTRATE-002` (raisable by more `N`) / `SPORE-SUBSTRATE-003` (`N>1` still short, **or** `pBad ≥ 0.5` so voting cannot converge) | `002`: **error** in `production`/`deterministic`, **warning** in `dev`. `003`: **error** (always) |
-| **B3** | **determinism preservation.** An un-voted noisy result must not feed a deterministic context. | `lane` noisy **and** `redundancy == 1` **and** sink requires determinism | `SPORE-SUBSTRATE-004` · `UNVOTED_ANALOG_INTO_DETERMINISTIC` | **error** (always) |
+| **B1** | **crypto-on-core.** Integrity is never tolerance-bounded. | flow has a Hash/Sign/crypto effect **and** `lane` is `photonic`/`noisy` | `FUNGI-SUBSTRATE-001` · `CRYPTO_ON_NOISY_LANE` | **error** (always, every profile) |
+| **B2** | **redundancy sufficiency.** Declared tolerance must be provable at the declared `N`. | `epsilonModeled > tolerance` at the declared `redundancy` | `FUNGI-SUBSTRATE-002` (raisable by more `N`) / `FUNGI-SUBSTRATE-003` (`N>1` still short, **or** `pBad ≥ 0.5` so voting cannot converge) | `002`: **error** in `production`/`deterministic`, **warning** in `dev`. `003`: **error** (always) |
+| **B3** | **determinism preservation.** An un-voted noisy result must not feed a deterministic context. | `lane` noisy **and** `redundancy == 1` **and** sink requires determinism | `FUNGI-SUBSTRATE-004` · `UNVOTED_ANALOG_INTO_DETERMINISTIC` | **error** (always) |
 
-### 4.1 B1 — crypto-on-core (`SPORE-SUBSTRATE-001`)
+### 4.1 B1 — crypto-on-core (`FUNGI-SUBSTRATE-001`)
 
 **Rule.** If the flow declares any crypto effect *and* its declared lane is noisy, emit `001` and deny.
 Crypto integrity requires bit-exactness; it can never be "tolerated" at `1e-6`. The fix is structural —
@@ -192,7 +192,7 @@ of scope here, listed honestly in §9.)
 
 `001` is profile-independent: integrity is not negotiable at any deployment posture.
 
-### 4.2 B2 — redundancy sufficiency (`SPORE-SUBSTRATE-002` / `-003`)
+### 4.2 B2 — redundancy sufficiency (`FUNGI-SUBSTRATE-002` / `-003`)
 
 **Rule.** Build the `SubstrateGuarantee` from the block (`epsilonDeclared = tolerance`,
 `redundancyN = redundancy`, `mustCommit = true` when the lane is noisy), call
@@ -200,11 +200,11 @@ of scope here, listed honestly in §9.)
 `verifyToleranceUnderNoise` does (`substrate-model.ts:336–350`):
 
 - `check.met` ⇒ pass.
-- `!met && !check.redundancyHelps` (i.e. `pBad ≥ 0.5`) ⇒ `SPORE-SUBSTRATE-003` **error** — voting
+- `!met && !check.redundancyHelps` (i.e. `pBad ≥ 0.5`) ⇒ `FUNGI-SUBSTRATE-003` **error** — voting
   fundamentally does not converge; raising `N` is futile. Fix: reduce noise / move to digital.
-- `!met && redundancyN > 1` ⇒ `SPORE-SUBSTRATE-003` **error** — declared `N` is short of what the model
+- `!met && redundancyN > 1` ⇒ `FUNGI-SUBSTRATE-003` **error** — declared `N` is short of what the model
   needs. Fix: raise `N` (the `check.trace` over `N=1,3,5,7` shows the smallest sufficient `N`).
-- `!met && redundancyN == 1` ⇒ `SPORE-SUBSTRATE-002` — tolerance unmet with no voting; raising `N`
+- `!met && redundancyN == 1` ⇒ `FUNGI-SUBSTRATE-002` — tolerance unmet with no voting; raising `N`
   *would* help. Severity is **warning in `dev`, error in `production`/`deterministic`** — the only
   profile-sensitive code in the family. Profile is read from `this.currentProfile`
   (`governance-verifier.ts:1126`, set at `1135`; the `isProduction` idiom is at `1662`).
@@ -214,7 +214,7 @@ decreasing in odd N* (`substrate-model.ts:222–236`), so a sufficient `N` alway
 the diagnostic — adding `redundancy: 3` (or `tmr`) to a flow flagged at `N=1` admits it (acceptance
 test §7.2). When `pBad ≥ 0.5` the honest answer is "voting won't help" — `003`, not a false promise.
 
-### 4.3 B3 — determinism preservation (`SPORE-SUBSTRATE-004`)
+### 4.3 B3 — determinism preservation (`FUNGI-SUBSTRATE-004`)
 
 **Rule.** An **un-voted** (`redundancy == 1`) reading from a noisy lane is non-deterministic at the bit
 level; feeding it into a context that *requires* determinism is a `004` error. The fix is a consensus
@@ -234,7 +234,7 @@ before B3), so re-testing `hasCrypto` here would be dead. (`hasCrypto` is comput
 ```ts
 const isUnvoted = inf.redundancyN === 1;                                  // 1 or omitted (default)
 const sinkRequiresDeterminism = profile === "deterministic" || externalDeterminismSink;
-if (laneIsNoisy && isUnvoted && sinkRequiresDeterminism) { /* SPORE-SUBSTRATE-004, error */ }
+if (laneIsNoisy && isUnvoted && sinkRequiresDeterminism) { /* FUNGI-SUBSTRATE-004, error */ }
 ```
 
 `004` outranks `002`/`003` (Direction C priority): we report the *categorical* "unvoted analog into a
@@ -265,8 +265,8 @@ acceptance tests in `governance-verifier.test.mjs` (§7).
 ### 5.2 Insertion point in `governance-verifier.ts`
 
 Inside the per-flow `verifyFlow()` method, **after** the invariant-block verification
-(`SPORE-INV-001/002`, ~`governance-verifier.ts:1820–1827`) and **before** the trap declarations
-(`SPORE-TRAP-001/002`, ~`1829–1832`) — the same neighbourhood where `checkResilienceViolations` /
+(`FUNGI-INV-001/002`, ~`governance-verifier.ts:1820–1827`) and **before** the trap declarations
+(`FUNGI-TRAP-001/002`, ~`1829–1832`) — the same neighbourhood where `checkResilienceViolations` /
 `checkObservabilityWarnings` are wired (`1846–1874`). Guarded on a non-undefined `flowNode`:
 
 ```ts
@@ -336,7 +336,7 @@ function findSubstrateBlock(flowNode: AstNode): AstNode | undefined {
 ```
 
 Malformed values fail **closed**: a non-numeric `tolerance`, a non-odd/non-positive `redundancy`, or an
-unrecognised `lane` keyword is itself a diagnostic (`SPORE-SUBSTRATE-002`/`-003` family or a syntax-level
+unrecognised `lane` keyword is itself a diagnostic (`FUNGI-SUBSTRATE-002`/`-003` family or a syntax-level
 reject), never a silent coerce-to-default — see §8.
 
 ---
@@ -418,7 +418,7 @@ live in `substrate-inference.test.mjs`.
 ### 7.1 B1 — Hash on `lane: photonic` is rejected
 
 ```js
-it("SPORE-SUBSTRATE-001: crypto effect on a photonic lane is denied (every profile)", () => {
+it("FUNGI-SUBSTRATE-001: crypto effect on a photonic lane is denied (every profile)", () => {
   const result = parseAndVerify(`
 secure flow sealReceipt(r: Receipt) -> Result<Sealed, ApiError>
 contract {
@@ -427,14 +427,14 @@ contract {
 }
 { return Ok(Sealed.of(r)) }
 `, "production");
-  assert.ok(hasDiag(result, "SPORE-SUBSTRATE-001"));
-  const d = result.diagnostics.find(x => x.code === "SPORE-SUBSTRATE-001");
+  assert.ok(hasDiag(result, "FUNGI-SUBSTRATE-001"));
+  const d = result.diagnostics.find(x => x.code === "FUNGI-SUBSTRATE-001");
   assert.equal(d.severity, "error");                 // never tolerated, even with redundancy: 3
   assert.match(d.message, /digital lane|integrity/i);
 });
-it("SPORE-SUBSTRATE-001 still fires in dev (integrity is profile-independent)", () => {
+it("FUNGI-SUBSTRATE-001 still fires in dev (integrity is profile-independent)", () => {
   const result = parseAndVerify(/* same source */, "dev");
-  assert.equal(result.diagnostics.find(x => x.code === "SPORE-SUBSTRATE-001").severity, "error");
+  assert.equal(result.diagnostics.find(x => x.code === "FUNGI-SUBSTRATE-001").severity, "error");
 });
 it("no 001 when the same crypto effect is on a digital lane", () => {
   const result = parseAndVerify(`
@@ -442,54 +442,54 @@ secure flow sealReceipt(r: Receipt) -> Result<Sealed, ApiError>
 contract { effects { crypto.sign } substrate { lane: digital } }
 { return Ok(Sealed.of(r)) }
 `, "production");
-  assert.ok(!hasDiag(result, "SPORE-SUBSTRATE-001"));
+  assert.ok(!hasDiag(result, "FUNGI-SUBSTRATE-001"));
 });
 ```
 
 ### 7.2 B2 — tight tolerance without TMR is rejected; a vote admits it
 
 ```js
-it("SPORE-SUBSTRATE-002: tight tolerance at N=1 is rejected; redundancy: tmr clears it", () => {
+it("FUNGI-SUBSTRATE-002: tight tolerance at N=1 is rejected; redundancy: tmr clears it", () => {
   const tight = `
 flow average(xs: List<F64>) -> F64
 contract { substrate { lane: photonic; tolerance: 1e-6; redundancy: 1 } }
 { return mean(xs) }`;
   const r1 = parseAndVerify(tight, "production");
-  assert.ok(hasDiag(r1, "SPORE-SUBSTRATE-002"));
-  assert.equal(r1.diagnostics.find(x => x.code === "SPORE-SUBSTRATE-002").severity, "error");
+  assert.ok(hasDiag(r1, "FUNGI-SUBSTRATE-002"));
+  assert.equal(r1.diagnostics.find(x => x.code === "FUNGI-SUBSTRATE-002").severity, "error");
 
   const voted = tight.replace("redundancy: 1", "redundancy: tmr");   // tmr → N=3 (consensusTrit)
   const r2 = parseAndVerify(voted, "production");
-  assert.ok(!hasDiag(r2, "SPORE-SUBSTRATE-002"));    // monotone: raising N clears it (substrate-model.ts:222–236)
-  assert.ok(!hasDiag(r2, "SPORE-SUBSTRATE-003"));
+  assert.ok(!hasDiag(r2, "FUNGI-SUBSTRATE-002"));    // monotone: raising N clears it (substrate-model.ts:222–236)
+  assert.ok(!hasDiag(r2, "FUNGI-SUBSTRATE-003"));
 });
-it("SPORE-SUBSTRATE-002 is a warning in dev, error in production", () => {
+it("FUNGI-SUBSTRATE-002 is a warning in dev, error in production", () => {
   const src = `flow average(xs: List<F64>) -> F64
 contract { substrate { lane: photonic; tolerance: 1e-6; redundancy: 1 } } { return mean(xs) }`;
   assert.equal(parseAndVerify(src, "dev").diagnostics
-    .find(x => x.code === "SPORE-SUBSTRATE-002").severity, "warning");
+    .find(x => x.code === "FUNGI-SUBSTRATE-002").severity, "warning");
   assert.equal(parseAndVerify(src, "production").diagnostics
-    .find(x => x.code === "SPORE-SUBSTRATE-002").severity, "error");
+    .find(x => x.code === "FUNGI-SUBSTRATE-002").severity, "error");
 });
-it("SPORE-SUBSTRATE-003: when pBad ≥ 0.5 voting cannot converge — error, no false promise", () => {
+it("FUNGI-SUBSTRATE-003: when pBad ≥ 0.5 voting cannot converge — error, no false promise", () => {
   // SEVERE lane profile (pBad ≥ 0.5) → 003, even at high redundancy; trace never clears.
   const r = parseAndVerify(/* severe-lane flow, redundancy: 7 */, "production");
-  assert.ok(hasDiag(r, "SPORE-SUBSTRATE-003"));
-  assert.ok(!hasDiag(r, "SPORE-SUBSTRATE-002"));
+  assert.ok(hasDiag(r, "FUNGI-SUBSTRATE-003"));
+  assert.ok(!hasDiag(r, "FUNGI-SUBSTRATE-002"));
 });
 ```
 
 ### 7.3 B3 — voted result into a deterministic sink accepted; un-voted rejected
 
 ```js
-it("SPORE-SUBSTRATE-004: un-voted noisy result into a deterministic sink is rejected", () => {
+it("FUNGI-SUBSTRATE-004: un-voted noisy result into a deterministic sink is rejected", () => {
   const r = parseAndVerify(`
 flow scoreRisk(req: Req) -> Score
 contract { substrate { lane: noisy; tolerance: 1e-3; redundancy: 1 } }
 { return analogScore(req) }
 `, "deterministic");
-  assert.ok(hasDiag(r, "SPORE-SUBSTRATE-004"));
-  assert.equal(r.diagnostics.find(x => x.code === "SPORE-SUBSTRATE-004").severity, "error");
+  assert.ok(hasDiag(r, "FUNGI-SUBSTRATE-004"));
+  assert.equal(r.diagnostics.find(x => x.code === "FUNGI-SUBSTRATE-004").severity, "error");
 });
 it("a voted (N=3) result is admitted into the same deterministic sink", () => {
   const r = parseAndVerify(`
@@ -497,20 +497,20 @@ flow scoreRisk(req: Req) -> Score
 contract { substrate { lane: noisy; tolerance: 1e-3; redundancy: 3 } }
 { return analogScore(req) }
 `, "deterministic");
-  assert.ok(!hasDiag(r, "SPORE-SUBSTRATE-004"));      // a vote restores determinism at the boundary
+  assert.ok(!hasDiag(r, "FUNGI-SUBSTRATE-004"));      // a vote restores determinism at the boundary
 });
 ```
 
 ### 7.4 No-regression — flows without `substrate {}` are completely unaffected
 
 ```js
-it("a flow with NO substrate block emits zero SPORE-SUBSTRATE-* diagnostics", () => {
+it("a flow with NO substrate block emits zero FUNGI-SUBSTRATE-* diagnostics", () => {
   const r = parseAndVerify(`
 secure flow createOrder(req: Request) -> Result<Response, ApiError>
 contract { effects { database.write audit.write crypto.sign } }
 { return Ok(Response.ok({})) }
 `, "production");
-  for (const code of ["SPORE-SUBSTRATE-001","SPORE-SUBSTRATE-002","SPORE-SUBSTRATE-003","SPORE-SUBSTRATE-004"])
+  for (const code of ["FUNGI-SUBSTRATE-001","FUNGI-SUBSTRATE-002","FUNGI-SUBSTRATE-003","FUNGI-SUBSTRATE-004"])
     assert.ok(!hasDiag(r, code), `unexpected ${code} on a flow without substrate{}`);
 });
 it("lane: digital is inert — crypto + tight tolerance still emit nothing", () => {
@@ -519,26 +519,26 @@ flow f(x: F64) -> F64
 contract { effects { crypto.hash } substrate { lane: digital; tolerance: 1e-12; redundancy: 1 } }
 { return x }
 `, "production");
-  assert.equal(r.diagnostics.filter(d => d.code.startsWith("SPORE-SUBSTRATE-")).length, 0);
+  assert.equal(r.diagnostics.filter(d => d.code.startsWith("FUNGI-SUBSTRATE-")).length, 0);
 });
 ```
 
 Plus the **oracle** tests (§6.1) in both suites and a **constant-identity** check
-(`assert.equal(SUBSTRATE_DIAGNOSTICS.CRYPTO_ON_NOISY_LANE, "SPORE-SUBSTRATE-001")`, mirroring the
-`SPORE_RES_001.code` style at `governance-verifier.test.mjs`). The full package suite + the graph check
+(`assert.equal(SUBSTRATE_DIAGNOSTICS.CRYPTO_ON_NOISY_LANE, "FUNGI-SUBSTRATE-001")`, mirroring the
+`FUNGI_RES_001.code` style at `governance-verifier.test.mjs`). The full package suite + the graph check
 run at the phase boundary.
 
 ### 7.5 Constant registration
 
 Direction C exports `SUBSTRATE_DIAGNOSTICS` from `substrate-model.ts:273–278` (tower-citizen). For the
-compiler the four codes are registered as exported `SPORE_SUBSTRATE_001..004` const objects in
-`governance-verifier.ts` (the diagnostic-constant section, alongside `SPORE_RES_001`/`SPORE_OBS_001`), and
+compiler the four codes are registered as exported `FUNGI_SUBSTRATE_001..004` const objects in
+`governance-verifier.ts` (the diagnostic-constant section, alongside `FUNGI_RES_001`/`FUNGI_OBS_001`), and
 re-exported from `index.ts` in the governance-verifier export block (`index.ts:663–692`):
 
 ```ts
 export {
   /* …existing… */
-  SPORE_SUBSTRATE_001, SPORE_SUBSTRATE_002, SPORE_SUBSTRATE_003, SPORE_SUBSTRATE_004,
+  FUNGI_SUBSTRATE_001, FUNGI_SUBSTRATE_002, FUNGI_SUBSTRATE_003, FUNGI_SUBSTRATE_004,
 } from "./governance-verifier.js";
 ```
 
@@ -552,16 +552,16 @@ table) so the contract surface and the math library can never disagree on a code
 
 | Malformed declaration | Outcome |
 |---|---|
-| `tolerance:` non-numeric / `< 0` / `> 1` | reject — emit a parse/`SPORE-SUBSTRATE-002`-family diagnostic; never coerce to default |
+| `tolerance:` non-numeric / `< 0` / `> 1` | reject — emit a parse/`FUNGI-SUBSTRATE-002`-family diagnostic; never coerce to default |
 | `redundancy:` even / `< 1` / non-integer | reject — `redundancy` must be odd ≥ 1 (mirrors `assertOddPositive`, `substrate-model.ts:80–84`); never round |
-| `lane:` unrecognised keyword | `malformed` → `SPORE-SUBSTRATE-002` error; do **not** silently treat as `digital` |
-| `tolerance:` split/incomplete numeric (`1e-`) | `malformed` → `SPORE-SUBSTRATE-002` error; **never** truncate to the leading digit |
+| `lane:` unrecognised keyword | `malformed` → `FUNGI-SUBSTRATE-002` error; do **not** silently treat as `digital` |
+| `tolerance:` split/incomplete numeric (`1e-`) | `malformed` → `FUNGI-SUBSTRATE-002` error; **never** truncate to the leading digit |
 | `substrate {}` present but empty | inert: defaults make `lane=digital` → returns `[]`; no false positive |
 
 Defaults apply **only** to *omitted* fields, never to *garbage* fields — the difference between "the
 author chose the safe default" and "the author wrote nonsense we silently swallowed". The latter always
 fails the build. As implemented, a malformed `tolerance`/`redundancy`/`lane` sets `InferredSubstrate.malformed`,
-which `checkSubstrateViolations` reports as `SPORE-SUBSTRATE-002` (error) — it does **not** mint a new code
+which `checkSubstrateViolations` reports as `FUNGI-SUBSTRATE-002` (error) — it does **not** mint a new code
 (spec §4 binding) and the message names the malformed field.
 
 ### 8.1 Numeric literals — scientific notation (a language-wide lexer enablement)
@@ -575,7 +575,7 @@ follows, so `1e-6` is **one** numeric token everywhere in Galerina. This is a sm
 trailing `e` with no following digit stays an identifier; hex `0x1e` is unaffected) and was verified to
 cause **zero regression** across the full suite. **Defense-in-depth:** `parseToleranceField` additionally
 requires the value to match a complete numeric literal (`^[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?$`); a split
-or incomplete numeric (`1e-`, `1 e - 6`) fails closed as `SPORE-SUBSTRATE-002`, never a silent default.
+or incomplete numeric (`1e-`, `1 e - 6`) fails closed as `FUNGI-SUBSTRATE-002`, never a silent default.
 
 ---
 
@@ -622,7 +622,7 @@ or incomplete numeric (`1e-`, `1 e - 6`) fails closed as `SPORE-SUBSTRATE-002`, 
 
 ## 11. Cross-references
 
-`galerina-substrate-failure-model.md` (Direction C — the model, the `SPORE-SUBSTRATE-*` registration, §8
+`galerina-substrate-failure-model.md` (Direction C — the model, the `FUNGI-SUBSTRATE-*` registration, §8
 follow-ups that scope this doc) · `galerina-three-valued-governance.md` (Direction A — `Verdict`, `vAnd`,
 No-Coercion; the inherited safety half of B3) · `substrate-model.ts`
 (`singleLaneErrorProbability:98`, `nmrFailureProbability:227`, `binom:214`, `checkGuarantee:262`,
@@ -631,6 +631,6 @@ No-Coercion; the inherited safety half of B3) · `substrate-model.ts`
 `governance-verifier.ts` (`verify:1128`, `verifyFlow` insertion ~`1827`, `makeGovDiag:167`,
 `currentProfile:1126`, effect-array idiom `1262`) · `resilience-inference.ts` /
 `observability-inference.ts` (the inferred-block precedent + AST-search idiom) · `index.ts:663–692`
-(constant export block) · `compiler-diagnostics.md` (`SPORE-SUBSTRATE-*`, `SPORE-SYNTAX-009`) ·
+(constant export block) · `compiler-diagnostics.md` (`FUNGI-SUBSTRATE-*`, `FUNGI-SYNTAX-009`) ·
 `galerina-domain-guard-policies.md` (static-manifest-clamping prior art) ·
 `galerina-photonic-tri-substrate-rd-agenda.md` §5 (parent agenda, `#58`).

@@ -32,7 +32,7 @@ confusion. (This was a leftover from the #155 root-package work.)
 | **Curated `examples/auth-service/` corpus (31 files)** | **31/31 clean · 0 findings** (profile strict, governance dev) |
 | `#105` WASM admission gate | attestation-first, fail-closed; new negative-path tasks tracked (#173/#176/#186/#190) |
 
-The security `audit` CLI is a *manual* devtools tool. A broad sweep over **all 397 `.spore`**
+The security `audit` CLI is a *manual* devtools tool. A broad sweep over **all 397 `.fungi`**
 files surfaces ~47 "failures" that are **by-design, not defects** (documented in the
 toolchain memory): PROFILE-001/002 on the self-hosted compiler + recursion/loop benchmarks
 (strict profile forbids recursion/unbounded loops — inherent to those algorithms),
@@ -60,7 +60,7 @@ Ran `npm run run:quick` + `npm run compare` in `galerina-devtools-benchmarks`. R
 recorded at `results/latest.json` (the future-comparison baseline).
 
 **Did this session change benchmark numbers? No material change — and that is expected.**
-This session's work was entirely in the **Stage-B WASM emitter** (the `.spore → WAT` path)
+This session's work was entirely in the **Stage-B WASM emitter** (the `.fungi → WAT` path)
 and the `#105` admission harness. The benchmark suite exercises the **Stage-A tiered
 runtime** (cache / bytecode-VM / sync fast-path / WASM / tree-walker) on numeric/string/
 governance workloads — a different code path. So the emitter changes neither helped nor
@@ -97,7 +97,7 @@ done), and the Tower's hardware-isolation layer is honestly disclosed as Stage-A
 1. **#165** float arithmetic → `f64` ops + `f64` locals.
 2. **#192** parser: `match` in expression position (`return match …` / `let x = match …`).
 3. **#193** WAT emitter param-naming collision (`p0`/`p1`/… vs positional `$p<i>`).
-4. Then: attempt `parser.spore` → real-WASM byte-parity (the next milestone after tokenize).
+4. Then: attempt `parser.fungi` → real-WASM byte-parity (the next milestone after tokenize).
 
 ### Security & integrity (sequence ASAP)
 - **#149 CRITICAL** — signing-key git-history scrub + CI secret scanning (user-driven, destructive).
@@ -180,7 +180,7 @@ posture escalation = a privilege-escalation footgun, incompatible with the Zero 
 **Question: "Have we covered XOR?"**
 - **Binary XOR: ✅ covered.** The Galerina `^` operator lowers to `i32.xor`
   (`wat-emitter.ts` BINARY_OP_TO_WAT). Bitwise XOR is also used incidentally (xorshift PRNG
-  in `hybrid-engine.ts`; V_DPM mask complement in `vdpm.spore`).
+  in `hybrid-engine.ts`; V_DPM mask complement in `vdpm.fungi`).
 - **Ternary tri-logic XOR (the "SUM gate", Mod-3): not implemented — but this is notes
   discussion, NOT adopted.** The Tower's `tpl-simulator.ts` has the T-MAC ternary dot
   product (add/subtract/skip) and a `tri-logic` benchmark, but no ternary XOR gate. The

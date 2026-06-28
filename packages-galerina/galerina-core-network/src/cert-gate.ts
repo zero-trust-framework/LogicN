@@ -243,7 +243,7 @@ export function withSideSignal(verdict: Verdict, sideSignal: Verdict): Verdict {
  * IFF the composed verdict is exactly `+1` IFF all four sub-verdicts are `+1`
  * (and every side-signal is `+1`).
  *
- * `onDiagnostic` receives SPORE-GOV-3VL-001 whenever an INDETERMINATE (`0`) verdict
+ * `onDiagnostic` receives FUNGI-GOV-3VL-001 whenever an INDETERMINATE (`0`) verdict
  * is collapsed to deny — it is structurally impossible to drop that silently
  * (the diagnostic is also returned in `decision.diagnostic`).
  */

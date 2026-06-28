@@ -29,7 +29,7 @@ host package manifest boundary checks
 export type EnvironmentMode = "development" | "test" | "staging" | "production"
 ```
 
-Unknown modes emit `SPORE-CONFIG-003` rather than silently falling back.
+Unknown modes emit `FUNGI-CONFIG-003` rather than silently falling back.
 
 ## Environment Config Types
 
@@ -49,7 +49,7 @@ export interface SecretEnvironmentReference {
 ```
 
 `loadEnvironmentConfig()` validates required variables and secrets, emits
-`SPORE-CONFIG-001` for missing public variables and `SPORE-CONFIG-002` for missing
+`FUNGI-CONFIG-001` for missing public variables and `FUNGI-CONFIG-002` for missing
 secrets.
 
 ## Safe Secret Resolution Flow
@@ -72,13 +72,13 @@ raw value is never logged or reported
 
 | Code | Meaning |
 | --- | --- |
-| `SPORE-CONFIG-001` | required public environment variable missing |
-| `SPORE-CONFIG-002` | required secret missing |
-| `SPORE-CONFIG-003` | unknown environment mode |
-| `SPORE-CONFIG-004` | production strict mode disabled |
-| `SPORE-CONFIG-005` | unsafe secret default detected |
-| `SPORE-CONFIG-006` | development package enabled in production |
-| `SPORE-CONFIG-010` | host package manifest boundary violation |
+| `FUNGI-CONFIG-001` | required public environment variable missing |
+| `FUNGI-CONFIG-002` | required secret missing |
+| `FUNGI-CONFIG-003` | unknown environment mode |
+| `FUNGI-CONFIG-004` | production strict mode disabled |
+| `FUNGI-CONFIG-005` | unsafe secret default detected |
+| `FUNGI-CONFIG-006` | development package enabled in production |
+| `FUNGI-CONFIG-010` | host package manifest boundary violation |
 
 ## Contracts
 
@@ -111,7 +111,7 @@ const result = loadConfigFromObjects({
     name: "galerina-app",
     version: "0.1.0",
     root: ".",
-    entryFiles: ["packages-galerina/galerina-framework-example-app/src/index.spore"],
+    entryFiles: ["packages-galerina/galerina-framework-example-app/src/index.fungi"],
     packages: ["packages-galerina/galerina-core", "packages-galerina/galerina-core-config", "packages-galerina/galerina-framework-example-app"],
     strict: true,
     targets: ["cpu", "wasm"],

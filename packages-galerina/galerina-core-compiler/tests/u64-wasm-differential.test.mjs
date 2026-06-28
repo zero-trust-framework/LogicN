@@ -11,13 +11,13 @@ const C = `contract { effects {} }`;
 const flowU64 = (body) => `pure flow f() -> UInt64\n${C}\n{ ${body} }`;
 
 async function walker(src) {
-  const p = L.parseProgram(src, "p.spore");
+  const p = L.parseProgram(src, "p.fungi");
   try { L.resolveSymbols(p.ast); L.checkTypes(p.ast); } catch {}
   const r = await L.executeFlow("f", new Map(), p.ast);
   return r.value;
 }
 function compileWAT(src) {
-  const p = L.parseProgram(src, "p.spore");
+  const p = L.parseProgram(src, "p.fungi");
   assert.equal(p.diagnostics.filter((d) => d.severity === "error").length, 0, "parse");
   const fx = L.checkEffects(p.flows, p.ast);
   const { gir } = L.emitGIR(p.ast, p.flows, fx);
@@ -71,8 +71,8 @@ describe("UInt64 WASM ≡ walker (#52 unsigned-64 lowering)", () => {
   it("the WAT uses UNSIGNED ops (div_u / lt_u / checked u64 helpers), never signed i64 for a UInt64 flow", () => {
     const wat = compileWAT(flowU64(`let a: UInt64 = 10  let b: UInt64 = 3  let q: UInt64 = a / b  let r: UInt64 = a + b  return r`));
     assert.match(wat, /i64\.div_u/, "division must be unsigned");
-    assert.match(wat, /spore_checked_add_u64/, "addition must use the checked u64 helper");
-    assert.doesNotMatch(wat, /i64\.div_s|spore_checked_add_i64/, "must NOT use signed i64 ops for a UInt64 flow");
+    assert.match(wat, /fungi_checked_add_u64/, "addition must use the checked u64 helper");
+    assert.doesNotMatch(wat, /i64\.div_s|fungi_checked_add_i64/, "must NOT use signed i64 ops for a UInt64 flow");
   });
 
   it("a mixed UInt64×Int op DECLINES in WASM (walker handles the sign promotion)", () => {

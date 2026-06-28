@@ -63,7 +63,7 @@
 ## Phase 6: Major Version Trigger
 
 ```text
-[ ] Add .spore/benchmark-state.json
+[ ] Add .fungi/benchmark-state.json
 [ ] Store last Galerina version
 [ ] Detect major version change
 [ ] Trigger only in development mode

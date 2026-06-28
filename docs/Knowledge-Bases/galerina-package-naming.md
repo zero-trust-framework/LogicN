@@ -16,7 +16,7 @@ Galerina packages. The broader historical package naming context is in
 ## Rules at a Glance
 
 - Use `galerina-*` for implementation packages.
-- Use `spore` for language-surface artifacts such as diagnostics, grammar, AST
+- Use `fungi` for language-surface artifacts such as diagnostics, grammar, AST
   formats, and CLI file formats.
 - Prefer explicit package families over ambiguous root names.
 - Merge duplicates before renaming dependent packages.
@@ -31,7 +31,7 @@ Galerina packages. The broader historical package naming context is in
 targets, framework packages, database connectors, developer tools, and runtime
 support.
 
-`spore` is reserved for language artifacts:
+`fungi` is reserved for language artifacts:
 
 - grammar file formats
 - AST schema names
@@ -43,7 +43,7 @@ support.
 Final principle:
 
 ```text
-galerina-* for packages. spore for language artifacts.
+galerina-* for packages. fungi for language artifacts.
 ```
 
 ## Naming Families

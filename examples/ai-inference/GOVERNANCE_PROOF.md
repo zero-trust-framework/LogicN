@@ -79,7 +79,7 @@ Input/output: DataHandle only — no raw pointers
 No strings, no PII, no protected values
 No filesystem, no network
 Child-process isolation (Phase 27: process, Phase 28: component)
-Signed module (SPORE-PKG-005 equivalent for native)
+Signed module (FUNGI-PKG-005 equivalent for native)
 Audit entry required: records chosen target, buffer sizes (not content)
 Fallback: cpu (always declared)
 ```

@@ -1,7 +1,7 @@
 // =============================================================================
 // galerina-devtools-intelligence — Workspace Indexer
 //
-// Walk all .spore files in a directory, parse each, extract IndexedFlow objects,
+// Walk all .fungi files in a directory, parse each, extract IndexedFlow objects,
 // and save as workspace.lindex (JSON).
 //
 // Supports incremental update: files whose mtime hasn't changed are skipped
@@ -19,7 +19,7 @@ const INDEX_FILENAME = "workspace.lindex";
 const INDEX_VERSION = 1 as const;
 
 // ---------------------------------------------------------------------------
-// SPORE-INTEL-001 — index integrity (anti poisoned-index)
+// FUNGI-INTEL-001 — index integrity (anti poisoned-index)
 //
 // The .lindex is a CACHE whose `flows`/`fileHashes` are TRUSTED on an incremental build (a file whose
 // stored hash matches is not re-parsed — its cached flows are reused). An attacker who can write the
@@ -43,7 +43,7 @@ function serializeForIntegrity(index: WorkspaceIndex): string {
   });
 }
 
-/** Compute the SPORE-INTEL-001 integrity tag (HMAC if keyed, else SHA-256 digest). */
+/** Compute the FUNGI-INTEL-001 integrity tag (HMAC if keyed, else SHA-256 digest). */
 export function computeIndexIntegrity(index: WorkspaceIndex): string {
   const data = serializeForIntegrity(index);
   const key = process.env.GALERINA_INDEX_HMAC_KEY;
@@ -86,7 +86,7 @@ async function walkSporeFiles(dir: string): Promise<string[]> {
         if (entry.name !== "node_modules" && entry.name !== "dist" && !entry.name.startsWith(".")) {
           await recurse(fullPath);
         }
-      } else if (entry.isFile() && entry.name.endsWith(".spore")) {
+      } else if (entry.isFile() && entry.name.endsWith(".fungi")) {
         results.push(fullPath);
       }
     }
@@ -108,10 +108,10 @@ async function loadExistingIndex(indexPath: string): Promise<WorkspaceIndex | nu
       typeof parsed === "object" && parsed !== null &&
       (parsed as WorkspaceIndex).version === INDEX_VERSION
     ) {
-      // SPORE-INTEL-001: never trust a cached index that fails its integrity tag (poisoned/corrupt) —
+      // FUNGI-INTEL-001: never trust a cached index that fails its integrity tag (poisoned/corrupt) —
       // discard it and let the caller fully re-parse (fail-closed). Never silent.
       if (!verifyIndexIntegrity(parsed as WorkspaceIndex)) {
-        console.warn(`SPORE-INTEL-001: ${INDEX_FILENAME} integrity check FAILED — discarding cached index, full re-parse (a poisoned/corrupt index is not trusted)`);
+        console.warn(`FUNGI-INTEL-001: ${INDEX_FILENAME} integrity check FAILED — discarding cached index, full re-parse (a poisoned/corrupt index is not trusted)`);
         return null;
       }
       return parsed as WorkspaceIndex;
@@ -129,7 +129,7 @@ async function saveIndex(indexPath: string, index: WorkspaceIndex): Promise<void
 }
 
 /**
- * SPORE-INTEL-002: refuse a path-traversal `indexDir`. A raw `..` segment (CWE-22) is rejected so an
+ * FUNGI-INTEL-002: refuse a path-traversal `indexDir`. A raw `..` segment (CWE-22) is rejected so an
  * indexDir derived from untrusted input cannot escape its intended root and plant/overwrite a
  * `workspace.lindex` elsewhere. A deliberate absolute or sub-path with NO `..` segment is allowed
  * (a trusted caller may legitimately write the index to a separate cache dir).
@@ -137,7 +137,7 @@ async function saveIndex(indexPath: string, index: WorkspaceIndex): Promise<void
 function assertIndexDirSandboxed(indexDir: string | undefined): void {
   if (indexDir === undefined) return; // default (= workspaceDir) is safe
   if (indexDir.split(/[\\/]+/).includes("..")) {
-    throw new Error(`SPORE-INTEL-002: indexDir contains a '..' path-traversal segment — refusing to write ${INDEX_FILENAME} (CWE-22)`);
+    throw new Error(`FUNGI-INTEL-002: indexDir contains a '..' path-traversal segment — refusing to write ${INDEX_FILENAME} (CWE-22)`);
   }
 }
 
@@ -161,7 +161,7 @@ export interface IndexBuildResult {
 /**
  * Build or incrementally update the workspace.lindex file for `workspaceDir`.
  *
- * @param workspaceDir  Directory to walk for .spore files
+ * @param workspaceDir  Directory to walk for .fungi files
  * @param indexDir      Where to write workspace.lindex (defaults to workspaceDir)
  */
 export async function buildIndex(
@@ -169,7 +169,7 @@ export async function buildIndex(
   indexDir?: string,
 ): Promise<IndexBuildResult> {
   const t0 = Date.now();
-  assertIndexDirSandboxed(indexDir); // SPORE-INTEL-002 — reject path-traversal before any write
+  assertIndexDirSandboxed(indexDir); // FUNGI-INTEL-002 — reject path-traversal before any write
   const absWorkspace = resolve(workspaceDir);
   const absIndexDir  = resolve(indexDir ?? workspaceDir);
   const indexPath    = join(absIndexDir, INDEX_FILENAME);
@@ -186,15 +186,15 @@ export async function buildIndex(
     }
   }
 
-  // Walk workspace for .spore files
-  const sporeFiles = await walkSporeFiles(absWorkspace);
+  // Walk workspace for .fungi files
+  const fungiFiles = await walkSporeFiles(absWorkspace);
 
   const allFlows: IndexedFlow[] = [];
   const newFileHashes: Record<string, string> = {};
   let filesIndexed = 0;
   let filesSkipped = 0;
 
-  for (const filePath of sporeFiles) {
+  for (const filePath of fungiFiles) {
     // Check mtime for incremental (fast pre-filter)
     let mtime = 0;
     try {

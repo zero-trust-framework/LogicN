@@ -2,9 +2,9 @@
 // Task #68 — CBOR Secure Parser Hardening Tests
 //
 // Tests for security constraints wired into decodeCBOR():
-//   SPORE-MANIFEST-DEPTH          — max nesting depth 8 (Billion Laughs)
-//   SPORE-MANIFEST-DUPLICATE-KEY  — reject duplicate map keys (shadow-field)
-//   SPORE-MANIFEST-LENGTH-OVERFLOW — reject fields > 4MB (DWI ceiling)
+//   FUNGI-MANIFEST-DEPTH          — max nesting depth 8 (Billion Laughs)
+//   FUNGI-MANIFEST-DUPLICATE-KEY  — reject duplicate map keys (shadow-field)
+//   FUNGI-MANIFEST-LENGTH-OVERFLOW — reject fields > 4MB (DWI ceiling)
 //
 // Also tests that verifyManifestRoundTrip() returns false for security
 // violations rather than throwing.
@@ -88,10 +88,10 @@ function buildLengthOverflowCBOR() {
 }
 
 // ---------------------------------------------------------------------------
-// SPORE-MANIFEST-DEPTH tests
+// FUNGI-MANIFEST-DEPTH tests
 // ---------------------------------------------------------------------------
 
-describe("SPORE-MANIFEST-DEPTH: CBOR depth limit enforcement", () => {
+describe("FUNGI-MANIFEST-DEPTH: CBOR depth limit enforcement", () => {
 
   it("accepts nesting at exactly depth 8 (array of 8 levels)", () => {
     // 8 levels of nesting: depths 0..7 (inner call at depth 8 is within limit)
@@ -102,7 +102,7 @@ describe("SPORE-MANIFEST-DEPTH: CBOR depth limit enforcement", () => {
     assert.doesNotThrow(() => decodeCBOR(cbor, 0, 0), "8 levels should be accepted");
   });
 
-  it("rejects nesting at 9 levels with SPORE-MANIFEST-DEPTH", () => {
+  it("rejects nesting at 9 levels with FUNGI-MANIFEST-DEPTH", () => {
     // 9 array wrappers: the innermost call is at depth 9 — should throw
     const cbor = buildDeeplyNestedCBOR(9);
     assert.throws(
@@ -110,21 +110,21 @@ describe("SPORE-MANIFEST-DEPTH: CBOR depth limit enforcement", () => {
       (err) => {
         assert.ok(err instanceof Error, "should throw an Error");
         assert.ok(
-          err.message.startsWith("SPORE-MANIFEST-DEPTH"),
-          `Expected SPORE-MANIFEST-DEPTH, got: ${err.message}`,
+          err.message.startsWith("FUNGI-MANIFEST-DEPTH"),
+          `Expected FUNGI-MANIFEST-DEPTH, got: ${err.message}`,
         );
         return true;
       },
     );
   });
 
-  it("rejects nesting at 20 levels with SPORE-MANIFEST-DEPTH", () => {
+  it("rejects nesting at 20 levels with FUNGI-MANIFEST-DEPTH", () => {
     const cbor = buildDeeplyNestedCBOR(20);
     assert.throws(
       () => decodeCBOR(cbor, 0, 0),
       (err) => {
         assert.ok(err instanceof Error);
-        assert.ok(err.message.startsWith("SPORE-MANIFEST-DEPTH"));
+        assert.ok(err.message.startsWith("FUNGI-MANIFEST-DEPTH"));
         return true;
       },
     );
@@ -136,17 +136,17 @@ describe("SPORE-MANIFEST-DEPTH: CBOR depth limit enforcement", () => {
     const cbor = buildDeeplyNestedCBOR(9);
     assert.throws(
       () => decodeCBOR(cbor, 0, 0),
-      /SPORE-MANIFEST-DEPTH/,
+      /FUNGI-MANIFEST-DEPTH/,
     );
   });
 
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-MANIFEST-DUPLICATE-KEY tests
+// FUNGI-MANIFEST-DUPLICATE-KEY tests
 // ---------------------------------------------------------------------------
 
-describe("SPORE-MANIFEST-DUPLICATE-KEY: duplicate map key rejection", () => {
+describe("FUNGI-MANIFEST-DUPLICATE-KEY: duplicate map key rejection", () => {
 
   it("rejects a CBOR map with duplicate string key", () => {
     const cbor = buildDuplicateKeyMapCBOR();
@@ -155,8 +155,8 @@ describe("SPORE-MANIFEST-DUPLICATE-KEY: duplicate map key rejection", () => {
       (err) => {
         assert.ok(err instanceof Error, "should throw an Error");
         assert.ok(
-          err.message.startsWith("SPORE-MANIFEST-DUPLICATE-KEY"),
-          `Expected SPORE-MANIFEST-DUPLICATE-KEY, got: ${err.message}`,
+          err.message.startsWith("FUNGI-MANIFEST-DUPLICATE-KEY"),
+          `Expected FUNGI-MANIFEST-DUPLICATE-KEY, got: ${err.message}`,
         );
         assert.ok(
           err.message.includes("key"),
@@ -192,17 +192,17 @@ describe("SPORE-MANIFEST-DUPLICATE-KEY: duplicate map key rejection", () => {
     ]);
     assert.throws(
       () => decodeCBOR(cbor, 0, 0),
-      /SPORE-MANIFEST-DUPLICATE-KEY/,
+      /FUNGI-MANIFEST-DUPLICATE-KEY/,
     );
   });
 
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-MANIFEST-LENGTH-OVERFLOW tests
+// FUNGI-MANIFEST-LENGTH-OVERFLOW tests
 // ---------------------------------------------------------------------------
 
-describe("SPORE-MANIFEST-LENGTH-OVERFLOW: field size ceiling enforcement", () => {
+describe("FUNGI-MANIFEST-LENGTH-OVERFLOW: field size ceiling enforcement", () => {
 
   it("rejects a byte string claiming > 4MB", () => {
     const cbor = buildLengthOverflowCBOR();
@@ -211,8 +211,8 @@ describe("SPORE-MANIFEST-LENGTH-OVERFLOW: field size ceiling enforcement", () =>
       (err) => {
         assert.ok(err instanceof Error, "should throw an Error");
         assert.ok(
-          err.message.startsWith("SPORE-MANIFEST-LENGTH-OVERFLOW"),
-          `Expected SPORE-MANIFEST-LENGTH-OVERFLOW, got: ${err.message}`,
+          err.message.startsWith("FUNGI-MANIFEST-LENGTH-OVERFLOW"),
+          `Expected FUNGI-MANIFEST-LENGTH-OVERFLOW, got: ${err.message}`,
         );
         return true;
       },
@@ -231,7 +231,7 @@ describe("SPORE-MANIFEST-LENGTH-OVERFLOW: field size ceiling enforcement", () =>
     ]);
     assert.throws(
       () => decodeCBOR(cbor, 0, 0),
-      /SPORE-MANIFEST-LENGTH-OVERFLOW/,
+      /FUNGI-MANIFEST-LENGTH-OVERFLOW/,
     );
   });
 
@@ -247,7 +247,7 @@ describe("SPORE-MANIFEST-LENGTH-OVERFLOW: field size ceiling enforcement", () =>
     ]);
     assert.throws(
       () => decodeCBOR(cbor, 0, 0),
-      /SPORE-MANIFEST-LENGTH-OVERFLOW/,
+      /FUNGI-MANIFEST-LENGTH-OVERFLOW/,
     );
   });
 
@@ -275,14 +275,14 @@ describe("SPORE-MANIFEST-LENGTH-OVERFLOW: field size ceiling enforcement", () =>
 // verifyManifestRoundTrip security integration
 // ---------------------------------------------------------------------------
 
-describe("verifyManifestRoundTrip: SPORE-MANIFEST-* errors return false (not throw)", () => {
+describe("verifyManifestRoundTrip: FUNGI-MANIFEST-* errors return false (not throw)", () => {
 
   it("normal round-trip returns true for a simple manifest", () => {
     // Construct a minimal mock LManifest-like object and verify the round-trip
     const mockManifest = {
-      schemaVersion: "spore.manifest.v1",
+      schemaVersion: "fungi.manifest.v1",
       sourceHash: "sha256:abc123",
-      sourceFile: "test.spore",
+      sourceFile: "test.fungi",
       flowCount: 1,
       derivedConstraints: [],
       proofObligations: [],
@@ -299,11 +299,11 @@ describe("verifyManifestRoundTrip: SPORE-MANIFEST-* errors return false (not thr
     assert.equal(result, true, "simple manifest round-trip should succeed");
   });
 
-  it("returns false (not throw) when decodeCBOR would throw SPORE-MANIFEST-DEPTH", () => {
+  it("returns false (not throw) when decodeCBOR would throw FUNGI-MANIFEST-DEPTH", () => {
     // We can't directly test verifyManifestRoundTrip with a crafted CBOR payload
     // because it accepts an LManifest (which is then encoded fresh), but we can
     // verify the catch-and-return-false path by subclassing / testing the semantics:
-    // The important invariant: any SPORE-MANIFEST-* Error from decodeCBOR returns false,
+    // The important invariant: any FUNGI-MANIFEST-* Error from decodeCBOR returns false,
     // not re-thrown.
     //
     // We test this indirectly: a valid manifest always round-trips correctly.

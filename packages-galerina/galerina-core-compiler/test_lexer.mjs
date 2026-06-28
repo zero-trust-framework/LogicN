@@ -34,7 +34,7 @@ const testCases = [
 let passed = 0, failed = 0;
 
 testCases.forEach(tc => {
-  const result = lex(tc.input, 'test.spore');
+  const result = lex(tc.input, 'test.fungi');
   const numbers = result.tokens.filter(t => t.kind === 'number');
   const identifiers = result.tokens.filter(t => t.kind === 'identifier');
   const operators = result.tokens.filter(t => t.kind === 'operator');

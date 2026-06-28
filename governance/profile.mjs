@@ -50,7 +50,7 @@ export function isProductionProfile(raw = process.env.GALERINA_PROFILE) {
 export function resolveSigningProfileWarned(warn = console.warn, raw = process.env.GALERINA_PROFILE) {
   const res = resolveSigningProfile(raw);
   if (res.failSecure) {
-    warn(`⚠️  SPORE-PROFILE-UNRECOGNIZED: GALERINA_PROFILE='${res.raw}' is not a recognized profile — fail-securing to 'production' (signing/admission enforcement ON). Set it explicitly to 'dev' or 'production'.`);
+    warn(`⚠️  FUNGI-PROFILE-UNRECOGNIZED: GALERINA_PROFILE='${res.raw}' is not a recognized profile — fail-securing to 'production' (signing/admission enforcement ON). Set it explicitly to 'dev' or 'production'.`);
   }
   return res;
 }

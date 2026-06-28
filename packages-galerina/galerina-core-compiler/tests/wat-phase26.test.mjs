@@ -4,10 +4,10 @@
 // Tests:
 //   26A. wasm-standalone build: WAT emission + JS assembler produces valid WASM
 //   26A. wasmtime availability check (informational — not a hard requirement)
-//   26B. getPatient.spore governance: PHI effects, requiresAudit, allowedEffects
-//   26B. getPatient.spore: parses with 0 errors
-//   26B. getPatient.spore: governance verifier produces runtimeManifests
-//   26C. parser.spore parity: TS parser finds 1 flow, parser.spore has 0 parse errors
+//   26B. getPatient.fungi governance: PHI effects, requiresAudit, allowedEffects
+//   26B. getPatient.fungi: parses with 0 errors
+//   26B. getPatient.fungi: governance verifier produces runtimeManifests
+//   26C. parser.fungi parity: TS parser finds 1 flow, parser.fungi has 0 parse errors
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -29,26 +29,26 @@ import {
 } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const GET_PATIENT_PATH = join(__dir, "../../../examples/healthcare/getPatient.spore");
-const PARSER_SPORE_PATH = join(__dir, "../src/self-hosted/parser.spore");
+const GET_PATIENT_PATH = join(__dir, "../../../examples/healthcare/getPatient.fungi");
+const PARSER_FUNGI_PATH = join(__dir, "../src/self-hosted/parser.fungi");
 
 // ---------------------------------------------------------------------------
 // 26A — wasm-standalone build pipeline
 // ---------------------------------------------------------------------------
 
 describe("Phase 26A: wasm-standalone build emits WAT + valid WASM", () => {
-  // Use greet.spore as a minimal standalone test — pure flow, no effects
-  const GREET_PATH = join(__dir, "../../../examples/wasm-hello-world/greet.spore");
+  // Use greet.fungi as a minimal standalone test — pure flow, no effects
+  const GREET_PATH = join(__dir, "../../../examples/wasm-hello-world/greet.fungi");
 
-  it("greet.spore exists", () => {
-    assert.ok(existsSync(GREET_PATH), `greet.spore not found at: ${GREET_PATH}`);
+  it("greet.fungi exists", () => {
+    assert.ok(existsSync(GREET_PATH), `greet.fungi not found at: ${GREET_PATH}`);
   });
 
-  it("greet.spore: parseProgram + emitGIR + buildWATModuleFromGIR + renderWAT produces valid WAT", () => {
+  it("greet.fungi: parseProgram + emitGIR + buildWATModuleFromGIR + renderWAT produces valid WAT", () => {
     const source = readFileSync(GREET_PATH, "utf8");
-    const p = parseProgram(source, "greet.spore");
+    const p = parseProgram(source, "greet.fungi");
     const errors = p.diagnostics.filter((d) => d.severity === "error");
-    assert.equal(errors.length, 0, `greet.spore parse errors: ${errors.map((e) => e.message).join("; ")}`);
+    assert.equal(errors.length, 0, `greet.fungi parse errors: ${errors.map((e) => e.message).join("; ")}`);
 
     const eff = checkEffects(p.flows, p.ast);
     const gir = emitGIR(p.ast, p.flows, eff);
@@ -60,9 +60,9 @@ describe("Phase 26A: wasm-standalone build emits WAT + valid WASM", () => {
     console.log(`  [26A] WAT snippet: ${wat.split("\n").slice(0, 6).join(" | ")}`);
   });
 
-  it("greet.spore: assembleWAT produces a valid WASM binary", async () => {
+  it("greet.fungi: assembleWAT produces a valid WASM binary", async () => {
     const source = readFileSync(GREET_PATH, "utf8");
-    const p = parseProgram(source, "greet.spore");
+    const p = parseProgram(source, "greet.fungi");
     const eff = checkEffects(p.flows, p.ast);
     const gir = emitGIR(p.ast, p.flows, eff);
     const watModule = buildWATModuleFromGIR(gir.gir, STDLIB_CAPABILITY_MAP, "wasm-standalone");
@@ -96,7 +96,7 @@ describe("Phase 26A: wasm-standalone build emits WAT + valid WASM", () => {
 
   it("wasm-standalone target: WAT has no JS-side imports for pure flows", () => {
     const source = readFileSync(GREET_PATH, "utf8");
-    const p = parseProgram(source, "greet.spore");
+    const p = parseProgram(source, "greet.fungi");
     const eff = checkEffects(p.flows, p.ast);
     const gir = emitGIR(p.ast, p.flows, eff);
     const watModule = buildWATModuleFromGIR(gir.gir, STDLIB_CAPABILITY_MAP, "wasm-standalone");
@@ -112,32 +112,32 @@ describe("Phase 26A: wasm-standalone build emits WAT + valid WASM", () => {
 });
 
 // ---------------------------------------------------------------------------
-// 26B — Healthcare getPatient.spore governance verification
+// 26B — Healthcare getPatient.fungi governance verification
 // ---------------------------------------------------------------------------
 
-describe("Phase 26B: getPatient.spore healthcare governance verification", () => {
-  it("getPatient.spore file exists", () => {
+describe("Phase 26B: getPatient.fungi healthcare governance verification", () => {
+  it("getPatient.fungi file exists", () => {
     assert.ok(
       existsSync(GET_PATIENT_PATH),
-      `getPatient.spore not found at: ${GET_PATIENT_PATH}`,
+      `getPatient.fungi not found at: ${GET_PATIENT_PATH}`,
     );
   });
 
-  it("getPatient.spore: parseProgram produces 0 parse errors", () => {
+  it("getPatient.fungi: parseProgram produces 0 parse errors", () => {
     const src = readFileSync(GET_PATIENT_PATH, "utf8");
-    const p = parseProgram(src, "getPatient.spore");
+    const p = parseProgram(src, "getPatient.fungi");
     const errors = p.diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       errors.length,
       0,
-      `getPatient.spore parse errors: ${errors.map((e) => e.message).join("; ")}`,
+      `getPatient.fungi parse errors: ${errors.map((e) => e.message).join("; ")}`,
     );
     console.log(`  [26B] Parse errors: ${errors.length}`);
   });
 
-  it("getPatient.spore: governance verifier produces runtimeManifests in production mode", () => {
+  it("getPatient.fungi: governance verifier produces runtimeManifests in production mode", () => {
     const src = readFileSync(GET_PATIENT_PATH, "utf8");
-    const p = parseProgram(src, "getPatient.spore");
+    const p = parseProgram(src, "getPatient.fungi");
     const eff = checkEffects(p.flows, p.ast);
     const gov = verifyGovernance(p.ast, p.flows, eff, "production");
 
@@ -151,9 +151,9 @@ describe("Phase 26B: getPatient.spore healthcare governance verification", () =>
     );
   });
 
-  it("getPatient.spore: runtimeManifest requiresAudit=true (PHI access requires audit)", () => {
+  it("getPatient.fungi: runtimeManifest requiresAudit=true (PHI access requires audit)", () => {
     const src = readFileSync(GET_PATIENT_PATH, "utf8");
-    const p = parseProgram(src, "getPatient.spore");
+    const p = parseProgram(src, "getPatient.fungi");
     const eff = checkEffects(p.flows, p.ast);
     const gov = verifyGovernance(p.ast, p.flows, eff, "production");
 
@@ -172,9 +172,9 @@ describe("Phase 26B: getPatient.spore healthcare governance verification", () =>
     }
   });
 
-  it("getPatient.spore: allowedEffects includes database.read, phi.read, audit.write", () => {
+  it("getPatient.fungi: allowedEffects includes database.read, phi.read, audit.write", () => {
     const src = readFileSync(GET_PATIENT_PATH, "utf8");
-    const p = parseProgram(src, "getPatient.spore");
+    const p = parseProgram(src, "getPatient.fungi");
     const eff = checkEffects(p.flows, p.ast);
     const gov = verifyGovernance(p.ast, p.flows, eff, "production");
 
@@ -193,14 +193,14 @@ describe("Phase 26B: getPatient.spore healthcare governance verification", () =>
     }
   });
 
-  it("getPatient.spore: effect checker recognises PHI effects (database.read, audit.write)", () => {
+  it("getPatient.fungi: effect checker recognises PHI effects (database.read, audit.write)", () => {
     const src = readFileSync(GET_PATIENT_PATH, "utf8");
-    const p = parseProgram(src, "getPatient.spore");
+    const p = parseProgram(src, "getPatient.fungi");
     const eff = checkEffects(p.flows, p.ast);
 
     // The getPatient flow should not have effect errors for declared effects
     const effectErrors = eff.flatMap((r) =>
-      r.diagnostics.filter((d) => d.severity === "error" && d.code === "SPORE-EFFECT-002"),
+      r.diagnostics.filter((d) => d.severity === "error" && d.code === "FUNGI-EFFECT-002"),
     );
     console.log(`  [26B] Effect undeclared errors: ${effectErrors.length}`);
     assert.ok(true, "Effect check run without crashing");
@@ -211,11 +211,11 @@ describe("Phase 26B: getPatient.spore healthcare governance verification", () =>
 // 26C — Parser parity progress
 // ---------------------------------------------------------------------------
 
-describe("Phase 26C: parser parity progress — TS parser vs parser.spore", () => {
+describe("Phase 26C: parser parity progress — TS parser vs parser.fungi", () => {
   const FLOW_SOURCE = "pure flow add(a: Int, b: Int) -> Int { return a }";
 
   it("TypeScript parser: parses FLOW_SOURCE with 0 errors and finds 1 flow", () => {
-    const result = parseProgram(FLOW_SOURCE, "parity.spore");
+    const result = parseProgram(FLOW_SOURCE, "parity.fungi");
     const errors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, `TS parser errors: ${errors.map((e) => e.message).join("; ")}`);
     assert.equal(result.flows.length, 1, `Expected 1 flow, got ${result.flows.length}`);
@@ -223,19 +223,19 @@ describe("Phase 26C: parser parity progress — TS parser vs parser.spore", () =
     console.log(`  [26C] TypeScript parser: ${result.flows.length} flow(s) found [${flowName}]`);
   });
 
-  it("parser.spore: exists and parses with 0 errors", () => {
+  it("parser.fungi: exists and parses with 0 errors", () => {
     assert.ok(
-      existsSync(PARSER_SPORE_PATH),
-      `parser.spore not found at: ${PARSER_SPORE_PATH}`,
+      existsSync(PARSER_FUNGI_PATH),
+      `parser.fungi not found at: ${PARSER_FUNGI_PATH}`,
     );
 
-    let source = readFileSync(PARSER_SPORE_PATH, "utf8");
+    let source = readFileSync(PARSER_FUNGI_PATH, "utf8");
     if (source.charCodeAt(0) === 0xFEFF) source = source.slice(1);
 
-    const parsed = parseProgram(source, "parser.spore");
+    const parsed = parseProgram(source, "parser.fungi");
     const errors = parsed.diagnostics.filter((d) => d.severity === "error");
 
-    console.log(`  [26C] parser.spore parse errors: ${errors.length}`);
+    console.log(`  [26C] parser.fungi parse errors: ${errors.length}`);
     if (errors.length > 0) {
       console.log(`  [26C] Errors: ${errors.map((e) => e.message).join("; ")}`);
     }
@@ -243,26 +243,26 @@ describe("Phase 26C: parser parity progress — TS parser vs parser.spore", () =
     assert.equal(
       errors.length,
       0,
-      `parser.spore should have 0 parse errors, got: ${errors.map((e) => e.message).join("; ")}`,
+      `parser.fungi should have 0 parse errors, got: ${errors.map((e) => e.message).join("; ")}`,
     );
   });
 
-  it("parity report: TypeScript parser: 1 flow. parser.spore: parses with 0 errors.", () => {
+  it("parity report: TypeScript parser: 1 flow. parser.fungi: parses with 0 errors.", () => {
     // TypeScript parser
-    const tsResult = parseProgram(FLOW_SOURCE, "parity.spore");
+    const tsResult = parseProgram(FLOW_SOURCE, "parity.fungi");
     const tsFlowCount = tsResult.flows.length;
 
-    // parser.spore
-    let parserSource = readFileSync(PARSER_SPORE_PATH, "utf8");
+    // parser.fungi
+    let parserSource = readFileSync(PARSER_FUNGI_PATH, "utf8");
     if (parserSource.charCodeAt(0) === 0xFEFF) parserSource = parserSource.slice(1);
-    const selfParsed = parseProgram(parserSource, "parser.spore");
+    const selfParsed = parseProgram(parserSource, "parser.fungi");
     const selfErrors = selfParsed.diagnostics.filter((d) => d.severity === "error").length;
 
-    const report = `TypeScript parser: ${tsFlowCount} flow. parser.spore: parses with ${selfErrors} errors.`;
+    const report = `TypeScript parser: ${tsFlowCount} flow. parser.fungi: parses with ${selfErrors} errors.`;
     console.log(`  [26C] ${report}`);
 
     assert.equal(tsFlowCount, 1, "TypeScript parser should find 1 flow");
-    assert.equal(selfErrors, 0, `parser.spore should have 0 parse errors`);
-    console.log(`  [26C] RESULT: TypeScript parser: 1 flow. parser.spore: parses with 0 errors.`);
+    assert.equal(selfErrors, 0, `parser.fungi should have 0 parse errors`);
+    console.log(`  [26C] RESULT: TypeScript parser: 1 flow. parser.fungi: parses with 0 errors.`);
   });
 });

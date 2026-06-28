@@ -67,10 +67,10 @@ Migration profile levels:
 Required verifier behavior: reject unsupported algorithms, reject stale evidence schema versions, bind algorithm ID and key ID into proof-chain hash inputs.
 
 Diagnostics:
-- `SPORE-HW-101` MissingRequiredAttestation
-- `SPORE-HW-102` UnsupportedAttestationAlgorithm
-- `SPORE-HW-103` HybridAttestationIncomplete
-- `SPORE-HW-104` AttestationEvidenceStale
+- `FUNGI-HW-101` MissingRequiredAttestation
+- `FUNGI-HW-102` UnsupportedAttestationAlgorithm
+- `FUNGI-HW-103` HybridAttestationIncomplete
+- `FUNGI-HW-104` AttestationEvidenceStale
 
 ---
 
@@ -80,7 +80,7 @@ Diagnostics:
 - Fallback to non-CHERI target denied unless flow policy allows downgrade.
 - Audit record must include capability-mode evidence marker.
 
-Diagnostic: `SPORE-HW-201` CapabilityHardwareRequired
+Diagnostic: `FUNGI-HW-201` CapabilityHardwareRequired
 
 ---
 
@@ -90,8 +90,8 @@ Diagnostic: `SPORE-HW-201` CapabilityHardwareRequired
 - Deterministic profile must reject targets without tag-check guarantees when `requireMTE=true`.
 
 Diagnostics:
-- `SPORE-HW-301` MemoryTaggingRequired
-- `SPORE-HW-302` MemoryTaggingEvidenceMissing
+- `FUNGI-HW-301` MemoryTaggingRequired
+- `FUNGI-HW-302` MemoryTaggingEvidenceMissing
 
 ---
 
@@ -102,9 +102,9 @@ Diagnostics:
 - Denial must be explicit and auditable.
 
 Diagnostics:
-- `SPORE-HW-401` TrustedExecutionRequired
-- `SPORE-HW-402` TrustedExecutionTypeNotAllowed
-- `SPORE-HW-403` TrustedExecutionAttestationFailed
+- `FUNGI-HW-401` TrustedExecutionRequired
+- `FUNGI-HW-402` TrustedExecutionTypeNotAllowed
+- `FUNGI-HW-403` TrustedExecutionAttestationFailed
 
 ---
 

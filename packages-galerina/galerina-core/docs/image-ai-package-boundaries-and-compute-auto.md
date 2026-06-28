@@ -2,17 +2,17 @@
 
 Galerina, short for **Galerina**, is a strict, memory-safe, security-first programming language and compiler/toolchain.
 
-Galerina source files use the `.spore` extension.
+Galerina source files use the `.fungi` extension.
 
 Example files:
 
 ```text
-boot.spore
-main.spore
-routes.spore
-models.spore
-image-provider-example.spore
-image-policy.spore
+boot.fungi
+main.fungi
+routes.fungi
+models.fungi
+image-provider-example.fungi
+image-policy.fungi
 ```
 
 ---
@@ -830,7 +830,7 @@ final decision / storage / response:
 Galerina should allow target preferences at different levels:
 
 ```text
-global compute policy in boot.spore
+global compute policy in boot.fungi
 package-level targets
 model-level targets
 flow-level override
@@ -843,7 +843,7 @@ Recommended priority:
 explicit flow target
 model target policy
 package target policy
-boot.spore global policy
+boot.fungi global policy
 safe CPU fallback
 ```
 
@@ -1247,7 +1247,7 @@ Example:
   "imagePackageTargetReport": {
     "package": "ImageSegmentationPackage",
     "flow": "segmentImage",
-    "source": "src/image/segment.spore:4",
+    "source": "src/image/segment.fungi:4",
     "computeMode": "auto",
     "model": "SegmentationModel",
     "selectedTarget": "gpu",
@@ -1323,7 +1323,7 @@ Example:
 {
   "imageSecurityReport": {
     "flow": "segmentImageEndpoint",
-    "source": "src/image/api.spore:8",
+    "source": "src/image/api.fungi:8",
     "metadataStripped": true,
     "decoderSandbox": true,
     "unsafeNativeDecoder": false,
@@ -1390,7 +1390,7 @@ Keep image loading and request handling outside model-heavy compute flows. Use i
     {
       "package": "ImageSegmentationPackage",
       "flow": "segmentImage",
-      "source": "src/image/segment.spore:4",
+      "source": "src/image/segment.fungi:4",
       "model": "SegmentationModel",
       "input": "FileRef",
       "output": "ImageMask",
@@ -1400,7 +1400,7 @@ Keep image loading and request handling outside model-heavy compute flows. Use i
     {
       "package": "ImageEmbeddingPackage",
       "flow": "createImageEmbedding",
-      "source": "src/image/embed.spore:4",
+      "source": "src/image/embed.fungi:4",
       "input": "FileRef",
       "output": "ImageEmbedding",
       "effects": ["file.read", "compute.run"],

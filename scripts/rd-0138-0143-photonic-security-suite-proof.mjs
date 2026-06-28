@@ -63,8 +63,8 @@ console.log("\nV2  Lane-0 mask-and-continue is fail-open unless a sanctioned dec
      "naive mask-and-continue returns a caller-consumable value on verdict 0 — a flow happened (fail-open; even the length is an oracle)");
 
   const m = maskByVerdict(INDETERMINATE);
-  ok(isMasked(m) && m.reason === "indeterminate" && m.diagnostic?.code === "SPORE-GOV-3VL-001",
-     "shipped maskByVerdict(0) -> typed Masked sentinel + SPORE-GOV-3VL-001 (no value flows; fail-closed)");
+  ok(isMasked(m) && m.reason === "indeterminate" && m.diagnostic?.code === "FUNGI-GOV-3VL-001",
+     "shipped maskByVerdict(0) -> typed Masked sentinel + FUNGI-GOV-3VL-001 (no value flows; fail-closed)");
   ok(maskByVerdict(DENY) !== null && isMasked(maskByVerdict(DENY)) && maskByVerdict(DENY).reason === "denied",
      "maskByVerdict(DENY) -> Masked (denied), still no value");
   ok(maskByVerdict(ALLOW) === null,

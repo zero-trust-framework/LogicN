@@ -13,14 +13,14 @@ Applies to: Phase 13 (Semantic Graph + Capability Inference) and Phase 14 (Stage
 
 ```
 Phase 13:  packages/galerina-devtools-graph-algorithms/src/SemanticGraph.ts
-Later:     C:\laragon\www\SPORE-Graph (standalone) — only after API stabilises
+Later:     C:\laragon\www\FUNGI-Graph (standalone) — only after API stabilises
 Trigger:   at least two internal packages depend on the same stable graph API
 ```
 
 Reason: SemanticGraph will change while GIR, contracts, passive execution plans, and runtime
 reports are still evolving. A standalone package boundary now freezes the wrong abstractions.
 
-"Move SPORE-Graph into the centre" means: make graph concepts central to compiler/runtime
+"Move FUNGI-Graph into the centre" means: make graph concepts central to compiler/runtime
 architecture — not necessarily make the standalone repo the source of truth immediately.
 
 **Canonical plain-data interface:**
@@ -57,7 +57,7 @@ galerina build --production = missing effects fail (governance boundary)
 
 Missing effect declaration is just a suggestion. Governance violations are always enforced.
 
-**SPORE-EFFECT-001 in check mode:**
+**FUNGI-EFFECT-001 in check mode:**
 ```text
 Warning: Flow uses network.outbound but does not declare it.
 
@@ -65,7 +65,7 @@ Suggested fix:
   contract { effects { network.outbound } }
 ```
 
-**SPORE-EFFECT-001 in production mode:**
+**FUNGI-EFFECT-001 in production mode:**
 ```text
 Error: Production builds require explicit effect declarations.
 ```

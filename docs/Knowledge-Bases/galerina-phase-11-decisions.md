@@ -43,7 +43,7 @@ mut count: Int = 0
 count = count + 1       // allowed
 
 let count: Int = 0
-count = count + 1       // SPORE-BINDING-XXX: Cannot reassign immutable binding
+count = count + 1       // FUNGI-BINDING-XXX: Cannot reassign immutable binding
 ```
 
 Stage A may parse `mut` without enforcing reassignment.
@@ -54,7 +54,7 @@ Phase 11A must enforce:
 
 Expected Phase 11A diagnostic:
 ```text
-SPORE-BINDING-XXX (name TBD)
+FUNGI-BINDING-XXX (name TBD)
 Cannot reassign immutable binding 'count'.
 Use mut if reassignment is intended.
 ```
@@ -67,7 +67,7 @@ The Canonical Example Corpus (215 examples in `docs/Examples/`) must be executab
 
 ```text
 npm test should:
-  - compile every docs/examples/**/*.spore file
+  - compile every docs/examples/**/*.fungi file
   - compare actual diagnostic codes to expected.diagnostics.txt
   - fail on mismatch
 ```
@@ -85,14 +85,14 @@ npm test should:
 
 **Matching rules:**
 - `expected.diagnostics.txt` contains `none` → zero ERROR-level diagnostics
-- `expected.diagnostics.txt` contains `SPORE-XXX-YYY` → at least one diagnostic with that code must fire
+- `expected.diagnostics.txt` contains `FUNGI-XXX-YYY` → at least one diagnostic with that code must fire
 - Match diagnostic **codes** first; message matching comes later
 
 ---
 
 ## Decision 4 — Internal graph module now, standalone package later
 
-**Do not create `C:\laragon\www\SPORE-Graph\` yet.**
+**Do not create `C:\laragon\www\FUNGI-Graph\` yet.**
 
 Create internal graph module now as:
 ```
@@ -113,7 +113,7 @@ What to build inside it now:
 - GIR node graph
 - Runtime report event DAG
 
-**Extraction trigger:** When concepts stabilise, move to `C:\laragon\www\SPORE-Graph\` standalone Apache 2.0 package.
+**Extraction trigger:** When concepts stabilise, move to `C:\laragon\www\FUNGI-Graph\` standalone Apache 2.0 package.
 
 ---
 
@@ -177,7 +177,7 @@ contract_enforcement:
 
 ```
 Phase 11A.1  — CEC tightening (promote stable examples, fix expected.diagnostics.txt)
-Phase 11A.2  — mut reassignment enforcement (SPORE-BINDING-XXX)
+Phase 11A.2  — mut reassignment enforcement (FUNGI-BINDING-XXX)
 Phase 11A.3  — inferType() member access chains (patient.id → String, etc.)
 Phase 11B    — Value-state taint completion
 Phase 11C    — Contract runtime enforcement (separate runtime layer, not interpreter.ts)
@@ -210,10 +210,10 @@ await contractEnforcer.withTimeout(contract.timeouts, async () => {
 })
 ```
 
-## Decision 10 — spore-graph renamed to @galerina/devtools-project-graph
+## Decision 10 — fungi-graph renamed to @galerina/devtools-project-graph
 
-The standalone package at `C:\laragon\www\SPORE-Graph\` is renamed from `spore-graph` to
-`@galerina/devtools-project-graph`. Consumed via `github:galerina/spore-graph` (not `file:` path).
+The standalone package at `C:\laragon\www\FUNGI-Graph\` is renamed from `fungi-graph` to
+`@galerina/devtools-project-graph`. Consumed via `github:galerina/fungi-graph` (not `file:` path).
 It is the **only package outside the monorepo** — all others live in `packages-galerina/`.
 
 ---

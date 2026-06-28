@@ -1,33 +1,33 @@
-family: SPORE-NAME
+family: FUNGI-NAME
 description: "Symbol resolution diagnostics"
 diagnostics:
-  - code: SPORE-NAME-001
+  - code: FUNGI-NAME-001
     name: UndeclaredName
     severity: error
     phase: symbol_resolver
     message: "'{name}' is not declared in the current scope."
     implemented: true
-  - code: SPORE-NAME-002
+  - code: FUNGI-NAME-002
     name: DuplicateName
     severity: error
     phase: symbol_resolver
     message: "'{name}' is already declared in this scope."
     implemented: true
-  - code: SPORE-NAME-003
+  - code: FUNGI-NAME-003
     name: UseBeforeDeclaration
     severity: error
     phase: symbol_resolver
     message: "'{name}' is used before it is declared."
     implemented: false
     phase_target: "8B"
-  - code: SPORE-NAME-004
+  - code: FUNGI-NAME-004
     name: PrivateAccess
     severity: error
     phase: symbol_resolver
     message: "'{name}' is not exported from its defining module."
     implemented: false
     phase_target: "Phase 9 (module system)"
-  - code: SPORE-NAME-005
+  - code: FUNGI-NAME-005
     name: AmbiguousName
     severity: error
     phase: symbol_resolver

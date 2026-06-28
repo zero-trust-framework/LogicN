@@ -226,7 +226,7 @@ Skia/Impeller assumptions
 compute auto and vector regions
 platform-channel APIs and permissions
 FFI bindings and unsupported platforms
-source-map links from generated Dart/native bindings to .spore source
+source-map links from generated Dart/native bindings to .fungi source
 ```
 
 ---

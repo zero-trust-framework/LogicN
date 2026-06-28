@@ -91,7 +91,7 @@ async function loadRevocationGate(
       return undefined;
     }
     throw new Error(
-      `SPORE-FUSE-REVOCATION-UNTRUSTED: cannot establish the revocation gate from ${governanceDir} ` +
+      `FUNGI-FUSE-REVOCATION-UNTRUSTED: cannot establish the revocation gate from ${governanceDir} ` +
         `(${msg}) — refusing to fuse (fail-closed). Ship governance/revocation-registry.mjs + a ` +
         `signed revocations.json, or pass allowUnsigned for a dev boot outside the repo.`,
     );
@@ -100,7 +100,7 @@ async function loadRevocationGate(
 
 /**
  * Fuse the governed greeting package, fail-closed. Returns the admitted component whose
- * `invoke("main")` runs the signed .wasm. Throws (SPORE-FUSE-*) on tamper / bad signature /
+ * `invoke("main")` runs the signed .wasm. Throws (FUNGI-FUSE-*) on tamper / bad signature /
  * unknown capability / REVOKED signing key.
  *
  * The host injects the revocation gate (the kernel stays node-dependency-free): a validly

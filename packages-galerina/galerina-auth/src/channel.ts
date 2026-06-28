@@ -60,7 +60,7 @@ export type { CertGateInput, CertSubVerdicts, ChainValidationOutcome, Revocation
  * proven) admits; `0` (e.g. revocation unknown) and `−1` (e.g. revoked, expired,
  * pin mismatch) refuse.
  *
- * `onDiagnostic` (optional) receives SPORE-GOV-3VL-001 if an INDETERMINATE verdict is
+ * `onDiagnostic` (optional) receives FUNGI-GOV-3VL-001 if an INDETERMINATE verdict is
  * surfaced through the gate's own boundary preview — it is never dropped silently.
  */
 export function channelIdentityVerdict(

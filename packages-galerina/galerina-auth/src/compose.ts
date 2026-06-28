@@ -47,7 +47,7 @@ export function composeAuthVerdict(factors: readonly Verdict[]): Verdict {
  *
  * This is a diagnostic/logging convenience for the transport side; it does NOT make
  * the authoritative admission decision. The App Kernel performs the binding collapse
- * at its own gate. `onDiagnostic` receives SPORE-GOV-3VL-001 when an INDETERMINATE
+ * at its own gate. `onDiagnostic` receives FUNGI-GOV-3VL-001 when an INDETERMINATE
  * verdict is collapsed to deny, so a preview can surface exactly why a request would
  * be refused.
  */

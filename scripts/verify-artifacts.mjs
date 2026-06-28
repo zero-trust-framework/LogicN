@@ -17,7 +17,7 @@
  *      intact / formatting-only / SIGNATURE-STALE / re-signed / wasm-drift / no-backup.
  *   3. Cross-checks each manifest's recorded wasm sha256 against the real .wasm bytes.
  *   4. Scans compiler source for corrupted/renamed crypto wire-format constants
- *      (truncated `galerina.*` contexts; `spore.*` tags renamed from `lln.*`) that
+ *      (truncated `galerina.*` contexts; `fungi.*` tags renamed from `fungi-.*`) that
  *      orphan pre-rebrand persisted signatures.
  *
  * Usage:
@@ -186,11 +186,11 @@ function wireScan() {
   const hits = [];
   const srcRoot = join(REPO, "packages-galerina");
   // Canonical wire format (owner decision 2026-06-26): product/governance contexts =
-  // galerina.*.v2 ; format/schema tags = spore.* . Flag anything OFF that canonical —
-  // the galerina.* truncation, or residual un-migrated logicn.*/lln.* old-brand tags.
+  // galerina.*.v2 ; format/schema tags = fungi.* . Flag anything OFF that canonical —
+  // the galerina.* truncation, or residual un-migrated logicn.*/fungi-.* old-brand tags.
   const RX = [
     { rx: /\bgalerina\.(proofgraph|bridge|audit|config)\.[a-z.]*v\d/g, kind: "TRUNCATED-CONTEXT", why: "domain-sep context still truncated galerina.* — must be galerina.*.v2" },
-    { rx: /\b(logicn|lln)\.[a-z][a-z0-9]*(?:\.[a-z0-9]+)*\.v\d/g, kind: "RESIDUAL-OLD-BRAND", why: "un-migrated old-brand wire tag (logicn.*/lln.*) — format tags must be spore.*, governance contexts galerina.*.v2" },
+    { rx: /\b(logicn|fungi-)\.[a-z][a-z0-9]*(?:\.[a-z0-9]+)*\.v\d/g, kind: "RESIDUAL-OLD-BRAND", why: "un-migrated old-brand wire tag (logicn.*/fungi-.*) — format tags must be fungi.*, governance contexts galerina.*.v2" },
   ];
   const walk = (dir) => {
     let entries;

@@ -12,7 +12,7 @@ import type { FlowContextReceipt, FileContextReceipts } from "./types.js";
  *
  * Example output:
  *   ## Context Receipt: processPasswordHashing
- *   **File:** auth.spore | **Qualifier:** secure | **Return:** HashResult
+ *   **File:** auth.fungi | **Qualifier:** secure | **Return:** HashResult
  *   ...
  */
 export function renderReceiptMarkdown(receipt: FlowContextReceipt): string {

@@ -510,7 +510,7 @@ This lets framework plugins consume Galerina outputs without guessing generated 
 
 ## Source Maps and Error Mapping
 
-Galerina must map generated runtime errors back to `.spore` source.
+Galerina must map generated runtime errors back to `.fungi` source.
 
 Example:
 
@@ -519,7 +519,7 @@ Browser error:
   Validation failed.
 
 Source:
-  src/forms/contact.spore:12
+  src/forms/contact.fungi:12
 ```
 
 Outputs:

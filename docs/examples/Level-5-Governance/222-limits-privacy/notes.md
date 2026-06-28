@@ -29,4 +29,4 @@ The runtime enforces these limits before the flow body executes.
 - Limits prevent denial-of-service via oversized payloads — enforced without application code.
 - The privacy block is a machine-readable GDPR/HIPAA annotation for compliance auditors.
 - Retention policies can be enforced by a data lifecycle tool that reads the contract.
-- Redaction requirements are checkable by the governance verifier (SPORE-GOV-003).
+- Redaction requirements are checkable by the governance verifier (FUNGI-GOV-003).

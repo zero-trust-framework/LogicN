@@ -17,7 +17,7 @@ posture: crypto stays Binary; fail-closed; no perf claim without a named-machine
 ### 1.1 What it is
 The DB **governs** heavy data; it never **absorbs** it. A blob (video, image, archive) lives in cold object storage;
 the hot TritMesh/`.tmf` layer holds only a tiny **passport**: a capability contract + a content hash + a pointer.
-This is already a standing Galerina invariant (privacy/egress `SealTaint`, `SPORE-PRIVACY-002`; the `.tmf` engine stores
+This is already a standing Galerina invariant (privacy/egress `SealTaint`, `FUNGI-PRIVACY-002`; the `.tmf` engine stores
 metadata, not blobs). **Correction to the note:** the capability *grant* lives in the signed `.lmanifest` `fuse{}`
 block, NOT in the `.tmf` (the `.tmf` is integrity/confidentiality only).
 
@@ -64,7 +64,7 @@ A 2 GB video, chunked into n = 4096 × 512 KB, E2EE'd, dropped in cold storage �
 - **Arena bump allocator.** Allocation is `ptr += size; return ptr − size` — **O(1)**, no free-list. Per-flow reset is
   `ptr = HEAP_BASE` — **O(1)** reclamation of the whole arena; secret-zeroing on reset is `fill(0)` over `[HEAP_BASE,
   ptr)`. Shipped: `wat-emitter.ts` B1 `deriveArenaWATMemory` (ceiling from `contract.memory{arena}`, `WAT_HEAP_BASE=1024`),
-  B2 per-flow `$__spore_heap` reset, B2b secret-zero on reset (R&D 0055). Galerina-compiled is GC-free monotone bump.
+  B2 per-flow `$__fungi_heap` reset, B2b secret-zero on reset (R&D 0055). Galerina-compiled is GC-free monotone bump.
 - **Zero-copy boundary.** A downstream stage reads bytes in place via `(ptr, len)` instead of copying — saves the
   `O(len)` copy + an allocation per hop. (Intra-module is free today; cross-trust-boundary zero-copy is #102-106-gated.)
 - **Ring-buffer batching.** Amortize the host-boundary cost `C_switch` over `k` operations: per-op cost
@@ -91,7 +91,7 @@ can leak/corrupt. Collapsing `m` boundaries into one WASM linear-memory space re
 remaining trusted surface is the Wasmtime binary + a thin bootstrap shim. The *attack-surface-reduction* claim is
 sound. The **"mathematical security"** claim, however, rests on **WASM linear-memory ISOLATION at the network
 boundary** — which is **DRCM/DSS.wasm**, today a **115-byte placeholder** (`build/dss-supervisor.wasm`) with the real
-~31 KB DSS still **uncompiled `.spore`**, blocked on #102-106 + Stage-B P9.4.
+~31 KB DSS still **uncompiled `.fungi`**, blocked on #102-106 + Stage-B P9.4.
 
 ### 3.2 Tiers
 - **DECIDED (deployment stance):** main-app-as-WASM + packages-outside (R&D 0052), explicitly **NOT a single monolith**

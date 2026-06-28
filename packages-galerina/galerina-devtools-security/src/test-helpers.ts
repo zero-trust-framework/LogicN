@@ -7,7 +7,7 @@
 // Usage:
 //   import { SecurityTestHelper } from "@galerina/devtools-security";
 //   const s = new SecurityTestHelper();
-//   await s.assertBlocked(source, "SPORE-TAINT-001");
+//   await s.assertBlocked(source, "FUNGI-TAINT-001");
 //   await s.assertAllowed(source);
 // =============================================================================
 

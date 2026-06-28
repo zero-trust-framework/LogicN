@@ -22,7 +22,7 @@ pure flow trimmed(s: String) -> String { return s.trim() }
 `;
 
 async function setup() {
-  const prog = L.parseProgram(PROGRAM, "string-methods.spore");
+  const prog = L.parseProgram(PROGRAM, "string-methods.fungi");
   const fx = L.checkEffects(prog.flows, prog.ast);
   const { gir } = L.emitGIR(prog.ast, prog.flows, fx);
   const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "string-methods", prog.ast, true));

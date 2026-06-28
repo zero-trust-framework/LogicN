@@ -142,7 +142,7 @@ Emission rule:
 
 ```text
 If any observed effect is not covered by declared effects, pass 6 emits an
-SPORE-EFFECT-* error and GIR emission does not run.
+FUNGI-EFFECT-* error and GIR emission does not run.
 ```
 
 Direct effects, effects inside local `fn` helpers, and transitive flow-call
@@ -570,13 +570,13 @@ flow:
 GIR emission must not run when any prior checker emits an error:
 
 ```text
-SPORE-NAME-* error
-SPORE-TYPE-* error
-SPORE-VALUESTATE-* error
-SPORE-SECRET-* error
-SPORE-EFFECT-* error
-SPORE-INTENT-* error
-SPORE-GOV-* error
+FUNGI-NAME-* error
+FUNGI-TYPE-* error
+FUNGI-VALUESTATE-* error
+FUNGI-SECRET-* error
+FUNGI-EFFECT-* error
+FUNGI-INTENT-* error
+FUNGI-GOV-* error
 ```
 
 Warnings may be included in the compile report. A strict profile may choose to

@@ -146,7 +146,7 @@ Let `rekey(k)` = the index of the **first** message of the **next** epoch after 
 S2 is pure crypto; its **admission** is governed by the shipped K3 calculus. A rekey that cannot complete
 (decapsulation error, missing fresh `ss`, expired epoch with no successful reseed) yields verdict
 `INDETERMINATE (0)`, which `decideAtBoundary` collapses to **DENY** (`three-valued-governance.ts:40-44,89-97`,
-`SPORE-GOV-3VL-001`). Any side-signal folds via `vAnd = minTrit` (`three-valued-governance.ts:49-51`): degrade-only, never
+`FUNGI-GOV-3VL-001`). Any side-signal folds via `vAnd = minTrit` (`three-valued-governance.ts:49-51`): degrade-only, never
 coercing an ALLOW. **Unknown rekey status → DENY → no data effects** (this is what TLSTP S4's "Recovering" FSM holds on;
 see `done/0065 §2-S4`). Crypto stays Binary throughout; no analog ever touches `ss`, `R`, `CK`, or `MK`.
 
@@ -154,7 +154,7 @@ see `done/0065 §2-S4`). Crypto stays Binary throughout; no analog ever touches 
 
 The owner's notes proposed a **Ternary Ephemeral Ratchet** `K_{n+1} = KDF(K_n, E_ternary)` folding analog/photonic
 entropy `E_ternary` directly into the per-packet KDF. It is **doubly dead**. (a) **Crypto-on-core violation:** analog
-substrate bytes in a key are forbidden — `SPORE-SUBSTRATE-001` is enforced at `substrate-model.ts` `CRYPTO_ON_NOISY_LANE='error'`
+substrate bytes in a key are forbidden — `FUNGI-SUBSTRATE-001` is enforced at `substrate-model.ts` `CRYPTO_ON_NOISY_LANE='error'`
 (per `galerina-tlstp-transport-auth-rnd-2026-06-22.md:42,87`). (b) **Internally broken — non-reproducible:** the photonic
 emulator is `deterministic=false` with `ENOB_CEILING=8`, so the two endpoints would sample **different** `E_ternary`
 values and derive **different** keys `K_{n+1}` — the AEAD tag fails on every packet and the channel is dead. A ratchet
@@ -224,7 +224,7 @@ or transport corruption that FEC could not repair).
 | transport | TLSTP S4 FSM → **Recovering**, deny ALL data effects; `--timeout--> Closed/Erase` (🔥 keys) | no plaintext egress; never silently `→ Established` |
 
 Outcome: a failed rekey **cannot** silently fall back to the old (possibly-compromised) `R_1` and **cannot** proceed in
-the clear. The unknown collapses to DENY (`SPORE-GOV-3VL-001`); keys are erased on timeout. This is the fail-closed
+the clear. The unknown collapses to DENY (`FUNGI-GOV-3VL-001`); keys are erased on timeout. This is the fail-closed
 guarantee made concrete: the channel halts rather than degrade its secrecy. Note `vAnd` is degrade-only — even if some
 other input were `ALLOW (+1)`, `minTrit(+1, 0) = 0 → DENY`; an analog/photonic signal could only push **toward** DENY,
 never manufacture an ALLOW.
@@ -264,7 +264,7 @@ B8-adjacent**: surface as a build step, do not auto-ship outside the agreed sequ
    aspirational-HW (#102-106). Do not assert guaranteed wipe.
 6. **Govern admission at the boundary.** Resolve rekey status to a `Verdict` (`three-valued-governance.ts:33,40-44`);
    unknown/failed → `INDETERMINATE`; fold via `vAnd` (`three-valued-governance.ts:49-51`); decide with
-   `decideAtBoundary`/`collapse` (`:89-97`, `SPORE-GOV-3VL-001`). Pair with the S4 "Recovering" FSM (`done/0065 §2-S4`):
+   `decideAtBoundary`/`collapse` (`:89-97`, `FUNGI-GOV-3VL-001`). Pair with the S4 "Recovering" FSM (`done/0065 §2-S4`):
    while a rekey is pending/failed, deny ALL data effects; `--timeout--> Closed/Erase`.
 
 ### Tests to write
@@ -277,7 +277,7 @@ B8-adjacent**: surface as a build step, do not auto-ship outside the agreed sequ
 - **Determinism / reproducibility:** both endpoints, given the same `(ct, sk)`, derive byte-identical `ss`, `R_{e+1}`,
   `CK_0^{(e+1)}` (this is the test the Ternary Ratchet would FAIL — keep it as the guard against any analog regression).
 - **Failure / DENY (Example C):** corrupt `ct`, assert `Decaps` raises `TmfCryptoError`, assert the boundary collapses
-  to DENY (`SPORE-GOV-3VL-001`), assert no plaintext egress and keys erased on timeout.
+  to DENY (`FUNGI-GOV-3VL-001`), assert no plaintext egress and keys erased on timeout.
 - **Trigger:** assert `rekey?` fires at exactly `n−n_e = N` and at `t−t_e = T`, whichever first; assert epoch index +
   message index reset correctly.
 - **Erasure (best-effort):** assert the post-use buffers are zeroed (`.every(b=>b===0)`); document it as best-effort.
@@ -297,7 +297,7 @@ B8-adjacent**: surface as a build step, do not auto-ship outside the agreed sequ
   that epoch (this is the precondition in the PCS theorem).
 - **HARD — both endpoints must derive identical `ss`.** This is the bit-exactness requirement that kills the analog
   ratchet (§2.5). Never let any non-deterministic / analog value enter `ss`, `R`, `CK`, or `MK`. The reproducibility
-  test above is the regression guard; treat any analog-in-key as `SPORE-SUBSTRATE-001` `'error'`.
+  test above is the regression guard; treat any analog-in-key as `FUNGI-SUBSTRATE-001` `'error'`.
 - **MEDIUM — fail-closed on rekey failure.** A failed `Decaps` must **not** fall back to the old root and must **not**
   proceed in cleartext. Route through `INDETERMINATE → DENY` + S4 Recovering/Erase (Example C). The tempting "retry with
   old keys" path is a security hole.

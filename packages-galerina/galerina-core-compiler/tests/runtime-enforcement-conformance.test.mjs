@@ -12,7 +12,7 @@ import {
   createCapabilityHost,
   COMPILER_MINIMUM_CAPABILITIES,
   run,
-  SPORE_VOID,
+  FUNGI_VOID,
 } from "../dist/index.js";
 
 // ---------------------------------------------------------------------------
@@ -145,7 +145,7 @@ describe("Runtime enforcement — run()", () => {
     const source = `pure flow greet() -> String { return "hi" }`;
     let result;
     await assert.doesNotReject(async () => {
-      result = await run(source, "test.spore", "greet", new Map());
+      result = await run(source, "test.fungi", "greet", new Map());
     });
     assert.ok(result !== undefined, "run() must return a result");
     assert.equal(result.ok, true, "pure flow should succeed");
@@ -155,7 +155,7 @@ describe("Runtime enforcement — run()", () => {
 
   it("run() result always carries an enforcementRecord", async () => {
     const source = `pure flow greet() -> String { return "hi" }`;
-    const result = await run(source, "test.spore", "greet", new Map());
+    const result = await run(source, "test.fungi", "greet", new Map());
     assert.ok(result.enforcementRecord !== undefined, "enforcementRecord should always be present");
     assert.equal(result.enforcementRecord.flowName, "greet");
   });

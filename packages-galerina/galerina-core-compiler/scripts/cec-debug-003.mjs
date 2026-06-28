@@ -2,17 +2,17 @@ import { readFileSync } from "node:fs";
 import { parseProgram, resolveSymbols, checkTypes, checkValueStates, checkEffects, effectResultsToDiagnostics, verifyGovernance, checkEvents } from "../dist/index.js";
 
 const SUPPRESS = new Set([
-  "SPORE-TYPE-001",
-  "SPORE-TYPE-009",
-  "SPORE-NAME-001",
-  "SPORE-GOV-002",
-  "SPORE-SYNTAX-006",
-  "SPORE-SYNTAX-007",
-  "SPORE-SYNTAX-008",
+  "FUNGI-TYPE-001",
+  "FUNGI-TYPE-009",
+  "FUNGI-NAME-001",
+  "FUNGI-GOV-002",
+  "FUNGI-SYNTAX-006",
+  "FUNGI-SYNTAX-007",
+  "FUNGI-SYNTAX-008",
 ]);
 
-const src = readFileSync("C:/laragon/www/LO/docs/Examples/Level-1-Basics/003-secure-flow/example.spore", "utf8");
-const parsed = parseProgram(src, "test.spore");
+const src = readFileSync("C:/laragon/www/LO/docs/Examples/Level-1-Basics/003-secure-flow/example.fungi", "utf8");
+const parsed = parseProgram(src, "test.fungi");
 const sr = resolveSymbols(parsed.ast);
 const tr = checkTypes(parsed.ast);
 const vr = checkValueStates(parsed.ast);

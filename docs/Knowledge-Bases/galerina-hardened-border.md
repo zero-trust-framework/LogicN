@@ -31,12 +31,12 @@ Stage 1 — Admission Check
 Stage 2 — Schema Validation (Hardened Border)
   └─ Load schemas/data_types.json for this plugin
   └─ Run validatePluginInput() against all declared inputs
-  └─ Any SPORE-BORDER-001..004 violation → SECURITY_ALERT, plugin call blocked
+  └─ Any FUNGI-BORDER-001..004 violation → SECURITY_ALERT, plugin call blocked
 
 Stage 3 — Execution
   └─ Stage A: invoke plugin logic with validated inputs
   └─ Stage B: instantiate WASM instance under Wasmtime fuel + memory limits
-  └─ Unexpected trap → SPORE-BORDER-005, plugin version blacklisted
+  └─ Unexpected trap → FUNGI-BORDER-005, plugin version blacklisted
 
 Stage 4 — Compliance Hash
   └─ Compute computeComplianceHash(output, schema)
@@ -51,15 +51,15 @@ Stage 5 — Hard Erasure
 
 ---
 
-## SPORE-BORDER Diagnostic Codes
+## FUNGI-BORDER Diagnostic Codes
 
 | Code | Name | Severity | Description |
 |------|------|----------|-------------|
-| SPORE-BORDER-001 | MISSING_REQUIRED_FIELD | SECURITY_ALERT | Required input field absent — schema poisoning attack |
-| SPORE-BORDER-002 | TYPE_MISMATCH | SECURITY_ALERT | Input type differs from schema — hostile input |
-| SPORE-BORDER-003 | FIELD_TOO_LARGE | SECURITY_ALERT | Input exceeds maxLength — buffer overflow attempt |
-| SPORE-BORDER-004 | VALUE_OUT_OF_RANGE | SECURITY_ALERT | Numeric value outside min/max bounds — boundary probe |
-| SPORE-BORDER-005 | UNEXPECTED_TRAP | SECURITY_ALERT | Plugin WASM trap outside governed invariant — auto-blacklist |
+| FUNGI-BORDER-001 | MISSING_REQUIRED_FIELD | SECURITY_ALERT | Required input field absent — schema poisoning attack |
+| FUNGI-BORDER-002 | TYPE_MISMATCH | SECURITY_ALERT | Input type differs from schema — hostile input |
+| FUNGI-BORDER-003 | FIELD_TOO_LARGE | SECURITY_ALERT | Input exceeds maxLength — buffer overflow attempt |
+| FUNGI-BORDER-004 | VALUE_OUT_OF_RANGE | SECURITY_ALERT | Numeric value outside min/max bounds — boundary probe |
+| FUNGI-BORDER-005 | UNEXPECTED_TRAP | SECURITY_ALERT | Plugin WASM trap outside governed invariant — auto-blacklist |
 
 All BORDER codes emit `severity: "SECURITY_ALERT"` (not a type error or warning). They are written to the audit log and trigger the Epilogue Receipt.
 
@@ -72,7 +72,7 @@ Every plugin must conform to this layout (enforced by `galerina promote`):
 ```
 governance/plugins/<name>-v<version>/
 ├── manifest.json          ← resource limits, capabilities, blacklist status
-├── governance.spore         ← capability declarations ([conforms_to: DomainGuard])
+├── governance.fungi         ← capability declarations ([conforms_to: DomainGuard])
 ├── plugin.wasm            ← signed compiled binary (sha256 in manifest.sourceHash)
 └── schemas/
     └── data_types.json    ← strict input/output type contract (PluginDataSchema)
@@ -120,7 +120,7 @@ Supported types: `Int`, `String`, `Bool`, `Float`, `Bytes`, `Array<Int>`, `Array
 The blacklist (`build/plugin-blacklist.json`) is the Tower's permanent record of plugin versions that have committed security events.
 
 **Blacklisting conditions:**
-- Plugin WASM traps unexpectedly (not from a `trap` keyword in governance.spore)
+- Plugin WASM traps unexpectedly (not from a `trap` keyword in governance.fungi)
 - Plugin attempts to exceed its declared `resourceLimits`
 - Plugin output fails schema validation (possible output-side injection)
 
@@ -153,7 +153,7 @@ A blacklisted plugin version is **never** un-blacklisted. Deploy a new version w
 | `loadPluginBlacklist()` / `blacklistPlugin()` | Implemented (`galerina.mjs`) |
 | `galerina border-check` — CLI validation | Implemented (`galerina.mjs`) |
 | Plugin folder schema enforced at `galerina promote` | Pending |
-| SPORE-BORDER-001..005 governance verifier | Comment-registered (`governance-verifier.ts`) |
+| FUNGI-BORDER-001..005 governance verifier | Comment-registered (`governance-verifier.ts`) |
 
 ### Stage B (Planned — DSS.wasm + Wasmtime)
 
@@ -161,7 +161,7 @@ A blacklisted plugin version is **never** un-blacklisted. Deploy a new version w
 |---------|--------|
 | WASM linear memory zeroed on `hardErase()` | Pending (DRCM Phase 5 gate) |
 | Wasmtime fuel limit enforced per plugin invocation | Pending (task #104) |
-| SPORE-BORDER-005 auto-blacklist on trap signal | Pending (DSS.wasm signal routing) |
+| FUNGI-BORDER-005 auto-blacklist on trap signal | Pending (DSS.wasm signal routing) |
 | V_DPM bit cleared for blacklisted plugins at admission | Pending (task #102) |
 | Schema validation in DSS.wasm (no JS boundary) | Pending |
 
@@ -180,6 +180,6 @@ Scans `governance/plugins/` and validates that every plugin subdirectory has bot
 ## Related Documents
 
 - `docs/Knowledge-Bases/galerina-drcm.md` — DRCM architecture (DSS.wasm supervisor)
-- `docs/Knowledge-Bases/galerina-governance-rules.md` — full SPORE diagnostic code registry
+- `docs/Knowledge-Bases/galerina-governance-rules.md` — full FUNGI diagnostic code registry
 - `packages-galerina/galerina-core-compiler/src/plugin-schema.ts` — TypeScript implementation
 - `governance/plugins/groq-inference-v1/` — reference plugin example

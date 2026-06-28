@@ -966,7 +966,7 @@ Bad public response:
 
 ```json
 {
-  "error": "src/payment-service.spore:42 DATABASE_PASSWORD failed"
+  "error": "src/payment-service.fungi:42 DATABASE_PASSWORD failed"
 }
 ```
 

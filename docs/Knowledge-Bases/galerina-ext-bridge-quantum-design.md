@@ -23,7 +23,7 @@ gated on a pinned venv with ffsim) · **Phase 3** (worked H₂ example flow + fl
 a *tolerance-certified* backend is admissible **iff** it pins all three of
 `pinnedEnvHash` + `tolerance` + `backendArtifactHash` (fail-closed if any is missing)
 **and** carries **no Hash/Sign/crypto effect** — that exclusion is the already-shipped
-`SPORE-SUBSTRATE-001` (B1 *crypto-on-core*), reached "for free" by declaring the ffsim
+`FUNGI-SUBSTRATE-001` (B1 *crypto-on-core*), reached "for free" by declaring the ffsim
 path as a noisy `lane` (§5.4, §9). Integrity stays bit-exact on the deterministic
 core; only the *compute* is tolerance-bounded.
 
@@ -143,7 +143,7 @@ Surveyed from `C:\wwwprojects\IBM-FFSIM\ffsim` (README, `pyproject.toml`, `Cargo
 ## 5. The contract surface (what the `flow` declares)
 
 The bridge is driven from a `quantum {}` contract sub-block — the direct analog of
-the existing `ai {}` block (see `examples/foundations/ai-inference-governed.spore`).
+the existing `ai {}` block (see `examples/foundations/ai-inference-governed.fungi`).
 Everything is **deny-by-default**: only what is listed is permitted.
 
 ### 5.1 Effects (what the code may technically do) — new vocabulary
@@ -159,7 +159,7 @@ Following the codebase's dotted-effect style (`ai.infer`, `db.read`, `network.ou
 | `audit.write` | emit the governing `AuditEvent` (**always required**) |
 
 `QuantumSim` is the family/`PluginMetadata.capabilityMask` bit name. **Open question
-(§12):** the canonical V_DPM bit index must be assigned against `self-hosted/dss/vdpm.spore`
+(§12):** the canonical V_DPM bit index must be assigned against `self-hosted/dss/vdpm.fungi`
 (task #85) — do **not** invent a bit number here.
 
 ### 5.2 Capabilities (what the actor is authorised to do)
@@ -204,7 +204,7 @@ Therefore:
 The float64 ffsim path **is** a substrate *noisy lane*. The flow therefore declares a
 `substrate {}` block (peer to `resilience {}` / `observability {}`):
 
-```spore
+```fungi
 substrate {
   lane: noisy          ;; photonic | noisy | digital — float64 ffsim is a noisy lane
   tolerance: 1e-8      ;; epsilonDeclared — scalars must agree to this band
@@ -215,16 +215,16 @@ substrate {
 The already-shipped `verifySubstrate()` pass then enforces, **before any silicon or
 subprocess**, three obligations that this bridge gets *for free*:
 
-- **B1 / `SPORE-SUBSTRATE-001` (crypto-on-core)** — a flow on a `noisy` lane may carry
+- **B1 / `FUNGI-SUBSTRATE-001` (crypto-on-core)** — a flow on a `noisy` lane may carry
   **no Hash/Sign/crypto effect**, an `error` in *every* profile. This is exactly the
   ratified §9 constraint: integrity is never tolerance-bounded. (See §9 for how the
   Epilogue Receipt still signs the output digest — on the *digital* core, over the
   produced bytes.)
-- **B3 / `SPORE-SUBSTRATE-004` (determinism preservation)** — an **un-voted** (`redundancy: 1`)
+- **B3 / `FUNGI-SUBSTRATE-004` (determinism preservation)** — an **un-voted** (`redundancy: 1`)
   noisy result must not feed a deterministic-integrity sink. To let an ffsim scalar
   gate a deterministic decision, declare `redundancy: tmr` (run ffsim N times, vote /
   tolerance-cluster) or route it through an explicit tolerance-bounded branch.
-- **B2 / `SPORE-SUBSTRATE-002`/`-003` (redundancy sufficiency)** — the declared
+- **B2 / `FUNGI-SUBSTRATE-002`/`-003` (redundancy sufficiency)** — the declared
   `tolerance` must be provable at the declared `N` under the modeled noise. *Refinement
   (Open item, §13.8):* the substrate model's per-lane noise profile must gain a
   `float64`/BLAS+Rayon-reproducibility profile for this lane; today its profiles are
@@ -366,14 +366,14 @@ Stage 1 — Admission     verify pinned ffsim version + venv hash == attested ma
                         verify backend not blacklisted; verify governance tier ≤ flow's tier.
 Stage 2 — Interrogate   validate the job against schemas/data_types.json (strict): op ∈ enum,
                         norb/nelec/seed integers in range, subspaceDim ≤ max_subspace_dim (§6),
-                        params are finite numbers only. Any breach → SPORE-BORDER-001..004 SECURITY_ALERT,
+                        params are finite numbers only. Any breach → FUNGI-BORDER-001..004 SECURITY_ALERT,
                         job blocked, NO spawn.
 Stage 3 — Execute       spawn the pinned worker (child_process) in a confined scratch dir:
                           • RAYON_NUM_THREADS pinned     • wall-clock timeout (max_wall_ms) → SIGKILL
                           • memory ceiling (OS rlimit where available)  • NO network (deny-by-default)
                           • stdin/stdout strict length-prefixed JSON; large arrays via hashed temp files
                         Worker runs ONLY the enumerated op with validated params — never arbitrary Python.
-                        Unexpected exit (segfault / OOM kill / non-zero) → SPORE-BORDER-005 → blacklist version.
+                        Unexpected exit (segfault / OOM kill / non-zero) → FUNGI-BORDER-005 → blacklist version.
 Stage 4 — Compliance    validate outputs against schema (shape, dtype, FINITE — reject NaN/Inf);
                         sha256 every artifact; assemble QuantumProvenance; write Epilogue Receipt.
 Stage 5 — Hard Erase    kill subprocess, wipe scratch dir, erase sandbox. No worker state survives.
@@ -385,11 +385,11 @@ Stage 5 — Hard Erase    kill subprocess, wipe scratch dir, erase sandbox. No w
 - The flow **never** hands Python a string to evaluate. The bridge owns a fixed
   `ffsim_worker.py` (a shipped, **hashed data asset**, not compiled into core) that
   dispatches a closed enum of operations over validated numeric parameters.
-- **No crypto on the noisy lane (`SPORE-SUBSTRATE-001`, RATIFIED).** An ffsim flow
+- **No crypto on the noisy lane (`FUNGI-SUBSTRATE-001`, RATIFIED).** An ffsim flow
   (`lane: noisy`) may carry **no Hash/Sign/crypto effect** — enforced by `verifySubstrate`
   in every profile. Signing the result is a *separate, downstream* digital-core step
   over the produced bytes (§9). Integrity is bit-exact; only the compute is tolerance-bounded.
-- **No un-voted noisy result into a deterministic sink (`SPORE-SUBSTRATE-004`).** An
+- **No un-voted noisy result into a deterministic sink (`FUNGI-SUBSTRATE-004`).** An
   ffsim scalar at `redundancy: 1` cannot silently gate a deterministic/commit decision;
   use `redundancy: tmr` (vote across N runs) or a tolerance-bounded branch.
 - **Deny-by-default everywhere:** effects, capabilities, network, filesystem (scratch
@@ -451,7 +451,7 @@ unaffected) plus `validateManifestShape` + tests.
 The gating worry was "certified implies bit-exact." The resolution: **separate the
 compute lane from the integrity lane.**
 
-- The **compute** (ffsim, `lane: noisy`) is tolerance-bounded. By `SPORE-SUBSTRATE-001`
+- The **compute** (ffsim, `lane: noisy`) is tolerance-bounded. By `FUNGI-SUBSTRATE-001`
   (§5.4) that flow may carry **no crypto effect** — you cannot sign *inside* the float64
   computation.
 - The **Epilogue Receipt** signs `sha256(output bytes)` on the **deterministic digital
@@ -469,13 +469,13 @@ compute lane from the integrity lane.**
 
 **Certified/P9 mode (#138):** with `requireCertifiedProfile`, the Tower refuses an
 unsigned/dev bridge; a tolerance-certified ffsim bridge passes **iff** it is signed,
-all three pins are present, and the consuming flow is `SPORE-SUBSTRATE-001`-clean.
+all three pins are present, and the consuming flow is `FUNGI-SUBSTRATE-001`-clean.
 
 ---
 
-## 10. Example `.spore` flow (illustrative — does not compile yet)
+## 10. Example `.fungi` flow (illustrative — does not compile yet)
 
-```spore
+```fungi
 /*
  * Example: governed ground-state energy via IBM ffsim (out-of-process, under contract).
  * Phase 1.5 IMPLEMENTED — @galerina/ext-bridge-quantum exists (governance + hybrid attestation, 21 tests); out-of-process EXEC is Phase 2. The quantum {} contract sub-block is still design-stage.
@@ -513,8 +513,8 @@ contract {
   }
 
   ;; The ffsim float64 path is a NOISY LANE. verifySubstrate enforces (every profile):
-  ;;   B1/SPORE-SUBSTRATE-001 — no crypto effect on this flow (integrity stays on the core)
-  ;;   B3/SPORE-SUBSTRATE-004 — an un-voted (redundancy:1) scalar can't gate a deterministic sink
+  ;;   B1/FUNGI-SUBSTRATE-001 — no crypto effect on this flow (integrity stays on the core)
+  ;;   B3/FUNGI-SUBSTRATE-004 — an un-voted (redundancy:1) scalar can't gate a deterministic sink
   substrate {
     lane: noisy
     tolerance: 1e-8                    ;; scalars must agree to this band (Hartree)
@@ -549,7 +549,7 @@ contract {
 }
 ```
 
-Like `ai-inference-governed.spore`, the `quantum {}` block is **not decoration** — it is
+Like `ai-inference-governed.fungi`, the `quantum {}` block is **not decoration** — it is
 the source of truth for the limits the Tower enforces at the border *before* any
 compute. An over-budget or unattested job is denied with `LOAD → TRAP → ERASE` only.
 
@@ -564,7 +564,7 @@ Mirror `galerina-ext-bridge-cpp` / `galerina-ext-bridge-bitnet`.
 ```
 packages-galerina/galerina-ext-bridge-quantum/
 ├── package.json
-├── package.spore.json                 ← Galerina package manifest (kind/provides/capabilities)
+├── package.fungi.json                 ← Galerina package manifest (kind/provides/capabilities)
 ├── tsconfig.json                    ← copy verbatim from ext-bridge-bitnet
 ├── src/
 │   ├── index.ts                     ← exports + createQuantumBridgeRegistry() / selectQuantumBackend()
@@ -612,7 +612,7 @@ packages-galerina/galerina-ext-bridge-quantum/
 }
 ```
 
-### 11.3 `package.spore.json` (mirror galerina-api-protocol-rest)
+### 11.3 `package.fungi.json` (mirror galerina-api-protocol-rest)
 
 ```json
 {
@@ -646,7 +646,7 @@ export function createQuantumBridgeRegistry(): QuantumBridgeRegistry {
 
 **Phase 0 — ratify the shared-package changes first (they gate everything):**
 - [x] Decisions ratified 2026-06-15 (§13) — no design left to settle; this phase is *implementation*.
-- [ ] Confirm `verifySubstrate` (`substrate-inference.ts` / `substrate-model.ts`) already fires `SPORE-SUBSTRATE-001` for a `lane: noisy` flow carrying any crypto effect, and `SPORE-SUBSTRATE-004` for an un-voted noisy→deterministic feed. If the `float64`/BLAS+Rayon lane noise profile for B2 is missing, add it (§13.8). **No new crypto-exclusion machinery — reuse the shipped pass.**
+- [ ] Confirm `verifySubstrate` (`substrate-inference.ts` / `substrate-model.ts`) already fires `FUNGI-SUBSTRATE-001` for a `lane: noisy` flow carrying any crypto effect, and `FUNGI-SUBSTRATE-004` for an un-voted noisy→deterministic feed. If the `float64`/BLAS+Rayon lane noise profile for B2 is missing, add it (§13.8). **No new crypto-exclusion machinery — reuse the shipped pass.**
 - [ ] Extend `@galerina/inference-bridge-contract/manifest.ts`: `DeterminismMode += "tolerance"`, optional `tolerance` / `pinnedEnvHash` / `backendArtifactHash`; update `validateManifestShape` + `canonicalManifestString` (field order!) + tests. *(Touches a neutral package consumed by #137 — re-run its boundary report.)*
 
 **Phase 1 — pure-TS governance core (no ffsim needed; fully testable):**
@@ -665,7 +665,7 @@ export function createQuantumBridgeRegistry(): QuantumBridgeRegistry {
 - [ ] `worker/ffsim_worker.py` — fixed enumerated-op dispatcher (NO `eval`); length-prefixed JSON over stdio; large arrays via hashed temp files.
 - [ ] `ffsim-backend.ts` — `child_process.spawn` under scratch dir; `RAYON_NUM_THREADS` pinned; wall-clock SIGKILL; output finite/shape/dtype validation; sha256 artifacts; `QuantumProvenance`.
 - [ ] Reproducibility test: same `(job, seed, threads)` ⇒ scalars agree within `tolerance` (two runs).
-- [ ] Border tests: oversized subspace, NaN/Inf output, worker non-zero exit → `SPORE-BORDER-005` → blacklist.
+- [ ] Border tests: oversized subspace, NaN/Inf output, worker non-zero exit → `FUNGI-BORDER-005` → blacklist.
 
 **Phase 3 — integration & docs:**
 - [ ] One worked example flow under `examples/` (small molecule, e.g. H₂/H₄ in a minimal basis) with a `quantum {}` block; mark experimental.
@@ -684,7 +684,7 @@ design constraints**, not open items. One refinement (§13.8) remains genuinely 
    non-bit-exact external backend via `certified` + `determinismMode:"tolerance"`, valid
    **only** with all three pins (`pinnedEnvHash` + `tolerance` + `backendArtifactHash`),
    **fail-closed if any is missing** (§9.1.3). **Hard constraint:** a tolerance-certified
-   backend may **never** carry a Hash/Sign/crypto effect — that is `SPORE-SUBSTRATE-001`
+   backend may **never** carry a Hash/Sign/crypto effect — that is `FUNGI-SUBSTRATE-001`
    (crypto-on-core), enforced "for free" by declaring `lane: noisy` (§5.4). This is *why*
    it is safe: the compute is tolerance-bounded but the Epilogue Receipt signs the output
    digest with SHA-256 on the **deterministic core**, not the float64 lane (§9.2).
@@ -705,12 +705,12 @@ design constraints**, not open items. One refinement (§13.8) remains genuinely 
    no state survives the boundary). A warm pool conflicts with that invariant — defer it to
    **#147** (warm-sandbox + zero-after-run sanitizer), which is what makes reuse safe.
 7. **V_DPM bit — RATIFIED.** Do **not** allocate speculatively. Assign the `QuantumSim`
-   capability bit in `self-hosted/dss/vdpm.spore` (#85/#91, the `bitfield V_DPM {}` register)
+   capability bit in `self-hosted/dss/vdpm.fungi` (#85/#91, the `bitfield V_DPM {}` register)
    **when implementation starts**, to avoid bit collisions.
 
 ### 13.8 Remaining open item (refinement, not a blocker)
 
-- **B2 lane noise profile for the float64 lane.** `verifySubstrate`'s B2/`SPORE-SUBSTRATE-002/003`
+- **B2 lane noise profile for the float64 lane.** `verifySubstrate`'s B2/`FUNGI-SUBSTRATE-002/003`
   (tolerance provable at the declared `N`) currently reasons over *photonic-oriented* per-lane
   noise profiles (`substrate-model.ts`). A `float64`/BLAS+Rayon-reproducibility profile must be
   added so B2 can hold an ffsim flow's declared `tolerance` to a real model. Until then, B1
@@ -723,7 +723,7 @@ design constraints**, not open items. One refinement (§13.8) remains genuinely 
 
 - ✅ **No Rust/Zig in core** — ffsim's Rust stays in ffsim, out-of-process; the package is pure TS + a pinned, hashed Python worker script (a data asset, not compiled in).
 - ✅ **No invented crypto** — reuses existing Ed25519 attestation (#137) + sha256 hashing only.
-- ✅ **Integrity stays bit-exact (`SPORE-SUBSTRATE-001`)** — the tolerance lane carries no crypto; the receipt signs `sha256(output)` on the deterministic core. No new exclusion machinery — the shipped `verifySubstrate` pass enforces it.
+- ✅ **Integrity stays bit-exact (`FUNGI-SUBSTRATE-001`)** — the tolerance lane carries no crypto; the receipt signs `sha256(output)` on the deterministic core. No new exclusion machinery — the shipped `verifySubstrate` pass enforces it.
 - ✅ **No fictional hardware/perf numbers** — only ffsim's own published figure (64-site Hubbard 256 EiB → 19.3 GiB) is cited, as ffsim's claim; the binomial memory formula is exact; no Galerina perf numbers are asserted.
 - ✅ **TS-like core preserved** — adds a peer `ext-bridge` package; no language-model changes beyond the proposed `quantum {}` sub-block (analog of `ai {}`) and the additive manifest fields.
 - ✅ **Design-only** — no package, code, or tests created; every artifact above is a specification.
@@ -741,7 +741,7 @@ design constraints**, not open items. One refinement (§13.8) remains genuinely 
 - `notes/33-IBM-FFSIM.md` — the original eval (errors corrected in §2).
 - `docs/Knowledge-Bases/galerina-photonic-tri-substrate-rd-agenda.md` — the tolerance-contract philosophy (§5.4).
 - `docs/Knowledge-Bases/galerina-substrate-contracts.md` — the `substrate { lane / tolerance / redundancy }` block + `verifySubstrate` pass this design reuses (B1/B2/B3).
-- `docs/Knowledge-Bases/galerina-substrate-failure-model.md` — Direction C noise model + `SPORE-SUBSTRATE-001..004` (`substrate-model.ts`).
+- `docs/Knowledge-Bases/galerina-substrate-failure-model.md` — Direction C noise model + `FUNGI-SUBSTRATE-001..004` (`substrate-model.ts`).
 - `docs/Knowledge-Bases/galerina-quantum-resistance-posture.md` — KEEP-SHA-256 + ML-DSA-65 signature decision behind §9.2's bit-exact integrity.
-- `docs/Knowledge-Bases/compiler-diagnostics.md` §SPORE-SUBSTRATE — the diagnostic family enforcing the crypto-on-core exclusion.
+- `docs/Knowledge-Bases/compiler-diagnostics.md` §FUNGI-SUBSTRATE — the diagnostic family enforcing the crypto-on-core exclusion.
 - **`C:\wwwprojects\Galerina-R-AND-D\FFSM\`** — concrete build-readiness R&D grounding mined from the ffsim source: `ffsim-build-readiness.md` (env/container/determinism/Rust core), `ffsim-op-catalog.md` (op catalog + wire protocol + golden test), `_raw-miner-findings.md` (raw `file:line` cites). **Read before Phase 1/2 implementation.**

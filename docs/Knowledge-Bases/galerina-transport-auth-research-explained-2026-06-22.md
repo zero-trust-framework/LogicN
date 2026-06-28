@@ -67,7 +67,7 @@ caveats). The value was isolating the genuinely-new ~15–25%.
 | **Ternary Ephemeral Ratchet** (`K_{n+1}=KDF(K_n, E_ternary)`) | 42-auth Doc003 | **Crypto-on-core violation + non-reproducible** (analog ≠ analog across endpoints → divergent keys → dead channel). → **S2** digital KEM ratchet + SHAKE256 chain. |
 | **Continuous float `T_c` as the gate** | 42-auth Doc001 | Erases the K3 INDETERMINATE state (indeterminate-as-allow) + non-deterministic. → **0069** float-in-telemetry / trit-in-gate (degrade-only). |
 | **Parallel +1/0/−1 "holding" session trit** | 42-auth Doc001 | Charter-forbidden alias of the governance trit (K3 0 = fail-closed-neutral, not "holding"). → **S4** Recovering FSM *above* the single K3 trit. |
-| **Ternary symbol repair on ciphertext** ("request only the missing entropy") | 42-auth Doc001 | AEAD fails closed on one bit; re-opens the killed cleartext-semantic leak (`SPORE-PRIVACY-002`). → **S3** digital FEC over *opaque* ciphertext. |
+| **Ternary symbol repair on ciphertext** ("request only the missing entropy") | 42-auth Doc001 | AEAD fails closed on one bit; re-opens the killed cleartext-semantic leak (`FUNGI-PRIVACY-002`). → **S3** digital FEC over *opaque* ciphertext. |
 | **Photonic φ/θ/timing as an auth factor / key-binder** ("silicon can't spoof θ") | 42-auth Doc001/003 | ≤10-bit, non-deterministic, and optical PUFs are PAC-learnable (so "unspoofable" is false). → **0070** degrade-only TamperTrust signal under the digital sig. |
 | **"Abolish all CAs"** as a crypto primitive | 42-auth Doc004 | It's a deployment stance, not a primitive; Galerina governs *over* a library-validated chain + pinning (no-CA pinned-key admission already ships). |
 | **balanced-ternary "semantic clustering"** of `.tmf` via K3 trits | 41-tritmesh | Category error (Kleene governance lattice ≠ continuous vector space). Similarity stays an ANN/vector concern, off the trit, under SealTaint at egress. |
@@ -76,7 +76,7 @@ caveats). The value was isolating the genuinely-new ~15–25%.
 ### ⏸ ASPIRATIONAL / HW-gated (parked until substrate exists)
 | Finding | Why parked |
 |---|---|
-| In-sandbox TLS-termination **isolation guarantee** | Rests on DRCM/DSS.wasm — `build/dss-supervisor.wasm` is a real **115-byte placeholder**; the actual DSS is ~31 KB of **uncompiled `.spore`** (12 files). The real runtime is blocked on #102-106 + Stage-B P9.4. The deployment *stance* (main-app-as-WASM, R&D 0052) is decided; the isolation *guarantee* is not. |
+| In-sandbox TLS-termination **isolation guarantee** | Rests on DRCM/DSS.wasm — `build/dss-supervisor.wasm` is a real **115-byte placeholder**; the actual DSS is ~31 KB of **uncompiled `.fungi`** (12 files). The real runtime is blocked on #102-106 + Stage-B P9.4. The deployment *stance* (main-app-as-WASM, R&D 0052) is decided; the isolation *guarantee* is not. |
 | Optical sensing front-end (φ/θ/path-fingerprint measurement) | Needs photonic silicon + a calibration root; emulator is `deterministic=false`, `ENOB_CEILING=8`. Only the governance resolver (0070) is buildable today. |
 | Raw-byte ring-buffer shim / cross-trust-boundary zero-copy | WASM Component Model (#102-106). |
 | The 0050 blind-observability exporter (DTM rides on it) | Net-new and unbuilt; DTM adds one metric + one discretizer but doesn't advance that build gate. |

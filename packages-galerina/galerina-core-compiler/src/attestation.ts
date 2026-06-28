@@ -21,7 +21,7 @@ export interface GalerinaAttestation {
   readonly flow: string;
   readonly timestamp: string;
   readonly hashes: {
-    readonly source?: string;           // sha256:hex of .spore source
+    readonly source?: string;           // sha256:hex of .fungi source
     readonly gir?: string;              // sha256:hex of GIR JSON
     readonly contract?: string;         // sha256:hex of contract block source
     readonly runtimeReport?: string;    // sha256:hex of runtime report

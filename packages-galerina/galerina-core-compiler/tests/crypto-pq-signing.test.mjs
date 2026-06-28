@@ -1,4 +1,4 @@
-// SPORE-CRYPTO-PQ-001 (#34 capstone): a crypto.sign effect in a CERTIFIED profile must declare a
+// FUNGI-CRYPTO-PQ-001 (#34 capstone): a crypto.sign effect in a CERTIFIED profile must declare a
 // post-quantum/hybrid signing algorithm. Ed25519-only signatures are Shor-breakable (harvest-now-
 // forge-later), so they are denied in production/deterministic profiles; dev allows them.
 // The algorithm is asserted with a marker effect alongside crypto.sign:
@@ -12,13 +12,13 @@ function verify(effects, profile) {
   const src = `secure flow signReceipt(req: Request) -> Result<Response, ApiError>
 contract { effects { ${effects} } }
 { return Ok(Response.ok({})) }`;
-  const parsed = parseProgram(src, "t.spore");
+  const parsed = parseProgram(src, "t.fungi");
   const eff = checkEffects(parsed.flows, parsed.ast);
   return verifyGovernance(parsed.ast, parsed.flows, eff, profile);
 }
-const has = (r) => r.diagnostics.some((d) => d.code === "SPORE-CRYPTO-PQ-001");
+const has = (r) => r.diagnostics.some((d) => d.code === "FUNGI-CRYPTO-PQ-001");
 
-describe("SPORE-CRYPTO-PQ-001 — Sign effects must be post-quantum in a certified profile", () => {
+describe("FUNGI-CRYPTO-PQ-001 — Sign effects must be post-quantum in a certified profile", () => {
   it("bare crypto.sign in production is DENIED (no algorithm declared)", () => {
     assert.equal(has(verify("crypto.sign audit.write", "production")), true);
   });
@@ -37,7 +37,7 @@ describe("SPORE-CRYPTO-PQ-001 — Sign effects must be post-quantum in a certifi
   it("bare crypto.sign in DEV is allowed (rule is certified-profile-only)", () => {
     assert.equal(has(verify("crypto.sign audit.write", "dev")), false);
   });
-  it("a flow with no signing is inert (no SPORE-CRYPTO-PQ-001)", () => {
+  it("a flow with no signing is inert (no FUNGI-CRYPTO-PQ-001)", () => {
     assert.equal(has(verify("database.read", "production")), false);
   });
   it("deterministic profile also enforces it", () => {

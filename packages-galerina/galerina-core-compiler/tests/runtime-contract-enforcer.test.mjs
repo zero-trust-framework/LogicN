@@ -144,7 +144,7 @@ describe("checkRequestSize (via limitPolicy)", () => {
     const enforcer = createContractEnforcer(contractNode, "limitedFlow");
     assert.throws(
       () => enforcer.checkRequestSize(2048),
-      (err) => err instanceof RangeError && err.message.includes("SPORE-LIMIT"),
+      (err) => err instanceof RangeError && err.message.includes("FUNGI-LIMIT"),
     );
   });
 

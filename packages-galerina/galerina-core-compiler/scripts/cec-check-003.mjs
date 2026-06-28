@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import { parseProgram, resolveSymbols, checkTypes, checkValueStates, checkEffects, effectResultsToDiagnostics, verifyGovernance, checkEvents } from "../dist/index.js";
 
-const src = readFileSync("C:/laragon/www/LO/docs/Examples/Level-1-Basics/003-secure-flow/example.spore", "utf8");
-const parsed = parseProgram(src, "test.spore");
+const src = readFileSync("C:/laragon/www/LO/docs/Examples/Level-1-Basics/003-secure-flow/example.fungi", "utf8");
+const parsed = parseProgram(src, "test.fungi");
 const sr = resolveSymbols(parsed.ast);
 const tr = checkTypes(parsed.ast);
 const vr = checkValueStates(parsed.ast);

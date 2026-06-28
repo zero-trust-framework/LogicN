@@ -109,12 +109,12 @@ type SinkContext =
 
 | Code | Trigger | Severity |
 |---|---|---|
-| `SPORE-TAINT-001` | Raw `Tainted<T>` reaches an injection sink (SQL/HTML/Shell/Path) | **error** |
-| `SPORE-TAINT-002` | Unvalidated value reaches a business-logic sink | warning |
-| `SPORE-TAINT-003` | Value untainted for context A used in sink expecting context B | **error** |
-| `SPORE-TAINT-004` | `Sql.escape` / `Shell.quote` used where parameterize/spawn available | warning |
+| `FUNGI-TAINT-001` | Raw `Tainted<T>` reaches an injection sink (SQL/HTML/Shell/Path) | **error** |
+| `FUNGI-TAINT-002` | Unvalidated value reaches a business-logic sink | warning |
+| `FUNGI-TAINT-003` | Value untainted for context A used in sink expecting context B | **error** |
+| `FUNGI-TAINT-004` | `Sql.escape` / `Shell.quote` used where parameterize/spawn available | warning |
 
-`SPORE-TAINT-003` is the key one — it enforces "clean for the sink it was cleaned for".
+`FUNGI-TAINT-003` is the key one — it enforces "clean for the sink it was cleaned for".
 
 ---
 

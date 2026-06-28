@@ -19,9 +19,9 @@ A code answers exactly one question. If you need to report a second, distinct pr
 *(A `dev`-warning → `prod`-error toggle of the SAME problem is allowed — that's one failure mode, two profiles.)*
 
 ## 2. Code identifier format
-- **Compiler / governance diagnostics:** `SPORE-<FAMILY>-<NNN>` — `FAMILY` = UPPERCASE `[A-Z0-9]+`, `NNN` =
-  zero-padded number. No bespoke suffixes (`SPORE-RUNTIME-EFFECT-GATE` ✗ → `SPORE-RUNTIME-010` ✓). No parallel
-  sub-schemes that collide with the parent (`SPORE-CONFIG-GOV-003` ✗ collides with `SPORE-CONFIG-003`).
+- **Compiler / governance diagnostics:** `FUNGI-<FAMILY>-<NNN>` — `FAMILY` = UPPERCASE `[A-Z0-9]+`, `NNN` =
+  zero-padded number. No bespoke suffixes (`FUNGI-RUNTIME-EFFECT-GATE` ✗ → `FUNGI-RUNTIME-010` ✓). No parallel
+  sub-schemes that collide with the parent (`FUNGI-CONFIG-GOV-003` ✗ collides with `FUNGI-CONFIG-003`).
 - **Runtime/host errors:** `ERR_<DOMAIN>_<DETAIL>` — UPPER_SNAKE. **One scheme per layer** — do NOT introduce a
   third (the unused `Galerina-ERR-{DOMAIN}-NNN` in `error-codes.md` must go).
 - **Numbers are allocated monotonically and never repurposed.** A retired code's number stays retired
@@ -38,7 +38,7 @@ A code answers exactly one question. If you need to report a second, distinct pr
 - **A `name` belongs to exactly ONE code** (no `INTENT_BEHAVIOR_MISMATCH` under both GOV-001 and INTENT-001).
   *(Prevents: V2 collision.)*
 - **Don't reuse a diagnostic `name` as a bare trap/violation token** (`EFFECT_BOUNDARY_VIOLATION` must not be
-  both an `SPORE-EFFECT-003` `name:` and a free-standing thrown code — prefix the trap form, e.g. `TRAP_…`).
+  both an `FUNGI-EFFECT-003` `name:` and a free-standing thrown code — prefix the trap form, e.g. `TRAP_…`).
   *(Prevents: cross-namespace collision.)*
 
 ## 4. `severity` — fixed lowercase vocabulary, by axis
@@ -52,33 +52,33 @@ A code answers exactly one question. If you need to report a second, distinct pr
   converge). *(Prevents: the §7 cross-scale inconsistency.)*
 - **Audit-event severity is also a separate axis.** Tower-citizen `AuditEvent.severity` is a runtime/audit
   vocabulary (currently UPPERCASE `ERROR|WARNING|INFO`), distinct from compiler diagnostic severity. The #215
-  scanner's V3 therefore checks ONLY the diagnostic axis (severities attached to an `SPORE-*`/`ERR_*` code).
+  scanner's V3 therefore checks ONLY the diagnostic axis (severities attached to an `FUNGI-*`/`ERR_*` code).
   Migrating the audit-event vocabulary to lowercase to match is a **versioning-sensitive format change** (it
   alters signed audit records) — deferred to a deliberate, version-bumped change (Stage I), not forced here.
 
 ## 5. Single source of truth
-- **Every code has exactly one exported metadata constant** (`export const SPORE_<FAMILY>_<NNN> = { code, name,
+- **Every code has exactly one exported metadata constant** (`export const FUNGI_<FAMILY>_<NNN> = { code, name,
   severity, message, … }` / the `ERR_*` equivalent), listed in its family's `_DIAGNOSTICS` array.
-- **Every emit references the constant** — no inline `code: "SPORE-…"` string literals, no
-  `throw new Error("SPORE-…: …")`. Severity/name/message live in the constant only, so they cannot drift between
+- **Every emit references the constant** — no inline `code: "FUNGI-…"` string literals, no
+  `throw new Error("FUNGI-…: …")`. Severity/name/message live in the constant only, so they cannot drift between
   the spec and the call site. *(Prevents: R4 inline-emit drift; the raw-throw `MANIFEST-*`/`ASSIMILATE-*` cases.)*
 - **A "code" must be a structured field, not free text.** `{ ok:false, reason:"ERR_X: …" }` is not a code —
   use `{ ok:false, errorCode:"ERR_X", reason:"…" }`. *(Prevents: `ERR_QUANTUM_PQ_REQUIRED` /
   `ERR_ADDON_HASH_MISMATCH` / `ERR_BRIDGE_UNATTESTED`-mode-collapsing being invisible + un-branchable.)*
 
 ## 6. No cross-package redefinition
-- **One package owns each code** (`galerina-core-compiler` is the canonical exporter for `SPORE-*`). Other packages
+- **One package owns each code** (`galerina-core-compiler` is the canonical exporter for `FUNGI-*`). Other packages
   **import** the constant — they never re-declare a code with their own `name`/`severity`.
   *(Prevents: R3 — the #1 root cause. e.g. `devtools-project-graph/effect-graph.ts` redefining EFFECT-002/003/004
   inverted; the GRAPH-* dual definitions.)*
 - A doc/comment claiming "canonical to X" must actually import from X.
 - **A standalone package that cannot import the owner's constants (no dependency edge) mints its OWN family —
-  it does NOT squat.** e.g. `devtools-project-graph` (zero deps) owns `SPORE-PGRAPH-*` for *all* its graph-VIEW
-  findings; it must not reuse core's `SPORE-EFFECT-*`/`SPORE-BOUNDARY-*`/`SPORE-CAPABILITY-*` or flowgraph's
-  `SPORE-GRAPH-*`. *(Stage D, 2026-06-22.)*
+  it does NOT squat.** e.g. `devtools-project-graph` (zero deps) owns `FUNGI-PGRAPH-*` for *all* its graph-VIEW
+  findings; it must not reuse core's `FUNGI-EFFECT-*`/`FUNGI-BOUNDARY-*`/`FUNGI-CAPABILITY-*` or flowgraph's
+  `FUNGI-GRAPH-*`. *(Stage D, 2026-06-22.)*
 - **Ownership counts even when only DOCUMENTED.** A family declared as owned by package X in its
   README / registry / TODO is X's — another package must not define codes in it, even if X has not yet emitted
-  them in `src`. *(Stage D found project-graph squatting on core's README-only `SPORE-BOUNDARY` series; the
+  them in `src`. *(Stage D found project-graph squatting on core's README-only `FUNGI-BOUNDARY` series; the
   src-only R3 scan had missed it.)*
 
 ## 7. No dead codes, no false gates
@@ -109,5 +109,5 @@ codes, the production-gate check). Once a category reaches 0 it flips to CI-enfo
 
 ## See also
 [galerina-diagnostic-code-taxonomy-audit-2026-06-22.md](galerina-diagnostic-code-taxonomy-audit-2026-06-22.md)
-(the findings these rules prevent) · [galerina-governance-rules.md](galerina-governance-rules.md) (the SPORE code
+(the findings these rules prevent) · [galerina-governance-rules.md](galerina-governance-rules.md) (the FUNGI code
 registry) · `scripts/audit-diagnostic-codes.mjs` (the enforcement) · [galerina-task-ledger.md](galerina-task-ledger.md) §9 (#213/#215).

@@ -205,7 +205,7 @@ describe("@galerina/domain-types — extended registry", () => {
   it("resolveImports includes 'Email' as a type from @galerina/domain-types", () => {
     const { ast } = parseProgram(
       `import Email from "@galerina/domain-types"\n`,
-      "test.spore",
+      "test.fungi",
     );
     const result = resolveImports(ast);
     assert.ok(
@@ -217,7 +217,7 @@ describe("@galerina/domain-types — extended registry", () => {
   it("resolveImports includes 'UserId' as a type from @galerina/domain-types", () => {
     const { ast } = parseProgram(
       `import UserId from "@galerina/domain-types"\n`,
-      "test.spore",
+      "test.fungi",
     );
     const result = resolveImports(ast);
     assert.ok(
@@ -229,7 +229,7 @@ describe("@galerina/domain-types — extended registry", () => {
   it("resolveImports resolves all @galerina/domain-types members as types", () => {
     const { ast } = parseProgram(
       `import { Email, Url, Path, CurrencyCode, Reference, UserId, Actor, TraceId, TenantId, Deadline } from "@galerina/domain-types"\n`,
-      "test.spore",
+      "test.fungi",
     );
     const result = resolveImports(ast);
     const expected = ["Email", "Url", "Path", "CurrencyCode", "Reference", "UserId", "Actor", "TraceId", "TenantId", "Deadline"];
@@ -248,7 +248,7 @@ describe("@galerina/enterprise-types — extended registry", () => {
   it("resolveImports includes 'Policy' as type from @galerina/enterprise-types", () => {
     const { ast } = parseProgram(
       `import Policy from "@galerina/enterprise-types"\n`,
-      "test.spore",
+      "test.fungi",
     );
     const result = resolveImports(ast);
     assert.ok(
@@ -260,7 +260,7 @@ describe("@galerina/enterprise-types — extended registry", () => {
   it("resolveImports resolves AuditRecord and AuditProof from @galerina/enterprise-types", () => {
     const { ast } = parseProgram(
       `import { AuditRecord, AuditProof, ExecutionPlan, RuntimeReport } from "@galerina/enterprise-types"\n`,
-      "test.spore",
+      "test.fungi",
     );
     const result = resolveImports(ast);
     assert.ok(result.typeNames.includes("AuditRecord"), "AuditRecord should resolve");
@@ -276,7 +276,7 @@ describe("@galerina/compute-types — extended registry", () => {
   it("resolveImports includes 'ComputeTarget' from @galerina/compute-types", () => {
     const { ast } = parseProgram(
       `import ComputeTarget from "@galerina/compute-types"\n`,
-      "test.spore",
+      "test.fungi",
     );
     const result = resolveImports(ast);
     assert.ok(
@@ -309,7 +309,7 @@ describe("resolveImports — external package.galerina.yaml lookup", () => {
 
       const { ast } = parseProgram(
         `import { CustomerId, CustomerRecord } from "@myorg/customer-types"\n`,
-        "test.spore",
+        "test.fungi",
       );
 
       const result = resolveImports(ast, root);
@@ -329,7 +329,7 @@ describe("resolveImports — external package.galerina.yaml lookup", () => {
   it("returns empty (no error) for external package without manifest", () => {
     const { ast } = parseProgram(
       `import SomeType from "@unknown/package"\n`,
-      "test.spore",
+      "test.fungi",
     );
     // No nodeModulesRoot — should silently fall back to value kind
     const result = resolveImports(ast);

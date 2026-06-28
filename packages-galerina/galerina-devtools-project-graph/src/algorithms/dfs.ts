@@ -1,5 +1,5 @@
 // =============================================================================
-// lln-graph — Depth-First Search algorithms
+// fungi-graph — Depth-First Search algorithms
 // =============================================================================
 
 import type { Graph, GraphNode, NodeId } from "../core/types.js";

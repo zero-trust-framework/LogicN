@@ -526,7 +526,7 @@ function plainWrite() {
   return buf.length;
 }
 function governedWrite() {
-  // TritMesh write: hash the object + sign a .spore passport over the hash.
+  // TritMesh write: hash the object + sign a .fungi passport over the hash.
   const h = crypto.createHash('sha256').update(payload).digest();
   const sig = crypto.sign(null, h, privateKey); // Ed25519 over the digest
   return sig.length + h.length;
@@ -590,7 +590,7 @@ check('"invincible" is FALSE as an absolute (it is N-replica availability)',
   'safety holds (no bad data served) but data is UNAVAILABLE -> score honestly');
 
 // 2b. "Instant migration": schema-less ingestion makes LINKING O(1) (mint
-//     .spore + draw edge), but the BYTES still have to land in cold storage.
+//     .fungi + draw edge), but the BYTES still have to land in cold storage.
 //     Moving a 1 TB legacy dataset is O(N) bandwidth, NOT instantaneous.
 const ONE_TB = 1024 * GiB;
 const INGEST_BPS = 1 * GiB; // 1 GiB/s ingest pipe (generous)

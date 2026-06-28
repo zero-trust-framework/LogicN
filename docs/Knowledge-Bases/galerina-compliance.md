@@ -76,7 +76,7 @@ Every governed execution produces a machine-readable audit record:
 
 ```json
 {
-  "schemaVersion": "spore.audit.v1",
+  "schemaVersion": "fungi.audit.v1",
   "audit_sequence": 14092,
   "flow_intent": "process_patient_billing",
   "governance_id": "gov_flow_89f2a7",
@@ -192,7 +192,7 @@ This is not compiled from logs. It is **generated natively by the ExecutionGraph
 ## The `galerina-verify` CLI (Phase 34+)
 
 ```bash
-galerina-verify proof.json --key spore-gov-2026-01
+galerina-verify proof.json --key fungi-gov-2026-01
 ```
 
 Output:
@@ -203,7 +203,7 @@ Output:
 ✓ Capability: medical.read declared and held
 ✓ Privacy: PII redacted before audit.write
 ✓ Hardware: arm.sve2 (ExecutionPlane, ProofLevel.Sealed)
-✓ GovernanceSignature: spore-gov-2026-01 (valid, ML-DSA)
+✓ GovernanceSignature: fungi-gov-2026-01 (valid, ML-DSA)
 
 RESULT: COMPLIANT
 ```

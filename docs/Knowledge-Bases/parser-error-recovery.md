@@ -143,8 +143,8 @@ The parser emits one of two codes when it produces an `errorNode`:
 
 | Code | Name | Used when |
 |---|---|---|
-| `SPORE-PARSE-001` | `UNEXPECTED_TOKEN` | Token is not valid in this position |
-| `SPORE-PARSE-002` | `EXPECTED_FLOW_KEYWORD` | Flow qualifier not followed by `flow` keyword |
+| `FUNGI-PARSE-001` | `UNEXPECTED_TOKEN` | Token is not valid in this position |
+| `FUNGI-PARSE-002` | `EXPECTED_FLOW_KEYWORD` | Flow qualifier not followed by `flow` keyword |
 
 These codes are already in use in the Phase 4 parser.
 
@@ -164,7 +164,7 @@ flow add(a: Int, b: Int) -> Int {
 Behaviour:
 
 ```
-SPORE-PARSE-001: Expected "}", got eof.
+FUNGI-PARSE-001: Expected "}", got eof.
 ```
 
 The parser emits the diagnostic and returns a `block` node with the `}`
@@ -181,8 +181,8 @@ secure secure
 Behaviour:
 
 ```
-SPORE-PARSE-002: Expected "flow" after "secure".
-SPORE-PARSE-001: Expected "flow", got "secure" (keyword).
+FUNGI-PARSE-002: Expected "flow" after "secure".
+FUNGI-PARSE-001: Expected "flow", got "secure" (keyword).
 ... (cascading errors from failed parseFlowDecl)
 ```
 
@@ -200,9 +200,9 @@ Input:
 Behaviour:
 
 ```
-SPORE-PARSE-001: Unexpected token "!" at top level.
-SPORE-PARSE-001: Unexpected token "!" at top level.
-SPORE-PARSE-001: Unexpected token "!" at top level.
+FUNGI-PARSE-001: Unexpected token "!" at top level.
+FUNGI-PARSE-001: Unexpected token "!" at top level.
+FUNGI-PARSE-001: Unexpected token "!" at top level.
 ```
 
 The three `!` characters are each skipped individually. The `flow` keyword is
@@ -217,13 +217,13 @@ Phase 4 parser tests already verify recovery:
 
 ```javascript
 it("recovers after an unexpected token at top level", () => {
-  const result = parseProgram("!!! flow add(a: Int) -> Int { return a }", "test.spore");
+  const result = parseProgram("!!! flow add(a: Int) -> Int { return a }", "test.fungi");
   assert.ok(result.ast !== undefined);
 });
 
-it("reports SPORE-PARSE-002 when flow qualifier is not followed by flow", () => {
-  const result = parseProgram("secure secure", "test.spore");
-  const diag = result.diagnostics.find((d) => d.code === "SPORE-PARSE-002");
+it("reports FUNGI-PARSE-002 when flow qualifier is not followed by flow", () => {
+  const result = parseProgram("secure secure", "test.fungi");
+  const diag = result.diagnostics.find((d) => d.code === "FUNGI-PARSE-002");
   assert.ok(diag !== undefined);
 });
 ```

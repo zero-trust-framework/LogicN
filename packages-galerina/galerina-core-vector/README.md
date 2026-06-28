@@ -7,7 +7,7 @@
 `galerina-core-vector` may document vector suitability for photonic planning, but
 it does not own photonic runtime target semantics. `docs/COVERAGE.md` records a
 boundary conflict where vector photonic notes proposed `PhotonicRuntimeTarget`,
-`PhotonicExecutionPlan`, `OpticalTransportMode` and `SPORE-PHOTONIC-*` contracts in
+`PhotonicExecutionPlan`, `OpticalTransportMode` and `FUNGI-PHOTONIC-*` contracts in
 this package. Treat that material as proposal/reference only until the photonic
 owner package reconciles the public contract.
 
@@ -83,7 +83,7 @@ estimateOpticalSuitability
 buildPhotonicPlan
 resolveFallback
 validateTransportMode / validatePhotonicTarget / validatePhotonicPlan
-SPORE-PHOTONIC-001–006
+FUNGI-PHOTONIC-001–006
 ```
 
 This **conflicts with the boundary rule above** which states photonic representation

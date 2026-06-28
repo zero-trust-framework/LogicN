@@ -139,8 +139,8 @@ contract {
 `;
 
   it("compile same source twice → same parse diagnostic count", () => {
-    const p1 = parseProgram(FIXED_SOURCE, "score.spore");
-    const p2 = parseProgram(FIXED_SOURCE, "score.spore");
+    const p1 = parseProgram(FIXED_SOURCE, "score.fungi");
+    const p2 = parseProgram(FIXED_SOURCE, "score.fungi");
     assert.equal(
       p1.diagnostics.filter((d) => d.severity === "error").length,
       p2.diagnostics.filter((d) => d.severity === "error").length,
@@ -149,8 +149,8 @@ contract {
   });
 
   it("compile same source twice → same semantic graph node/edge count", () => {
-    const p1 = parseProgram(FIXED_SOURCE, "score.spore");
-    const p2 = parseProgram(FIXED_SOURCE, "score.spore");
+    const p1 = parseProgram(FIXED_SOURCE, "score.fungi");
+    const p2 = parseProgram(FIXED_SOURCE, "score.fungi");
     const g1 = buildSemanticGraph(p1.ast, p1.flows);
     const g2 = buildSemanticGraph(p2.ast, p2.flows);
     assert.equal(g1.nodes.length, g2.nodes.length, "Node count must be stable");
@@ -158,8 +158,8 @@ contract {
   });
 
   it("compile same source twice → same planHash for each flow", () => {
-    const p1 = parseProgram(FIXED_SOURCE, "score.spore");
-    const p2 = parseProgram(FIXED_SOURCE, "score.spore");
+    const p1 = parseProgram(FIXED_SOURCE, "score.fungi");
+    const p2 = parseProgram(FIXED_SOURCE, "score.fungi");
     const errors1 = p1.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors1.length, 0, `Parse errors: ${errors1.map((e) => e.message).join(", ")}`);
 
@@ -185,7 +185,7 @@ contract {
 describe("canonical-hash: hashPassivePlan stability", () => {
   it("hashPassivePlan called twice on the same plan object → same hash", () => {
     const plan = {
-      schemaVersion: "spore.execution.plan.v1",
+      schemaVersion: "fungi.execution.plan.v1",
       flowName: "testFlow",
       qualifier: "pure",
       planHash: "",
@@ -202,7 +202,7 @@ describe("canonical-hash: hashPassivePlan stability", () => {
 
   it("same plan with different key order → same hashPassivePlan", () => {
     const planA = {
-      schemaVersion: "spore.execution.plan.v1",
+      schemaVersion: "fungi.execution.plan.v1",
       flowName: "testFlow",
       qualifier: "pure",
       steps: [{ kind: "return", value: "x" }],
@@ -211,7 +211,7 @@ describe("canonical-hash: hashPassivePlan stability", () => {
       steps: [{ kind: "return", value: "x" }],
       qualifier: "pure",
       flowName: "testFlow",
-      schemaVersion: "spore.execution.plan.v1",
+      schemaVersion: "fungi.execution.plan.v1",
     };
     const h1 = hashPassivePlan(planA);
     const h2 = hashPassivePlan(planB);
@@ -226,7 +226,7 @@ describe("canonical-hash: hashPassivePlan stability", () => {
 describe("canonical-hash: hashGIR stability with realistic payload", () => {
   it("hashGIR with realistic multi-flow GIR → stable across two calls", () => {
     const gir = {
-      schemaVersion: "spore.gir.v1",
+      schemaVersion: "fungi.gir.v1",
       generatedAt: "2024-01-01T00:00:00.000Z",
       flows: [
         {
@@ -250,11 +250,11 @@ describe("canonical-hash: hashGIR stability with realistic payload", () => {
 
   it("GIR with different flow order → different hash (flow arrays are ordered)", () => {
     const girA = {
-      schemaVersion: "spore.gir.v1",
+      schemaVersion: "fungi.gir.v1",
       flows: [{ name: "a", qualifier: "pure flow" }, { name: "b", qualifier: "flow" }],
     };
     const girB = {
-      schemaVersion: "spore.gir.v1",
+      schemaVersion: "fungi.gir.v1",
       flows: [{ name: "b", qualifier: "flow" }, { name: "a", qualifier: "pure flow" }],
     };
     const h1 = hashGIR(girA);

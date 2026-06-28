@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Galerina Linux Deployment Script
-# Usage: ./scripts/deploy-linux.sh <app.spore> [--port <N>]
+# Usage: ./scripts/deploy-linux.sh <app.fungi> [--port <N>]
 #
-# Builds .spore -> .wasm, verifies governance manifest, runs a
+# Builds .fungi -> .wasm, verifies governance manifest, runs a
 # health-check probe, then prints the commands needed to start
 # the governed runtime under Wasmtime (available in Phase 9+).
 #
@@ -11,41 +11,41 @@
 #   - wasmtime       (optional — used at runtime when DRCM Phase 9 lands)
 #
 # Examples:
-#   ./scripts/deploy-linux.sh examples/auth-service/createSession.spore
-#   ./scripts/deploy-linux.sh examples/auth-service/createSession.spore --port 9000
+#   ./scripts/deploy-linux.sh examples/auth-service/createSession.fungi
+#   ./scripts/deploy-linux.sh examples/auth-service/createSession.fungi --port 9000
 
 set -euo pipefail
 
 # ── args ──────────────────────────────────────────────────────────────────────
-SPORE_FILE="${1:-examples/auth-service/createSession.spore}"
+FUNGI_FILE="${1:-examples/auth-service/createSession.fungi}"
 PORT="8080"
 if [[ "${2:-}" == "--port" && -n "${3:-}" ]]; then
   PORT="$3"
 fi
 
 BUILD_DIR="build"
-BASE_NAME="$(basename "${SPORE_FILE%.spore}")"
+BASE_NAME="$(basename "${FUNGI_FILE%.fungi}")"
 WASM_FILE="${BUILD_DIR}/${BASE_NAME}.wasm"
 MANIFEST_FILE="${BUILD_DIR}/${BASE_NAME}.lmanifest"
 MANIFEST_JSON="${BUILD_DIR}/${BASE_NAME}.lmanifest.json"
-HEALTH_SPORE="examples/deployment/health-check.spore"
+HEALTH_FUNGI="examples/deployment/health-check.fungi"
 
 echo "Galerina Governed Runtime -- Deployment"
-echo "   File:    ${SPORE_FILE}"
+echo "   File:    ${FUNGI_FILE}"
 echo "   Port:    ${PORT}"
 echo ""
 
 # ── step 1: governance check ─────────────────────────────────────────────────
 echo "Checking governance..."
-if ! node galerina.mjs check "${SPORE_FILE}" 2>&1; then
-  echo "Governance check failed: ${SPORE_FILE}"
+if ! node galerina.mjs check "${FUNGI_FILE}" 2>&1; then
+  echo "Governance check failed: ${FUNGI_FILE}"
   exit 1
 fi
 echo ""
 
 # ── step 2: build WASM ───────────────────────────────────────────────────────
 echo "Building .wasm..."
-node galerina.mjs build "${SPORE_FILE}"
+node galerina.mjs build "${FUNGI_FILE}"
 echo ""
 
 if [ ! -f "${WASM_FILE}" ]; then
@@ -56,7 +56,7 @@ echo "Built: ${WASM_FILE}"
 
 # ── step 3: verify manifest ───────────────────────────────────────────────────
 echo "Verifying governance manifest..."
-if node galerina.mjs verify "${SPORE_FILE}" 2>&1; then
+if node galerina.mjs verify "${FUNGI_FILE}" 2>&1; then
   echo "Manifest verified"
 else
   echo "Manifest verification returned non-zero -- review ${MANIFEST_JSON}"
@@ -77,14 +77,14 @@ fi
 # ── step 5: health check probe ───────────────────────────────────────────────
 echo ""
 echo "Running health check flow..."
-if [ -f "${HEALTH_SPORE}" ]; then
-  if node galerina.mjs check "${HEALTH_SPORE}" 2>&1 | grep -q "0 errors"; then
+if [ -f "${HEALTH_FUNGI}" ]; then
+  if node galerina.mjs check "${HEALTH_FUNGI}" 2>&1 | grep -q "0 errors"; then
     echo "Health check flow: ACCEPT (0 errors)"
   else
-    echo "Health check flow: governance warning -- review ${HEALTH_SPORE}"
+    echo "Health check flow: governance warning -- review ${HEALTH_FUNGI}"
   fi
 else
-  echo "Health check flow not found at ${HEALTH_SPORE} -- skipping"
+  echo "Health check flow not found at ${HEALTH_FUNGI} -- skipping"
 fi
 echo ""
 

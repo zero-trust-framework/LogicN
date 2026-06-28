@@ -1,9 +1,9 @@
 // =============================================================================
-// Flow dependency analysis — //spore:USES / //spore: USEDBY / //spore: IMPACT (R&D 0045)
+// Flow dependency analysis — //fungi:USES / //fungi: USEDBY / //fungi: IMPACT (R&D 0045)
 //
 // Per-flow observed call graph from the AST: USES (upstream callees), USEDBY (direct callers /
 // "dependants"), IMPACT (transitive downstream blast-radius; 0 = safe to delete). Feeds the
-// generated `//spore:` comment vocabulary.
+// generated `//fungi:` comment vocabulary.
 // =============================================================================
 
 import { describe, it } from "node:test";
@@ -17,7 +17,7 @@ import {
 } from "../dist/index.js";
 
 function deps(src) {
-  const p = parseProgram(src, "deps.spore");
+  const p = parseProgram(src, "deps.fungi");
   const errs = p.diagnostics.filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, "parse: " + errs.map((e) => e.message).join("; "));
   return analyzeFlowDependencies(p.ast);
@@ -92,57 +92,57 @@ describe("analyzeProgramFlowDependencies — cross-file (whole-app) analysis", (
   }
 
   it("counts a caller in ANOTHER file as USEDBY (the cross-file fix)", () => {
-    // leaf lives in lib.spore and is called only from app.spore. A per-file analysis would say
+    // leaf lives in lib.fungi and is called only from app.fungi. A per-file analysis would say
     // leaf.usedBy = [] → "safe to delete" (a fail-OPEN lie). Cross-file must see the caller.
     const { deps } = program({
-      "lib.spore": `pure flow leaf(x: Int) -> Int { return x }`,
-      "app.spore": `pure flow main(x: Int) -> Int { return leaf(x) }`,
+      "lib.fungi": `pure flow leaf(x: Int) -> Int { return x }`,
+      "app.fungi": `pure flow main(x: Int) -> Int { return leaf(x) }`,
     });
-    assert.deepEqual(deps.get("leaf").usedBy, ["main"], "caller in app.spore is seen");
+    assert.deepEqual(deps.get("leaf").usedBy, ["main"], "caller in app.fungi is seen");
     assert.equal(deps.get("leaf").impact, 1, "leaf is NOT safe to delete (impact > 0)");
     assert.equal(deps.get("main").impact, 0, "nothing calls main → safe to delete");
   });
 
   it("attributes each flow to its declaring file", () => {
     const { fileByFlow } = program({
-      "lib.spore": `pure flow leaf(x: Int) -> Int { return x }`,
-      "app.spore": `pure flow main(x: Int) -> Int { return leaf(x) }`,
+      "lib.fungi": `pure flow leaf(x: Int) -> Int { return x }`,
+      "app.fungi": `pure flow main(x: Int) -> Int { return leaf(x) }`,
     });
-    assert.equal(fileByFlow.get("leaf"), "lib.spore");
-    assert.equal(fileByFlow.get("main"), "app.spore");
+    assert.equal(fileByFlow.get("leaf"), "lib.fungi");
+    assert.equal(fileByFlow.get("main"), "app.fungi");
   });
 
   it("a duplicate flow name across files UNIONS callers (fail-safe — never a false safe-to-delete)", () => {
     // `helper` declared in two files; each is called by a different caller. The union must show
     // BOTH callers, so impact can only be over-counted, never under-counted.
     const { deps } = program({
-      "a.spore": `pure flow helper(x: Int) -> Int { return x }\npure flow callA(x: Int) -> Int { return helper(x) }`,
-      "b.spore": `pure flow helper(x: Int) -> Int { return x }\npure flow callB(x: Int) -> Int { return helper(x) }`,
+      "a.fungi": `pure flow helper(x: Int) -> Int { return x }\npure flow callA(x: Int) -> Int { return helper(x) }`,
+      "b.fungi": `pure flow helper(x: Int) -> Int { return x }\npure flow callB(x: Int) -> Int { return helper(x) }`,
     });
     assert.deepEqual(deps.get("helper").usedBy, ["callA", "callB"], "both callers unioned");
     assert.ok(deps.get("helper").impact >= 1, "shared name is never mislabelled safe-to-delete");
   });
 });
 
-describe("renderDependencyComments — the canonical //spore: lines", () => {
-  it("renders //spore: USES, //spore: USEDBY and //spore: IMPACT in the canonical form", () => {
+describe("renderDependencyComments — the canonical //fungi: lines", () => {
+  it("renders //fungi: USES, //fungi: USEDBY and //fungi: IMPACT in the canonical form", () => {
     const d = deps(CHAIN);
     assert.deepEqual(renderDependencyComments(d.get("mid")), [
-      "//spore: USES: (1) leaf",
-      "//spore: USEDBY: (1) top",
-      "//spore: IMPACT: (1)",
+      "//fungi: USES: (1) leaf",
+      "//fungi: USEDBY: (1) top",
+      "//fungi: IMPACT: (1)",
     ]);
   });
 
   it("omits empty USES/USEDBY and flags safe-to-delete at IMPACT 0", () => {
     const d = deps(CHAIN);
     assert.deepEqual(renderDependencyComments(d.get("top")), [
-      "//spore: USES: (1) mid",
-      "//spore: IMPACT: (0) — safe to delete",
+      "//fungi: USES: (1) mid",
+      "//fungi: IMPACT: (0) — safe to delete",
     ]);
     assert.deepEqual(renderDependencyComments(d.get("leaf")), [
-      "//spore: USEDBY: (1) mid",
-      "//spore: IMPACT: (2)",
+      "//fungi: USEDBY: (1) mid",
+      "//fungi: IMPACT: (2)",
     ]);
   });
 });

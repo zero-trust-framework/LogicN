@@ -9,11 +9,11 @@
 - Explicit single-target syntax: `compute target gpu { fallback cpu }`
 - `Money<C>` arithmetic within compute-heavy flows (VAT, financial modelling)
 - `Decimal` precision for financial calculations
-- `SPORE-HINT-COMPUTE-001` — informational hint when `ai.inference` is used without a compute target preference
+- `FUNGI-HINT-COMPUTE-001` — informational hint when `ai.inference` is used without a compute target preference
 
 ## Canonical patterns
 
-```spore
+```fungi
 // Prefer NPU or GPU with mandatory CPU fallback
 pure flow embedText(text: String) -> Tensor<Float32, [1, 768]>
   with compute target best { prefer [npu, gpu, cpu] fallback cpu }
@@ -22,7 +22,7 @@ pure flow embedText(text: String) -> Tensor<Float32, [1, 768]>
 }
 ```
 
-```spore
+```fungi
 // Explicit GPU target for known-large workload
 pure flow processImage(pixels: Tensor<Float32, [3, 224, 224]>) -> Tensor<Float32, [1000]>
   with compute target gpu { fallback cpu }
@@ -43,10 +43,10 @@ pure flow processImage(pixels: Tensor<Float32, [3, 224, 224]>) -> Tensor<Float32
 
 | Code | Meaning |
 |------|---------|
-| `SPORE-HINT-COMPUTE-001` | Flow uses `ai.inference` but no compute target preference declared; NPU/GPU would improve performance |
-| `SPORE-TARGET-001` | Compute target declared without a required `fallback` |
-| `SPORE-TYPE-006` | `Tensor` declared without two type parameters |
-| `SPORE-TYPE-004` | Cross-currency `Money` arithmetic — currency mismatch at compile time |
+| `FUNGI-HINT-COMPUTE-001` | Flow uses `ai.inference` but no compute target preference declared; NPU/GPU would improve performance |
+| `FUNGI-TARGET-001` | Compute target declared without a required `fallback` |
+| `FUNGI-TYPE-006` | `Tensor` declared without two type parameters |
+| `FUNGI-TYPE-004` | Cross-currency `Money` arithmetic — currency mismatch at compile time |
 
 ## Example IDs at this level
 

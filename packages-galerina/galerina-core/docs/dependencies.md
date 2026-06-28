@@ -33,6 +33,6 @@ Recommended dependency rule:
 ```text
 Import local files.
 Use approved packages.
-Register packages in boot.spore.
+Register packages in boot.fungi.
 Report package permissions, hashes, usage and loading behaviour.
 ```

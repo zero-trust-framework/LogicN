@@ -1,7 +1,7 @@
 import { parseProgram, resolveSymbols, checkTypes, checkValueStates, checkEffects, effectResultsToDiagnostics, verifyGovernance, checkEvents } from "../dist/index.js";
 
 function run(src) {
-  const parsed = parseProgram(src, "test.spore");
+  const parsed = parseProgram(src, "test.fungi");
   const sr = resolveSymbols(parsed.ast);
   const tr = checkTypes(parsed.ast);
   const vr = checkValueStates(parsed.ast);

@@ -9,7 +9,7 @@ Each standard is testable/enforceable and maps to a Galerina enforcer that alrea
 tests · **BLD-003** provenance · **DOC-004** doc↔source drift. Companion: [coverage cross-check methodology](galerina-coverage-crosscheck-methodology.md).
 
 ## Anchor standards
-1. **UNIVERSAL COVERAGE (→ #218 + #215).** Every governable construct (every emittable `SPORE-*`/`ERR_*` code,
+1. **UNIVERSAL COVERAGE (→ #218 + #215).** Every governable construct (every emittable `FUNGI-*`/`ERR_*` code,
    contract clause, capability/syntax form, effect, stdlib fn, CLI cmd, generated artifact) MUST be indexed by
    ≥1 audit, reconciled **bidirectionally**: index→audit (no blind spots) + audit→index (no phantoms).
    Emittable-but-unregistered OR registered-but-no-longer-emittable MUST fail the build; a registered code with
@@ -25,11 +25,11 @@ tests · **BLD-003** provenance · **DOC-004** doc↔source drift. Companion: [c
    StrykerJS/PIT mutation thresholds · seL4 noninterference proof-gating.*
 
 ## Diagnostic registry & ID space
-3. **Registry completeness (→ #215 + #218).** Every emittable `SPORE-*` MUST be in one central registry
+3. **Registry completeness (→ #215 + #218).** Every emittable `FUNGI-*` MUST be in one central registry
    (`galerina-governance-rules.md`, split shipped/unshipped) WITH a long-form explanation; CI diffs source-extracted
    codes vs registry and fails on unregistered-emit / emit-less-registration / missing-explanation. *Basis: rustc
    `error_codes!` + `E####.md` one-per-code + tidy orphan detection · Roslyn RS2000.*
-4. **Structured ID space (→ #215 / ENV-001).** Every diagnostic MUST have (a) a stable constant `SPORE-<DOMAIN>-<NNN>`
+4. **Structured ID space (→ #215 / ENV-001).** Every diagnostic MUST have (a) a stable constant `FUNGI-<DOMAIN>-<NNN>`
    code, (b) exactly one category from the closed 14-category set (S/C/E/K/I/M/A/P/EC/ID/AU/LC/T/FG), (c) a
    domain-reserved numeric range, (d) a non-null version-stable help URI. Meta-check rejects non-constant /
    duplicate / mis-prefixed / out-of-range / unknown-category / help-missing. *Basis: Roslyn RS1015/1017/1018/1019/1020
@@ -49,13 +49,13 @@ tests · **BLD-003** provenance · **DOC-004** doc↔source drift. Companion: [c
    it rejects, asserting exact code + tier) AND ≥1 MUST-PASS near-miss (it must not flag). Absence of either →
    fail-closed; known gaps marked with an explicit TODO annotation, never omitted. *Basis: ESLint/typescript-eslint
    RuleTester (throws if no valid OR no invalid case) · Semgrep `ruleid:`/`ok:` + tracked `todoruleid:`.*
-8. **Exhaustive snapshot assertions (→ #218 + DOC-004).** Every diagnostic MUST have ≥1 snapshot test: a `.spore`
+8. **Exhaustive snapshot assertions (→ #218 + DOC-004).** Every diagnostic MUST have ≥1 snapshot test: a `.fungi`
    fixture + a golden capture of the FULL governance output (code, message, span, suggestion, verdict tier), at
    message granularity (an extra unasserted OR a missing asserted diagnostic fails). Fixtures exhaustively
-   annotate every expected verdict inline (`//~ DENY SPORE-PRIVACY-002`). Output changes force a reviewed re-bless;
+   annotate every expected verdict inline (`//~ DENY FUNGI-PRIVACY-002`). Output changes force a reviewed re-bless;
    new diagnostics ship fixture + blessed snapshot in the same change. *Basis: rustc `tests/ui` `.stderr` + `--bless`
    + `//~` exhaustive annotations · clang-tidy `CHECK-MESSAGES`.*
-9. **Executable doc examples (→ DOC-004 + #215).** Every explanation MUST embed a runnable `.spore` snippet that
+9. **Executable doc examples (→ DOC-004 + #215).** Every explanation MUST embed a runnable `.fungi` snippet that
    produces that exact code; CI compiles it and asserts the emitted code matches. A documented example that no
    longer errors (esp. a deny-by-default rule) is a fail-closed regression. The one-line summary is single-sourced
    across code descriptor / doc / release-note (drift fails). *Basis: rustc `error_index_generator` runs
@@ -88,7 +88,7 @@ tests · **BLD-003** provenance · **DOC-004** doc↔source drift. Companion: [c
     large-scale differential/fuzz testing into BOTH and fails on any divergence. *Basis: AWS Cedar `cedar-drt`
     (~100M tests/6h nightly, Lean/Dafny model vs Rust impl).*
 15. **Continuous fuzzing of toxic borders (→ SEC-002 + #215 border inventory).** Every untrusted-input border
-    (`.spore` lexer/parser, `.tmf` container/KEM-DEM decoder, runtime DMZ border-check, Tier-3 bridges) has a fuzz
+    (`.fungi` lexer/parser, `.tmf` container/KEM-DEM decoder, runtime DMZ border-check, Tier-3 bridges) has a fuzz
     harness in a continuous job; crashes fail-closed (reject), auto-captured as regression corpus; a fix isn't
     accepted until the reproducer is in the corpus. *Basis: Google OSS-Fuzz.*
 16. **Proof-gating (→ SEC-002 + BLD-003 proof-artifact freshness).** A change to a correctness-critical kernel

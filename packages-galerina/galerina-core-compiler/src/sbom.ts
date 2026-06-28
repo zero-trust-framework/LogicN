@@ -7,7 +7,7 @@
 //
 // FAIL-CLOSED, most-secure posture: an SBOM must NEVER claim integrity it does not have. A component
 // without a well-formed `sha256:<64hex>` content hash is emitted WITHOUT a `hashes` entry, tagged
-// `galerina:integrity = UNVERIFIED`, and raised as an SPORE-SBOM-001 diagnostic; the whole BOM is marked
+// `galerina:integrity = UNVERIFIED`, and raised as an FUNGI-SBOM-001 diagnostic; the whole BOM is marked
 // `galerina:complete = false`. A consumer can gate on `result.complete` (reject an incomplete SBOM)
 // instead of being lulled by a document that silently omits an unverifiable component. This is the
 // SBOM analogue of the honest-posture fixes elsewhere in the tree — no overclaim of coverage.
@@ -18,7 +18,7 @@ import type { PackageManifest } from "./package-resolver.js";
 const SBOM_SHA256_RE = /^sha256:([0-9a-f]{64})$/i;
 
 export interface SbomDiagnostic {
-  readonly code: "SPORE-SBOM-001";
+  readonly code: "FUNGI-SBOM-001";
   readonly severity: "error";
   readonly component: string;
   readonly message: string;
@@ -70,7 +70,7 @@ export function generateCycloneDxSbom(
     const verified = match !== null;
     if (!verified) {
       diagnostics.push({
-        code: "SPORE-SBOM-001",
+        code: "FUNGI-SBOM-001",
         severity: "error",
         component: `${m.name}@${m.version}`,
         message:

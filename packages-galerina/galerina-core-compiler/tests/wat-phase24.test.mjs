@@ -232,7 +232,7 @@ describe("Phase 24B: buildWATModule produces real WAT; assembleWAT produces vali
 describe("Phase 24C: full pipeline from Galerina source to valid WASM binary", () => {
   it("pure flow add(a: Int, b: Int) -> Int compiles to WAT with local.get and valid binary", async () => {
     const src = `pure flow add(a: Int, b: Int) -> Int { return a }`;
-    const parsed = parseProgram(src, "t.spore");
+    const parsed = parseProgram(src, "t.fungi");
     const eff = checkEffects(parsed.flows, parsed.ast);
     const gir = emitGIR(parsed.ast, parsed.flows, eff);
 
@@ -258,7 +258,7 @@ pure flow greet(name: String) -> String
 contract { intent { "Return a greeting." } effects {} }
 { return name }
 `;
-    const parsed = parseProgram(src, "greet.spore");
+    const parsed = parseProgram(src, "greet.fungi");
     const eff = checkEffects(parsed.flows, parsed.ast);
     const gir = emitGIR(parsed.ast, parsed.flows, eff);
 
@@ -280,7 +280,7 @@ contract { intent { "Return a greeting." } effects {} }
 
   it("pure flow with no params emits (i32.const 0) and valid binary", async () => {
     const src = `pure flow constant() -> Int { return 42 }`;
-    const parsed = parseProgram(src, "t.spore");
+    const parsed = parseProgram(src, "t.fungi");
     const eff = checkEffects(parsed.flows, parsed.ast);
     const gir = emitGIR(parsed.ast, parsed.flows, eff);
 

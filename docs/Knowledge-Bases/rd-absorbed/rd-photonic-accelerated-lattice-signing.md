@@ -230,7 +230,7 @@ On a real photonic MVM (silicon-photonic mesh / commercial photonic tensor core)
 Galerina does **not** build the accelerator. Galerina owns **governance + the deterministic re-verify gate**: the
 host-call boundary that (a) invokes the vetted FIPS-204 verifier on the re-quantized signature, (b) treats any
 mismatch/`unknown` as `deny` (K3 three-valued, charter §2), and (c) keeps the photonic unit strictly outside the
-trust boundary. Crypto cannot live in `.spore` (the governance language rejects even bitwise `^`,
+trust boundary. Crypto cannot live in `.fungi` (the governance language rejects even bitwise `^`,
 `signature-custody-v0.md` §7); the accelerator is even further out — an untrusted external compute resource whose
 output is only ever *checked*, never *trusted*.
 

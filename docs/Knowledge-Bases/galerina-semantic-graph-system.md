@@ -1,15 +1,15 @@
-# Galerina — Semantic Graph System (SPORE-Graph Evolution)
+# Galerina — Semantic Graph System (FUNGI-Graph Evolution)
 
 **Status:** Phase 13 — Architectural Proposal
 **Priority:** HIGH — differentiates Galerina from all other language projects
-**Depends on:** SPORE-Graph (`C:\laragon\www\SPORE-Graph`), `galerina-devtools-graph-algorithms`
+**Depends on:** FUNGI-Graph (`C:\laragon\www\FUNGI-Graph`), `galerina-devtools-graph-algorithms`
 **Decision:** SemanticGraph is the resolved queryable layer built from AST — does NOT replace AST
 
 ---
 
 ## TL;DR
 
-- SPORE-Graph evolves from a graph utility library into the canonical semantic foundation of the entire Galerina ecosystem
+- FUNGI-Graph evolves from a graph utility library into the canonical semantic foundation of the entire Galerina ecosystem
 - SemanticGraph = resolved, queryable program meaning built from AST — compiler, IDE, AI, governance, self-hosting all operate on the same model
 - The AST remains compiler truth; SemanticGraph is the resolved, enriched layer above it
 
@@ -17,7 +17,7 @@
 
 ## Current Architecture Problem
 
-### Current State (SPORE-Graph is downstream)
+### Current State (FUNGI-Graph is downstream)
 
 ```
 Source
@@ -28,12 +28,12 @@ Source
   → Effect Checker
   → Compiler
     → Reports
-      → SPORE-Graph   ← downstream consumer, receives data after all decisions are made
+      → FUNGI-Graph   ← downstream consumer, receives data after all decisions are made
 ```
 
-SPORE-Graph currently sits at the end of the pipeline. It receives data only after the compiler has finished all reasoning. It cannot influence, query, or participate in the resolution process. The compiler, IDE, AI tooling, and governance engine each build their own partial models independently — there is no single shared semantic model.
+FUNGI-Graph currently sits at the end of the pipeline. It receives data only after the compiler has finished all reasoning. It cannot influence, query, or participate in the resolution process. The compiler, IDE, AI tooling, and governance engine each build their own partial models independently — there is no single shared semantic model.
 
-### Proposed State (SPORE-Graph is the centre)
+### Proposed State (FUNGI-Graph is the centre)
 
 ```
 Source
@@ -41,20 +41,20 @@ Source
   → Parser
   → AST
   → Semantic Resolver
-    → SPORE-Graph   ← canonical shared semantic model
+    → FUNGI-Graph   ← canonical shared semantic model
       → Type Checker
       → Effect Checker
       → Governance
       → Runtime
 ```
 
-SPORE-Graph becomes the resolved semantic model that all downstream consumers query. The AST drives the resolver; the SemanticGraph is the enriched output. Every compiler pass, IDE query, AI context export, and governance check operates on the same graph. One model, one truth.
+FUNGI-Graph becomes the resolved semantic model that all downstream consumers query. The AST drives the resolver; the SemanticGraph is the enriched output. Every compiler pass, IDE query, AI context export, and governance check operates on the same graph. One model, one truth.
 
 ---
 
 ## SemanticGraph — New Graph Type
 
-`SemanticGraph` is a new graph family within SPORE-Graph. It is not a general-purpose graph — it is specifically shaped to represent resolved Galerina program meaning.
+`SemanticGraph` is a new graph family within FUNGI-Graph. It is not a general-purpose graph — it is specifically shaped to represent resolved Galerina program meaning.
 
 ### Node Types
 
@@ -95,7 +95,7 @@ getUser
   → requires   → database.read
   → returns    → User
   → calls      → dbQuery
-  → belongsTo  → users.spore
+  → belongsTo  → users.fungi
 ```
 
 This graph fragment encodes everything the compiler, AI assistant, IDE, and governance engine need to reason about `getUser` — without reading source files.
@@ -158,7 +158,7 @@ Nodes: `Type`, `Generic`, `Constraint`, `Alias`, `Enum`
 
 Models the full type system as a graph — generics and their constraints, type aliases and what they alias, enum variants, and subtype relationships. Enables the type checker to query relationships rather than walking raw AST structures.
 
-Supports: `SPORE-TYPE-*` diagnostic codes.
+Supports: `FUNGI-TYPE-*` diagnostic codes.
 
 ### 3. IntentGraph — Intent and Governance Graph
 
@@ -166,7 +166,7 @@ Nodes: `Intent`, `Flow`, `Capability`, `GovernanceRule`
 
 Models declared intent and the governance rules that govern it. Links intents to the flows that implement them, and flows to the capabilities they require. Enables governance queries as graph traversals.
 
-Supports: `SPORE-INTENT-*` diagnostic codes.
+Supports: `FUNGI-INTENT-*` diagnostic codes.
 
 ### 4. CompilerGraph — Self-Hosting Compiler Graph
 
@@ -221,7 +221,7 @@ No custom governance logic is needed for each question. The graph structure enco
 
 ### Phase 1 — SemanticGraph + --emit-semantic-graph
 
-- Define `SemanticGraph` node and edge types in SPORE-Graph
+- Define `SemanticGraph` node and edge types in FUNGI-Graph
 - Build `SemanticResolver` compiler pass that constructs the graph from AST
 - Wire graph into Type Checker and Effect Checker as a query source
 - Implement `--emit-semantic-graph` CLI flag
@@ -238,10 +238,10 @@ No custom governance logic is needed for each question. The graph structure enco
 
 - Define `TypeGraph` node and edge types
 - Build TypeGraph from resolved type declarations
-- Wire into Type Checker; support `SPORE-TYPE-*` diagnostics via graph queries
+- Wire into Type Checker; support `FUNGI-TYPE-*` diagnostics via graph queries
 - Define `IntentGraph` node and edge types
 - Build IntentGraph from intent declarations and flow mappings
-- Wire into governance verifier; support `SPORE-INTENT-*` diagnostics via graph queries
+- Wire into governance verifier; support `FUNGI-INTENT-*` diagnostics via graph queries
 
 ### Phase 4 — CompilerGraph + Self-Hosting Integration
 
@@ -277,7 +277,7 @@ Replacing the AST with the graph would lose precision. Bypassing the graph and q
 
 ## See Also
 
-- [spore-graph](C:\laragon\www\SPORE-Graph) — the graph library that SemanticGraph is built on
+- [fungi-graph](C:\laragon\www\FUNGI-Graph) — the graph library that SemanticGraph is built on
 - [galerina-roadmap](galerina-roadmap.md) — overall phase roadmap
 - [galerina-gir-schema](galerina-gir-schema.md) — GIR (Governed IR) schema, related IR layer
 - [capability-registry.yaml](capability-registry.yaml) — authoritative capability definitions

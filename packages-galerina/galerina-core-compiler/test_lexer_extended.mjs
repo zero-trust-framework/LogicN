@@ -101,7 +101,7 @@ const testCases = [
 let passed = 0, failed = 0;
 
 testCases.forEach(tc => {
-  const result = lex(tc.input, 'test.spore');
+  const result = lex(tc.input, 'test.fungi');
   const nonTrivia = result.tokens.filter(t => t.kind !== 'eof' && t.kind !== 'newline');
   
   let ok = false;

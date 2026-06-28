@@ -195,7 +195,7 @@ Example diagnostic:
   "severity": "error",
   "code": "GALERINA-CRASH-004",
   "message": "External API call has no timeout or failure handler.",
-  "file": "payments.spore",
+  "file": "payments.fungi",
   "line": 28,
   "suggestion": "Add a timeout and typed Err handler."
 }
@@ -221,7 +221,7 @@ Example report:
   "crashId": "crash_01HABC",
   "requestId": "req_99",
   "flow": "Payments.authorise",
-  "sourceFile": "payments.spore",
+  "sourceFile": "payments.fungi",
   "sourceLine": 54,
   "compiledTarget": "node",
   "computeTarget": "cpu",
@@ -366,8 +366,8 @@ Example:
   "summary": "Order creation failed because the payment provider timed out.",
   "likelyCause": "External API unavailable or timeout too short.",
   "safeFilesToInspect": [
-    "routes/orders.spore",
-    "services/payments.spore"
+    "routes/orders.fungi",
+    "services/payments.fungi"
   ],
   "doNotExpose": [
     "PAYMENT_API_KEY",
@@ -390,18 +390,18 @@ A Galerina app may organise crash policy like this:
 
 ```text
 my-galerina-app/
-|-- boot.spore
-|-- main.spore
+|-- boot.fungi
+|-- main.fungi
 |-- routes/
-|   `-- orders.spore
+|   `-- orders.fungi
 |-- services/
-|   `-- payments.spore
+|   `-- payments.fungi
 |-- workers/
-|   `-- send-order-emails.spore
+|   `-- send-order-emails.fungi
 |-- policies/
-|   |-- crash-policy.spore
-|   |-- security-policy.spore
-|   `-- logging-policy.spore
+|   |-- crash-policy.fungi
+|   |-- security-policy.fungi
+|   `-- logging-policy.fungi
 |-- reports/
 |   |-- compile-report.json
 |   |-- security-report.json
@@ -461,7 +461,7 @@ Galerina needs these capabilities to support safe crash handling:
 | `panic` / `crash` categories | Unexpected runtime failures |
 | `crash_boundary` | Route, webhook and worker containment |
 | `crash_policy` | App-wide crash rules |
-| source maps | Link runtime faults back to `.spore` source |
+| source maps | Link runtime faults back to `.fungi` source |
 | structured crash reports | Developer, operator and AI debugging |
 | checkpoints | Identify the last successful step |
 | safe logging | Prevent secret leaks |

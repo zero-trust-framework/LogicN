@@ -4,16 +4,16 @@
 // Walks the Galerina AST and raises PCI compliance findings.
 //
 // Map of diagnostic codes to PCI DSS 4.0.1 requirements:
-//   SPORE-PCI-001  Req 3.3  — raw card-data keywords in identifier names / strings
-//   SPORE-PCI-002  Req 3.5  — PAN binding without privacy { mask ... }
-//   SPORE-PCI-003  Req 4.2  — network.outbound without TLS declaration
-//   SPORE-PCI-004  Req 7    — payment flow with no authority {} block
-//   SPORE-PCI-005  Req 10.2 — payment flow with no effects { audit.write }
-//   SPORE-PCI-006  Req 10.3 — card/PAN data reaching AuditLog.write unredacted
-//   SPORE-PCI-007  Req 6.2  — payment flow with no contract { intent { ... } }
-//   SPORE-PCI-008  Req 8    — secure flow processing payment data, no authority.requires
-//   SPORE-PCI-009  Req 12.6 — file with 2+ payment flows, none have contract.intent
-//   SPORE-PCI-010  Req 6.3  — unsafe let binding named with card-data keyword
+//   FUNGI-PCI-001  Req 3.3  — raw card-data keywords in identifier names / strings
+//   FUNGI-PCI-002  Req 3.5  — PAN binding without privacy { mask ... }
+//   FUNGI-PCI-003  Req 4.2  — network.outbound without TLS declaration
+//   FUNGI-PCI-004  Req 7    — payment flow with no authority {} block
+//   FUNGI-PCI-005  Req 10.2 — payment flow with no effects { audit.write }
+//   FUNGI-PCI-006  Req 10.3 — card/PAN data reaching AuditLog.write unredacted
+//   FUNGI-PCI-007  Req 6.2  — payment flow with no contract { intent { ... } }
+//   FUNGI-PCI-008  Req 8    — secure flow processing payment data, no authority.requires
+//   FUNGI-PCI-009  Req 12.6 — file with 2+ payment flows, none have contract.intent
+//   FUNGI-PCI-010  Req 6.3  — unsafe let binding named with card-data keyword
 // =============================================================================
 
 import { parseProgram, checkValueStates, type AstNode, type AstNodeKind, NodeFlags } from "@galerina/core-compiler";
@@ -336,7 +336,7 @@ function makeFinding(
 /**
  * Run PCI DSS 4.0.1 static analysis on a Galerina source string.
  *
- * @param source   - .spore source content
+ * @param source   - .fungi source content
  * @param fileName - optional file name for finding metadata
  */
 export function runPciAudit(
@@ -357,20 +357,20 @@ export function runPciAudit(
   let analyzerBlind = false;
 
   // Parse
-  const parsed = parseProgram(source, fileName ?? "source.spore");
+  const parsed = parseProgram(source, fileName ?? "source.fungi");
 
   // FAIL-CLOSED on parse failure (#0098): a security oracle that cannot see the program is BLIND,
   // and a blind oracle must DENY, not PASS. ANY parse error means the auditor is operating on an
   // incomplete view of the program — whether the failure is TOTAL (no flows / empty AST) or PARTIAL
   // (some flows parsed, but a section is malformed, e.g. an unterminated block). In every case push
-  // a high-severity SPORE-PCI-000 ParseFailure so buildReport's `passed` becomes false, instead of
+  // a high-severity FUNGI-PCI-000 ParseFailure so buildReport's `passed` becomes false, instead of
   // returning a clean "pass". Mirrors the security audit-runner's parse-fail handling.
   // NIST SP 800-207 T6 / CWE-636 (not-failing-securely) / CWE-703 / CWE-1287.
   const parseErrors = (parsed.diagnostics ?? []).filter(d => d.severity === "error");
   if (parseErrors.length > 0) {
     analyzerBlind = true;
     findings.push(makeFinding(
-      "SPORE-PCI-000",
+      "FUNGI-PCI-000",
       "ParseFailure",
       "6.2",
       "high",
@@ -391,7 +391,7 @@ export function runPciAudit(
   // value-state results (used for unsafe binding detection)
   const vsResult = checkValueStates(ast);
 
-  // Track payment flows for SPORE-PCI-009
+  // Track payment flows for FUNGI-PCI-009
   const paymentFlowNodes: AstNode[] = [];
   let anyPaymentFlowHasIntent = false;
 
@@ -408,7 +408,7 @@ export function runPciAudit(
       if (hasContractIntent(flowNode)) anyPaymentFlowHasIntent = true;
     }
 
-    // SPORE-PCI-001 — Req 3.3: raw card patterns in string literals or binding names
+    // FUNGI-PCI-001 — Req 3.3: raw card patterns in string literals or binding names
     // String literals with card keywords
     const seenPci001Literals = new Set<string>();
     for (const strLit of findNodes(flowNode, "stringLiteral")) {
@@ -417,7 +417,7 @@ export function runPciAudit(
         if (litVal.includes(kw) && !seenPci001Literals.has(kw)) {
           seenPci001Literals.add(kw);
           findings.push(makeFinding(
-            "SPORE-PCI-001",
+            "FUNGI-PCI-001",
             "RawCardDataInStringLiteral",
             "3.3",
             "critical",
@@ -440,7 +440,7 @@ export function runPciAudit(
             if (!hasPrivacyBlock(flowNode)) {
               seenPci001Bindings.add(bareName);
               findings.push(makeFinding(
-                "SPORE-PCI-001",
+                "FUNGI-PCI-001",
                 "RawCardDataInIdentifier",
                 "3.3",
                 "critical",
@@ -454,7 +454,7 @@ export function runPciAudit(
       }
     }
 
-    // SPORE-PCI-002 — Req 3.5: PAN binding without privacy { mask ... }
+    // FUNGI-PCI-002 — Req 3.5: PAN binding without privacy { mask ... }
     for (const kind of ["letDecl", "mutDecl", "readonlyDecl"] as const) {
       for (const decl of findNodes(flowNode, kind)) {
         if (!decl.value) continue;
@@ -463,7 +463,7 @@ export function runPciAudit(
             bareName.includes("cardnumber") || bareName.includes("primaryaccountnumber")) {
           if (!hasPrivacyBlock(flowNode)) {
             findings.push(makeFinding(
-              "SPORE-PCI-002",
+              "FUNGI-PCI-002",
               "PanBindingWithoutPrivacyMask",
               "3.5",
               "critical",
@@ -479,10 +479,10 @@ export function runPciAudit(
     // Extract raw source for this flow (used for regex-based checks)
     const flowSource = getFlowSource(source, flowName);
 
-    // SPORE-PCI-003 — Req 4.2: network.outbound without TLS declaration
+    // FUNGI-PCI-003 — Req 4.2: network.outbound without TLS declaration
     if (isPayment && hasNetworkOutbound(flowNode) && !hasTlsDeclaration(flowSource)) {
       findings.push(makeFinding(
-        "SPORE-PCI-003",
+        "FUNGI-PCI-003",
         "NetworkOutboundWithoutTls",
         "4.2",
         "critical",
@@ -492,10 +492,10 @@ export function runPciAudit(
       ));
     }
 
-    // SPORE-PCI-004 — Req 7: payment flow with no authority {} block
+    // FUNGI-PCI-004 — Req 7: payment flow with no authority {} block
     if (isPayment && !hasAuthorityBlock(flowNode)) {
       findings.push(makeFinding(
-        "SPORE-PCI-004",
+        "FUNGI-PCI-004",
         "PaymentFlowMissingAuthority",
         "7",
         "high",
@@ -505,10 +505,10 @@ export function runPciAudit(
       ));
     }
 
-    // SPORE-PCI-005 — Req 10.2: payment flow with no effects { audit.write }
+    // FUNGI-PCI-005 — Req 10.2: payment flow with no effects { audit.write }
     if (isPayment && !hasAuditWriteEffect(flowNode)) {
       findings.push(makeFinding(
-        "SPORE-PCI-005",
+        "FUNGI-PCI-005",
         "PaymentFlowMissingAuditWrite",
         "10.2",
         "high",
@@ -518,11 +518,11 @@ export function runPciAudit(
       ));
     }
 
-    // SPORE-PCI-006 — Req 10.3: card/PAN data reaching AuditLog.write without redact()
+    // FUNGI-PCI-006 — Req 10.3: card/PAN data reaching AuditLog.write without redact()
     const auditViolations = checkCardDataAtAuditLog(flowNode);
     for (const binding of auditViolations) {
       findings.push(makeFinding(
-        "SPORE-PCI-006",
+        "FUNGI-PCI-006",
         "CardDataAtAuditLogUnredacted",
         "10.3",
         "critical",
@@ -532,10 +532,10 @@ export function runPciAudit(
       ));
     }
 
-    // SPORE-PCI-007 — Req 6.2: payment flow with no contract { intent { ... } }
+    // FUNGI-PCI-007 — Req 6.2: payment flow with no contract { intent { ... } }
     if (isPayment && !hasContractIntent(flowNode)) {
       findings.push(makeFinding(
-        "SPORE-PCI-007",
+        "FUNGI-PCI-007",
         "PaymentFlowMissingContractIntent",
         "6.2",
         "medium",
@@ -545,10 +545,10 @@ export function runPciAudit(
       ));
     }
 
-    // SPORE-PCI-008 — Req 8: secure flow processing payment data with no authority.requires
+    // FUNGI-PCI-008 — Req 8: secure flow processing payment data with no authority.requires
     if (isSecure && isPayment && !hasAuthorityRequires(flowNode, source)) {
       findings.push(makeFinding(
-        "SPORE-PCI-008",
+        "FUNGI-PCI-008",
         "SecurePaymentFlowMissingAuthorityRequires",
         "8",
         "high",
@@ -558,7 +558,7 @@ export function runPciAudit(
       ));
     }
 
-    // SPORE-PCI-010 — Req 6.3: let binding with card-data keyword without immediate gating
+    // FUNGI-PCI-010 — Req 6.3: let binding with card-data keyword without immediate gating
     const seenPci010 = new Set<string>();
     for (const decl of findNodes(flowNode, "letDecl")) {
       if (!decl.value) continue;
@@ -579,7 +579,7 @@ export function runPciAudit(
       if (!isGated) {
         seenPci010.add(bareName);
         findings.push(makeFinding(
-          "SPORE-PCI-010",
+          "FUNGI-PCI-010",
           "UnsafeCardDataBindingUngated",
           "6.3",
           "high",
@@ -595,10 +595,10 @@ export function runPciAudit(
   // File-level checks (after all flows are visited)
   // -----------------------------------------------------------------------
 
-  // SPORE-PCI-009 — Req 12.6: file with 2+ payment flows, none have contract.intent
+  // FUNGI-PCI-009 — Req 12.6: file with 2+ payment flows, none have contract.intent
   if (paymentFlowNodes.length >= 2 && !anyPaymentFlowHasIntent) {
     findings.push(makeFinding(
-      "SPORE-PCI-009",
+      "FUNGI-PCI-009",
       "MultiplePaymentFlowsNoIntent",
       "12.6",
       "medium",
@@ -660,7 +660,7 @@ function buildReport(
   const sourceSnippet = source.slice(0, 200) + (source.length > 200 ? "..." : "");
 
   return {
-    schemaVersion: "spore.pci-audit.v1",
+    schemaVersion: "fungi.pci-audit.v1",
     pciDssVersion: "4.0.1",
     source: sourceSnippet,
     findings,

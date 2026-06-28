@@ -13,9 +13,9 @@ const EMPTY_INPUTS = {
 };
 
 describe("Proof chain — buildProofChain", () => {
-  it("produces spore.execution.proof.v1 schema version", () => {
+  it("produces fungi.execution.proof.v1 schema version", () => {
     const chain = buildProofChain(EMPTY_INPUTS);
-    assert.equal(chain.schemaVersion, "spore.execution.proof.v1");
+    assert.equal(chain.schemaVersion, "fungi.execution.proof.v1");
   });
 
   it("produces a non-empty proofId", () => {
@@ -60,7 +60,7 @@ describe("Proof chain — buildProofChain", () => {
     const withEvent = buildProofChain({
       ...EMPTY_INPUTS,
       auditEvents: [{
-        schemaVersion: "spore.runtime.audit.v1",
+        schemaVersion: "fungi.runtime.audit.v1",
         id: "evt_1",
         timestamp: "2026-01-01T00:00:00.000Z",
         status: "Success",
@@ -114,7 +114,7 @@ describe("Proof chain — verifyProofChain", () => {
     const result = verifyProofChain(chain, {
       ...EMPTY_INPUTS,
       auditEvents: [{
-        schemaVersion: "spore.runtime.audit.v1",
+        schemaVersion: "fungi.runtime.audit.v1",
         id: "injected",
         timestamp: "2026-01-01T00:00:00.000Z",
         status: "Success",

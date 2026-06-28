@@ -200,7 +200,7 @@ Example:
 - Added planned unified `Galerina dev` command and optional watch mode.
 - Added prototype `Galerina generate`, `Galerina dev` and `Galerina run --generate` development-output commands.
 - Added prototype browser target import blocking for server-only imports, with parsed `target browser`, `import` and `capabilities` syntax.
-- Added examples/browser-form.spore and prototype `app.browser.js` placeholder output when a browser target is declared.
+- Added examples/browser-form.fungi and prototype `app.browser.js` placeholder output when a browser target is declared.
 - Added v0.1 prototype CLI in compiler/galerina.js.
 - Added source-mapped lexer prototype in compiler/lexer.js and `Galerina tokens`.
 - Added basic formatter prototype in compiler/formatter.js and `Galerina fmt`.
@@ -223,12 +223,12 @@ Example:
 - Added package.json scripts for check, build, AST, target and AI context output.
 - Added grammar/galerina.ebnf as the first parser grammar draft.
 - Added JSON schema drafts for AST, compiler reports, source maps and AI context.
-- Added runnable .spore examples for strict types, Option, Result, Decision, JSON, API, webhooks, workers, rollback and compute targets.
+- Added runnable .fungi examples for strict types, Option, Result, Decision, JSON, API, webhooks, workers, rollback and compute targets.
 - Added CPU-compatible build output placeholders plus GPU, photonic and ternary planning artefacts.
 - Added instruction-architecture.md to define CPU baseline and photonic planning compatibility.
 - Added Galerina / Galerina as the project name.
-- Added `.spore` as the official source file extension.
-- Added `boot.spore` as the recommended project entry file.
+- Added `.fungi` as the official source file extension.
+- Added `boot.fungi` as the recommended project entry file.
 - Added normal CPU binary output as the primary practical target.
 - Added WebAssembly output as a portability target.
 - Added GPU planning as a first-class accelerator target.
@@ -294,8 +294,8 @@ Example:
 - Added README API-native examples for route contracts, typed handlers and schema/OpenAPI prototype commands.
 - Added README webhook example details for typed events, verification order, idempotency and generated reports.
 - Changed diagnostic console output to include Galerina diagnostic code and recovery action.
-- Changed source file extension from the early `.language` idea to `.spore`.
-- Changed project entry concept from `main.language` to `boot.spore` / `main.spore`.
+- Changed source file extension from the early `.language` idea to `.fungi`.
+- Changed project entry concept from `main.language` to `boot.fungi` / `main.fungi`.
 - Changed photonic support from direct required hardware support to planning and validation first.
 - Changed ternary support from general replacement for booleans to specific 3-way logic and decision modelling.
 - Changed AI support from vague AI-friendliness to explicit AI context and AI explanation files.
@@ -410,7 +410,7 @@ Version `0.1.0` should establish the full concept documentation bundle.
 
 ```text
 - hello world example
-- boot.spore example
+- boot.fungi example
 - strict type example
 - Option example
 - Result example
@@ -435,7 +435,7 @@ Version `0.2.0` should introduce the first parser prototype.
 - Lexer prototype
 - Parser prototype
 - AST output
-- Basic `.spore` syntax parsing
+- Basic `.fungi` syntax parsing
 - Source file and line tracking
 - Basic syntax error reporting
 ```
@@ -443,7 +443,7 @@ Version `0.2.0` should introduce the first parser prototype.
 ### Planned Supported Syntax
 
 ```text
-- boot.spore
+- boot.fungi
 - flow definitions
 - secure flow definitions
 - type definitions
@@ -624,8 +624,8 @@ Version `1.0.0` should be the first stable Galerina language specification and i
 
 ```text
 - Stable core syntax
-- Stable `.spore` file format
-- Stable boot.spore structure
+- Stable `.fungi` file format
+- Stable boot.fungi structure
 - Stable type system
 - Stable JSON/API model
 - Stable source-map format

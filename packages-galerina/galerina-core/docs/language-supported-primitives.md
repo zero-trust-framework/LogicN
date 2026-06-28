@@ -162,7 +162,7 @@ safe fallback paths
 source-mapped runtime errors
 ```
 
-Errors should be clear, auditable, and easy to trace back to the original `.spore` source file.
+Errors should be clear, auditable, and easy to trace back to the original `.fungi` source file.
 
 Galerina should support compiler and runtime reports that make failures understandable for developers and AI tools.
 

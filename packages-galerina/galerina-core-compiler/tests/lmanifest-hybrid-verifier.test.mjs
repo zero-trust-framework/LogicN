@@ -17,14 +17,14 @@ const sha256hex = (buf) => createHash("sha256").update(buf).digest("hex");
 
 async function fixture(keyId = "testkeyid0000001") {
   const kp = await generateHybridGovernanceKeyPair(keyId);
-  const body = Buffer.from(`{"schema":"spore.manifest.v2","name":"demo","wasmSha256":"deadbeef"}`, "utf8");
+  const body = Buffer.from(`{"schema":"fungi.manifest.v2","name":"demo","wasmSha256":"deadbeef"}`, "utf8");
   const bodyHash = sha256hex(body);
   // Sign the SAME envelope shape the loader-side verifier rebuilds (generatedAt is excluded from the payload).
   const env = makeManifestEnvelope(bodyHash, "2026-01-01T00:00:00.000Z");
   const signed = await signProofGraphHybrid(env, kp);
   const signature = signed.governanceSignature.signature;
 
-  const root = mkdtempSync(join(tmpdir(), "spore-hv-"));
+  const root = mkdtempSync(join(tmpdir(), "fungi-hv-"));
   const gov = join(root, "governance");
   mkdirSync(gov, { recursive: true });
   const edPem = createPublicKey({ key: kp.publicKey, format: "der", type: "spki" }).export({ type: "spki", format: "pem" });
@@ -60,7 +60,7 @@ test("NO PQ DOWNGRADE: a missing .mldsa.pub.b64 for a v2 manifest THROWS (hard d
   try {
     rmSync(join(f.gov, `signing-key-${f.keyId}.mldsa.pub.b64`));
     const verify = makeLmanifestHybridVerifier();
-    await assert.rejects(() => verify(callInput(f)), /SPORE-FUSE-HYBRID-PQ-KEY-MISSING/);
+    await assert.rejects(() => verify(callInput(f)), /FUNGI-FUSE-HYBRID-PQ-KEY-MISSING/);
   } finally { rmSync(f.root, { recursive: true, force: true }); }
 });
 
@@ -69,7 +69,7 @@ test("FAIL-CLOSED: a malformed (wrong-length) ML-DSA key THROWS", async () => {
   try {
     writeFileSync(join(f.gov, `signing-key-${f.keyId}.mldsa.pub.b64`), Buffer.from("too-short").toString("base64"));
     const verify = makeLmanifestHybridVerifier();
-    await assert.rejects(() => verify(callInput(f)), /SPORE-FUSE-HYBRID-PQ-KEY-MALFORMED/);
+    await assert.rejects(() => verify(callInput(f)), /FUNGI-FUSE-HYBRID-PQ-KEY-MALFORMED/);
   } finally { rmSync(f.root, { recursive: true, force: true }); }
 });
 

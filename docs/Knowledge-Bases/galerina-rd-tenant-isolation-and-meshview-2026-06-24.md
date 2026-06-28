@@ -31,7 +31,7 @@
 
 | Claim | Verdict | Where it lives |
 |---|---|---|
-| C1 Governed visibility (metadata topology, payload shown `[ENCRYPTED BLOCK]`) | SOUND | Galerina-gov = **shipped** K3 `decideAtBoundary` + `redact()`/`seal()` + SealTaint (SPORE-PRIVACY-002); MeshView UI = TritMesh |
+| C1 Governed visibility (metadata topology, payload shown `[ENCRYPTED BLOCK]`) | SOUND | Galerina-gov = **shipped** K3 `decideAtBoundary` + `redact()`/`seal()` + SealTaint (FUNGI-PRIVACY-002); MeshView UI = TritMesh |
 | C2 Client-side `meshview.wasm` (decrypt in admin RAM) | SOUND but **TritMesh-product** | Thick-client + E2E crypto; TLSTP is owner-locked R&D. Nothing for Galerina |
 | C3 Ephemeral capability delegation (time-locked `.tmf` token to a support engineer) | SOUND, **established (macaroon)** | Buildable governance piece = **fail-closed TTL lease** (small); token-minting + `.tmf` plumbing = TritMesh |
 | C4 Immutable-append editing + History slider | SOUND, **already SHIPPED** | tmf-history-chain (hash-chained append); slider UI = TritMesh. Datomic/event-sourcing prior art |
@@ -51,7 +51,7 @@ Two halves, both deny-by-default, both compile-time, both reusing shipped machin
 **HALF A — Deny-by-default-private vault visibility (build first, lowest risk).** Make a `vault`/`model`'s tenancy posture an explicit, compiler-checked declaration that **defaults to the SAFE value**:
 - Default = `tenant_scoped` (private). Any flow reading/writing a `tenant_scoped` vault MUST carry a proven caller scope, intersected with it (Half B). **Forgetting the annotation ⇒ tenant_scoped ⇒ SAFE/denied, never leaky.** This is the deny-by-default inversion of the classic ORM footgun (Rails `default_scope` / Django un-scoped `.objects`, where forgetting the scope *leaks*).
 - `shared` / `public` must be written **explicitly** and is review-gated: emit a governance obligation mirroring the shipped **C-005 propose→approve** widening machinery (`validateTransitionMonotonicity`) + domain-guard `[conforms_to: X]` ceiling, so promoting a vault to shared is a visible, attributable change an AI cannot make silently.
-- New diagnostics in the existing `SPORE-GOV` family (`SPORE-TENANT-*` is a free code family — register in `galerina-diagnostic-namespace-ownership.md`): e.g. **SPORE-TENANT-001** "tenant_scoped vault accessed without a bound caller scope" (fail-closed); **SPORE-TENANT-002** "shared/public vault declared without review obligation."
+- New diagnostics in the existing `FUNGI-GOV` family (`FUNGI-TENANT-*` is a free code family — register in `galerina-diagnostic-namespace-ownership.md`): e.g. **FUNGI-TENANT-001** "tenant_scoped vault accessed without a bound caller scope" (fail-closed); **FUNGI-TENANT-002** "shared/public vault declared without review obligation."
 - **Reuses (shipped):** the `view: public/private/secret/internal/...` lattice on models (`capabilities.md`, `builtin-view-levels.md`); the `scoped vault` boundary (`scoped-vaults.md`, Stage B); deny-by-default capability rules ("missing grants fail closed").
 
 **HALF B — Compiler-forced capability-scope intersection (Galerina-honest border-1; NOT a MeshQL rewriter).** Galerina cannot rewrite a SQL/MeshQL string it doesn't own, so enforce at the capability/contract layer it DOES own:
@@ -60,18 +60,18 @@ Two halves, both deny-by-default, both compile-time, both reusing shipped machin
 - This is the buildable reading of `Q_executed = Q ∩ S_user`: **capability intersection + a fail-closed proof obligation in `governance-verifier.ts`, not a query-string transform.** The actual row filtering still happens in the data engine (Postgres RLS / MeshQL when real); Galerina's job is to make "no caller scope bound" a **COMPILE ERROR**, so the unscoped-query class of bug cannot ship.
 
 **HALF C — Honest per-tenant key (border-2, digital, ext-package).** Do **not** derive a key from the identity token directly (OWASP: never trust a client-supplied tenant ID as key material). Derive a per-tenant KEK via `KDF(tenant_master_secret, tenant_identity_binding)` under **M-of-N threshold custody**, then KEM-DEM-wrap per-record DEKs.
-- **Reuses:** tmf **slice 3 KEM-DEM (DONE**, `src/kemdem.ts`, 14 golden tests) + tmf **slice 4 hybrid signing + M-of-N threshold custody (NEXT** — the real build dependency, `threshold-custody-v0`); crypto stays digital (SPORE-SUBSTRATE-001).
+- **Reuses:** tmf **slice 3 KEM-DEM (DONE**, `src/kemdem.ts`, 14 golden tests) + tmf **slice 4 hybrid signing + M-of-N threshold custody (NEXT** — the real build dependency, `threshold-custody-v0`); crypto stays digital (FUNGI-SUBSTRATE-001).
 - This is **defense-in-depth at-rest BEHIND Half A/B, never a substitute** for the access-control border (a live session with both keys loaded defeats "rogue dump → noise"). Crypto-shred on tenant delete = shipped digital key-zeroize (revocation registry `governance/revocations.json` + vault zero-wipe in `rotation-manager.ts`).
 
 **Build order:** Half A → Half B (both compile-time, no substrate dependency) → Half C after tmf slice 4 lands.
 
 ### Note 55 — the only buildable governance pieces
 
-1. **Per-field `Result.Masked` shaper (K3 partial-return, C1/C6).** ALREADY DECIDED, on the owner BUILD-ALL-SIX queue (tritmesh tm-5). Folds actor capabilities per response field with K3 `vAnd`; DENY/INDETERMINATE fields become a typed `Masked(code)` sentinel carrying SPORE-GOV-3VL-001 and the rest is returned. This is the ONE thing MeshView needs that Galerina doesn't already ship (current masking is **binary** redact/seal/reject-whole-record). Build as a thin fail-closed composition of `decideAtBoundary` + `view()` + `redact()` at an output boundary.
+1. **Per-field `Result.Masked` shaper (K3 partial-return, C1/C6).** ALREADY DECIDED, on the owner BUILD-ALL-SIX queue (tritmesh tm-5). Folds actor capabilities per response field with K3 `vAnd`; DENY/INDETERMINATE fields become a typed `Masked(code)` sentinel carrying FUNGI-GOV-3VL-001 and the rest is returned. This is the ONE thing MeshView needs that Galerina doesn't already ship (current masking is **binary** redact/seal/reject-whole-record). Build as a thin fail-closed composition of `decideAtBoundary` + `view()` + `redact()` at an output boundary.
 
 2. **Time-locked attenuated capability lease (macaroon-shaped delegation, C3).** Mostly already-research (CapTP delegation + macaroon attenuation in `galerina-governed-runtime-research-2026-06-03.md` §C) + the capability/verdict model is shipped (`galerina-auth` returns K3 `Verdict`s; kernel keeps the decision). The genuinely buildable governance piece is the **FAIL-CLOSED EXPIRY**: model the grant as a bounded lease/TTL that fail-closes (denies) if the verifier can't re-confirm it within the window — exactly the revocation decision already made for confidential-compute (`wu3iyjjba`: "lease/TTL that fail-closes; push-alone is fail-OPEN"). **NOT** "the capability evaporates by itself." Token-minting and `.tmf` plumbing are TritMesh-product.
 
-**Do NOT rebuild (already shipped):** governed visibility / payload gate (K3 `decideAtBoundary` + `redact()`/`seal()` + SealTaint, SPORE-PRIVACY-002); immutable-append history (tmf-history-chain); break-glass Shamir M-of-N (**cite `wu3iyjjba` + `threshold-custody-v0`**); capability verdict factors (`galerina-auth`); revocation of a leaked grant (`governance/revocations.json` + revocation-registry, fail-closed + trust-anchor-pinned).
+**Do NOT rebuild (already shipped):** governed visibility / payload gate (K3 `decideAtBoundary` + `redact()`/`seal()` + SealTaint, FUNGI-PRIVACY-002); immutable-append history (tmf-history-chain); break-glass Shamir M-of-N (**cite `wu3iyjjba` + `threshold-custody-v0`**); capability verdict factors (`galerina-auth`); revocation of a leaked grant (`governance/revocations.json` + revocation-registry, fail-closed + trust-anchor-pinned).
 
 ---
 
@@ -104,7 +104,7 @@ All "novel" mechanisms across both notes are established → **defensive-pub / n
 - `capabilities.md` (effects vs capabilities, `view:` exposure, attenuation rule line 219) · `builtin-view-levels.md` · `scoped-vaults.md`
 - `galerina-domain-guard-policies.md` (`[conforms_to: X]` ceilings) · `galerina-contract-permissions-design.md` (C-005/M-001 widening)
 - `galerina-governed-identity.md` (Option 5/8 identity binding) · `permission-capability-actor-model.md` (`ctx.actor.tenantId`)
-- `galerina-contract-privacy-observability.md` (`redact()`/`seal()`, SealTaint, SPORE-PRIVACY-002)
+- `galerina-contract-privacy-observability.md` (`redact()`/`seal()`, SealTaint, FUNGI-PRIVACY-002)
 - `galerina-tmf-engine.md` (KEM-DEM slice 3 DONE, threshold-custody slice 4 NEXT) · `galerina-rd-confidential-compute-cheri-threshold-2026-06-23.md` (`wu3iyjjba`, threshold-custody-v0, Shamir overclaims)
 - `galerina-rd-tritmesh-1-5-and-52-3d-2026-06-23.md` (tm-5 `Result.Masked` shaper, BUILD-ALL-SIX) · `galerina-rd-53-azt-selfcert-and-blackhole-protocol-2026-06-23.md` (note-53 ledger: `memory.fill(0)` per-flow not intrusion-triggered, item 2b)
-- `galerina-governed-runtime-research-2026-06-03.md` §C (CapTP/macaroon delegation) · `galerina-diagnostic-namespace-ownership.md` (register `SPORE-TENANT-*`)
+- `galerina-governed-runtime-research-2026-06-03.md` §C (CapTP/macaroon delegation) · `galerina-diagnostic-namespace-ownership.md` (register `FUNGI-TENANT-*`)

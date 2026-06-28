@@ -13,7 +13,7 @@ pure flow sumI64(n: Int) -> Int64 contract { effects {} } { mut t: Int64 = 0  mu
 pure flow mulI32(n: Int) -> Int contract { effects {} } { mut t: Int = 1  mut i: Int = 0  while i < n { t = t * 1  i = i + 1 }  return t }
 pure flow mulI64(n: Int) -> Int64 contract { effects {} } { mut t: Int64 = 1  mut i: Int = 0  while i < n { t = t * 1  i = i + 1 }  return t }`;
 
-const prog = parseProgram(SRC, "bench.spore");
+const prog = parseProgram(SRC, "bench.fungi");
 const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
 if (errs.length) { console.error("parse error:", errs.map((d) => d.message).join("; ")); process.exit(1); }
 

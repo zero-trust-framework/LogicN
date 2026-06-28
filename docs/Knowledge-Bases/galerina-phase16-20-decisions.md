@@ -20,12 +20,12 @@ Stage B Complete = Medium
 
 **Required for Stage B Complete:**
 ```
-lexer.spore            ← Stage B1 (partially done)
-parser.spore           ← Stage B1 (v0 done)
-ast.spore              ← Stage B2
-importResolver.spore   ← Stage B2
-typeChecker.spore      ← Stage B2
-effectChecker.spore    ← Stage B2
+lexer.fungi            ← Stage B1 (partially done)
+parser.fungi           ← Stage B1 (v0 done)
+ast.fungi              ← Stage B2
+importResolver.fungi   ← Stage B2
+typeChecker.fungi      ← Stage B2
+effectChecker.fungi    ← Stage B2
 ```
 
 **NOT required for Stage B Complete:**
@@ -38,10 +38,10 @@ Those are Stage C concerns.
 **Stage B sub-milestones:**
 ```
 Stage B1 — Parsing
-  lexer.spore + parser.spore can parse real Galerina
+  lexer.fungi + parser.fungi can parse real Galerina
 
 Stage B2 — Semantic Analysis
-  typeChecker.spore + effectChecker.spore can validate real Galerina
+  typeChecker.fungi + effectChecker.fungi can validate real Galerina
 
 Stage B3 — Self-Hosted Front End
   Source → Galerina Compiler → Diagnostics (no TypeScript compiler logic)

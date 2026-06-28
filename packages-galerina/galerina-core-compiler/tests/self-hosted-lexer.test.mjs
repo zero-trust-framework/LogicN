@@ -1,7 +1,7 @@
 // =============================================================================
 // Self-Hosted Lexer — End-to-End Execution Test
 //
-// Verifies that src/self-hosted/lexer.spore parses and executes correctly,
+// Verifies that src/self-hosted/lexer.fungi parses and executes correctly,
 // producing a valid token stream from Galerina source text.
 //
 // Milestones exercised:
@@ -28,7 +28,7 @@ import { parseProgram, resolveSymbols, checkTypes, executeFlow } from "../dist/i
 // ---------------------------------------------------------------------------
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const LEXER_PATH = join(__dir, "../src/self-hosted/lexer.spore");
+const LEXER_PATH = join(__dir, "../src/self-hosted/lexer.fungi");
 
 /**
  * Load, parse, and compile the self-hosted lexer.
@@ -37,7 +37,7 @@ const LEXER_PATH = join(__dir, "../src/self-hosted/lexer.spore");
 function loadLexer() {
   let source = readFileSync(LEXER_PATH, "utf8");
   if (source.charCodeAt(0) === 0xFEFF) source = source.slice(1);
-  const parsed = parseProgram(source, "lexer.spore");
+  const parsed = parseProgram(source, "lexer.fungi");
   resolveSymbols(parsed.ast);
   checkTypes(parsed.ast);
   return parsed;
@@ -76,22 +76,22 @@ function extractToken(token) {
 // Test suite
 // ---------------------------------------------------------------------------
 
-describe("Self-Hosted Lexer (lexer.spore) — end-to-end", () => {
+describe("Self-Hosted Lexer (lexer.fungi) — end-to-end", () => {
 
   // ── Step 1: Parse check ─────────────────────────────────────────────────
 
-  it("lexer.spore parses with zero errors", () => {
+  it("lexer.fungi parses with zero errors", () => {
     let source = readFileSync(LEXER_PATH, "utf8");
     if (source.charCodeAt(0) === 0xFEFF) source = source.slice(1);
-    const parsed = parseProgram(source, "lexer.spore");
+    const parsed = parseProgram(source, "lexer.fungi");
     const errors = parsed.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errors.length, 0, `Expected 0 parse errors, got: ${errors.map((e) => e.message).join("; ")}`);
   });
 
-  it("lexer.spore exports the four expected flows", () => {
+  it("lexer.fungi exports the four expected flows", () => {
     let source = readFileSync(LEXER_PATH, "utf8");
     if (source.charCodeAt(0) === 0xFEFF) source = source.slice(1);
-    const parsed = parseProgram(source, "lexer.spore");
+    const parsed = parseProgram(source, "lexer.fungi");
     const names = parsed.flows?.map((f) => f.name) ?? [];
     assert.ok(names.includes("tokenize"), "tokenize flow should be present");
     assert.ok(names.includes("makeKeywordTable"), "makeKeywordTable flow should be present");
@@ -110,7 +110,7 @@ guarded flow test() -> Int {
   arr = arr.append("z")
   return arr.count()
 }
-`, "test.spore");
+`, "test.fungi");
     const result = await executeFlow("test", new Map(), parsed.ast);
     assert.equal(result.value.__tag, "int");
     assert.equal(result.value.value, 3);
@@ -123,7 +123,7 @@ guarded flow test() -> Int {
 pure flow test() -> Option<Char> {
   return "hello".charAt(0)
 }
-`, "test.spore");
+`, "test.fungi");
     const result = await executeFlow("test", new Map(), parsed.ast);
     assert.equal(result.value.__tag, "some");
     assert.equal(result.value.value.__tag, "char");
@@ -135,7 +135,7 @@ pure flow test() -> Option<Char> {
 pure flow test() -> Option<Char> {
   return "hello".charAt(99)
 }
-`, "test.spore");
+`, "test.fungi");
     const result = await executeFlow("test", new Map(), parsed.ast);
     assert.equal(result.value.__tag, "none");
   });
@@ -148,7 +148,7 @@ pure flow test() -> Bool {
   let tab = '\t'
   return tab.codePoint() == 9
 }
-`, "test.spore");
+`, "test.fungi");
     const result = await executeFlow("test", new Map(), parsed.ast);
     assert.equal(result.value.__tag, "bool");
     assert.equal(result.value.value, true);
@@ -157,7 +157,7 @@ pure flow test() -> Bool {
   it("char literal '\\\\n' (backslash-n) resolves to a newline character (codePoint 10)", async () => {
     // Use raw string to pass backslash-n as two chars to the Galerina parser
     const src = "pure flow test() -> Bool {\n  let nl = '\\n'\n  return nl.codePoint() == 10\n}\n";
-    const parsed = parseProgram(src, "test.spore");
+    const parsed = parseProgram(src, "test.fungi");
     const result = await executeFlow("test", new Map(), parsed.ast);
     assert.equal(result.value.__tag, "bool");
     assert.equal(result.value.value, true);
@@ -181,7 +181,7 @@ pure flow classify(n: Int) -> String {
     return "other"
   }
 }
-`, "test.spore");
+`, "test.fungi");
     for (const [n, expected] of [[1, "one"], [2, "two"], [3, "three"], [4, "other"]]) {
       const result = await executeFlow("classify", new Map([["n", { __tag: "int", value: n }]]), parsed.ast);
       assert.equal(result.value.__tag, "string", `n=${n} should give string`);
@@ -337,8 +337,8 @@ pure flow classify(n: Int) -> String {
     const { ast } = loadLexer();
     const result = await tokenize(ast, "let x: Int = 123");
 
-    assert.equal(result.diagnostics.filter((d) => d.code === "SPORE-RUNTIME-002").length, 0,
-      "Should produce no SPORE-RUNTIME-002 unresolved call errors");
+    assert.equal(result.diagnostics.filter((d) => d.code === "FUNGI-RUNTIME-002").length, 0,
+      "Should produce no FUNGI-RUNTIME-002 unresolved call errors");
   });
 
   // ── Step 8: String literals (S5) ─────────────────────────────────────────

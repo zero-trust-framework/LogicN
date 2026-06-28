@@ -1,7 +1,7 @@
 import { parseProgram, checkTypes } from "../dist/index.js";
 
 function run(src) {
-  const p = parseProgram(src, "test.spore");
+  const p = parseProgram(src, "test.fungi");
   const t = checkTypes(p.ast);
   return t.diagnostics;
 }

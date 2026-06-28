@@ -28,7 +28,7 @@ Requirements are grouped using the following labels:
 Galerina must support:
 
 ```text
-.spore source files
+.fungi source files
 strict type checking
 memory safety
 security-first defaults
@@ -383,18 +383,18 @@ location, problem, why, suggested fix and safe examples where appropriate.
 
 ## Project File Requirements
 
-### REQ-PROJECT-001: Use `.spore` Source Files
+### REQ-PROJECT-001: Use `.fungi` Source Files
 
-Galerina source files MUST use the `.spore` extension.
+Galerina source files MUST use the `.fungi` extension.
 
 Examples:
 
 ```text
-boot.spore
-main.spore
-order-service.spore
-payment-webhook.spore
-fraud-check.spore
+boot.fungi
+main.fungi
+order-service.fungi
+payment-webhook.fungi
+fraud-check.fungi
 ```
 
 ### REQ-PROJECT-002: Project Entry File
@@ -402,7 +402,7 @@ fraud-check.spore
 A Galerina project SHOULD use:
 
 ```text
-boot.spore
+boot.fungi
 ```
 
 as the main project entry file.
@@ -410,10 +410,10 @@ as the main project entry file.
 Simple projects MAY use:
 
 ```text
-main.spore
+main.fungi
 ```
 
-For consistency, `boot.spore` is preferred for full applications.
+For consistency, `boot.fungi` is preferred for full applications.
 
 ---
 
@@ -424,13 +424,13 @@ Galerina MUST support short scripts without a full project structure.
 Example:
 
 ```text
-hello.spore
+hello.fungi
 ```
 
 Command:
 
 ```bash
-Galerina run hello.spore
+Galerina run hello.fungi
 ```
 
 Short scripts MUST use secure defaults:
@@ -533,7 +533,7 @@ Recommended structure:
 
 ```text
 my-galerina-app/
-â”œâ”€â”€ boot.spore
+â”œâ”€â”€ boot.fungi
 â”œâ”€â”€ Galerina.config
 â”œâ”€â”€ Galerina.lock
 â”œâ”€â”€ .env.example
@@ -770,7 +770,7 @@ Shared mutable state MUST be restricted, protected or explicitly declared.
 ### REQ-MEMORY-006: Runtime Memory Pressure and Spill Policy
 
 Galerina SHOULD allow projects to declare runtime memory pressure behaviour in
-`boot.spore`.
+`boot.fungi`.
 
 Runtime memory configuration SHOULD support:
 
@@ -1671,11 +1671,11 @@ created timestamp
 Galerina SHOULD support required generated documentation and a map manifest as part
 of the build contract.
 
-This contract SHOULD be declared in `boot.spore`, not `main.spore`.
+This contract SHOULD be declared in `boot.fungi`, not `main.fungi`.
 
 ```text
-boot.spore = project, build, config, target, report and documentation registry
-main.spore = application entry point
+boot.fungi = project, build, config, target, report and documentation registry
+main.fungi = application entry point
 ```
 
 Required generated outputs MAY include:
@@ -1703,7 +1703,7 @@ docs/docs-manifest.json
 The map manifest SHOULD explain:
 
 ```text
-which .spore files were compiled
+which .fungi files were compiled
 which flows, APIs, webhooks and types exist
 which routes map to which handlers
 which source files map to generated outputs
@@ -1761,7 +1761,7 @@ Output:
 app.source-map.json
 ```
 
-The source map MUST map compiled output errors back to original `.spore` files.
+The source map MUST map compiled output errors back to original `.fungi` files.
 
 ---
 
@@ -1784,7 +1784,7 @@ Example:
 Runtime error: PaymentStatus.Unknown was not handled.
 
 Original source:
-  app/services/order-service.spore:42:7
+  app/services/order-service.fungi:42:7
 
 Suggestion:
   Add a map branch for Unknown.
@@ -1850,7 +1850,7 @@ Example:
 {
   "errorType": "TargetCompatibilityError",
   "target": "photonic",
-  "file": "src/fraud-check.spore",
+  "file": "src/fraud-check.fungi",
   "line": 18,
   "column": 12,
   "problem": "readFile cannot run inside a photonic compute block.",
@@ -2119,7 +2119,7 @@ galerina-core-tasks             = safe project automation
 ```
 
 If a change affects only package semantics, update that package documentation.
-If a change affects `.spore` syntax, compiler validation, report schemas or package
+If a change affects `.fungi` syntax, compiler validation, report schemas or package
 registry behaviour, update `galerina-core` documentation as well.
 
 ---

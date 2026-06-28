@@ -1,7 +1,7 @@
 /**
  * WASM benchmark runner — Phase 27
  *
- * Compiles a Galerina .spore file to binary WASM via the Phase 27 pipeline:
+ * Compiles a Galerina .fungi file to binary WASM via the Phase 27 pipeline:
  *   parseProgram → checkEffects → emitGIR → buildWATModuleFromGIR(exportAllPure)
  *   → renderWAT → assembleWAT (wabt) → WebAssembly.instantiate → benchmark
  *
@@ -14,13 +14,13 @@ import { performance } from "node:perf_hooks";
 
 const compilerPath = new URL("../../galerina-core-compiler/dist/index.js", import.meta.url);
 
-export async function runWASMBenchmark(sporePath, opsPerRun = null) {
+export async function runWASMBenchmark(fungiPath, opsPerRun = null) {
   const m = await import(compilerPath.href);
-  const source = readFileSync(sporePath, "utf8");
+  const source = readFileSync(fungiPath, "utf8");
 
   // ── Compile Galerina → WAT → binary WASM ────────────────────────────────────
   const t0 = performance.now();
-  const parsed = m.parseProgram(source, sporePath);
+  const parsed = m.parseProgram(source, fungiPath);
   const errs = (parsed.diagnostics ?? []).filter(d => d.severity === "error");
   if (errs.length > 0) {
     return { runtime: "wasm", error: true, reason: errs[0]?.message, compileMs: 0 };

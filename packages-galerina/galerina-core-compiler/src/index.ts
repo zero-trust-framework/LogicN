@@ -24,52 +24,52 @@ export {
   type LexerDiagnostic,
 } from "./lexer.js";
 
-/** SPORE-LEX-001: Generic type nesting exceeds maximum depth (8 levels). */
-export const SPORE_LEX_001 = {
-  code: "SPORE-LEX-001",
+/** FUNGI-LEX-001: Generic type nesting exceeds maximum depth (8 levels). */
+export const FUNGI_LEX_001 = {
+  code: "FUNGI-LEX-001",
   name: "ExcessiveNesting",
   severity: "error" as const,
   message: "Generic type nesting exceeds maximum depth (8 levels). Simplify the type.",
   suggestedFix: "Use a type alias to break up deeply nested generics.",
 } as const;
 
-/** SPORE-LEX-002: String literal or identifier exceeds maximum length (10,000 characters). */
-export const SPORE_LEX_002 = {
-  code: "SPORE-LEX-002",
+/** FUNGI-LEX-002: String literal or identifier exceeds maximum length (10,000 characters). */
+export const FUNGI_LEX_002 = {
+  code: "FUNGI-LEX-002",
   name: "OversizedToken",
   severity: "error" as const,
   message: "String literal or identifier exceeds maximum length (10,000 characters).",
   suggestedFix: "Split large string literals or shorten identifier names.",
 } as const;
 
-/** SPORE-LEX-003: Invalid unicode escape sequence in string literal. */
-export const SPORE_LEX_003 = {
-  code: "SPORE-LEX-003",
+/** FUNGI-LEX-003: Invalid unicode escape sequence in string literal. */
+export const FUNGI_LEX_003 = {
+  code: "FUNGI-LEX-003",
   name: "InvalidUnicodeEscape",
   severity: "error" as const,
   message: "Invalid unicode escape sequence in string literal.",
   suggestedFix: "Use \\u{XXXXXX} with 1-6 hex digits, or \\uXXXX with exactly 4.",
 } as const;
 
-/** SPORE-LEX-004: Source file exceeds the 10 MB maximum. */
-export const SPORE_LEX_004 = {
-  code: "SPORE-LEX-004",
+/** FUNGI-LEX-004: Source file exceeds the 10 MB maximum. */
+export const FUNGI_LEX_004 = {
+  code: "FUNGI-LEX-004",
   name: "FileTooLarge",
   severity: "error" as const,
   message: "File exceeds maximum size (10MB). Split into smaller files.",
 } as const;
 
-/** SPORE-LEX-005: A single line exceeds 10,000 characters. */
-export const SPORE_LEX_005 = {
-  code: "SPORE-LEX-005",
+/** FUNGI-LEX-005: A single line exceeds 10,000 characters. */
+export const FUNGI_LEX_005 = {
+  code: "FUNGI-LEX-005",
   name: "LineTooLong",
   severity: "warning" as const,
   message: "Line exceeds maximum length (10,000 characters).",
 } as const;
 
-/** SPORE-LEX-006: Lexer emitted too many diagnostics; further errors suppressed. */
-export const SPORE_LEX_006 = {
-  code: "SPORE-LEX-006",
+/** FUNGI-LEX-006: Lexer emitted too many diagnostics; further errors suppressed. */
+export const FUNGI_LEX_006 = {
+  code: "FUNGI-LEX-006",
   name: "TooManyDiagnostics",
   severity: "error" as const,
   message: "Lexer emitted the maximum number of diagnostics (100). Further errors suppressed. Fix the first errors and re-compile.",
@@ -108,7 +108,7 @@ export {
   type EffectCheckerMode,
 } from "./effect-checker.js";
 
-// ── AI-code-gen referee: the machine-consumable structural leak proof (spore.leakproof.v1) ──
+// ── AI-code-gen referee: the machine-consumable structural leak proof (fungi.leakproof.v1) ──
 // Normalizes the compiler's governance diagnostics into one stable schema an autonomous LLM writer can
 // read to self-patch the exact capability leak. Fail-closed (any deny → module verdict 'leak'); signable.
 export { buildLeakProof, canonicalLeakProof } from "./leak-proof.js";
@@ -118,7 +118,7 @@ export { buildTestWitness, testSuiteDigest, canonicalTestWitness, testWitnessDig
 export type { TestWitness } from "./leak-proof.js";
 
 // Execution Graph Kernel — ProofGraph, ExecutionSignature, GraphFingerprint
-// Phase 26B: ImmutableInputSeal, HardwareSealedDispatch, SPORE-HW-001/002/003
+// Phase 26B: ImmutableInputSeal, HardwareSealedDispatch, FUNGI-HW-001/002/003
 // Phase 40: EpilogueReceipt, generateEpilogueReceipt
 export {
   computeExecutionSignature,
@@ -147,9 +147,9 @@ export type { FixEdit, ApplyFixEditsResult, AutoFixOutcome } from "./fix-edit.js
 export { makeLmanifestHybridVerifier } from "./lmanifest-hybrid-verifier.js";
 export type { LmanifestHybridVerdict, LmanifestHybridVerifierInput } from "./lmanifest-hybrid-verifier.js";
 export {
-  SPORE_HW_001,
-  SPORE_HW_002,
-  SPORE_HW_003,
+  FUNGI_HW_001,
+  FUNGI_HW_002,
+  FUNGI_HW_003,
   type ExecutionSignature,
   type ProofGraph,
   type ProofObligation,
@@ -217,16 +217,16 @@ export {
 } from "./value-state-checker.js";
 
 // ---------------------------------------------------------------------------
-// Gate diagnostics — SPORE-GATE-001
+// Gate diagnostics — FUNGI-GATE-001
 //
 // Reserved for Phase 19 @gate annotation enforcement.
 // When a flow is annotated @gate, callers must use error propagation (?)
 // and the result must transition the binding from unsafe to safe.
 // ---------------------------------------------------------------------------
 
-/** SPORE-GATE-001: @gate-annotated flow called without required error propagation or state transition. */
-export const SPORE_GATE_001 = {
-  code: "SPORE-GATE-001",
+/** FUNGI-GATE-001: @gate-annotated flow called without required error propagation or state transition. */
+export const FUNGI_GATE_001 = {
+  code: "FUNGI-GATE-001",
   name: "GateAnnotationRequired",
   severity: "error" as const,
   message: "This flow is annotated @gate. Callers must use error propagation (?) and assign the result to a 'safe mut' binding.",
@@ -234,9 +234,9 @@ export const SPORE_GATE_001 = {
   suggestedFix: "Change the call to: safe mut name = gateFn(value)?",
 } as const;
 
-/** SPORE-VALUESTATE-005: A value derived from an unsafe binding reached a governed sink. */
-export const SPORE_VALUESTATE_005 = {
-  code: "SPORE-VALUESTATE-005",
+/** FUNGI-VALUESTATE-005: A value derived from an unsafe binding reached a governed sink. */
+export const FUNGI_VALUESTATE_005 = {
+  code: "FUNGI-VALUESTATE-005",
   name: "DERIVED_UNSAFE_VALUE_AT_SINK",
   severity: "error" as const,
   message: "A value derived from an unsafe binding reached a governed sink. Even after transformation (e.g. .trim()), a value derived from unsafe input is still tainted.",
@@ -251,9 +251,9 @@ export {
   type TypeCheckResult,
 } from "./type-checker.js";
 
-/** SPORE-TYPE-003: raw String assigned to a branded type (Brand<T,"Name"> alias) without a validation gate. */
-export const SPORE_TYPE_003 = {
-  code: "SPORE-TYPE-003",
+/** FUNGI-TYPE-003: raw String assigned to a branded type (Brand<T,"Name"> alias) without a validation gate. */
+export const FUNGI_TYPE_003 = {
+  code: "FUNGI-TYPE-003",
   name: "InvalidNominalConversion",
   severity: "error",
   message:
@@ -261,23 +261,23 @@ export const SPORE_TYPE_003 = {
     + "Use a validation gate such as validate.x(raw)? to produce a trusted branded value.",
 } as const;
 
-// SPORE-TYPE-010..019 — per formal-type-system-spec.md canonical mapping
-export const SPORE_TYPE_010 = { code: "SPORE-TYPE-010", name: "UnsatisfiedGenericConstraint", severity: "error", message: "Type does not satisfy the required generic constraint." } as const;
-export const SPORE_TYPE_011 = { code: "SPORE-TYPE-011", name: "InvalidCollectionElement", severity: "error", message: "Collection element type does not match the declared element type." } as const;
-export const SPORE_TYPE_012 = { code: "SPORE-TYPE-012", name: "InvalidResultType", severity: "error", message: "Ok/Err branch type does not match the declared Result<T,E> type." } as const;
-export const SPORE_TYPE_013 = { code: "SPORE-TYPE-013", name: "InvalidSecretOperation", severity: "error", message: "Protected secret value cannot use this operator. Use constantTimeEquals() for equality." } as const;
-export const SPORE_TYPE_014 = { code: "SPORE-TYPE-014", name: "MissingRequiredEffect", severity: "error", message: "Calling this function requires an effect that the current flow does not declare." } as const;
-export const SPORE_TYPE_015 = { code: "SPORE-TYPE-015", name: "GovernedSinkViolation", severity: "error", message: "Governed sink requires a safe/validated binding; received an unsafe binding." } as const;
-export const SPORE_TYPE_016 = { code: "SPORE-TYPE-016", name: "TensorShapeMismatch", severity: "error", message: "Tensor shapes are incompatible for this operation." } as const;
-export const SPORE_TYPE_017 = { code: "SPORE-TYPE-017", name: "QuantizedPrecisionMismatch", severity: "warning", message: "Cannot mix quantized (Int8) and floating-point (Float32) without explicit dequantize(). General numeric narrowing is SPORE-TYPE-002." } as const;
-export const SPORE_TYPE_018 = { code: "SPORE-TYPE-018", name: "InvalidRuntimeTargetType", severity: "error", message: "This type cannot exist in the selected compute target." } as const;
-export const SPORE_TYPE_019 = { code: "SPORE-TYPE-019", name: "UnknownSymbol", severity: "error", message: "Symbol is not defined in the current scope." } as const;
+// FUNGI-TYPE-010..019 — per formal-type-system-spec.md canonical mapping
+export const FUNGI_TYPE_010 = { code: "FUNGI-TYPE-010", name: "UnsatisfiedGenericConstraint", severity: "error", message: "Type does not satisfy the required generic constraint." } as const;
+export const FUNGI_TYPE_011 = { code: "FUNGI-TYPE-011", name: "InvalidCollectionElement", severity: "error", message: "Collection element type does not match the declared element type." } as const;
+export const FUNGI_TYPE_012 = { code: "FUNGI-TYPE-012", name: "InvalidResultType", severity: "error", message: "Ok/Err branch type does not match the declared Result<T,E> type." } as const;
+export const FUNGI_TYPE_013 = { code: "FUNGI-TYPE-013", name: "InvalidSecretOperation", severity: "error", message: "Protected secret value cannot use this operator. Use constantTimeEquals() for equality." } as const;
+export const FUNGI_TYPE_014 = { code: "FUNGI-TYPE-014", name: "MissingRequiredEffect", severity: "error", message: "Calling this function requires an effect that the current flow does not declare." } as const;
+export const FUNGI_TYPE_015 = { code: "FUNGI-TYPE-015", name: "GovernedSinkViolation", severity: "error", message: "Governed sink requires a safe/validated binding; received an unsafe binding." } as const;
+export const FUNGI_TYPE_016 = { code: "FUNGI-TYPE-016", name: "TensorShapeMismatch", severity: "error", message: "Tensor shapes are incompatible for this operation." } as const;
+export const FUNGI_TYPE_017 = { code: "FUNGI-TYPE-017", name: "QuantizedPrecisionMismatch", severity: "warning", message: "Cannot mix quantized (Int8) and floating-point (Float32) without explicit dequantize(). General numeric narrowing is FUNGI-TYPE-002." } as const;
+export const FUNGI_TYPE_018 = { code: "FUNGI-TYPE-018", name: "InvalidRuntimeTargetType", severity: "error", message: "This type cannot exist in the selected compute target." } as const;
+export const FUNGI_TYPE_019 = { code: "FUNGI-TYPE-019", name: "UnknownSymbol", severity: "error", message: "Symbol is not defined in the current scope." } as const;
 
-// SPORE-TYPE-030/031 — Tensor element type and dimension checking (Phase 18D)
+// FUNGI-TYPE-030/031 — Tensor element type and dimension checking (Phase 18D)
 
-/** SPORE-TYPE-030: Tensor operations received mismatched element types. */
-export const SPORE_TYPE_030 = {
-  code: "SPORE-TYPE-030",
+/** FUNGI-TYPE-030: Tensor operations received mismatched element types. */
+export const FUNGI_TYPE_030 = {
+  code: "FUNGI-TYPE-030",
   name: "TensorElementTypeMismatch",
   severity: "error" as const,
   message: "Tensor element types do not match. Float32 and Int8 tensors cannot be combined without explicit conversion.",
@@ -285,9 +285,9 @@ export const SPORE_TYPE_030 = {
   suggestedFix: "Use dequantize() to convert Int8 to Float32 before the operation, or quantize() to convert Float32 to Int8.",
 } as const;
 
-/** SPORE-TYPE-031: Tensor operations received incompatible dimension counts. */
-export const SPORE_TYPE_031 = {
-  code: "SPORE-TYPE-031",
+/** FUNGI-TYPE-031: Tensor operations received incompatible dimension counts. */
+export const FUNGI_TYPE_031 = {
+  code: "FUNGI-TYPE-031",
   name: "TensorDimensionMismatch",
   severity: "error" as const,
   message: "Tensor dimension counts do not match. [768] (rank 1) cannot be used where [Batch, 768] (rank 2) is expected.",
@@ -295,17 +295,17 @@ export const SPORE_TYPE_031 = {
   suggestedFix: "Use Tensor.unsqueeze() to add a batch dimension, or Tensor.squeeze() to remove one.",
 } as const;
 
-/** SPORE-VALUESTATE-006: A protected value was assigned to a plain (unprotected) binding. */
-export const SPORE_VALUESTATE_006 = {
-  code: "SPORE-VALUESTATE-006",
+/** FUNGI-VALUESTATE-006: A protected value was assigned to a plain (unprotected) binding. */
+export const FUNGI_VALUESTATE_006 = {
+  code: "FUNGI-VALUESTATE-006",
   name: "ProtectedBoundaryViolation",
   severity: "error" as const,
   message: "A protected value is used where the plain (unprotected) type is required. Declare the binding as 'protected X', or pass through an authorised access gate.",
 } as const;
 
-/** SPORE-VALUESTATE-007: A redacted value cannot convert back to its original type. */
-export const SPORE_VALUESTATE_007 = {
-  code: "SPORE-VALUESTATE-007",
+/** FUNGI-VALUESTATE-007: A redacted value cannot convert back to its original type. */
+export const FUNGI_VALUESTATE_007 = {
+  code: "FUNGI-VALUESTATE-007",
   name: "RedactedBoundaryViolation",
   severity: "error" as const,
   message: "A redacted value cannot be converted back to its original type. Redaction is irreversible.",
@@ -321,9 +321,9 @@ export {
   type ExportKind,
 } from "./symbol-resolver.js";
 
-/** SPORE-NAME-003: Local binding shadows a built-in domain type. */
-export const SPORE_NAME_003 = {
-  code: "SPORE-NAME-003",
+/** FUNGI-NAME-003: Local binding shadows a built-in domain type. */
+export const FUNGI_NAME_003 = {
+  code: "FUNGI-NAME-003",
   name: "CrossModuleShadow",
   severity: "warning",
   message: "Local binding shadows a built-in domain type. Rename to avoid confusion.",
@@ -362,17 +362,17 @@ export {
   type ResolvedPackageEntry,
 } from "./package-resolver.js";
 
-// CycloneDX SBOM emitter (R&D 0120-F3) — fail-closed on missing integrity (SPORE-SBOM-001).
+// CycloneDX SBOM emitter (R&D 0120-F3) — fail-closed on missing integrity (FUNGI-SBOM-001).
 export { generateCycloneDxSbom } from "./sbom.js";
 export type { SbomResult, SbomDiagnostic, SbomOptions } from "./sbom.js";
 
 // ---------------------------------------------------------------------------
-// Package resolver diagnostics — SPORE-PKG-001..005
+// Package resolver diagnostics — FUNGI-PKG-001..005
 // ---------------------------------------------------------------------------
 
-/** SPORE-PKG-001: Package declares capabilities not present in the lockfile snapshot. */
-export const SPORE_PKG_001 = {
-  code: "SPORE-PKG-001",
+/** FUNGI-PKG-001: Package declares capabilities not present in the lockfile snapshot. */
+export const FUNGI_PKG_001 = {
+  code: "FUNGI-PKG-001",
   name: "CapabilityExpanded",
   severity: "error" as const,
   message: "Package declares new capabilities not present in the lockfile. This is a breaking security change — review and re-approve.",
@@ -380,9 +380,9 @@ export const SPORE_PKG_001 = {
   suggestedFix: "Run 'galerina package audit' to review the new capability declarations, then update the lockfile after explicit approval.",
 } as const;
 
-/** SPORE-PKG-002: Package comes from an unregistered or unverified registry. */
-export const SPORE_PKG_002 = {
-  code: "SPORE-PKG-002",
+/** FUNGI-PKG-002: Package comes from an unregistered or unverified registry. */
+export const FUNGI_PKG_002 = {
+  code: "FUNGI-PKG-002",
   name: "UntrustedRegistry",
   severity: "error" as const,
   message: "Package comes from an unregistered or unverified registry. Galerina requires all packages to come from a declared trusted registry.",
@@ -390,9 +390,9 @@ export const SPORE_PKG_002 = {
   suggestedFix: "Add the registry to the project's trusted registry list, or switch to a verified source.",
 } as const;
 
-/** SPORE-PKG-003: Package manifest has no content-addressable hash. */
-export const SPORE_PKG_003 = {
-  code: "SPORE-PKG-003",
+/** FUNGI-PKG-003: Package manifest has no content-addressable hash. */
+export const FUNGI_PKG_003 = {
+  code: "FUNGI-PKG-003",
   name: "MissingHash",
   severity: "warning" as const,
   message: "Package has no content-addressable hash. Without a hash, tamper detection and reproducible builds are not possible.",
@@ -400,9 +400,9 @@ export const SPORE_PKG_003 = {
   suggestedFix: "Add 'hash: sha256:<hex>' to the package manifest. Run 'galerina package hash' to generate it.",
 } as const;
 
-/** SPORE-PKG-004: Package declares or attempts an install script; default policy denies. */
-export const SPORE_PKG_004 = {
-  code: "SPORE-PKG-004",
+/** FUNGI-PKG-004: Package declares or attempts an install script; default policy denies. */
+export const FUNGI_PKG_004 = {
+  code: "FUNGI-PKG-004",
   name: "InstallScriptDenied",
   severity: "error" as const,
   message: "Package attempts to declare an install script. Galerina denies install scripts by default.",
@@ -410,9 +410,9 @@ export const SPORE_PKG_004 = {
   suggestedFix: "Remove the installScript declaration. If absolutely necessary, configure an explicit resolver policy with signature verification.",
 } as const;
 
-/** SPORE-PKG-005: Package has no signature; origin cannot be cryptographically verified. */
-export const SPORE_PKG_005 = {
-  code: "SPORE-PKG-005",
+/** FUNGI-PKG-005: Package has no signature; origin cannot be cryptographically verified. */
+export const FUNGI_PKG_005 = {
+  code: "FUNGI-PKG-005",
   name: "MissingSignature",
   severity: "warning" as const,
   message: "Package has no signature. Origin cannot be cryptographically verified.",
@@ -420,9 +420,9 @@ export const SPORE_PKG_005 = {
   suggestedFix: "Sign the package with 'galerina package sign' and add 'signature:' to the manifest.",
 } as const;
 
-/** SPORE-PKG-006: Package is signed by a REVOKED key; trusted origin cannot be established. */
-export const SPORE_PKG_006 = {
-  code: "SPORE-PKG-006",
+/** FUNGI-PKG-006: Package is signed by a REVOKED key; trusted origin cannot be established. */
+export const FUNGI_PKG_006 = {
+  code: "FUNGI-PKG-006",
   name: "RevokedSigner",
   severity: "error" as const,
   message: "Package is signed by a revoked key. A revoked signing key cannot establish trusted origin.",
@@ -433,9 +433,9 @@ export const SPORE_PKG_006 = {
 // Phase 17A — Naming Policy Checker
 export {
   checkNamingPolicy,
-  SPORE_STYLE_001,
-  SPORE_STYLE_002,
-  SPORE_STYLE_SEC_001,
+  FUNGI_STYLE_001,
+  FUNGI_STYLE_002,
+  FUNGI_STYLE_SEC_001,
   type NamingPolicyDiagnostic,
   type NamingPolicyResult,
   type NamingPolicyConfig,
@@ -516,9 +516,9 @@ export {
   isPureEffectFree,
   extractRequestTimeMs,
   extractNetworkRequestsLimit,
-  SPORE_VOID,
-  SPORE_NONE,
-  SPORE_RUNTIME_005,
+  FUNGI_VOID,
+  FUNGI_NONE,
+  FUNGI_RUNTIME_005,
   // Optimization A: binding slot array
   assignSlots,
   SlottedScope,
@@ -633,10 +633,10 @@ export {
 export {
   ANTI_ABUSE_EFFECTS,
   PRIVATE_IP_RANGES,
-  SPORE_NET_001,
-  SPORE_NET_002,
-  SPORE_RUNTIME_006,
-  SPORE_ANTI_ABUSE_001,
+  FUNGI_NET_001,
+  FUNGI_NET_002,
+  FUNGI_RUNTIME_006,
+  FUNGI_ANTI_ABUSE_001,
   parseNetworkDestinationPolicy,
   isHostAllowed,
   type NetworkDestinationPolicy,
@@ -692,11 +692,11 @@ export {
 } from "./stdlib-registry.js";
 
 // ---------------------------------------------------------------------------
-// Stdlib diagnostics — SPORE-STDLIB-001
+// Stdlib diagnostics — FUNGI-STDLIB-001
 // ---------------------------------------------------------------------------
 
 /**
- * SPORE-STDLIB-001: An effectful stdlib function was called without the
+ * FUNGI-STDLIB-001: An effectful stdlib function was called without the
  * required effect being declared in the flow's contract.
  *
  * Example: calling File.readText() without declaring filesystem.read.
@@ -705,8 +705,8 @@ export {
  * This diagnostic is emitted by the effect checker when a stdlib call is
  * detected in the flow body but the corresponding effect is not declared.
  */
-export const SPORE_STDLIB_001 = {
-  code: "SPORE-STDLIB-001",
+export const FUNGI_STDLIB_001 = {
+  code: "FUNGI-STDLIB-001",
   name: "StdlibEffectNotDeclared",
   severity: "error" as const,
   message: "Effectful stdlib function called without declaring the required effect in the contract.",
@@ -729,36 +729,36 @@ export {
 export {
   verifyGovernance,
   extractArenaLimitMB,
-  SPORE_GOV_001,
-  SPORE_GOV_003,
-  SPORE_GOV_006,
-  SPORE_GOV_013,
-  SPORE_GOV_019,
-  SPORE_GOV_020,
-  SPORE_TERM_001,
-  SPORE_VAL_001,
-  SPORE_VAL_002,
-  SPORE_VAL_003,
+  FUNGI_GOV_001,
+  FUNGI_GOV_003,
+  FUNGI_GOV_006,
+  FUNGI_GOV_013,
+  FUNGI_GOV_019,
+  FUNGI_GOV_020,
+  FUNGI_TERM_001,
+  FUNGI_VAL_001,
+  FUNGI_VAL_002,
+  FUNGI_VAL_003,
   RECOGNISED_VALUE_CLASSIFICATIONS,
-  SPORE_CONTEXT_001,
-  SPORE_GOV_011,
-  SPORE_GOV_012,
+  FUNGI_CONTEXT_001,
+  FUNGI_GOV_011,
+  FUNGI_GOV_012,
   // New category codes (task #50 — EC/ID/AU/LC/T/FG)
-  SPORE_RES_001,
-  SPORE_OBS_001,
-  SPORE_EC_001,
-  SPORE_EC_002,
-  SPORE_ID_001,
-  SPORE_AU_001,
-  SPORE_DRCM_UNSUPPORTED,
+  FUNGI_RES_001,
+  FUNGI_OBS_001,
+  FUNGI_EC_001,
+  FUNGI_EC_002,
+  FUNGI_ID_001,
+  FUNGI_AU_001,
+  FUNGI_DRCM_UNSUPPORTED,
   // #34 — post-quantum signing enforcement
-  SPORE_CRYPTO_PQ_001,
+  FUNGI_CRYPTO_PQ_001,
   // Direction B — substrate {} contract obligations
-  SPORE_SUBSTRATE_001,
-  SPORE_SUBSTRATE_002,
-  SPORE_SUBSTRATE_003,
-  SPORE_SUBSTRATE_004,
-  SPORE_SUBSTRATE_005,
+  FUNGI_SUBSTRATE_001,
+  FUNGI_SUBSTRATE_002,
+  FUNGI_SUBSTRATE_003,
+  FUNGI_SUBSTRATE_004,
+  FUNGI_SUBSTRATE_005,
   type GovernanceDiagnostic,
   type GovernanceVerifyResult,
   type DeploymentProfile,
@@ -776,8 +776,8 @@ export { singleLaneErrorProbability, nmrFailureProbability } from "./substrate-m
 export {
   checkProfiles,
   PROFILE_DIAGNOSTICS,
-  SPORE_PROFILE_001, SPORE_PROFILE_002, SPORE_PROFILE_003, SPORE_PROFILE_004,
-  SPORE_PROFILE_005, SPORE_PROFILE_005B, SPORE_PROFILE_006, SPORE_PROFILE_007,
+  FUNGI_PROFILE_001, FUNGI_PROFILE_002, FUNGI_PROFILE_003, FUNGI_PROFILE_004,
+  FUNGI_PROFILE_005, FUNGI_PROFILE_005B, FUNGI_PROFILE_006, FUNGI_PROFILE_007,
   type RuntimeProfile,
   type ProfileDiagnostic,
 } from "./profile-checker.js";
@@ -808,11 +808,11 @@ export {
   UNTAINT_BOUNDARIES,
   INJECTION_SINKS,
   TAINT_DIAGNOSTICS,
-  SPORE_TAINT_001, SPORE_TAINT_002, SPORE_TAINT_003, SPORE_TAINT_004,
+  FUNGI_TAINT_001, FUNGI_TAINT_002, FUNGI_TAINT_003, FUNGI_TAINT_004,
   type SinkContext,
   type TaintDiagnostic,
-  SPORE_TAINT_005,
-  SPORE_TAINT_006,
+  FUNGI_TAINT_005,
+  FUNGI_TAINT_006,
 } from "./taint-checker.js";
 
 // Phase 29/33 — Economics Inference (convention over configuration)
@@ -824,12 +824,12 @@ export {
 } from "./economics-inference.js";
 
 // ---------------------------------------------------------------------------
-// Economics / Lineage / AI governance diagnostics — SPORE-ECON-001..003
+// Economics / Lineage / AI governance diagnostics — FUNGI-ECON-001..003
 // ---------------------------------------------------------------------------
 
-/** SPORE-ECON-001: Flow execution may exceed the declared economic budget. */
-export const SPORE_ECON_001 = {
-  code: "SPORE-ECON-001",
+/** FUNGI-ECON-001: Flow execution may exceed the declared economic budget. */
+export const FUNGI_ECON_001 = {
+  code: "FUNGI-ECON-001",
   name: "BudgetExceeded",
   severity: "warning" as const,
   message: "Flow execution may exceed the declared economic budget.",
@@ -837,9 +837,9 @@ export const SPORE_ECON_001 = {
   suggestedFix: "Increase the target_cost in contract.economics, or declare preferred_execution wasm to reduce compute cost.",
 } as const;
 
-/** SPORE-ECON-002: Protected data binding has no lineage declaration. */
-export const SPORE_ECON_002 = {
-  code: "SPORE-ECON-002",
+/** FUNGI-ECON-002: Protected data binding has no lineage declaration. */
+export const FUNGI_ECON_002 = {
+  code: "FUNGI-ECON-002",
   name: "LineageMissing",
   severity: "info" as const,
   message: "Protected data binding has no lineage declaration.",
@@ -847,9 +847,9 @@ export const SPORE_ECON_002 = {
   suggestedFix: "Add lineage { source origin owner Team retention duration } to the contract.",
 } as const;
 
-/** SPORE-ECON-003: AI model call uses a model not in the contract's approved_models list. */
-export const SPORE_ECON_003 = {
-  code: "SPORE-ECON-003",
+/** FUNGI-ECON-003: AI model call uses a model not in the contract's approved_models list. */
+export const FUNGI_ECON_003 = {
+  code: "FUNGI-ECON-003",
   name: "AiModelUnapproved",
   severity: "error" as const,
   message: "AI model call uses a model not in the contract's approved_models list.",
@@ -857,9 +857,9 @@ export const SPORE_ECON_003 = {
   suggestedFix: "Add the model to contract.ai.approved_models, or remove the call.",
 } as const;
 
-/** SPORE-GOV-014: Flow declares compute targets with prefer [...] but no fallback target is declared. */
-export const SPORE_GOV_014 = {
-  code: "SPORE-GOV-014",
+/** FUNGI-GOV-014: Flow declares compute targets with prefer [...] but no fallback target is declared. */
+export const FUNGI_GOV_014 = {
+  code: "FUNGI-GOV-014",
   name: "MissingFallbackTarget",
   severity: "warning" as const,
   message: "Flow declares compute targets with prefer [...] but no fallback target is declared. A fallback is required — without it, a native accelerator crash becomes an unrecoverable service failure.",
@@ -876,11 +876,11 @@ export {
 } from "./boundary-graph.js";
 
 // ---------------------------------------------------------------------------
-// Effect diagnostics — SPORE-EFFECT-005
+// Effect diagnostics — FUNGI-EFFECT-005
 // ---------------------------------------------------------------------------
 
 /**
- * SPORE-EFFECT-005: Effect name is a broad alias without a specific dot-path qualifier.
+ * FUNGI-EFFECT-005: Effect name is a broad alias without a specific dot-path qualifier.
  *
  * Broad aliases (`network`, `database`, `filesystem`, `ai`, `audit`) are demoted
  * in favour of canonical names (`network.outbound`, `database.read`, etc.) because
@@ -888,8 +888,8 @@ export {
  *
  * Severity: warning in development mode, error in production mode.
  */
-export const SPORE_EFFECT_005 = {
-  code: "SPORE-EFFECT-005",
+export const FUNGI_EFFECT_005 = {
+  code: "FUNGI-EFFECT-005",
   name: "BroadAliasUsed",
   severity: "warning" as const,
   message: "Effect name is a broad alias. Use the canonical dot-path name to precisely declare authority.",
@@ -900,11 +900,11 @@ export const SPORE_EFFECT_005 = {
 // Phase 9B — Event Checker
 export {
   checkEvents,
-  SPORE_EVENT_001,
-  SPORE_EVENT_002,
-  SPORE_EVENT_003,
-  SPORE_EVENT_004,
-  SPORE_EVENT_005,
+  FUNGI_EVENT_001,
+  FUNGI_EVENT_002,
+  FUNGI_EVENT_003,
+  FUNGI_EVENT_004,
+  FUNGI_EVENT_005,
   type EventDiagnostic,
   type EventCheckResult,
 } from "./event-checker.js";
@@ -1154,135 +1154,135 @@ export interface IntentCheckResult {
 }
 
 // ---------------------------------------------------------------------------
-// Intent diagnostic codes — SPORE-INTENT-001..005
+// Intent diagnostic codes — FUNGI-INTENT-001..005
 //
 // Note: The source document uses "LN-INTENT-*"; the canonical repo format
-// is "SPORE-INTENT-*" (matching SPORE-CONFIG-*, SPORE-LOGIC-*, etc.).
+// is "FUNGI-INTENT-*" (matching FUNGI-CONFIG-*, FUNGI-LOGIC-*, etc.).
 // ---------------------------------------------------------------------------
 
 /** Declared intent conflicts with inferred behavior (e.g. delete in a "send receipt" flow). */
-export const SPORE_INTENT_001 = {
-  code: "SPORE-INTENT-001",
+export const FUNGI_INTENT_001 = {
+  code: "FUNGI-INTENT-001",
   name: "INTENT_BEHAVIOR_MISMATCH",
   severity: "error",
   message: "Declared intent conflicts with inferred behavior.",
 } as const;
 
 /** API route, webhook, payment flow, or other governed surface is missing a required intent declaration. */
-export const SPORE_INTENT_002 = {
-  code: "SPORE-INTENT-002",
+export const FUNGI_INTENT_002 = {
+  code: "FUNGI-INTENT-002",
   name: "MISSING_REQUIRED_INTENT",
   severity: "error",
   message: "Governed surface requires an intent declaration.",
 } as const;
 
 /** Unsafe block is missing a reason, approval, or fallback declaration. */
-export const SPORE_INTENT_003 = {
-  code: "SPORE-INTENT-003",
+export const FUNGI_INTENT_003 = {
+  code: "FUNGI-INTENT-003",
   name: "UNSAFE_MISSING_REASON_OR_FALLBACK",
   severity: "error",
   message: "Unsafe block must declare reason, approval, and a safe fallback.",
 } as const;
 
 /** Privileged flow does not declare the required capability. */
-export const SPORE_INTENT_004 = {
-  code: "SPORE-INTENT-004",
+export const FUNGI_INTENT_004 = {
+  code: "FUNGI-INTENT-004",
   name: "PRIVILEGED_MISSING_CAPABILITY",
   severity: "error",
   message: "Privileged flow must declare its required capability.",
 } as const;
 
 /** Experimental flow or block is included in a production build target. */
-export const SPORE_INTENT_005 = {
-  code: "SPORE-INTENT-005",
+export const FUNGI_INTENT_005 = {
+  code: "FUNGI-INTENT-005",
   name: "EXPERIMENTAL_IN_PRODUCTION",
   severity: "error",
   message: "Experimental code must not be included in a production build target without explicit approval.",
 } as const;
 
-export const SPORE_INTENT_DIAGNOSTICS = [
-  SPORE_INTENT_001,
-  SPORE_INTENT_002,
-  SPORE_INTENT_003,
-  SPORE_INTENT_004,
-  SPORE_INTENT_005,
+export const FUNGI_INTENT_DIAGNOSTICS = [
+  FUNGI_INTENT_001,
+  FUNGI_INTENT_002,
+  FUNGI_INTENT_003,
+  FUNGI_INTENT_004,
+  FUNGI_INTENT_005,
 ] as const;
 
 // ---------------------------------------------------------------------------
-// Syntax diagnostics — SPORE-SYNTAX-001..002
+// Syntax diagnostics — FUNGI-SYNTAX-001..002
 // ---------------------------------------------------------------------------
 
 /** `var` is not a valid Galerina keyword. Use `let` or `mut`. */
-export const SPORE_SYNTAX_001 = {
-  code: "SPORE-SYNTAX-001",
+export const FUNGI_SYNTAX_001 = {
+  code: "FUNGI-SYNTAX-001",
   name: "VAR_NOT_SUPPORTED",
   severity: "error",
   message: "Galerina does not support var. Use let for immutable bindings or mut for mutable bindings.",
 } as const;
 
 /** `const` is not a valid Galerina keyword. Use `let` or `readonly`. */
-export const SPORE_SYNTAX_002 = {
-  code: "SPORE-SYNTAX-002",
+export const FUNGI_SYNTAX_002 = {
+  code: "FUNGI-SYNTAX-002",
   name: "CONST_NOT_SUPPORTED",
   severity: "error",
   message: "Galerina does not support const. Use let for immutable bindings or readonly for read-only values.",
 } as const;
 
 /** `let` binding at top level — must be inside a flow. */
-export const SPORE_SYNTAX_006 = {
-  code: "SPORE-SYNTAX-006",
+export const FUNGI_SYNTAX_006 = {
+  code: "FUNGI-SYNTAX-006",
   name: "LET_AT_TOP_LEVEL",
   severity: "error",
   message: "Top-level let bindings are not allowed. Move this inside a flow, or use const for compile-time constants.",
 } as const;
 
 /** `mut` binding at top level — mutable state must be flow-local. */
-export const SPORE_SYNTAX_007 = {
-  code: "SPORE-SYNTAX-007",
+export const FUNGI_SYNTAX_007 = {
+  code: "FUNGI-SYNTAX-007",
   name: "MUT_AT_TOP_LEVEL",
   severity: "error",
   message: "Top-level mut bindings are not allowed. Mutable state must be flow-local.",
 } as const;
 
 /** `unsafe let` at top level — boundary data must be owned by a secure flow. */
-export const SPORE_SYNTAX_008 = {
-  code: "SPORE-SYNTAX-008",
+export const FUNGI_SYNTAX_008 = {
+  code: "FUNGI-SYNTAX-008",
   name: "UNSAFE_LET_AT_TOP_LEVEL",
   severity: "error",
   message: "unsafe let is only allowed inside a secure flow. Boundary data must be owned by a governed flow.",
 } as const;
 
 /** `emit` at top level — events may only be emitted inside flows. */
-export const SPORE_SYNTAX_009 = {
-  code: "SPORE-SYNTAX-009",
+export const FUNGI_SYNTAX_009 = {
+  code: "FUNGI-SYNTAX-009",
   name: "EMIT_AT_TOP_LEVEL",
   severity: "error",
   message: "Events may only be emitted inside flows. Declare events globally, emit them inside governed execution.",
 } as const;
 
-export const SPORE_SYNTAX_DIAGNOSTICS = [
-  SPORE_SYNTAX_001,
-  SPORE_SYNTAX_002,
-  SPORE_SYNTAX_006,
-  SPORE_SYNTAX_007,
-  SPORE_SYNTAX_008,
-  SPORE_SYNTAX_009,
+export const FUNGI_SYNTAX_DIAGNOSTICS = [
+  FUNGI_SYNTAX_001,
+  FUNGI_SYNTAX_002,
+  FUNGI_SYNTAX_006,
+  FUNGI_SYNTAX_007,
+  FUNGI_SYNTAX_008,
+  FUNGI_SYNTAX_009,
 ] as const;
 
 // ---------------------------------------------------------------------------
-// Legacy syntax diagnostics — SPORE-SYNTAX-LEGACY-001
+// Legacy syntax diagnostics — FUNGI-SYNTAX-LEGACY-001
 // ---------------------------------------------------------------------------
 
 /**
- * SPORE-SYNTAX-LEGACY-001: `with effects [...]` is legacy syntax.
+ * FUNGI-SYNTAX-LEGACY-001: `with effects [...]` is legacy syntax.
  *
  * Fired as a warning by the parser when the old `with effects [database.write]`
  * form is detected. The canonical form is `contract { effects { database.write } }`.
  *
  * The legacy form remains parseable for backwards compatibility.
  */
-export const SPORE_SYNTAX_LEGACY_001 = {
-  code: "SPORE-SYNTAX-LEGACY-001",
+export const FUNGI_SYNTAX_LEGACY_001 = {
+  code: "FUNGI-SYNTAX-LEGACY-001",
   name: "LegacyEffectsSyntax",
   severity: "warning" as const,
   message: "'with effects [...]' is legacy syntax. Use 'contract { effects { ... } }' instead.",
@@ -1290,68 +1290,68 @@ export const SPORE_SYNTAX_LEGACY_001 = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// Binding diagnostics — SPORE-BINDING-001..004
+// Binding diagnostics — FUNGI-BINDING-001..004
 // ---------------------------------------------------------------------------
 
 /** Attempt to reassign an immutable `let` binding. */
-export const SPORE_BINDING_001 = {
-  code: "SPORE-BINDING-001",
+export const FUNGI_BINDING_001 = {
+  code: "FUNGI-BINDING-001",
   name: "IMMUTABLE_LET_REASSIGNMENT",
   severity: "error",
   message: "Cannot reassign immutable let binding. Use mut only if reassignment is required.",
 } as const;
 
 /** Attempt to reassign a `readonly` binding. */
-export const SPORE_BINDING_002 = {
-  code: "SPORE-BINDING-002",
+export const FUNGI_BINDING_002 = {
+  code: "FUNGI-BINDING-002",
   name: "READONLY_REASSIGNMENT",
   severity: "error",
   message: "Cannot reassign readonly binding.",
 } as const;
 
 /** Attempt to mutate a value through a `readonly` binding. */
-export const SPORE_BINDING_003 = {
-  code: "SPORE-BINDING-003",
+export const FUNGI_BINDING_003 = {
+  code: "FUNGI-BINDING-003",
   name: "READONLY_PROPERTY_MUTATION",
   severity: "error",
   message: "Cannot mutate a value through a readonly binding.",
 } as const;
 
 /** `mut` binding used in a pure or safe context where mutation is forbidden. */
-export const SPORE_BINDING_004 = {
-  code: "SPORE-BINDING-004",
+export const FUNGI_BINDING_004 = {
+  code: "FUNGI-BINDING-004",
   name: "MUT_IN_PURE_CONTEXT",
   severity: "error",
   message: "mut binding used where mutation is forbidden. Use let or a functional accumulator (fold, count, filter).",
 } as const;
 
-/** SPORE-BINDING-005: Reassignment of immutable let binding denied. */
-export const SPORE_BINDING_005 = {
-  code: "SPORE-BINDING-005",
+/** FUNGI-BINDING-005: Reassignment of immutable let binding denied. */
+export const FUNGI_BINDING_005 = {
+  code: "FUNGI-BINDING-005",
   name: "IMMUTABLE_BINDING_REASSIGNED",
   severity: "error",
   message: "Cannot reassign an immutable 'let' binding. Use 'mut' if reassignment is intended.",
 } as const;
 
-/** SPORE-BINDING-006: Type-changing reassignment of mut binding denied. */
-export const SPORE_BINDING_006 = {
-  code: "SPORE-BINDING-006",
+/** FUNGI-BINDING-006: Type-changing reassignment of mut binding denied. */
+export const FUNGI_BINDING_006 = {
+  code: "FUNGI-BINDING-006",
   name: "MUT_TYPE_CHANGE",
   severity: "error",
   message: "Cannot change the type of a 'mut' binding on reassignment. 'mut' bindings are type-stable.",
 } as const;
 
-export const SPORE_BINDING_DIAGNOSTICS = [
-  SPORE_BINDING_001,
-  SPORE_BINDING_002,
-  SPORE_BINDING_003,
-  SPORE_BINDING_004,
-  SPORE_BINDING_005,
-  SPORE_BINDING_006,
+export const FUNGI_BINDING_DIAGNOSTICS = [
+  FUNGI_BINDING_001,
+  FUNGI_BINDING_002,
+  FUNGI_BINDING_003,
+  FUNGI_BINDING_004,
+  FUNGI_BINDING_005,
+  FUNGI_BINDING_006,
 ] as const;
 
 // ---------------------------------------------------------------------------
-// Raw-pointer diagnostics — SPORE-RAWPTR-001
+// Raw-pointer diagnostics — FUNGI-RAWPTR-001
 // ---------------------------------------------------------------------------
 
 /**
@@ -1360,254 +1360,254 @@ export const SPORE_BINDING_DIAGNOSTICS = [
  * Galerina bans raw pointer access in normal code. Only approved unsafe blocks
  * may use raw pointer expressions, and they must declare reason + fallback.
  */
-export const SPORE_RAWPTR_001 = {
-  code: "SPORE-RAWPTR-001",
+export const FUNGI_RAWPTR_001 = {
+  code: "FUNGI-RAWPTR-001",
   name: "RAW_POINTER_OUTSIDE_UNSAFE",
   severity: "error",
   message: "Raw pointer access is not allowed in normal Galerina code. Move this into an approved unsafe block with declared reason and fallback.",
 } as const;
 
-export const SPORE_RAWPTR_DIAGNOSTICS = [SPORE_RAWPTR_001] as const;
+export const FUNGI_RAWPTR_DIAGNOSTICS = [FUNGI_RAWPTR_001] as const;
 
 // ---------------------------------------------------------------------------
-// Pipeline diagnostics — SPORE-PIPELINE-001..005
+// Pipeline diagnostics — FUNGI-PIPELINE-001..005
 // ---------------------------------------------------------------------------
 
 /** A method called in a pipeline chain does not exist on the current type. */
-export const SPORE_PIPELINE_001 = {
-  code: "SPORE-PIPELINE-001",
+export const FUNGI_PIPELINE_001 = {
+  code: "FUNGI-PIPELINE-001",
   name: "UNKNOWN_PIPELINE_METHOD",
   severity: "error",
   message: "Unknown method in pipeline chain.",
 } as const;
 
 /** The return type of a pipeline stage does not match the input of the next. */
-export const SPORE_PIPELINE_002 = {
-  code: "SPORE-PIPELINE-002",
+export const FUNGI_PIPELINE_002 = {
+  code: "FUNGI-PIPELINE-002",
   name: "PIPELINE_TYPE_MISMATCH",
   severity: "error",
   message: "Pipeline stage output type does not match the next stage's input type.",
 } as const;
 
 /** A pipeline contains a fallible stage whose Result is not handled. */
-export const SPORE_PIPELINE_003 = {
-  code: "SPORE-PIPELINE-003",
+export const FUNGI_PIPELINE_003 = {
+  code: "FUNGI-PIPELINE-003",
   name: "UNHANDLED_FALLIBLE_PIPELINE",
   severity: "error",
   message: "Fallible pipeline stage produces a Result that is not handled or propagated.",
 } as const;
 
 /** A pipeline stage uses an effect not declared on the enclosing flow. */
-export const SPORE_PIPELINE_004 = {
-  code: "SPORE-PIPELINE-004",
+export const FUNGI_PIPELINE_004 = {
+  code: "FUNGI-PIPELINE-004",
   name: "PIPELINE_UNDECLARED_EFFECT",
   severity: "error",
   message: "Pipeline stage requires an effect that is not declared on the enclosing flow.",
 } as const;
 
 /** A pipeline attempts to mutate a value through a readonly receiver. */
-export const SPORE_PIPELINE_005 = {
-  code: "SPORE-PIPELINE-005",
+export const FUNGI_PIPELINE_005 = {
+  code: "FUNGI-PIPELINE-005",
   name: "PIPELINE_READONLY_MUTATION",
   severity: "error",
   message: "Pipeline stage attempts to mutate a readonly receiver.",
 } as const;
 
-export const SPORE_PIPELINE_DIAGNOSTICS = [
-  SPORE_PIPELINE_001,
-  SPORE_PIPELINE_002,
-  SPORE_PIPELINE_003,
-  SPORE_PIPELINE_004,
-  SPORE_PIPELINE_005,
+export const FUNGI_PIPELINE_DIAGNOSTICS = [
+  FUNGI_PIPELINE_001,
+  FUNGI_PIPELINE_002,
+  FUNGI_PIPELINE_003,
+  FUNGI_PIPELINE_004,
+  FUNGI_PIPELINE_005,
 ] as const;
 
 // ---------------------------------------------------------------------------
-// Typed content block diagnostics — SPORE-BLOCK-001..004
+// Typed content block diagnostics — FUNGI-BLOCK-001..004
 // ---------------------------------------------------------------------------
 
 /** Unknown typed content block type — only html, dom, script, css are valid. */
-export const SPORE_BLOCK_001 = {
-  code: "SPORE-BLOCK-001",
+export const FUNGI_BLOCK_001 = {
+  code: "FUNGI-BLOCK-001",
   name: "UNKNOWN_CONTENT_BLOCK_TYPE",
   severity: "error",
   message: "Unknown typed content block type. Valid types are: html, dom, script, css.",
 } as const;
 
 /** Typed content block was opened but its closing marker was never found. */
-export const SPORE_BLOCK_002 = {
-  code: "SPORE-BLOCK-002",
+export const FUNGI_BLOCK_002 = {
+  code: "FUNGI-BLOCK-002",
   name: "UNCLOSED_CONTENT_BLOCK",
   severity: "error",
   message: "Typed content block is never closed. The closing marker must appear alone at the start of a line.",
 } as const;
 
 /** The closing marker does not match the opening marker. */
-export const SPORE_BLOCK_003 = {
-  code: "SPORE-BLOCK-003",
+export const FUNGI_BLOCK_003 = {
+  code: "FUNGI-BLOCK-003",
   name: "MISMATCHED_CONTENT_BLOCK_MARKER",
   severity: "error",
   message: "Typed content block closing marker does not match the opening marker.",
 } as const;
 
 /** A ProtectedSecret value was emitted into a script or html block. */
-export const SPORE_BLOCK_004 = {
-  code: "SPORE-BLOCK-004",
+export const FUNGI_BLOCK_004 = {
+  code: "FUNGI-BLOCK-004",
   name: "SECRET_IN_CONTENT_BLOCK",
   severity: "error",
   message: "ProtectedSecret cannot be emitted into a typed content block.",
 } as const;
 
-export const SPORE_BLOCK_DIAGNOSTICS = [
-  SPORE_BLOCK_001,
-  SPORE_BLOCK_002,
-  SPORE_BLOCK_003,
-  SPORE_BLOCK_004,
+export const FUNGI_BLOCK_DIAGNOSTICS = [
+  FUNGI_BLOCK_001,
+  FUNGI_BLOCK_002,
+  FUNGI_BLOCK_003,
+  FUNGI_BLOCK_004,
 ] as const;
 
 // ---------------------------------------------------------------------------
-// String diagnostics — SPORE-STRING-001..004
+// String diagnostics — FUNGI-STRING-001..004
 // ---------------------------------------------------------------------------
 
 /** Attempted String.decode() produced an invalid UTF-8 sequence. */
-export const SPORE_STRING_001 = {
-  code: "SPORE-STRING-001",
+export const FUNGI_STRING_001 = {
+  code: "FUNGI-STRING-001",
   name: "INVALID_UTF8_DECODE",
   severity: "error",
   message: "Attempted decode produced invalid UTF-8. Handle the DecodeError with a map block.",
 } as const;
 
 /** A secret value was assigned to a plain String binding instead of SecureString. */
-export const SPORE_STRING_002 = {
-  code: "SPORE-STRING-002",
+export const FUNGI_STRING_002 = {
+  code: "FUNGI-STRING-002",
   name: "SECRET_STORED_AS_STRING",
   severity: "error",
   message: "Secret value must not be stored in a plain String. Use SecureString or Secret.env().",
 } as const;
 
 /** A Bytes value was assigned to a String binding without an explicit decode step. */
-export const SPORE_STRING_003 = {
-  code: "SPORE-STRING-003",
+export const FUNGI_STRING_003 = {
+  code: "FUNGI-STRING-003",
   name: "IMPLICIT_STRING_BYTE_CONVERSION",
   severity: "error",
   message: "Bytes cannot become String without an explicit decode. Use String.decode(bytes, Encoding.UTF8).",
 } as const;
 
 /** `.length` was called on a String without specifying whether chars or bytes are counted. */
-export const SPORE_STRING_004 = {
-  code: "SPORE-STRING-004",
+export const FUNGI_STRING_004 = {
+  code: "FUNGI-STRING-004",
   name: "AMBIGUOUS_STRING_LENGTH",
   severity: "warning",
   message: "Ambiguous String length. Use .charCount() for Unicode scalar count or .encodedLength(Encoding.UTF8) for byte length.",
 } as const;
 
-export const SPORE_STRING_DIAGNOSTICS = [
-  SPORE_STRING_001,
-  SPORE_STRING_002,
-  SPORE_STRING_003,
-  SPORE_STRING_004,
+export const FUNGI_STRING_DIAGNOSTICS = [
+  FUNGI_STRING_001,
+  FUNGI_STRING_002,
+  FUNGI_STRING_003,
+  FUNGI_STRING_004,
 ] as const;
 
 // ---------------------------------------------------------------------------
-// Char diagnostics — SPORE-CHAR-001..004
+// Char diagnostics — FUNGI-CHAR-001..004
 // ---------------------------------------------------------------------------
 
 /** A Char value was assigned to or compared with a Byte without an explicit conversion. */
-export const SPORE_CHAR_001 = {
-  code: "SPORE-CHAR-001",
+export const FUNGI_CHAR_001 = {
+  code: "FUNGI-CHAR-001",
   name: "CHAR_BYTE_CONFUSION",
   severity: "error",
   message: "Char cannot be assigned to Byte. Char is text; Byte is raw data. Encode explicitly with .toString().encode(Encoding.UTF8).",
 } as const;
 
 /** A character literal contains an invalid Unicode scalar value. */
-export const SPORE_CHAR_002 = {
-  code: "SPORE-CHAR-002",
+export const FUNGI_CHAR_002 = {
+  code: "FUNGI-CHAR-002",
   name: "INVALID_CHAR_LITERAL",
   severity: "error",
   message: "Character literal contains an invalid Unicode scalar value.",
 } as const;
 
 /** A character literal contains more than one character unit. */
-export const SPORE_CHAR_003 = {
-  code: "SPORE-CHAR-003",
+export const FUNGI_CHAR_003 = {
+  code: "FUNGI-CHAR-003",
   name: "MULTI_CHAR_LITERAL",
   severity: "error",
   message: "Char literal must contain exactly one character unit. Use String for multi-character values.",
 } as const;
 
 /** A Char was used as an integer without calling .codePoint(). */
-export const SPORE_CHAR_004 = {
-  code: "SPORE-CHAR-004",
+export const FUNGI_CHAR_004 = {
+  code: "FUNGI-CHAR-004",
   name: "IMPLICIT_CHAR_NUMBER_CONVERSION",
   severity: "error",
   message: "Char cannot be used as an integer directly. Use .codePoint() to get the Unicode code point.",
 } as const;
 
-export const SPORE_CHAR_DIAGNOSTICS = [
-  SPORE_CHAR_001,
-  SPORE_CHAR_002,
-  SPORE_CHAR_003,
-  SPORE_CHAR_004,
+export const FUNGI_CHAR_DIAGNOSTICS = [
+  FUNGI_CHAR_001,
+  FUNGI_CHAR_002,
+  FUNGI_CHAR_003,
+  FUNGI_CHAR_004,
 ] as const;
 
 // ---------------------------------------------------------------------------
-// Byte diagnostics — SPORE-BYTE-001..005
+// Byte diagnostics — FUNGI-BYTE-001..005
 // ---------------------------------------------------------------------------
 
 /** A Byte literal value is outside the valid 0–255 range. */
-export const SPORE_BYTE_001 = {
-  code: "SPORE-BYTE-001",
+export const FUNGI_BYTE_001 = {
+  code: "FUNGI-BYTE-001",
   name: "BYTE_OUT_OF_RANGE",
   severity: "error",
   message: "Byte value must be between 0 and 255.",
 } as const;
 
 /** A Byte arithmetic result could exceed 255 without explicit overflow handling. */
-export const SPORE_BYTE_002 = {
-  code: "SPORE-BYTE-002",
+export const FUNGI_BYTE_002 = {
+  code: "FUNGI-BYTE-002",
   name: "BYTE_OVERFLOW",
   severity: "error",
   message: "Byte arithmetic result may exceed 255. Use wrapping, checked, or saturating arithmetic explicitly.",
 } as const;
 
 /** A Bytes value was assigned to a String binding without an explicit decode step. */
-export const SPORE_BYTE_003 = {
-  code: "SPORE-BYTE-003",
+export const FUNGI_BYTE_003 = {
+  code: "FUNGI-BYTE-003",
   name: "IMPLICIT_BYTE_STRING_CONVERSION",
   severity: "error",
   message: "Bytes cannot become String without an explicit decode. Use String.decode(bytes, Encoding.UTF8).",
 } as const;
 
 /** A raw Bytes value was passed to a log sink without redaction. */
-export const SPORE_BYTE_004 = {
-  code: "SPORE-BYTE-004",
+export const FUNGI_BYTE_004 = {
+  code: "FUNGI-BYTE-004",
   name: "RAW_BYTES_LOGGED",
   severity: "error",
   message: "Raw Bytes must not be passed directly to a log sink. Redact, hash, or encode before logging.",
 } as const;
 
 /** A Bytes read has no declared memory limit or streaming path. */
-export const SPORE_BYTE_005 = {
-  code: "SPORE-BYTE-005",
+export const FUNGI_BYTE_005 = {
+  code: "FUNGI-BYTE-005",
   name: "UNBOUNDED_BYTES_READ",
   severity: "error",
   message: "Bytes read without a declared memory limit or a streaming path. Declare maxBodyMb or use a streaming reader.",
 } as const;
 
-export const SPORE_BYTE_DIAGNOSTICS = [
-  SPORE_BYTE_001,
-  SPORE_BYTE_002,
-  SPORE_BYTE_003,
-  SPORE_BYTE_004,
-  SPORE_BYTE_005,
+export const FUNGI_BYTE_DIAGNOSTICS = [
+  FUNGI_BYTE_001,
+  FUNGI_BYTE_002,
+  FUNGI_BYTE_003,
+  FUNGI_BYTE_004,
+  FUNGI_BYTE_005,
 ] as const;
 
 // ---------------------------------------------------------------------------
-// Memory diagnostics — SPORE-MEMORY-001..008
+// Memory diagnostics — FUNGI-MEMORY-001..008
 //
-// HONEST STATUS (#65 / RD-0130, 2026-06-26). Of this family ONLY SPORE-MEMORY-008
+// HONEST STATUS (#65 / RD-0130, 2026-06-26). Of this family ONLY FUNGI-MEMORY-008
 // is WIRED (emitter detectUnsafeBlockWithoutReason; the `unsafe block` construct
-// must declare a reason + fallback). SPORE-MEMORY-001..007 are RESERVED / NOT
+// must declare a reason + fallback). FUNGI-MEMORY-001..007 are RESERVED / NOT
 // EMITTED: no compiler pass produces them and none is planned.
 //
 // WHY (and why that is correct, not a gap): Galerina is VALUE-SEMANTICS — no shared
@@ -1623,7 +1623,7 @@ export const SPORE_BYTE_DIAGNOSTICS = [
 // unsafe-block obligation that matters).
 //
 // The ONE linear-resource guarantee Galerina genuinely needs — consume-once
-// ("a passport used twice") — ships + is enforced as SPORE-AFFINE-001
+// ("a passport used twice") — ships + is enforced as FUNGI-AFFINE-001
 // (value-state-checker.ts), NOT via these codes. `move`/`borrow`/`pinned` are
 // reserved lexer keywords: parsed, currently unenforced.
 //
@@ -1636,87 +1636,87 @@ export const SPORE_BYTE_DIAGNOSTICS = [
 // stance: docs/Knowledge-Bases/galerina-memory-safety-model.md.
 // ---------------------------------------------------------------------------
 
-// --- SPORE-MEMORY-001..007: RESERVED / NOT-EMITTED (value-semantics; see family header) ---
+// --- FUNGI-MEMORY-001..007: RESERVED / NOT-EMITTED (value-semantics; see family header) ---
 
 /** RESERVED (no compiler pass emits this): a moved value used again after ownership transferred. */
-export const SPORE_MEMORY_001 = {
-  code: "SPORE-MEMORY-001",
+export const FUNGI_MEMORY_001 = {
+  code: "FUNGI-MEMORY-001",
   name: "USE_AFTER_MOVE",
   severity: "error",
   message: "A moved value cannot be used again. Ownership transferred at the move site.",
 } as const;
 
 /** A value was borrowed after its ownership had already moved. */
-export const SPORE_MEMORY_002 = {
-  code: "SPORE-MEMORY-002",
+export const FUNGI_MEMORY_002 = {
+  code: "FUNGI-MEMORY-002",
   name: "BORROW_AFTER_MOVE",
   severity: "error",
   message: "Cannot borrow a value after ownership has moved.",
 } as const;
 
 /** A borrowed reference outlives the scope of its owner. */
-export const SPORE_MEMORY_003 = {
-  code: "SPORE-MEMORY-003",
+export const FUNGI_MEMORY_003 = {
+  code: "FUNGI-MEMORY-003",
   name: "BORROW_ESCAPES_SCOPE",
   severity: "error",
   message: "Borrowed reference cannot outlive its owner. Return ownership via move instead.",
 } as const;
 
 /** Mutation was attempted through a readonly reference. */
-export const SPORE_MEMORY_004 = {
-  code: "SPORE-MEMORY-004",
+export const FUNGI_MEMORY_004 = {
+  code: "FUNGI-MEMORY-004",
   name: "READONLY_MUTATION",
   severity: "error",
   message: "Cannot mutate a value through a readonly reference.",
 } as const;
 
 /** A mutable borrow exists while another borrow or alias is active. */
-export const SPORE_MEMORY_005 = {
-  code: "SPORE-MEMORY-005",
+export const FUNGI_MEMORY_005 = {
+  code: "FUNGI-MEMORY-005",
   name: "MUTABLE_ALIAS",
   severity: "error",
   message: "A mutable borrow cannot coexist with another active borrow or alias of the same value.",
 } as const;
 
 /** An index may be outside the bounds of the target collection. */
-export const SPORE_MEMORY_006 = {
-  code: "SPORE-MEMORY-006",
+export const FUNGI_MEMORY_006 = {
+  code: "FUNGI-MEMORY-006",
   name: "BOUNDS_VIOLATION",
   severity: "error",
   message: "Index may be outside collection bounds. Use .get(index) for safe access or prove bounds at compile time.",
 } as const;
 
 /** An unchecked access was used outside an approved unsafe block. */
-export const SPORE_MEMORY_007 = {
-  code: "SPORE-MEMORY-007",
+export const FUNGI_MEMORY_007 = {
+  code: "FUNGI-MEMORY-007",
   name: "UNCHECKED_ACCESS_OUTSIDE_UNSAFE",
   severity: "error",
   message: "Unchecked index or memory access must be inside an approved unsafe block with a declared reason and fallback.",
 } as const;
 
-// --- SPORE-MEMORY-008: the ONE WIRED memory code (emitter: detectUnsafeBlockWithoutReason) ---
+// --- FUNGI-MEMORY-008: the ONE WIRED memory code (emitter: detectUnsafeBlockWithoutReason) ---
 
 /** An unsafe memory operation has no declared safe fallback. (WIRED — emitted by detectUnsafeBlockWithoutReason.) */
-export const SPORE_MEMORY_008 = {
-  code: "SPORE-MEMORY-008",
+export const FUNGI_MEMORY_008 = {
+  code: "FUNGI-MEMORY-008",
   name: "UNSAFE_MEMORY_REQUIRES_FALLBACK",
   severity: "error",
   message: "Unsafe memory operation must declare a safe fallback. Every unsafe block requires a fallback flow.",
 } as const;
 
-export const SPORE_MEMORY_DIAGNOSTICS = [
-  SPORE_MEMORY_001,
-  SPORE_MEMORY_002,
-  SPORE_MEMORY_003,
-  SPORE_MEMORY_004,
-  SPORE_MEMORY_005,
-  SPORE_MEMORY_006,
-  SPORE_MEMORY_007,
-  SPORE_MEMORY_008,
+export const FUNGI_MEMORY_DIAGNOSTICS = [
+  FUNGI_MEMORY_001,
+  FUNGI_MEMORY_002,
+  FUNGI_MEMORY_003,
+  FUNGI_MEMORY_004,
+  FUNGI_MEMORY_005,
+  FUNGI_MEMORY_006,
+  FUNGI_MEMORY_007,
+  FUNGI_MEMORY_008,
 ] as const;
 
 // ---------------------------------------------------------------------------
-// Compute-target diagnostics — SPORE-COMPUTE-001
+// Compute-target diagnostics — FUNGI-COMPUTE-001
 //
 // Emitted by the SemanticGraph / ExecutionPlanner (NOT the parser) when a
 // flow's body contains patterns incompatible with its declared compute target.
@@ -1728,9 +1728,9 @@ export const SPORE_MEMORY_DIAGNOSTICS = [
 // the actual compatibility proof lives in the semantic/planner layer.
 // ---------------------------------------------------------------------------
 
-/** SPORE-COMPUTE-001: Pattern is not compatible with the declared compute target. */
-export const SPORE_COMPUTE_001 = {
-  code: "SPORE-COMPUTE-001",
+/** FUNGI-COMPUTE-001: Pattern is not compatible with the declared compute target. */
+export const FUNGI_COMPUTE_001 = {
+  code: "FUNGI-COMPUTE-001",
   name: "ComputeTargetIncompatiblePattern",
   severity: "warning" as const,
   message: "This pattern may not map efficiently to the declared compute target (NPU/GPU/TPU).",
@@ -1739,28 +1739,28 @@ export const SPORE_COMPUTE_001 = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// Backend / CLI diagnostics — SPORE-BACKEND-001
+// Backend / CLI diagnostics — FUNGI-BACKEND-001
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
-// Build diagnostics — SPORE-BUILD-001
+// Build diagnostics — FUNGI-BUILD-001
 // ---------------------------------------------------------------------------
 
 /**
- * SPORE-BUILD-001: Same source produced different output on repeated compilation.
+ * FUNGI-BUILD-001: Same source produced different output on repeated compilation.
  * Indicates a compiler bug, nondeterministic behaviour, or hidden state leakage.
  */
-export const SPORE_BUILD_001 = {
-  code: "SPORE-BUILD-001",
+export const FUNGI_BUILD_001 = {
+  code: "FUNGI-BUILD-001",
   name: "NonDeterministicBuild",
   severity: "error" as const,
   message: "Same source produced different output on repeated compilation. This indicates a compiler bug, nondeterministic behaviour, or hidden state leakage.",
   suggestedFix: "Check for: timestamp in output, random values in codegen, hash map iteration order, filesystem enumeration order.",
 };
 
-/** SPORE-BACKEND-001: The CLI or runtime backend encountered an unrecoverable error (e.g. file read failure). */
-export const SPORE_BACKEND_001 = {
-  code: "SPORE-BACKEND-001",
+/** FUNGI-BACKEND-001: The CLI or runtime backend encountered an unrecoverable error (e.g. file read failure). */
+export const FUNGI_BACKEND_001 = {
+  code: "FUNGI-BACKEND-001",
   name: "BackendError",
   severity: "error" as const,
   message: "The Galerina compiler backend encountered an unrecoverable error.",
@@ -1769,7 +1769,7 @@ export const SPORE_BACKEND_001 = {
 };
 
 // ---------------------------------------------------------------------------
-// Source-level escape diagnostics — SPORE-SOURCE-ESCAPE-001
+// Source-level escape diagnostics — FUNGI-SOURCE-ESCAPE-001
 // ---------------------------------------------------------------------------
 
 // Phase 12A — Source Escape Checker
@@ -1779,9 +1779,9 @@ export {
   type EscapeCheckResult,
 } from "./source-escape-checker.js";
 
-/** SPORE-SOURCE-ESCAPE-001: Galerina source calls eval() or a dynamic code loading function. */
-export const SPORE_SOURCE_ESCAPE_001 = {
-  code: "SPORE-SOURCE-ESCAPE-001",
+/** FUNGI-SOURCE-ESCAPE-001: Galerina source calls eval() or a dynamic code loading function. */
+export const FUNGI_SOURCE_ESCAPE_001 = {
+  code: "FUNGI-SOURCE-ESCAPE-001",
   name: "SourceLevelEvalEscape",
   severity: "error" as const,
   message: "Galerina source calls eval() or a dynamic code loading function. This bypasses governance, capability checks, and audit trails.",
@@ -1790,7 +1790,7 @@ export const SPORE_SOURCE_ESCAPE_001 = {
 };
 
 // ---------------------------------------------------------------------------
-// Safety diagnostics — SPORE-SAFETY-001..006
+// Safety diagnostics — FUNGI-SAFETY-001..006
 //
 // These replace the deprecated Galerina_COMPILER_* diagnostic codes from
 // validateCoreSyntaxSafety. All new safety-checker diagnostics must use
@@ -1798,60 +1798,60 @@ export const SPORE_SOURCE_ESCAPE_001 = {
 // ---------------------------------------------------------------------------
 
 /** A Tri value was used directly as a branch condition without explicit conversion. */
-export const SPORE_SAFETY_001 = {
-  code: "SPORE-SAFETY-001",
+export const FUNGI_SAFETY_001 = {
+  code: "FUNGI-SAFETY-001",
   name: "TRI_BRANCH_CONDITION",
   severity: "error",
   message: "Tri values must not be used directly as branch conditions. Use exhaustive match or an explicit conversion policy.",
 } as const;
 
 /** An unsafe implicit assignment occurred between Bool, Tri, or Decision types. */
-export const SPORE_SAFETY_002 = {
-  code: "SPORE-SAFETY-002",
+export const FUNGI_SAFETY_002 = {
+  code: "FUNGI-SAFETY-002",
   name: "UNSAFE_LOGIC_ASSIGNMENT",
   severity: "error",
   message: "Implicit conversion between Tri, Bool, and Decision is not allowed. Use an explicit policy-bearing conversion flow.",
 } as const;
 
 /** A Tri unknown value was mapped to true without policy justification. */
-export const SPORE_SAFETY_003 = {
-  code: "SPORE-SAFETY-003",
+export const FUNGI_SAFETY_003 = {
+  code: "FUNGI-SAFETY-003",
   name: "TRI_UNKNOWN_AS_TRUE",
   severity: "error",
   message: "Converting Tri unknown to true requires explicit policy justification. In secure flows, this is always an error.",
 } as const;
 
 /** A raw secret literal was detected in source code. */
-export const SPORE_SAFETY_004 = {
-  code: "SPORE-SAFETY-004",
+export const FUNGI_SAFETY_004 = {
+  code: "FUNGI-SAFETY-004",
   name: "SECRET_LITERAL",
   severity: "error",
   message: "Source must not contain raw secret literals. Use SecureString or an environment reference.",
 } as const;
 
 /** An unsafe dynamic code execution call was detected. */
-export const SPORE_SAFETY_005 = {
-  code: "SPORE-SAFETY-005",
+export const FUNGI_SAFETY_005 = {
+  code: "FUNGI-SAFETY-005",
   name: "UNSAFE_DYNAMIC_CODE",
   severity: "error",
   message: "Unsafe dynamic code execution must not appear in Galerina source. Declare intent and use a governed flow.",
 } as const;
 
 /** A Tri match block is missing one or more required cases. */
-export const SPORE_SAFETY_006 = {
-  code: "SPORE-SAFETY-006",
+export const FUNGI_SAFETY_006 = {
+  code: "FUNGI-SAFETY-006",
   name: "TRI_MATCH_NOT_EXHAUSTIVE",
   severity: "error",
   message: "Tri match must handle all three cases: Positive, Neutral, and Negative.",
 } as const;
 
-export const SPORE_SAFETY_DIAGNOSTICS = [
-  SPORE_SAFETY_001,
-  SPORE_SAFETY_002,
-  SPORE_SAFETY_003,
-  SPORE_SAFETY_004,
-  SPORE_SAFETY_005,
-  SPORE_SAFETY_006,
+export const FUNGI_SAFETY_DIAGNOSTICS = [
+  FUNGI_SAFETY_001,
+  FUNGI_SAFETY_002,
+  FUNGI_SAFETY_003,
+  FUNGI_SAFETY_004,
+  FUNGI_SAFETY_005,
+  FUNGI_SAFETY_006,
 ] as const;
 
 // Phase 18 — Monkey-Patch Checker (source-level SEC-020/021 detection)
@@ -1863,24 +1863,24 @@ export {
 } from "./monkey-patch-checker.js";
 
 // ---------------------------------------------------------------------------
-// Security diagnostics — SPORE-SEC-020..021
+// Security diagnostics — FUNGI-SEC-020..021
 //
 // Source-level detection: fired by checkMonkeyPatching() / checkMonkeyPatchingSource().
-// SPORE-BACKEND-001 is reserved for the future JS emitter (ambient authority checks).
+// FUNGI-BACKEND-001 is reserved for the future JS emitter (ambient authority checks).
 // ---------------------------------------------------------------------------
 
-/** SPORE-SEC-020: Runtime behaviour modification is prohibited in Galerina. */
-export const SPORE_SEC_020 = {
-  code: "SPORE-SEC-020",
+/** FUNGI-SEC-020: Runtime behaviour modification is prohibited in Galerina. */
+export const FUNGI_SEC_020 = {
+  code: "FUNGI-SEC-020",
   name: "RuntimeMutation",
   severity: "error" as const,
   message: "Runtime behaviour modification is prohibited in Galerina. Use adapters, interfaces, or mocks instead of patching runtime objects.",
   suggestedFix: "Declare an adapter implementing the interface, or use a mock in test boundaries.",
 } as const;
 
-/** SPORE-SEC-021: Prototype or object mutation after definition is prohibited. */
-export const SPORE_SEC_021 = {
-  code: "SPORE-SEC-021",
+/** FUNGI-SEC-021: Prototype or object mutation after definition is prohibited. */
+export const FUNGI_SEC_021 = {
+  code: "FUNGI-SEC-021",
   name: "PrototypeMutation",
   severity: "error" as const,
   message: "Prototype or object mutation after definition is prohibited. Galerina requires declared behaviour.",
@@ -2055,9 +2055,9 @@ export function validateCoreSyntaxSafety(
   if (contentBlockScope !== undefined) {
     diagnostics.push(
       createCompilerDiagnostic(
-        SPORE_BLOCK_002.code,
-        SPORE_BLOCK_002.name,
-        SPORE_BLOCK_002.severity,
+        FUNGI_BLOCK_002.code,
+        FUNGI_BLOCK_002.name,
+        FUNGI_BLOCK_002.severity,
         `${contentBlockScope.blockType} block opened with marker ${contentBlockScope.marker} is never closed.`,
         { file: source.file, line: contentBlockScope.startLine, column: 1 },
       ),
@@ -2077,10 +2077,10 @@ export function validateCoreSyntaxSafety(
  * Stage 1 status: STUB — returns empty diagnostics.
  * Full implementation (Stage 2) will validate block content based on type:
  *   html/dom — HTML structure validation
- *   script   — JavaScript syntax check; SPORE-BLOCK-004 secret detection
+ *   script   — JavaScript syntax check; FUNGI-BLOCK-004 secret detection
  *   css      — CSS property/selector validation
  *
- * TODO SPORE-BLOCK-004: detect ProtectedSecret references interpolated into script blocks.
+ * TODO FUNGI-BLOCK-004: detect ProtectedSecret references interpolated into script blocks.
  */
 export function validateTypedContentBlock(_input: {
   readonly blockType: "html" | "dom" | "script" | "css";
@@ -2192,11 +2192,11 @@ function parseFlowStart(
  * Full implementation requires the compiler AST to carry FlowDeclarationMetadata.
  * Wire up in Stage 3 once the parser emits intent/effect nodes.
  *
- * TODO SPORE-INTENT-001: check inferred effects against declared effects.
- * TODO SPORE-INTENT-002: require intent on governed surfaces.
- * TODO SPORE-INTENT-003: require unsafe blocks to declare reason + fallback.
- * TODO SPORE-INTENT-004: require privileged flows to declare capability.
- * TODO SPORE-INTENT-005: block experimental flows in production targets.
+ * TODO FUNGI-INTENT-001: check inferred effects against declared effects.
+ * TODO FUNGI-INTENT-002: require intent on governed surfaces.
+ * TODO FUNGI-INTENT-003: require unsafe blocks to declare reason + fallback.
+ * TODO FUNGI-INTENT-004: require privileged flows to declare capability.
+ * TODO FUNGI-INTENT-005: block experimental flows in production targets.
  */
 export function validateIntentEffects(
   _flowName: string,
@@ -2270,10 +2270,10 @@ function detectTriBranchCondition(
 
   return [
     createCompilerDiagnostic(
-      SPORE_SAFETY_001.code,
-      SPORE_SAFETY_001.name,
-      SPORE_SAFETY_001.severity,
-      SPORE_SAFETY_001.message,
+      FUNGI_SAFETY_001.code,
+      FUNGI_SAFETY_001.name,
+      FUNGI_SAFETY_001.severity,
+      FUNGI_SAFETY_001.message,
       { file, line: lineNumber, column: line.indexOf(symbol.name) + 1 },
     ),
   ];
@@ -2306,9 +2306,9 @@ function detectUnsafeCoreAssignment(
   ) {
     return [
       createCompilerDiagnostic(
-        SPORE_SAFETY_002.code,
-        SPORE_SAFETY_002.name,
-        SPORE_SAFETY_002.severity,
+        FUNGI_SAFETY_002.code,
+        FUNGI_SAFETY_002.name,
+        FUNGI_SAFETY_002.severity,
         `${sourceSymbol.type} must not implicitly convert to ${targetType}. Use an explicit policy-bearing conversion flow.`,
         { file, line: lineNumber, column: line.indexOf(sourceSymbol.name) + 1 },
       ),
@@ -2332,8 +2332,8 @@ function detectRiskyTriBoolPolicy(
   if (/\bunknown_as(?:\s*:\s*true|_true)\b/.test(line)) {
     return [
       createCompilerDiagnostic(
-        SPORE_SAFETY_003.code,
-        SPORE_SAFETY_003.name,
+        FUNGI_SAFETY_003.code,
+        FUNGI_SAFETY_003.name,
         secure ? "error" : "warning",
         secure
           ? "secure flow must not convert Tri unknown to true."
@@ -2354,8 +2354,8 @@ function detectRiskyTriBoolPolicy(
     const col = line.search(/\b[Tt]ri\.(?:toBool|toDecision)/);
     return [
       createCompilerDiagnostic(
-        SPORE_SAFETY_003.code,
-        SPORE_SAFETY_003.name,
+        FUNGI_SAFETY_003.code,
+        FUNGI_SAFETY_003.name,
         secure ? "error" : "warning",
         secure
           ? `secure flow must not call Tri.${method} without an explicit unknown-state policy (e.g. unknown_as: Negative). The Neutral/HOLD state must never silently coerce to a truthy default.`
@@ -2383,10 +2383,10 @@ function detectSecretLiteral(
 
   return [
     createCompilerDiagnostic(
-      SPORE_SAFETY_004.code,
-      SPORE_SAFETY_004.name,
-      SPORE_SAFETY_004.severity,
-      SPORE_SAFETY_004.message,
+      FUNGI_SAFETY_004.code,
+      FUNGI_SAFETY_004.name,
+      FUNGI_SAFETY_004.severity,
+      FUNGI_SAFETY_004.message,
       { file, line: lineNumber, column: line.indexOf(secretMatch[2]) + 1 },
     ),
   ];
@@ -2403,10 +2403,10 @@ function detectUnsafeDynamicCode(
 
   return [
     createCompilerDiagnostic(
-      SPORE_SAFETY_005.code,
-      SPORE_SAFETY_005.name,
-      SPORE_SAFETY_005.severity,
-      SPORE_SAFETY_005.message,
+      FUNGI_SAFETY_005.code,
+      FUNGI_SAFETY_005.name,
+      FUNGI_SAFETY_005.severity,
+      FUNGI_SAFETY_005.message,
       { file, line: lineNumber, column: Math.max(line.search(/\b(?:eval|Function|unsafe_exec|raw_shell)\s*\(/) + 1, 1) },
     ),
   ];
@@ -2424,9 +2424,9 @@ function validateTriMatchExhaustive(
 
   return [
     createCompilerDiagnostic(
-      SPORE_SAFETY_006.code,
-      SPORE_SAFETY_006.name,
-      SPORE_SAFETY_006.severity,
+      FUNGI_SAFETY_006.code,
+      FUNGI_SAFETY_006.name,
+      FUNGI_SAFETY_006.severity,
       `Tri match is missing cases: ${missing.join(", ")}.`,
       { file, line: matchBlock.startLine, column: matchBlock.symbol.location.column },
     ),
@@ -2458,9 +2458,9 @@ function parseContentBlockOpen(
       kind: "unknown_type",
       diagnostics: [
         createCompilerDiagnostic(
-          SPORE_BLOCK_001.code,
-          SPORE_BLOCK_001.name,
-          SPORE_BLOCK_001.severity,
+          FUNGI_BLOCK_001.code,
+          FUNGI_BLOCK_001.name,
+          FUNGI_BLOCK_001.severity,
           `Unknown typed content block type "${rawType}". Valid types are: html, dom, script, css.`,
           { file, line: lineNumber, column: line.search(new RegExp(`\\b${match[1]}\\b`)) + 1 },
         ),
@@ -2494,24 +2494,24 @@ function detectUnsupportedBindingKeyword(
   if (/^\s*\bvar\s+[A-Za-z_]/.test(line)) {
     return [
       createCompilerDiagnostic(
-        SPORE_SYNTAX_001.code,
-        SPORE_SYNTAX_001.name,
-        SPORE_SYNTAX_001.severity,
-        SPORE_SYNTAX_001.message,
+        FUNGI_SYNTAX_001.code,
+        FUNGI_SYNTAX_001.name,
+        FUNGI_SYNTAX_001.severity,
+        FUNGI_SYNTAX_001.message,
         { file, line: lineNumber, column: line.search(/\bvar\b/) + 1 },
       ),
     ];
   }
 
   // Detect `const <identifier>` or `const <identifier>:` as a statement
-  // Exclude TypeScript-style `export const` — this scanner runs on .spore files
+  // Exclude TypeScript-style `export const` — this scanner runs on .fungi files
   if (/^\s*\bconst\s+[A-Za-z_]/.test(line)) {
     return [
       createCompilerDiagnostic(
-        SPORE_SYNTAX_002.code,
-        SPORE_SYNTAX_002.name,
-        SPORE_SYNTAX_002.severity,
-        SPORE_SYNTAX_002.message,
+        FUNGI_SYNTAX_002.code,
+        FUNGI_SYNTAX_002.name,
+        FUNGI_SYNTAX_002.severity,
+        FUNGI_SYNTAX_002.message,
         { file, line: lineNumber, column: line.search(/\bconst\b/) + 1 },
       ),
     ];
@@ -2530,8 +2530,8 @@ function detectUnsupportedBindingKeyword(
  * Stage 1 status: STUB — returns diagnostics based on binding kind alone.
  * Full implementation requires AST-level binding scope tracking.
  *
- * TODO SPORE-BINDING-001: reject reassignment of let bindings.
- * TODO SPORE-BINDING-002: reject reassignment of readonly bindings.
+ * TODO FUNGI-BINDING-001: reject reassignment of let bindings.
+ * TODO FUNGI-BINDING-002: reject reassignment of readonly bindings.
  */
 export function checkBindingReassignment(input: {
   readonly bindingKind: "let" | "mut" | "readonly";
@@ -2541,9 +2541,9 @@ export function checkBindingReassignment(input: {
   if (input.bindingKind === "let") {
     return [
       createCompilerDiagnostic(
-        SPORE_BINDING_001.code,
-        SPORE_BINDING_001.name,
-        SPORE_BINDING_001.severity,
+        FUNGI_BINDING_001.code,
+        FUNGI_BINDING_001.name,
+        FUNGI_BINDING_001.severity,
         `Cannot reassign immutable let binding ${input.bindingName}. Use mut only if reassignment is required.`,
         input.location,
       ),
@@ -2553,9 +2553,9 @@ export function checkBindingReassignment(input: {
   if (input.bindingKind === "readonly") {
     return [
       createCompilerDiagnostic(
-        SPORE_BINDING_002.code,
-        SPORE_BINDING_002.name,
-        SPORE_BINDING_002.severity,
+        FUNGI_BINDING_002.code,
+        FUNGI_BINDING_002.name,
+        FUNGI_BINDING_002.severity,
         `Cannot reassign readonly binding ${input.bindingName}.`,
         input.location,
       ),
@@ -2571,7 +2571,7 @@ export function checkBindingReassignment(input: {
  * Stage 1 status: STUB — returns diagnostic when binding is readonly.
  * Full implementation requires property access tracking in the AST.
  *
- * TODO SPORE-BINDING-003: reject property mutation through readonly binding.
+ * TODO FUNGI-BINDING-003: reject property mutation through readonly binding.
  */
 export function checkReadonlyMutation(input: {
   readonly bindingKind: "let" | "mut" | "readonly";
@@ -2585,9 +2585,9 @@ export function checkReadonlyMutation(input: {
 
   return [
     createCompilerDiagnostic(
-      SPORE_BINDING_003.code,
-      SPORE_BINDING_003.name,
-      SPORE_BINDING_003.severity,
+      FUNGI_BINDING_003.code,
+      FUNGI_BINDING_003.name,
+      FUNGI_BINDING_003.severity,
       `Cannot mutate property ${input.propertyName} through readonly binding ${input.bindingName}.`,
       input.location,
     ),
@@ -2603,11 +2603,11 @@ export function checkReadonlyMutation(input: {
  *   - Effect context (to compare declared vs used effects)
  *   - Readonly scope (to detect readonly receiver mutation)
  *
- * TODO SPORE-PIPELINE-001: reject unknown pipeline methods.
- * TODO SPORE-PIPELINE-002: reject type mismatches between stages.
- * TODO SPORE-PIPELINE-003: require Result handling in fallible pipelines.
- * TODO SPORE-PIPELINE-004: require declared effects for effectful stages.
- * TODO SPORE-PIPELINE-005: reject readonly receiver mutation.
+ * TODO FUNGI-PIPELINE-001: reject unknown pipeline methods.
+ * TODO FUNGI-PIPELINE-002: reject type mismatches between stages.
+ * TODO FUNGI-PIPELINE-003: require Result handling in fallible pipelines.
+ * TODO FUNGI-PIPELINE-004: require declared effects for effectful stages.
+ * TODO FUNGI-PIPELINE-005: reject readonly receiver mutation.
  */
 export function checkMethodChain(_input: {
   readonly receiver: string;
@@ -2639,9 +2639,9 @@ export function checkMutInPureContext(input: {
 
   return [
     createCompilerDiagnostic(
-      SPORE_BINDING_004.code,
-      SPORE_BINDING_004.name,
-      SPORE_BINDING_004.severity,
+      FUNGI_BINDING_004.code,
+      FUNGI_BINDING_004.name,
+      FUNGI_BINDING_004.severity,
       `mut binding ${input.bindingName} is not allowed in a pure flow. Use let or a functional accumulator (fold, count, filter).`,
       input.location,
     ),
@@ -2649,7 +2649,7 @@ export function checkMutInPureContext(input: {
 }
 
 /**
- * Emits SPORE-BINDING-004 when a `mut` binding declaration appears inside a
+ * Emits FUNGI-BINDING-004 when a `mut` binding declaration appears inside a
  * `pure flow` body. `pure flow` contexts forbid all mutable state.
  *
  * Phase 3 binding-level rule — no AST required. Full effect tracking
@@ -2678,9 +2678,9 @@ function detectMutInPureFlow(
 
   return [
     createCompilerDiagnostic(
-      SPORE_BINDING_004.code,
-      SPORE_BINDING_004.name,
-      SPORE_BINDING_004.severity,
+      FUNGI_BINDING_004.code,
+      FUNGI_BINDING_004.name,
+      FUNGI_BINDING_004.severity,
       `mut binding "${mutMatch[1]}" is not allowed in a pure flow. Use let or a functional accumulator (fold, count, filter).`,
       { file, line: lineNumber, column: line.search(/\bmut\b/) + 1 },
     ),
@@ -2688,7 +2688,7 @@ function detectMutInPureFlow(
 }
 
 /**
- * Emits SPORE-MEMORY-008 when an `unsafe block` opening line is missing a
+ * Emits FUNGI-MEMORY-008 when an `unsafe block` opening line is missing a
  * `reason` declaration. Every unsafe block must declare a human-readable
  * reason justification on the same line as the block header.
  *
@@ -2714,9 +2714,9 @@ function detectUnsafeBlockWithoutReason(
 
   return [
     createCompilerDiagnostic(
-      SPORE_MEMORY_008.code,
-      SPORE_MEMORY_008.name,
-      SPORE_MEMORY_008.severity,
+      FUNGI_MEMORY_008.code,
+      FUNGI_MEMORY_008.name,
+      FUNGI_MEMORY_008.severity,
       `unsafe block must declare a reason on the opening line. Expected: unsafe block <name> reason "<justification>" fallback <safeFlow> { ... }`,
       { file, line: lineNumber, column: line.search(/\bunsafe\b/) + 1 },
     ),
@@ -2724,7 +2724,7 @@ function detectUnsafeBlockWithoutReason(
 }
 
 /**
- * Emits SPORE-RAWPTR-001 when a raw-pointer dereference expression appears
+ * Emits FUNGI-RAWPTR-001 when a raw-pointer dereference expression appears
  * outside an approved unsafe block.
  *
  * Galerina bans raw pointer access in normal code. The pattern `*identifier`
@@ -2760,10 +2760,10 @@ function detectRawPointerOutsideUnsafe(
 
   return [
     createCompilerDiagnostic(
-      SPORE_RAWPTR_001.code,
-      SPORE_RAWPTR_001.name,
-      SPORE_RAWPTR_001.severity,
-      SPORE_RAWPTR_001.message,
+      FUNGI_RAWPTR_001.code,
+      FUNGI_RAWPTR_001.name,
+      FUNGI_RAWPTR_001.severity,
+      FUNGI_RAWPTR_001.message,
       { file, line: lineNumber, column },
     ),
   ];

@@ -19,7 +19,7 @@ the core boundary. The boundary is now three-way:
 - **Galerina ext (`galerina-ext-tmf`)** — the deterministic `.tmf` engine. New, in-repo, this doc.
 - **R&D (`Galerina-R-AND-D`)** — the authoring/scratch repo for the specs and research. Upstream of `ext`.
 
-## Crypto-on-core (`SPORE-SUBSTRATE-001`) — the hard line
+## Crypto-on-core (`FUNGI-SUBSTRATE-001`) — the hard line
 
 Every primitive runs **bit-exact on a deterministic digital core**: SHAKE256 via `node:crypto`;
 ML-DSA-65 / ML-KEM-768 via `@noble/post-quantum` (already a Galerina dependency). **No photonic crypto** —
@@ -34,7 +34,7 @@ and the lattice-crypto literature (see `galerina-rd-adoption-2026-06-16.md` §1)
 INTEGRITY       TMX-256 = 3-ary SHAKE256 XOF tree over coordinate-bound leaves; root binds header_core  (fail-closed)
 AUTHENTICITY    ML-DSA-65 (FIPS 204) signs the root — hybrid w/ Ed25519 in transition (no PQ downgrade)
 CONFIDENTIALITY ML-KEM-768 (FIPS 203) hybrid X25519 → SHAKE256 KDF → AEAD (default AES-256-GCM), committing
-ZERO-TRUST      three-valued verdicts allow / deny / unknown; unknown → deny  (SPORE-GOV-3VL-001)
+ZERO-TRUST      three-valued verdicts allow / deny / unknown; unknown → deny  (FUNGI-GOV-3VL-001)
 HARD LINE       crypto/integrity stay on a deterministic core; photonic = bulk math only
 ```
 
@@ -72,9 +72,9 @@ golden vectors in the package `tests/` (container `89544d46…`, root `43386e64�
 
 The engine is the **governed object**; the governance lives in Galerina proper:
 - **Verify-before-decrypt key release** — the K3 gate `keyRelease(integrityOk, authenticityOk, govVerdict)`,
-  landed as `tests/patterns/pattern-10-verify-before-decrypt-gate.spore` (adoption ledger U1).
+  landed as `tests/patterns/pattern-10-verify-before-decrypt-gate.fungi` (adoption ledger U1).
 - **No cleartext semantic embedding across a trust boundary** — `galerina-privacy-embedding-egress.md` (U2/#204).
-- Crypto effect typing + PQ/hybrid requirement — `SPORE-CRYPTO-PQ-001`, `galerina-quantum-resistance-posture.md`.
+- Crypto effect typing + PQ/hybrid requirement — `FUNGI-CRYPTO-PQ-001`, `galerina-quantum-resistance-posture.md`.
 
 ## See also
 

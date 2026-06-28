@@ -54,12 +54,12 @@ Discovered building the json-parse benchmark (2026-06-02):
   `\\`→`\`, `\n`, `\t`), or if intentional, document loudly + emit a diagnostic on
   `\"`/`\\` so the surprise is visible.
 
-### A2c — `SPORE-LEX-001` generic-depth counter false-positives on `a < b` — ✅ FIXED 2026-06-02
+### A2c — `FUNGI-LEX-001` generic-depth counter false-positives on `a < b` — ✅ FIXED 2026-06-02
 Discovered completing the Stage-B lexer; root-caused and fixed same day.
 - **Symptom:** the production lexer's generic-nesting depth guard (max depth 8) treated
   **every** `<` as opening a generic type and accumulated a **global**, never-reset counter.
   Ordinary comparison loops — `while i < srcLen { ... }` repeated 8+ times — pushed the
-  count past 8 and emitted a spurious `SPORE-LEX-001 "Generic type nesting exceeds maximum
+  count past 8 and emitted a spurious `FUNGI-LEX-001 "Generic type nesting exceeds maximum
   depth"` far from the real code. Contributors were writing loop guards backwards as
   `srcLen > i` to dodge it.
 - **Root cause:** `genericDepth` in `lexer.ts` was a single file-global counter, `++` on
@@ -69,7 +69,7 @@ Discovered completing the Stage-B lexer; root-caused and fixed same day.
   single-line generic still trips the diagnostic (no newline/brace before its 9th `<`),
   so detection is preserved. Regression tests in `tests/lexer.test.mjs` (4 cases:
   cross-line comparisons quiet, `;`-separated quiet, deep single-line generic still fires,
-  moderate generic quiet). All 7 operand-swap workarounds in `lexer.spore` reverted to
+  moderate generic quiet). All 7 operand-swap workarounds in `lexer.fungi` reverted to
   natural `i < srcLen` reading order. Full suite 2,906 green.
 
 ### A2d — `'\''` and `'\\'` char literals don't parse
@@ -105,7 +105,7 @@ Surfaced by a 3-agent review of the self-hosted modules (2026-06-02). These are 
 bugs to fix now — they're intentional scope limits or perf characteristics of the
 bootstrap subset. Documented so they don't surprise later:
 
-- **`runtime.spore` `envLookup` is O(n), `envBind` appends → O(n²) per loop.** A long
+- **`runtime.fungi` `envLookup` is O(n), `envBind` appends → O(n²) per loop.** A long
   loop that re-`store`s accumulates bindings (last-match wins, so correctness holds) but
   slows quadratically (sum 1..800 ≈ 216s). Fine for small bootstrap programs; a real
   runtime would use a map or overwrite-in-place on reassignment.
@@ -113,12 +113,12 @@ bootstrap subset. Documented so they don't surprise later:
   semantics for the subset; a governed runtime should poison/flag instead.
 - **An unresolved `call` (callee not in the flow table) → `0`** silently. The emitter/a
   link pass should reject unknown callees; the interpreter just returns the sentinel.
-- **Two expression lowerers coexist in `gir-emitter.spore`:** the legacy
+- **Two expression lowerers coexist in `gir-emitter.fungi`:** the legacy
   `emitExprGIR`/`emitFlowExprGIR` (flat `returnExpr` → op `const`/`load`/`add`/`cmp`,
   collapsing all arithmetic to `add`) vs the real `lowerExpr` (`binop`/`unop` with true
   opcodes). The runtime only consumes the `lowerExpr` form; the legacy one is
   flow-decl/returnExpr metadata only. Keep them distinct; prefer `lowerExpr`.
-- **`parser.spore` `decomposeReturn` (legacy flat `returnExpr`) misclassifies a leading
+- **`parser.fungi` `decomposeReturn` (legacy flat `returnExpr`) misclassifies a leading
   unary** (`return -1` → `literal/Unknown`). The full `body` AST is correct
   (`unary(neg, 1)`); `returnExpr` is back-compat only — read `body` for accuracy.
 
@@ -134,7 +134,7 @@ hit this and renamed `block`→`blk`). The reserved set spans plain-English noun
 will reach for as locals (`block`, `target`, `effects`).
 - **Hazard:** an AI can't predict which plain-English words are reserved; the error
   doesn't name the cause. Worse, a reserved param name produces a **cascade** of ~4
-  misleading `SPORE-PARSE-001` errors ("Expected parameter name, got ...", "Expected type
+  misleading `FUNGI-PARSE-001` errors ("Expected parameter name, got ...", "Expected type
   name, got ,") that point at the wrong tokens — none says "reserved word". And because
   the broken parse leaves the flow undefined, the interpreter then runs it as a silent
   no-op (empty result) rather than crashing — a probe that only checks "did it run" passes
@@ -144,7 +144,7 @@ will reach for as locals (`block`, `target`, `effects`).
 
 ### B2 — `let`-shadow vs `mut`-reassign is a silent correctness trap
 `if c { let x = ... }` shadows instead of mutating the outer `x`; parses clean, runs
-wrong (this was the real runtime.spore cache bug).
+wrong (this was the real runtime.fungi cache bug).
 - **Hazard:** AIs trained on Rust/JS reach for `let` here.
 - **Fix:** warn when a block-local `let` shadows an outer binding of the same name
   that is later read.
@@ -157,12 +157,12 @@ wrong (this was the real runtime.spore cache bug).
   is only the ceremony (A1), not the safety model.
 - `split` / `length` match JS/Python semantics exactly — reliable, checksum-faithful
   across runtimes (basis of the json-parse benchmark's bit-for-bit checksum).
-- `match` over `else if` (SPORE-SYNTAX-010) reads cleanly once learned — works for
+- `match` over `else if` (FUNGI-SYNTAX-010) reads cleanly once learned — works for
   enum/`Some`/`None` variants AND string literals (the string-literal dispatch bug was
   fixed 2026-06-02, see A2b).
 - **Recursion works** — recursive `flow`s (e.g. `fib`, `sumTo`) and **mutually**
   recursive flows (`parsePrimary` ↔ `parseExpr`) execute correctly (proven 2026-06-02
-  building the self-hosted body parser). Enables real recursive-descent parsers in `.spore`.
+  building the self-hosted body parser). Enables real recursive-descent parsers in `.fungi`.
 - **Self-referential record types work** — `record Expr { children: Array<Expr> }` /
   `record Stmt { body: Array<Stmt> }` parse and a recursive flow can walk the nested
   tree (proven 2026-06-02). Real nested ASTs are expressible in self-hosted Galerina.
@@ -181,7 +181,7 @@ wrong (this was the real runtime.spore cache bug).
 | 2026-06-02 | A2, A3 surfaced writing json-parse benchmark | benchmark expansion |
 | 2026-06-02 | A2b (string-literal match no-dispatch), B1 cascade detail surfaced writing effect-checker + gir-emitter Stage-B (parallel workers) | self-hosting push S2+S3 |
 | 2026-06-02 | A2b root-caused (matchPattern didn't strip pattern quotes) and FIXED; regression test added | interpreter fix |
-| 2026-06-02 | A2c (SPORE-LEX-001 false positive on `a < b`), A2d (escaped char literals) surfaced completing lexer S5 | self-hosting push S5+S6 |
+| 2026-06-02 | A2c (FUNGI-LEX-001 false positive on `a < b`), A2d (escaped char literals) surfaced completing lexer S5 | self-hosting push S5+S6 |
 | 2026-06-02 | A2c root-caused (global genericDepth never reset) and FIXED; +4 regression tests; 7 operand-swap workarounds reverted | interpreter/lexer fix |
 | 2026-06-02 | B1 extended (`block` reserved); confirmed recursion + self-referential record types work; Symbol-vs-Operator token note | M-A body parser |
 | 2026-06-03 | **A4** — `p = p + 1` inside deeply-nested if/while blocks silently doesn't update outer `p`; fix = extract into a standalone flow | R6 match parsing |

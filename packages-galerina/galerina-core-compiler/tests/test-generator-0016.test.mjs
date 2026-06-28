@@ -10,7 +10,7 @@ import {
 } from "../dist/index.js";
 
 function girFlows(source) {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effects = checkEffects(parsed.flows, parsed.ast);
   return emitGIR(parsed.ast, parsed.flows, effects).gir.flows;
 }
@@ -191,13 +191,13 @@ describe("0016: boundary/fuzz test generation", () => {
 });
 
 describe("0016: substrate-violation test generation", () => {
-  it("emits a crypto-on-core obligation per crypto effect (SPORE-SUBSTRATE-001)", () => {
+  it("emits a crypto-on-core obligation per crypto effect (FUNGI-SUBSTRATE-001)", () => {
     const flow = girFlows(cryptoFlow)[0];
     const cases = generateSubstrateViolationTests(flow);
     assert.equal(cases.length, 1);
     assert.equal(cases[0].cryptoEffect, "crypto.sign");
     assert.equal(cases[0].id, "signDoc::substrate::crypto.sign");
-    assert.match(cases[0].assertion, /noisy\/photonic substrate lane.*SPORE-SUBSTRATE-001.*fail-closed/);
+    assert.match(cases[0].assertion, /noisy\/photonic substrate lane.*FUNGI-SUBSTRATE-001.*fail-closed/);
   });
 
   it("a flow with no crypto effect generates no substrate obligations", () => {

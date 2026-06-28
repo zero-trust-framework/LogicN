@@ -2,7 +2,7 @@
 //
 // Proves: ALLOW fields pass through byte-identical; DENY/INDETERMINATE fields become a typed
 // Masked sentinel (keep-the-rest); deny-by-default on undefined/empty verdicts; per-field vAnd
-// fold of actor caps; SPORE-GOV-3VL-001 carried + sunk on every INDETERMINATE collapse; and the
+// fold of actor caps; FUNGI-GOV-3VL-001 carried + sunk on every INDETERMINATE collapse; and the
 // soundness invariant that a non-ALLOW verdict can NEVER return the value.
 
 import { test } from "node:test";
@@ -23,7 +23,7 @@ test("maskByVerdict: ALLOW keeps (null); DENY and INDETERMINATE withhold", () =>
   assert.ok(isMasked(d) && d.reason === "denied" && d.verdict === DENY && d.diagnostic === null);
   const i = maskByVerdict(INDETERMINATE);
   assert.ok(isMasked(i) && i.reason === "indeterminate" && i.verdict === INDETERMINATE);
-  assert.equal(i.diagnostic?.code, "SPORE-GOV-3VL-001", "INDETERMINATE carries the audit diagnostic");
+  assert.equal(i.diagnostic?.code, "FUNGI-GOV-3VL-001", "INDETERMINATE carries the audit diagnostic");
 });
 
 test("deny-by-default: undefined verdict and empty cap set both withhold (INDETERMINATE)", () => {
@@ -53,9 +53,9 @@ test("partialReturn: keep-the-rest — allowed fields pass through, others maske
 
   assert.deepEqual([...out.maskedFields].sort(), ["note", "ssn"]);
   assert.equal(out.allMasked, false, "not every field masked");
-  assert.equal(out.diagnostics.length, 1, "one SPORE-GOV-3VL-001 (the INDETERMINATE field)");
+  assert.equal(out.diagnostics.length, 1, "one FUNGI-GOV-3VL-001 (the INDETERMINATE field)");
   assert.equal(out.diagnostics[0].field, "note");
-  assert.equal(out.diagnostics[0].diagnostic.code, "SPORE-GOV-3VL-001");
+  assert.equal(out.diagnostics[0].diagnostic.code, "FUNGI-GOV-3VL-001");
 });
 
 test("partialReturn: allowed object field is the SAME reference (no value transform)", () => {
@@ -79,7 +79,7 @@ test("partialReturn: allMasked true only when every field withheld; false for em
 test("partialReturn: onDiagnostic sink fires once per INDETERMINATE field", () => {
   const seen = [];
   partialReturn({ a: 1, b: 2, c: 3 }, (f) => (f === "b" ? INDETERMINATE : DENY), (field, d) => seen.push([field, d.code]));
-  assert.deepEqual(seen, [["b", "SPORE-GOV-3VL-001"]], "only the INDETERMINATE collapse is audited (DENY is ordinary)");
+  assert.deepEqual(seen, [["b", "FUNGI-GOV-3VL-001"]], "only the INDETERMINATE collapse is audited (DENY is ordinary)");
 });
 
 test("SOUNDNESS: across every verdict, a non-ALLOW field never returns its value", () => {

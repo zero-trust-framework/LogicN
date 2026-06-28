@@ -23,7 +23,7 @@ pure flow add(a: Int, b: Int) -> Int {
   return a + b
 }
 `;
-    const result = await run(source, "test.spore", "add", new Map([
+    const result = await run(source, "test.fungi", "add", new Map([
       ["a", { __tag: "int", value: 3 }],
       ["b", { __tag: "int", value: 4 }],
     ]));
@@ -45,7 +45,7 @@ pure flow greet(name: String) -> String {
   return "hello"
 }
 `;
-    const result = await run(source, "test.spore", "greet", new Map([
+    const result = await run(source, "test.fungi", "greet", new Map([
       ["name", { __tag: "string", value: "world" }],
     ]));
 
@@ -67,7 +67,7 @@ pure flow doWork() -> Int {
 }
 `;
     // 10 second deadline — plenty of time for this synchronous flow
-    const result = await run(source, "test.spore", "doWork", new Map(), {
+    const result = await run(source, "test.fungi", "doWork", new Map(), {
       deadlineMs: 10_000,
     });
 
@@ -84,13 +84,13 @@ pure flow identity(x: Int) -> Int {
   return x
 }
 `;
-    const result = await run(source, "test.spore", "identity", new Map([
+    const result = await run(source, "test.fungi", "identity", new Map([
       ["x", { __tag: "int", value: 99 }],
     ]), { deadlineMs: 60_000 });
 
     assert.equal(result.ok, true);
     assert.ok(
-      !result.diagnostics.some((d) => d.code === "SPORE-RUNTIME-DEADLINE"),
+      !result.diagnostics.some((d) => d.code === "FUNGI-RUNTIME-DEADLINE"),
       "no deadline diagnostic expected for a far-future deadline",
     );
   });
@@ -112,7 +112,7 @@ pure flow slowFlow() -> Int {
     // To be deterministic, we also wait briefly before the deadline check.
     // Actually: we set deadlineMs=1 so Date.now() + 1 expires almost instantly.
     // The deadline is checked at the very start of runFlow() so this is reliable.
-    const result = await run(source, "test.spore", "slowFlow", new Map(), {
+    const result = await run(source, "test.fungi", "slowFlow", new Map(), {
       deadlineMs: 1,
     });
 
@@ -126,8 +126,8 @@ pure flow slowFlow() -> Int {
       if (errValue.__tag === "err") {
         assert.ok(
           errValue.error.__tag === "string" &&
-          errValue.error.value.includes("SPORE-TIMEOUT"),
-          `expected SPORE-TIMEOUT in error message, got: ${JSON.stringify(errValue.error)}`,
+          errValue.error.value.includes("FUNGI-TIMEOUT"),
+          `expected FUNGI-TIMEOUT in error message, got: ${JSON.stringify(errValue.error)}`,
         );
       }
     }
@@ -144,7 +144,7 @@ pure flow quick() -> String {
     // Pass a very short deadline — we use a helper that sleeps briefly first
     // to guarantee the deadline has passed by the time execute runs.
     // Strategy: set deadlineMs to 1 then add a micro delay via a resolved promise.
-    const resultPromise = run(source, "test.spore", "quick", new Map(), {
+    const resultPromise = run(source, "test.fungi", "quick", new Map(), {
       deadlineMs: 1,
     });
 

@@ -45,7 +45,7 @@ PHYSICAL (ASIC)
   echoes to: Economic layer → triggers economics { on_tamper zeroize } across affected contracts
 
 MATHEMATICAL (AST / type system)
-  detects: Girard's Paradox construction (Universe stratification violation, SPORE-UNIV-001)
+  detects: Girard's Paradox construction (Universe stratification violation, FUNGI-UNIV-001)
   echoes to: Physical layer → halts hardware execution of the offending flow
   echoes to: Economic layer → logs attempted type-level exploit to immutable audit trail
 
@@ -205,7 +205,7 @@ This follows the same editorial principle stated in `galerina-design-secrets-epi
 
 ### 7.2 Type-Level Exploit Attempt (Universe Violation)
 
-- **Mathematical:** Compiler catches SPORE-UNIV-001 (self-referential type) at compile time.
+- **Mathematical:** Compiler catches FUNGI-UNIV-001 (self-referential type) at compile time.
   The exploit never reaches the runtime.
 - **Physical:** No hardware event — the attack was neutralized before execution.
 - **Economic:** Compile-time rejection is logged to the CI/CD audit trail as a governance event.
@@ -219,7 +219,7 @@ This follows the same editorial principle stated in `galerina-design-secrets-epi
   `EconomicsOverrunError`.
 - **Mathematical:** The flow's output type is downgraded to `Unverified_Raw` — the output
   cannot be used in a governed context without passing through a Linear Gateway Transformation
-  (SPORE-GATE-* pattern). The taint monotonicity rule (see `galerina-fortified-typed-logic.md` §4)
+  (FUNGI-GATE-* pattern). The taint monotonicity rule (see `galerina-fortified-typed-logic.md` §4)
   ensures this cannot be silently circumvented.
 - **Physical:** The flow's hardware tier is demoted (active-mesh access withdrawn). If the flow
   attempts to continue executing at Tier 1, the capability gate check fails.

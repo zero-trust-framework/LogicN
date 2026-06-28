@@ -12,13 +12,13 @@
  * custody package (per the core-declares-verifies / ext-executes split,
  * [[galerina-key-custody-rotation-decision]]). Each `SignerVote.verdict` is expected to be
  * the result of an upstream signature/attestation verification done on binary silicon
- * (SPORE-SUBSTRATE-001); this primitive treats it as an already-decided trit.
+ * (FUNGI-SUBSTRATE-001); this primitive treats it as an already-decided trit.
  *
  * Invariants (inherited verbatim from the K3 algebra in three-valued-governance.ts —
  * NOT re-proved here), mirroring lease.ts:
  *  - **Deny-by-default.** Malformed input (a non-integer or < 1 threshold, a non-array
  *    vote set, a vote with an empty signer or an out-of-domain verdict) folds to
- *    INDETERMINATE → denied, audited SPORE-GOV-3VL-001. There is no path by which bad
+ *    INDETERMINATE → denied, audited FUNGI-GOV-3VL-001. There is no path by which bad
  *    input authorizes.
  *  - **Distinct signers only.** Votes are de-duplicated by `signer`; one signer counts
  *    AT MOST once (anti-Sybil — a signer cannot reach the threshold alone by repeating).
@@ -28,7 +28,7 @@
  *  - **Clean shortfall is a DENY, not an anomaly.** When the input is well-formed but
  *    fewer than M distinct signers approve, the verdict is an ordinary DENY (no
  *    diagnostic) — exactly as an expired (but well-formed) lease is a clean DENY. Only
- *    malformed/equivocating input raises SPORE-GOV-3VL-001.
+ *    malformed/equivocating input raises FUNGI-GOV-3VL-001.
  *  - **Pure.** No clock, no I/O, no randomness — same (votes, m) always yields the same
  *    decision (reproducible audit).
  */
@@ -108,7 +108,7 @@ export function quorumVerdict(votes: readonly SignerVote[] | unknown, m: number)
  * `authorized` is `true` ONLY when the input is well-formed AND at least `m` DISTINCT
  * signers approve. A clean shortfall (well-formed, < m approvals) is an ordinary DENY
  * (no diagnostic); malformed input or a signer equivocation collapses to INDETERMINATE
- * carrying SPORE-GOV-3VL-001 (also forwarded to `onDiagnostic` if provided). Pure.
+ * carrying FUNGI-GOV-3VL-001 (also forwarded to `onDiagnostic` if provided). Pure.
  */
 export function checkQuorum(
   votes: readonly SignerVote[] | unknown,

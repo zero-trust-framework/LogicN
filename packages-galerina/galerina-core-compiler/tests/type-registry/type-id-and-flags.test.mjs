@@ -6,7 +6,7 @@
 //   - EffectFlags bitset (distinct powers-of-2, effectsToFlags, effectsSubset)
 //   - ComputeCompatibilityFlags bitset (distinct powers-of-2)
 //   - parseTensorType, tensorElementTypesCompatible, tensorDimensionCountsCompatible
-//   - SPORE-TYPE-030 and SPORE-TYPE-031 constant shapes
+//   - FUNGI-TYPE-030 and FUNGI-TYPE-031 constant shapes
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -22,8 +22,8 @@ import {
   parseTensorType,
   tensorElementTypesCompatible,
   tensorDimensionCountsCompatible,
-  SPORE_TYPE_030,
-  SPORE_TYPE_031,
+  FUNGI_TYPE_030,
+  FUNGI_TYPE_031,
 } from "../../dist/index.js";
 
 // ---------------------------------------------------------------------------
@@ -260,7 +260,7 @@ describe("tensorElementTypesCompatible", () => {
     assert.ok(tensorElementTypesCompatible("Int8", "Int8"));
   });
 
-  it("different element types → incompatible → SPORE-TYPE-030", () => {
+  it("different element types → incompatible → FUNGI-TYPE-030", () => {
     assert.ok(!tensorElementTypesCompatible("Float32", "Int8"),
       "Float32 ≠ Int8 → incompatible");
     assert.ok(!tensorElementTypesCompatible("Float64", "Float32"),
@@ -274,7 +274,7 @@ describe("tensorDimensionCountsCompatible", () => {
     assert.ok(tensorDimensionCountsCompatible(["dynamic", 768], [32, 768]));
   });
 
-  it("different rank → incompatible → SPORE-TYPE-031", () => {
+  it("different rank → incompatible → FUNGI-TYPE-031", () => {
     assert.ok(!tensorDimensionCountsCompatible([768], ["dynamic", 768]),
       "Rank 1 ≠ Rank 2 → incompatible");
     assert.ok(!tensorDimensionCountsCompatible([32, 32], [32]),
@@ -283,27 +283,27 @@ describe("tensorDimensionCountsCompatible", () => {
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-TYPE-030 and SPORE-TYPE-031 constant shapes
+// FUNGI-TYPE-030 and FUNGI-TYPE-031 constant shapes
 // ---------------------------------------------------------------------------
 
-describe("SPORE_TYPE_030 and SPORE_TYPE_031: constant shapes", () => {
-  it("SPORE_TYPE_030 (TensorElementTypeMismatch) has correct shape", () => {
-    assert.equal(SPORE_TYPE_030.code, "SPORE-TYPE-030");
-    assert.equal(SPORE_TYPE_030.name, "TensorElementTypeMismatch");
-    assert.equal(SPORE_TYPE_030.severity, "error");
-    assert.ok(typeof SPORE_TYPE_030.why === "string");
-    assert.ok(SPORE_TYPE_030.suggestedFix.toLowerCase().includes("dequantize") ||
-              SPORE_TYPE_030.suggestedFix.toLowerCase().includes("quantize"),
+describe("FUNGI_TYPE_030 and FUNGI_TYPE_031: constant shapes", () => {
+  it("FUNGI_TYPE_030 (TensorElementTypeMismatch) has correct shape", () => {
+    assert.equal(FUNGI_TYPE_030.code, "FUNGI-TYPE-030");
+    assert.equal(FUNGI_TYPE_030.name, "TensorElementTypeMismatch");
+    assert.equal(FUNGI_TYPE_030.severity, "error");
+    assert.ok(typeof FUNGI_TYPE_030.why === "string");
+    assert.ok(FUNGI_TYPE_030.suggestedFix.toLowerCase().includes("dequantize") ||
+              FUNGI_TYPE_030.suggestedFix.toLowerCase().includes("quantize"),
       "suggestedFix must mention quantize/dequantize");
   });
 
-  it("SPORE_TYPE_031 (TensorDimensionMismatch) has correct shape", () => {
-    assert.equal(SPORE_TYPE_031.code, "SPORE-TYPE-031");
-    assert.equal(SPORE_TYPE_031.name, "TensorDimensionMismatch");
-    assert.equal(SPORE_TYPE_031.severity, "error");
-    assert.ok(typeof SPORE_TYPE_031.why === "string");
-    assert.ok(SPORE_TYPE_031.suggestedFix.toLowerCase().includes("squeeze") ||
-              SPORE_TYPE_031.suggestedFix.toLowerCase().includes("unsqueeze"),
+  it("FUNGI_TYPE_031 (TensorDimensionMismatch) has correct shape", () => {
+    assert.equal(FUNGI_TYPE_031.code, "FUNGI-TYPE-031");
+    assert.equal(FUNGI_TYPE_031.name, "TensorDimensionMismatch");
+    assert.equal(FUNGI_TYPE_031.severity, "error");
+    assert.ok(typeof FUNGI_TYPE_031.why === "string");
+    assert.ok(FUNGI_TYPE_031.suggestedFix.toLowerCase().includes("squeeze") ||
+              FUNGI_TYPE_031.suggestedFix.toLowerCase().includes("unsqueeze"),
       "suggestedFix must mention squeeze/unsqueeze");
   });
 });

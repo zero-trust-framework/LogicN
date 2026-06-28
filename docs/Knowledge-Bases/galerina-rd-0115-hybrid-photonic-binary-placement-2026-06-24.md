@@ -1,7 +1,7 @@
 # R&D 0115 — Optimal hybrid photonic/binary placement: joining 0110's cross-over math to the shipped ExecutionRouter
 
 **Date:** 2026-06-24 · **Workflow:** `wjx7k0y8g` · **Status:** R&D record (design/measurement plan; no build)
-**Posture:** verify-before-build · trust the math · fail-safe to digital · crypto-on-core (SPORE-SUBSTRATE-001)
+**Posture:** verify-before-build · trust the math · fail-safe to digital · crypto-on-core (FUNGI-SUBSTRATE-001)
 **Companion docs:** [`galerina-rd-0110-photonic-matmul-refutation-deepened-2026-06-24.md`](galerina-rd-0110-photonic-matmul-refutation-deepened-2026-06-24.md) · [`galerina-photonic-ppu-virtualisation.md`](galerina-photonic-ppu-virtualisation.md) · [`galerina-rd-0113-tower-citizen-deepened-2026-06-24.md`](galerina-rd-0113-tower-citizen-deepened-2026-06-24.md)
 
 > Owner ask: "did 0110 look at the hybrid option where we can switch between photonic and binary for the best placement of maths/use?"
@@ -19,9 +19,9 @@
 
 `ExecutionRouter.route()` (`galerina-tri-pipe/src/execution-router.ts:96-141`) composes **three axes** into one pure, deterministic decision, plus a deny-by-default cap-gate:
 
-- **Axis-1 capability tier** (`galerina-hardware-tier/src/hardware-directive.ts:40-60`) — fail-closed by construction: `attestationVerified !== true ⇒ binary` (strict boolean identity, so a JSON-round-tripped `'false'`/object/`1` cannot coerce-pass); unknown `targetId ⇒ binary` (K3 INDETERMINATE→DENY, SPORE-HW-004). Only an attested, fully-eligible AcceleratorPlane reaches photonic. **Binary is the structural floor.**
+- **Axis-1 capability tier** (`galerina-hardware-tier/src/hardware-directive.ts:40-60`) — fail-closed by construction: `attestationVerified !== true ⇒ binary` (strict boolean identity, so a JSON-round-tripped `'false'`/object/`1` cannot coerce-pass); unknown `targetId ⇒ binary` (K3 INDETERMINATE→DENY, FUNGI-HW-004). Only an attested, fully-eligible AcceleratorPlane reaches photonic. **Binary is the structural floor.**
 - **Axis-2 precision** — `routePrecision(opClass, routing)`.
-- **Axis-3 per-kernel offload** (`galerina-ext-photonic-emulator/src/partition-decider.ts:109-146`) — only *considered* when `offloadEligible = (tier∈{hybrid,photonic}) && precision==='ternary'`; otherwise `target=digital`. Deny-by-default: crypto / control-flow ⇒ digital (SPORE-SUBSTRATE-001); non-finite / n<1 ⇒ digital; systematic ADC-quant floor exceeding tolerance ⇒ digital **regardless of caller redundancyN** (SPORE-SUBSTRATE-003); cannot-vote ⇒ digital. Photonic returned **only** when an absolute-ns model proves `t_phot < t_dig`.
+- **Axis-3 per-kernel offload** (`galerina-ext-photonic-emulator/src/partition-decider.ts:109-146`) — only *considered* when `offloadEligible = (tier∈{hybrid,photonic}) && precision==='ternary'`; otherwise `target=digital`. Deny-by-default: crypto / control-flow ⇒ digital (FUNGI-SUBSTRATE-001); non-finite / n<1 ⇒ digital; systematic ADC-quant floor exceeding tolerance ⇒ digital **regardless of caller redundancyN** (FUNGI-SUBSTRATE-003); cannot-vote ⇒ digital. Photonic returned **only** when an absolute-ns model proves `t_phot < t_dig`.
 - **Cap-gate** (`execution-router.ts:89-130`) — `laneIsGranted` is deny-by-default: digital always granted (safe floor); a non-digital lane survives only if allowed by **both** the grant allow-list **and** the cap predicate (ANDed). An ungranted net-win lane collapses to `{target:digital}` — never throws, never routes to an ungranted lane.
 
 **Worst case == binary == today: verified.** Ran `Galerina-R-AND-D/scripts/rd-photonic-ppu-cost-model-proof.mjs` on the repo i9 / node: **25/25 PASS, exit 0** — including M2d "never a slowdown" (0 cases where routed cost > digital over a 4096-n × {1,3,9,25}-N sweep) and M2c (0 mis-routes; photonic chosen 15620×, digital 764×).

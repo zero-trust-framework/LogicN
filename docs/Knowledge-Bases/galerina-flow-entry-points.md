@@ -198,7 +198,7 @@ The compiler rejects any request binding that targets a flow without an explicit
 
 At runtime, the governed execution director checks that the invocation path matches a declared and valid entry point before execution begins. If it does not match, the request is refused with a governed error response — not a silent failure.
 
-**Diagnostic:** Attempts to reach ungated flows produce diagnostic `SPORE-ENTRY-001 UndeclaredEntryPoint`.
+**Diagnostic:** Attempts to reach ungated flows produce diagnostic `FUNGI-ENTRY-001 UndeclaredEntryPoint`.
 
 ---
 
@@ -233,4 +233,4 @@ Parser support for `contract.entry` is partially implemented as of Phase 11. The
 - `route-spec.md` — route declaration syntax and governance
 - `galerina-route-runtime-spec.md` — runtime handling of route entry points
 - `galerina-governance-architecture.md` — overall governance model
-- `compiler-diagnostics.md` — diagnostic codes including SPORE-ENTRY-001
+- `compiler-diagnostics.md` — diagnostic codes including FUNGI-ENTRY-001

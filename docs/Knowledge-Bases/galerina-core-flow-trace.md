@@ -316,15 +316,15 @@ export interface FlowTraceReport {
 
 ---
 
-## Diagnostic Codes (SPORE-TRACE series)
+## Diagnostic Codes (FUNGI-TRACE series)
 
 | Code | Name | Meaning |
 | --- | --- | --- |
-| `SPORE-TRACE-001` | SECRET_IN_TRACE | Secret value attempted to flow into trace output |
-| `SPORE-TRACE-002` | PII_IN_TRACE | PII field attempted to flow into trace output |
-| `SPORE-TRACE-003` | BODY_CAPTURE_DENIED | Raw body capture requested without approved policy |
-| `SPORE-TRACE-004` | HEADER_CAPTURE_DENIED | Sensitive header capture requested without approved policy |
-| `SPORE-TRACE-005` | TRACE_WRITER_CLOSED | Trace event emitted after writer was closed |
+| `FUNGI-TRACE-001` | SECRET_IN_TRACE | Secret value attempted to flow into trace output |
+| `FUNGI-TRACE-002` | PII_IN_TRACE | PII field attempted to flow into trace output |
+| `FUNGI-TRACE-003` | BODY_CAPTURE_DENIED | Raw body capture requested without approved policy |
+| `FUNGI-TRACE-004` | HEADER_CAPTURE_DENIED | Sensitive header capture requested without approved policy |
+| `FUNGI-TRACE-005` | TRACE_WRITER_CLOSED | Trace event emitted after writer was closed |
 
 ---
 

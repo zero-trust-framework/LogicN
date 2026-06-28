@@ -1,7 +1,7 @@
 # Galerina — % completion audit + roadmap (2026-06-25)
 
 **Verdict (adversarially verified):** **~87% shippable / ~61% full-vision.** Honesty bar HELD throughout
-(binary crypto + SPORE-SUBSTRATE-001, degrade-only K3, no free-O(1)/instant/FTL, `shippable` = wired+tested+
+(binary crypto + FUNGI-SUBSTRATE-001, degrade-only K3, no free-O(1)/instant/FTL, `shippable` = wired+tested+
 fail-closed and NOT spec-only). Produced by a 6-subsystem survey + an adversarial inflation critic
 (workflow `wvvuh8kiu`, 7 agents); every headline % is grounded against the live tree + the fresh
 all-green sweep below. Supersedes [galerina-percent-audit-roadmap-2026-06-24-v2.md] (~84%/~63%): shippable
@@ -15,7 +15,7 @@ ticked up from the session's fail-closed wins; full-vision held (new surface = n
 | **Tests** | core-compiler **3813/3813** · sentinel-memory **34/34** · tower-citizen **267/267** = **4114 / 0 fail** |
 | **Security audit** | **every ENFORCING gate 0 violations** (tier-boundary · production-blockers · name-collisions · diagnostic-doc-drift · overclaim-phrases · graph-integrity · web-stub-guard · gate-injection · NUL-hygiene) · **SEC-002 mutation 17/17 KILLED, 0 survived** (cert-pin, fuse gates 1/2/2b, i32 overflow traps, secret-egress sinks all genuinely guarded) |
 | **Benchmark** | truth-audit **PASSED** — cross-runtime correctness agrees on all 6 (nbody/mandelbrot/binary-trees/spectral-norm/tmf-container) · 14 unit-aligned · anti-inflation honest (Node 1549×/4554×/651× the governed tree-walker, no inflated wins) |
-| Report-only baselines (non-enforcing, documented backlog) | diagnostic-codes 158 (V5 name-case 134) · spore-quality 105 (.spore retrofit) · doc-drift 28 · provenance 3 |
+| Report-only baselines (non-enforcing, documented backlog) | diagnostic-codes 158 (V5 name-case 134) · fungi-quality 105 (.fungi retrofit) · doc-drift 28 · provenance 3 |
 
 ## Subsystem breakdown
 
@@ -30,13 +30,13 @@ ticked up from the session's fail-closed wins; full-vision held (new surface = n
 
 ## Binding must-asterisk caveats (a buyer/auditor MUST be told)
 
-1. **64-bit integers are not executable yet.** Scalar `Int64`/`UInt64` parse + type-check, but the compiler **refuses them fail-closed** (`SPORE-NUMERIC-001`, error) rather than silently truncate 64→32. The checked `i64-arith.ts` + interpreter int64 dispatch ARE shipped + unit-tested, but are **unreachable in any real flow** (gate-closed) — their green tests prove the arithmetic in isolation, not an end-to-end Int64 program. The WASM emitter still emits no i64 bodies (`wat-emitter.ts:2989-2996`). i32 (trapping) + f64 are the only widths faithful end-to-end across all tiers.
+1. **64-bit integers are not executable yet.** Scalar `Int64`/`UInt64` parse + type-check, but the compiler **refuses them fail-closed** (`FUNGI-NUMERIC-001`, error) rather than silently truncate 64→32. The checked `i64-arith.ts` + interpreter int64 dispatch ARE shipped + unit-tested, but are **unreachable in any real flow** (gate-closed) — their green tests prove the arithmetic in isolation, not an end-to-end Int64 program. The WASM emitter still emits no i64 bodies (`wat-emitter.ts:2989-2996`). i32 (trapping) + f64 are the only widths faithful end-to-end across all tiers.
 2. **The DEFAULT (non-certified) `.lmanifest` profile emits PLACEHOLDER signatures** (`manifest-generator.ts:685-693`). Real hybrid Ed25519+ML-DSA-65 signing is wired and fires for the certified/production profile with a signing key — but the default-profile output is not a real signature. #34 ML-DSA over the digest is the standing finish.
-3. **The web-* packages are STUBS.** What ships is the *enforced contract* (`governance/web-failclosed-contract.json` + `audit-web-stub-guard.mjs`, which blocks any impl that lacks its SPORE-WEB-* acceptance tests) + reserved codes — NOT running XSS/redirect/gesture defenses.
+3. **The web-* packages are STUBS.** What ships is the *enforced contract* (`governance/web-failclosed-contract.json` + `audit-web-stub-guard.mjs`, which blocks any impl that lacks its FUNGI-WEB-* acceptance tests) + reserved codes — NOT running XSS/redirect/gesture defenses.
 4. **RD-0112 #8 R1 (trit-correct REJECT tombstone) is DEFERRED** — a design decision, not a fail-open: a compute-segment packed-trit block can't decode to REJECT via a bare `pool.free` without a pool API change (the segment fill is mandatorily 0xFF for i32). R2 (erase-on-trap) shipped. .lcache loader is spec-only (deferred to #34).
 5. **The all-green evidence is LOCAL, not CI-continuous.** The SEC-002 mutation audit (17/17) and the full 4114-test suite run locally; neither is in `conventions.yml` yet (CI runs the build-free lints only). **This is the #1 NOW item.**
 6. **2 Hardened-Border drifts** (galerina-ext-bridge-cpp omits node:crypto; galerina-tower-citizen omits @galerina/substrate-math + ml-dsa) — informational (`graph-all` always exits 0), owner-call to widen-allowlist vs treat-as-violation.
-7. **Report-only lint baselines are >0 by design** (diagnostic-codes 158, spore-quality 105, doc-drift 28, provenance 3) — documented non-enforcing backlogs, not security failures.
+7. **Report-only lint baselines are >0 by design** (diagnostic-codes 158, fungi-quality 105, doc-drift 28, provenance 3) — documented non-enforcing backlogs, not security failures.
 8. Liveness caps are **deterministic step/iteration/depth counts only** — no wall-clock/resource deadline. Revocation/registry gates fire only when the host injects the predicate. Cross-flow secret/embedding propagation is intra-procedural (coarse fail-closed). Photonic/quantum results honestly mark `executedNatively=false` / `deterministic=false`.
 
 ## Roadmap
@@ -49,7 +49,7 @@ ticked up from the session's fail-closed wins; full-vision held (new surface = n
 ### NEXT (the standing core-component builds)
 - **Faithful i64 emitter — SUBSTANTIALLY DONE (Step 2b), short path to the Int64 gate-lift.** Status as of 2026-06-25 (verified plan `galerina-i64-lowering-plan-verified-2026-06-25.md`): Step 0 (shared `numeric-lowering.ts`) + Step 1 (interpreter literal-coercion + fast-tier fail-closed bail) + Step 2b emitter (i64 checked helpers, type routing, return/local valtype, **literal `i64.const` origination 3g/3h, foldToInt R2**) all SHIPPED. **A fused Int64 WASM module now VALIDATES under wabt + runs exact + traps** (`tests/wat-i64-milestone.test.mjs`); the worker cross-verified walker≡WASM≡exact-BigInt (rd-0113b 12/12, param slice; literal slice next off the 3g signal). **REMAINING before the owner-gated lift:** (a) the worker's literal-slice differential folds into rd-0113b → the complete 0014 Int64 corpus passes non-vacuously; (b) Step-2 type-checker tightening (mixed Int+Int64→Int64 contagion @type-checker:883; fail-closed Int-bodied-Int64-init reject @:414); (c) the rare bare-`return <literal>` threading through `emitBlockStatements` (fail-safe to walker today). Then remove `"Int64"` (only) from `BACKEND_UNLOWERABLE_SCALAR`. **UInt64 stays gated** (needs its own unsigned `u64-arith`).
 - **RD-0112 #8 R1 design decision** (recommend `pool.freeNoScrub()` + bench frees via a trit-aware path) — then the recycled governance slot decodes to REJECT.
-- **web-* lead pair** (`galerina-web-render` + `galerina-web-state`) when scheduled — every other web package is downstream of the render sanitiser gate + the state taint lattice; emit the reserved SPORE-WEB-* codes.
+- **web-* lead pair** (`galerina-web-render` + `galerina-web-state`) when scheduled — every other web package is downstream of the render sanitiser gate + the state taint lattice; emit the reserved FUNGI-WEB-* codes.
 - **Extend the 0014 byte-identical differential beyond i32** (strings/arrays/records/floats/Option/Result across all three tiers) + the 6-component-tuple harness slice.
 - **.tmf slice 4** (ML-DSA-65 over the TMX-256 root) + drive the report-only lint baselines to 0, then drop `--soft`.
 

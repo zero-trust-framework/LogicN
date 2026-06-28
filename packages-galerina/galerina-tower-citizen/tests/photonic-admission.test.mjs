@@ -70,12 +70,12 @@ test("deny: signature from the wrong key fails verification", () => {
   assert.match(r.reason, /signature/i);
 });
 
-test("indeterminate: no attestation is undischarged (SPORE-GOV-3VL-001), not admitted", () => {
+test("indeterminate: no attestation is undischarged (FUNGI-GOV-3VL-001), not admitted", () => {
   const { policy } = fixture();
   const r = admitPhotonicConfig(BLOB, undefined, policy);
   assert.equal(r.admitted, false);
   assert.equal(r.decision.verdict, 0, "INDETERMINATE");
-  assert.equal(r.decision.diagnostic?.code, "SPORE-GOV-3VL-001");
+  assert.equal(r.decision.diagnostic?.code, "FUNGI-GOV-3VL-001");
 });
 
 test("deny: a valid signature from a REVOKED key is refused", () => {

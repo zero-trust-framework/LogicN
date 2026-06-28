@@ -1,4 +1,4 @@
-// index-integrity.test.mjs — SPORE-INTEL-001 (poisoned-index) + SPORE-INTEL-002 (unsandboxed write).
+// index-integrity.test.mjs — FUNGI-INTEL-001 (poisoned-index) + FUNGI-INTEL-002 (unsandboxed write).
 //
 // Proves the .lindex cache is no longer trusted blindly: a tampered index is discarded + re-parsed
 // (fail-closed), an HMAC tag is unforgeable without the key, and a path-traversal indexDir is refused.
@@ -25,8 +25,8 @@ flow chargeCard(amount: Int) -> Bool
 `;
 
 async function tmpWorkspace() {
-  const dir = await mkdtemp(join(tmpdir(), "spore-intel-"));
-  await writeFile(join(dir, "pay.spore"), SAMPLE, "utf8");
+  const dir = await mkdtemp(join(tmpdir(), "fungi-intel-"));
+  await writeFile(join(dir, "pay.fungi"), SAMPLE, "utf8");
   return dir;
 }
 
@@ -60,11 +60,11 @@ test("POISONED INDEX: tampered flows with a STALE integrity tag are discarded (f
 });
 
 test("verifyIndexIntegrity: any field mutation breaks the tag; a missing tag fails closed", async () => {
-  const base = { version: 1, builtAt: "2026-06-24T00:00:00Z", workspaceDir: "/w", flows: [{ flowName: "a", filePath: "/w/a.spore" }], fileHashes: { "/w/a.spore": "abc" }, skippedFiles: 0 };
+  const base = { version: 1, builtAt: "2026-06-24T00:00:00Z", workspaceDir: "/w", flows: [{ flowName: "a", filePath: "/w/a.fungi" }], fileHashes: { "/w/a.fungi": "abc" }, skippedFiles: 0 };
   const sealed = { ...base, integrity: computeIndexIntegrity(base) };
   assert.equal(verifyIndexIntegrity(sealed), true);
-  assert.equal(verifyIndexIntegrity({ ...sealed, flows: [{ flowName: "b", filePath: "/w/a.spore" }] }), false, "mutating a flow breaks the tag");
-  assert.equal(verifyIndexIntegrity({ ...sealed, fileHashes: { "/w/a.spore": "DEAD" } }), false, "mutating a fileHash breaks the tag");
+  assert.equal(verifyIndexIntegrity({ ...sealed, flows: [{ flowName: "b", filePath: "/w/a.fungi" }] }), false, "mutating a flow breaks the tag");
+  assert.equal(verifyIndexIntegrity({ ...sealed, fileHashes: { "/w/a.fungi": "DEAD" } }), false, "mutating a fileHash breaks the tag");
   assert.equal(verifyIndexIntegrity(base), false, "no integrity tag → fail-closed");
 });
 
@@ -89,17 +89,17 @@ test("HMAC mode: with GALERINA_INDEX_HMAC_KEY the tag is unforgeable without the
   }
 });
 
-test("SPORE-INTEL-002: an indexDir with a '..' path-traversal segment is refused", async () => {
+test("FUNGI-INTEL-002: an indexDir with a '..' path-traversal segment is refused", async () => {
   const dir = await tmpWorkspace();
   try {
     await assert.rejects(
       () => buildIndex(dir, "../../escape"),        // raw traversal segments
-      /SPORE-INTEL-002/,
+      /FUNGI-INTEL-002/,
       "a '..'-traversal indexDir must be rejected before any write",
     );
     await assert.rejects(
       () => buildIndex(dir, "cache/../../etc"),     // traversal hidden mid-path
-      /SPORE-INTEL-002/,
+      /FUNGI-INTEL-002/,
     );
     // (a deliberate absolute cache dir with no `..` is allowed — proven by main-suite test 11.)
   } finally { await rm(dir, { recursive: true, force: true }); }

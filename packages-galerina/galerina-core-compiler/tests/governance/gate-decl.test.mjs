@@ -4,9 +4,9 @@
 // Tests for the `gate(condition) { ... }` admission guard block (task #88).
 //
 // Covers:
-//   - SPORE-GATE-001: gate(condition) references unknown condition name (warning)
-//   - SPORE-GATE-002: gate wrapping a pure flow is redundant (warning)
-//   - Known guard in same compilation unit → no SPORE-GATE-001
+//   - FUNGI-GATE-001: gate(condition) references unknown condition name (warning)
+//   - FUNGI-GATE-002: gate wrapping a pure flow is redundant (warning)
+//   - Known guard in same compilation unit → no FUNGI-GATE-001
 //   - gateDecl AST node shape (kind, value = condition name)
 // =============================================================================
 
@@ -24,7 +24,7 @@ import {
 // ---------------------------------------------------------------------------
 
 function parse(source) {
-  return parseProgram(source, "test.spore");
+  return parseProgram(source, "test.fungi");
 }
 
 function parseAndVerify(source, profile = "dev") {
@@ -120,11 +120,11 @@ gate(SomeGuard) {
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-GATE-001: unknown condition name
+// FUNGI-GATE-001: unknown condition name
 // ---------------------------------------------------------------------------
 
-describe("SPORE-GATE-001: gate condition not found in known domain guards", () => {
-  it("gate(UnknownGuard) emits SPORE-GATE-001 warning when guard not defined", () => {
+describe("FUNGI-GATE-001: gate condition not found in known domain guards", () => {
+  it("gate(UnknownGuard) emits FUNGI-GATE-001 warning when guard not defined", () => {
     const source = `
 gate(UnknownGuard) {
   secure flow action(x: String) -> Void
@@ -137,22 +137,22 @@ gate(UnknownGuard) {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      hasDiag(result, "SPORE-GATE-001"),
-      `Expected SPORE-GATE-001 for unknown condition 'UnknownGuard', got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-GATE-001"),
+      `Expected FUNGI-GATE-001 for unknown condition 'UnknownGuard', got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
-    const diag = diagsWithCode(result, "SPORE-GATE-001")[0];
+    const diag = diagsWithCode(result, "FUNGI-GATE-001")[0];
     assert.equal(
       diag?.severity,
       "warning",
-      "SPORE-GATE-001 must be a warning (Stage A; guard may be in another file)",
+      "FUNGI-GATE-001 must be a warning (Stage A; guard may be in another file)",
     );
     assert.ok(
       diag?.message.includes("UnknownGuard"),
-      `SPORE-GATE-001 message must mention 'UnknownGuard', got: ${diag?.message}`,
+      `FUNGI-GATE-001 message must mention 'UnknownGuard', got: ${diag?.message}`,
     );
   });
 
-  it("gate with known guard in same compilation unit — no SPORE-GATE-001", () => {
+  it("gate with known guard in same compilation unit — no FUNGI-GATE-001", () => {
     const source = `
 guard AdminGuard {
   permitted_effects {
@@ -172,18 +172,18 @@ gate(AdminGuard) {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      !hasDiag(result, "SPORE-GATE-001"),
-      `Expected no SPORE-GATE-001 when AdminGuard is declared in same unit, got: ${diagsWithCode(result, "SPORE-GATE-001").map((d) => d.message).join("; ")}`,
+      !hasDiag(result, "FUNGI-GATE-001"),
+      `Expected no FUNGI-GATE-001 when AdminGuard is declared in same unit, got: ${diagsWithCode(result, "FUNGI-GATE-001").map((d) => d.message).join("; ")}`,
     );
   });
 });
 
 // ---------------------------------------------------------------------------
-// SPORE-GATE-002: gate wrapping pure flow is redundant
+// FUNGI-GATE-002: gate wrapping pure flow is redundant
 // ---------------------------------------------------------------------------
 
-describe("SPORE-GATE-002: gate wrapping pure flow emits warning", () => {
-  it("gate(SomeGuard) { secure flow ... } does NOT emit SPORE-GATE-002", () => {
+describe("FUNGI-GATE-002: gate wrapping pure flow emits warning", () => {
+  it("gate(SomeGuard) { secure flow ... } does NOT emit FUNGI-GATE-002", () => {
     // Stage A parser only handles 'flow', 'secure', and 'guarded' keywords inside
     // gate {}. Since pure flow can't be placed inside gate {} via the current parser,
     // we verify the negative case: a gate wrapping a secure (non-pure) flow.
@@ -203,16 +203,16 @@ gate(SomeGuard) {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      !hasDiag(result, "SPORE-GATE-002"),
-      `Expected no SPORE-GATE-002 for gate wrapping secure flow, got: ${diagsWithCode(result, "SPORE-GATE-002").map((d) => d.message).join("; ")}`,
+      !hasDiag(result, "FUNGI-GATE-002"),
+      `Expected no FUNGI-GATE-002 for gate wrapping secure flow, got: ${diagsWithCode(result, "FUNGI-GATE-002").map((d) => d.message).join("; ")}`,
     );
   });
 
-  it("SPORE-GATE-002 constant: governance verifier has the check for pureFlowDecl", () => {
-    // The SPORE-GATE-002 check looks for pureFlowDecl children in gateDecl nodes.
+  it("FUNGI-GATE-002 constant: governance verifier has the check for pureFlowDecl", () => {
+    // The FUNGI-GATE-002 check looks for pureFlowDecl children in gateDecl nodes.
     // This test verifies the code path exists by checking that a gate wrapping
     // a regular flow (not pure) does NOT trigger the warning.
-    // Full SPORE-GATE-002 triggering requires pure flow support inside gate {} (Stage B).
+    // Full FUNGI-GATE-002 triggering requires pure flow support inside gate {} (Stage B).
     const source = `
 guard ReadOnlyGuard {
   permitted_effects { database.read }
@@ -228,10 +228,10 @@ gate(ReadOnlyGuard) {
 }
 `;
     const result = parseAndVerify(source);
-    // gate wrapping a plain flow (not pureFlowDecl) → no SPORE-GATE-002
+    // gate wrapping a plain flow (not pureFlowDecl) → no FUNGI-GATE-002
     assert.ok(
-      !hasDiag(result, "SPORE-GATE-002"),
-      `Expected no SPORE-GATE-002 for gate wrapping plain (non-pure) flow`,
+      !hasDiag(result, "FUNGI-GATE-002"),
+      `Expected no FUNGI-GATE-002 for gate wrapping plain (non-pure) flow`,
     );
   });
 });

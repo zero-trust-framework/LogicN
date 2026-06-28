@@ -1,5 +1,5 @@
 /**
- * Self-hosted GIR body emitter (gir-emitter.spore, M-B body section) — execution tests.
+ * Self-hosted GIR body emitter (gir-emitter.fungi, M-B body section) — execution tests.
  *
  * Lowers the parser's full Stmt/Expr body AST into a nested GIR tree:
  *   emitBodyGIR(body) -> Array<GIRStmt>, each GIRStmt carrying lowered GIRExpr operands.
@@ -14,8 +14,8 @@ import { dirname, join } from "node:path";
 import { parseProgram, executeFlow } from "../dist/index.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const GIR_SPORE = join(__dir, "..", "src", "self-hosted", "gir-emitter.spore");
-const program = parseProgram(readFileSync(GIR_SPORE, "utf8"), "gir-emitter.spore");
+const GIR_FUNGI = join(__dir, "..", "src", "self-hosted", "gir-emitter.fungi");
+const program = parseProgram(readFileSync(GIR_FUNGI, "utf8"), "gir-emitter.fungi");
 
 const vStr = (s) => ({ __tag: "string", value: String(s) });
 const vList = (items) => ({ __tag: "list", items });
@@ -61,18 +61,18 @@ async function emit(stmts) {
   return rec.items.map(readGStmt);
 }
 
-describe("gir-emitter.spore (body GIR) — parses clean", () => {
+describe("gir-emitter.fungi (body GIR) — parses clean", () => {
   it("has zero parse errors", () => {
     const errs = program.diagnostics.filter((d) => d.severity === "error");
     assert.equal(errs.length, 0, errs.map((e) => e.message).join(", "));
   });
 });
 
-// ── FLOW TABLE: parse real source via lexer.spore + parser.spore, feed parseFlows'
+// ── FLOW TABLE: parse real source via lexer.fungi + parser.fungi, feed parseFlows'
 //    output straight into buildFlowTable, read back the FlowEntry records. ──
 const SH_DIR = join(__dir, "..", "src", "self-hosted");
-const lexer = parseProgram(readFileSync(join(SH_DIR, "lexer.spore"), "utf8"), "lexer.spore");
-const parser = parseProgram(readFileSync(join(SH_DIR, "parser.spore"), "utf8"), "parser.spore");
+const lexer = parseProgram(readFileSync(join(SH_DIR, "lexer.fungi"), "utf8"), "lexer.fungi");
+const parser = parseProgram(readFileSync(join(SH_DIR, "parser.fungi"), "utf8"), "parser.fungi");
 
 async function flowsFrom(source) {
   const lexRes = await executeFlow("tokenize", new Map([["source", vStr(source)]]), lexer.ast);
@@ -97,7 +97,7 @@ async function flowTable(source) {
   });
 }
 
-describe("gir-emitter.spore — buildFlowTable (cross-flow table for the runtime)", () => {
+describe("gir-emitter.fungi — buildFlowTable (cross-flow table for the runtime)", () => {
   it("a single flow builds a one-entry table with name, ordered params, and a lowered body", async () => {
     const table = await flowTable(`pure flow double(x: Int) -> Int { return x + x }`);
     assert.equal(table.length, 1);
@@ -128,7 +128,7 @@ describe("gir-emitter.spore — buildFlowTable (cross-flow table for the runtime
   });
 });
 
-describe("gir-emitter.spore — expression lowering (real lowerExpr inside statements)", () => {
+describe("gir-emitter.fungi — expression lowering (real lowerExpr inside statements)", () => {
   it("let with a binary initializer lowers to store + binop with const kids", async () => {
     const [s] = await emit([
       stmt({ kind: "let", name: "x", typeName: "Int", expr: [expr("binary", "+", "", [expr("lit", "1", "Int"), expr("lit", "2", "Int")])] }),
@@ -176,7 +176,7 @@ describe("gir-emitter.spore — expression lowering (real lowerExpr inside state
   });
 });
 
-describe("gir-emitter.spore — statement lowering", () => {
+describe("gir-emitter.fungi — statement lowering", () => {
   it("let/mut/assign → store, return → ret, exprStmt → eval", async () => {
     const out = await emit([
       stmt({ kind: "let", name: "a", typeName: "Int", expr: [expr("lit", "1", "Int")] }),

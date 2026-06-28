@@ -27,17 +27,17 @@
 | 13 | Reprogram mesh on the fly; resolves at light speed | **SOUND** | Programmable meshes are real; but loading new weights is **Θ(N²) phase writes** with µs thermo-optic settling ≫ 50 ps propagation — fast only for fixed-weight inference | Bogaerts 2020, DOI:10.1038/s41586-020-2764-0 |
 | 14 | MBQC entanglement = "**instantaneous non-local logic**", info transfer is non-local | **REFUTED** | No-signalling: `ρ_B = Tr_A(ρ_AB)` is invariant under Alice's ops; Bob's marginal = I/2; **zero bits move** — correlation, not computation | Nielsen & Chuang 2010 §2.4.3; Peres & Terno 2004 |
 | 15 | Superdense coding "**doubles fiber bandwidth**" (2 bits/photon) | **OVERSTATED** | 2 bits per *qubit* but needs a pre-shared ebit + a quantum channel; end-to-end = 2 qubit-uses for 2 bits; Holevo caps bare classical fiber at 1 bit/qubit | Bennett & Wiesner 1992; Holevo 1973 |
-| 16 | "**Drop the MAC** — entanglement self-proves integrity" | **REFUTED** | Entanglement gives no EUF-CMA keyed binding; quantum gives no advantage over classical MACs (Boneh–Zhandry); violates SPORE-SUBSTRATE-001 | Boneh & Zhandry 2013, ePrint 2012/606 |
+| 16 | "**Drop the MAC** — entanglement self-proves integrity" | **REFUTED** | Entanglement gives no EUF-CMA keyed binding; quantum gives no advantage over classical MACs (Boneh–Zhandry); violates FUNGI-SUBSTRATE-001 | Boneh & Zhandry 2013, ePrint 2012/606 |
 | 17 | QKD/QBER tri-state gate makes the link "physically un-tappable / eradicates store-and-decrypt" | **OVERSTATED** | Eavesdrop-detection physics is sound (intercept-resend → QBER ~25%; key threshold ~11%); but QKD = key-agreement + tamper-*evidence*, needs an **authenticated classical channel** (contradicts #16). Track-not-build | Bennett & Brassard 1984; Shor & Preskill 2000 |
 | 18 | No-cloning theorem makes in-flight light un-copyable | **SOUND** | Correct (linearity proof). But it underpins eavesdrop *detection*, not encryption, and protects in-flight quantum states only — nothing at rest / in RAM | Wootters & Zurek 1982, DOI:10.1038/299802a0 |
 | 19 | SPDC frequency lock `ω₁ = ω₂ + ω₃` ⇔ `1/λ₁ = 1/λ₂ + 1/λ₃` | **SOUND** | Energy conservation, algebraically exact; **must add phase-matching** `k_p = k_s + k_i` (energy alone is necessary, not sufficient) | Boyd, *Nonlinear Optics* Ch.2/22; Couteau 2018 |
 | 20 | Grover offload: 1M passports in "exactly 1,000 ops", DB bottleneck obliterated | **OVERSTATED→REFUTED as a DB engine** | √N arithmetic right, but needs data-in-superposition QRAM (loading = Ω(N)); gate-cost ≈ Θ(N^{3/2}) ≫ classical O(log N) indexed DB. ASPIRATIONAL-HW | Grover 1996; Viamontes 2005; Aaronson 2015 |
 | 21 | DAC/ADC I/O conversion is the true bottleneck (brief's honest admission) | **SOUND** | Confirmed by measurement: median **1.9×** net speedup after ADC/DAC across 27 benchmarks; justifies the Tri-Pipe router | Meech et al. 2023, arXiv:2308.01719 |
-| 22 | GC-free O(1) bump/arena alloc (`ptr += size`, reset `ptr = HEAP_BASE`) | **SOUND** | Genuinely shipped (`wat-emitter.ts`: `WAT_HEAP_BASE=1024`, `$__spore_heap`, per-flow reset, secret-zeroing). O(1) per-alloc; technique is standard (region allocators) — Galerina's net-new is **governing** it | `wat-emitter.ts`; Gay & Aiken 1998 |
-| 23 | Governance dead-code elimination = "zero-time execution", deletes the WASM branch | **OVERSTATED** | Real core: compile-time fold + `SPORE-INV-001` *rejects* a provably-false flow (0 runtime cost) — but that's a build-time **error**, not branch-deletion; general branch-fold measured **ABSENT** (R&D 0036) | `governance-verifier.ts`; Cousot 1977; **R&D 0036** |
+| 22 | GC-free O(1) bump/arena alloc (`ptr += size`, reset `ptr = HEAP_BASE`) | **SOUND** | Genuinely shipped (`wat-emitter.ts`: `WAT_HEAP_BASE=1024`, `$__fungi_heap`, per-flow reset, secret-zeroing). O(1) per-alloc; technique is standard (region allocators) — Galerina's net-new is **governing** it | `wat-emitter.ts`; Gay & Aiken 1998 |
+| 23 | Governance dead-code elimination = "zero-time execution", deletes the WASM branch | **OVERSTATED** | Real core: compile-time fold + `FUNGI-INV-001` *rejects* a provably-false flow (0 runtime cost) — but that's a build-time **error**, not branch-deletion; general branch-fold measured **ABSENT** (R&D 0036) | `governance-verifier.ts`; Cousot 1977; **R&D 0036** |
 | 24 | K3 admission `E = min(cap, integrity)` (Kleene 3-valued, fail-closed) | **SOUND & SHIPPED** | `vAnd = minTrit`; `allOf([]) = INDETERMINATE` (deny-by-default). Sound gate ≠ "mathematically impenetrable" system | Kleene 1952 §64; `three-valued-governance.ts` |
 | 25 | `vAnd(T_digital, T_physical) = min` (No-Coercion / TamperTrust) | **SOUND & SHIPPED** | `min` monotone, ALLOW is top → substrate can only **degrade**, never manufacture ALLOW. Airtight lattice fact | `substrate-model.ts` |
-| 26 | SPORE-SUBSTRATE-001 — crypto stays on bit-exact silicon | **SOUND & SHIPPED** | Avalanche property → integrity can't be ε-tolerance-bounded; crypto-on-noisy-lane = priority-1 DENY | FIPS 180-4; `substrate-model.ts` |
+| 26 | FUNGI-SUBSTRATE-001 — crypto stays on bit-exact silicon | **SOUND & SHIPPED** | Avalanche property → integrity can't be ε-tolerance-bounded; crypto-on-noisy-lane = priority-1 DENY | FIPS 180-4; `substrate-model.ts` |
 | 27 | NMR voting drives error to binomial upper tail; raise N to meet ε | **SOUND & SHIPPED** | `nmrFailureProbability`; worked TMR p=0.1→0.028; `redundancyHelps` guards p<0.5 (von Neumann condition) | von Neumann 1956; `galerina-substrate-math` |
 | 28 | "Mathematically impenetrable + physically un-tappable" summary | **OVERSTATED** | Gate is sound but rests on *computational* (Ed25519/SHA-256) security; "un-tappable" is HW-gated and depends on an uncalibrated ε | Katz & Lindell; brief self-flags at lines 158, 418–420 |
 
@@ -223,7 +223,7 @@ Superdense coding sends 2 classical bits per transmitted qubit, but requires (1)
 
 ### 4.6 "Drop the MAC" (Claim 16 — REFUTED)
 
-A MAC's security is **EUF-CMA**: `Adv^{EUF-CMA} = Pr[adversary outputs (m*,t*), Verify(k,m*,t*)=1, m* unqueried]` must be negligible — it binds a message to a **secret key**. Entanglement contains no secret-keyed binding to message bytes; QBER senses channel *disturbance*, not payload authenticity, and an active MITM forges nothing by raising QBER. Quantum resources give **no advantage over classical one-time MACs** for authentication [Boneh–Zhandry 2013]. Dropping AEAD also violates **SPORE-SUBSTRATE-001** and the No-Coercion rule. Entanglement is at most tamper-*evidence* on a key-agreement channel, never message integrity.
+A MAC's security is **EUF-CMA**: `Adv^{EUF-CMA} = Pr[adversary outputs (m*,t*), Verify(k,m*,t*)=1, m* unqueried]` must be negligible — it binds a message to a **secret key**. Entanglement contains no secret-keyed binding to message bytes; QBER senses channel *disturbance*, not payload authenticity, and an active MITM forges nothing by raising QBER. Quantum resources give **no advantage over classical one-time MACs** for authentication [Boneh–Zhandry 2013]. Dropping AEAD also violates **FUNGI-SUBSTRATE-001** and the No-Coercion rule. Entanglement is at most tamper-*evidence* on a key-agreement channel, never message integrity.
 
 **Verdict: REFUTED.** Keep digital ML-DSA + AEAD always. Note the internal contradiction: QKD (Claim 17) *needs* the MAC that this claim drops — the two cannot both hold.
 
@@ -248,7 +248,7 @@ Claims 10, 12, 15/16, 20 are derived above; the section-specific ones:
 
 **Overstated magnitudes:** demonstrated net volumetric density is **≈9.6 GB/cm³** (705 multiplexed pages of ~73 KB in Fe:LiNbO₃) — ~10 GB, not a petabyte, in a ~1 cm³ cube. A petabyte is rack-scale, not a cube. "O(1) read" is misleading: selecting *which* page requires tuning the reference angle/wavelength — a **search over the multiplex dimension** plus SLM/CCD frame latency — so random access is O(1) per page-read but O(#multiplex-states) to address. Theoretical Bragg limit `~V/λ³` (a few TB/cm³) sits far above demonstrated [Coufal/Psaltis/Sincerbox 2000; Psaltis & Mok 1995].
 
-**Galerina correction:** the .tmf CID must stay digital SHA-256 — a diffraction pattern is analog/noisy, never the integrity anchor (SPORE-SUBSTRATE-001).
+**Galerina correction:** the .tmf CID must stay digital SHA-256 — a diffraction pattern is analog/noisy, never the integrity anchor (FUNGI-SUBSTRATE-001).
 
 **Verdict: OVERSTATED.** "Page-parallel read with high volumetric density."
 
@@ -260,7 +260,7 @@ The brief's honest admission is confirmed by direct measurement: an *ideal* anal
 
 ### 5.3 GC-free O(1) arena allocator (Claim 22 — SOUND, shipped)
 
-**Confirmed in the shipped codebase.** `packages-galerina/galerina-core-compiler/src/wat-emitter.ts` declares `export const WAT_HEAP_BASE = 1024;` (line 323) and emits the monotone bump pointer `(global $__spore_heap (mut i32) (i32.const ${WAT_HEAP_BASE}))` (line 495); record construction advances it (`ptr += size`), and B2 (R&D 0055) emits a per-flow reset rebasing `$__spore_heap` to `WAT_HEAP_BASE` — the literal `ptr = HEAP_BASE` snap-back — with B2b/G5 zeroing the reclaimed region for secret hygiene. Per-alloc cost is O(1) amortized; no tracing GC → no GC pause.
+**Confirmed in the shipped codebase.** `packages-galerina/galerina-core-compiler/src/wat-emitter.ts` declares `export const WAT_HEAP_BASE = 1024;` (line 323) and emits the monotone bump pointer `(global $__fungi_heap (mut i32) (i32.const ${WAT_HEAP_BASE}))` (line 495); record construction advances it (`ptr += size`), and B2 (R&D 0055) emits a per-flow reset rebasing `$__fungi_heap` to `WAT_HEAP_BASE` — the literal `ptr = HEAP_BASE` snap-back — with B2b/G5 zeroing the reclaimed region for secret hygiene. Per-alloc cost is O(1) amortized; no tracing GC → no GC pause.
 
 **Precision:** (a) bump/arena allocation is standard (region allocators, Rust `bumpalo`, Go per-goroutine stacks) [Gay & Aiken 1998] — Galerina's net-new is **governing** it (declared `contract.memory{arena N mb}` becomes the *enforced* WASM max-pages ceiling, B1, closing a prior fail-open where an 8 MB-declared arena shipped a 128 MB module). (b) "O(1)" is per-alloc/reset; total zeroing work is O(bytes). (c) A constant-factor / latency-predictability win, not an asymptotic change.
 
@@ -268,11 +268,11 @@ The brief's honest admission is confirmed by direct measurement: an *ideal* anal
 
 ### 5.4 Governance dead-code elimination = "zero-time execution" (Claim 23 — OVERSTATED)
 
-**Sound core (shipped):** `governance-verifier.ts` runs a lightweight constant-fold static evaluator on `ensure`/invariant expressions; a precondition that folds to false raises **`SPORE-INV-001 PRE_CONDITION_STATICALLY_FALSE`** ("dead code: invariant always fails"), and the K3 `min`-conjunction is the real admission algebra. A statically-proven deny costs **0 runtime cycles** — genuinely faster than a "boot → DB → 50 ms auth → reject" baseline.
+**Sound core (shipped):** `governance-verifier.ts` runs a lightweight constant-fold static evaluator on `ensure`/invariant expressions; a precondition that folds to false raises **`FUNGI-INV-001 PRE_CONDITION_STATICALLY_FALSE`** ("dead code: invariant always fails"), and the K3 `min`-conjunction is the real admission algebra. A statically-proven deny costs **0 runtime cycles** — genuinely faster than a "boot → DB → 50 ms auth → reject" baseline.
 
 **Overstatement:** (1) The mechanism is a **build-time hard error** (the program doesn't compile) — *stronger* than DCE, but a different thing from "deletes the branch from the WASM and ships it." (2) General dead-branch elimination is only **partial** in Galerina: const-EXPR-fold and branch-fold were measured **ABSENT** (R&D 0036, ADOPT #1/#2, not yet shipped). So "deletes the *entire* downstream branch" generalises a narrow, sound capability into a broad optimizer Galerina does not yet have [Cousot & Cousot 1977 = the abstract-interpretation basis].
 
-**Verdict: OVERSTATED.** Honest claim: "provably-denied flows are *rejected at compile time* (SPORE-INV-001), costing zero runtime cycles; general dead-branch elimination is partial and on the roadmap."
+**Verdict: OVERSTATED.** Honest claim: "provably-denied flows are *rejected at compile time* (FUNGI-INV-001), costing zero runtime cycles; general dead-branch elimination is partial and on the roadmap."
 
 ---
 
@@ -298,15 +298,15 @@ Because `min` is monotone and ALLOW is the lattice **top**, for all a,b: `min(a,
 
 `nmrFailureProbability(pBad, N) = Σ_{k=⌈N/2⌉}^{N} C(N,k) pBad^k (1−pBad)^{N−k}` (binomial upper tail).
 
-**Worked TMR (N=3, pBad=0.1):** `C(3,2)(0.1)²(0.9) + C(3,3)(0.1)³ = 3(0.01)(0.9) + 0.001 = 0.027 + 0.001 = 0.028` → a 10% lane improves to ~2.8%. The `redundancyHelps` guard (`pBad < 0.5`) is the correct von Neumann condition; at `pBad ≥ 0.5` majority voting diverges and the code emits `SPORE-SUBSTRATE-003` [von Neumann 1956; `galerina-substrate-math/src/index.ts`].
+**Worked TMR (N=3, pBad=0.1):** `C(3,2)(0.1)²(0.9) + C(3,3)(0.1)³ = 3(0.01)(0.9) + 0.001 = 0.027 + 0.001 = 0.028` → a 10% lane improves to ~2.8%. The `redundancyHelps` guard (`pBad < 0.5`) is the correct von Neumann condition; at `pBad ≥ 0.5` majority voting diverges and the code emits `FUNGI-SUBSTRATE-003` [von Neumann 1956; `galerina-substrate-math/src/index.ts`].
 
 ### 6.5 Tower-Citizen "Govern, Don't Absorb" + signed-T passport (Claim 8/T-artifact — SOUND & SHIPPED)
 
-The immutable WASM core never executes the analog/quantum physics; it **admits the config matrix T as a signed artifact** via a .tmf/.lmanifest capability passport with a 4-gate fail-closed discipline in `photonic-admission.ts` (`admitPhotonicConfig`): (1) `sha256(blob) == manifest.configSha256` (binds T's bytes); (2) Ed25519 over the canonical manifest; (3) registry-backed revocation (fail-closed on throw); (4) capability declared **and** granted (deny-by-default) — all collapsing through `decideAtBoundary` (no attestation → INDETERMINATE → `SPORE-GOV-3VL-001`). This is the architecturally novel, correct, useful piece: it makes the substrate **swappable (sim vs HW) without touching the trusted core** [capability-passport model, Miller/Yee/Shapiro 2003; simulator-then-hardware pattern à la Qiskit Aer].
+The immutable WASM core never executes the analog/quantum physics; it **admits the config matrix T as a signed artifact** via a .tmf/.lmanifest capability passport with a 4-gate fail-closed discipline in `photonic-admission.ts` (`admitPhotonicConfig`): (1) `sha256(blob) == manifest.configSha256` (binds T's bytes); (2) Ed25519 over the canonical manifest; (3) registry-backed revocation (fail-closed on throw); (4) capability declared **and** granted (deny-by-default) — all collapsing through `decideAtBoundary` (no attestation → INDETERMINATE → `FUNGI-GOV-3VL-001`). This is the architecturally novel, correct, useful piece: it makes the substrate **swappable (sim vs HW) without touching the trusted core** [capability-passport model, Miller/Yee/Shapiro 2003; simulator-then-hardware pattern à la Qiskit Aer].
 
 This is also **net-new mechanic #3 ("T-as-signed-artifact")**: today `hybrid-engine.ts:219` Freivalds-verifies the *result*, not that T is the *admitted* matrix — the signed-T rail closes that gap. The governance rail is core-buildable now; the photonic side is HW-gated (#102–106).
 
-### 6.6 SPORE-SUBSTRATE-001 — crypto stays on bit-exact silicon (Claim 26 — SOUND & SHIPPED)
+### 6.6 FUNGI-SUBSTRATE-001 — crypto stays on bit-exact silicon (Claim 26 — SOUND & SHIPPED)
 
 Cryptographic integrity is all-or-nothing: by the **avalanche / strict-avalanche criterion**, a single bit error in a hash/signature pre-image flips the digest unpredictably, so an ε-tolerance is meaningless — you cannot "mostly verify" a signature [Webster & Tavares 1985; FIPS 180-4]. `substrate-model.ts` encodes `hasCryptoEffect && laneIsNoisy → DENY` as the **highest-priority** denial. The brief's supporting argument (analog states are PAC-learnable, hence cannot be a key [Valiant 1984]) is directionally right.
 
@@ -326,9 +326,9 @@ The algebra (§6.1–6.2) is sound; the *summary* is the overclaim. (a) "Mathema
 | Grover DB offload (§4.7) | A fault-tolerant QC at N=10⁶ search scale **and** a physical QRAM whose loading cost (Ω(N)) doesn't erase the √N win — neither exists. |
 | Holographic O(1) storage (§5.1) | Demonstrated density at the claimed magnitude (PB/cm³ is ~10⁵× current ~9.6 GB/cm³) and a random-access addressing scheme that is genuinely sub-linear in multiplex states. |
 | Signed-T artifact admission (§6.5) | **Core-buildable now** (governance rail); only the photonic *execution* side is HW-gated. `hybrid-engine.ts:219` Freivalds→bind-to-admitted-T is the concrete next step. |
-| Branch-fold "zero-time" generality (§5.4) | Ship const-EXPR-fold + branch-fold (R&D 0036 ADOPT #1/#2); until then only `SPORE-INV-001` compile-time rejection is real. |
+| Branch-fold "zero-time" generality (§5.4) | Ship const-EXPR-fold + branch-fold (R&D 0036 ADOPT #1/#2); until then only `FUNGI-INV-001` compile-time rejection is real. |
 
-**Standing invariant across all gates:** crypto stays on bit-exact binary silicon (SPORE-SUBSTRATE-001); analog light is admissible only for parallel tensor ops or **degrade-only** governance signals. No performance number ships without a reproducible source.
+**Standing invariant across all gates:** crypto stays on bit-exact binary silicon (FUNGI-SUBSTRATE-001); analog light is admissible only for parallel tensor ops or **degrade-only** governance signals. No performance number ships without a reproducible source.
 
 ---
 
@@ -412,8 +412,8 @@ The algebra (§6.1–6.2) is sound; the *summary* is the overclaim. (a) "Mathema
 63. Cousot, P. & Cousot, R., "Abstract Interpretation: a unified lattice model for static analysis," POPL 1977. DOI:10.1145/512950.512973
 
 **Galerina internal (source of truth & prior R&D)**
-64. `C:\wwwprojects\Galerina\packages-galerina\galerina-core-compiler\src\wat-emitter.ts` — `WAT_HEAP_BASE=1024` (L323), `$__spore_heap` bump pointer (L495), B1 arena→maxPages, B2 per-flow reset, B2b/G5 zeroing. (Confirmed in this R&D.)
-65. `…\galerina-core-compiler\src\governance-verifier.ts` — `SPORE-INV-001 PRE_CONDITION_STATICALLY_FALSE` constant-fold static-false rejection.
+64. `C:\wwwprojects\Galerina\packages-galerina\galerina-core-compiler\src\wat-emitter.ts` — `WAT_HEAP_BASE=1024` (L323), `$__fungi_heap` bump pointer (L495), B1 arena→maxPages, B2 per-flow reset, B2b/G5 zeroing. (Confirmed in this R&D.)
+65. `…\galerina-core-compiler\src\governance-verifier.ts` — `FUNGI-INV-001 PRE_CONDITION_STATICALLY_FALSE` constant-fold static-false rejection.
 66. `…\galerina-tower-citizen\src\three-valued-governance.ts`, `substrate-model.ts`, `photonic-admission.ts`; `…\galerina-substrate-math\src\index.ts` (`nmrFailureProbability`); tests `three-valued-governance.test.mjs`, `photonic-admission.test.mjs`, `photonic-certified-admission.test.mjs`, `wat-arena-memory-fill-g5.test.mjs`.
 67. `docs/Knowledge-Bases/galerina-substrate-failure-model.md`; `docs/Knowledge-Bases/galerina-rd-tritmesh-1-5-and-52-3d-2026-06-23.md` (R&D 0107: Grover line-rate / superdense "drop the MAC" REFUTE; QKD/QBER TRACK; Meech 9.4× ideal → ~1.9× realized); `docs/Knowledge-Bases/galerina-rd-0110-photonic-matmul-refutation-deepened-2026-06-24.md` (O(1)-matmul = latency-O(1) / work-energy-Θ(N²); `rd-aot-tensor-precompute-proof.mjs`, Intel i9-9900K); `galerina-aot-tricks-verdict` (R&D 0036: const-expr/branch-fold measured ABSENT); `galerina-rd-0055-beyond-bump-memory`.
 
@@ -421,4 +421,4 @@ The algebra (§6.1–6.2) is sound; the *summary* is the overclaim. (a) "Mathema
 
 ---
 
-*Document status: R&D 0111, lead-author synthesis of five per-cluster maths-rechecks. Safe to hand to a physicist or auditor: every quantitative claim is derived with a worked number and tied to a citation; the four headline overclaims (O(1)-matmul, Grover DB, superdense/drop-the-MAC, instantaneous non-local logic) are refuted with the same rigor that confirms the sound governance core; crypto-on-core (SPORE-SUBSTRATE-001) is respected throughout; the O(1)-matmul refutation cross-references R&D 0110 as instructed.*
+*Document status: R&D 0111, lead-author synthesis of five per-cluster maths-rechecks. Safe to hand to a physicist or auditor: every quantitative claim is derived with a worked number and tied to a citation; the four headline overclaims (O(1)-matmul, Grover DB, superdense/drop-the-MAC, instantaneous non-local logic) are refuted with the same rigor that confirms the sound governance core; crypto-on-core (FUNGI-SUBSTRATE-001) is respected throughout; the O(1)-matmul refutation cross-references R&D 0110 as instructed.*

@@ -11,7 +11,7 @@ import { analyzeFile, buildProvenanceGraph } from "../../../galerina-devtools-pr
 const __dir = dirname(fileURLToPath(import.meta.url));
 const corpusDir = join(__dir, "../../../../examples/auth-service");
 
-const files = readdirSync(corpusDir).filter(f => f.endsWith(".spore"));
+const files = readdirSync(corpusDir).filter(f => f.endsWith(".fungi"));
 const sources = files.map(f => ({
   name: f,
   src: readFileSync(join(corpusDir, f), "utf8"),

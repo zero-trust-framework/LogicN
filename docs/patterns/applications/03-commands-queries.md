@@ -64,18 +64,18 @@ The `query` and `command` prefixes replace the `flow` keyword for these declarat
 
 | Rule | Diagnostic |
 |------|-----------|
-| A `query` flow may not declare `database.write` | SPORE-QUERY-001 |
-| A `query` flow may not declare `audit.write` | SPORE-QUERY-002 |
-| A `query` flow may not declare `event.emit` | SPORE-QUERY-003 |
-| A `query` flow may not call any internal flow that declares write effects | SPORE-QUERY-004 |
+| A `query` flow may not declare `database.write` | FUNGI-QUERY-001 |
+| A `query` flow may not declare `audit.write` | FUNGI-QUERY-002 |
+| A `query` flow may not declare `event.emit` | FUNGI-QUERY-003 |
+| A `query` flow may not call any internal flow that declares write effects | FUNGI-QUERY-004 |
 
 ### Command constraints
 
 | Rule | Diagnostic |
 |------|-----------|
-| A `command` flow must declare `database.write` or `event.emit` (at least one write effect) | SPORE-COMMAND-001 |
-| A `command` flow must declare `audit.write` | SPORE-COMMAND-002 (warning in Phase 17, error in Phase 18) |
-| A `command` flow must run `validation.run` before any `database.write` | SPORE-VALIDATE-001 |
+| A `command` flow must declare `database.write` or `event.emit` (at least one write effect) | FUNGI-COMMAND-001 |
+| A `command` flow must declare `audit.write` | FUNGI-COMMAND-002 (warning in Phase 17, error in Phase 18) |
+| A `command` flow must run `validation.run` before any `database.write` | FUNGI-VALIDATE-001 |
 
 ---
 
@@ -83,7 +83,7 @@ The `query` and `command` prefixes replace the `flow` keyword for these declarat
 
 The `query`/`command` prefix is a semantic constraint that improves the compiler's effect inference pass:
 
-- When a query calls an internal flow, the compiler propagates the read-only constraint down the call chain. Any write effect discovered in a callee of a query is surfaced as SPORE-QUERY-004 rather than being silently permitted.
+- When a query calls an internal flow, the compiler propagates the read-only constraint down the call chain. Any write effect discovered in a callee of a query is surfaced as FUNGI-QUERY-004 rather than being silently permitted.
 - When a command is analysed, the compiler can pre-verify that the declared write effects are actually reachable on all code paths (not just on the happy path).
 - The constraint prefix narrows the effect inference search space, which reduces compile time for large service contracts.
 

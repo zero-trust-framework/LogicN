@@ -202,7 +202,7 @@ tensor.read()   // ERROR: tensor was moved
 ```
 
 ```text
-SPORE-OWN-001: moved value used after move
+FUNGI-OWN-001: moved value used after move
   `tensor` was moved at line 4
   `tensor` used again at line 5
 ```

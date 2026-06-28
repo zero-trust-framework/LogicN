@@ -4,7 +4,7 @@
 
 **Decision:** Generated JavaScript must be capability-driven, not global-driven
 
-**New diagnostic:** `SPORE-BACKEND-001 AmbientAuthorityEscape`
+**New diagnostic:** `FUNGI-BACKEND-001 AmbientAuthorityEscape`
 
 ---
 
@@ -157,7 +157,7 @@ The Passive Execution Plan (PEP) is the compiler's intermediate representation o
 
 ---
 
-## Diagnostic: SPORE-BACKEND-001 AmbientAuthorityEscape
+## Diagnostic: FUNGI-BACKEND-001 AmbientAuthorityEscape
 
 **Triggered when:** The emitter, a backend pass, or a native module references any of the following without going through an approved capability wrapper:
 
@@ -179,7 +179,7 @@ A backend pass that emits:
 const secret = process.env.DATABASE_URL;
 ```
 
-...will cause SPORE-BACKEND-001 to fire during the backend verification pass.
+...will cause FUNGI-BACKEND-001 to fire during the backend verification pass.
 
 **Correct form:**
 
@@ -212,7 +212,7 @@ All Galerina-emitted JavaScript modules must conform to the following rules:
 2. All external power flows through `capabilityHost`, which is injected by the Galerina runtime
 3. Every module is emitted as `createRuntimeModule(capabilityHost)` — a factory, not a file with ambient side effects
 4. Ambient globals are shadowed to `undefined` at the top of every generated module
-5. The compiler backend verification pass checks for SPORE-BACKEND-001 and halts on violation
+5. The compiler backend verification pass checks for FUNGI-BACKEND-001 and halts on violation
 6. The permission model is in the Galerina source; the JS output is a faithful, capability-mediated translation of it
 7. Dynamic require and eval are absolute prohibitions — never emitted, never permitted in native bindings
 
@@ -224,7 +224,7 @@ All Galerina-emitted JavaScript modules must conform to the following rules:
 - `capabilities.md` — capability declaration model
 - `governed-capability-modules.md` — how capability modules are structured and verified
 - `galerina-core-security-secret-reference-model.md` — vault and secret access patterns
-- `compiler-diagnostics.md` — full diagnostic code reference including SPORE-BACKEND-001
+- `compiler-diagnostics.md` — full diagnostic code reference including FUNGI-BACKEND-001
 - `galerina-stage-b-root-capability-provider.md` — root capability provider architecture
 - `safe-unsafe-trust-model.md` — safe and unsafe boundaries in the runtime
 - `galerina-native-module-system.md` — native module binding rules

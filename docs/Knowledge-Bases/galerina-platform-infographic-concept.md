@@ -29,7 +29,7 @@ The infographic presents Galerina as a **multi-floor building** where each floor
 │ FLOOR 3: COMPILER PIPELINE                                  │
 │  lexer → parser → type-checker → value-state                │
 │  effect-checker → governance-verifier → GIR → WAT           │
-│  SPORE-xxx diagnostics  ProofGraph  GovernanceSignature        │
+│  FUNGI-xxx diagnostics  ProofGraph  GovernanceSignature        │
 ├─────────────────────────────────────────────────────────────┤
 │ FLOOR 2: RUNTIME CONTAINMENT (DRCM)                         │
 │  DSS.wasm supervisor  V_DPM 32-bit register                  │
@@ -121,14 +121,14 @@ A traffic-light system:
 
 ### Floor 3 — Proof Zone
 - Lexer → Parser → Symbol Resolver
-- Type Checker (SPORE-TYPE-001..023)
-- Value-State / Secret Taint Checker (SPORE-SECRET-001/002/003)
-- Effect Checker (SPORE-EFFECT-001..005)
-- Governance Verifier (35+ SPORE codes)
+- Type Checker (FUNGI-TYPE-001..023)
+- Value-State / Secret Taint Checker (FUNGI-SECRET-001/002/003)
+- Effect Checker (FUNGI-EFFECT-001..005)
+- Governance Verifier (35+ FUNGI codes)
 - ProofGraph + GovernanceSignature
 - Domain Guard Policies (`[conforms_to: X]`)
-- Wildcard ban (SPORE-CAP-001)
-- Prefix-token scanner (SPORE-SECRET-BREACH)
+- Wildcard ban (FUNGI-CAP-001)
+- Prefix-token scanner (FUNGI-SECRET-BREACH)
 
 ### Floor 2 — Containment Zone
 - DSS.wasm supervisor

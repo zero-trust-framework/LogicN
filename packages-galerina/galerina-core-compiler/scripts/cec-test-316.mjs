@@ -5,7 +5,7 @@ pure flow example(a: Tensor<Float32, [4, 8]>, b: Tensor<Float32, [8, 4]>) -> Voi
   let wrong = a + b
 }`;
 
-const p = parseProgram(src, "test.spore");
+const p = parseProgram(src, "test.fungi");
 const t = checkTypes(p.ast);
 if (t.diagnostics.length === 0) {
   console.log("No diagnostics — tensor add NOT caught");

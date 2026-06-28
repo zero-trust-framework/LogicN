@@ -23,18 +23,18 @@ const EXAMPLES_DIR = join(__dir, "../../../docs/Examples");
 
 // Phase 1 suppression codes
 const SUPPRESS = new Set([
-  "SPORE-TYPE-001",
-  "SPORE-TYPE-009",
-  "SPORE-NAME-001",
-  "SPORE-GOV-002",
-  "SPORE-SYNTAX-006",
-  "SPORE-SYNTAX-007",
-  "SPORE-SYNTAX-008",
-  "SPORE-EFFECT-004",
-  "SPORE-VALUESTATE-006",
-  "SPORE-VALUESTATE-002",
-  "SPORE-EVENT-003",
-  "SPORE-EVENT-005",
+  "FUNGI-TYPE-001",
+  "FUNGI-TYPE-009",
+  "FUNGI-NAME-001",
+  "FUNGI-GOV-002",
+  "FUNGI-SYNTAX-006",
+  "FUNGI-SYNTAX-007",
+  "FUNGI-SYNTAX-008",
+  "FUNGI-EFFECT-004",
+  "FUNGI-VALUESTATE-006",
+  "FUNGI-VALUESTATE-002",
+  "FUNGI-EVENT-003",
+  "FUNGI-EVENT-005",
 ]);
 
 // Proposal-only syntax patterns (result of X else Y)
@@ -46,8 +46,8 @@ const PROPOSAL_SYNTAX_PATTERNS = [
 // Future syntax keywords not yet implemented
 const FUTURE_SYNTAX_PATTERN = /\b(stateMachine|workflow)\b/;
 
-// Placeholder diagnostic code patterns (SPORE-TYPE-XXX etc.)
-const PLACEHOLDER_CODE_PATTERN = /SPORE-[A-Z]+-XXX/;
+// Placeholder diagnostic code patterns (FUNGI-TYPE-XXX etc.)
+const PLACEHOLDER_CODE_PATTERN = /FUNGI-[A-Z]+-XXX/;
 
 function runPipeline(source, filePath) {
   const parsed = parseProgram(source, filePath);
@@ -80,7 +80,7 @@ function walkDir(dir) {
   for (const e of entries) {
     const full = join(dir, e.name);
     if (e.isDirectory()) found.push(...walkDir(full));
-    else if (e.name === "example.spore") found.push(full);
+    else if (e.name === "example.fungi") found.push(full);
   }
   return found;
 }
@@ -103,20 +103,20 @@ function hasPlaceholderCodes(source) {
   return PLACEHOLDER_CODE_PATTERN.test(source);
 }
 
-function parseName(sporeFile) {
-  const normalized = sporeFile.replace(/\\/g, "/");
+function parseName(fungiFile) {
+  const normalized = fungiFile.replace(/\\/g, "/");
   const marker = "/Examples/";
   const after = normalized.slice(normalized.indexOf(marker) + marker.length);
-  return after.replace("/example.spore", "");
+  return after.replace("/example.fungi", "");
 }
 
-function getLevel(sporeFile) {
-  const normalized = sporeFile.replace(/\\/g, "/");
+function getLevel(fungiFile) {
+  const normalized = fungiFile.replace(/\\/g, "/");
   const m = normalized.match(/Level-(\d+)-/);
   return m ? parseInt(m[1], 10) : 0;
 }
 
-function promoteFile(sporeFile, source) {
+function promoteFile(fungiFile, source) {
   // Replace test_status: draft with test_status: stable
   let updated;
   if (/^\/\/\/\s*test_status:\s*draft/m.test(source)) {
@@ -132,7 +132,7 @@ function promoteFile(sporeFile, source) {
     );
   }
   // Preserve BOM if original had one
-  writeFileSync(sporeFile, updated, "utf8");
+  writeFileSync(fungiFile, updated, "utf8");
 }
 
 // Also update examples.manifest.json
@@ -168,11 +168,11 @@ const promotedIds = new Set();
 const allFiles = walkDir(EXAMPLES_DIR);
 console.log(`Found ${allFiles.length} example files\n`);
 
-for (const sporeFile of allFiles) {
-  const raw = readFileSync(sporeFile, "utf8");
+for (const fungiFile of allFiles) {
+  const raw = readFileSync(fungiFile, "utf8");
   const source = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
-  const name = parseName(sporeFile);
-  const level = getLevel(sporeFile);
+  const name = parseName(fungiFile);
+  const level = getLevel(fungiFile);
   const { status, expectedDiag } = parseHeader(source);
 
   // Skip already-stable examples
@@ -199,12 +199,12 @@ for (const sporeFile of allFiles) {
   // Criterion: no placeholder diagnostic codes in source
   if (hasPlaceholderCodes(source)) {
     results.keptDraft.push(name);
-    draftReasons.set(name, "uses placeholder diagnostic codes (SPORE-XXX)");
+    draftReasons.set(name, "uses placeholder diagnostic codes (FUNGI-XXX)");
     continue;
   }
 
   // Read expected.diagnostics.txt if present
-  const diagFile = sporeFile.replace(/example\.spore$/, "expected.diagnostics.txt");
+  const diagFile = fungiFile.replace(/example\.fungi$/, "expected.diagnostics.txt");
   let rawExpected = expectedDiag.toLowerCase() === "none" ? "none" : expectedDiag;
   try {
     rawExpected = readFileSync(diagFile, "utf8").trim();
@@ -221,13 +221,13 @@ for (const sporeFile of allFiles) {
     expectedLines.length === 0 || expectedLines[0].toLowerCase() === "none";
 
   const expectedCodes = expectedLines
-    .filter((l) => /^SPORE-[A-Z]+-\d+/.test(l))
+    .filter((l) => /^FUNGI-[A-Z]+-\d+/.test(l))
     .map((l) => l.split(/\s/)[0]);
 
   // Run the pipeline
   let diags;
   try {
-    diags = runPipeline(source, sporeFile);
+    diags = runPipeline(source, fungiFile);
   } catch (err) {
     results.keptDraft.push(name);
     draftReasons.set(name, `pipeline threw: ${err.message}`);
@@ -239,11 +239,11 @@ for (const sporeFile of allFiles) {
   const actualCodes = filtered.map((d) => d.code);
   const errors = filtered.filter((d) => d.severity === "error");
 
-  // Determine if this is a "parse failure" (SPORE-PARSE-001 present after suppression)
-  const hasParseError = filtered.some((d) => d.code === "SPORE-PARSE-001");
+  // Determine if this is a "parse failure" (FUNGI-PARSE-001 present after suppression)
+  const hasParseError = filtered.some((d) => d.code === "FUNGI-PARSE-001");
   if (hasParseError) {
     results.keptDraft.push(name);
-    draftReasons.set(name, `parser failed (SPORE-PARSE-001): ${filtered.find(d=>d.code==="SPORE-PARSE-001").message}`);
+    draftReasons.set(name, `parser failed (FUNGI-PARSE-001): ${filtered.find(d=>d.code==="FUNGI-PARSE-001").message}`);
     continue;
   }
 
@@ -252,7 +252,7 @@ for (const sporeFile of allFiles) {
     if (errors.length === 0) {
       results.promoted.push({ name, level, reason: "zero errors, expected none" });
       promotedIds.add(name.split("/").pop()); // id is last segment
-      promoteFile(sporeFile, source);
+      promoteFile(fungiFile, source);
     } else {
       results.keptDraft.push(name);
       const errorSummary = errors.map((d) => `${d.code}`).join(", ");
@@ -269,7 +269,7 @@ for (const sporeFile of allFiles) {
       // Perfect match — promote
       results.promoted.push({ name, level, reason: `codes match: ${expectedCodes.join(", ")}` });
       promotedIds.add(name.split("/").pop());
-      promoteFile(sporeFile, source);
+      promoteFile(fungiFile, source);
     } else if (allExpectedFound && unexpectedCodes.length > 0) {
       results.keptDraft.push(name);
       draftReasons.set(name, `expected codes found but unexpected extras: ${unexpectedCodes.join(", ")}`);

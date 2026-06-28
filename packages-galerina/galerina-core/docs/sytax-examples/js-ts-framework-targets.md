@@ -278,5 +278,5 @@ which framework adapter files were generated
 which React Native native boundaries and permissions were declared
 which WASM bridge functions exist
 which worker exports transfer, clone or reject data
-which generated locations map back to .spore source
+which generated locations map back to .fungi source
 ```

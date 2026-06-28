@@ -1,1 +1,1 @@
-SPORE-TYPE-004 — Cannot add Money<GBP> and Money<USD>. Use fx.convert() for explicit currency conversion.
+FUNGI-TYPE-004 — Cannot add Money<GBP> and Money<USD>. Use fx.convert() for explicit currency conversion.

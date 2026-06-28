@@ -145,7 +145,7 @@ to the correct implementation. The developer calls one interface and never sees 
    fail-closed** property (a confident verdict survives bounded analog noise; near-threshold collapses to
    DENY). It is **not** a promise that two tiers emit the same IEEE-754 bits.
 2. **Crypto, exact arithmetic, and control flow are BINARY-ONLY — they are NOT bifurcated.** Per
-   crypto-on-core (`SPORE-SUBSTRATE-001`), bit-exact cryptography and data-dependent control cannot run on
+   crypto-on-core (`FUNGI-SUBSTRATE-001`), bit-exact cryptography and data-dependent control cannot run on
    analog optics (the precision wall — proven). These have **one** implementation (binary); the photonic
    tier's programs route them to the binary core. A photonic crypto path would be invented/broken crypto
    and is forbidden. Bifurcation is *permitted and expected* **only** for components both tiers can
@@ -447,7 +447,7 @@ These documents translate the charter into concrete rules, patterns, and diagnos
 
 | Document | Purpose |
 |---|---|
-| `galerina-governance-rules.md` | Numbered rule registry with SPORE codes + enforce status |
+| `galerina-governance-rules.md` | Numbered rule registry with FUNGI codes + enforce status |
 | `galerina-architecture-patterns.md` | 9 copy-paste patterns for common structures |
 | `galerina-contract-authoring-guide.md` | Canonical contract authoring reference |
 | `galerina-deterministic-runtime-containment.md` | DRCM 7-module security architecture |

@@ -1,6 +1,6 @@
 # Galerina Standard Syntax: Typed Content Blocks
 
-**Status:** Stage 1 — parser state tracking live in compiler; `SPORE-BLOCK-001..004` constants defined; `validateTypedContentBlock()` stub in place  
+**Status:** Stage 1 — parser state tracking live in compiler; `FUNGI-BLOCK-001..004` constants defined; `validateTypedContentBlock()` stub in place  
 **Scope:** `html`, `dom`, `script`, `css` heredoc-style embedded content blocks  
 **Packages:** `@galerina/core`, `@galerina/core-compiler`
 
@@ -86,7 +86,7 @@ flow analyticsTag(pageId: String) -> Script {
 }
 ```
 
-`script` blocks are subject to strict content scanning. `ProtectedSecret` values must not be interpolated into script blocks (see `SPORE-BLOCK-004`).
+`script` blocks are subject to strict content scanning. `ProtectedSecret` values must not be interpolated into script blocks (see `FUNGI-BLOCK-004`).
 
 ### css block — scoped stylesheet
 
@@ -151,7 +151,7 @@ The `{` and `}` inside the `TABLE` block are invisible to the Galerina brace cou
 
 Even though the compiler suspends its checks while inside a content block, the following rules still apply at the AST level (Stage 2):
 
-- **`ProtectedSecret` values** must not be interpolated into `script` or `html` blocks — use `SPORE-BLOCK-004` check
+- **`ProtectedSecret` values** must not be interpolated into `script` or `html` blocks — use `FUNGI-BLOCK-004` check
 - **Unclosed interpolations** are a parse error
 - Secret literal patterns that appear in block interpolation sites are flagged during content block validation
 
@@ -159,14 +159,14 @@ Even though the compiler suspends its checks while inside a content block, the f
 
 ## 8. Diagnostic Codes
 
-### Content block diagnostics (SPORE-BLOCK-*)
+### Content block diagnostics (FUNGI-BLOCK-*)
 
 | Code | Name | Trigger |
 |---|---|---|
-| `SPORE-BLOCK-001` | `UNKNOWN_CONTENT_BLOCK_TYPE` | Block type is not `html`, `dom`, `script`, or `css` |
-| `SPORE-BLOCK-002` | `UNCLOSED_CONTENT_BLOCK` | Opening marker found but closing marker never appears |
-| `SPORE-BLOCK-003` | `MISMATCHED_CONTENT_BLOCK_MARKER` | Closing marker does not match the opening marker |
-| `SPORE-BLOCK-004` | `SECRET_IN_CONTENT_BLOCK` | `ProtectedSecret` interpolated into a `script` or `html` block |
+| `FUNGI-BLOCK-001` | `UNKNOWN_CONTENT_BLOCK_TYPE` | Block type is not `html`, `dom`, `script`, or `css` |
+| `FUNGI-BLOCK-002` | `UNCLOSED_CONTENT_BLOCK` | Opening marker found but closing marker never appears |
+| `FUNGI-BLOCK-003` | `MISMATCHED_CONTENT_BLOCK_MARKER` | Closing marker does not match the opening marker |
+| `FUNGI-BLOCK-004` | `SECRET_IN_CONTENT_BLOCK` | `ProtectedSecret` interpolated into a `script` or `html` block |
 
 ---
 
@@ -226,9 +226,9 @@ The existing `validateCoreSyntaxSafety()` function now tracks content block stat
 - When it encounters `html <<MARKER`, `dom <<MARKER`, `script <<MARKER`, or `css <<MARKER`, it enters content block mode
 - While in content block mode, all other checks (var/const, secret literals, brace depth) are **suspended**
 - When the bare closing marker is found alone at the start of a line, it exits content block mode
-- If end-of-file is reached while still inside a block, `SPORE-BLOCK-002` is emitted
+- If end-of-file is reached while still inside a block, `FUNGI-BLOCK-002` is emitted
 
-Unknown block types (e.g. `xml <<XML`) immediately emit `SPORE-BLOCK-001` without entering block mode.
+Unknown block types (e.g. `xml <<XML`) immediately emit `FUNGI-BLOCK-001` without entering block mode.
 
 ### `validateTypedContentBlock()` — content validation (stub)
 
@@ -246,7 +246,7 @@ Stage 1 status: **STUB** — returns empty diagnostics.
 
 Stage 2 will implement:
 - `html`/`dom` — HTML structure validation
-- `script` — JavaScript syntax check; `SPORE-BLOCK-004` secret detection
+- `script` — JavaScript syntax check; `FUNGI-BLOCK-004` secret detection
 - `css` — CSS property/selector validation
 
 ---
@@ -258,15 +258,15 @@ Stage 2 will implement:
 | `ContentBlockType`, `CONTENT_BLOCK_TYPES` | ✅ | `@galerina/core/src/index.ts` |
 | `TypedContentBlockExpression` interface | ✅ | `@galerina/core/src/index.ts` |
 | `typedContentBlockExpr` AstNodeKind | ✅ | `@galerina/core/src/index.ts` |
-| `SPORE-BLOCK-001..004` constants | ✅ | `@galerina/core-compiler` |
-| `SPORE_BLOCK_DIAGNOSTICS` array | ✅ | `@galerina/core-compiler` |
+| `FUNGI-BLOCK-001..004` constants | ✅ | `@galerina/core-compiler` |
+| `FUNGI_BLOCK_DIAGNOSTICS` array | ✅ | `@galerina/core-compiler` |
 | Content block state tracking in `validateCoreSyntaxSafety()` | ✅ | Real check; brace depth suspended inside blocks |
-| `SPORE-BLOCK-001` unknown type detection | ✅ | `parseContentBlockOpen()` |
-| `SPORE-BLOCK-002` unclosed block detection | ✅ | Post-loop check |
+| `FUNGI-BLOCK-001` unknown type detection | ✅ | `parseContentBlockOpen()` |
+| `FUNGI-BLOCK-002` unclosed block detection | ✅ | Post-loop check |
 | `validateTypedContentBlock()` stub | ✅ | Returns empty; Stage 2 pending |
 | Tests: content block tracking | ✅ | 5 new tests; 17/17 passing (2026-05-26) |
 | HTML/DOM structure validation (Stage 2) | ⏳ | Blocked on content block AST |
 | Script JS syntax check (Stage 2) | ⏳ | Blocked on content block AST |
 | CSS validation (Stage 2) | ⏳ | Blocked on content block AST |
-| `SPORE-BLOCK-003` mismatched marker (Stage 2) | ⏳ | Blocked on multi-block nesting parser |
-| `SPORE-BLOCK-004` secret in script block (Stage 2) | ⏳ | Blocked on interpolation AST |
+| `FUNGI-BLOCK-003` mismatched marker (Stage 2) | ⏳ | Blocked on multi-block nesting parser |
+| `FUNGI-BLOCK-004` secret in script block (Stage 2) | ⏳ | Blocked on interpolation AST |

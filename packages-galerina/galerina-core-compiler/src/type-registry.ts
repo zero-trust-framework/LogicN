@@ -294,7 +294,7 @@ export type GovernanceFlagsMask = number;
 // ---------------------------------------------------------------------------
 
 export interface RuntimeManifest {
-  readonly schemaVersion: "spore.runtime.manifest.v1";
+  readonly schemaVersion: "fungi.runtime.manifest.v1";
   readonly flow: string;
   readonly qualifier: string;
   readonly requiresAudit: boolean;
@@ -572,7 +572,7 @@ export type EffectCheckerFlagsMask = number;
 // Tensor type parsing helpers
 //
 // Extracts element type and shape from a Tensor<ElementType, [d1, d2, ...]>
-// type string. Used by SPORE-TYPE-030/031 checking.
+// type string. Used by FUNGI-TYPE-030/031 checking.
 // ---------------------------------------------------------------------------
 
 export interface TensorTypeInfo {
@@ -619,7 +619,7 @@ export function parseTensorType(typeName: string): TensorTypeInfo {
 
 /**
  * Returns true when two tensor types are element-type compatible.
- * Float32 ← Float32 ✅, Float32 ← Int8 ❌ (→ SPORE-TYPE-030)
+ * Float32 ← Float32 ✅, Float32 ← Int8 ❌ (→ FUNGI-TYPE-030)
  */
 export function tensorElementTypesCompatible(expected: string, actual: string): boolean {
   return expected.trim() === actual.trim();
@@ -627,7 +627,7 @@ export function tensorElementTypesCompatible(expected: string, actual: string): 
 
 /**
  * Returns true when two tensor shapes are dimension-count compatible.
- * [768] and [768] → true. [Batch, 768] and [768] → false (→ SPORE-TYPE-031)
+ * [768] and [768] → true. [Batch, 768] and [768] → false (→ FUNGI-TYPE-031)
  */
 export function tensorDimensionCountsCompatible(
   expected: readonly (number | "dynamic")[],
@@ -641,7 +641,7 @@ export function tensorDimensionCountsCompatible(
 //
 // Every native module that provides hardware acceleration (NPU, GPU, APU) must
 // declare a manifest satisfying this interface. The manifest is signed by the
-// publisher (SPORE-PKG-005 equivalent for native modules) and verified by the
+// publisher (FUNGI-PKG-005 equivalent for native modules) and verified by the
 // host runtime before the plugin is loaded.
 //
 // Architecture rules enforced by this manifest:
@@ -656,7 +656,7 @@ export function tensorDimensionCountsCompatible(
 // ---------------------------------------------------------------------------
 
 export interface NativePluginManifest {
-  readonly schemaVersion: "spore.native-plugin.v1";
+  readonly schemaVersion: "fungi.native-plugin.v1";
   readonly name: string;
   readonly capability: string;         // e.g. "host.npu.inference"
   readonly hash: string;               // sha256: content hash of native binary

@@ -42,8 +42,8 @@ policy belongs in `galerina-framework-app-kernel`.
 [ ] Implement validateAiPrompt(prompt, policy): NetworkDiagnostic[]
 [ ] Define NetworkDiagnostic: code, message, severity, destination?
 [ ] Define NetworkPolicyReport with schemaVersion "galerina.network.report.v1"
-[ ] Define SPORE-NETWORK-001 through SPORE-NETWORK-008 diagnostic codes
+[ ] Define FUNGI-NETWORK-001 through FUNGI-NETWORK-008 diagnostic codes
 [ ] Create internal dir: policy/, runtime/, webhook/, reports/, diagnostics/
-[ ] Implement deny-by-default rule (SPORE-NETWORK-001 for undeclared destinations)
-[ ] Integrate with boundary checker for SPORE-BOUNDARY-008 (network allowlist violation)
+[ ] Implement deny-by-default rule (FUNGI-NETWORK-001 for undeclared destinations)
+[ ] Integrate with boundary checker for FUNGI-BOUNDARY-008 (network allowlist violation)
 ```

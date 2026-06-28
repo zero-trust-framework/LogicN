@@ -19,7 +19,7 @@
  * decision ONLY at the trust boundary:
  *   collapse(+1) = allow ;  collapse(0) = deny (audited) ;  collapse(-1) = deny
  *   authorize(v) ⇔ v = +1
- * An INDETERMINATE collapsed to deny emits SPORE-GOV-3VL-001 — never silent.
+ * An INDETERMINATE collapsed to deny emits FUNGI-GOV-3VL-001 — never silent.
  *
  * See docs/Knowledge-Bases/galerina-three-valued-governance.md for the spec, the
  * fail-closed soundness theorem, and the no-coercion proof.
@@ -96,10 +96,10 @@ export function authorize(v: Verdict): boolean {
   return v === Verdict.ALLOW;
 }
 
-// ── Audited boundary decision — SPORE-GOV-3VL-001 ───────────────────────────────
+// ── Audited boundary decision — FUNGI-GOV-3VL-001 ───────────────────────────────
 
 /** The diagnostic code for an indeterminate verdict collapsed to deny at a boundary. */
-export const GOV_3VL_DIAGNOSTIC = "SPORE-GOV-3VL-001" as const;
+export const GOV_3VL_DIAGNOSTIC = "FUNGI-GOV-3VL-001" as const;
 
 /** Structured diagnostic record (shape compatible with the LogicDiagnostic family). */
 export interface GovernanceDiagnostic {
@@ -114,7 +114,7 @@ export interface BoundaryDecision {
   readonly verdict: Verdict;
   readonly decision: "allow" | "deny";
   readonly authorized: boolean;
-  /** Non-null IFF an INDETERMINATE verdict was collapsed to deny (SPORE-GOV-3VL-001). */
+  /** Non-null IFF an INDETERMINATE verdict was collapsed to deny (FUNGI-GOV-3VL-001). */
   readonly diagnostic: GovernanceDiagnostic | null;
 }
 
@@ -132,7 +132,7 @@ function indeterminateDiagnostic(): GovernanceDiagnostic {
  *
  * - ALLOW (+1)         → authorized, decision "allow", no diagnostic.
  * - DENY (-1)          → not authorized, decision "deny", no diagnostic (ordinary policy denial).
- * - INDETERMINATE (0)  → not authorized, decision "deny", diagnostic SPORE-GOV-3VL-001.
+ * - INDETERMINATE (0)  → not authorized, decision "deny", diagnostic FUNGI-GOV-3VL-001.
  *
  * The diagnostic is returned IN the result whenever a 0 is collapsed — it is
  * structurally impossible to drop an indeterminate verdict silently. The optional

@@ -60,4 +60,4 @@ One run is `simulate(64, 8)` = `steps × n × n` = **32,768 force evaluations**.
 |------|---------|
 | `node.mjs` | Node.js |
 | `python.py` | Python 3 |
-| `benchmark.spore` | Galerina governed/manifest/passive |
+| `benchmark.fungi` | Galerina governed/manifest/passive |

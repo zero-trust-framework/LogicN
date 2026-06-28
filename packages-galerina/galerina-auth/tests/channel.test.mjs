@@ -63,9 +63,9 @@ test("degrade-only side-signal can only LOWER, never lift (No-Coercion)", () => 
   );
 });
 
-test("onDiagnostic fires SPORE-GOV-3VL-001 when the verdict is INDETERMINATE", () => {
+test("onDiagnostic fires FUNGI-GOV-3VL-001 when the verdict is INDETERMINATE", () => {
   const seen = [];
   channelIdentityVerdict(goodInput({ revocation: "unknown" }), (d) => seen.push(d));
   assert.equal(seen.length, 1);
-  assert.equal(seen[0].code, "SPORE-GOV-3VL-001");
+  assert.equal(seen[0].code, "FUNGI-GOV-3VL-001");
 });

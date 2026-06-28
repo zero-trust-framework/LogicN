@@ -234,6 +234,6 @@ which fallback was used
 whether prompt safety ran
 whether PII/secrets were redacted
 whether generated output can be executed
-which generated report entries map back to .spore source
+which generated report entries map back to .fungi source
 ```
 

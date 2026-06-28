@@ -12,7 +12,7 @@ The design should make Galerina practical for normal software development today 
 
 Galerina should be designed around the foLOwing idea:
 
-> Write one safe, strict `.spore` source project and compile it into multiple target outputs.
+> Write one safe, strict `.fungi` source project and compile it into multiple target outputs.
 
 The design combines:
 
@@ -79,16 +79,16 @@ Galerina should not make futuristic hardware support more important than practic
 
 ## Source Files
 
-Galerina source files use the `.spore` extension.
+Galerina source files use the `.fungi` extension.
 
 Examples:
 
 ```text
-boot.spore
-main.spore
-order-service.spore
-payment-webhook.spore
-fraud-check.spore
+boot.fungi
+main.fungi
+order-service.fungi
+payment-webhook.fungi
+fraud-check.fungi
 ```
 
 ## Entry File Design
@@ -96,26 +96,26 @@ fraud-check.spore
 The recommended project entry file is:
 
 ```text
-boot.spore
+boot.fungi
 ```
 
 Reason:
 
 ```text
-boot.spore clearly means the project starts here
-main.spore can still be used for simple scripts or small projects
+boot.fungi clearly means the project starts here
+main.fungi can still be used for simple scripts or small projects
 ```
 
 A full project should normally use:
 
 ```text
-boot.spore
+boot.fungi
 ```
 
 A short script may use:
 
 ```text
-hello.spore
+hello.fungi
 ```
 
 ---
@@ -136,13 +136,13 @@ Script mode is for quick tasks.
 Example:
 
 ```text
-hello.spore
+hello.fungi
 ```
 
 Run:
 
 ```bash
-Galerina run hello.spore
+Galerina run hello.fungi
 ```
 
 Script mode should use secure defaults:
@@ -165,7 +165,7 @@ Example:
 
 ```text
 my-app/
-â”œâ”€â”€ boot.spore
+â”œâ”€â”€ boot.fungi
 â”œâ”€â”€ Galerina.config
 â”œâ”€â”€ Galerina.lock
 â”œâ”€â”€ src/
@@ -187,18 +187,18 @@ Galerina build
 
 ```text
 galerina-project/
-â”œâ”€â”€ boot.spore
+â”œâ”€â”€ boot.fungi
 â”œâ”€â”€ Galerina.config
 â”œâ”€â”€ Galerina.lock
 â”œâ”€â”€ .env.example
 â”‚
 â”œâ”€â”€ src/
-â”‚   â”œâ”€â”€ main.spore
-â”‚   â”œâ”€â”€ routes.spore
+â”‚   â”œâ”€â”€ main.fungi
+â”‚   â”œâ”€â”€ routes.fungi
 â”‚   â””â”€â”€ services/
-â”‚       â”œâ”€â”€ order-service.spore
-â”‚       â”œâ”€â”€ payment-service.spore
-â”‚       â””â”€â”€ fraud-service.spore
+â”‚       â”œâ”€â”€ order-service.fungi
+â”‚       â”œâ”€â”€ payment-service.fungi
+â”‚       â””â”€â”€ fraud-service.fungi
 â”‚
 â”œâ”€â”€ app/
 â”‚   â”œâ”€â”€ controllers/
@@ -1324,7 +1324,7 @@ Recommended stages:
 Galerina should compile to an intermediate representation before final outputs.
 
 ```text
-.spore source
+.fungi source
    â†“
 Galerina IR
    â†“
@@ -1373,7 +1373,7 @@ build/
 
 Galerina should generate source maps.
 
-Source maps should connect compiled output back to original `.spore` files.
+Source maps should connect compiled output back to original `.fungi` files.
 
 They should include:
 
@@ -1393,7 +1393,7 @@ Example error:
 Runtime error: PaymentStatus.Unknown was not handled.
 
 Original source:
-  app/services/order-service.spore:42:7
+  app/services/order-service.fungi:42:7
 
 Suggestion:
   Add a match branch for Unknown.
@@ -1480,7 +1480,7 @@ Example:
 {
   "errorType": "TargetCompatibilityError",
   "target": "photonic",
-  "file": "src/fraud-check.spore",
+  "file": "src/fraud-check.fungi",
   "line": 18,
   "column": 12,
   "problem": "readFile cannot run inside a photonic compute block.",

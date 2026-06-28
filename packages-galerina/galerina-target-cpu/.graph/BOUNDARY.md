@@ -5,7 +5,7 @@
 
 **Status:** ✅ PASS
 
-**Scanned scope:** roots [`src`] · extensions [`.ts`, `.spore`]
+**Scanned scope:** roots [`src`] · extensions [`.ts`, `.fungi`]
 
 ## Summary
 

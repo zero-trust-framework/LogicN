@@ -61,13 +61,13 @@ Do not call compatibility-boundary items "Galerina Core features".
 
 | Old idea                | Status                     | Replacement                                |
 | ----------------------- | -------------------------- | ------------------------------------------ |
-| `.language` files       | Deprecated / not supported | `.spore`                                      |
-| `main.spore` only projects  | Compatibility only         | `boot.spore` for full projects                |
+| `.language` files       | Deprecated / not supported | `.fungi`                                      |
+| `main.fungi` only projects  | Compatibility only         | `boot.fungi` for full projects                |
 | photonic-only execution | Rejected                   | CPU baseline with optional target planning |
 | hidden runtime magic    | Rejected                   | source maps, reports and explicit policy   |
 | unreported target jumps | Rejected                   | target compatibility and fallback reports  |
 
-Migration tools may diagnose old source names and suggest `.spore`, but normal Galerina
+Migration tools may diagnose old source names and suggest `.fungi`, but normal Galerina
 should not support old source extensions.
 
 ---
@@ -228,7 +228,7 @@ Suggested diagnostic:
 
 ```json
 {
-  "code": "SPORE-SEC-PATCH-001",
+  "code": "FUNGI-SEC-PATCH-001",
   "severity": "error",
   "message": "Runtime patching is not allowed. Use an adapter, interface, pipeline, test mock or signed hotfix package.",
   "safeToShow": true
@@ -364,7 +364,7 @@ behaviour.
 | Feature / idea                     | Current Galerina position                  | Keep because                              | Recommendation                                      |
 | ---------------------------------- | ------------------------------------ | ----------------------------------------- | --------------------------------------------------- |
 | `.language` source files           | Deprecated / migration only          | Historical Galerina design path                 | Do not support except migration diagnostics         |
-| `main.spore` entry file               | Simple-script compatibility          | Common language convention                | Keep for scripts; prefer `boot.spore` for projects     |
+| `main.fungi` entry file               | Simple-script compatibility          | Common language convention                | Keep for scripts; prefer `boot.fungi` for projects     |
 | JSON `null`                        | Boundary value only                  | APIs and databases use it                 | Decode to `Option` or `JsonNull`                    |
 | JavaScript `undefined`             | Rejected                             | JavaScript compatibility pressure         | Do not support; emit migration diagnostics          |
 | truthy/falsy logic                 | Rejected                             | Familiar in dynamic scripting styles      | Do not support; require `Bool`                      |

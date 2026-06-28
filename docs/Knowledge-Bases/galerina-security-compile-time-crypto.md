@@ -163,19 +163,19 @@ const SigningPolicy: SignaturePolicy = Ed25519 { }
 
 | Code | Meaning |
 |---|---|
-| `SPORE-CRYPTO-001` | Algorithm must be compile-time known across security boundary |
-| `SPORE-CRYPTO-002` | Runtime string used as cryptographic policy |
-| `SPORE-CRYPTO-003` | Algorithm not in approved policy set |
-| `SPORE-CRYPTO-004` | Key size below minimum for production profile |
-| `SPORE-CRYPTO-005` | Protocol downgrade forbidden |
-| `SPORE-CRYPTO-006` | Certificate verification cannot be disabled in production |
-| `SPORE-CRYPTO-007` | Crypto fallback must fail closed |
-| `SPORE-CRYPTO-008` | Unapproved custom crypto primitive |
+| `FUNGI-CRYPTO-001` | Algorithm must be compile-time known across security boundary |
+| `FUNGI-CRYPTO-002` | Runtime string used as cryptographic policy |
+| `FUNGI-CRYPTO-003` | Algorithm not in approved policy set |
+| `FUNGI-CRYPTO-004` | Key size below minimum for production profile |
+| `FUNGI-CRYPTO-005` | Protocol downgrade forbidden |
+| `FUNGI-CRYPTO-006` | Certificate verification cannot be disabled in production |
+| `FUNGI-CRYPTO-007` | Crypto fallback must fail closed |
+| `FUNGI-CRYPTO-008` | Unapproved custom crypto primitive |
 
 Example:
 
 ```text
-SPORE-CRYPTO-001: cryptographic algorithm must be compile-time known
+FUNGI-CRYPTO-001: cryptographic algorithm must be compile-time known
 
 Flow: sendPayment
 Boundary: network.external

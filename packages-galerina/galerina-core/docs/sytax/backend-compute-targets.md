@@ -235,7 +235,7 @@ security constraints
 cloud target recommendations
 plugin used
 vendor-specific mapping where applicable
-source-map links back to .spore files
+source-map links back to .fungi files
 ```
 
 ---

@@ -108,7 +108,7 @@ They must not overlap with `V1_ACTIVE_KEYWORDS`.
 ```text
 For each identifier-shaped token:
   1. Check V1_ACTIVE_KEYWORDS -> emit TokenKind.keyword
-  2. Check V1_FUTURE_RESERVED -> emit SPORE-SYNTAX-003 and TokenKind.keyword
+  2. Check V1_FUTURE_RESERVED -> emit FUNGI-SYNTAX-003 and TokenKind.keyword
   3. Otherwise -> emit TokenKind.identifier
 ```
 
@@ -116,10 +116,10 @@ For each identifier-shaped token:
 
 | Code | Meaning |
 |---|---|
-| `SPORE-SYNTAX-001` | `var` used; not a valid Galerina binding keyword |
-| `SPORE-SYNTAX-002` | `const` used; use `let` or `readonly` |
-| `SPORE-SYNTAX-003` | Future-reserved keyword used as identifier |
-| `SPORE-SYNTAX-004` | Active keyword used as identifier |
+| `FUNGI-SYNTAX-001` | `var` used; not a valid Galerina binding keyword |
+| `FUNGI-SYNTAX-002` | `const` used; use `let` or `readonly` |
+| `FUNGI-SYNTAX-003` | Future-reserved keyword used as identifier |
+| `FUNGI-SYNTAX-004` | Active keyword used as identifier |
 
 ## Architecture Placement
 

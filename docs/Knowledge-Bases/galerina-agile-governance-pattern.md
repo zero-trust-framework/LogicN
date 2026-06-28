@@ -55,7 +55,7 @@ break existing invariants before deployment.
 **Example:**
 ```bash
 # "What if I increase the transaction limit from $10K to $50K?"
-galerina check --what-if "economics.max_billing_quota_per_call = 5_000_000" flows/processPayment.spore
+galerina check --what-if "economics.max_billing_quota_per_call = 5_000_000" flows/processPayment.fungi
 
 # Compiler runs static analysis with the hypothetical constraint:
 # → Checks all invariants still hold
@@ -67,9 +67,9 @@ galerina check --what-if "economics.max_billing_quota_per_call = 5_000_000" flow
 safely afford before you ever modify a production file.
 
 **Status:** `galerina check --what-if` is live as of Task #71. Parses `policy {}` files,
-extracts `permitted_effects {}` and `enforced_limits {}`, scans `.spore` files for blocked
+extracts `permitted_effects {}` and `enforced_limits {}`, scans `.fungi` files for blocked
 effects, reports change class (TIGHTENING / NEUTRAL), and exits 2 on violations.
-DRY RUN — the policy is never applied. To apply: `cp <policy.spore> governance/ && galerina init-env`.
+DRY RUN — the policy is never applied. To apply: `cp <policy.fungi> governance/ && galerina init-env`.
 
 ---
 
@@ -83,7 +83,7 @@ invariants within mathematically bounded ranges.
 
 **Example in Galerina syntax:**
 
-```spore
+```fungi
 ;; Root policy — global ceiling (floor 4 artifact)
 policy PaymentSystemCeiling {
   permitted_effects { ledger.mutate, audit.write }
@@ -130,7 +130,7 @@ absolutely must have the ability to 'think' while running?"*
 But this is NOT discretion. It is a **pre-compiled, pre-signed, monotonically restricted
 state machine**:
 
-```spore
+```fungi
 policy {
   emergency {
     on invariant_failure {

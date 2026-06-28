@@ -29,4 +29,4 @@ handles sensitive data or financial transactions.
 
 When `observability { require trace_id }` is used together with `context { require trace_id }`,
 the governance verifier checks that `trace_id` is actually accessed in the flow body
-(SPORE-CONTEXT-001). Always read required context fields and pass them to audit records.
+(FUNGI-CONTEXT-001). Always read required context fields and pass them to audit records.

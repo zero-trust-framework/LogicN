@@ -12,7 +12,7 @@ photonic if not hybrid if not binary"* and **binary as the unconditional floor**
 > identical to today.**
 
 > **Fail-closed & neutral.** UNKNOWN or UNATTESTED capability ⇒ `binary` (the K3 dead-zone collapses to
-> DENY → binary, `SPORE-HW-004`). The directive is derived from the **attested** `manifest.hardwareIdentity`
+> DENY → binary, `FUNGI-HW-004`). The directive is derived from the **attested** `manifest.hardwareIdentity`
 > behind `verifyAttestation` — never from the gameable self-claimed `nativeAvailable` boolean. This package
 > stays neutral (no `node:crypto`, no Tower dependency): the caller runs `verifyAttestation` (the Tower's
 > **bridge** attestation surface — not the audit surface) and passes the `ok` result in.
@@ -33,7 +33,7 @@ photonic if not hybrid if not binary"* and **binary as the unconditional floor**
 hardware() :: () -> 'binary' | 'hybrid' | 'photonic'         // cached, deployment-stable
   1. read attested manifest hardwareIdentity → targetId
   2. attestation verified?            → NO  ⇒ 'binary'        (UNATTESTED — the floor)
-  3. profiles.get(targetId)           → undefined ⇒ 'binary'  (UNKNOWN ⇒ K3 DENY, SPORE-HW-004)
+  3. profiles.get(targetId)           → undefined ⇒ 'binary'  (UNKNOWN ⇒ K3 DENY, FUNGI-HW-004)
   4. requiresAttestation && !verified ⇒ 'binary'             (defensive)
   5. AcceleratorPlane && fully-eligible ⇒ 'photonic'         (the preference ceiling)
   6. AcceleratorPlane (whole component) / ExecutionPlane ⇒ 'hybrid'

@@ -22,7 +22,7 @@ Galerina tests prove behaviour plus governance.
 | 1 | Lexer | Source to correct tokens | Done |
 | 2 | Parser | Valid syntax to correct AST | Done |
 | 3 | Contract order | Sections in canonical order | Done |
-| 4 | Type checker | SPORE-TYPE-001..022 | Done |
+| 4 | Type checker | FUNGI-TYPE-001..022 | Done |
 | 5 | Value-state | unsafe/protected/redacted movement | Done |
 | 6 | Capability/Effect | Declared effects only | Done |
 | 7 | Negative governance | Illegal code rejected | Done |

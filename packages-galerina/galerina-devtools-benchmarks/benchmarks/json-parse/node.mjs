@@ -1,6 +1,6 @@
 import { performance } from "node:perf_hooks";
 
-// Canonical record (matches benchmark.spore). split/length semantics are identical
+// Canonical record (matches benchmark.fungi). split/length semantics are identical
 // across Galerina, JS and Python, so the checksum is reproducible bit-for-bit.
 const REC = "id:1001,name:alice,role:admin,active:true,score:95";
 
@@ -70,7 +70,7 @@ const result = {
   notes: [
     `Records: ${N} key:value records of 5 fields each`,
     "checksum = N × (5 fields + 20 value-chars) via split/length — matches Galerina and Python",
-    "splitScan mirrors the .spore kernel; jsonParse is the native JSON.parse path for reference",
+    "splitScan mirrors the .fungi kernel; jsonParse is the native JSON.parse path for reference",
   ],
 };
 console.log(JSON.stringify(result, null, 2));

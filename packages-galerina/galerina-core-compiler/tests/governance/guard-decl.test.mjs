@@ -6,9 +6,9 @@
 //
 // Covers:
 //   - guardDecl parses as AST node kind "guardDecl"
-//   - parent_policy: annotation + subset verification (SPORE-INHERIT-001/002, task #72)
+//   - parent_policy: annotation + subset verification (FUNGI-INHERIT-001/002, task #72)
 //   - contract [conforms_to: GuardName] validates effects against the guard ceiling
-//   - SPORE-GOV-004 for effects outside the guard's permitted set
+//   - FUNGI-GOV-004 for effects outside the guard's permitted set
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -25,7 +25,7 @@ import {
 // ---------------------------------------------------------------------------
 
 function parseAndVerify(source, profile = "dev") {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effects = checkEffects(parsed.flows, parsed.ast);
   return verifyGovernance(parsed.ast, parsed.flows, effects, profile);
 }
@@ -56,7 +56,7 @@ guard PaymentGuard {
   }
 }
 `;
-    const { ast, diagnostics } = parseProgram(source, "test.spore");
+    const { ast, diagnostics } = parseProgram(source, "test.fungi");
     const errors = diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       errors.length,
@@ -80,7 +80,7 @@ guard BillingGuard {
   }
 }
 `;
-    const { ast } = parseProgram(source, "test.spore");
+    const { ast } = parseProgram(source, "test.fungi");
     const guardNode = findNode(ast, "guardDecl", "BillingGuard");
     assert.ok(guardNode !== undefined, "guardDecl node must exist for BillingGuard");
     // The permitted_effects sub-block should appear as an identifier child
@@ -107,7 +107,7 @@ guard SimpleGuard {
   }
 }
 `;
-    const { diagnostics } = parseProgram(source, "test.spore");
+    const { diagnostics } = parseProgram(source, "test.fungi");
     const errors = diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       errors.length,
@@ -118,11 +118,11 @@ guard SimpleGuard {
 });
 
 // ---------------------------------------------------------------------------
-// parent_policy: annotation (task #72) — SPORE-INHERIT-001/002
+// parent_policy: annotation (task #72) — FUNGI-INHERIT-001/002
 // ---------------------------------------------------------------------------
 
-describe("guard parent_policy: subset verification (SPORE-INHERIT-001/002)", () => {
-  it("child guard with effects subset of parent passes cleanly — 0 SPORE-INHERIT errors", () => {
+describe("guard parent_policy: subset verification (FUNGI-INHERIT-001/002)", () => {
+  it("child guard with effects subset of parent passes cleanly — 0 FUNGI-INHERIT errors", () => {
     const source = `
 guard FinanceFullAccess {
   permitted_effects {
@@ -143,16 +143,16 @@ guard InvoicingSubset {
 `;
     const result = parseAndVerify(source);
     const inheritErrors = result.diagnostics.filter(
-      (d) => d.code === "SPORE-INHERIT-001" || d.code === "SPORE-INHERIT-002",
+      (d) => d.code === "FUNGI-INHERIT-001" || d.code === "FUNGI-INHERIT-002",
     );
     assert.equal(
       inheritErrors.length,
       0,
-      `Expected 0 SPORE-INHERIT errors for valid subset, got: ${inheritErrors.map((e) => `${e.code}: ${e.message}`).join("; ")}`,
+      `Expected 0 FUNGI-INHERIT errors for valid subset, got: ${inheritErrors.map((e) => `${e.code}: ${e.message}`).join("; ")}`,
     );
   });
 
-  it("SPORE-INHERIT-001: parent policy name not found emits error", () => {
+  it("FUNGI-INHERIT-001: parent policy name not found emits error", () => {
     const source = `
 guard ChildGuard {
   parent_policy: NonExistentParent
@@ -163,12 +163,12 @@ guard ChildGuard {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      hasDiag(result, "SPORE-INHERIT-001"),
-      `Expected SPORE-INHERIT-001 for unknown parent policy, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-INHERIT-001"),
+      `Expected FUNGI-INHERIT-001 for unknown parent policy, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("SPORE-INHERIT-002: child guard with effect not in parent emits error", () => {
+  it("FUNGI-INHERIT-002: child guard with effect not in parent emits error", () => {
     const source = `
 guard ParentGuard {
   permitted_effects {
@@ -187,23 +187,23 @@ guard ChildGuard {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      hasDiag(result, "SPORE-INHERIT-002"),
-      `Expected SPORE-INHERIT-002 when child adds network.outbound (not in parent), got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-INHERIT-002"),
+      `Expected FUNGI-INHERIT-002 when child adds network.outbound (not in parent), got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-INHERIT-002");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-INHERIT-002");
     assert.ok(
       diag?.message.includes("network.outbound") || diag?.message.includes("ChildGuard"),
-      `SPORE-INHERIT-002 message should mention the violation, got: ${diag?.message}`,
+      `FUNGI-INHERIT-002 message should mention the violation, got: ${diag?.message}`,
     );
   });
 });
 
 // ---------------------------------------------------------------------------
-// contract [conforms_to: GuardName] — SPORE-GOV-004
+// contract [conforms_to: GuardName] — FUNGI-GOV-004
 // ---------------------------------------------------------------------------
 
-describe("contract [conforms_to: GuardName]: effect subset validation (SPORE-GOV-004)", () => {
-  it("[conforms_to: GuardName] with effects within ceiling — 0 SPORE-GOV-004", () => {
+describe("contract [conforms_to: GuardName]: effect subset validation (FUNGI-GOV-004)", () => {
+  it("[conforms_to: GuardName] with effects within ceiling — 0 FUNGI-GOV-004", () => {
     const source = `
 guard PaymentGuard {
   permitted_effects {
@@ -220,15 +220,15 @@ contract [conforms_to: PaymentGuard] {
 { return Ok(id) }
 `;
     const result = parseAndVerify(source);
-    const gov004 = result.diagnostics.filter((d) => d.code === "SPORE-GOV-004");
+    const gov004 = result.diagnostics.filter((d) => d.code === "FUNGI-GOV-004");
     assert.equal(
       gov004.length,
       0,
-      `Expected 0 SPORE-GOV-004 errors when effects subset of guard, got: ${gov004.map((e) => e.message).join("; ")}`,
+      `Expected 0 FUNGI-GOV-004 errors when effects subset of guard, got: ${gov004.map((e) => e.message).join("; ")}`,
     );
   });
 
-  it("[conforms_to: GuardName] with forbidden effect emits SPORE-GOV-004", () => {
+  it("[conforms_to: GuardName] with forbidden effect emits FUNGI-GOV-004", () => {
     const source = `
 guard RestrictedGuard {
   permitted_effects {
@@ -245,17 +245,17 @@ contract [conforms_to: RestrictedGuard] {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      hasDiag(result, "SPORE-GOV-004"),
-      `Expected SPORE-GOV-004 for network.outbound outside guard ceiling, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
+      hasDiag(result, "FUNGI-GOV-004"),
+      `Expected FUNGI-GOV-004 for network.outbound outside guard ceiling, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
-    const diag = result.diagnostics.find((d) => d.code === "SPORE-GOV-004");
+    const diag = result.diagnostics.find((d) => d.code === "FUNGI-GOV-004");
     assert.ok(
       diag?.message.includes("network.outbound"),
-      `SPORE-GOV-004 message must mention the violating effect, got: ${diag?.message}`,
+      `FUNGI-GOV-004 message must mention the violating effect, got: ${diag?.message}`,
     );
   });
 
-  it("contract without conforms_to is not checked — no SPORE-GOV-004 for any effect", () => {
+  it("contract without conforms_to is not checked — no FUNGI-GOV-004 for any effect", () => {
     const source = `
 guard TightGuard {
   permitted_effects {
@@ -271,11 +271,11 @@ contract {
 { return Ok(id) }
 `;
     const result = parseAndVerify(source);
-    const gov004 = result.diagnostics.filter((d) => d.code === "SPORE-GOV-004");
+    const gov004 = result.diagnostics.filter((d) => d.code === "FUNGI-GOV-004");
     assert.equal(
       gov004.length,
       0,
-      `Expected no SPORE-GOV-004 for unbound contract (no conforms_to), got: ${gov004.map((e) => e.message).join("; ")}`,
+      `Expected no FUNGI-GOV-004 for unbound contract (no conforms_to), got: ${gov004.map((e) => e.message).join("; ")}`,
     );
   });
 });
@@ -287,7 +287,7 @@ contract {
 // ---------------------------------------------------------------------------
 
 describe("GOV-001: permitted_effects state machine + strict conforms_to", () => {
-  it("OMITTED permitted_effects (limits-only guard) is NEUTRAL — no SPORE-GOV-004", () => {
+  it("OMITTED permitted_effects (limits-only guard) is NEUTRAL — no FUNGI-GOV-004", () => {
     const source = `
 guard LimitsOnly {
   enforced_limits {
@@ -304,12 +304,12 @@ contract [conforms_to: LimitsOnly] {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      !hasDiag(result, "SPORE-GOV-004"),
+      !hasDiag(result, "FUNGI-GOV-004"),
       `omitted permitted_effects must be neutral (auto-inherit), got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
 
-  it("EXPLICITLY EMPTY permitted_effects {} is DENY-ALL — every declared effect emits SPORE-GOV-004", () => {
+  it("EXPLICITLY EMPTY permitted_effects {} is DENY-ALL — every declared effect emits FUNGI-GOV-004", () => {
     const source = `
 guard DenyAll {
   permitted_effects {
@@ -325,7 +325,7 @@ contract [conforms_to: DenyAll] {
 `;
     const result = parseAndVerify(source);
     assert.ok(
-      hasDiag(result, "SPORE-GOV-004"),
+      hasDiag(result, "FUNGI-GOV-004"),
       `empty permitted_effects {} must deny all effects, got: ${result.diagnostics.map((d) => d.code).join(", ")}`,
     );
   });
@@ -340,7 +340,7 @@ contract [conforms_to: MissingPolicy] {
 { return Ok(id) }
 `;
     const result = parseAndVerify(source, "dev");
-    const d = result.diagnostics.find((x) => x.code === "SPORE-GOV-004" && x.name === "DOMAIN_GUARD_NOT_FOUND");
+    const d = result.diagnostics.find((x) => x.code === "FUNGI-GOV-004" && x.name === "DOMAIN_GUARD_NOT_FOUND");
     assert.ok(d !== undefined && d.severity === "warning", `dev: expected a warning, got: ${d?.severity}`);
   });
 
@@ -354,7 +354,7 @@ contract [conforms_to: MissingPolicy] {
 { return Ok(id) }
 `;
     const result = parseAndVerify(source, "production");
-    const d = result.diagnostics.find((x) => x.code === "SPORE-GOV-004" && x.name === "DOMAIN_GUARD_NOT_FOUND");
+    const d = result.diagnostics.find((x) => x.code === "FUNGI-GOV-004" && x.name === "DOMAIN_GUARD_NOT_FOUND");
     assert.ok(d !== undefined && d.severity === "error", `production: expected a fatal error, got: ${d?.severity}`);
   });
 });

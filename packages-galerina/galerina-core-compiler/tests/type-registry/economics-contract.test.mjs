@@ -4,8 +4,8 @@
 // Tests:
 //   1. contract { economics { target_cost 0.001 } } parses with 0 errors
 //   2. contract { lineage { source crm } } parses with 0 errors
-//   3. SPORE_ECON_001.code === "SPORE-ECON-001"
-//   4. SPORE_ECON_002.severity === "info"
+//   3. FUNGI_ECON_001.code === "FUNGI-ECON-001"
+//   4. FUNGI_ECON_002.severity === "info"
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -13,8 +13,8 @@ import { describe, it } from "node:test";
 
 import {
   parseProgram,
-  SPORE_ECON_001,
-  SPORE_ECON_002,
+  FUNGI_ECON_001,
+  FUNGI_ECON_002,
 } from "../../dist/index.js";
 
 // ---------------------------------------------------------------------------
@@ -34,7 +34,7 @@ contract {
   return order.id
 }
 `.trim();
-    const result = parseProgram(source, "test.spore");
+    const result = parseProgram(source, "test.fungi");
     const parseErrors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       parseErrors.length,
@@ -55,7 +55,7 @@ contract {
   return id
 }
 `.trim();
-    const result = parseProgram(source, "test.spore");
+    const result = parseProgram(source, "test.fungi");
     const parseErrors = result.diagnostics.filter((d) => d.severity === "error");
     assert.equal(
       parseErrors.length,
@@ -69,14 +69,14 @@ contract {
 // Diagnostic constant shape tests
 // ---------------------------------------------------------------------------
 
-describe("SPORE_ECON_001 constant shape", () => {
-  it("code is SPORE-ECON-001", () => {
-    assert.equal(SPORE_ECON_001.code, "SPORE-ECON-001");
+describe("FUNGI_ECON_001 constant shape", () => {
+  it("code is FUNGI-ECON-001", () => {
+    assert.equal(FUNGI_ECON_001.code, "FUNGI-ECON-001");
   });
 });
 
-describe("SPORE_ECON_002 constant shape", () => {
+describe("FUNGI_ECON_002 constant shape", () => {
   it("severity is info", () => {
-    assert.equal(SPORE_ECON_002.severity, "info");
+    assert.equal(FUNGI_ECON_002.severity, "info");
   });
 });

@@ -63,8 +63,8 @@ test("H4: photonic ≻ hybrid ≻ binary; binary is the unconditional floor", ()
   assert.equal(resolveHardware({ targetId: "photonic", attestationVerified: true, componentFullyEligible: false }), "hybrid");
 });
 
-// H5 — the K3 dead-zone: unknown target ⇒ INDETERMINATE ⇒ DENY ⇒ binary (SPORE-HW-004).
-test("H5: unknown target is the K3 dead-zone → DENY → binary (SPORE-HW-004)", () => {
+// H5 — the K3 dead-zone: unknown target ⇒ INDETERMINATE ⇒ DENY ⇒ binary (FUNGI-HW-004).
+test("H5: unknown target is the K3 dead-zone → DENY → binary (FUNGI-HW-004)", () => {
   assert.equal(HARDWARE_TIER_PROFILES.get("definitely-not-a-target"), undefined);
   assert.equal(resolveHardware({ ...base, targetId: "definitely-not-a-target" }), "binary");
   // and via the manifest-identity convenience (normalizes, unknown ⇒ binary)

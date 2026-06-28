@@ -55,7 +55,7 @@ It may contain:
 ```text
 documentation
 language specification drafts
-example .spore files
+example .fungi files
 compiler source code
 runtime source code
 tooling source code
@@ -246,7 +246,7 @@ docs: update JSON-native design
 design: add source-map schema notes
 security: add SecureString rules
 todo: add compiler report tasks
-fix: correct .spore filename examples
+fix: correct .fungi filename examples
 chore: add Apache notice file
 ```
 
@@ -354,7 +354,7 @@ Why is this needed?
 
 ## Checklist
 
-- [ ] Uses `.spore` for source examples
+- [ ] Uses `.fungi` for source examples
 - [ ] Preserves strict typing
 - [ ] Preserves no undefined / no silent null
 - [ ] Preserves source-map requirements
@@ -613,7 +613,7 @@ Documentation changes should be reviewed for:
 accuracy
 consistency
 no unsupported claims
-correct .spore file naming
+correct .fungi file naming
 security-first language
 clear examples
 Apache-2.0 compatibility
@@ -660,7 +660,7 @@ Before committing:
 
 ```text
 [ ] No real secrets added
-[ ] `.spore` extension used correctly
+[ ] `.fungi` extension used correctly
 [ ] Documentation is consistent
 [ ] Strict typing rules preserved
 [ ] Security defaults preserved
@@ -772,7 +772,7 @@ Examples:
 
 ```text
 renaming file extension
-changing boot.spore structure
+changing boot.fungi structure
 changing syntax
 changing report schemas
 changing security defaults

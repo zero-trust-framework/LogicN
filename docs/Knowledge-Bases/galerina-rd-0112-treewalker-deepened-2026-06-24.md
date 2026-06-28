@@ -1,7 +1,7 @@
 # R&D 0112 — Tree-walker, deepened: maths recheck, compliance, and the 0110 cross-compare
 
 **Date:** 2026-06-24 · **Workflow:** `wp23sd2t9` · **Status:** R&D record (one build action taken — see §6)
-**Posture:** verify-before-build · trust the math · fail-closed · crypto-on-core (SPORE-SUBSTRATE-001)
+**Posture:** verify-before-build · trust the math · fail-closed · crypto-on-core (FUNGI-SUBSTRATE-001)
 **Companion docs:** [`galerina-tree-walker-speed-and-photonic-governance.md`](galerina-tree-walker-speed-and-photonic-governance.md) · [`galerina-rd-0110-photonic-matmul-refutation-deepened-2026-06-24.md`](galerina-rd-0110-photonic-matmul-refutation-deepened-2026-06-24.md) · [`galerina-formal-verification-direction.md`](galerina-formal-verification-direction.md) · [`galerina-aot-tricks-verdict.md`](galerina-aot-tricks-verdict.md)
 
 > Owner ask: "put the tree-walker back into R&D — recheck maths, compliance, deep research, extend the maths; when it comes back, cross-compare with the TritMesh O(1)-matmul refutation (0110) to see if it helps."

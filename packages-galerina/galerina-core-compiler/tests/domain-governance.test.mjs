@@ -5,12 +5,12 @@
 //   parseProgram → checkEffects → verifyGovernance → checkEvents
 //
 // Diagnostic codes exercised:
-//   SPORE-GOV-003, SPORE-GOV-011, SPORE-GOV-012
-//   SPORE-CONTEXT-001
-//   SPORE-EVENT-001, SPORE-EVENT-002
-//   SPORE-EFFECT-001, SPORE-EFFECT-002, SPORE-EFFECT-003, SPORE-EFFECT-004
-//   GOV-001 (SPORE-GOV-001), GOV-002 (SPORE-GOV-002), GOV-004 (SPORE-GOV-010),
-//   GOV-010 (SPORE-GOV-010)
+//   FUNGI-GOV-003, FUNGI-GOV-011, FUNGI-GOV-012
+//   FUNGI-CONTEXT-001
+//   FUNGI-EVENT-001, FUNGI-EVENT-002
+//   FUNGI-EFFECT-001, FUNGI-EFFECT-002, FUNGI-EFFECT-003, FUNGI-EFFECT-004
+//   GOV-001 (FUNGI-GOV-001), GOV-002 (FUNGI-GOV-002), GOV-004 (FUNGI-GOV-010),
+//   GOV-010 (FUNGI-GOV-010)
 // =============================================================================
 
 import assert from "node:assert/strict";
@@ -20,12 +20,12 @@ import {
   checkEffects,
   verifyGovernance,
   checkEvents,
-  SPORE_GOV_003,
-  SPORE_CONTEXT_001,
-  SPORE_GOV_011,
-  SPORE_GOV_012,
-  SPORE_EVENT_001,
-  SPORE_EVENT_002,
+  FUNGI_GOV_003,
+  FUNGI_CONTEXT_001,
+  FUNGI_GOV_011,
+  FUNGI_GOV_012,
+  FUNGI_EVENT_001,
+  FUNGI_EVENT_002,
 } from "../dist/index.js";
 
 // ---------------------------------------------------------------------------
@@ -33,7 +33,7 @@ import {
 // ---------------------------------------------------------------------------
 
 function runPipeline(source, profile = "dev") {
-  const parsed = parseProgram(source, "test.spore");
+  const parsed = parseProgram(source, "test.fungi");
   const effects = checkEffects(parsed.flows, parsed.ast);
   const gov = verifyGovernance(parsed.ast, parsed.flows, effects, profile);
   const events = checkEvents(parsed.ast);
@@ -183,29 +183,29 @@ intent "Return patient record to an authorised clinical actor." {
     assert.equal(parsed.flows[0]?.name, "getPatient");
   });
 
-  it("does not raise SPORE-EVENT-001 — event declared before use", () => {
+  it("does not raise FUNGI-EVENT-001 — event declared before use", () => {
     const { events } = runPipeline(FULL_CONTRACT);
-    assert.ok(!eventHasDiag(events, "SPORE-EVENT-001"), "Unexpected SPORE-EVENT-001");
+    assert.ok(!eventHasDiag(events, "FUNGI-EVENT-001"), "Unexpected FUNGI-EVENT-001");
   });
 
-  it("does not raise SPORE-EVENT-002 — event is emitted", () => {
+  it("does not raise FUNGI-EVENT-002 — event is emitted", () => {
     const { events } = runPipeline(FULL_CONTRACT);
-    assert.ok(!eventHasDiag(events, "SPORE-EVENT-002"), "Unexpected SPORE-EVENT-002");
+    assert.ok(!eventHasDiag(events, "FUNGI-EVENT-002"), "Unexpected FUNGI-EVENT-002");
   });
 
-  it("does not raise SPORE-CONTEXT-001 — actor and trace_id are accessed", () => {
+  it("does not raise FUNGI-CONTEXT-001 — actor and trace_id are accessed", () => {
     const { gov } = runPipeline(FULL_CONTRACT);
-    assert.ok(!govHasDiag(gov, "SPORE-CONTEXT-001"), "Unexpected SPORE-CONTEXT-001");
+    assert.ok(!govHasDiag(gov, "FUNGI-CONTEXT-001"), "Unexpected FUNGI-CONTEXT-001");
   });
 
-  it("does not raise SPORE-GOV-003 — denied fields nhsNumber/dateOfBirth are not returned", () => {
+  it("does not raise FUNGI-GOV-003 — denied fields nhsNumber/dateOfBirth are not returned", () => {
     const { gov } = runPipeline(FULL_CONTRACT);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-003"), "Unexpected SPORE-GOV-003");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-003"), "Unexpected FUNGI-GOV-003");
   });
 
-  it("does not raise SPORE-GOV-010 — intent is declared", () => {
+  it("does not raise FUNGI-GOV-010 — intent is declared", () => {
     const { gov } = runPipeline(FULL_CONTRACT);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-010"), "Unexpected SPORE-GOV-010");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-010"), "Unexpected FUNGI-GOV-010");
   });
 
   it("records intent_declared proof obligation", () => {
@@ -226,11 +226,11 @@ intent "Return patient record to an authorised clinical actor." {
 });
 
 // =============================================================================
-// 2. SPORE-GOV-003: response.denies field appears in response body
+// 2. FUNGI-GOV-003: response.denies field appears in response body
 // =============================================================================
 
-describe("SPORE-GOV-003 — denied field appears in response body", () => {
-  it("emits SPORE-GOV-003 when a denied field name is used in a response record", () => {
+describe("FUNGI-GOV-003 — denied field appears in response body", () => {
+  it("emits FUNGI-GOV-003 when a denied field name is used in a response record", () => {
     const { gov } = runPipeline(`
 flow getPatient(readonly request: Request) -> GetPatientResult
 contract {
@@ -248,10 +248,10 @@ contract { effects { database.read } }
   return Ok(Response.ok({ patientId: patient.id, email: patient.email }))
 }
 `);
-    assert.ok(govHasDiag(gov, "SPORE-GOV-003"), "Expected SPORE-GOV-003 for denied email field");
+    assert.ok(govHasDiag(gov, "FUNGI-GOV-003"), "Expected FUNGI-GOV-003 for denied email field");
   });
 
-  it("SPORE-GOV-003 is error severity", () => {
+  it("FUNGI-GOV-003 is error severity", () => {
     const { gov } = runPipeline(`
 flow getPatient(readonly request: Request) -> GetPatientResult
 contract {
@@ -264,12 +264,12 @@ contract { effects { database.read } }
   return Ok(Response.ok({ ssn: patient.ssn }))
 }
 `);
-    const diag = gov.diagnostics.find((d) => d.code === "SPORE-GOV-003");
-    assert.ok(diag !== undefined, "Expected SPORE-GOV-003");
+    const diag = gov.diagnostics.find((d) => d.code === "FUNGI-GOV-003");
+    assert.ok(diag !== undefined, "Expected FUNGI-GOV-003");
     assert.equal(diag.severity, "error");
   });
 
-  it("SPORE-GOV-003 message names the offending field", () => {
+  it("FUNGI-GOV-003 message names the offending field", () => {
     const { gov } = runPipeline(`
 flow getPatient(readonly request: Request) -> GetPatientResult
 contract {
@@ -282,12 +282,12 @@ contract { effects { database.read } }
   return Ok(Response.ok({ creditCardNumber: card.num }))
 }
 `);
-    const diag = gov.diagnostics.find((d) => d.code === "SPORE-GOV-003");
+    const diag = gov.diagnostics.find((d) => d.code === "FUNGI-GOV-003");
     assert.ok(diag !== undefined);
     assert.ok(diag.message.includes("creditCardNumber"), "Message should name the denied field");
   });
 
-  it("does not emit SPORE-GOV-003 when denied field is not in the response body", () => {
+  it("does not emit FUNGI-GOV-003 when denied field is not in the response body", () => {
     const { gov } = runPipeline(`
 flow getPatient(readonly request: Request) -> GetPatientResult
 contract {
@@ -301,10 +301,10 @@ contract { effects { database.read } }
   return Ok(Response.ok({ patientId: patient.id, name: patient.name }))
 }
 `);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-003"), "Unexpected SPORE-GOV-003");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-003"), "Unexpected FUNGI-GOV-003");
   });
 
-  it("does not emit SPORE-GOV-003 when contract has no response section", () => {
+  it("does not emit FUNGI-GOV-003 when contract has no response section", () => {
     const { gov } = runPipeline(`
 flow getOrder(readonly request: Request) -> GetOrderResult
 contract {
@@ -317,22 +317,22 @@ contract { effects { database.read } }
   return Ok(Response.ok({ email: user.email }))
 }
 `);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-003"), "Unexpected SPORE-GOV-003 without response contract");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-003"), "Unexpected FUNGI-GOV-003 without response contract");
   });
 
-  it("SPORE_GOV_003 constant has expected code and name", () => {
-    assert.equal(SPORE_GOV_003.code, "SPORE-GOV-003");
-    assert.equal(SPORE_GOV_003.name, "PROTECTED_DATA_IN_RESPONSE");
-    assert.equal(SPORE_GOV_003.severity, "error");
+  it("FUNGI_GOV_003 constant has expected code and name", () => {
+    assert.equal(FUNGI_GOV_003.code, "FUNGI-GOV-003");
+    assert.equal(FUNGI_GOV_003.name, "PROTECTED_DATA_IN_RESPONSE");
+    assert.equal(FUNGI_GOV_003.severity, "error");
   });
 });
 
 // =============================================================================
-// 3. SPORE-GOV-011: unknown contract set
+// 3. FUNGI-GOV-011: unknown contract set
 // =============================================================================
 
-describe("SPORE-GOV-011 — unknown contract set", () => {
-  it("emits SPORE-GOV-011 when flow uses an undeclared contract set", () => {
+describe("FUNGI-GOV-011 — unknown contract set", () => {
+  it("emits FUNGI-GOV-011 when flow uses an undeclared contract set", () => {
     const { gov } = runPipeline(`
 flow createOrder(request: Request) -> Result<Response, ApiError>
 contract {
@@ -343,10 +343,10 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(govHasDiag(gov, "SPORE-GOV-011"), "Expected SPORE-GOV-011 for unknown contract set");
+    assert.ok(govHasDiag(gov, "FUNGI-GOV-011"), "Expected FUNGI-GOV-011 for unknown contract set");
   });
 
-  it("SPORE-GOV-011 is error severity", () => {
+  it("FUNGI-GOV-011 is error severity", () => {
     const { gov } = runPipeline(`
 flow x(request: Request) -> Result<Response, ApiError>
 contract {
@@ -357,12 +357,12 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    const diag = gov.diagnostics.find((d) => d.code === "SPORE-GOV-011");
+    const diag = gov.diagnostics.find((d) => d.code === "FUNGI-GOV-011");
     assert.ok(diag !== undefined);
     assert.equal(diag.severity, "error");
   });
 
-  it("SPORE-GOV-011 message names the missing set", () => {
+  it("FUNGI-GOV-011 message names the missing set", () => {
     const { gov } = runPipeline(`
 flow x(request: Request) -> Result<Response, ApiError>
 contract {
@@ -373,12 +373,12 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    const diag = gov.diagnostics.find((d) => d.code === "SPORE-GOV-011");
+    const diag = gov.diagnostics.find((d) => d.code === "FUNGI-GOV-011");
     assert.ok(diag !== undefined);
     assert.ok(diag.message.includes("GhostPolicy"), "Message should name the unknown set");
   });
 
-  it("does not emit SPORE-GOV-011 when the contract set is declared at program scope", () => {
+  it("does not emit FUNGI-GOV-011 when the contract set is declared at program scope", () => {
     const { gov } = runPipeline(`
 contract set OrderPolicy {
   rules {}
@@ -395,22 +395,22 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-011"), "Unexpected SPORE-GOV-011 when set is declared");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-011"), "Unexpected FUNGI-GOV-011 when set is declared");
   });
 
-  it("SPORE_GOV_011 constant has expected code and name", () => {
-    assert.equal(SPORE_GOV_011.code, "SPORE-GOV-011");
-    assert.equal(SPORE_GOV_011.name, "UnknownContractSet");
-    assert.equal(SPORE_GOV_011.severity, "error");
+  it("FUNGI_GOV_011 constant has expected code and name", () => {
+    assert.equal(FUNGI_GOV_011.code, "FUNGI-GOV-011");
+    assert.equal(FUNGI_GOV_011.name, "UnknownContractSet");
+    assert.equal(FUNGI_GOV_011.severity, "error");
   });
 });
 
 // =============================================================================
-// 4. SPORE-GOV-012: contract set requires audit.write but flow doesn't declare it
+// 4. FUNGI-GOV-012: contract set requires audit.write but flow doesn't declare it
 // =============================================================================
 
-describe("SPORE-GOV-012 — contract set audit requirement not met", () => {
-  it("emits SPORE-GOV-012 when audit requirement is unmet", () => {
+describe("FUNGI-GOV-012 — contract set audit requirement not met", () => {
+  it("emits FUNGI-GOV-012 when audit requirement is unmet", () => {
     const { gov } = runPipeline(`
 contract set AuditedPolicy {
   rules {}
@@ -428,10 +428,10 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(govHasDiag(gov, "SPORE-GOV-012"), "Expected SPORE-GOV-012");
+    assert.ok(govHasDiag(gov, "FUNGI-GOV-012"), "Expected FUNGI-GOV-012");
   });
 
-  it("SPORE-GOV-012 is warning severity", () => {
+  it("FUNGI-GOV-012 is warning severity", () => {
     const { gov } = runPipeline(`
 contract set AuditedPolicy {
   audit {
@@ -448,12 +448,12 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    const diag = gov.diagnostics.find((d) => d.code === "SPORE-GOV-012");
+    const diag = gov.diagnostics.find((d) => d.code === "FUNGI-GOV-012");
     assert.ok(diag !== undefined);
     assert.equal(diag.severity, "warning");
   });
 
-  it("does not emit SPORE-GOV-012 when flow declares audit.write", () => {
+  it("does not emit FUNGI-GOV-012 when flow declares audit.write", () => {
     const { gov } = runPipeline(`
 contract set AuditedPolicy {
   audit {
@@ -470,10 +470,10 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-012"), "Unexpected SPORE-GOV-012 when audit.write is declared");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-012"), "Unexpected FUNGI-GOV-012 when audit.write is declared");
   });
 
-  it("does not emit SPORE-GOV-012 when contract set audit block is empty", () => {
+  it("does not emit FUNGI-GOV-012 when contract set audit block is empty", () => {
     const { gov } = runPipeline(`
 contract set SimplePolicy {
   rules {}
@@ -489,22 +489,22 @@ contract {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-012"), "Unexpected SPORE-GOV-012 for empty audit block");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-012"), "Unexpected FUNGI-GOV-012 for empty audit block");
   });
 
-  it("SPORE_GOV_012 constant has expected code and name", () => {
-    assert.equal(SPORE_GOV_012.code, "SPORE-GOV-012");
-    assert.equal(SPORE_GOV_012.name, "ContractSetRequirementNotMet");
-    assert.equal(SPORE_GOV_012.severity, "warning");
+  it("FUNGI_GOV_012 constant has expected code and name", () => {
+    assert.equal(FUNGI_GOV_012.code, "FUNGI-GOV-012");
+    assert.equal(FUNGI_GOV_012.name, "ContractSetRequirementNotMet");
+    assert.equal(FUNGI_GOV_012.severity, "warning");
   });
 });
 
 // =============================================================================
-// 5. SPORE-CONTEXT-001: required context field not accessed
+// 5. FUNGI-CONTEXT-001: required context field not accessed
 // =============================================================================
 
-describe("SPORE-CONTEXT-001 — required context field not accessed", () => {
-  it("emits SPORE-CONTEXT-001 when context.actor is required but never accessed", () => {
+describe("FUNGI-CONTEXT-001 — required context field not accessed", () => {
+  it("emits FUNGI-CONTEXT-001 when context.actor is required but never accessed", () => {
     const { gov } = runPipeline(`
 flow getRecord(readonly request: Request) -> GetRecordResult
 contract {
@@ -521,10 +521,10 @@ contract { effects { database.read } }
   return Ok(Response.ok({ id: record.id }))
 }
 `);
-    assert.ok(govHasDiag(gov, "SPORE-CONTEXT-001"), "Expected SPORE-CONTEXT-001");
+    assert.ok(govHasDiag(gov, "FUNGI-CONTEXT-001"), "Expected FUNGI-CONTEXT-001");
   });
 
-  it("SPORE-CONTEXT-001 is warning severity", () => {
+  it("FUNGI-CONTEXT-001 is warning severity", () => {
     const { gov } = runPipeline(`
 flow getRecord(readonly request: Request) -> GetRecordResult
 contract {
@@ -537,12 +537,12 @@ contract { effects { database.read } }
   return Ok(Response.ok({}))
 }
 `);
-    const diag = gov.diagnostics.find((d) => d.code === "SPORE-CONTEXT-001");
+    const diag = gov.diagnostics.find((d) => d.code === "FUNGI-CONTEXT-001");
     assert.ok(diag !== undefined);
     assert.equal(diag.severity, "warning");
   });
 
-  it("SPORE-CONTEXT-001 message names the missing field", () => {
+  it("FUNGI-CONTEXT-001 message names the missing field", () => {
     const { gov } = runPipeline(`
 flow getRecord(readonly request: Request) -> GetRecordResult
 contract {
@@ -555,12 +555,12 @@ contract { effects { database.read } }
   return Ok(Response.ok({}))
 }
 `);
-    const diag = gov.diagnostics.find((d) => d.code === "SPORE-CONTEXT-001");
+    const diag = gov.diagnostics.find((d) => d.code === "FUNGI-CONTEXT-001");
     assert.ok(diag !== undefined);
     assert.ok(diag.message.includes("correlation_id"), "Message should name the unaccessed field");
   });
 
-  it("does not emit SPORE-CONTEXT-001 when the field is accessed in the body", () => {
+  it("does not emit FUNGI-CONTEXT-001 when the field is accessed in the body", () => {
     const { gov } = runPipeline(`
 flow getRecord(readonly request: Request) -> GetRecordResult
 contract {
@@ -574,10 +574,10 @@ contract { effects { database.read } }
   return Ok(Response.ok({ actor: actor }))
 }
 `);
-    assert.ok(!govHasDiag(gov, "SPORE-CONTEXT-001"), "Unexpected SPORE-CONTEXT-001");
+    assert.ok(!govHasDiag(gov, "FUNGI-CONTEXT-001"), "Unexpected FUNGI-CONTEXT-001");
   });
 
-  it("does not emit SPORE-CONTEXT-001 when there is no context section", () => {
+  it("does not emit FUNGI-CONTEXT-001 when there is no context section", () => {
     const { gov } = runPipeline(`
 flow getOrder(readonly request: Request) -> GetOrderResult
 contract {
@@ -590,22 +590,22 @@ contract { effects { database.read } }
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!govHasDiag(gov, "SPORE-CONTEXT-001"), "Unexpected SPORE-CONTEXT-001 without context section");
+    assert.ok(!govHasDiag(gov, "FUNGI-CONTEXT-001"), "Unexpected FUNGI-CONTEXT-001 without context section");
   });
 
-  it("SPORE_CONTEXT_001 constant has expected code and name", () => {
-    assert.equal(SPORE_CONTEXT_001.code, "SPORE-CONTEXT-001");
-    assert.equal(SPORE_CONTEXT_001.name, "REQUIRED_CONTEXT_NOT_ACCESSED");
-    assert.equal(SPORE_CONTEXT_001.severity, "warning");
+  it("FUNGI_CONTEXT_001 constant has expected code and name", () => {
+    assert.equal(FUNGI_CONTEXT_001.code, "FUNGI-CONTEXT-001");
+    assert.equal(FUNGI_CONTEXT_001.name, "REQUIRED_CONTEXT_NOT_ACCESSED");
+    assert.equal(FUNGI_CONTEXT_001.severity, "warning");
   });
 });
 
 // =============================================================================
-// 6. SPORE-EVENT-001: emit without global event declaration
+// 6. FUNGI-EVENT-001: emit without global event declaration
 // =============================================================================
 
-describe("SPORE-EVENT-001 — emit without global event declaration", () => {
-  it("emits SPORE-EVENT-001 when an event is emitted without a top-level declaration", () => {
+describe("FUNGI-EVENT-001 — emit without global event declaration", () => {
+  it("emits FUNGI-EVENT-001 when an event is emitted without a top-level declaration", () => {
     const { events } = runPipeline(`
 flow createOrder(request: Request) -> Result<Response, ApiError>
 contract { effects { database.write } }
@@ -614,10 +614,10 @@ contract { effects { database.write } }
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(eventHasDiag(events, "SPORE-EVENT-001"), "Expected SPORE-EVENT-001");
+    assert.ok(eventHasDiag(events, "FUNGI-EVENT-001"), "Expected FUNGI-EVENT-001");
   });
 
-  it("SPORE-EVENT-001 is error severity", () => {
+  it("FUNGI-EVENT-001 is error severity", () => {
     const { events } = runPipeline(`
 flow x(request: Request) -> Result<Response, ApiError>
 contract { effects { database.write } }
@@ -626,12 +626,12 @@ contract { effects { database.write } }
   return Ok(Response.ok({}))
 }
 `);
-    const diag = events.diagnostics.find((d) => d.code === "SPORE-EVENT-001");
+    const diag = events.diagnostics.find((d) => d.code === "FUNGI-EVENT-001");
     assert.ok(diag !== undefined);
     assert.equal(diag.severity, "error");
   });
 
-  it("SPORE-EVENT-001 message names the undeclared event", () => {
+  it("FUNGI-EVENT-001 message names the undeclared event", () => {
     const { events } = runPipeline(`
 flow x(request: Request) -> Result<Response, ApiError>
 contract { effects { database.write } }
@@ -640,12 +640,12 @@ contract { effects { database.write } }
   return Ok(Response.ok({}))
 }
 `);
-    const diag = events.diagnostics.find((d) => d.code === "SPORE-EVENT-001");
+    const diag = events.diagnostics.find((d) => d.code === "FUNGI-EVENT-001");
     assert.ok(diag !== undefined);
     assert.ok(diag.message.includes("PatientCreated"), "Message should name the event");
   });
 
-  it("does not emit SPORE-EVENT-001 when the event is declared globally", () => {
+  it("does not emit FUNGI-EVENT-001 when the event is declared globally", () => {
     const { events } = runPipeline(`
 event OrderCreated
 
@@ -656,22 +656,22 @@ contract { effects { database.write } }
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!eventHasDiag(events, "SPORE-EVENT-001"), "Unexpected SPORE-EVENT-001");
+    assert.ok(!eventHasDiag(events, "FUNGI-EVENT-001"), "Unexpected FUNGI-EVENT-001");
   });
 
-  it("SPORE_EVENT_001 constant has expected code and name", () => {
-    assert.equal(SPORE_EVENT_001.code, "SPORE-EVENT-001");
-    assert.equal(SPORE_EVENT_001.name, "EventNotDeclared");
-    assert.equal(SPORE_EVENT_001.severity, "error");
+  it("FUNGI_EVENT_001 constant has expected code and name", () => {
+    assert.equal(FUNGI_EVENT_001.code, "FUNGI-EVENT-001");
+    assert.equal(FUNGI_EVENT_001.name, "EventNotDeclared");
+    assert.equal(FUNGI_EVENT_001.severity, "error");
   });
 });
 
 // =============================================================================
-// 7. SPORE-EVENT-002: event declared but never emitted
+// 7. FUNGI-EVENT-002: event declared but never emitted
 // =============================================================================
 
-describe("SPORE-EVENT-002 — event declared but never emitted", () => {
-  it("emits SPORE-EVENT-002 when a declared event is never emitted", () => {
+describe("FUNGI-EVENT-002 — event declared but never emitted", () => {
+  it("emits FUNGI-EVENT-002 when a declared event is never emitted", () => {
     const { events } = runPipeline(`
 event OrderCancelled
 
@@ -679,10 +679,10 @@ pure flow calculate(x: Int) -> Int {
   return x
 }
 `);
-    assert.ok(eventHasDiag(events, "SPORE-EVENT-002"), "Expected SPORE-EVENT-002");
+    assert.ok(eventHasDiag(events, "FUNGI-EVENT-002"), "Expected FUNGI-EVENT-002");
   });
 
-  it("SPORE-EVENT-002 is warning severity", () => {
+  it("FUNGI-EVENT-002 is warning severity", () => {
     const { events } = runPipeline(`
 event UnusedEvent
 
@@ -690,21 +690,21 @@ pure flow greet() -> String {
   return "hello"
 }
 `);
-    const diag = events.diagnostics.find((d) => d.code === "SPORE-EVENT-002");
+    const diag = events.diagnostics.find((d) => d.code === "FUNGI-EVENT-002");
     assert.ok(diag !== undefined);
     assert.equal(diag.severity, "warning");
   });
 
-  it("SPORE-EVENT-002 message names the unused event", () => {
+  it("FUNGI-EVENT-002 message names the unused event", () => {
     const { events } = runPipeline(`
 event DeadEvent
 `);
-    const diag = events.diagnostics.find((d) => d.code === "SPORE-EVENT-002");
+    const diag = events.diagnostics.find((d) => d.code === "FUNGI-EVENT-002");
     assert.ok(diag !== undefined);
     assert.ok(diag.message.includes("DeadEvent"), "Message should name the event");
   });
 
-  it("does not emit SPORE-EVENT-002 when the event is emitted somewhere", () => {
+  it("does not emit FUNGI-EVENT-002 when the event is emitted somewhere", () => {
     const { events } = runPipeline(`
 event OrderCreated
 
@@ -715,22 +715,22 @@ contract { effects { database.write } }
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!eventHasDiag(events, "SPORE-EVENT-002"), "Unexpected SPORE-EVENT-002");
+    assert.ok(!eventHasDiag(events, "FUNGI-EVENT-002"), "Unexpected FUNGI-EVENT-002");
   });
 
-  it("SPORE_EVENT_002 constant has expected code and name", () => {
-    assert.equal(SPORE_EVENT_002.code, "SPORE-EVENT-002");
-    assert.equal(SPORE_EVENT_002.name, "EventNeverEmitted");
-    assert.equal(SPORE_EVENT_002.severity, "warning");
+  it("FUNGI_EVENT_002 constant has expected code and name", () => {
+    assert.equal(FUNGI_EVENT_002.code, "FUNGI-EVENT-002");
+    assert.equal(FUNGI_EVENT_002.name, "EventNeverEmitted");
+    assert.equal(FUNGI_EVENT_002.severity, "warning");
   });
 });
 
 // =============================================================================
-// 8. Effect checker: SPORE-EFFECT-001/002/003/004
+// 8. Effect checker: FUNGI-EFFECT-001/002/003/004
 // =============================================================================
 
-describe("Effect checker — SPORE-EFFECT-001 undeclared effect", () => {
-  it("emits SPORE-EFFECT-001 for a guarded flow using an undeclared effect", () => {
+describe("Effect checker — FUNGI-EFFECT-001 undeclared effect", () => {
+  it("emits FUNGI-EFFECT-001 for a guarded flow using an undeclared effect", () => {
     const { effects } = runPipeline(`
 guarded flow saveOrder(order: Order) -> Result<OrderId, OrderError>
 contract { effects { database.read } }
@@ -739,10 +739,10 @@ contract { effects { database.read } }
   return Ok(order.id)
 }
 `);
-    assert.ok(effectHasDiag(effects, "SPORE-EFFECT-001"), "Expected SPORE-EFFECT-001");
+    assert.ok(effectHasDiag(effects, "FUNGI-EFFECT-001"), "Expected FUNGI-EFFECT-001");
   });
 
-  it("SPORE-EFFECT-001 is error severity", () => {
+  it("FUNGI-EFFECT-001 is error severity", () => {
     const { effects } = runPipeline(`
 guarded flow saveOrder(order: Order) -> Result<OrderId, OrderError>
 contract { effects { database.read } }
@@ -751,12 +751,12 @@ contract { effects { database.read } }
   return Ok(order.id)
 }
 `);
-    const diag = effects.flatMap((r) => r.diagnostics).find((d) => d.code === "SPORE-EFFECT-001");
+    const diag = effects.flatMap((r) => r.diagnostics).find((d) => d.code === "FUNGI-EFFECT-001");
     assert.ok(diag !== undefined);
     assert.equal(diag.severity, "error");
   });
 
-  it("does not emit SPORE-EFFECT-001 when effect is correctly declared", () => {
+  it("does not emit FUNGI-EFFECT-001 when effect is correctly declared", () => {
     const { effects } = runPipeline(`
 guarded flow saveOrder(order: Order) -> Result<OrderId, OrderError>
 contract { effects { database.write, database.read } }
@@ -765,12 +765,12 @@ contract { effects { database.write, database.read } }
   return Ok(order.id)
 }
 `);
-    assert.ok(!effectHasDiag(effects, "SPORE-EFFECT-001"), "Unexpected SPORE-EFFECT-001");
+    assert.ok(!effectHasDiag(effects, "FUNGI-EFFECT-001"), "Unexpected FUNGI-EFFECT-001");
   });
 });
 
-describe("Effect checker — SPORE-EFFECT-002 overdeclared effect", () => {
-  it("emits SPORE-EFFECT-002 (warning) when a declared effect is not observed", () => {
+describe("Effect checker — FUNGI-EFFECT-002 overdeclared effect", () => {
+  it("emits FUNGI-EFFECT-002 (warning) when a declared effect is not observed", () => {
     const { effects } = runPipeline(`
 guarded flow getOrder(request: Request) -> Result<Order, OrderError>
 contract { effects { database.read, network.outbound } }
@@ -779,10 +779,10 @@ contract { effects { database.read, network.outbound } }
   return Ok(order)
 }
 `);
-    assert.ok(effectHasDiag(effects, "SPORE-EFFECT-002"), "Expected SPORE-EFFECT-002 for overdeclared network.outbound");
+    assert.ok(effectHasDiag(effects, "FUNGI-EFFECT-002"), "Expected FUNGI-EFFECT-002 for overdeclared network.outbound");
   });
 
-  it("SPORE-EFFECT-002 is warning severity for overdeclared effect", () => {
+  it("FUNGI-EFFECT-002 is warning severity for overdeclared effect", () => {
     const { effects } = runPipeline(`
 guarded flow getOrder(request: Request) -> Result<Order, OrderError>
 contract { effects { database.read, network.outbound } }
@@ -791,14 +791,14 @@ contract { effects { database.read, network.outbound } }
   return Ok(order)
 }
 `);
-    const diag = effects.flatMap((r) => r.diagnostics).find((d) => d.code === "SPORE-EFFECT-002");
+    const diag = effects.flatMap((r) => r.diagnostics).find((d) => d.code === "FUNGI-EFFECT-002");
     assert.ok(diag !== undefined);
     assert.equal(diag.severity, "warning");
   });
 });
 
-describe("Effect checker — SPORE-EFFECT-003 pure flow with effects", () => {
-  it("emits SPORE-EFFECT-003 when pure flow declares effects", () => {
+describe("Effect checker — FUNGI-EFFECT-003 pure flow with effects", () => {
+  it("emits FUNGI-EFFECT-003 when pure flow declares effects", () => {
     const { effects } = runPipeline(`
 pure flow badFlow(x: Int) -> Int
 contract { effects { database.read } }
@@ -806,10 +806,10 @@ contract { effects { database.read } }
   return x
 }
 `);
-    assert.ok(effectHasDiag(effects, "SPORE-EFFECT-003"), "Expected SPORE-EFFECT-003");
+    assert.ok(effectHasDiag(effects, "FUNGI-EFFECT-003"), "Expected FUNGI-EFFECT-003");
   });
 
-  it("SPORE-EFFECT-003 is error severity", () => {
+  it("FUNGI-EFFECT-003 is error severity", () => {
     const { effects } = runPipeline(`
 pure flow badFlow(x: Int) -> Int
 contract { effects { database.write } }
@@ -817,24 +817,24 @@ contract { effects { database.write } }
   return x
 }
 `);
-    const diag = effects.flatMap((r) => r.diagnostics).find((d) => d.code === "SPORE-EFFECT-003");
+    const diag = effects.flatMap((r) => r.diagnostics).find((d) => d.code === "FUNGI-EFFECT-003");
     assert.ok(diag !== undefined);
     assert.equal(diag.severity, "error");
   });
 
-  it("does not emit SPORE-EFFECT-003 for a pure flow with no effects", () => {
+  it("does not emit FUNGI-EFFECT-003 for a pure flow with no effects", () => {
     const { effects } = runPipeline(`
 pure flow add(a: Int, b: Int) -> Int {
   return a + b
 }
 `);
-    assert.ok(!effectHasDiag(effects, "SPORE-EFFECT-003"), "Unexpected SPORE-EFFECT-003");
+    assert.ok(!effectHasDiag(effects, "FUNGI-EFFECT-003"), "Unexpected FUNGI-EFFECT-003");
   });
 });
 
-describe("Effect checker — SPORE-EFFECT-004 / SPORE-EFFECT-005 non-canonical / broad alias names", () => {
-  it("emits SPORE-EFFECT-005 for broad alias 'database' (use database.read or database.write)", () => {
-    // 'database' is a broad alias — emits SPORE-EFFECT-005 (warning), not SPORE-EFFECT-004 (error)
+describe("Effect checker — FUNGI-EFFECT-004 / FUNGI-EFFECT-005 non-canonical / broad alias names", () => {
+  it("emits FUNGI-EFFECT-005 for broad alias 'database' (use database.read or database.write)", () => {
+    // 'database' is a broad alias — emits FUNGI-EFFECT-005 (warning), not FUNGI-EFFECT-004 (error)
     const { effects } = runPipeline(`
 guarded flow getOrder(request: Request) -> Result<Order, OrderError>
 contract { effects { database } }
@@ -842,10 +842,10 @@ contract { effects { database } }
   return Ok(order)
 }
 `);
-    assert.ok(effectHasDiag(effects, "SPORE-EFFECT-005"), "Expected SPORE-EFFECT-005 for broad alias 'database'");
+    assert.ok(effectHasDiag(effects, "FUNGI-EFFECT-005"), "Expected FUNGI-EFFECT-005 for broad alias 'database'");
   });
 
-  it("emits SPORE-EFFECT-004 for a completely unknown effect name", () => {
+  it("emits FUNGI-EFFECT-004 for a completely unknown effect name", () => {
     const { effects } = runPipeline(`
 guarded flow doTheThing(request: Request) -> Result<Response, ApiError>
 contract { effects { magic.spell } }
@@ -853,10 +853,10 @@ contract { effects { magic.spell } }
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(effectHasDiag(effects, "SPORE-EFFECT-004"), "Expected SPORE-EFFECT-004 for unknown effect");
+    assert.ok(effectHasDiag(effects, "FUNGI-EFFECT-004"), "Expected FUNGI-EFFECT-004 for unknown effect");
   });
 
-  it("does not emit SPORE-EFFECT-004 for canonical effect names", () => {
+  it("does not emit FUNGI-EFFECT-004 for canonical effect names", () => {
     const { effects } = runPipeline(`
 guarded flow getOrder(request: Request) -> Result<Order, OrderError>
 contract { effects { database.read, audit.write } }
@@ -864,7 +864,7 @@ contract { effects { database.read, audit.write } }
   return Ok(order)
 }
 `);
-    assert.ok(!effectHasDiag(effects, "SPORE-EFFECT-004"), "Unexpected SPORE-EFFECT-004 for canonical names");
+    assert.ok(!effectHasDiag(effects, "FUNGI-EFFECT-004"), "Unexpected FUNGI-EFFECT-004 for canonical names");
   });
 });
 
@@ -873,7 +873,7 @@ contract { effects { database.read, audit.write } }
 // =============================================================================
 
 describe("Governance verifier — GOV-001 intent behaviour mismatch", () => {
-  it("emits SPORE-GOV-001 warning when intent says local but flow declares network.outbound", () => {
+  it("emits FUNGI-GOV-001 warning when intent says local but flow declares network.outbound", () => {
     const { gov } = runPipeline(`
 secure flow runModel(request: Request) -> Result<Response, AiError>
 contract { effects { ai.inference, network.outbound } }
@@ -881,12 +881,12 @@ intent "Run inference locally without remote calls." {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(govHasDiag(gov, "SPORE-GOV-001"), "Expected SPORE-GOV-001 for local intent + network.outbound");
+    assert.ok(govHasDiag(gov, "FUNGI-GOV-001"), "Expected FUNGI-GOV-001 for local intent + network.outbound");
   });
 });
 
 describe("Governance verifier — GOV-002 missing audit for governed sink", () => {
-  it("emits SPORE-GOV-002 when database.write is declared but audit.write is missing", () => {
+  it("emits FUNGI-GOV-002 when database.write is declared but audit.write is missing", () => {
     const { gov } = runPipeline(`
 guarded flow saveOrder(order: Order) -> Result<OrderId, OrderError>
 contract { effects { database.write } }
@@ -894,10 +894,10 @@ contract { effects { database.write } }
   return Ok(order.id)
 }
 `);
-    assert.ok(govHasDiag(gov, "SPORE-GOV-002"), "Expected SPORE-GOV-002");
+    assert.ok(govHasDiag(gov, "FUNGI-GOV-002"), "Expected FUNGI-GOV-002");
   });
 
-  it("does not emit SPORE-GOV-002 when audit.write is co-declared", () => {
+  it("does not emit FUNGI-GOV-002 when audit.write is co-declared", () => {
     const { gov } = runPipeline(`
 guarded flow saveOrder(order: Order) -> Result<OrderId, OrderError>
 contract { effects { database.write, audit.write } }
@@ -905,12 +905,12 @@ contract { effects { database.write, audit.write } }
   return Ok(order.id)
 }
 `);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-002"), "Unexpected SPORE-GOV-002 when audit.write declared");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-002"), "Unexpected FUNGI-GOV-002 when audit.write declared");
   });
 });
 
 describe("Governance verifier — GOV-010 missing intent on secure flow", () => {
-  it("emits SPORE-GOV-010 info when secure flow has no intent in dev mode", () => {
+  it("emits FUNGI-GOV-010 info when secure flow has no intent in dev mode", () => {
     const { gov } = runPipeline(`
 secure flow createOrder(request: Request) -> Result<Response, ApiError>
 contract { effects { database.write, audit.write } }
@@ -918,10 +918,10 @@ contract { effects { database.write, audit.write } }
   return Ok(Response.ok({}))
 }
 `, "dev");
-    assert.ok(govHasDiag(gov, "SPORE-GOV-010"), "Expected SPORE-GOV-010 in dev mode");
+    assert.ok(govHasDiag(gov, "FUNGI-GOV-010"), "Expected FUNGI-GOV-010 in dev mode");
   });
 
-  it("emits SPORE-GOV-010 as error in production mode", () => {
+  it("emits FUNGI-GOV-010 as error in production mode", () => {
     const { gov } = runPipeline(`
 secure flow createOrder(request: Request) -> Result<Response, ApiError>
 contract { effects { database.write, audit.write } }
@@ -929,12 +929,12 @@ contract { effects { database.write, audit.write } }
   return Ok(Response.ok({}))
 }
 `, "production");
-    const diag = gov.diagnostics.find((d) => d.code === "SPORE-GOV-010");
+    const diag = gov.diagnostics.find((d) => d.code === "FUNGI-GOV-010");
     assert.ok(diag !== undefined);
     assert.equal(diag.severity, "error");
   });
 
-  it("does not emit SPORE-GOV-010 when secure flow has intent", () => {
+  it("does not emit FUNGI-GOV-010 when secure flow has intent", () => {
     const { gov } = runPipeline(`
 secure flow createPatient(request: Request) -> Result<Response, ApiError>
 contract { effects { database.write, audit.write } }
@@ -942,7 +942,7 @@ intent "Create a patient record." {
   return Ok(Response.ok({}))
 }
 `);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-010"), "Unexpected SPORE-GOV-010 when intent is present");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-010"), "Unexpected FUNGI-GOV-010 when intent is present");
   });
 });
 
@@ -1039,34 +1039,34 @@ intent "Return a patient profile to an authorised clinical actor." {
     assert.ok(flow?.declaredEffects.includes("audit.write"));
   });
 
-  it("no SPORE-GOV-010 — intent is declared", () => {
+  it("no FUNGI-GOV-010 — intent is declared", () => {
     const { gov } = runPipeline(GET_PATIENT);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-010"), "Unexpected SPORE-GOV-010");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-010"), "Unexpected FUNGI-GOV-010");
   });
 
-  it("no SPORE-GOV-003 — denied fields are not in the response body", () => {
+  it("no FUNGI-GOV-003 — denied fields are not in the response body", () => {
     const { gov } = runPipeline(GET_PATIENT);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-003"), "Unexpected SPORE-GOV-003");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-003"), "Unexpected FUNGI-GOV-003");
   });
 
-  it("no SPORE-CONTEXT-001 — actor and trace_id are accessed", () => {
+  it("no FUNGI-CONTEXT-001 — actor and trace_id are accessed", () => {
     const { gov } = runPipeline(GET_PATIENT);
-    assert.ok(!govHasDiag(gov, "SPORE-CONTEXT-001"), "Unexpected SPORE-CONTEXT-001");
+    assert.ok(!govHasDiag(gov, "FUNGI-CONTEXT-001"), "Unexpected FUNGI-CONTEXT-001");
   });
 
-  it("no SPORE-GOV-002 — audit.write is declared", () => {
+  it("no FUNGI-GOV-002 — audit.write is declared", () => {
     const { gov } = runPipeline(GET_PATIENT);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-002"), "Unexpected SPORE-GOV-002");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-002"), "Unexpected FUNGI-GOV-002");
   });
 
-  it("no SPORE-EVENT-001 — event is declared globally", () => {
+  it("no FUNGI-EVENT-001 — event is declared globally", () => {
     const { events } = runPipeline(GET_PATIENT);
-    assert.ok(!eventHasDiag(events, "SPORE-EVENT-001"), "Unexpected SPORE-EVENT-001");
+    assert.ok(!eventHasDiag(events, "FUNGI-EVENT-001"), "Unexpected FUNGI-EVENT-001");
   });
 
-  it("no SPORE-EVENT-002 — event is emitted in the flow body", () => {
+  it("no FUNGI-EVENT-002 — event is emitted in the flow body", () => {
     const { events } = runPipeline(GET_PATIENT);
-    assert.ok(!eventHasDiag(events, "SPORE-EVENT-002"), "Unexpected SPORE-EVENT-002");
+    assert.ok(!eventHasDiag(events, "FUNGI-EVENT-002"), "Unexpected FUNGI-EVENT-002");
   });
 
   it("records audit_required proof obligation", () => {
@@ -1128,17 +1128,17 @@ intent "Register a new patient record in the healthcare system." {
     assert.ok(noParseErrors(parsed), "Expected no parse errors on healthcare flow");
   });
 
-  it("does not emit SPORE-GOV-003 — denied PII fields not returned", () => {
+  it("does not emit FUNGI-GOV-003 — denied PII fields not returned", () => {
     const { gov } = runPipeline(HEALTHCARE_FLOW);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-003"), "Unexpected SPORE-GOV-003 for healthcare flow");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-003"), "Unexpected FUNGI-GOV-003 for healthcare flow");
   });
 
-  it("no SPORE-GOV-002 — audit.write declared for the database.write sink", () => {
+  it("no FUNGI-GOV-002 — audit.write declared for the database.write sink", () => {
     const { gov } = runPipeline(HEALTHCARE_FLOW);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-002"), "Unexpected SPORE-GOV-002 for healthcare flow");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-002"), "Unexpected FUNGI-GOV-002 for healthcare flow");
   });
 
-  it("emits SPORE-GOV-003 when a PII field leaks into the response body", () => {
+  it("emits FUNGI-GOV-003 when a PII field leaks into the response body", () => {
     const { gov } = runPipeline(`
 secure flow createPatient(readonly request: Request) -> CreatePatientResult
 contract {
@@ -1154,7 +1154,7 @@ intent "Register patient." {
   return Ok(Response.created({ nhsNumber: patient.nhsNumber }))
 }
 `);
-    assert.ok(govHasDiag(gov, "SPORE-GOV-003"), "Expected SPORE-GOV-003 for leaking nhsNumber");
+    assert.ok(govHasDiag(gov, "FUNGI-GOV-003"), "Expected FUNGI-GOV-003 for leaking nhsNumber");
   });
 });
 
@@ -1205,20 +1205,20 @@ intent "Run symptom triage using the clinical inference model." {
     assert.ok(flow?.declaredEffects.includes("ai.inference"), "Expected ai.inference declared");
   });
 
-  it("does not emit SPORE-GOV-010 — intent is declared", () => {
+  it("does not emit FUNGI-GOV-010 — intent is declared", () => {
     const { gov } = runPipeline(AI_FLOW);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-010"), "Unexpected SPORE-GOV-010 on AI flow");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-010"), "Unexpected FUNGI-GOV-010 on AI flow");
   });
 
-  it("emits SPORE-HINT-COMPUTE-001 — ai.inference without compute target preference", () => {
+  it("emits FUNGI-HINT-COMPUTE-001 — ai.inference without compute target preference", () => {
     const { gov } = runPipeline(AI_FLOW);
     // Planning hint, not a governance error
-    assert.ok(govHasDiag(gov, "SPORE-HINT-COMPUTE-001"), "Expected planning hint SPORE-HINT-COMPUTE-001");
+    assert.ok(govHasDiag(gov, "FUNGI-HINT-COMPUTE-001"), "Expected planning hint FUNGI-HINT-COMPUTE-001");
   });
 
-  it("does not emit SPORE-EFFECT-004 — ai.inference is a canonical effect name", () => {
+  it("does not emit FUNGI-EFFECT-004 — ai.inference is a canonical effect name", () => {
     const { effects } = runPipeline(AI_FLOW);
-    assert.ok(!effectHasDiag(effects, "SPORE-EFFECT-004"), "Unexpected SPORE-EFFECT-004");
+    assert.ok(!effectHasDiag(effects, "FUNGI-EFFECT-004"), "Unexpected FUNGI-EFFECT-004");
   });
 });
 
@@ -1266,22 +1266,22 @@ intent "Retrieve patient data under HealthcarePolicy governance." {
     assert.ok(noParseErrors(parsed), "Expected no parse errors with contract set reuse");
   });
 
-  it("does not emit SPORE-GOV-011 — contract set is declared", () => {
+  it("does not emit FUNGI-GOV-011 — contract set is declared", () => {
     const { gov } = runPipeline(CONTRACT_SET_SOURCE);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-011"), "Unexpected SPORE-GOV-011");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-011"), "Unexpected FUNGI-GOV-011");
   });
 
-  it("does not emit SPORE-GOV-012 — flow declares audit.write as required by the set", () => {
+  it("does not emit FUNGI-GOV-012 — flow declares audit.write as required by the set", () => {
     const { gov } = runPipeline(CONTRACT_SET_SOURCE);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-012"), "Unexpected SPORE-GOV-012");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-012"), "Unexpected FUNGI-GOV-012");
   });
 
-  it("does not emit SPORE-EVENT-001 — event is declared globally", () => {
+  it("does not emit FUNGI-EVENT-001 — event is declared globally", () => {
     const { events } = runPipeline(CONTRACT_SET_SOURCE);
-    assert.ok(!eventHasDiag(events, "SPORE-EVENT-001"), "Unexpected SPORE-EVENT-001");
+    assert.ok(!eventHasDiag(events, "FUNGI-EVENT-001"), "Unexpected FUNGI-EVENT-001");
   });
 
-  it("emits SPORE-GOV-012 for a second flow that uses the set without audit.write", () => {
+  it("emits FUNGI-GOV-012 for a second flow that uses the set without audit.write", () => {
     const src = `
 contract set AuditRequired {
   audit {
@@ -1299,7 +1299,7 @@ contract {
 }
 `;
     const { gov } = runPipeline(src);
-    assert.ok(govHasDiag(gov, "SPORE-GOV-012"), "Expected SPORE-GOV-012 for non-audit flow using audited set");
+    assert.ok(govHasDiag(gov, "FUNGI-GOV-012"), "Expected FUNGI-GOV-012 for non-audit flow using audited set");
   });
 
   it("multiple flows can reuse the same contract set", () => {
@@ -1328,8 +1328,8 @@ contract {
 }
 `;
     const { gov } = runPipeline(src);
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-011"), "Unexpected SPORE-GOV-011 for reused set");
-    assert.ok(!govHasDiag(gov, "SPORE-GOV-012"), "Unexpected SPORE-GOV-012 for empty audit block");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-011"), "Unexpected FUNGI-GOV-011 for reused set");
+    assert.ok(!govHasDiag(gov, "FUNGI-GOV-012"), "Unexpected FUNGI-GOV-012 for empty audit block");
   });
 });
 
@@ -1412,7 +1412,7 @@ intent "Create patient." {
 `);
     // database.write should be observed from PatientsDB.insert
     // audit.write from AuditLog.write
-    assert.ok(!effectHasDiag(effects, "SPORE-EFFECT-001"), "Unexpected SPORE-EFFECT-001 with named result type");
+    assert.ok(!effectHasDiag(effects, "FUNGI-EFFECT-001"), "Unexpected FUNGI-EFFECT-001 with named result type");
   });
 
   it("named result type flow with all 16 sections parses cleanly", () => {

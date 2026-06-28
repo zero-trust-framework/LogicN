@@ -23,7 +23,7 @@ RESOLUTION  value delivered by CONSTRAINT-COLLAPSE — hold a K3 possibility-   
 The prototype implements all three over the *same* task (`{ id, compute, constraints }`), where `compute` is the body (it may have side effects) and `constraints` are K3 predicates (`−1 DENY / 0 INDETERMINATE / +1 ALLOW`):
 
 - **`deliverAsync`** (the regular pattern): `await compute()` runs the body **first**, *then* checks the verdict. A denied result is discarded — but the side effect already happened.
-- **`deliverResolution`** (the third): `allOf(constraints)` collapses the possibility-space **first** (`vAnd = min`, empty-fold → `INDETERMINATE`); `decideAtBoundary` resolves `ALLOW` iff `+1` else `DENY` (fail-closed, emits `SPORE-GOV-3VL-001`). The body runs **only** on `ALLOW`.
+- **`deliverResolution`** (the third): `allOf(constraints)` collapses the possibility-space **first** (`vAnd = min`, empty-fold → `INDETERMINATE`); `decideAtBoundary` resolves `ALLOW` iff `+1` else `DENY` (fail-closed, emits `FUNGI-GOV-3VL-001`). The body runs **only** on `ALLOW`.
 
 This is Galerina's shipped `decideAtBoundary` mechanism, made into a standalone delivery primitive.
 
@@ -39,7 +39,7 @@ The same payment body under all three modes:
 
 The defining behavior: **async commits the side effect then checks; resolution collapses then runs the body only on ALLOW.** On a denied/unknown path the body never executes.
 
-> **Independent re-derivation (convergence, 2026-06-24).** A separate R&D-bridge session built and red-teamed the same model *grounded on the shipped K3 dist* (`rd-0109-resolution-paradigm-grounded.mjs` imports `galerina-tower-citizen/dist/three-valued-governance.js` — the real `vAnd`/`allOf`/`decideAtBoundary`, not a toy), passed it back as bridge done-report **0109** (`R-AND-D` `fcb4201`). I re-ran it here: **10/10 properties, exit 0**, and its independent red-team (~30 attacks: TOCTOU/stale-ALLOW, 500-way microtask reorder → 0 bodies / 250 `SPORE-GOV-3VL-001`, verdict forgery via `valueOf`/`Symbol.toPrimitive`/boxed-Number/`-0`/`NaN`/`Proxy`, re-entrancy, throwing/async constraints) found **0 holes**. Two independent derivations + two independent red-teams converge on the same conclusion — and the same residual split (their TOCTOU/snapshot = my HOLE-1, fixed; their atomicity/lease gaps = my HOLE-2, disclosed). **0109 ≡ RD-0125** (same finding; the convergence is the value, not new scope).
+> **Independent re-derivation (convergence, 2026-06-24).** A separate R&D-bridge session built and red-teamed the same model *grounded on the shipped K3 dist* (`rd-0109-resolution-paradigm-grounded.mjs` imports `galerina-tower-citizen/dist/three-valued-governance.js` — the real `vAnd`/`allOf`/`decideAtBoundary`, not a toy), passed it back as bridge done-report **0109** (`R-AND-D` `fcb4201`). I re-ran it here: **10/10 properties, exit 0**, and its independent red-team (~30 attacks: TOCTOU/stale-ALLOW, 500-way microtask reorder → 0 bodies / 250 `FUNGI-GOV-3VL-001`, verdict forgery via `valueOf`/`Symbol.toPrimitive`/boxed-Number/`-0`/`NaN`/`Proxy`, re-entrancy, throwing/async constraints) found **0 holes**. Two independent derivations + two independent red-teams converge on the same conclusion — and the same residual split (their TOCTOU/snapshot = my HOLE-1, fixed; their atomicity/lease gaps = my HOLE-2, disclosed). **0109 ≡ RD-0125** (same finding; the convergence is the value, not new scope).
 
 ## 3. Security examination — 10/10 adversarial properties hold (incl. an independent review)
 
@@ -54,7 +54,7 @@ An **independent adversarial reviewer** (that did not write the model) returned 
 | P5 | denied body **never executes** in resolution mode | 0 side effects on the denied path |
 | P6 | async **leaks** the denied side-effect | the gap resolution closes (work ran before the check) |
 | P7 | determinism | the collapse is a pure function of constraints — verdict independent of wall-clock |
-| P8 | never-silent | every DENY collapse emits `SPORE-GOV-3VL-001` |
+| P8 | never-silent | every DENY collapse emits `FUNGI-GOV-3VL-001` |
 | **P9** | **the honest differentiator** | a 2-valued "check-first" guard is just as FAST but **fails OPEN on INDETERMINATE**; resolution fails closed |
 | **P10** | **mutable-constraint forge defeated** | a hostile constraint truncating the shared obligation array cannot hide a peer's `DENY` (collapse over an immutable snapshot) — the adversarial-review HOLE-1 regression |
 

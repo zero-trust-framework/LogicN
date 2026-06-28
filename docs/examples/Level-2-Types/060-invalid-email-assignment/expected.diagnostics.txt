@@ -1,4 +1,4 @@
-SPORE-TYPE-003
+FUNGI-TYPE-003
 
 Cannot assign a raw String to branded type Email.
 Use a validation gate: let email: protected Email = validate.email(rawEmail)?

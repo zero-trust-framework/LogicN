@@ -11,7 +11,7 @@
  *
  *   (1) keygen (CLASSICAL) + build (non-certified)  → a real v1 Ed25519-only manifest
  *   (2) verify, DEFAULT posture (no env)            → exit 0   (default consume UNCHANGED)
- *   (3) verify, GALERINA_MANIFEST_PROFILE=certified   → exit 1, SPORE-MANIFEST-PQ-REQUIRED (fail-closed)
+ *   (3) verify, GALERINA_MANIFEST_PROFILE=certified   → exit 1, FUNGI-MANIFEST-PQ-REQUIRED (fail-closed)
  *   (4) verify, GALERINA_MANIFEST_PROFILE=certifed    → unrecognized → fail-secure to certified:
  *                                                     warn + exit 1 (a typo NEVER drops the PQ mandate)
  *
@@ -44,37 +44,37 @@ test("certified-consume PQ floor: a v1 manifest is rejected at verify under cert
     const kg = run(["keygen"], {}, dir);
     assert.equal(kg.status, 0, `classical keygen should exit 0: ${out(kg)}`);
 
-    writeFileSync(join(dir, "answer.spore"), PURE_FLOW);
+    writeFileSync(join(dir, "answer.fungi"), PURE_FLOW);
 
-    const build = run(["build", "answer.spore"], {}, dir);
+    const build = run(["build", "answer.fungi"], {}, dir);
     assert.equal(build.status, 0, `non-certified build should succeed: ${out(build)}`);
 
     // Precondition: a classical non-certified build emits a v1 (NON-hybrid) manifest — the exact
     // shape the floor must reject under certified. If this ever becomes v2 by default the test below
     // would be vacuous, so assert the precondition explicitly.
     const manifest = JSON.parse(readFileSync(join(dir, "build", "answer.lmanifest.json"), "utf8"));
-    assert.notEqual(manifest.schemaVersion, "spore.manifest.v2",
+    assert.notEqual(manifest.schemaVersion, "fungi.manifest.v2",
       "precondition: a classical non-certified build emits a v1 (non-hybrid) manifest");
 
     // ── (2) DEFAULT posture — UNCHANGED: a signed v1 manifest still verifies (exit 0). ──
-    const vDefault = run(["verify", "answer.spore"], {}, dir);
+    const vDefault = run(["verify", "answer.fungi"], {}, dir);
     assert.equal(vDefault.status, 0,
       `default verify of a v1 manifest must still pass (default consume unchanged): ${out(vDefault)}`);
 
     // ── (3) CERTIFIED posture — the CLOSED fail-open: a v1 manifest is refused fail-closed. ──
-    const vCert = run(["verify", "answer.spore"], { GALERINA_MANIFEST_PROFILE: "certified" }, dir);
+    const vCert = run(["verify", "answer.fungi"], { GALERINA_MANIFEST_PROFILE: "certified" }, dir);
     assert.equal(vCert.status, 1,
       `certified verify of a v1 manifest must fail closed (exit 1): ${out(vCert)}`);
-    assert.match(out(vCert), /SPORE-MANIFEST-PQ-REQUIRED/,
-      "certified consume of a v1 manifest is reported as SPORE-MANIFEST-PQ-REQUIRED");
+    assert.match(out(vCert), /FUNGI-MANIFEST-PQ-REQUIRED/,
+      "certified consume of a v1 manifest is reported as FUNGI-MANIFEST-PQ-REQUIRED");
 
     // ── (4) UNRECOGNIZED posture (typo) — fail-secure to certified: warns, then STILL refuses. ──
-    const vTypo = run(["verify", "answer.spore"], { GALERINA_MANIFEST_PROFILE: "certifed" }, dir);
+    const vTypo = run(["verify", "answer.fungi"], { GALERINA_MANIFEST_PROFILE: "certifed" }, dir);
     assert.equal(vTypo.status, 1,
       `an unrecognized profile must fail-secure to certified (exit 1): ${out(vTypo)}`);
-    assert.match(out(vTypo), /SPORE-MANIFEST-PROFILE-UNRECOGNIZED/,
+    assert.match(out(vTypo), /FUNGI-MANIFEST-PROFILE-UNRECOGNIZED/,
       "an unrecognized profile warns it is fail-securing to certified");
-    assert.match(out(vTypo), /SPORE-MANIFEST-PQ-REQUIRED/,
+    assert.match(out(vTypo), /FUNGI-MANIFEST-PQ-REQUIRED/,
       "...and still enforces the PQ floor (a typo never silently downgrades)");
   } finally {
     rmSync(dir, { recursive: true, force: true });

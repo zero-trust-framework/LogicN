@@ -14,9 +14,9 @@ node ../../../../galerina.mjs build --package .   # or, from the app root: npm r
 
 ## Security posture
 
-- **Deny-by-default.** `package.spore.json` declares `"capabilities": []`. The entry is
+- **Deny-by-default.** `package.fungi.json` declares `"capabilities": []`. The entry is
   `pure` with no `effects {}`, so it cannot reach the network, storage, secrets, the
   database, or inference. Grant a capability only by adding it to both a flow's
   `effects {}` and this descriptor's `capabilities`.
-- **Fail-closed.** The `match` ends with the mandatory `_ =>` wildcard (SPORE-TYPE-023):
+- **Fail-closed.** The `match` ends with the mandatory `_ =>` wildcard (FUNGI-TYPE-023):
   an unexpected state returns 500 instead of falling through.

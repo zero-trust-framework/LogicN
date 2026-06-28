@@ -68,10 +68,10 @@ Domain types represent validated meaning. `Email`, `PatientId`, `CustomerId`, `N
 
 ```galerina
 // WRONG — Email implies validation, unsafe let contradicts this
-unsafe let email: Email = request.body.email    // SPORE-TYPE-003
+unsafe let email: Email = request.body.email    // FUNGI-TYPE-003
 
 // WRONG — Array<Email> implies validated elements
-unsafe let emails: Array<Email> = request.body.emails  // SPORE-TYPE-003
+unsafe let emails: Array<Email> = request.body.emails  // FUNGI-TYPE-003
 
 // CORRECT — String is the raw type, validation produces Email
 unsafe let rawEmail: String = request.body.email
@@ -167,9 +167,9 @@ unsafe let values: Array<Unknown> = json.decode(raw)?
 | `unsafe let rawEmails: protected Array<String>` | ✅ Allowed | Untrusted + sensitive is valid |
 | `let emails: Array<protected Email>` | ✅ Allowed | Trusted + sensitive elements |
 | `protected Array<protected Email>` | ✅ Allowed | Sensitive collection + sensitive elements |
-| `unsafe let email: Email = request.body.email` | ❌ SPORE-TYPE-003 | Domain type implies validation |
-| `unsafe let emails: Array<Email> = request.body.emails` | ❌ SPORE-TYPE-003 | Array<Email> implies validated elements |
-| `unsafe let id: CustomerId = request.body.id` | ❌ SPORE-TYPE-003 | Brand type implies validation |
+| `unsafe let email: Email = request.body.email` | ❌ FUNGI-TYPE-003 | Domain type implies validation |
+| `unsafe let emails: Array<Email> = request.body.emails` | ❌ FUNGI-TYPE-003 | Array<Email> implies validated elements |
+| `unsafe let id: CustomerId = request.body.id` | ❌ FUNGI-TYPE-003 | Brand type implies validation |
 
 ---
 
@@ -188,5 +188,5 @@ Array<T>    =  container (carries both independently)
 
 - `docs/Knowledge-Bases/value-state-annotations.md` — unsafe/protected/redacted
 - `docs/Knowledge-Bases/formal-type-system-spec.md` — type system
-- `docs/Knowledge-Bases/galerina-type-improvements-phase-8.md` — SPORE-TYPE-003
+- `docs/Knowledge-Bases/galerina-type-improvements-phase-8.md` — FUNGI-TYPE-003
 - `docs/Knowledge-Bases/generic-types.md` — collection types

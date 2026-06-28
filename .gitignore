@@ -1,6 +1,6 @@
 build/target-cache/
-build/.spore-cache/
-**/.spore-cache/
+build/.fungi-cache/
+**/.fungi-cache/
 **/*.egraph.json
 **/*.egraph.json.gz
 .galerina/capabilities.local.json
@@ -23,7 +23,7 @@ packages-galerina/galerina-devtools-benchmarks/results/history/
 test-output.txt
 **/*.pdb
 build/*.out
-# Ad-hoc audit scratch (tN.spore fixtures at repo root) — no tracked tool generates it; local-only.
+# Ad-hoc audit scratch (tN.fungi fixtures at repo root) — no tracked tool generates it; local-only.
 /_audit_tmp/
 # Ad-hoc probe scratch — throwaway .mjs repros a session writes to exercise the compiler/runtime, then
 # deletes. Named *.probe.mjs by convention so `git add -A` can never sweep one into a commit (a `cf-probe.mjs`
@@ -38,7 +38,7 @@ build/*.wasm
 build/*.lmanifest
 build/*.lmanifest.json
 build/*.governance-impact.json
-build/*.spore
+build/*.fungi
 build/*.log
 build/*.txt
 build/_*.json

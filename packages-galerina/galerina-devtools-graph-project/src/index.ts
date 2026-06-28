@@ -1,4 +1,4 @@
-import { GraphBuilder, bfsPath as sporeBfsPath } from "@galerina/devtools-project-graph";
+import { GraphBuilder, bfsPath as fungiBfsPath } from "@galerina/devtools-project-graph";
 
 export type ProjectGraphNodeKind =
   | "Package"
@@ -26,7 +26,7 @@ export type ProjectGraphNodeKind =
   | "ValueGraph"
   /** Hardware dispatch plan: CPU / GPU / NPU / APU / WASM targeting. */
   | "ExecutionGraph"
-  /** Diagnostic code definition: SPORE-* series. */
+  /** Diagnostic code definition: FUNGI-* series. */
   | "DiagnosticCode"
   /** Runtime profile definition: strict / high_integrity / deterministic. */
   | "RuntimeProfile"
@@ -533,15 +533,15 @@ export function findProjectGraphPath(
     };
   }
 
-  // Build a transient spore-graph for the BFS, keyed by node id.
-  const sporeBuilder = new GraphBuilder<ProjectGraphNode, ProjectGraphEdge>();
-  for (const node of graph.nodes) sporeBuilder.addNode(node.id, node);
+  // Build a transient fungi-graph for the BFS, keyed by node id.
+  const fungiBuilder = new GraphBuilder<ProjectGraphNode, ProjectGraphEdge>();
+  for (const node of graph.nodes) fungiBuilder.addNode(node.id, node);
   for (const edge of graph.edges) {
-    try { sporeBuilder.addEdge(edge.from, edge.to, edge); } catch { /* skip edges to unknown nodes */ }
+    try { fungiBuilder.addEdge(edge.from, edge.to, edge); } catch { /* skip edges to unknown nodes */ }
   }
-  const sporeGraph = sporeBuilder.build();
+  const fungiGraph = fungiBuilder.build();
 
-  const pathIds = sporeBfsPath(sporeGraph, from.id, to.id);
+  const pathIds = fungiBfsPath(fungiGraph, from.id, to.id);
 
   if (pathIds === null) {
     return {
@@ -1001,8 +1001,8 @@ function extractGalerinaSymbols(
 ): readonly ProjectGraphNode[] {
   const nodes: ProjectGraphNode[] = [];
   // Galerina top-level declarations. Mirrors extractTypeScriptExports so that
-  // pure-.spore packages expose their flows/contracts as graph nodes (#177) —
-  // previously every .spore file (kind "galerina-source") was silently dropped.
+  // pure-.fungi packages expose their flows/contracts as graph nodes (#177) —
+  // previously every .fungi file (kind "galerina-source") was silently dropped.
   const declPattern =
     /(?:^|\n)\s*(?:export\s+)?(?:governed\s+)?(flow|contract|enum|record|type)\s+([A-Za-z_][A-Za-z0-9_]*)/g;
 

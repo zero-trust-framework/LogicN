@@ -24,11 +24,11 @@ export type { CapabilityRequest, PolicyContext } from "./decision-evaluate.js";
 export { evaluateCapability } from "./decision-evaluate.js";
 
 export {
-  SPORE_DECISION_001_INVALID_DECISION,
-  SPORE_DECISION_002_EMPTY_REASON,
-  SPORE_DECISION_003_EMPTY_UNKNOWN_REASONS,
-  SPORE_DECISION_004_FAILED_CLOSED,
-  SPORE_DECISION_005_EMPTY_COMBINE,
+  FUNGI_DECISION_001_INVALID_DECISION,
+  FUNGI_DECISION_002_EMPTY_REASON,
+  FUNGI_DECISION_003_EMPTY_UNKNOWN_REASONS,
+  FUNGI_DECISION_004_FAILED_CLOSED,
+  FUNGI_DECISION_005_EMPTY_COMBINE,
   decisionDiagnosticInvalid,
   decisionDiagnosticEmptyReason,
   decisionDiagnosticEmptyUnknownReasons,

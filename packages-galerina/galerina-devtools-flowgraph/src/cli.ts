@@ -9,7 +9,7 @@ const command = args[0];
 const filePath = args[1];
 
 if (!filePath) {
-  process.stdout.write("Usage: galerina-graph <check|json|mermaid> <file.spore>\n");
+  process.stdout.write("Usage: galerina-graph <check|json|mermaid> <file.fungi>\n");
   process.exit(1);
 }
 

@@ -1,7 +1,7 @@
 // =============================================================================
 // Galerina Phase 4 — Recursive Descent Parser
 //
-// Parses Galerina .spore source text into an AstNode tree.
+// Parses Galerina .fungi source text into an AstNode tree.
 // Grammar: docs/Knowledge-Bases/phase-4-parser-ast-plan.md
 //
 // Entry point: parseProgram(source, file)
@@ -93,7 +93,7 @@ export type AstNodeKind =
   // checks the proof obligation exists + is signed, then elides the WAT gate.
   | "assumingDecl"
   // DRCM Phase 4 (task #39) — emergency transition declaration inside emergency {} block.
-  // Produced by parseEmergencyBlock(); validated by SPORE-MONO-001/002.
+  // Produced by parseEmergencyBlock(); validated by FUNGI-MONO-001/002.
   // { kind: "emergencyTransitionDecl", value: signalName, children: [deny/action nodes] }
   | "emergencyTransitionDecl"
   // Tower-native syntax primitives
@@ -122,7 +122,7 @@ export type AstNodeKind =
   // assimilatedPluginDecl — Hot-Code Residency (pre-compiled, always-hot, stateless data)
   // { kind: "assimilatedPluginDecl", value: "Alias", children: [path identifier, contractDecl?] }
   // assimilate implies safe — deep DAG audit performed automatically
-  // governed by boot.spore assimilation_memory_budget
+  // governed by boot.fungi assimilation_memory_budget
   | "assimilatedPluginDecl"
   // BUILD #110 — secrets{} body retention (parseSecretsBlock): the credential/rotation policy is
   // RETAINED (not dropped by the generic sub-block parser) so the manifest can bind it to a signed
@@ -288,7 +288,7 @@ const INFIX_OPERATOR_TABLE: ReadonlyMap<string, InfixEntry> = new Map([
 //   the backend decides what TensorCandidate means for GPU vs NPU vs Photonic.
 //
 // Rule: parser sets flags; compiler/SemanticGraph validates compatibility.
-//   SPORE-COMPUTE-001 (incompatible pattern for compute target) is a compiler
+//   FUNGI-COMPUTE-001 (incompatible pattern for compute target) is a compiler
 //   diagnostic, NOT a parser diagnostic.
 // ---------------------------------------------------------------------------
 
@@ -335,22 +335,22 @@ function makeNode(
 // Parser
 // ---------------------------------------------------------------------------
 
-/** SPORE-PARSE-DEPTH-001: the maximum recursive-descent expression-nesting depth. Real code never approaches
- *  this (deeply-nested expressions are rare beyond ~20); the guard exists so an adversarial deeply-nested .spore
+/** FUNGI-PARSE-DEPTH-001: the maximum recursive-descent expression-nesting depth. Real code never approaches
+ *  this (deeply-nested expressions are rare beyond ~20); the guard exists so an adversarial deeply-nested .fungi
  *  (e.g. ~1600 nested parens / arrays, ~3 KB) cannot overflow the host JS stack and crash the compiler with an
- *  uncaught RangeError BEFORE any governance/admission runs. Mirrors the lexer's SPORE-LEX-001 generic-nesting
+ *  uncaught RangeError BEFORE any governance/admission runs. Mirrors the lexer's FUNGI-LEX-001 generic-nesting
  *  guard. 256 leaves wide headroom for legit code while staying far under the host stack ceiling for the parser
  *  AND every downstream AST walker (type-checker / verifier / interpreter), which then recurse over an AST whose
  *  depth this bounds. */
 const MAX_EXPR_DEPTH = 256;
 
 /** Thrown by the depth guard to unwind the recursion to parseProgram's per-declaration catch — fail-closed,
- *  never a host crash. The SPORE-PARSE-DEPTH-001 diagnostic is recorded before the throw. */
+ *  never a host crash. The FUNGI-PARSE-DEPTH-001 diagnostic is recorded before the throw. */
 class ParseAborted extends Error {}
 
 class Parser {
   private pos = 0;
-  /** Current recursive-descent expression-nesting depth (SPORE-PARSE-DEPTH-001 stack-exhaustion guard). */
+  /** Current recursive-descent expression-nesting depth (FUNGI-PARSE-DEPTH-001 stack-exhaustion guard). */
   private exprDepth = 0;
   private readonly diagnostics: ParseDiagnostic[] = [];
   private readonly flows: FlowMeta[] = [];
@@ -383,7 +383,7 @@ class Parser {
       try {
         decl = this.parseDeclaration();
       } catch (e) {
-        // The SPORE-PARSE-DEPTH-001 guard (or a similar fail-closed abort) unwound this declaration's parse to
+        // The FUNGI-PARSE-DEPTH-001 guard (or a similar fail-closed abort) unwound this declaration's parse to
         // avoid a host-stack overflow; the diagnostic is already recorded. Stop parsing — the file has already
         // failed, so emit the partial (valid) program collected so far and let check/build reject on the error.
         if (e instanceof ParseAborted) break;
@@ -435,9 +435,9 @@ class Parser {
         case "event":    return this.parseEventDecl();
         case "resource": return this.parseResourceDecl();
         case "let": {
-          // SPORE-SYNTAX-006: let at top level is not allowed
+          // FUNGI-SYNTAX-006: let at top level is not allowed
           this.emit(
-            "SPORE-SYNTAX-006",
+            "FUNGI-SYNTAX-006",
             "LET_AT_TOP_LEVEL",
             `Top-level 'let' bindings are not allowed — a binding lives inside a flow. Move it into a flow body.`,
             this.loc(),
@@ -447,9 +447,9 @@ class Parser {
           return undefined;
         }
         case "mut": {
-          // SPORE-SYNTAX-007: mut at top level is not allowed
+          // FUNGI-SYNTAX-007: mut at top level is not allowed
           this.emit(
-            "SPORE-SYNTAX-007",
+            "FUNGI-SYNTAX-007",
             "MUT_AT_TOP_LEVEL",
             `Top-level 'mut' bindings are not allowed. Mutable state must be flow-local.`,
             this.loc(),
@@ -459,9 +459,9 @@ class Parser {
           return undefined;
         }
         case "readonly": {
-          // SPORE-SYNTAX-006 variant: readonly at top level is not allowed as an executable binding
+          // FUNGI-SYNTAX-006 variant: readonly at top level is not allowed as an executable binding
           this.emit(
-            "SPORE-SYNTAX-006",
+            "FUNGI-SYNTAX-006",
             "LET_AT_TOP_LEVEL",
             `Top-level 'readonly' bindings are not allowed. Move inside a flow.`,
             this.loc(),
@@ -469,14 +469,14 @@ class Parser {
           this.skipTopLevelStatement();
           return undefined;
         }
-        // SPORE-SYNTAX-LEGACY-002: deprecated flow qualifiers — emit advisory, fall through to flow parse
+        // FUNGI-SYNTAX-LEGACY-002: deprecated flow qualifiers — emit advisory, fall through to flow parse
         case "safe": {
           const legacyQual = tok.value;
           const nextPeek = this.peek(1);
           if (nextPeek.kind === "keyword" && nextPeek.value === "flow") {
             // `safe flow` — emit advisory and parse as `flow`
             this.emitWarning(
-              "SPORE-SYNTAX-LEGACY-002",
+              "FUNGI-SYNTAX-LEGACY-002",
               "LegacyFlowQualifier",
               `'${legacyQual} flow' is a legacy qualifier. Use 'guarded flow' (for '${legacyQual} flow'). This will become an error in a future version.`,
               this.loc(),
@@ -497,7 +497,7 @@ class Parser {
           if (nextPeek.kind === "keyword" && nextPeek.value === "flow") {
             // `guard flow` — legacy qualifier; emit advisory and parse as `flow`
             this.emitWarning(
-              "SPORE-SYNTAX-LEGACY-002",
+              "FUNGI-SYNTAX-LEGACY-002",
               "LegacyFlowQualifier",
               `'guard flow' is a legacy qualifier. Use 'guarded flow'. This will become an error in a future version.`,
               this.loc(),
@@ -510,11 +510,11 @@ class Parser {
           return this.parseGuardDecl();
         }
         case "unsafe": {
-          // SPORE-SYNTAX-008: unsafe let at top level — boundary data must be flow-owned
+          // FUNGI-SYNTAX-008: unsafe let at top level — boundary data must be flow-owned
           const peek = this.peek(1);
           if (peek.kind === "keyword" && (peek.value === "let" || peek.value === "mut")) {
             this.emit(
-              "SPORE-SYNTAX-008",
+              "FUNGI-SYNTAX-008",
               "UNSAFE_LET_AT_TOP_LEVEL",
               `'unsafe let' is only allowed inside a secure flow. Boundary data must be owned by a governed flow.`,
               this.loc(),
@@ -527,9 +527,9 @@ class Parser {
           return undefined;
         }
         case "emit": {
-          // SPORE-SYNTAX-009: emit at top level is not allowed
+          // FUNGI-SYNTAX-009: emit at top level is not allowed
           this.emit(
-            "SPORE-SYNTAX-009",
+            "FUNGI-SYNTAX-009",
             "EMIT_AT_TOP_LEVEL",
             `Events may only be emitted inside flows. Declare events globally, emit them inside governed execution.`,
             this.loc(),
@@ -540,7 +540,7 @@ class Parser {
         case "fn": {
           // fn at top level is a compiler error — fn is only valid inside a flow body
           this.emit(
-            "SPORE-SYNTAX-005",
+            "FUNGI-SYNTAX-005",
             "FN_AT_TOP_LEVEL",
             `Top-level fn declarations are not permitted. Use pure flow, guarded flow, or secure flow instead.`,
             this.loc(),
@@ -674,10 +674,10 @@ class Parser {
     let effectsNode: AstNode | undefined;
     let effectNames: string[] = [];
     if (this.currentIs("keyword", "with") && this.peek(1).kind === "keyword" && this.peek(1).value === "effects") {
-      // SPORE-SYNTAX-LEGACY-001: 'with effects [...]' was removed in v1-current.
+      // FUNGI-SYNTAX-LEGACY-001: 'with effects [...]' was removed in v1-current.
       // Hard error: use 'contract { effects { ... } }' instead.
       this.emit(
-        "SPORE-SYNTAX-LEGACY-001",
+        "FUNGI-SYNTAX-LEGACY-001",
         "LegacyEffectsSyntax",
         "'with effects [...]' was removed. Use 'contract { effects { ... } }' instead.",
         this.loc(),
@@ -717,7 +717,7 @@ class Parser {
       if (this.currentIs("keyword", "with") && this.peek(1).kind === "keyword" && this.peek(1).value === "effects") {
         if (effectsNode === undefined) {
           this.emitWarning(
-            "SPORE-SYNTAX-LEGACY-001",
+            "FUNGI-SYNTAX-LEGACY-001",
             "LegacyEffectsSyntax",
             "'with effects [...]' is legacy syntax. Use 'contract { effects { ... } }' instead.",
             this.loc(),
@@ -760,7 +760,7 @@ class Parser {
         continue;
       }
       // `policy { ... }` — DEPRECATED alias for `access {}` (v2.1: policy keyword reserved)
-      // Will emit SPORE-SYNTAX-LEGACY-003 advisory in a future version.
+      // Will emit FUNGI-SYNTAX-LEGACY-003 advisory in a future version.
       // For now: silently accept and delegate to parsePolicyBlock().
       if (this.currentIs("keyword", "policy")) {
         flowClauses.push(this.parsePolicyBlock()); // existing handler, kept for compat
@@ -879,7 +879,7 @@ class Parser {
 
     if (!this.currentIs("keyword", "flow")) {
       this.emit(
-        "SPORE-PARSE-002",
+        "FUNGI-PARSE-002",
         "EXPECTED_FLOW_KEYWORD",
         `Expected "flow" after "secure".`,
         loc,
@@ -897,7 +897,7 @@ class Parser {
 
     if (!this.currentIs("keyword", "flow")) {
       this.emit(
-        "SPORE-PARSE-002",
+        "FUNGI-PARSE-002",
         "EXPECTED_FLOW_KEYWORD",
         `Expected "flow" after "pure".`,
         loc,
@@ -914,7 +914,7 @@ class Parser {
 
     if (!this.currentIs("keyword", "flow")) {
       this.emit(
-        "SPORE-PARSE-002",
+        "FUNGI-PARSE-002",
         "EXPECTED_FLOW_KEYWORD",
         `Expected "flow" after "guarded".`,
         loc,
@@ -959,7 +959,7 @@ class Parser {
     // Expect "flow" keyword
     if (!this.currentIs("keyword", "flow") && !this.currentIs("identifier", "flow")) {
       this.emit(
-        "SPORE-PARSE-002",
+        "FUNGI-PARSE-002",
         "EXPECTED_FLOW_KEYWORD",
         `Expected "flow" after "governed ${floorName}".`,
         loc,
@@ -1030,7 +1030,7 @@ class Parser {
     // Optional leading qualifiers on parameters, in any order:
     //   readonly req: Request        — APU-shareable view
     //   tainted data: RequestPayload — untrusted input (34A): marks the param `unsafe` so the
-    //                                  shipped SPORE-VALUESTATE-003/004/005 governed-sink guards fire.
+    //                                  shipped FUNGI-VALUESTATE-003/004/005 governed-sink guards fire.
     // `tainted` closes the param-trusted-by-default fail-OPEN (0031) opt-in; bare params are unchanged.
     let isReadonly = false;
     let isTainted = false;
@@ -1228,7 +1228,7 @@ class Parser {
 
     // Dot-path: database.read, audit.write, etc.
     // Also capture wildcards: network.* — preserved in the effect name so
-    // the governance verifier can emit SPORE-CAP-001 (wildcard ban, task #30).
+    // the governance verifier can emit FUNGI-CAP-001 (wildcard ban, task #30).
     while (this.currentIs("symbol", ".")) {
       this.advance(); // consume dot
       const next = this.current();
@@ -1257,16 +1257,16 @@ class Parser {
   // ── Block and statements ───────────────────────────────────────────────────
 
   private parseBlock(): AstNode {
-    // SPORE-PARSE-DEPTH-001 (statement-block half): the depth guard must also bound STATEMENT-BLOCK nesting
+    // FUNGI-PARSE-DEPTH-001 (statement-block half): the depth guard must also bound STATEMENT-BLOCK nesting
     // (if/unless/while/for/match → block → statement → ...), not only expression nesting — otherwise a
-    // deeply-nested-block .spore re-opens the same host-stack RangeError via a different syntactic vector
+    // deeply-nested-block .fungi re-opens the same host-stack RangeError via a different syntactic vector
     // (DevSecOps pentest finding). Shares the SAME counter as parseExpression so the COMBINED block+expression
     // nesting depth is bounded however the two are interleaved. try/finally so a nested ParseAborted cannot
     // leak the counter (it unwinds to parseProgram's per-declaration catch, which stops parsing the file).
     if (++this.exprDepth > MAX_EXPR_DEPTH) {
       this.exprDepth--;
       this.emit(
-        "SPORE-PARSE-DEPTH-001",
+        "FUNGI-PARSE-DEPTH-001",
         "EXCESSIVE_NESTING",
         `Block/statement nesting exceeds the maximum depth of ${MAX_EXPR_DEPTH} — refusing to parse (stack-exhaustion / denial-of-service guard).`,
         this.loc(),
@@ -1600,7 +1600,7 @@ class Parser {
       // which is exhaustive, readable, and explicit — no fallthrough, no hidden paths.
       if (this.currentIs("keyword", "if") || this.currentIs("keyword", "unless")) {
         this.emit(
-          "SPORE-SYNTAX-010",
+          "FUNGI-SYNTAX-010",
           "ElseIfNotAllowed",
           "'else if' is not allowed in Galerina. Use 'match' for multi-branch logic — it is exhaustive and has no hidden fallthrough.",
           this.loc(),
@@ -1818,7 +1818,7 @@ class Parser {
 
     // Detect bare assignment: `name = expr` (no binding keyword).
     // This is the canonical mutation of a `mut` binding; `let` and `readonly`
-    // bindings will be rejected by the binding checker (SPORE-BINDING-005).
+    // bindings will be rejected by the binding checker (FUNGI-BINDING-005).
     if (this.current().kind === "identifier") {
       const peek1 = this.peek(1);
       if (peek1?.kind === "operator" && peek1.value === "=") {
@@ -1857,14 +1857,14 @@ class Parser {
    *                       Callers pass 0 (the default) to parse a full expression.
    */
   private parseExpression(minPrecedence = 0): AstNode {
-    // SPORE-PARSE-DEPTH-001: fail-closed stack-exhaustion guard. An adversarial deeply-nested expression
+    // FUNGI-PARSE-DEPTH-001: fail-closed stack-exhaustion guard. An adversarial deeply-nested expression
     // (nested parens / arrays / records) would otherwise overflow the host JS stack with an uncaught
     // RangeError, crashing the compiler/embedder BEFORE any contract check runs. Emit a clean diagnostic and
     // abort the parse (the file fails check/build) instead of crashing the host.
     if (++this.exprDepth > MAX_EXPR_DEPTH) {
       this.exprDepth--;
       this.emit(
-        "SPORE-PARSE-DEPTH-001",
+        "FUNGI-PARSE-DEPTH-001",
         "EXCESSIVE_NESTING",
         `Expression nesting exceeds the maximum depth of ${MAX_EXPR_DEPTH} — refusing to parse (stack-exhaustion / denial-of-service guard).`,
         this.loc(),
@@ -1904,8 +1904,8 @@ class Parser {
       if (tok.kind !== "operator") break;
 
       // ── #126 — bitwise operators are intentionally NOT Galerina operators ──────
-      // Bit-level math (AND/OR/shift) lives in the engine/extension layer, not in .spore (the
-      // crypto-on-core boundary). Emit the clear SPORE-PARSE-001 hint HERE, where this is
+      // Bit-level math (AND/OR/shift) lives in the engine/extension layer, not in .fungi (the
+      // crypto-on-core boundary). Emit the clear FUNGI-PARSE-001 hint HERE, where this is
       // unambiguously an infix/value position — vs. generics (`<<`/`>>` in TYPE position) and
       // `|` match-arm patterns, which are parsed by other paths and never reach this loop.
       {
@@ -1914,11 +1914,11 @@ class Parser {
         if (tok.value === "&" || tok.value === "|" || doubled) {
           const sym = doubled ? tok.value + tok.value : tok.value;
           this.emit(
-            "SPORE-PARSE-001",
+            "FUNGI-PARSE-001",
             "UNEXPECTED_TOKEN",
-            `Bitwise operator '${sym}' is not a Galerina operator — bit-level operations (AND/OR/shift) live in the engine/extension layer, not in .spore (the crypto-on-core boundary).`,
+            `Bitwise operator '${sym}' is not a Galerina operator — bit-level operations (AND/OR/shift) live in the engine/extension layer, not in .fungi (the crypto-on-core boundary).`,
             this.loc(),
-            `.spore has arithmetic (+ - * / %), comparison, and logical (and / or) operators only — move bit-twiddling into a governed engine extension.`,
+            `.fungi has arithmetic (+ - * / %), comparison, and logical (and / or) operators only — move bit-twiddling into a governed engine extension.`,
           );
           // Recover: consume the operator + the rest of the expression so we don't ALSO emit a
           // confusing "unexpected token in statement position" follow-on. The error already failed it.
@@ -1946,7 +1946,7 @@ class Parser {
       left = { kind: "binaryExpr", value: op, location: loc, children: [left, right] };
     }
 
-    this.exprDepth--; // balance the SPORE-PARSE-DEPTH-001 guard on the normal-return path
+    this.exprDepth--; // balance the FUNGI-PARSE-DEPTH-001 guard on the normal-return path
     return left;
   }
 
@@ -2741,7 +2741,7 @@ class Parser {
    * (permitted transitions on `mut` variables — how state is allowed to change over time).
    * See: galerina-build-roadmap.md — Tower-Native Syntax v2.1 spec.
    *
-   * For now: accepted silently as an alias for `access {}`. Will become SPORE-SYNTAX-LEGACY-003
+   * For now: accepted silently as an alias for `access {}`. Will become FUNGI-SYNTAX-LEGACY-003
    * in a future version.
    *
    * Syntax:
@@ -3358,7 +3358,7 @@ class Parser {
    * ]}
    *
    * Called from parsePolicyBlock() for the `emergency { }` sub-block.
-   * The governance verifier (SPORE-MONO-001/002) validates the transitions.
+   * The governance verifier (FUNGI-MONO-001/002) validates the transitions.
    *
    * DRCM Phase 4 (task #39).
    */
@@ -3451,7 +3451,7 @@ class Parser {
             }
 
             // allow / grant — a capability EXPANSION. SURFACE it as an `allow:` action node
-            // (do NOT silently swallow it) so the governance verifier's SPORE-MONO-001
+            // (do NOT silently swallow it) so the governance verifier's FUNGI-MONO-001
             // EMERGENCY_EXPANDS_CAPABILITY fires as a hard compile error: V_DPM is monotonically
             // decreasing, so an emergency handler may only clear (deny) capabilities, never grant
             // new ones. Before this, an unrecognised `allow X` fell through to the silent skip
@@ -3758,7 +3758,7 @@ class Parser {
    * Parses `fn name(params) -> ReturnType { body }` inside a flow body.
    *
    * Rules:
-   *   - fn cannot declare effects — emits SPORE-SEC-014 if found
+   *   - fn cannot declare effects — emits FUNGI-SEC-014 if found
    *   - fn cannot request authority
    *   - fn is always synchronous
    *   - Binding variables from fn params are registered in the fn's own scope
@@ -3783,7 +3783,7 @@ class Parser {
       retTypeNode = this.parseTypeRef();
     }
 
-    // fn CANNOT declare effects — emit SPORE-SEC-014 and skip the clause
+    // fn CANNOT declare effects — emit FUNGI-SEC-014 and skip the clause
     this.skipNewlines();
     const hasEffects =
       this.currentIs("keyword", "effects") ||
@@ -3793,7 +3793,7 @@ class Parser {
 
     if (hasEffects) {
       this.emit(
-        "SPORE-SEC-014",
+        "FUNGI-SEC-014",
         "FN_CANNOT_DECLARE_EFFECTS",
         `Local fn '${name}' cannot declare effects. Effects belong to the containing flow.`,
         this.loc(),
@@ -4239,7 +4239,7 @@ class Parser {
 
       // `liability {}` — auto-calculated max legal/financial exposure from the ValueGraph
       // breach-risk matrix. NEVER written in source — the governance verifier computes and
-      // stores it in the ProofGraph. If a developer writes it manually a SPORE-GOV warning fires.
+      // stores it in the ProofGraph. If a developer writes it manually a FUNGI-GOV warning fires.
       if ((tok.kind === "keyword" || tok.kind === "identifier") && tok.value === "liability") {
         children.push(this.parseContractSubBlock("liability"));
         this.skipNewlines();
@@ -4309,7 +4309,7 @@ class Parser {
    * claim    — the proof obligation claim string (must match ProofObligation in manifest)
    *
    * Used by governance verifier (task #74) to perform manifest-lookup proof verification.
-   * On success: WAT gate is elided (zero overhead). On failure: SPORE-ASSUME-001.
+   * On success: WAT gate is elided (zero overhead). On failure: FUNGI-ASSUME-001.
    */
   private parseAssumingDecl(): AstNode {
     const loc = this.loc();
@@ -4774,7 +4774,7 @@ class Parser {
       // Each `ensure expr` becomes an { kind: "ensureDecl", children: [exprNode] } node.
       // The governance verifier attempts static constant-fold evaluation:
       //   - Provably true  → statically_verified in ProofGraph, no WAT gate
-      //   - Provably false → SPORE-INV-001 (error — invariant cannot be satisfied)
+      //   - Provably false → FUNGI-INV-001 (error — invariant cannot be satisfied)
       //   - Unknown        → runtime-precheck in ProofGraph, WAT assertion gate injected
       if (subBlockName === "invariant" && (tok.kind === "keyword" || tok.kind === "identifier") && tok.value === "ensure") {
         const ensureLoc = this.loc();
@@ -4790,7 +4790,7 @@ class Parser {
       }
 
       // For effects sub-blocks: capture dot-path effect names
-      // Wildcards (network.*) are preserved so SPORE-CAP-001 can detect them (task #30).
+      // Wildcards (network.*) are preserved so FUNGI-CAP-001 can detect them (task #30).
       if (subBlockName === "effects" && (tok.kind === "identifier" || tok.kind === "keyword")) {
         const effectLoc = this.loc();
         let effectName = tok.value;
@@ -4803,7 +4803,7 @@ class Parser {
             effectName += "." + next.value;
             this.advance();
           } else if (next.kind === "operator" && next.value === "*") {
-            // Wildcard — include so governance verifier can emit SPORE-CAP-001
+            // Wildcard — include so governance verifier can emit FUNGI-CAP-001
             effectName += ".*";
             this.advance();
           } else {
@@ -5209,19 +5209,19 @@ class Parser {
   /**
    * Parse all import forms:
    *
-   *   import "./path.spore"
-   *     → DAG merge (app file, same security context as boot.spore)
+   *   import "./path.fungi"
+   *     → DAG merge (app file, same security context as boot.fungi)
    *     → importDecl node (existing)
    *
-   *   import plugin safe "./path.spore" as Alias { contract { access { grant X } } }
+   *   import plugin safe "./path.fungi" as Alias { contract { access { grant X } } }
    *     → Standard bridged plugin (isolated, demand-loaded, transient)
    *     → importPluginDecl node
    *
-   *   import plugin assimilate "./path.spore" as Alias { contract { ... } }
+   *   import plugin assimilate "./path.fungi" as Alias { contract { ... } }
    *     → Hot-Code Residency (pre-compiled, always-hot, stateless data)
    *     → assimilatedPluginDecl node
    *     → assimilate implies safe — deep DAG audit performed automatically
-   *     → governed by boot.spore assimilation_memory_budget
+   *     → governed by boot.fungi assimilation_memory_budget
    *
    * The `as Alias` name is stored in node.value.
    * The plugin path is stored as the first child (identifier node).
@@ -5468,7 +5468,7 @@ class Parser {
   }
 
   private emitUnexpected(message: string): void {
-    this.emit("SPORE-PARSE-001", "UNEXPECTED_TOKEN", message, this.loc());
+    this.emit("FUNGI-PARSE-001", "UNEXPECTED_TOKEN", message, this.loc());
   }
 
   // ── Token stream helpers ───────────────────────────────────────────────────
@@ -5507,7 +5507,7 @@ class Parser {
       this.current().kind === "comment" ||
       this.current().kind === "docComment" ||
       this.current().kind === "govComment" ||  // ;; governance annotations — skip during parse, preserved in token stream for manifest
-      this.current().kind === "genComment"   // //spore: generated metadata — skip during parse, preserved in the token stream for tooling
+      this.current().kind === "genComment"   // //fungi: generated metadata — skip during parse, preserved in the token stream for tooling
     ) {
       this.pos++;
     }
@@ -5515,7 +5515,7 @@ class Parser {
 
   // ── Panic-mode recovery helpers ───────────────────────────────────────────
   //
-  // One syntax error must not cascade into many SPORE-PARSE-001 diagnostics.
+  // One syntax error must not cascade into many FUNGI-PARSE-001 diagnostics.
   // Each helper advances to a safe resynchronisation point:
   //
   //   recoverToStatement()       — newline, ";", or "}"  (within a block)
@@ -5590,7 +5590,7 @@ class Parser {
 
   /**
    * Advances the token stream forward until a top-level declaration keyword is
-   * found (or EOF), preventing cascading SPORE-PARSE-001 errors from one bad
+   * found (or EOF), preventing cascading FUNGI-PARSE-001 errors from one bad
    * declaration.
    *
    * Top-level boundary keywords: flow, secure, pure, guarded, type, record,
@@ -5635,7 +5635,7 @@ class Parser {
    *      top-level keyword (flow, pure, guarded, secure, type, record, enum,
    *      import, intent, governance, api, compute, route, contract, event).
    *
-   * This avoids spurious SPORE-PARSE-001 cascades when a binding initializer
+   * This avoids spurious FUNGI-PARSE-001 cascades when a binding initializer
    * is written on the next line:
    *     let email: protected Email =
    *       validate.email(rawEmail)?      ← without this fix: PARSE-001 here
@@ -5709,7 +5709,7 @@ class Parser {
     if (tok.kind !== kind || (value !== undefined && tok.value !== value)) {
       const expected = value !== undefined ? `"${value}"` : kind;
       this.emit(
-        "SPORE-PARSE-001",
+        "FUNGI-PARSE-001",
         "UNEXPECTED_TOKEN",
         `Expected ${expected}, got "${tok.value}" (${tok.kind}).`,
         this.loc(),
@@ -5728,7 +5728,7 @@ class Parser {
 /**
  * Parses a Galerina source file.
  *
- * @param source  Full source text of the .spore file.
+ * @param source  Full source text of the .fungi file.
  * @param file    File path used in diagnostic locations.
  * @returns       ParseResult containing the AST, diagnostics, and flow metadata.
  */

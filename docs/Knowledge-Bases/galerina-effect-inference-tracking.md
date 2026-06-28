@@ -7,7 +7,7 @@
 | Phase | 16 — Implementation |
 | New types | `FlowEffectSummary` (`declaredEffects`, `inferredEffects`, `missingEffects`) |
 | New | `EFFECT_REGISTRY` (centralised operation→effect mapping) |
-| New | `suggestedCode` in `SPORE-EFFECT-001` diagnostics |
+| New | `suggestedCode` in `FUNGI-EFFECT-001` diagnostics |
 
 ## TL;DR
 
@@ -165,7 +165,7 @@ The suggested block is complete and sorted — the developer can paste it direct
 
 In dev mode the compiler is a helpful assistant: it tells you what you are missing and shows you how to fix it. In production mode the contract is enforced strictly — a flow that calls `database.find` without declaring `database.read` does not build.
 
-The diagnostic code for both severities is `SPORE-EFFECT-001`.
+The diagnostic code for both severities is `FUNGI-EFFECT-001`.
 
 ---
 
@@ -208,7 +208,7 @@ flow getUser {
 - `declaredEffects`: `[]`
 - `inferredEffects`: `["database.read"]`
 - `missingEffects`: `["database.read"]`
-- Diagnostic: `SPORE-EFFECT-001` warning with suggested patch.
+- Diagnostic: `FUNGI-EFFECT-001` warning with suggested patch.
 
 ---
 
@@ -274,7 +274,7 @@ flow getUserAudited {
 - All effect arrays (`declaredEffects`, `inferredEffects`, `missingEffects`) are sorted lexicographically for determinism.
 - `EFFECT_REGISTRY` is the single source of truth — no scattered hardcoded effect name strings anywhere in the compiler.
 - `missingEffects` is always a set difference: `inferredEffects - declaredEffects`.
-- `SPORE-EFFECT-001` diagnostics always include `suggestedCode` containing the complete, ready-to-paste `contract.effects` block.
+- `FUNGI-EFFECT-001` diagnostics always include `suggestedCode` containing the complete, ready-to-paste `contract.effects` block.
 - In dev mode the diagnostic is a warning; in production it is an error.
 - The compiler suggests — the developer approves.
 

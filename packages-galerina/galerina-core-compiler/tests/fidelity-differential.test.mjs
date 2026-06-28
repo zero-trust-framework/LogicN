@@ -11,7 +11,7 @@
  *
  * It doubles as the conformance lock for slices 1/3 (cfb72f9) + 2/3 (6542bae): if any future change
  * makes a tier diverge on these edges, this fails. Slice-2 (below) extends the differential to the
- * REAL WASM tier (.spore → WAT → wabt → #105 admission → instantiate), proving the same i32 conformance
+ * REAL WASM tier (.fungi → WAT → wabt → #105 admission → instantiate), proving the same i32 conformance
  * end-to-end against the semantic reference. The full 6-component tuple (effect trace, taint/seal,
  * audit record, diagnostics) remains the next harness slice.
  */
@@ -78,7 +78,7 @@ const CORPUS = [
 test("0014 slice-1: tree-walker ≡ bytecode/fast tier, byte-exact (value + trap) over the i32 edges", async () => {
   for (const [src, flow, params, caseList] of CORPUS) {
     clearBytecodeCache(); // isolate each entry — see the NOTE above (cross-compilation cache hygiene)
-    const prog = parseProgram(src, "fid.spore");
+    const prog = parseProgram(src, "fid.fungi");
     const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
     assert.equal(errs.length, 0, `parse error in "${src}": ${errs.map((d) => d.message).join("; ")}`);
     for (const vals of caseList) {
@@ -105,7 +105,7 @@ test("0014 slice-1: tree-walker ≡ bytecode/fast tier, byte-exact (value + trap
 // (6542bae) made the walker + bytecode + WASM emitter conform on the i32 edges (checked add/sub/mul →
 // trap on overflow; native i32.div_s/rem_s trap on /0 and INT32_MIN÷-1; INT32_MIN%-1 = 0, no trap).
 // This slice PROVES that conformance end-to-end: it drives the SAME pure-i32 flows through the reference
-// async tree-walker AND through real WASM (.spore → WAT → real-wabt → #105 Ed25519-attested admission →
+// async tree-walker AND through real WASM (.fungi → WAT → real-wabt → #105 Ed25519-attested admission →
 // instantiate), asserting the WASM result is byte-identical to the walker. Trap MESSAGES legitimately
 // differ across runtimes (walker "integer overflow" vs a WASM `unreachable`/`div_s` trap), so traps are
 // compared by KIND (both trapped) and values by Object.is (catches a -0 that === would hide). This
@@ -113,11 +113,11 @@ test("0014 slice-1: tree-walker ≡ bytecode/fast tier, byte-exact (value + trap
 const WASM_SRC = CORPUS.map(([src]) => src).join("\n");
 
 test("0014 slice-2: WASM tier ≡ reference walker, byte-exact (value; trap⟺trap) over the i32 edges", async () => {
-  const prog = parseProgram(WASM_SRC, "fid-wasm.spore");
+  const prog = parseProgram(WASM_SRC, "fid-wasm.fungi");
   const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, `parse error: ${errs.map((d) => d.message).join("; ")}`);
 
-  // .spore → WAT → real wabt module → #105 Ed25519-attested admission gate → instantiate (once, all flows).
+  // .fungi → WAT → real wabt module → #105 Ed25519-attested admission gate → instantiate (once, all flows).
   const fx = L.checkEffects(prog.flows, prog.ast);
   const { gir } = L.emitGIR(prog.ast, prog.flows, fx);
   const wat = L.renderWAT(L.buildWATModuleFromGIR(gir, undefined, "fid", prog.ast, true));
@@ -161,7 +161,7 @@ test("0014 slice-2: WASM tier ≡ reference walker, byte-exact (value; trap⟺tr
 // (L.checkEffects → EffectCheckerFlags.EffectFree, set only for a pure flow with no declared AND no
 // inferred effects) and feed its EffectFree fact to the REAL resolver (resolveGovernanceMode). Each
 // effectful flow → effectFree=false → tier `full` under `auto`, AND a safety-override to `full`
-// (+ SPORE-CONFIG-GOV-002) even when `lean` is explicitly requested. taintClean is pinned true to isolate
+// (+ FUNGI-CONFIG-GOV-002) even when `lean` is explicitly requested. taintClean is pinned true to isolate
 // the EFFECT floor (the easiest path to lean): proving these still refuse lowering shows the effect floor
 // alone suffices. A pure no-effect CONTROL flow is asserted lean-eligible so the test can't pass trivially.
 const NEG_GOV_CORPUS = [
@@ -184,7 +184,7 @@ test("0014 slice-3: floor-bearing flows are refused lowering — governance reso
   // Control: a pure effect-free flow MUST be lean-eligible — proves the corpus below isn't trivially `full`.
   {
     const [src, flow] = POS_GOV_CONTROL;
-    const prog = parseProgram(src, "fid-gov-ctrl.spore");
+    const prog = parseProgram(src, "fid-gov-ctrl.fungi");
     const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
     assert.equal(errs.length, 0, `control parse error: ${errs.map((d) => d.message).join("; ")}`);
     const ef = effectFreeOf(prog, flow);
@@ -195,7 +195,7 @@ test("0014 slice-3: floor-bearing flows are refused lowering — governance reso
 
   // Negative corpus: every effectful / sink-touching flow is forced to full and refused lowering.
   for (const [src, flow, why] of NEG_GOV_CORPUS) {
-    const prog = parseProgram(src, "fid-gov.spore");
+    const prog = parseProgram(src, "fid-gov.fungi");
     const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
     assert.equal(errs.length, 0, `parse error for ${flow} (${why}): ${errs.map((d) => d.message).join("; ")}`);
 
@@ -208,12 +208,12 @@ test("0014 slice-3: floor-bearing flows are refused lowering — governance reso
     assert.equal(auto.tier, "full", `auto: ${flow} (${why}) must resolve full, got ${auto.tier} — ${auto.reason}`);
 
     // 3. Even an EXPLICIT `lean` request is overridden to full (lean cannot relax an enforcement that exists),
-    //    and the resolver must surface the SPORE-CONFIG-GOV-002 safety-override diagnostic.
+    //    and the resolver must surface the FUNGI-CONFIG-GOV-002 safety-override diagnostic.
     const lean = resolveGovernanceMode({ projectDefault: "lean", flowRequest: "lean", effectFree: ef, taintClean: true });
     assert.equal(lean.tier, "full", `lean-override: ${flow} (${why}) must safety-override to full, got ${lean.tier} — ${lean.reason}`);
     assert.ok(
-      lean.diagnostics.some((d) => d.includes("SPORE-CONFIG-GOV-002")),
-      `lean-override: ${flow} (${why}) must emit SPORE-CONFIG-GOV-002 — got [${lean.diagnostics.join(" | ")}]`,
+      lean.diagnostics.some((d) => d.includes("FUNGI-CONFIG-GOV-002")),
+      `lean-override: ${flow} (${why}) must emit FUNGI-CONFIG-GOV-002 — got [${lean.diagnostics.join(" | ")}]`,
     );
   }
 });
@@ -226,7 +226,7 @@ test("0014 slice-3: floor-bearing flows are refused lowering — governance reso
 test("0014 slice-4: liveness fail-closed — runaway loop + deep recursion TRAP (not truncate-succeed, not crash)", async () => {
   // (1) infinite while → runtimeError at maxIterations, NOT a successful partial result.
   {
-    const prog = parseProgram("guarded flow loopForever() -> Int contract { effects {} } { mut i = 0 while true { i = i + 1 } return i }", "fid-live.spore");
+    const prog = parseProgram("guarded flow loopForever() -> Int contract { effects {} } { mut i = 0 while true { i = i + 1 } return i }", "fid-live.fungi");
     const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
     assert.equal(errs.length, 0, `parse error: ${errs.map((d) => d.message).join("; ")}`);
     const res = await executeFlow("loopForever", new Map(), prog.ast, prog.flows, undefined, undefined, { maxIterations: 5 });
@@ -235,7 +235,7 @@ test("0014 slice-4: liveness fail-closed — runaway loop + deep recursion TRAP 
   }
   // (2) unbounded self-recursion → runtimeError at maxCallDepth, NOT an uncatchable host crash.
   {
-    const prog = parseProgram("guarded flow recur(n: Int) -> Int contract { effects {} } { return recur(n + 1) }", "fid-rec.spore");
+    const prog = parseProgram("guarded flow recur(n: Int) -> Int contract { effects {} } { return recur(n + 1) }", "fid-rec.fungi");
     const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
     assert.equal(errs.length, 0, `parse error: ${errs.map((d) => d.message).join("; ")}`);
     const res = await executeFlow("recur", new Map([["n", { __tag: "int", value: 0 }]]), prog.ast, prog.flows, undefined, undefined, { maxCallDepth: 50 });
@@ -255,7 +255,7 @@ test("0014 slice-5a: FUZZ tree-walker ≡ bytecode/fast tier, byte-exact over ra
   const sample = makeSampler(0x9e3779b1);
   for (const [src, flow, params] of CORPUS) {
     clearBytecodeCache(); // isolate each entry from the cross-compilation cache (see the NOTE above)
-    const prog = parseProgram(src, "fid-fuzz.spore");
+    const prog = parseProgram(src, "fid-fuzz.fungi");
     const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
     assert.equal(errs.length, 0, `parse error in "${src}": ${errs.map((d) => d.message).join("; ")}`);
     for (let i = 0; i < N; i++) {
@@ -273,7 +273,7 @@ test("0014 slice-5a: FUZZ tree-walker ≡ bytecode/fast tier, byte-exact over ra
 
 test("0014 slice-5b: FUZZ WASM tier ≡ reference walker, byte-exact (value; trap⟺trap) over random i32 inputs", async () => {
   const N = 200;
-  const prog = parseProgram(WASM_SRC, "fid-fuzz-wasm.spore");
+  const prog = parseProgram(WASM_SRC, "fid-fuzz-wasm.fungi");
   const errs = (prog.diagnostics ?? []).filter((d) => d.severity === "error");
   assert.equal(errs.length, 0, `parse error: ${errs.map((d) => d.message).join("; ")}`);
 

@@ -36,14 +36,14 @@ skip on a flow that *has* an effect.
 
 ## Precedence — stricter wins (`full > auto > lean`)
 A flow may opt **up** (request stricter than the project) but may **never opt down past the project
-ceiling**. Project `full` + flow `lean` → `full` (rejected, `SPORE-CONFIG-GOV-001`). Project `auto`
+ceiling**. Project `full` + flow `lean` → `full` (rejected, `FUNGI-CONFIG-GOV-001`). Project `auto`
 + flow `full` → `full` (opt-up, fine). An explicit `lean` on a flow that isn't EffectFree/taint-clean
-→ safety override to `full` (`SPORE-CONFIG-GOV-002`). Mirrors the shipped `posture.ts` fail-secure
+→ safety override to `full` (`FUNGI-CONFIG-GOV-002`). Mirrors the shipped `posture.ts` fail-secure
 `off|auto|on` shape (secure pole = `full`).
 
 ## The hard floors (never relaxable, even under `lean`)
-Crypto-on-core (`SPORE-SUBSTRATE-001`) · K3 capability gate (`(required & granted) === required`) ·
-secret egress (`SPORE-SECRET-002`) · privacy egress (`SPORE-PRIVACY-002`) · the three-valued border
+Crypto-on-core (`FUNGI-SUBSTRATE-001`) · K3 capability gate (`(required & granted) === required`) ·
+secret egress (`FUNGI-SECRET-002`) · privacy egress (`FUNGI-PRIVACY-002`) · the three-valued border
 (`collapse(unknown)=deny`). All shipped, all fail-closed; the knob never touches them.
 
 ## Build status (verify-before-build)

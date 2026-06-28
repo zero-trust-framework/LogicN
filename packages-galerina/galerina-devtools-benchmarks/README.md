@@ -102,7 +102,7 @@ All three workloads are designed so the algorithm is identical across all runtim
 Galerina's governed runtime deliberately trades throughput for safety guarantees:
 
 **Manifest mode** adds a static pre-flight phase before execution:
-- Parse the `.spore` source and build an AST
+- Parse the `.fungi` source and build an AST
 - Run the effect checker to classify all side-effects
 - Run the governance verifier to confirm the program meets its declared contracts
 - Then execute
@@ -142,19 +142,19 @@ benchmarks/
     python.py         Python benchmark
     bench.cpp         C++ source
     bench.rs          Rust source
-    benchmark.spore     Galerina source
+    benchmark.fungi     Galerina source
   arithmetic-threshold/
     node.mjs
     python.py
     bench.cpp
     bench.rs
-    benchmark.spore
+    benchmark.fungi
   six-digit-guess/
     node.mjs
     python.py
     bench.cpp
     bench.rs
-    benchmark.spore
+    benchmark.fungi
 src/
   runner.mjs          Orchestration — runs all runtimes, writes results/latest.json
   compare.mjs         Reads results/latest.json, prints Markdown comparison table

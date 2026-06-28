@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import { parseProgram, checkEffects, effectResultsToDiagnostics } from "../dist/index.js";
 
-const src = readFileSync("C:/laragon/www/LO/docs/Examples/Level-9-Enterprise/462-policy-purpose/example.spore", "utf8");
-const p = parseProgram(src, "test.spore");
+const src = readFileSync("C:/laragon/www/LO/docs/Examples/Level-9-Enterprise/462-policy-purpose/example.fungi", "utf8");
+const p = parseProgram(src, "test.fungi");
 const ef = checkEffects(p.flows, p.ast);
 const diags = effectResultsToDiagnostics(ef);
 console.log("Effect diagnostics:");
