@@ -161,6 +161,20 @@ source → sink = INDETERMINATE, never silent PASS). **Load-bearing ZT (V7):** t
 program (fail-OPEN); Ed25519-covering closes it. ~70% reuse (project-graph algos + BoundaryGraph + compiler taint
 tags); net-new = DataFlowGraph builder + 4 predicate checks. Build ≈2–3 days, additive.
 
+## 2026-06-28 — RD-0169 (TritMesh/Galerina AWS-decoupled deployment + K3 tri-state software protocol — note 09)
+
+🧪 DESIGN · **ZT 6** · proof `scripts/rd-0169-tritmesh-aws-decoupled-tristate-proof.mjs` (31/31) · paper=defensive.
+Owner note `76-mesh-r-d-09` ("just R&D, add to KB"): Galerina compute decoupled from a headless TritMesh DB over a
+DB-connection API + `.spore` storage (S3/EBS) + Redis cache, with a `tri_state_vector {storage,cache,node} ∈
+{+1,0,-1}` driving routing on binary silicon (2-bit/enum). Mostly **re-derives RD-0161** (headless `.spore`-stream
+DiD) + **RD-0150** (graph border). Sound AVAILABILITY patterns (proven): stale-while-revalidate on `cache=0` collapses
+a stampede N→1 refetch; deterministic 27-vector tri-state routing; lag-`node=0` read-only. **Load-bearing caveat (same
+class as RD-0162/0164/0165):** the `tri_state_vector` is operator-trustable HEALTH telemetry and must NEVER become a
+security/admission verdict — a forged `[+1,+1,+1]` is admitted with no secret if health gates admission (proven
+fail-open); admission stays keyed on the signed `.spore` capability. `authorize(0)=false`, `vAnd`=min downgrades-only,
+so "stale/syncing→0" never launders into ALLOW; "serve stale" applies to DATA, never AUTH (stale/unknown auth =
+INDETERMINATE→deny). The DB-connection API stays a TLS + SSRF + signed-index (RD-0167) border.
+
 ## Refuted — and WHY we did not adopt (the negative record)
 | Idea | Verdict | Why refuted |
 |---|---|---|
