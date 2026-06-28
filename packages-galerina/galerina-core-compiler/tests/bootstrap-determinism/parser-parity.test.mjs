@@ -130,10 +130,10 @@ describe("R7B: Stage B parser parity: TS parser vs parser.fungi", () => {
     let selfHostedSource = readFileSync(PARSER_PATH, "utf8");
     if (selfHostedSource.charCodeAt(0) === 0xFEFF) selfHostedSource = selfHostedSource.slice(1);
     const selfParsed = parseProgram(selfHostedSource, "parser.fungi");
-    const parserSpore = selfParsed.diagnostics.filter((d) => d.severity === "error").length;
-    const parserSporeStatus = parserSpore === 0 ? "ok (0 parse errors)" : `${parserSpore} parse errors`;
+    const parserFungi = selfParsed.diagnostics.filter((d) => d.severity === "error").length;
+    const parserFungiStatus = parserFungi === 0 ? "ok (0 parse errors)" : `${parserFungi} parse errors`;
 
-    const msg = `parser parity: TypeScript found ${tsFlowCount} flow(s) [${tsNames.join(", ")}], parser.fungi status: ${parserSporeStatus}`;
+    const msg = `parser parity: TypeScript found ${tsFlowCount} flow(s) [${tsNames.join(", ")}], parser.fungi status: ${parserFungiStatus}`;
     console.log(`  [parity] ${msg}`);
 
     if (PARITY_ACHIEVED) {
@@ -148,9 +148,9 @@ describe("R7B: Stage B parser parity: TS parser vs parser.fungi", () => {
     if (selfHostedSource.charCodeAt(0) === 0xFEFF) selfHostedSource = selfHostedSource.slice(1);
     const selfParsed = parseProgram(selfHostedSource, "parser.fungi");
     const errors = selfParsed.diagnostics.filter((d) => d.severity === "error");
-    const parserSporeStatus = errors.length === 0 ? "ok" : `${errors.length} parse errors`;
+    const parserFungiStatus = errors.length === 0 ? "ok" : `${errors.length} parse errors`;
 
-    const msg = `parser.fungi status: ${parserSporeStatus}`;
+    const msg = `parser.fungi status: ${parserFungiStatus}`;
     console.log(`  [parity] ${msg}`);
 
     if (errors.length > 0) {
@@ -161,7 +161,7 @@ describe("R7B: Stage B parser parity: TS parser vs parser.fungi", () => {
       assert.equal(errors.length, 0, `parser.fungi parse errors: ${errors.map((e) => e.message).join("; ")}`);
     } else {
       // Soft assertion: 0 parse errors is the goal
-      assert.ok(true, `parser parity: TypeScript found 1 flows, parser.fungi status: ${parserSporeStatus}`);
+      assert.ok(true, `parser parity: TypeScript found 1 flows, parser.fungi status: ${parserFungiStatus}`);
     }
   });
 });

@@ -66,7 +66,7 @@ export interface GraphJSON<N, E> {
  * Shared diagnostic shape used by fungi-graph graph validators.
  * Structurally compatible with LogicN's CompilerDiagnostic / BaseDiagnostic.
  */
-export interface LlnDiagnostic {
+export interface FungiDiagnostic {
   readonly code: string;
   readonly name: string;
   readonly severity: "info" | "warning" | "error";
@@ -83,7 +83,7 @@ export const FUNGI_PGRAPH_001 = {
   name: "CYCLE_DETECTED",
   severity: "error",
   message: "Graph contains a cycle where a directed acyclic graph is required.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 /** A referenced node does not exist in the graph. */
 export const FUNGI_PGRAPH_002 = {
@@ -91,7 +91,7 @@ export const FUNGI_PGRAPH_002 = {
   name: "NODE_NOT_FOUND",
   severity: "error",
   message: "Referenced node does not exist in the graph.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 /** A declared dependency could not be resolved to an existing node. */
 export const FUNGI_PGRAPH_003 = {
@@ -99,7 +99,7 @@ export const FUNGI_PGRAPH_003 = {
   name: "DEPENDENCY_MISSING",
   severity: "error",
   message: "A declared dependency was not found in the graph.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 /** Iterative fixpoint propagation did not converge within the allowed iterations. */
 export const FUNGI_PGRAPH_004 = {
@@ -107,7 +107,7 @@ export const FUNGI_PGRAPH_004 = {
   name: "FIXPOINT_TIMEOUT",
   severity: "error",
   message: "Iterative fixpoint propagation did not converge within the maximum allowed iterations.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 /** A resource lifecycle state transition is not permitted by the state machine. */
 export const FUNGI_PGRAPH_005 = {
@@ -115,7 +115,7 @@ export const FUNGI_PGRAPH_005 = {
   name: "INVALID_TRANSITION",
   severity: "error",
   message: "Resource lifecycle state transition is not permitted.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 export const FUNGI_PGRAPH_DIAGNOSTICS = [
   FUNGI_PGRAPH_001,

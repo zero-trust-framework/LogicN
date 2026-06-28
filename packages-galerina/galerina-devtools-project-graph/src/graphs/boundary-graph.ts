@@ -9,7 +9,7 @@
 // =============================================================================
 
 import { GraphBuilder } from "../core/builder.js";
-import type { Graph, LlnDiagnostic } from "../core/types.js";
+import type { Graph, FungiDiagnostic } from "../core/types.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -57,28 +57,28 @@ export const FUNGI_PGRAPH_020 = {
   name: "EFFECT_CROSSES_BOUNDARY",
   severity: "error",
   message: "An effect is transferred across a boundary that does not allow it.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 export const FUNGI_PGRAPH_021 = {
   code: "FUNGI-PGRAPH-021",
   name: "SECRET_CROSSES_UNSAFE_BOUNDARY",
   severity: "error",
   message: "A secret value crosses a boundary that is not a declared secret boundary.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 export const FUNGI_PGRAPH_022 = {
   code: "FUNGI-PGRAPH-022",
   name: "UNTRUSTED_INPUT_UNVALIDATED",
   severity: "error",
   message: "Data from an untrusted boundary crosses into the application without validation.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 export const FUNGI_PGRAPH_023 = {
   code: "FUNGI-PGRAPH-023",
   name: "REQUIRED_POLICY_MISSING",
   severity: "error",
   message: "A boundary crossing requires a policy that is not declared.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 export const FUNGI_PGRAPH_BOUNDARY_DIAGNOSTICS = [
   FUNGI_PGRAPH_020,
@@ -140,8 +140,8 @@ export function buildBoundaryGraph(
 // Validation
 // ---------------------------------------------------------------------------
 
-export function validateBoundaries(graph: BoundaryGraph): LlnDiagnostic[] {
-  const diagnostics: LlnDiagnostic[] = [];
+export function validateBoundaries(graph: BoundaryGraph): FungiDiagnostic[] {
+  const diagnostics: FungiDiagnostic[] = [];
 
   for (const edge of graph.edges()) {
     const target = graph.node(edge.to);

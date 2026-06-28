@@ -43,7 +43,7 @@ function findDescriptors(base, depth = 0, acc = []) {
 }
 
 /** Newest mtime (ms) of any .fungi under `dir` (recursively, skipping build dirs). */
-function newestSpore(dir, depth = 0) {
+function newestFungi(dir, depth = 0) {
   let newest = 0;
   let entries;
   try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return newest; }
@@ -54,7 +54,7 @@ function newestSpore(dir, depth = 0) {
       const m = statSync(p).mtimeMs;
       if (m > newest) newest = m;
     } else if (e.isDirectory() && depth < 6) {
-      const m = newestSpore(p, depth + 1);
+      const m = newestFungi(p, depth + 1);
       if (m > newest) newest = m;
     }
   }
@@ -77,7 +77,7 @@ for (const dir of pkgDirs) {
 
   const srcRoot = existsSync(join(dir, "src")) ? join(dir, "src") : dir;
   const wasm = join(dir, "dist", `${name}.wasm`);
-  const srcMtime = newestSpore(srcRoot);
+  const srcMtime = newestFungi(srcRoot);
 
   // No .fungi source to fuse — e.g. an ext-bridge with a `.ts` entry (galerina-ext-bridge-quantum) that carries a
   // package.fungi.json descriptor but is NOT a fusable .fungi module. `galerina build --package` would try to parse

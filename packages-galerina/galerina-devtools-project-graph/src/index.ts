@@ -15,7 +15,7 @@ export type {
   GraphEdge,
   Graph,
   GraphJSON,
-  LlnDiagnostic,
+  FungiDiagnostic,
 } from "./core/types.js";
 
 export {

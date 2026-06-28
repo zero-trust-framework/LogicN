@@ -207,7 +207,7 @@ builder.addEdge("build", "install", { required: true }); // ❌ reversed order
 ```
 src/
   core/
-    types.ts          — NodeId, GraphNode<N>, GraphEdge<E>, Graph<N,E>, GraphJSON, LlnDiagnostic, FUNGI-GRAPH-001..005
+    types.ts          — NodeId, GraphNode<N>, GraphEdge<E>, Graph<N,E>, GraphJSON, FungiDiagnostic, FUNGI-GRAPH-001..005
     graph.ts          — ImmutableGraph<N,E> implementation (not exported directly)
     builder.ts        — GraphBuilder<N,E> — the only way to construct a Graph
   algorithms/
@@ -261,4 +261,4 @@ Big thanks to the original graph implementations inside the Galerina monorepo th
 
 - **`galerina-core-tasks/dependency-graph.ts`** — the original hand-written DFS that proved the dependency resolution contract (task ordering, cycle detection, missing dependency errors) that `resolveDependencies` and `buildDependencyGraph` now fulfil with Kahn's algorithm.
 
-Both implementations were authored as part of the Galerina platform and informed every design decision in this library — from the `LlnDiagnostic` interface shape to the choice to make `Graph<N,E>` immutable after construction.
+Both implementations were authored as part of the Galerina platform and informed every design decision in this library — from the `FungiDiagnostic` interface shape to the choice to make `Graph<N,E>` immutable after construction.

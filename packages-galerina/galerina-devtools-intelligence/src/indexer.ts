@@ -69,7 +69,7 @@ export function verifyIndexIntegrity(index: WorkspaceIndex): boolean {
 // File system walk
 // ---------------------------------------------------------------------------
 
-async function walkSporeFiles(dir: string): Promise<string[]> {
+async function walkFungiFiles(dir: string): Promise<string[]> {
   const results: string[] = [];
 
   async function recurse(current: string): Promise<void> {
@@ -187,7 +187,7 @@ export async function buildIndex(
   }
 
   // Walk workspace for .fungi files
-  const fungiFiles = await walkSporeFiles(absWorkspace);
+  const fungiFiles = await walkFungiFiles(absWorkspace);
 
   const allFlows: IndexedFlow[] = [];
   const newFileHashes: Record<string, string> = {};

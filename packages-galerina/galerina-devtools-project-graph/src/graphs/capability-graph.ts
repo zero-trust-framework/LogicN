@@ -6,7 +6,7 @@
 // =============================================================================
 
 import { GraphBuilder } from "../core/builder.js";
-import type { Graph, LlnDiagnostic, NodeId } from "../core/types.js";
+import type { Graph, FungiDiagnostic, NodeId } from "../core/types.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -39,7 +39,7 @@ export const FUNGI_PGRAPH_030 = {
   name: "CAPABILITY_NOT_GRANTED",
   severity: "error",
   message: "A flow requires a capability that has not been granted.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 // ---------------------------------------------------------------------------
 // Builder
@@ -111,8 +111,8 @@ export function resolveCapabilities(
  * Validate that all "requires" edges from flow nodes are satisfied by
  * granted capabilities reachable from those flows.
  */
-export function validateCapabilities(graph: CapabilityGraph): LlnDiagnostic[] {
-  const diagnostics: LlnDiagnostic[] = [];
+export function validateCapabilities(graph: CapabilityGraph): FungiDiagnostic[] {
+  const diagnostics: FungiDiagnostic[] = [];
 
   for (const node of graph.nodes()) {
     if (node.data.kind !== "flow") continue;

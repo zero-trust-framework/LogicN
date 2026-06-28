@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "spore.fuse.v1",
+  "schemaVersion": "fungi.fuse.v1",
   "name": "greeting",
   "version": "0.1.0",
   "kind": "pure-transform",

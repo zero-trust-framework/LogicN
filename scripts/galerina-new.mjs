@@ -144,7 +144,7 @@ function packageDescriptor(name) {
   ) + "\n";
 }
 
-function indexSpore(name) {
+function indexFungi(name) {
   return `// ${name} — opinionated SECURE Galerina package (scaffolded by galerina-new).
 //
 // Deny-by-default, fail-closed, least-capability:
@@ -224,7 +224,7 @@ function scaffoldPackage(absTarget, name, targetDir) {
 
   console.log(`galerina-new — scaffolding secure package "${name}" into ${absTarget}`);
   writeFileStrict(join(absTarget, "package.fungi.json"), packageDescriptor(name), "package.fungi.json");
-  writeFileStrict(join(absTarget, "src", "index.fungi"), indexSpore(name), "src/index.fungi");
+  writeFileStrict(join(absTarget, "src", "index.fungi"), indexFungi(name), "src/index.fungi");
   writeFileStrict(join(absTarget, "README.md"), readme(name), "README.md");
   writeFileStrict(join(absTarget, "tests", ".gitkeep"), "", "tests/.gitkeep");
 

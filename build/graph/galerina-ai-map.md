@@ -1153,7 +1153,7 @@ Data lineage and provenance tracker for Galerina: maps data sources, transformat
 Provides:
 - FileProvenanceResult
 - analyzeFile
-- collectSporeFiles
+- collectFungiFiles
 - buildProvenanceGraph
 - DEVTOOLS_PROVENANCE_VERSION
 - renderTextReport

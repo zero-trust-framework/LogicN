@@ -4,32 +4,32 @@ codes-with-names: 251 · names: 276
 
 
 ## V1 OVERLOAD — one code, >1 name (23)
-  SPORE-ASSUME-001  ->  ASSUMING_MISSING_FLOW_REF | ASSUMING_MISSING_CLAIM
-  SPORE-ASSUME-002  ->  ASSUMING_NO_CONTRACT | ASSUMING_CLAIM_NOT_FOUND
-  SPORE-BORDER-004  ->  VALUE_BELOW_MINIMUM | VALUE_ABOVE_MAXIMUM
-  SPORE-EFFECT-002  ->  TRANSITIVE_EFFECT_NOT_DECLARED | EFFECT_NOT_INFERRED
-  SPORE-EFFECT-003  ->  EFFECT_BOUNDARY_VIOLATION | UNSAFE_EFFECT_IN_SAFE_FLOW
-  SPORE-EFFECT-004  ->  NON_CANONICAL_EFFECT | UNKNOWN_EFFECT | TRANSITIVE_EFFECT_UNDECLARED
-  SPORE-GATE-001  ->  GATE_UNKNOWN_CONDITION | GateAnnotationRequired
-  SPORE-GOV-004  ->  DENIED_TARGET_SELECTED | DOMAIN_GUARD_NOT_FOUND | DOMAIN_GUARD_POLICY_VIOLATION
-  SPORE-GOV-017  ->  InvalidPhysicalHardeningValue | PhysicalHardeningOnLowRiskFlow
-  SPORE-GRAPH-001  ->  CycleDetected | CYCLE_DETECTED
-  SPORE-GRAPH-002  ->  DeadFlow | NODE_NOT_FOUND
-  SPORE-GRAPH-003  ->  AuthorityEscalation | DEPENDENCY_MISSING
-  SPORE-GRAPH-004  ->  PiiLeakagePath | FIXPOINT_TIMEOUT
-  SPORE-GRAPH-005  ->  MissingAuditCoverage | INVALID_TRANSITION
-  SPORE-MONO-001  ->  EMERGENCY_EXPANDS_CAPABILITY | EMERGENCY_UNKNOWN_ACTION
-  SPORE-PRIVACY-002  ->  EmbeddingCrossesFlowBoundary | EmbeddingEgressDenied
-  SPORE-SEC-020  ->  RuntimeMutation | RuntimeMutationProhibited
-  SPORE-SEC-021  ->  PrototypeMutation | PrototypeMutationProhibited
-  SPORE-SECRET-002  ->  SecretCrossesFlowBoundary | SecretSentToNetwork | SecretComparisonDenied
-  SPORE-TYPE-008  ->  InvalidReturnType | SilentNullDenied
-  SPORE-TYPE-023  ->  DeferredTypeCheck | MissingWildcardArm
-  SPORE-VALUESTATE-005  ->  DERIVED_UNSAFE_VALUE_AT_SINK | DerivedUnsafeValueAtSink
-  SPORE-VALUESTATE-006  ->  ProtectedBoundaryViolation | ProtectedValueAtAuditLog
+  FUNGI-ASSUME-001  ->  ASSUMING_MISSING_FLOW_REF | ASSUMING_MISSING_CLAIM
+  FUNGI-ASSUME-002  ->  ASSUMING_NO_CONTRACT | ASSUMING_CLAIM_NOT_FOUND
+  FUNGI-BORDER-004  ->  VALUE_BELOW_MINIMUM | VALUE_ABOVE_MAXIMUM
+  FUNGI-EFFECT-002  ->  TRANSITIVE_EFFECT_NOT_DECLARED | EFFECT_NOT_INFERRED
+  FUNGI-EFFECT-003  ->  EFFECT_BOUNDARY_VIOLATION | UNSAFE_EFFECT_IN_SAFE_FLOW
+  FUNGI-EFFECT-004  ->  NON_CANONICAL_EFFECT | UNKNOWN_EFFECT | TRANSITIVE_EFFECT_UNDECLARED
+  FUNGI-GATE-001  ->  GATE_UNKNOWN_CONDITION | GateAnnotationRequired
+  FUNGI-GOV-004  ->  DENIED_TARGET_SELECTED | DOMAIN_GUARD_NOT_FOUND | DOMAIN_GUARD_POLICY_VIOLATION
+  FUNGI-GOV-017  ->  InvalidPhysicalHardeningValue | PhysicalHardeningOnLowRiskFlow
+  FUNGI-GRAPH-001  ->  CycleDetected | CYCLE_DETECTED
+  FUNGI-GRAPH-002  ->  DeadFlow | NODE_NOT_FOUND
+  FUNGI-GRAPH-003  ->  AuthorityEscalation | DEPENDENCY_MISSING
+  FUNGI-GRAPH-004  ->  PiiLeakagePath | FIXPOINT_TIMEOUT
+  FUNGI-GRAPH-005  ->  MissingAuditCoverage | INVALID_TRANSITION
+  FUNGI-MONO-001  ->  EMERGENCY_EXPANDS_CAPABILITY | EMERGENCY_UNKNOWN_ACTION
+  FUNGI-PRIVACY-002  ->  EmbeddingCrossesFlowBoundary | EmbeddingEgressDenied
+  FUNGI-SEC-020  ->  RuntimeMutation | RuntimeMutationProhibited
+  FUNGI-SEC-021  ->  PrototypeMutation | PrototypeMutationProhibited
+  FUNGI-SECRET-002  ->  SecretCrossesFlowBoundary | SecretSentToNetwork | SecretComparisonDenied
+  FUNGI-TYPE-008  ->  InvalidReturnType | SilentNullDenied
+  FUNGI-TYPE-023  ->  DeferredTypeCheck | MissingWildcardArm
+  FUNGI-VALUESTATE-005  ->  DERIVED_UNSAFE_VALUE_AT_SINK | DerivedUnsafeValueAtSink
+  FUNGI-VALUESTATE-006  ->  ProtectedBoundaryViolation | ProtectedValueAtAuditLog
 
 ## V2 COLLISION — one name, >1 code (1)
-  INTENT_BEHAVIOR_MISMATCH  ->  SPORE-GOV-001 | SPORE-INTENT-001
+  INTENT_BEHAVIOR_MISMATCH  ->  FUNGI-GOV-001 | FUNGI-INTENT-001
 
 ## V3 SEVERITY-VOCAB — outside {error,warning,info} (17)
   ERROR            galerina-tower-citizen/src/audit-logger.ts:158
@@ -51,12 +51,12 @@ codes-with-names: 251 · names: 276
   high             galerina-devtools-security/src/audit-runner.ts:175
 
 ## V4 MULTI-SEVERITY — one code, >1 severity (7; review for legit dev/prod toggles)
-  SPORE-ASSUME-002  ->  error | warning
-  SPORE-EFFECT-001  ->  error | warning
-  SPORE-GATE-001  ->  warning | error
-  SPORE-GOV-017  ->  error | warning
-  SPORE-GRAPH-002  ->  warning | error
-  SPORE-GRAPH-005  ->  warning | error
-  SPORE-MONO-001  ->  error | warning
+  FUNGI-ASSUME-002  ->  error | warning
+  FUNGI-EFFECT-001  ->  error | warning
+  FUNGI-GATE-001  ->  warning | error
+  FUNGI-GOV-017  ->  error | warning
+  FUNGI-GRAPH-002  ->  warning | error
+  FUNGI-GRAPH-005  ->  warning | error
+  FUNGI-MONO-001  ->  error | warning
 
 ## TOTAL flagged: V1 23 + V2 1 + V3 7 distinct-bad-severities + V4 7

@@ -21,7 +21,7 @@
 
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { analyzeFile, buildProvenanceGraph, collectSporeFiles } from "./analyzer.js";
+import { analyzeFile, buildProvenanceGraph, collectFungiFiles } from "./analyzer.js";
 import { renderTextReport, renderJsonReport, renderProvReport } from "./reporter.js";
 import type { ProvenanceOptions } from "./types.js";
 
@@ -98,7 +98,7 @@ async function main(): Promise<number> {
         return 1;
       }
 
-      const files = collectSporeFiles(resolve(dir));
+      const files = collectFungiFiles(resolve(dir));
       if (files.length === 0) {
         process.stderr.write(`No .fungi files found in '${dir}'\n`);
         return 0;
@@ -135,7 +135,7 @@ async function main(): Promise<number> {
       const formatArg = formatIdx >= 0 ? args[formatIdx + 1] : undefined;
       const wantProvJson = formatArg === "prov-json";
 
-      const files = collectSporeFiles(resolve(dir));
+      const files = collectFungiFiles(resolve(dir));
 
       if (files.length === 0) {
         process.stderr.write(`No .fungi files found in '${dir}'\n`);

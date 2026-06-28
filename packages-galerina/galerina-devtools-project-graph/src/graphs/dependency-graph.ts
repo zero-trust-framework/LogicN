@@ -23,7 +23,7 @@
 
 import { GraphBuilder } from "../core/builder.js";
 import { topoSort } from "../algorithms/topo.js";
-import type { Graph, LlnDiagnostic } from "../core/types.js";
+import type { Graph, FungiDiagnostic } from "../core/types.js";
 import { FUNGI_PGRAPH_001, FUNGI_PGRAPH_003 } from "../core/types.js";
 
 // ---------------------------------------------------------------------------
@@ -75,9 +75,9 @@ export interface TaskEntry {
  */
 export function buildDependencyGraph(tasks: readonly TaskEntry[]): {
   graph: DependencyGraph;
-  diagnostics: LlnDiagnostic[];
+  diagnostics: FungiDiagnostic[];
 } {
-  const diagnostics: LlnDiagnostic[] = [];
+  const diagnostics: FungiDiagnostic[] = [];
   const builder = new GraphBuilder<TaskNodeData, DependencyEdgeData>();
   const knownNames = new Set(tasks.map((t) => t.name));
 
@@ -116,7 +116,7 @@ export type DependencyResolution =
       readonly ok: false;
       readonly order: readonly string[];
       readonly cycle: readonly string[];
-      readonly diagnostic: LlnDiagnostic;
+      readonly diagnostic: FungiDiagnostic;
     };
 
 /**

@@ -13,8 +13,8 @@ const rdUrl    = pathToFileURL(join(lnRoot, "dist/route-dispatcher.js")).href;
 const { parseProgram } = await import(indexUrl);
 const { startServer }  = await import(rdUrl);
 
-const healthSpore = join(lnRoot, "../../examples/auth-service/healthCheck.fungi");
-const source = readFileSync(healthSpore, "utf8");
+const healthFungi = join(lnRoot, "../../examples/auth-service/healthCheck.fungi");
+const source = readFileSync(healthFungi, "utf8");
 const parsed = parseProgram(source, "healthCheck.fungi");
 
 const server = await startServer(parsed.ast, parsed.flows, {

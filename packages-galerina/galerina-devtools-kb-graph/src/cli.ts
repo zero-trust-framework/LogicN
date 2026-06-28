@@ -62,7 +62,7 @@ async function main(): Promise<void> {
     console.log(`Orphans: 0`);
   }
   console.log(`Stale:   ${stats.staleLinkCount} broken link${stats.staleLinkCount !== 1 ? "s" : ""}`);
-  console.log(`FUNGI codes: ${stats.totalSporeCodes} unique`);
+  console.log(`FUNGI codes: ${stats.totalFungiCodes} unique`);
 
   // ── Staleness report ───────────────────────────────────────────────────────
   if (doStale) {

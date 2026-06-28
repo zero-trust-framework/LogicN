@@ -6,7 +6,7 @@
 // =============================================================================
 
 import { GraphBuilder } from "../core/builder.js";
-import type { Graph, LlnDiagnostic, NodeId } from "../core/types.js";
+import type { Graph, FungiDiagnostic, NodeId } from "../core/types.js";
 import { FUNGI_PGRAPH_002, FUNGI_PGRAPH_005 } from "../core/types.js";
 import { updateNode } from "../algorithms/fixpoint.js";
 
@@ -104,7 +104,7 @@ export interface AdvanceStateOptions {
 
 export type AdvanceResult =
   | { readonly ok: true; readonly graph: ResourceLifecycleGraph }
-  | { readonly ok: false; readonly diagnostic: LlnDiagnostic };
+  | { readonly ok: false; readonly diagnostic: FungiDiagnostic };
 
 /**
  * Advance a resource to a new state, returning an updated immutable graph.

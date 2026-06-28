@@ -56,7 +56,7 @@ for (const file of FILES) {
   const rel = relative(ROOT, file).replace(/\\/g, "/");
   const isTest = /\/tests?\//.test(rel) || /\.test\./.test(rel);
   const isDoc = rel.endsWith(".md");
-  const isSpore = rel.endsWith(".fungi");
+  const isFungi = rel.endsWith(".fungi");
   const lines = readFileSync(file, "utf8").split(/\r?\n/);
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -141,7 +141,7 @@ for (const file of FILES) {
       || /\.push\(/.test(line));
     for (const code of codes) {
       const e = get(code);
-      let role = isDoc ? "doc" : isTest ? "test" : isSpore ? "fungi" : (isDef ? "def" : isEmit ? "emit" : "ref");
+      let role = isDoc ? "doc" : isTest ? "test" : isFungi ? "fungi" : (isDef ? "def" : isEmit ? "emit" : "ref");
       e.occ.push({ file: rel, line: i + 1, role });
       // capture name/severity only at code-bearing src lines (def/emit), within a tight window
       if (!isDoc && !isTest && (isDef || isEmit)) {

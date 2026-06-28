@@ -171,11 +171,11 @@ function stringArray(v: unknown): string[] | null {
 }
 
 /** Strip line and block comments so commented-out imports are not counted. `;;` is a Galerina line comment. */
-function stripComments(src: string, isSpore: boolean): string {
+function stripComments(src: string, isFungi: boolean): string {
   let out = src
     .replace(/\/\*[\s\S]*?\*\//g, "")       // block comments
     .replace(/(^|[^:])\/\/[^\n]*/g, "$1");  // line comments (avoid eating "://")
-  if (isSpore) out = out.replace(/;;[^\n]*/g, ""); // Galerina govComment line comments
+  if (isFungi) out = out.replace(/;;[^\n]*/g, ""); // Galerina govComment line comments
   return out;
 }
 
@@ -231,8 +231,8 @@ export function scanPackage(scopePath: string): ScanResult {
   const pkgCache = new Map<string, OwningPackage | null>();
 
   const files: ScannedFile[] = sourceFiles.map((abs) => {
-    const isSpore = abs.endsWith(".fungi");
-    const raw = stripComments(readFileSync(abs, "utf-8"), isSpore);
+    const isFungi = abs.endsWith(".fungi");
+    const raw = stripComments(readFileSync(abs, "utf-8"), isFungi);
     const relPath = relative(scopePath, abs).split(sep).join("/");
 
     const imports: FileImport[] = [];

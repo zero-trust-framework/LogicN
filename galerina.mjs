@@ -792,7 +792,7 @@ Baseline comparison (governance-cost):
   // Recursively collect every .fungi source under a root (skipping build/vendor dirs), then run a
   // CROSS-FILE flow analysis so USES/USEDBY/IMPACT span files (a flow called from another file is
   // never mislabelled "safe to delete"). Returns per-file rewrite results; `write:true` persists them.
-  const collectSporeFiles = (root) => {
+  const collectFungiFiles = (root) => {
     const SKIP = new Set(["node_modules", "dist", "build", ".git", ".galerina"]);
     const out = [];
     const walk = (dir) => {
@@ -817,7 +817,7 @@ Baseline comparison (governance-cost):
     const files = [];
     const sources = new Map();
     let parseErrors = 0;
-    for (const f of collectSporeFiles(root)) {
+    for (const f of collectFungiFiles(root)) {
       try {
         const src = readFileSync(f, "utf8");
         const p = m.parseProgram(src, f);

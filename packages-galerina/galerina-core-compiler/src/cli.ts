@@ -241,7 +241,7 @@ type CliMode =
 // File discovery
 // ---------------------------------------------------------------------------
 
-function findSporeFiles(dir: string): string[] {
+function findFungiFiles(dir: string): string[] {
   const results: string[] = [];
 
   function walk(current: string): void {
@@ -669,7 +669,7 @@ function getSrcDir(): string {
 // ---------------------------------------------------------------------------
 
 function runFixEffects(targetDir: string): void {
-  const files = findSporeFiles(targetDir);
+  const files = findFungiFiles(targetDir);
   if (files.length === 0) {
     process.stdout.write("No .fungi files found.\n");
     return;
@@ -942,7 +942,7 @@ function runGovernanceDiff(baseRefArg: string): void {
   const wantJson = process.argv.includes("--json");
 
   // Collect all .fungi files currently present
-  const files = findSporeFiles(process.cwd());
+  const files = findFungiFiles(process.cwd());
   const beforeFlows: FlowMeta[] = [];
   const afterFlows: FlowMeta[] = [];
 
@@ -990,7 +990,7 @@ function runGovernanceDiff(baseRefArg: string): void {
 }
 
 function runCostAnalysis(targetDir: string): void {
-  const files = findSporeFiles(targetDir);
+  const files = findFungiFiles(targetDir);
   if (files.length === 0) {
     process.stdout.write("No .fungi files found.\n");
     return;
@@ -1155,7 +1155,7 @@ function main(): void {
     return;
   }
 
-  const files = findSporeFiles(targetDir);
+  const files = findFungiFiles(targetDir);
   if (files.length === 0) {
     process.stdout.write("No .fungi files found.\n");
     process.exit(0);
@@ -1310,7 +1310,7 @@ function runWatch(targetDir: string): void {
     fsW(targetDir, { recursive: true }, (_evt: string, filename: string | null) => recheck(filename));
   } catch {
     // Fallback: watch individual .fungi files using watchFile
-    const files = findSporeFiles(targetDir);
+    const files = findFungiFiles(targetDir);
     for (const f of files) {
       fsWF(f, { interval: 500 }, () => recheck(f));
     }

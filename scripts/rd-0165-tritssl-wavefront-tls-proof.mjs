@@ -389,7 +389,7 @@ section('DEMO 5 — sound layered model: signed PQ capability token over TLS 1.3
   }
   const { publicKey: issuerPub, privateKey: issuerPriv } = crypto.generateKeyPairSync(alg);
 
-  function issueSpore(subject, scope, ttlSec) {
+  function issueFungi(subject, scope, ttlSec) {
     const claims = {
       v: 1, subject, scope,
       iat: 1750000000,
@@ -403,7 +403,7 @@ section('DEMO 5 — sound layered model: signed PQ capability token over TLS 1.3
   // Verifier: must run INSIDE the TLS session (channel already AEAD-encrypted
   // and server-authenticated by the real X.509 chain). Verify PQ signature +
   // expiry + scope. The dot-product geometry, if present, is only a hint.
-  function verifySpore(tok, now, requiredScope) {
+  function verifyFungi(tok, now, requiredScope) {
     let claims;
     try { claims = JSON.parse(Buffer.from(tok.payload, 'base64').toString()); }
     catch { return false; }
@@ -416,9 +416,9 @@ section('DEMO 5 — sound layered model: signed PQ capability token over TLS 1.3
   }
 
   const now = 1750000100;
-  const good = issueSpore('bank.example', 'read:balance', 3600);
+  const good = issueFungi('bank.example', 'read:balance', 3600);
   check('layered: validly-signed in-scope token is ACCEPTED',
-        verifySpore(good, now, 'read:balance'));
+        verifyFungi(good, now, 'read:balance'));
 
   // Demo-1 forger has NO issuer private key. Best they can do is tamper claims
   // or fabricate a signature -> verification fails. The forgery that broke the
@@ -428,16 +428,16 @@ section('DEMO 5 — sound layered model: signed PQ capability token over TLS 1.3
         iat: 1750000000, exp: 1751000000, nonce: 'deadbeef' })).toString('base64'),
     sig: good.sig /* reuse a real signature over DIFFERENT claims */ };
   check('layered: forged/tampered token (no issuer key) is REJECTED',
-        verifySpore(tampered, now, 'admin:transfer') === false);
+        verifyFungi(tampered, now, 'admin:transfer') === false);
 
   // Expiry is enforced (no "static accept forever").
-  const expired = issueSpore('bank.example', 'read:balance', 1);
+  const expired = issueFungi('bank.example', 'read:balance', 1);
   check('layered: expired token is REJECTED (freshness bound)',
-        verifySpore(expired, 1750000200, 'read:balance') === false);
+        verifyFungi(expired, 1750000200, 'read:balance') === false);
 
   // Scope confinement (capability least-privilege).
   check('layered: out-of-scope use is REJECTED (least privilege)',
-        verifySpore(good, now, 'admin:transfer') === false);
+        verifyFungi(good, now, 'admin:transfer') === false);
 
   // Explicitly assert the architectural rule.
   const rule =

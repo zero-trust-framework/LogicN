@@ -305,7 +305,7 @@ console.log("\nV8  ZT: an in-.fungi index MUST be signed — unsigned => index-p
   // A .fungi passport = capability header + an embedded T-CSR index + a payload.
   // Node labels map to colidx targets; the "secret" read is node 1 ("balance").
   const labels = ["public_brochure", "balance_12345", "attacker_99999"];
-  const buildSpore = () => ({
+  const buildFungi = () => ({
     header: { tier: 3, intent: "read-balance" },
     // primary INDEX embedded in the passport: "query node 0 -> resolves to target row 1"
     index: { rowptr: [0, 1], colidx: [1] },     // colidx[0] = 1 -> "balance_12345"
@@ -329,7 +329,7 @@ console.log("\nV8  ZT: an in-.fungi index MUST be signed — unsigned => index-p
 
   // ---- (a) UNSIGNED INDEX (or index outside the signed region): attack SUCCEEDS silently
   {
-    const fungi = buildSpore();
+    const fungi = buildFungi();
     const sig = edSign(null, naiveRegionBytes(fungi), privateKey); // legit signer, but index NOT covered
     const honest = resolveRead(fungi, 0);
     ok(honest === "balance_12345", "baseline: honest read of query-node 0 resolves to 'balance_12345'");
@@ -346,7 +346,7 @@ console.log("\nV8  ZT: an in-.fungi index MUST be signed — unsigned => index-p
 
   // ---- (b) SIGNED INDEX: same attack is now DETECTED and rejected
   {
-    const fungi = buildSpore();
+    const fungi = buildFungi();
     const sig = edSign(null, signedRegionBytes(fungi), privateKey); // index IS covered
     const honest = resolveRead(fungi, 0);
     ok(honest === "balance_12345", "baseline (signed): honest read resolves to 'balance_12345'");

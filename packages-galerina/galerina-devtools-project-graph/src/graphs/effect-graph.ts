@@ -11,7 +11,7 @@
 
 import { GraphBuilder } from "../core/builder.js";
 import { fixpoint } from "../algorithms/fixpoint.js";
-import type { Graph, LlnDiagnostic, NodeId } from "../core/types.js";
+import type { Graph, FungiDiagnostic, NodeId } from "../core/types.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -52,21 +52,21 @@ export const FUNGI_PGRAPH_010 = {
   name: "UNDECLARED_EFFECT_IN_GRAPH",
   severity: "error",
   message: "Flow performs an effect that is not declared in its effects list.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 export const FUNGI_PGRAPH_011 = {
   code: "FUNGI-PGRAPH-011",
   name: "EFFECT_NOT_INFERRED",
   severity: "error",
   message: "Flow declares an effect that cannot be inferred from its body or callees.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 export const FUNGI_PGRAPH_012 = {
   code: "FUNGI-PGRAPH-012",
   name: "UNSAFE_EFFECT_IN_SAFE_FLOW",
   severity: "error",
   message: "Flow with safety level 'safe' performs a side-effectful operation.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 export const FUNGI_PGRAPH_013 = {
   code: "FUNGI-PGRAPH-013",
@@ -74,7 +74,7 @@ export const FUNGI_PGRAPH_013 = {
   severity: "error",
   message:
     "Flow inherits a transitive effect from a callee that is not declared on the calling flow.",
-} as const satisfies LlnDiagnostic;
+} as const satisfies FungiDiagnostic;
 
 export const FUNGI_PGRAPH_EFFECT_DIAGNOSTICS = [
   FUNGI_PGRAPH_010,
@@ -171,8 +171,8 @@ export function propagateEffects(graph: EffectGraph): EffectGraph {
  * Validate effect declarations against inferred and transitive effects.
  * Returns zero diagnostics when the graph is fully correct.
  */
-export function validateEffects(graph: EffectGraph): LlnDiagnostic[] {
-  const diagnostics: LlnDiagnostic[] = [];
+export function validateEffects(graph: EffectGraph): FungiDiagnostic[] {
+  const diagnostics: FungiDiagnostic[] = [];
 
   for (const node of graph.nodes()) {
     const { flowName, safetyLevel, declaredEffects, inferredEffects, transitiveEffects } =

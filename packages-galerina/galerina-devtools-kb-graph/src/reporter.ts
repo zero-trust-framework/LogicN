@@ -71,7 +71,7 @@ export function generateMarkdownReport(graph: KBGraph, generatedAt: string): str
     `Generated: ${generatedAt}`,
     "",
     "## Stats",
-    `- Docs: ${stats.totalDocs} | Edges: ${stats.totalEdges} | Orphans: ${stats.orphanCount} | Stale links: ${stats.staleLinkCount} | FUNGI codes: ${stats.totalSporeCodes}`,
+    `- Docs: ${stats.totalDocs} | Edges: ${stats.totalEdges} | Orphans: ${stats.orphanCount} | Stale links: ${stats.staleLinkCount} | FUNGI codes: ${stats.totalFungiCodes}`,
     "",
     "## Document Registry (auto-generated)",
     "",

@@ -14,7 +14,7 @@ import { fileURLToPath } from "node:url";
 import {
   analyzeFile,
   buildProvenanceGraph,
-  collectSporeFiles,
+  collectFungiFiles,
   renderTextReport,
   renderJsonReport,
   renderProvReport,
@@ -130,7 +130,7 @@ describe("analyzeFile: ungated flow — high-risk flagged", () => {
 
 describe("buildProvenanceGraph: summary counts", () => {
   it("counts flows and files correctly for the auth-service corpus", () => {
-    const files = collectSporeFiles(AUTH_SERVICE_DIR);
+    const files = collectFungiFiles(AUTH_SERVICE_DIR);
     assert.ok(files.length > 0, "Should find .fungi files in auth-service directory");
 
     const graph = buildProvenanceGraph(files);
@@ -183,7 +183,7 @@ describe("analyzeFile: --flow filter", () => {
 
 describe("buildProvenanceGraph + renderTextReport: corpus report", () => {
   it("generates a text report without throwing for auth-service corpus", () => {
-    const files = collectSporeFiles(AUTH_SERVICE_DIR);
+    const files = collectFungiFiles(AUTH_SERVICE_DIR);
     const graph = buildProvenanceGraph(files);
     const report = renderTextReport(graph, files.length);
 
@@ -376,7 +376,7 @@ describe("riskFlows: provenance graph properties", () => {
   it("riskFlows is a non-empty array for the auth-service corpus (genuine ungated flows detected)", () => {
     // The auth-service corpus contains files where unsafe input reaches AuditLog.write
     // without redact() — the provenance tool correctly detects these.
-    const files = collectSporeFiles(AUTH_SERVICE_DIR);
+    const files = collectFungiFiles(AUTH_SERVICE_DIR);
     const graph = buildProvenanceGraph(files);
 
     // The corpus has genuine ungated flows — riskFlows should be >= 0 (tool is accurate)
@@ -384,7 +384,7 @@ describe("riskFlows: provenance graph properties", () => {
   });
 
   it("trust boundary crossings are counted (>= 0)", () => {
-    const files = collectSporeFiles(AUTH_SERVICE_DIR);
+    const files = collectFungiFiles(AUTH_SERVICE_DIR);
     const graph = buildProvenanceGraph(files);
     assert.ok(graph.summary.trustBoundaryCrossings >= 0, "trustBoundaryCrossings must be non-negative");
   });
