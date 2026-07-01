@@ -513,14 +513,32 @@ function compileFile(
   // .lmanifest generation (DRCM Phase 1 task #33 — RFC 8785 canonical JSON)
   // Emitted for build modes when there are no errors.
   // Contains: source hash, derived constraints, proof obligations, governance signatures.
-  if ((mode === "build" || mode === "build-production" || mode === "build-deterministic") &&
-      !diagnostics.some(d => d.severity === "error")) {
-    const govResultForManifest = verifyGovernance(
-      parseResult.ast, parseResult.flows, effectResults, "dev", filePath
-    );
-    const manifest = generateManifest(source, filePath, parseResult.flows, govResultForManifest, undefined, parseResult.ast, source);
-    const manifestJson = serializeManifest(manifest);
-    return { file: filePath, diagnostics, manifestJson };
+  if (mode === "build" || mode === "build-production" || mode === "build-deterministic") {
+    // SIGNING-BOUNDARY FAIL-OPEN FIX (2026-07-01): a plain `build` runs the effect/value-state/
+    // governance checks in DEVELOPMENT strictness, so a security/governance violation (SECRET-002,
+    // PRIVACY-002, GOV-002, EFFECT-004, …) is only a WARNING and would be silently SIGNED into a
+    // deployable .lmanifest — an artifact `build --production` would refuse. A signed manifest is an
+    // admission credential; it must NOT be issued for an artifact that fails production strictness.
+    // Production/deterministic builds already carry strict diagnostics, so only the lenient `build`
+    // mode needs the extra gate. (Manifest CONTENT stays dev-computed to avoid changing golden hashes;
+    // the gate only decides whether to sign a clean-in-production artifact.)
+    let strictBlocksSigning = false;
+    if (mode === "build") {
+      const strictEffects = checkEffects(parseResult.flows, parseResult.ast, "production", true);
+      strictBlocksSigning =
+        checkValueStates(parseResult.ast, "production").diagnostics.some(d => d.severity === "error") ||
+        strictEffects.some(r => r.diagnostics.some(d => d.severity === "error")) ||
+        verifyGovernance(parseResult.ast, parseResult.flows, strictEffects, "production", filePath)
+          .diagnostics.some(d => d.severity === "error");
+    }
+    if (!strictBlocksSigning && !diagnostics.some(d => d.severity === "error")) {
+      const govResultForManifest = verifyGovernance(
+        parseResult.ast, parseResult.flows, effectResults, "dev", filePath
+      );
+      const manifest = generateManifest(source, filePath, parseResult.flows, govResultForManifest, undefined, parseResult.ast, source);
+      const manifestJson = serializeManifest(manifest);
+      return { file: filePath, diagnostics, manifestJson };
+    }
   }
 
   return { file: filePath, diagnostics };
