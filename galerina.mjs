@@ -1196,7 +1196,9 @@ Baseline comparison (governance-cost):
     // from `fx` and the exit predicate ignored fx entirely — so a pure-flow effect breach or a
     // deny-by-default escape printed "0 errors" EXIT=0. Surface them and FAIL CLOSED in ALL modes.
     // (Deliberately narrow: the broader undeclared-effect class EFFECT-001/STDLIB-001 stays dev-advisory.)
-    const INTEGRITY_EFFECT_CODES = new Set(["FUNGI-EFFECT-003", "FUNGI-STDLIB-002"]);
+    // FUNGI-EFFECT-006 (deny-only effect, 2026-07-02) joins the always-fail-closed set:
+    // a deny-only name is never grantable at ANY profile, so even dev/check refuse.
+    const INTEGRITY_EFFECT_CODES = new Set(["FUNGI-EFFECT-003", "FUNGI-STDLIB-002", "FUNGI-EFFECT-006"]);
     const integrityEffectErrors = fx.flatMap(r => (r.diagnostics ?? []).filter(
       d => d.severity === "error" && INTEGRITY_EFFECT_CODES.has(d.code)));
     // Run the value-state checker ONCE and surface ALL of its ERROR-severity diagnostics, not just the
@@ -1946,7 +1948,9 @@ Baseline comparison (governance-cost):
     // a PURE flow, a boundary breach) and FUNGI-STDLIB-002 (deny-by-default unrecognized effectful method).
     // The production branch above already folds ALL error diagnostics; this keeps these two fail-closed at
     // every profile (the broader EFFECT-001/STDLIB-001 class stays dev-advisory, by design).
-    const INTEGRITY_EFFECT_CODES = new Set(["FUNGI-EFFECT-003", "FUNGI-STDLIB-002"]);
+    // FUNGI-EFFECT-006 (deny-only effect, 2026-07-02) joins the always-fail-closed set:
+    // a deny-only name is never grantable at ANY profile, so even dev/check refuse.
+    const INTEGRITY_EFFECT_CODES = new Set(["FUNGI-EFFECT-003", "FUNGI-STDLIB-002", "FUNGI-EFFECT-006"]);
     for (const result of fx) {
       for (const d of result.diagnostics ?? []) {
         if (d.severity === "error" && INTEGRITY_EFFECT_CODES.has(d.code)) govErrors.push(d);
@@ -2011,8 +2015,35 @@ Baseline comparison (governance-cost):
     writeFileSync(`${outDir}/${name}.wasm`, assembled.wasm);
     writeFileSync(`${outDir}/${name}.wat`, wat);
 
+    // ── CG-4 SIGNING-BOUNDARY GATE (mirror of cli.ts runOnFile, c2a260d) ──────────
+    // A lenient (dev-profile) build must NOT mint a signed .lmanifest for an artifact
+    // that production-strict governance rejects — a signed manifest is an admission
+    // credential. cli.ts got this gate 2026-07-01; THIS minting site (the bundled CLI,
+    // incl. `build --package`) was proven to still hybrid-sign a flow declaring a fake
+    // effect (verified 2026-07-02). Production builds already fail-closed earlier
+    // (govErrors gate), so only the lenient path re-checks. The .wasm/.wat still emit
+    // (local inspection); only the credential is withheld — and loudly, never silently.
+    let mintManifest = true;
+    if (!buildIsProduction) {
+      try {
+        const strictEffectsForSigning = m.checkEffects(parsed.flows, parsed.ast, "production", true);
+        mintManifest = !(
+          m.checkValueStates(parsed.ast, "production").diagnostics.some((d) => d.severity === "error") ||
+          strictEffectsForSigning.some((r) => (r.diagnostics ?? []).some((d) => d.severity === "error")) ||
+          m.verifyGovernance(parsed.ast, parsed.flows, strictEffectsForSigning, "production", fungiFile)
+            .diagnostics.some((d) => d.severity === "error")
+        );
+      } catch (gateErr) {
+        mintManifest = false; // cannot prove production-clean → do not sign (fail-closed)
+        console.warn(`   ⚠️  CG-4 pre-signing check failed (${gateErr.message}) — refusing to mint a manifest it cannot vouch for.`);
+      }
+    }
+    if (!mintManifest) {
+      console.warn(`  ⛔ CG-4 signing boundary: NOT minting a .lmanifest for '${name}' — the artifact fails production-strict governance. Run GALERINA_PROFILE=production galerina build to see the errors; an unminted manifest is inadmissible at fuse (FUNGI-FUSE-UNSIGNED, fail-closed).`);
+    }
+
     // .lmanifest generation (DRCM Phase 3 task #67 — binary CBOR RFC 8949)
-    try {
+    if (mintManifest) try {
       const { generateManifest, serializeManifest, serializeManifestCBOR, prettyManifest, verifyManifestRoundTrip, manifestSigningInput } = await import(
         new URL("packages-galerina/galerina-core-compiler/dist/manifest-generator.js", import.meta.url).href
       );
@@ -2339,7 +2370,9 @@ Baseline comparison (governance-cost):
     // INSIDE the signed .lmanifest (`fuse` block, embedded above before signing).
     // This standalone file is a convenience copy — the loader cross-checks it
     // against the signed manifest and prefers the manifest on any disagreement.
-    if (packageBuild) {
+    // CG-4: no fusion descriptor without a manifest — a .fuse.json pointing at an
+    // unminted .lmanifest is misleading residue (admission would fail-close anyway).
+    if (packageBuild && mintManifest) {
       // Recompute defensively so this block stays valid even if the manifest
       // embedding above was skipped (e.g. manifest generation threw, non-fatal).
       const fuseWasmSha256 = "sha256:" + createHash("sha256").update(Buffer.from(assembled.wasm)).digest("hex");
