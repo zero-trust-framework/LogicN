@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// kb-index.mjs — index the Galerina Knowledge-Base (docs/Knowledge-Bases/*.md — ~490 files / 135k+ lines) so you can
+// kb-index.mjs — index the Galerina Knowledge-Base (ZTF-Knowledge-Bases/**/*.md, RECURSIVE — ~690 files) so you can
 // FIND the right doc by keyword instead of grep-reading the whole tree. A re-runnable TOKEN-SAVER (owner request,
 // 2026-06-22): build the index once, then QUERY it. Sibling to code-index.mjs (codes) — this indexes KB PROSE.
 //
@@ -11,12 +11,19 @@
 // Per doc it indexes: title (first # heading), all sub-headings, bold terms, FUNGI-*/ERR_ codes, task #NNN refs,
 // [[kb-cross-refs]], and a term-frequency table (title+headings weighted). JSON for tools, MD for humans/AI.
 import { readdirSync, readFileSync, mkdirSync, writeFileSync, statSync } from "node:fs";
-import { join, relative, basename } from "node:path";
+import { join, relative, basename, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { extractCodes } from "./lib/codes.mjs";
 import { writeProvenance } from "./lib/provenance.mjs"; // BLD-003 / #216 provenance sidecar
 
-const ROOT = process.cwd();
-const KB = join(ROOT, "docs", "Knowledge-Bases");
+const REPO = join(dirname(fileURLToPath(import.meta.url)), ".."); // Galerina repo root (this script lives in scripts/)
+const ROOT = REPO;                                                // anchor for relative() display + OUT dir
+// The KB was relocated OUT of this repo (IP separation) — same convention as audit-effect-canonicality.mjs.
+// Default to the sibling ZTF-Knowledge-Bases; override with GALERINA_KB_DIR. Recurse it: rd-absorbed/,
+// defensive-publications/, schemas/ … were silently dropped by the old flat scan of the now-removed
+// docs/Knowledge-Bases (a flat, non-recursive index reports a false "seen everything").
+const KB = process.env.GALERINA_KB_DIR || join(REPO, "..", "ZTF-Knowledge-Bases");
+const KB_SKIP = new Set(["build", "node_modules", ".git"]);       // build/ = generated indexes (would self-pollute)
 const EXTRA = ["README.md", "AGENTS.md"]; // also index repo-root key docs if present
 const OUT = join(ROOT, "build", "kb-index");
 const STOP = new Set(
@@ -26,9 +33,17 @@ const STOP = new Set(
     .split(/\s+/),
 );
 
+function walkMd(dir, out) {
+  let entries;
+  try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return out; }
+  for (const e of entries) {
+    if (e.isDirectory()) { if (!KB_SKIP.has(e.name)) walkMd(join(dir, e.name), out); }
+    else if (e.isFile() && e.name.endsWith(".md")) out.push(join(dir, e.name));
+  }
+  return out;
+}
 function kbFiles() {
-  const out = [];
-  try { for (const f of readdirSync(KB)) if (f.endsWith(".md")) out.push(join(KB, f)); } catch { /* no KB */ }
+  const out = walkMd(KB, []);                                    // recurse the whole KB (skip build/ etc.)
   for (const f of EXTRA) { const p = join(ROOT, f); try { statSync(p); out.push(p); } catch { /* absent */ } }
   return out;
 }
