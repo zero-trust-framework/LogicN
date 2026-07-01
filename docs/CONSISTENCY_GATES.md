@@ -54,4 +54,4 @@ same class in more places; extend the gate to cover them, then reconcile:
 
 **Rule for new defect classes (the meta-rule):** when a defect turns out to be a toolchain
 self-inconsistency, do not just fix the instance — add the invariant to the table above and a gate
-that fails on it, so the *class* cannot silently return. (See `.claude` memory: `logicn-rule-error-to-tooling`.)
+that fails on it, so the *class* cannot silently return. (See the **error-to-tooling** rule in `.claude` memory — every recurring error becomes a dev-tool detector.)
