@@ -3,6 +3,8 @@ declare module "node:child_process" {
     readonly encoding?: "utf8" | "buffer";
     readonly timeout?: number;
     readonly cwd?: string;
+    /** Piped to the child's stdin (real Node option; used by `git check-ignore --stdin`). */
+    readonly input?: string;
   }
 
   export interface SpawnSyncResult {

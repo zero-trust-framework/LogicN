@@ -21,6 +21,7 @@ import {
 import { execSync, spawnSync } from "node:child_process";
 import { parseProgram, type FlowMeta } from "./parser.js";
 import { diffGovernance, renderGovernanceDiff } from "./governance-diff.js";
+import { excludeGitIgnored } from "./git-ignore-filter.js";
 import { resolveSymbols } from "./symbol-resolver.js";
 import { checkTypes } from "./type-checker.js";
 import { checkValueStates } from "./value-state-checker.js";
@@ -959,8 +960,10 @@ function runGovernanceDiff(baseRefArg: string): void {
   const baseRef = baseRefArg === process.cwd() ? "HEAD" : baseRefArg.replace(/\.\.$/, "");
   const wantJson = process.argv.includes("--json");
 
-  // Collect all .fungi files currently present
-  const files = findFungiFiles(process.cwd());
+  // Collect all .fungi files currently present. Git-IGNORED files (build
+  // artifacts, stranded test fixtures) are excluded: they can never exist at
+  // baseRef, so each would read as a phantom "added" flow on every run.
+  const files = excludeGitIgnored(findFungiFiles(process.cwd()), process.cwd());
   const beforeFlows: FlowMeta[] = [];
   const afterFlows: FlowMeta[] = [];
 
