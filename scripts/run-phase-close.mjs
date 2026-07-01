@@ -220,6 +220,13 @@ run("coverage:codes", "node", ["scripts/audit-coverage.mjs", "codes", "--soft"])
 // KB/SPEC doc-drift is --strict only, pending the storage.*/ledger.* family work (Commit 2).
 run("effect:canonicality", "node", ["scripts/audit-effect-canonicality.mjs"]);
 
+// ── 5c-iii. Muted-diagnostics gate (2026-07-01) ──
+// Owner concern: "codes muted early to stop them alerting — could they still be off?" A silenced
+// security/governance check is a fail-open. This enumerates every mode-gated + SUPPRESS-set diagnostic
+// and FAILS if a security/governance code is muted WITHOUT being on the reviewed allowlist — so muting
+// can never happen silently again.
+run("muted:diagnostics", "node", ["scripts/audit-muted-diagnostics.mjs"]);
+
 // ── 5d. Dev-tool script tests (scripts/tests/) ──
 // These live OUTSIDE packages-galerina, so the package runner (run-all-tests.cjs) never sees them. Run them
 // here so the audit/index/registry tooling is regression-gated (e.g. the shared code-regex self-test).

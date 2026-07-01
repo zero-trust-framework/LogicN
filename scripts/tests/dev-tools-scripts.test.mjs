@@ -329,3 +329,37 @@ test("effect-canonicality: the REAL repo effect tables are single-source consist
   assert.equal(j.internal.length, 0,
     `internal effect tables have drifted: ${JSON.stringify(j.internal, null, 2)}`);
 });
+
+// ── audit-muted-diagnostics: fail-open gate for silenced security/governance codes ──
+// A fixture with an UN-allowlisted mode-gated SECURITY code proves detection; the REAL repo
+// is asserted to have NO silently-muted security/governance codes (regression guard).
+const tmp10 = mkdtempSync(join(tmpdir(), "fungi-muted-"));
+after(() => { try { rmSync(tmp10, { recursive: true, force: true }); } catch { /* best effort */ } });
+const mSrc = join(tmp10, "packages-galerina", "galerina-core-compiler", "src");
+mkdirSync(mSrc, { recursive: true });
+writeFileSync(join(mSrc, "x.ts"), [
+  `export function f(mode) {`,
+  `  diagnostics.push({`,
+  `    code: "FUNGI-SECRET-999",`,
+  `    name: "FixtureSecretMute",`,
+  `    severity: mode === "production" ? "error" : "warning",`,  // mode-gated SECURITY code, not allowlisted
+  `  });`,
+  `}`,
+].join("\n") + "\n");
+const runMuted = (root) => JSON.parse(spawnSync(process.execPath,
+  [join(SCRIPTS, "audit-muted-diagnostics.mjs"), "--root", root, "--json"],
+  { encoding: "utf8" }).stdout);
+
+test("muted-diagnostics: DETECTS an un-allowlisted mode-gated SECURITY code and blocks", () => {
+  const j = runMuted(tmp10);
+  assert.ok(j.violations.some((v) => v.code === "FUNGI-SECRET-999"), "the un-reviewed secret mute is flagged");
+  assert.ok(j.blocking > 0, "an un-allowlisted security mute is blocking");
+});
+
+test("muted-diagnostics: the REAL repo has NO silently-muted security/governance codes (regression guard)", () => {
+  const j = JSON.parse(spawnSync(process.execPath,
+    [join(SCRIPTS, "audit-muted-diagnostics.mjs"), "--json"],
+    { cwd: SCRIPTS, encoding: "utf8" }).stdout);
+  assert.equal(j.blocking, 0,
+    `security/governance codes muted without review: ${JSON.stringify([...j.violations, ...j.suppressViolations], null, 2)}`);
+});
