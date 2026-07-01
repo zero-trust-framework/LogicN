@@ -32,7 +32,7 @@ every gate here is wired into `scripts/run-phase-close.mjs`** so it runs on ever
 
 | Gate | Enforces | Command | Blocks on |
 |---|---|---|---|
-| `scripts/audit-effect-canonicality.mjs` | CG-1, CG-2, CG-6 | `node scripts/audit-effect-canonicality.mjs [--strict]` | internal table drift (C1–C4); docs drift under `--strict` (C5–C6) |
+| `scripts/audit-effect-canonicality.mjs` | CG-1, CG-2, CG-6 | `node scripts/audit-effect-canonicality.mjs [--strict]` | internal table drift (C1–C4, C7 capability-types, C8 gir-emitter); docs drift under `--strict` (C5–C6); Stage-B drift (C9) informational |
 | `scripts/audit-muted-diagnostics.mjs` | CG-3 | `node scripts/audit-muted-diagnostics.mjs` | a security/governance code muted without a reviewed allowlist entry |
 | compiler (`cli.ts`) production-strict signing gate | CG-4 | (in-compiler; regression-tested) | signing a plain-`build` artifact that fails production strictness |
 | regression tests | all | `node --test scripts/tests/dev-tools-scripts.test.mjs` | a gate that stops detecting its own defect class |
@@ -42,15 +42,20 @@ plus `node scripts/run-all-tests.cjs` (full suite). Green = every rule holds.
 
 ---
 
-## Pending coverage (tracked; extend the gates here as they land — Commit 2)
+## Coverage status (Commit 2 — extended 2026-07-01)
 
-`audit-effect-canonicality.mjs` currently gates 3 tables. The zero-trust component sweep found the
-same class in more places; extend the gate to cover them, then reconcile:
-- `capability-types.ts` `CAPABILITY_BIT_POSITION` / `KNOWN_CAPABILITIES` (the V_DPM capability vocabulary; already carries `storage.write`/`ledger.mutate`/`shell.execute`/`native.call`).
-- `gir-emitter.ts` `EFFECT_TO_CAPABILITY` (only 8 of 31+ canonical effects mapped — decide bit-exempt vs gap).
-- Stage-A `CANONICAL_EFFECTS` (TS) vs Stage-B `self-hosted/effect-checker.fungi` `knownEffects()` (divergent).
-- Local inference sets (`MUTATION_EFFECTS`, `NETWORK_EFFECTS`, `AI_EFFECTS`, `HIGH_TRUST_EFFECTS`) — CG-5 regression guard.
-- **Runtime-enforceability (CG-2 extension):** canonical effects `payment.charge`, `pii.read/write`, `phi.read/write` have **no V_DPM bit** → not runtime bit-enforceable. Assign bits (or a domain-capability lane).
+`audit-effect-canonicality.mjs` now gates 6 tables. The Commit-2 full rename converged the effect and
+capability vocabularies on domain names (filesystem→storage, unsafe.native→native.call, +ledger.mutate/
+shell.execute), so these are now GATED and clean:
+- ✅ `capability-types.ts` `SystemCapabilityType` / `CAPABILITY_BIT_POSITION` (the V_DPM vocabulary) — **C7** (blocking).
+- ✅ `gir-emitter.ts` `EFFECT_TO_CAPABILITY` keys (host.* values exempt) — **C8** (blocking).
+- ℹ️ Stage-A `CANONICAL_EFFECTS` vs Stage-B `self-hosted/effect-checker.fungi` `knownEffects()` — **C9**
+  (INFORMATIONAL, never blocks — self-hosted is WIP). Surfaces `ai.infer` / `telemetry.read` / `eval.execute`
+  drift, tracked for reconciliation (rename `ai.infer`→`ai.inference`; decide `telemetry.read`/`eval.execute`).
+
+Still pending:
+- Local inference sets (`MUTATION_EFFECTS`, `NETWORK_EFFECTS`, `AI_EFFECTS`, `HIGH_TRUST_EFFECTS`) — CG-5 regression guard (not yet gated).
+- **Runtime-enforceability (CG-2 extension) — Commit 3:** canonical effects `payment.charge`, `pii.read`, `phi.read/write` have **no V_DPM bit** → not runtime bit-enforceable. Assign reserved V_DPM bits (20–29) + wire the emergency clear-masks.
 
 **Rule for new defect classes (the meta-rule):** when a defect turns out to be a toolchain
 self-inconsistency, do not just fix the instance — add the invariant to the table above and a gate

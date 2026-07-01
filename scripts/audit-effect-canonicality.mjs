@@ -33,6 +33,10 @@ const rootIdx = process.argv.indexOf("--root");
 const ROOT = rootIdx !== -1 ? process.argv[rootIdx + 1] : join(HERE, "..");
 const EFFECT_CHECKER = join(ROOT, "packages-galerina/galerina-core-compiler/src/effect-checker.ts");
 const TYPE_REGISTRY = join(ROOT, "packages-galerina/galerina-core-compiler/src/type-registry.ts");
+// Commit 2 extension — the additional tables the SoT must also govern (effect <-> capability <-> Stage-B):
+const CAP_TYPES = join(ROOT, "packages-galerina/galerina-core-compiler/src/capability-types.ts");
+const GIR_EMITTER = join(ROOT, "packages-galerina/galerina-core-compiler/src/gir-emitter.ts");
+const STAGE_B = join(ROOT, "packages-galerina/galerina-core-compiler/src/self-hosted/effect-checker.fungi");
 // The KB lives OUTSIDE the repo (IP separation); resolve via env, default sibling.
 const KB_DIR = process.env.GALERINA_KB_DIR || join(ROOT, "../ZTF-Knowledge-Bases");
 const KB_REGISTRY = join(KB_DIR, "galerina-rules-master-registry.md");
@@ -105,6 +109,23 @@ const PURE_FORBIDDEN = new Set(quoted(sliceBlock(ecSrc, "PURE_FORBIDDEN_EFFECTS 
 const REGISTRY = objectEntries(sliceBlock(ecSrc, "EFFECT_REGISTRY"));
 const FLAG_NAMES = mapKeys(sliceBlock(trSrc, "EFFECT_NAME_TO_FLAG"));
 
+// Commit 2 extension — additional governed tables (read defensively; absent = skipped).
+const capSrc = existsSync(CAP_TYPES) ? readFileSync(CAP_TYPES, "utf8") : "";
+const girSrc = existsSync(GIR_EMITTER) ? readFileSync(GIR_EMITTER, "utf8") : "";
+const stageBSrc = existsSync(STAGE_B) ? readFileSync(STAGE_B, "utf8") : "";
+// V_DPM capability vocabulary: SystemCapabilityType enum values + CAPABILITY_BIT_POSITION string keys.
+const CAP_NAMES = [
+  ...[...(sliceBlock(capSrc, "enum SystemCapabilityType") || "").matchAll(/=\s*"([^"]+)"/g)].map((m) => m[1]),
+  ...[...(sliceBlock(capSrc, "CAPABILITY_BIT_POSITION") || "").matchAll(/"([^"]+)"\s*:/g)].map((m) => m[1]),
+];
+// gir-emitter EFFECT_TO_CAPABILITY keys (effect side; host.* values are host names, not effects).
+const GIR_KEYS = [...(sliceBlock(girSrc, "EFFECT_TO_CAPABILITY") || "").matchAll(/\[\s*"([^"]+)"\s*,/g)].map((m) => m[1]);
+// Stage-B self-hosted knownEffects() return array.
+const stageBMatch = stageBSrc.match(/knownEffects[\s\S]*?return\s*(\[[\s\S]*?\])/);
+const STAGEB_EFFECTS = stageBMatch ? [...stageBMatch[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]) : [];
+// Capability-only names legitimately NOT canonical effects: wildcard roots (banned by FUNGI-CAP-001 but known).
+const CAP_ONLY = new Set(["network.*", "storage.*", "database.*"]);
+
 // canonical families (first segment) — for doc-level family checks
 const CANON_FAMILIES = new Set([...CANONICAL].map(fam));
 // a name is "known" if it is canonical, a registered alias, or a broad alias
@@ -170,21 +191,43 @@ if (existsSync(GRAPH_SPEC)) {
   }
 } // SPEC is optional (design workspace) — silent if absent
 
+// C7 — capability-types V_DPM vocabulary must be a known effect (∪ wildcard roots). After the Commit-2
+//      rename the effect and capability layers share names; this catches any future re-drift.
+{
+  const bad = [...new Set(CAP_NAMES)].filter((c) => !isKnown(c) && !CAP_ONLY.has(c));
+  if (bad.length) add("C7 capability⊄canonical",
+    "capability-types.ts (SystemCapabilityType / CAPABILITY_BIT_POSITION) names a capability that is not a canonical effect, alias, broad-alias, or wildcard root", bad);
+}
+// C8 — gir-emitter EFFECT_TO_CAPABILITY keys must be canonical effects (host.* values are not checked).
+{
+  const bad = GIR_KEYS.filter((k) => !isKnown(k));
+  if (bad.length) add("C8 gir-emitter⊄canonical",
+    "gir-emitter.ts EFFECT_TO_CAPABILITY maps a non-canonical effect key to a host capability", bad);
+}
+// C9 — Stage-B self-hosted knownEffects() should agree with Stage-A canonical (∪ alias). Self-hosted is
+//      WIP, so this is INFORMATIONAL (never blocks) — it records the divergence (record-everything).
+{
+  const bad = STAGEB_EFFECTS.filter((e) => !isKnown(e));
+  if (bad.length) add("C9 stageB-drift",
+    `Stage-B self-hosted/effect-checker.fungi knownEffects() lists effects Stage-A does not canonicalise — ${STAGE_B}`, bad);
+}
+
 // ── severity ─────────────────────────────────────────────────────────────────
 // INTERNAL invariants (C1–C4): the compiler's own effect tables must agree — these
 //   are hard errors and gate CI by default.
 // DOC drift (C5–C6): the KB registry / .graph SPEC name effects the compiler rejects
 //   — real, but resolved by the family work (Commit 2). Reported; blocks only under --strict.
 const STRICT = process.argv.includes("--strict");
-const sevOf = (f) => (/^(C[1-4]|BOOTSTRAP)\b/.test(f.check) ? "internal" : "docs");
+const sevOf = (f) => (/^(C[1-4]|C7|C8|BOOTSTRAP)\b/.test(f.check) ? "internal" : /^C9\b/.test(f.check) ? "stageb" : "docs");
 const internal = findings.filter((f) => sevOf(f) === "internal");
 const docs = findings.filter((f) => sevOf(f) === "docs");
-const blocking = STRICT ? findings : internal;
+const stageb = findings.filter((f) => sevOf(f) === "stageb");   // Stage-B WIP — informational, never blocks
+const blocking = STRICT ? [...internal, ...docs] : internal;
 
 if (process.argv.includes("--json")) {
   console.log(JSON.stringify({
     canonicalCount: CANONICAL.size, aliasCount: ALIASES.size, strict: STRICT,
-    internal, docs, blockingCount: blocking.length,
+    internal, docs, stageb, blockingCount: blocking.length,
   }, null, 2));
   process.exit(blocking.length ? 1 : 0);
 }
@@ -201,6 +244,7 @@ const printGroup = (label, group) => {
 };
 if (internal.length === 0) console.log(`   ✅ internal effect tables are single-source consistent`);
 printGroup("❌ INTERNAL (blocking)", internal);
-printGroup(`${STRICT ? "❌" : "⚠️ "} DOC DRIFT (${STRICT ? "blocking under --strict" : "pending Commit 2 — not blocking"})`, docs);
-console.log(`\n=== ${internal.length} internal + ${docs.length} doc finding(s); ${blocking.length} blocking ===`);
+printGroup(`${STRICT ? "❌" : "⚠️ "} DOC DRIFT (${STRICT ? "blocking under --strict" : "pending — not blocking"})`, docs);
+printGroup("ℹ️  STAGE-B DRIFT (self-hosted WIP — informational, never blocks)", stageb);
+console.log(`\n=== ${internal.length} internal + ${docs.length} doc + ${stageb.length} stage-b finding(s); ${blocking.length} blocking ===`);
 process.exit(blocking.length ? 1 : 0);
