@@ -1,50 +1,62 @@
 # TODO
 
 Living task list. Authoritative forward view: `../ZTF-Knowledge-Bases/galerina-roadmap.md`.
+% audit: `../ZTF-Knowledge-Bases/galerina-percent-audit-roadmap-2026-07-02.md` (**~90% shippable / ~64% full-vision**).
 Consistency rules + gates: `docs/CONSISTENCY_GATES.md`.
 
-## ✅ Done — 2026-07-01 (pushed) + 2026-07-01/02 evening sessions (local)
-- [x] 2026-07-01 day: 15 commits **PUSHED** → `origin/main` (`c691d81..302565d`) — effect-SoT Commits 1–3
-      (full rename cddb930 + V_DPM domain bits c2492cb), proofs/kb-index/memory-graph gates, signing fix.
-- [x] governance:diff fixture noise — gitignored `build/*.fungi` no longer phantom "added"/false EXPANSION — `941ec41`
-- [x] **CG-7** annotation→re-fuse→unsigned cascade closed (owner: "both ends + detector"): writer guard +
-      rebuild guard (`--force` to override) + BLOCKING `signed:fixtures` phase-close gate; `index.fungi` residue reverted — `4190287`
-- [x] **Declared-effect hardening** (owner: "harden after proof"; proof P1–P6 green in KB `proofs/rd-declared-effect-hardening-proof.mjs`):
-      `telemetry.read` canonical + mask-visible (bit 14) · `ai.infer` → one-way alias of `ai.inference` ·
-      `eval.execute` DENY-ONLY (`FUNGI-EFFECT-006`, fails EVERY profile incl. dev) · Stage-B `knownEffects`
-      reconciled (C9 drift GONE) · new C10 (deny-only name must never be grantable) · corpus renamed
-      (healthcare `medical.read`→`phi.read`, `ai.infer`→`ai.inference`; Level-9 `pii.write`→`database.write`
-      keeping the pinned Wave-2 error semantic).
-- [x] **CG-4 at the bundled CLI**: lenient `galerina build`/`build --package` no longer mints a signed
-      `.lmanifest`/`.fuse.json` for a production-violating artifact (was proven still hybrid-signing
-      `effects{totally.fake.effect}` on 2026-07-02; cli.ts had the gate, galerina.mjs did not).
-- [x] **CG-6 corpus gate**: `scripts/audit-corpus-effect-names.mjs` (`effects:corpus` in phase-close) — the
-      teaching corpus may declare only names a production compile accepts; aerospace invented names on a
-      reviewed allowlist pending the domain-namespace decision.
+**State (2026-07-02, verified by running):** 60/60 packages · 5,914 tests · 0 fail · phase-close ALL green ·
+`audit-effect-canonicality --strict` 0 findings · `governance:diff` NEUTRAL · border 93/0. `main` **ahead 5, NOT pushed**.
 
-## 🔲 Next (short-term)
-- [ ] Push the local commits to `origin/main` (owner OK required — publish act).
-- [ ] **Owner-gated: domain-effect namespaces** — aerospace showcase invents `mission.read`/`orbit.compute`/
-      `propulsion.plan`/`navigation.compute`/`flight_control.propose`. Decide: governed custom-namespace
-      mechanism (R&D + ZT-score first) vs canonical-families-only (rewrite showcase). Until then: allowlisted
-      WARN-level in the corpus gate; any NEW invented name still blocks.
-- [ ] `.graph` A/B fair re-run — PAUSED with the `.gate` model (below).
+## ✅ Done — 2026-07-01/02 (local, unpushed)
+- [x] governance:diff fixture noise — gitignored `build/*.fungi` no longer phantom "added" — `941ec41`
+- [x] **CG-7** annotation→re-fuse→unsigned cascade closed (both ends + detector) — `4190287`
+- [x] **Declared-effect hardening** — `telemetry.read` canonical (bit 14) · `ai.infer`→alias · `eval.execute`
+      DENY-ONLY (`FUNGI-EFFECT-006`, every profile) · Stage-B reconciled (C9 cleared) · C10 — `6bb63a1`
+- [x] **CG-4 at the bundled CLI** — lenient build no longer mints a signed manifest for a production-violating
+      artifact (was proven still hybrid-signing `effects{totally.fake.effect}`) — `2491de9`
+- [x] **CG-6 corpus gate** — teaching corpus may declare only production-compilable effect names — `eb525e5`
+- [x] **% audit + roadmap refresh (2026-07-02)** — 6-subsystem fleet audit + critic; new percent-audit doc,
+      hub roadmap, runtime SOT banner; **fixed the anti-drift registry's own drift** in `docs/CONSISTENCY_GATES.md`
+      (C9 reconciliation + V_DPM bits 20–23 were shipped but still listed pending).
+- [x] **NUL-byte fix (owner-approved 2026-07-02)** — raw `0x00` in `kernel.ts` (admission kernel) +
+      `inference-bridge-contract/src/manifest.ts` replaced with the byte-identical `\0` escape; both files
+      are plain greppable text again; `source-hygiene-no-nul.test.mjs` allowlist now **EMPTY** (zero-tolerance).
+- [x] **CG-7 third end (owner-approved 2026-07-02)** — direct `galerina build --package <pkg>` refuses when the
+      manifest is **git-tracked** real-signed (committed ceremony fixture: greeting, fuse-demo, 2 compose
+      fixtures) unless `--force`; untracked dev-signed manifests (api-protocol-rest's own tests) build freely;
+      not-a-repo → protect. `rebuild-fusable-packages --force` forwards to the child. +2 regression tests.
 
-## 🔲 PAUSED by owner (2026-07-01) — do NOT build until the owner's model explanation
-- [ ] **`.gate` integration**: owner revision — `.gate` = the light-ASCII AI-authoring surface (SPEC mis-named
-      it `.graph`; original intent `notes/77-mesh-r-d-07.md`); `.graph` = standard ASCII Topology ONLY (never
-      logic files alongside `.fungi`); logic IR stays internal GIR unless the explanation says otherwise.
-      Hard locks unchanged (runtime pure `.fungi`; deny-only signed-capability admission; one IR; no
-      `.gate`-derived `.fungi` on disk). Record: `.claude` memory `galerina-gate-graph-owner-revision-2026-07-01`,
-      KB results-log 2026-07-01 OWNER REVISION entry, `ZT-Galerina-GRAPH-ASCII/RESUME-2026-07-01.md` item 2.
+## 🔲 Owner decisions (answered 2026-07-02 / still open)
+- [x] ~~Domain-effect namespaces~~ — **DECIDED: keep-interim.** Aerospace allowlist stands WARN-level; any NEW
+      invented name still blocks; posture A stays buildable later behind an explicit GO (verdict + N1–N4 proof
+      recorded in the KB note).
+- [ ] **Push** the local commits to `origin/main` — **owner chose HOLD (2026-07-02)**; stays local until an
+      explicit push OK. Until pushed, remote CI is blind to CG-4/CG-6/CG-7.
+- [ ] Offline re-sign ceremony owed: `greeting.lmanifest` (old-brand `lln.manifest.v1` schema).
 
-## 🔲 Owner-gated (surface; do not build without GO)
-- [ ] RD-0231 build spike (~3–5d) — subject to the paused model explanation.
-- [ ] OSS top-3: freivalds-verifier · k3-decision · signed-index-sidecar.
-- [ ] `galerina build --package <signed-pkg>` direct-invocation refusal without `--force` (CG-7 completion;
-      the phase-close detector already catches the resulting drift).
-- [ ] Offline re-sign ceremony owed: `greeting.lmanifest` (old-brand `lln.` schema).
-- [ ] Runtime-planning roadmap: track the USES/USEDBY dep-graph (incremental recompute, lazy exec, cache-invalidation).
+## 🔲 NOW (buildable, no hard blocker; value-ordered)
+- [ ] **Numeric doc-drift sweep** — stale comments say "64-bit not yet emitted" while the gate set is empty:
+      `value-state-checker.ts:2166`, `u64-arith.ts:25`, `numeric-lowering.ts:26`, `cli-numeric-gate.test.mjs`
+      header. Then extend `audit-doc-drift`/`diagnostic-doc-drift` to catch the "gated/not-yet-emitted" phrase
+      class (error→tooling rule) so it can't recur.
+- [ ] **`FUNGI-LIMIT-001`** — implement the `enforced_limits{}` ceiling check (`governance-verifier.ts:2694-2699`
+      emits no diagnostic today; a declared-but-unenforced governance surface).
+- [ ] **B5a signed registry index** — module is real + fail-closed *when injected* (`fuse-loader.ts:694/951`),
+      but no signed index is distributed and nothing wires it by default. Make default-on or ship an index.
+- [ ] Drive the `lint:conventions` umbrella (270 report-only findings) to 0, then drop `--soft`.
 
-## 🔲 Long-term / carried forward
-- [ ] DSS.wasm (#102–106); post-P9 enhancements; CI secret-scan (residual of the #149 revocation).
+## ⏸ PAUSED by owner (2026-07-01) — `.gate` / `.graph`
+- [ ] Do NOT build to a `.gate` compiler. Owner still finalizing the model (`.gate` = light-ASCII AI-authoring
+      surface; `.graph` = ASCII Topology ONLY; runtime pure `.fungi`; one IR; deny-only signed-capability
+      admission). R&D continues in-KB behind two open gates: **RD-0232b** (7 adversarial blockers → SPEC v0.2
+      gated), **RD-0232c** (ZT-1: hand-copied `sens_class` registry drifted from prod `type-registry.ts` — must
+      be machine-sourced; 7-tenet scorecard open). `.graph` A/B fair re-run is paused-coupled.
+      Record: `.claude` memory `galerina-gate-graph-owner-revision-2026-07-01`; KB results-log RD-0232/b/c.
+
+## 🔲 NEXT / carried forward
+- [ ] App-kernel posture default (`kernel.ts:245` = `"off"`) — decide production-adaptive `"auto"` default.
+- [ ] **web-* lead pair** (`galerina-web-render` + `galerina-web-state`) — largest shippable-scope gap.
+- [ ] **Full-suite CI** (#155 npm workspaces) — get the crypto/border phase-close gates off local-only.
+- [ ] Self-hosting: extend byte-parity tokenize → parser.
+- [ ] Post-P9: DSS.wasm (#102–106); enhancements (#146, #156/#157 start, #158); CI secret-scan residual (#149).
+- [ ] Hygiene: 2 untracked `RESUME-2026-07-01-continue*.md` at repo root; LICENSE copyright fill uncommitted.

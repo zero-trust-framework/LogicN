@@ -36,7 +36,7 @@ every gate here is wired into `scripts/run-phase-close.mjs`** so it runs on ever
 | `scripts/audit-effect-canonicality.mjs` | CG-1, CG-2, CG-6 | `node scripts/audit-effect-canonicality.mjs [--strict]` | internal table drift (C1–C4, C7 capability-types, C8 gir-emitter, C10 deny-only-in-grantable-table); docs drift under `--strict` (C5–C6); Stage-B drift (C9) informational |
 | `scripts/audit-corpus-effect-names.mjs` | CG-6 (corpus half) | `node scripts/audit-corpus-effect-names.mjs [--root <dir>]` | a teaching-corpus `.fungi` declaring an effect name a PRODUCTION compile rejects (unknown, non-broad alias, deny-only); broad aliases warn; `tests/` fixtures report-only; aspirational aerospace names on a reviewed allowlist (owner-gated additions) |
 | `scripts/audit-muted-diagnostics.mjs` | CG-3 | `node scripts/audit-muted-diagnostics.mjs` | a security/governance code muted without a reviewed allowlist entry |
-| `scripts/audit-signed-fixture-drift.mjs` | CG-7 | `node scripts/audit-signed-fixture-drift.mjs [--root <dir>]` | a signed fusable package with ANY local modification (src or dist); writer guard (`galerina.mjs` `//fungi:` refresh) + rebuild guard (`rebuild-fusable-packages.mjs`, `--force` to override) prevent the known paths |
+| `scripts/audit-signed-fixture-drift.mjs` | CG-7 | `node scripts/audit-signed-fixture-drift.mjs [--root <dir>]` | a signed fusable package with ANY local modification (src or dist); writer guard (`galerina.mjs` `//fungi:` refresh) + rebuild guard (`rebuild-fusable-packages.mjs`, `--force` to override) prevent the known paths. **Third end closed 2026-07-02 (owner-approved):** direct `galerina build --package <pkg>` refuses when the package's `.lmanifest` is **git-tracked** real-signed (a committed ceremony fixture) unless `--force`; an untracked/ignored dev-signed manifest (local rebuild artifact, e.g. api-protocol-rest's own tests) builds freely; outside a git repo the guard protects (most-secure). Regression: `scripts/tests/signed-fixture-guard.test.mjs` §4/§5 |
 | compiler (`cli.ts`) production-strict signing gate | CG-4 | (in-compiler; regression-tested) | signing a plain-`build` artifact that fails production strictness |
 | bundled CLI (`galerina.mjs`) pre-signing gate | CG-4 | (in-CLI; `scripts/tests/cg4-signing-boundary.test.mjs`) | the SECOND minting site (`build` / `build --package`): a lenient build of a production-violating package emits `.wasm`/`.wat` but NO `.lmanifest`/`.fuse.json` — loudly, never silently (closed 2026-07-02; the cli.ts fix alone left this site signing) |
 | regression tests | all | `node --test scripts/tests/dev-tools-scripts.test.mjs` | a gate that stops detecting its own defect class |
@@ -53,13 +53,20 @@ capability vocabularies on domain names (filesystem→storage, unsafe.native→n
 shell.execute), so these are now GATED and clean:
 - ✅ `capability-types.ts` `SystemCapabilityType` / `CAPABILITY_BIT_POSITION` (the V_DPM vocabulary) — **C7** (blocking).
 - ✅ `gir-emitter.ts` `EFFECT_TO_CAPABILITY` keys (host.* values exempt) — **C8** (blocking).
-- ℹ️ Stage-A `CANONICAL_EFFECTS` vs Stage-B `self-hosted/effect-checker.fungi` `knownEffects()` — **C9**
-  (INFORMATIONAL, never blocks — self-hosted is WIP). Surfaces `ai.infer` / `telemetry.read` / `eval.execute`
-  drift, tracked for reconciliation (rename `ai.infer`→`ai.inference`; decide `telemetry.read`/`eval.execute`).
+- ✅ Stage-A `CANONICAL_EFFECTS` vs Stage-B `self-hosted/effect-checker.fungi` `knownEffects()` — **C9**
+  (INFORMATIONAL, never blocks — self-hosted is WIP). **RECONCILED 2026-07-02** (`6bb63a1`): `ai.infer`→
+  `ai.inference` (one-way alias), `telemetry.read` promoted canonical (mask bit 14), `eval.execute` made
+  **DENY-ONLY** (`FUNGI-EFFECT-006`, fails every profile). Stage-B `knownEffects` updated to match; C9 now
+  surfaces **0 drift** (`audit-effect-canonicality --strict` clean). New **C10**: a DENY-ONLY name must never
+  appear in any grantable table (blocking fail-open guard).
 
 Still pending:
 - Local inference sets (`MUTATION_EFFECTS`, `NETWORK_EFFECTS`, `AI_EFFECTS`, `HIGH_TRUST_EFFECTS`) — CG-5 regression guard (not yet gated).
-- **Runtime-enforceability (CG-2 extension) — Commit 3:** canonical effects `payment.charge`, `pii.read`, `phi.read/write` have **no V_DPM bit** → not runtime bit-enforceable. Assign reserved V_DPM bits (20–29) + wire the emergency clear-masks.
+
+Landed:
+- ✅ **Runtime-enforceability (CG-2 extension) — Commit 3 DONE** (`c2492cb`): canonical effects now carry V_DPM
+  bits — `payment.charge` = 20, `pii.read` = 21, `phi.read` = 22, `phi.write` = 23 (`capability-types.ts:16-17,33-36`;
+  consumed by `dss/vdpm.fungi`). Runtime bit-enforceable via the single-cycle `(req & granted) == req` mask.
 
 **Rule for new defect classes (the meta-rule):** when a defect turns out to be a toolchain
 self-inconsistency, do not just fix the instance — add the invariant to the table above and a gate
