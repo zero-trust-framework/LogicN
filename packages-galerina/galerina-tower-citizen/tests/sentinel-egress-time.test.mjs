@@ -10,14 +10,52 @@
 // no longer writes the audit ledger directly; it hands records to the egress
 // sentinel, which is the only component that touches the ledger file.
 
-import { test } from "node:test";
+import { test, after } from "node:test";
 import assert from "node:assert/strict";
+import { rmSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 import { TowerRuntime, AuditLogger } from "../dist/index.js";
 import { LogicalClock } from "../../galerina-core-sentinel-time/dist/index.js";
 import { AuditEgress, readEgressLedger } from "../../galerina-core-sentinel-egress/dist/index.js";
 
+// ── Test hygiene: isolate the egress scratch ledgers, and don't leak them ──────
+// The egress sentinel writes scratch ledgers under build/egress-it-<pid>-<n>. The
+// OS recycles PIDs across `node --test` runs, so WITHOUT cleanup a fresh run can
+// land on a dir left by a PRIOR run that already holds 12 records; readEgressLedger
+// then counts stale 12 + fresh 12 = 24 and the `total === 12` assertion fails — a
+// flaky, code-change-free gate failure. Left unchecked these dirs also accumulate
+// without bound (999+ observed). Two guards keep this border deterministic:
+//   1. sweepScratchDirs() removes EVERY egress-it-* dir. Run once at load (clears
+//      stale leftovers from prior/crashed runs) and again via after() (so a clean
+//      run leaves nothing behind — no disk leak).
+//   2. uniqueDir() hard-resets its specific target dir before handing it out, so
+//      each test starts from a clean slate even when the PID has been recycled.
+const SCRATCH_ROOT = "build";
+const SCRATCH_PREFIX = "egress-it-";
+
+const sweepScratchDirs = () => {
+  let entries;
+  try {
+    entries = readdirSync(SCRATCH_ROOT, { withFileTypes: true });
+  } catch {
+    return; // build/ not created yet — nothing to sweep
+  }
+  for (const e of entries) {
+    if (e.isDirectory() && e.name.startsWith(SCRATCH_PREFIX)) {
+      rmSync(join(SCRATCH_ROOT, e.name), { recursive: true, force: true });
+    }
+  }
+};
+
+sweepScratchDirs();       // clear stale dirs from prior (possibly crashed) runs
+after(sweepScratchDirs);  // don't leak this run's dirs
+
 let counter = 0;
-const uniqueDir = () => `build/egress-it-${process.pid}-${++counter}`;
+const uniqueDir = () => {
+  const dir = `${SCRATCH_ROOT}/${SCRATCH_PREFIX}${process.pid}-${++counter}`;
+  rmSync(dir, { recursive: true, force: true }); // PID reuse: never inherit a prior run's records
+  return dir;
+};
 
 test("LST stamps every audit event with a deterministic LogicalTick", () => {
   const clock = new LogicalClock(1000);
