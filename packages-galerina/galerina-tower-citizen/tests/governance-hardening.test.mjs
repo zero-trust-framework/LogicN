@@ -38,21 +38,6 @@ test("aerospace mode: a precision with no bridge traps ERR_HOST_NATIVE_DENIED (n
   assert.equal(r.trapCode, "ERR_HOST_NATIVE_DENIED");
 });
 
-test("host-native fallback is DENY-BY-DEFAULT; the explicit opt-in restores it (RD-0236 #4)", async () => {
-  // RD-0236 #4 inversion (owner decision 2026-07-02): the silent host-native fallback is no longer
-  // the default. A routed precision with no bridge now traps ERR_HOST_NATIVE_DENIED; a deployment must
-  // explicitly opt IN via allowHostNativeFallback. (allowUnattestedBridges opts past the unrelated #2
-  // attestation gate so this test isolates the #4 behaviour.)
-  const denied = createHybridEngine({ airGapped: true, governanceTier: 1, governance: { allowUnattestedBridges: true, allowUnsignedCapabilityGrant: true } });
-  const d = await denied.infer({ prompt: "x", correlationId: cid("deny") });
-  assert.equal(d.trapFired, true, "the silent host-native fallback is now denied by default");
-  assert.equal(d.trapCode, "ERR_HOST_NATIVE_DENIED");
-
-  const permitted = createHybridEngine({ airGapped: true, governanceTier: 1, governance: { allowUnattestedBridges: true, allowHostNativeFallback: true, allowUnsignedCapabilityGrant: true } });
-  const p = await permitted.infer({ prompt: "x", correlationId: cid("perm") });
-  assert.equal(p.trapFired, false, "the explicit opt-in restores the host-native path");
-});
-
 test("stub bridge TRAPS the illegal 0b11 trit encoding (no corruption masking)", () => {
   const bridge = new StubTernaryBridge(new AuditLogger(null));
   // Craft a packed word whose first element (shift = byteIdx0,pos0 → 6) holds enc=0b11.

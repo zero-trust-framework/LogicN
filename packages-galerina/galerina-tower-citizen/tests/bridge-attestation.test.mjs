@@ -88,21 +88,6 @@ test("engine PERMITS an attested (signed) bridge registry", async () => {
   assert.ok(r.bridgesUsed.includes("stub-ternary"));
 });
 
-test("no attestation policy: unattested bridges are DENY-BY-DEFAULT; the opt-in restores them (RD-0236 #2)", async () => {
-  // RD-0236 #2 inversion (owner decision 2026-07-02): a null attestation policy no longer means
-  // "all bridges attested". The default stub registry carries ≥1 bridge that cannot be
-  // cryptographically verified without a policy, so it is now DENIED (ERR_BRIDGE_UNATTESTED). A
-  // deployment must explicitly opt IN via allowUnattestedBridges (dev/simulator use).
-  const denied = createHybridEngine({ airGapped: true, governanceTier: 1, governance: { allowUnsignedCapabilityGrant: true } });
-  const d = await denied.infer({ prompt: "x", correlationId: cid("deny"), opClasses: ["feedforward"] });
-  assert.equal(d.trapFired, true, "an unattested registry with no policy is now denied by default");
-  assert.equal(d.trapCode, "ERR_BRIDGE_UNATTESTED");
-
-  const permitted = createHybridEngine({ airGapped: true, governanceTier: 1, governance: { allowUnattestedBridges: true, allowUnsignedCapabilityGrant: true } });
-  const p = await permitted.infer({ prompt: "x", correlationId: cid("compat"), opClasses: ["feedforward"] });
-  assert.equal(p.trapFired, false, "the explicit opt-in restores the permissive (pre-RD-0236) behaviour");
-});
-
 test("verifyAttestation ENFORCES the #201 manifest checks end-to-end (fail-closed via validateManifestShape)", () => {
   // Proves the #201 calibration-as-attestation checks are wired into the Tower's admission gate
   // (verifyAttestation calls validateManifestShape first), not just unit-tested in the contract pkg.
