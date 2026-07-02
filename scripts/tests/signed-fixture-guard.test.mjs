@@ -4,8 +4,11 @@
 //   2. the detector gate (audit-signed-fixture-drift.mjs --root) on a temp git repo
 //   3. the writer guard: `galerina deps --all --write` must NEVER rewrite src
 //      inside a SIGNED fusable package (and must rewrite an unsigned one).
-// The rebuild guard (rebuild-fusable-packages.mjs) shares predicate 1; its skip
-// branch is exercised against the real repo by the phase-close cadence.
+//   4. the direct-invocation guard (CG-7 third end, owner-approved 2026-07-02):
+//      `galerina build --package <signed>` refuses without --force; --force overrides.
+// The rebuild guard (rebuild-fusable-packages.mjs) shares predicate 1 and forwards
+// --force to the child build; its skip branch is exercised against the real repo by
+// the phase-close cadence.
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from "node:fs";
@@ -119,4 +122,64 @@ test("writer guard: deps --all --write skips SIGNED package src, rewrites unsign
   assert.equal(readFileSync(sealedSrc, "utf8"), beforeSealed, "SIGNED package src must be byte-identical");
   assert.match(r.stdout, /🔒/, "the skip is reported, never silent");
   assert.notEqual(readFileSync(plainSrc, "utf8"), beforePlain, "unsigned package src gets its //fungi: block");
+});
+
+// ── 4. the direct-invocation guard: build --package refuses a SIGNED package ──
+// tmpdir is NOT a git repo → exercises the fail-closed direction: when git cannot say
+// whether the signed manifest is a committed ceremony artifact, the guard protects.
+test("build --package refuses a SIGNED package without --force; --force overrides; unsigned builds freely", () => {
+  const base = join(tmp, "direct-build");
+  const signed = makePkg(base, "sealed-build", { signature: REAL_SIG });
+  const unsigned = makePkg(base, "open-build", {});
+  const build = (dir, ...extra) =>
+    spawnSync("node", [join(ROOT, "galerina.mjs"), "build", "--package", dir, ...extra],
+      { cwd: ROOT, encoding: "utf8", timeout: 120_000, shell: isWin });
+  const REFUSAL = /Refusing to locally rebuild SIGNED/;
+
+  // signed, no --force → refused BEFORE any compile; message names the rule; manifest untouched
+  const manPath = join(signed, "dist", "sealed-build.lmanifest.json");
+  const beforeMan = readFileSync(manPath, "utf8");
+  const refused = build(signed);
+  assert.equal(refused.status, 1, "signed package must be refused without --force");
+  assert.match(refused.stderr + refused.stdout, REFUSAL, "refusal names the rule");
+  assert.equal(readFileSync(manPath, "utf8"), beforeMan, "refusal must not touch the signed manifest");
+
+  // signed, WITH --force → the CG-7 guard is bypassed (build proceeds; no refusal emitted)
+  const forced = build(signed, "--force");
+  assert.doesNotMatch(forced.stderr + forced.stdout, REFUSAL, "--force must bypass the direct-invocation guard");
+
+  // unsigned, no --force → guard never fires; a valid package compiles
+  const open = build(unsigned);
+  assert.doesNotMatch(open.stderr + open.stdout, REFUSAL, "unsigned package must never trip the signed guard");
+  assert.equal(open.status, 0, `unsigned package should build: ${open.stderr}`);
+});
+
+// ── 5. the git-tracked discriminator: committed fixture vs local dev artifact ──
+// The CG-7 rule protects COMMITTED signed artifacts (the ceremony's). A real-signed but
+// untracked/git-ignored manifest is a local dev rebuild (api-protocol-rest regenerates its
+// own dist inside its tests) — refusing those would break legitimate dev workflows.
+test("build --package: git-TRACKED signed manifest → refused; untracked dev-signed → builds",
+  { skip: !gitAvailable && "git not available" }, () => {
+  const repo = join(tmp, "direct-build-repo");
+  mkdirSync(repo, { recursive: true });
+  assert.equal(git(repo, "init", "-q").status, 0);
+  const ceremony = makePkg(repo, "ceremony", { signature: REAL_SIG });
+  const devlocal = makePkg(repo, "devlocal", { signature: REAL_SIG });
+  // commit ceremony's manifest (committed fixture); leave devlocal fully untracked
+  assert.equal(git(repo, "add", "ceremony").status, 0);
+  assert.equal(git(repo, "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "fixture").status, 0);
+
+  const build = (dir) =>
+    spawnSync("node", [join(ROOT, "galerina.mjs"), "build", "--package", dir],
+      { cwd: ROOT, encoding: "utf8", timeout: 120_000, shell: isWin });
+  const REFUSAL = /Refusing to locally rebuild SIGNED/;
+
+  const refused = build(ceremony);
+  assert.equal(refused.status, 1, "a git-tracked signed manifest is a committed fixture — must refuse");
+  assert.match(refused.stderr + refused.stdout, REFUSAL);
+
+  const allowed = build(devlocal);
+  assert.doesNotMatch(allowed.stderr + allowed.stdout, REFUSAL,
+    "an untracked dev-signed manifest is a local artifact — must NOT refuse");
+  assert.equal(allowed.status, 0, `dev-signed local package should rebuild freely: ${allowed.stderr}`);
 });

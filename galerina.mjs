@@ -906,6 +906,31 @@ Baseline comparison (governance-cost):
       if (!packageDescriptor.name) { console.error('Error: package.fungi.json must declare a "name"'); process.exit(1); }
       packageBuild = pkgDir;
       fungiFile = join(pkgDir, packageDescriptor.entry || "src/index.fungi");
+      // ── CG-7 third end (owner-approved 2026-07-02): refuse to locally rebuild a SIGNED
+      // fusable package via direct `build --package` when its manifest is a COMMITTED
+      // (git-tracked) artifact — the committed dist/<name>.wasm + .lmanifest ARE the signed
+      // artifacts, owned by the OFFLINE re-sign ceremony; a local rebuild mints an UNSIGNED
+      // manifest → the fuse loader fail-closes (FUNGI-FUSE-UNSIGNED). A real-signed but
+      // git-IGNORED/untracked manifest is a LOCAL dev artifact (e.g. api-protocol-rest
+      // regenerates its own dist inside its tests) — no committed fixture is at risk, so it
+      // rebuilds freely. Fail direction: outside a git repo (or on any git error) we cannot
+      // tell a dev artifact from a downloaded ceremony artifact → protect (most-secure
+      // default; matches isUnderSignedPackage's unreadable→protect stance). `--force`
+      // overrides for the deliberate pre-re-sign rebuild (rebuild-fusable-packages forwards
+      // it). The rebuild-hook guard + the `signed:fixtures` drift gate cover the automated
+      // paths; this closes the DIRECT-invocation path.
+      if (!rest.includes("--force") && isUnderSignedPackage(fungiFile)) {
+        const manRel = join("dist", `${packageDescriptor.name}.lmanifest.json`);
+        const tracked = spawnSync("git", ["ls-files", "--error-unmatch", manRel],
+          { cwd: packageBuild, encoding: "utf8", timeout: 15000 });
+        // 0 = tracked (committed fixture) · 1 = untracked (local dev artifact) · anything
+        // else (128 not-a-repo, spawn failure, timeout) → protect.
+        const committedFixture = tracked.status !== 1;
+        if (committedFixture) {
+          console.error(`⛔ Refusing to locally rebuild SIGNED package "${packageDescriptor.name}" — dist/${packageDescriptor.name}.lmanifest is a git-tracked signed artifact owned by the offline re-sign ceremony. A local rebuild would mint an UNSIGNED manifest and the fuse loader would fail-close. Pass --force only if you are deliberately rebuilding ahead of an offline re-sign.`);
+          process.exit(1);
+        }
+      }
     }
   }
 

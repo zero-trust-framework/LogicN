@@ -101,7 +101,12 @@ for (const dir of pkgDirs) {
 
   if (wasmMtime > 0 && wasmMtime >= srcMtime) { fresh++; continue; } // up to date — skip
 
-  const r = spawnSync("node", ["galerina.mjs", "build", "--package", dir],
+  // Forward --force to the child build: when this rebuild is deliberately forced (FORCE bypasses the
+  // signed-skip above), the child `build --package` must also accept the CG-7 direct-invocation guard's
+  // override, or a forced rebuild of a signed package would be refused downstream.
+  const buildArgs = ["galerina.mjs", "build", "--package", dir];
+  if (FORCE) buildArgs.push("--force");
+  const r = spawnSync("node", buildArgs,
     { cwd: ROOT, encoding: "utf8", shell: isWin, timeout: 60000 });
   if (r.status === 0) { rebuilt++; details.push(`✅ rebuilt ${name}`); }
   else {
