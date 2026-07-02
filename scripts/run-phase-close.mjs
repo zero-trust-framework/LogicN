@@ -199,6 +199,7 @@ run("code-index", "node", ["scripts/code-index.mjs"]);
 run("code-registry", "node", ["scripts/gen-code-registry.mjs"]);
 run("kb-index", "node", ["scripts/kb-index.mjs"]); // KB keyword index (token-saver): keep build/kb-index/ fresh vs the docs
 run("memory-graph", "node", ["scripts/memory-graph.mjs"]); // 4th graph tool: .claude memory health (dangling [[links]]/orphans/dupes)
+run("dev-tool-index", "node", ["scripts/dev-tool-index.mjs"]); // package + dev-tool index/graph (build/dev-tool-index/) — coverage + gaps visible
 
 // ── 5b. Convention lint gate (TASK-ENV-001) ──
 // The umbrella that runs every registered convention enforcer (today: the #215 code scanner; later:
